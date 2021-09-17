@@ -46,6 +46,8 @@ namespace AudioUnit {
 	delegate float AUImplementorValueProvider (AUParameter param);
 
 	delegate void AUParameterObserver (ulong address, float value);
+	
+	delegate void AUVoiceIOMutedSpeechActivityEventListener (AUVoiceIOSpeechActivityEvent activityEvent);
 
 // 	AUAudioTODO - We need testing for these bindings
 // 	delegate void AUScheduleMidiEventBlock (AUEventSampleTime eventSampleTime, byte cable, nint length, ref byte midiBytes);
@@ -139,6 +141,12 @@ namespace AudioUnit {
 		[Export ("scheduleParameterBlock")]
 		AUScheduleParameterBlock ScheduleParameterBlock { get; }
 
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [NullAllowed]
+		// [Export ("scheduleMIDIEventListBlock")]
+		// AUMidiEventListBlock ScheduleMidiEventListBlock { get; }
+
 // 		[Export ("tokenByAddingRenderObserver:")]
 // 		nint GetToken (AURenderObserver observer);
 
@@ -151,6 +159,22 @@ namespace AudioUnit {
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("MIDIOutputNames", ArgumentSemantic.Copy)]
 		string[] MidiOutputNames { get; }
+
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [NullAllowed]
+		// [Export ("MIDIOutputEventListBlock", ArgumentSemantic.Copy)]
+		// AUMidiEventListBlock MidiOutputEventListBlock { get; set; }
+
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [Export ("AudioUnitMIDIProtocol")]
+		// MIDIProtocolID AudioUnitMidiProtocol { get; }
+
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [Export ("hostMIDIProtocol", ArgumentSemantic.Assign)]
+		// MIDIProtocolID HostMIDIProtocol { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("providesUserInterface")]
@@ -173,7 +197,6 @@ namespace AudioUnit {
 		
 		AUParameterTree ParameterTree {
 			get; 
-			[Introduced (PlatformName.UIKitForMac, 13,0)]
 			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 			set;
 		}
@@ -248,11 +271,9 @@ namespace AudioUnit {
 		[Export ("shouldChangeToFormat:forBus:")]
 		bool ShouldChangeToFormat (AVAudioFormat format, AUAudioUnitBus bus);
 
-		[Mac (10,11)][iOS (7,0)]
 		[Notification, Field ("kAudioComponentRegistrationsChangedNotification")]
 		NSString AudioComponentRegistrationsChangedNotification { get; }
 
-		[Mac (10,11)][iOS (7,0)]
 		[Notification, Field ("kAudioComponentInstanceInvalidationNotification")]
 		NSString AudioComponentInstanceInvalidationNotification { get; }
 
@@ -266,7 +287,7 @@ namespace AudioUnit {
 		[Export ("profileStateForCable:channel:")]
 		MidiCIProfileState GetProfileState (byte cable, byte channel);
 
-		[Mac (10,14), iOS (12, 0)]
+		[Mac (10,14), iOS (12, 0), NoWatch, NoTV]
 		[NullAllowed, Export ("profileChangedBlock", ArgumentSemantic.Assign)]
 		AUMidiCIProfileChangedCallback ProfileChangedCallback { get; set; }
 
@@ -280,33 +301,28 @@ namespace AudioUnit {
 
 #endif
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("userPresets", ArgumentSemantic.Copy)]
 		AUAudioUnitPreset[] UserPresets { get; }
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("saveUserPreset:error:")]
 		bool SaveUserPreset (AUAudioUnitPreset userPreset, [NullAllowed] out NSError outError);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("deleteUserPreset:error:")]
 		bool DeleteUserPreset (AUAudioUnitPreset userPreset, [NullAllowed] out NSError outError);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("presetStateFor:error:")]
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetPresetState (AUAudioUnitPreset userPreset, [NullAllowed] out NSError outError);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("supportsUserPresets")]
 		bool SupportsUserPresets { get; }
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13, 0)] // needed since it's not in iOS
 		[NoWatch, NoTV, NoiOS, Mac (10, 15)]
 		[Export ("isLoadedInProcess")]
 		bool IsLoadedInProcess { get; }

@@ -2,6 +2,7 @@
 // corevideo.cs: Definitions for CoreVideo
 //
 // Copyright 2014 Xamarin Inc. All rights reserved.
+// Copyright 2020 Microsoft Corporation
 //
 
 using System;
@@ -260,6 +261,14 @@ namespace CoreVideo {
 		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
 		[Field ("kCVImageBufferAlphaChannelModeKey")]
 		NSString AlphaChannelModeKey { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kCVImageBufferRegionOfInterestKey")]
+		NSString RegionOfInterestKey { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kCVImageBufferAmbientViewingEnvironmentKey")]
+		NSString AmbientViewingEnvironmentKey { get; }
 	}
 
 	[Watch (4,0)]
@@ -348,10 +357,14 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferYCbCrMatrix_SMPTE_240M_1995")]
 		Smpte240M1995,
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "This API is no longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "This API is no longer supported.")]
 		[Field ("kCVImageBufferYCbCrMatrix_DCI_P3")]
 		[iOS (9,0), Mac (10,12)]
 		DciP3,
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "This API is no longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "This API is no longer supported.")]
 		[Field ("kCVImageBufferYCbCrMatrix_P3_D65")]
 		[iOS (9,0), Mac (10,12)]
 		P3D65,
@@ -408,10 +421,12 @@ namespace CoreVideo {
 
 #if !MONOMAC
 		[NoWatch]
+		[NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLESCompatibilityKey")]
 		NSString OpenGLESCompatibilityKey { get; }
 
 		[NoWatch]
+		[NoMacCatalyst]
 		[iOS (9,0)]
 		[Field ("kCVPixelBufferOpenGLESTextureCacheCompatibilityKey")]
 		NSString OpenGLESTextureCacheCompatibilityKey { get; }
@@ -421,11 +436,53 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferMetalCompatibilityKey")]
 		NSString MetalCompatibilityKey { get; }
 
-#if MONOMAC
-		[Mac (10,11)]
+		[NoiOS, NoTV, NoWatch, Mac (10,11), NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
-#endif
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_BlackLevel")]
+		NSString ProResRawKey_BlackLevel { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_ColorMatrix")]
+		NSString ProResRawKey_ColorMatrix { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_GainFactor")]
+		NSString ProResRawKey_GainFactor { get; }
+
+		[NoWatch, NoTV, Mac(12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_RecommendedCrop")]
+		NSString ProResRawKey_RecommendedCrop { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_SenselSitingOffsets")]
+		NSString ProResRawKey_SenselSitingOffsets { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceBlueFactor")]
+		NSString ProResRawKey_WhiteBalanceBlueFactor { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceCCT")]
+		NSString ProResRawKey_WhiteBalanceCct { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceRedFactor")]
+		NSString ProResRawKey_WhiteBalanceRedFactor { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteLevel")]
+		NSString ProResRawKey_WhiteLevel { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern")]
+		NSString VersatileBayerKey_BayerPattern { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_MetadataExtension")]
+		NSString MetadataExtension { get; }
 	}
 
 	[Partial]
@@ -444,12 +501,12 @@ namespace CoreVideo {
 	[NoWatch]
 	[Partial]
 	interface CVMetalTextureCache {
-		[NoMac]
+		[Mac (12,0)]
 		[Internal]
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[TV (13,0), NoWatch, iOS (13,0)]
 		[Field ("kCVMetalTextureStorageMode")]
 		NSString StorageMode { get; }
 	}
@@ -474,5 +531,14 @@ namespace CoreVideo {
 	[StrongDictionary ("CVMetalTextureAttributesKeys")]
 	interface CVMetalTextureAttributes {
 		// Create stub DictionaryContainer class
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (14, 0)]
+	public enum CVVersatileBayerPattern : uint
+	{
+		Rggb = 0,
+		Grbg = 1,
+		Gbrg = 2,
+		Bggr = 3,
 	}
 }

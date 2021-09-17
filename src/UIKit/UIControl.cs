@@ -13,6 +13,7 @@ using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace UIKit {
@@ -47,10 +48,12 @@ namespace UIKit {
 	}
 	
 	public partial class UIControl {
-		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets = new
-			ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> ();
+		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
 		public void AddTarget (EventHandler notification, UIControlEvent events)
 		{
+			if (allTargets == null)
+				allTargets = new ();
+
 			var targets = allTargets.GetValue (this, k =>
 			{
 				MarkDirty ();
@@ -193,7 +196,9 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[iOS (9,0)]
+#endif
 		public event EventHandler PrimaryActionTriggered {
 			add {
 				AddTarget (value, UIControlEvent.PrimaryActionTriggered);

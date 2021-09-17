@@ -7,6 +7,8 @@
 // Copyright 2012 Xamarin Inc
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 namespace AppKit
@@ -25,3 +27,4 @@ namespace AppKit
 		}
 	}
 }
+#endif // !__MACCATALYST__

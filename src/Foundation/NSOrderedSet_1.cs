@@ -1,4 +1,4 @@
-﻿//
+//
 // This file contains a generic version of NSOrderedSet
 //
 // Authors:

@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		HttpListener listener;
 		int port;
 		Thread listener_thread;
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			var listening = new ManualResetEvent (false);
@@ -76,7 +76,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 						do {
 							var context = listener.GetContext ();
 							var request = context.Request;
-							var pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, request.RawUrl.Substring (1));
+							var pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, request.RawUrl.Substring (1));
 							Console.WriteLine ($"    Serving {pacPath}");
 							var buf = File.ReadAllBytes (pacPath);
 							context.Response.ContentLength64 = buf.Length;
@@ -101,7 +101,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			listening.WaitOne ();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TearDown ()
 		{
 			listener.Stop ();
@@ -115,7 +115,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.XamarinUri;
@@ -129,7 +129,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingScriptNoProxy ()
 		{
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.MicrosoftUri;
@@ -158,7 +158,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			NSObject cbClient = null;
 			bool done = false;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.XamarinUri;
@@ -196,10 +196,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			NSObject cbClient = null;
 			bool done = false;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 
 			var script = File.ReadAllText (pacPath);
-			var targetUri = NetworkResources.XamarinUri;
+			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
 			bool foundProxies;

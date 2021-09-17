@@ -1,4 +1,4 @@
-﻿//
+//
 // PdfAnnotation.cs
 //
 // Authors:
@@ -8,37 +8,47 @@
 //
 
 using System;
+using System.Runtime.Versioning;
+
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace PdfKit {
 	public partial class PdfAnnotation {
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
 			if (value == null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
-			return _SetValue (value.Handle, key.GetConstant ());
+			return _SetValue (value.Handle, key.GetConstant ()!);
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
 			var nstr = NSString.CreateNative (str);
 			try {
-				return _SetValue (nstr, key.GetConstant ());
+				return _SetValue (nstr, key.GetConstant ()!);
 			} finally {
 				NSString.ReleaseNative (nstr);
 			}
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
-			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()), true);
+			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()!), true);
 		}
 
 		public PdfAnnotationKey AnnotationType {
@@ -46,7 +56,9 @@ namespace PdfKit {
 			set { Type = value.GetConstant (); }
 		}
 
+#if !NET
 		[Mac (10,13)]
+#endif
 		public CGPoint[] QuadrilateralPoints {
 			get {
 				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) =>

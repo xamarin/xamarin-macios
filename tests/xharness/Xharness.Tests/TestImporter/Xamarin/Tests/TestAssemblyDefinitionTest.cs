@@ -1,7 +1,7 @@
 using System;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 using Moq;
 using NUnit.Framework;
+using Xharness.TestImporter;
 using Xharness.TestImporter.Xamarin;
 
 namespace Xharness.Tests.TestImporter.Tests {

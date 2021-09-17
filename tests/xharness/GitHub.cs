@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,11 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
-namespace Xharness
-{
+namespace Xharness {
 	/// <summary>
 	/// API to interact with the vcs used in the project. It is used to indentify those modified files in a PR and
 	/// choose which tests to execute.
@@ -42,9 +41,9 @@ namespace Xharness
 		{
 			var client = new WebClient ();
 			client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
-			var xharness_github_token_file = Environment.GetEnvironmentVariable ("XHARNESS_GITHUB_TOKEN_FILE");
-			if (!string.IsNullOrEmpty (xharness_github_token_file) && File.Exists (xharness_github_token_file))
-				client.Headers.Add (HttpRequestHeader.Authorization, File.ReadAllText (xharness_github_token_file));
+			var xharness_github_token = Environment.GetEnvironmentVariable ("GITHUB_TOKEN");
+			if (!string.IsNullOrEmpty (xharness_github_token))
+				client.Headers.Add (HttpRequestHeader.Authorization, xharness_github_token);
 			return client;
 		}
 

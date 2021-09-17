@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSUrlSessionTaskTransactionMetrics
 //
 // Authors:
@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.Null (sttm.ResponseEndDate, "ResponseEndDate");
 					Assert.Null (sttm.ResponseStartDate, "ResponseStartDate");
 				}
-				Assert.False (sttm.ReusedConnection, "ReusedConnection");
+				Assert.That (sttm.ReusedConnection, Is.EqualTo (true).Or.EqualTo (false), "ReusedConnection");
 				Assert.Null (sttm.SecureConnectionEndDate, "SecureConnectionEndDate");
 				Assert.Null (sttm.SecureConnectionStartDate, "SecureConnectionStartDate");
 			}

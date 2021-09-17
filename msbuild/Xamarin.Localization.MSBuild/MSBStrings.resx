@@ -374,10 +374,7 @@
     
     <!-- E0087: not used anymore -->
     
-    <data name="E0088" xml:space="preserve">
-        <value>Could not get native libraries: {0}
-        </value>
-    </data>
+    <!-- E0088: not used anymore -->
         
     <data name="E0089" xml:space="preserve">
         <value>Unrecognized platform: {0}
@@ -494,7 +491,7 @@
     </data>
     
     <data name="W0111" xml:space="preserve">
-        <value>The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
+        <value>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </value>
     </data>
     
@@ -826,7 +823,71 @@
         <value>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
         </value>
     </data>
+
+    <data name="E0174" xml:space="preserve">
+        <value>{0} has an incorrect or unknown format and cannot be processed.
+        </value>
+    </data>
+
+    <data name="E0175" xml:space="preserve">
+        <value>No matching framework found inside '{0}'.
+        </value>
+    </data>
+
+    <data name="W0176" xml:space="preserve">
+        <value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value>
+    </data>
+
+    <data name="E0177" xml:space="preserve">
+        <value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value>
+    </data>
     
+    <data name="E0178" xml:space="preserve">
+        <value>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</value>
+    </data>
+
+    <data name="E0179" xml:space="preserve">
+        <value>There is no available connection to the Mac. Task '{0}' will not be executed</value>
+    </data>
+
+    <data name="E0180" xml:space="preserve">
+        <value>Could not deserialize DataSet {0}</value>
+    </data>
+
+    <data name="E0181" xml:space="preserve">
+        <value>The file {0} does not have ImageAsset as build action.</value>
+    </data>
+
+    <data name="E0182" xml:space="preserve">
+        <value>Could not resolve UTI for {0} in catalog {1}</value>
+    </data>
+
+    <data name="E0183" xml:space="preserve">
+        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value>
+    </data>
+
+    <data name="E0184" xml:space="preserve">
+        <value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value>
+    </data>
+
+    <data name="E0185" xml:space="preserve">
+        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
+        </value>
+    </data>
+
+    <data name="E0186" xml:space="preserve">
+        <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
+    </data>
+    
+    <data name="E0187" xml:space="preserve">
+        <value>Could not map the macOS version {0} to a corresponding iOS version</value>
+    </data>
+
+    <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
+
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.
         </value>
@@ -877,35 +938,9 @@
         </value>
     </data>
     
-    <data name="E7011" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
-        </value>
-    </data>
-    
-    <data name="E7012" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' does not contain any watch apps.
-        </value>
-    </data>
-    
-    <data name="E7012_A" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' contain more than one watch apps.
-        </value>
-    </data>
-    
-    <data name="E7013" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
-        </value>
-    </data>
-    
-    <data name="E7013_A" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
-        </value>
-    </data>
-    
-    <data name="E7013_B" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
-        </value>
-    </data>
+    <!-- E7011: not used anymore -->
+    <!-- E7012: not used anymore -->
+    <!-- E7013: not used anymore -->
     
     <data name="E7014" xml:space="preserve">
         <value>The Watch App '{0}' does not contain an Info.plist.
@@ -1198,5 +1233,100 @@
     <data name="E7068" xml:space="preserve">
         <value>Can't create a binding resource package unless there are native references in the binding project.
         </value>
+    </data>
+    
+    <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value>
+    </data>
+    
+    <data name="E7070" xml:space="preserve">
+        <value>Invalid architecture ({0}): can't link more than one architecture at a time.</value>
+    </data>
+
+    <data name="E7071" xml:space="preserve">
+        <value>Unable to parse the AOT compiler arguments: {0} ({1})</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+
+    <data name="InvalidFramework" xml:space="preserve">
+        <value>Invalid framework: {0}</value>
+    </data>
+    
+    <data name="InvalidPlatform" xml:space="preserve">
+        <value>Invalid platform: {0}</value>
+    </data>
+    
+    <data name="E7072" xml:space="preserve">
+        <value>Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</value>
+    </data>
+
+    <data name="E7073" xml:space="preserve">
+        <value>At least one app bundle must be specified.</value>
+    </data>
+
+    <data name="E7074" xml:space="preserve">
+        <value>The app bundle {0} does not exist.</value>
+    </data>
+
+    <data name="E7075" xml:space="preserve">
+        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+    </data>
+
+    <data name="E7076" xml:space="preserve">
+        <value>Can't merge the symlink '{0}', it has different targets.</value>
+    </data>
+
+    <data name="E7077" xml:space="preserve">
+        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+    </data>
+
+    <data name="E7078" xml:space="preserve">
+        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+    </data>
+
+    <data name="E7079" xml:space="preserve">
+        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+    </data>
+
+    <data name="E7080" xml:space="preserve">
+        <value>App bundle file #{0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
+
+    <data name="E7081" xml:space="preserve">
+        <value>The AOT compiler '{0}' does not exist.</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+
+    <data name="E7082" xml:space="preserve">
+        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+
+    <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+
+    <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
     </data>
 </root>

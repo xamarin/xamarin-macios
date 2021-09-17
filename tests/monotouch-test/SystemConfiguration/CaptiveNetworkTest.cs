@@ -74,11 +74,13 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				return;
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-			// To get a non-null dictionary back, we must (https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
-			// * Use core location, and request (and get) authorization to use location information
-			// * Add the 'com.apple.developer.networking.wifi-info' entitlement
-			// I tried this, and still got null back, so just assert that we get null.
-			Assert.IsNull (dict, "Dictionary");
+			// It's quite complex to figure out whether we should get a dictionary back or not.
+			// References:
+			// * https://github.com/xamarin/xamarin-macios/commit/24331f35dd67d19f3ed9aca7b8b21827ce0823c0
+			// * https://github.com/xamarin/xamarin-macios/issues/11504
+			// * https://github.com/xamarin/xamarin-macios/issues/12278
+			// * https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo
+			// So don't assert anything about the dictionary.
 #endif
 		}
 
@@ -91,7 +93,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #else
 			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-			Assert.IsNull (ifaces, "Null Interfaces");
 #endif // __TVOS__
 		}
 #endif
@@ -156,7 +157,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			bool supported = true;
 #else
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)

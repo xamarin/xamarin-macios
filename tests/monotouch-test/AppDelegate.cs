@@ -19,7 +19,7 @@ namespace MonoTouchFixtures {
 		static UIWindow window;
 		TouchRunner runner;
 
-#if !__TVOS__
+#if __IOS__ && !__MACCATALYST__
 		public override bool AccessibilityPerformMagicTap ()
 		{
 			try {
@@ -41,6 +41,10 @@ namespace MonoTouchFixtures {
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+#if __MACCATALYST__
+			// Debug spew to track down https://github.com/xamarin/maccore/issues/2414
+			Console.WriteLine ("AppDelegate.FinishedLaunching");
+#endif
 			// create a new window instance based on the screen size
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			runner = new TouchRunner (window);
@@ -60,6 +64,14 @@ namespace MonoTouchFixtures {
 			return true;
 		}
 
+		static void Main (string[] args)
+		{
+			// Make sure we have at least one reference to the bindings project so that mcs doesn't strip the reference to it.
+			GC.KeepAlive (typeof(Bindings.Test.UltimateMachine));
+
+			UIApplication.Main (args, null, typeof (AppDelegate));
+		}
+
 		public static void PresentModalViewController (UIViewController vc, double duration)
 		{
 			var bckp = window.RootViewController;
@@ -75,7 +87,14 @@ namespace MonoTouchFixtures {
 		{
 			var vc = new AsyncController (action, imageToShow);
 			var bckp = window.RootViewController;
-			window.RootViewController = vc;
+			var navigation = bckp as UINavigationController;
+
+			if (navigation != null) {
+				navigation.PushViewController (vc, false);
+			} else {
+				window.RootViewController = vc;
+			}
+
 			try {
 				do {
 					if (timeout < DateTime.Now)
@@ -83,7 +102,11 @@ namespace MonoTouchFixtures {
 					NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
 				} while (!check_completed ());
 			} finally {
-				window.RootViewController = bckp;
+				if (navigation != null) {
+					navigation.PopViewController (false);
+				} else {
+					window.RootViewController = bckp;
+				}
 			}
 
 			return true;

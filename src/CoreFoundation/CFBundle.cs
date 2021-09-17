@@ -3,6 +3,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -154,6 +155,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoaded (IntPtr bundle);
 		
 		public bool HasLoadedExecutable {
@@ -161,6 +163,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundlePreflightExecutable (IntPtr bundle, out IntPtr error);
 		
 		public bool PreflightExecutable (out NSError error)
@@ -173,6 +176,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleLoadExecutableAndReturnError (IntPtr bundle, out IntPtr error);
 		
 		public bool LoadExecutable (out NSError error)
@@ -429,7 +433,7 @@ namespace CoreFoundation {
 			using (CFString cfKey = new CFString (key),
 					cfValue = new CFString (defaultValue),
 					cfTable = new CFString (tableName)) {
-				return CFString.FetchString (CFBundleCopyLocalizedString (handle, cfKey.Handle, cfValue.Handle, cfTable.Handle), releaseHandle: true);
+				return CFString.FromHandle (CFBundleCopyLocalizedString (handle, cfKey.Handle, cfValue.Handle, cfTable.Handle), releaseHandle: true);
 			}
 		}
 
@@ -458,7 +462,7 @@ namespace CoreFoundation {
 			using (var cfArray = new CFArray (CFBundleCopyLocalizationsForPreferences (cfLocalArray.Handle, cfPrefArray.Handle), true)) {
 				var cultureInfo = new string [cfArray.Count];
 				for (int index = 0; index < cfArray.Count; index ++) {
-					cultureInfo [index] = CFString.FetchString (cfArray.GetValue (index));
+					cultureInfo [index] = CFString.FromHandle (cfArray.GetValue (index));
 				}
 				return cultureInfo;
 			}
@@ -474,7 +478,7 @@ namespace CoreFoundation {
 			using (var cfArray = new CFArray (CFBundleCopyLocalizationsForURL (bundle.Handle), true)) {
 				var cultureInfo = new string [cfArray.Count];
 				for (int index = 0; index < cfArray.Count; index++) {
-					cultureInfo [index] = CFString.FetchString (cfArray.GetValue (index));
+					cultureInfo [index] = CFString.FromHandle (cfArray.GetValue (index));
 				}
 				return cultureInfo;
 			}
@@ -496,7 +500,7 @@ namespace CoreFoundation {
 			using (var cfArray = new CFArray (CFBundleCopyPreferredLocalizationsFromArray (cfLocArray.Handle), true)) {
 				var cultureInfo = new string [cfArray.Count];
 				for (int index = 0; index < cfArray.Count; index++) {
-					cultureInfo [index] = CFString.FetchString (cfArray.GetValue (index));
+					cultureInfo [index] = CFString.FromHandle (cfArray.GetValue (index));
 				}
 				return cultureInfo;
 			}
@@ -515,14 +519,14 @@ namespace CoreFoundation {
 		extern static /* CFString */ IntPtr CFBundleGetDevelopmentRegion (IntPtr bundle );
 		
 		public string DevelopmentRegion {
-			get { return CFString.FetchString (CFBundleGetDevelopmentRegion (handle)); }
+			get { return CFString.FromHandle (CFBundleGetDevelopmentRegion (handle)); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFString */ IntPtr CFBundleGetIdentifier (IntPtr bundle);
 		
 		public string Identifier {
-			get { return CFString.FetchString (CFBundleGetIdentifier (handle)); }
+			get { return CFString.FromHandle (CFBundleGetIdentifier (handle)); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -562,15 +566,6 @@ namespace CoreFoundation {
 		
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFBundleGetPackageInfo (IntPtr bundle, out uint packageType, out uint packageCreator);
-		
-		static string FourCCToString (uint code)
-		{
-			return new string (new char [] { 
-				(char) (byte) (code >> 24), 
-				(char) (byte) (code >> 16), 
-				(char) (byte) (code >> 8), 
-				(char) (byte) code});
-		}
 
 		public PackageInfo Info {
 			get {
@@ -578,7 +573,7 @@ namespace CoreFoundation {
 				uint creator = 0;
 				
 				CFBundleGetPackageInfo (handle, out type, out creator);
-				var creatorStr = FourCCToString (creator);
+				var creatorStr = Runtime.ToFourCCString (creator);
 				switch (type) {
 				case 1095782476: // ""APPL
 					return new PackageInfo (CFBundle.PackageType.Application, creatorStr);
@@ -608,5 +603,76 @@ namespace CoreFoundation {
 				}
 			}
 		}
+
+#if MONOMAC || __MACCATALYST__
+#if !NET
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
+
+#if !NET
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public static bool IsExecutableLoadable (CFBundle bundle)
+		{
+			if (bundle == null)
+				throw new ArgumentNullException (nameof (bundle));
+			if (bundle.Handle == IntPtr.Zero)
+				throw new ObjectDisposedException (nameof (bundle));
+
+			return CFBundleIsExecutableLoadable (bundle.Handle);
+		}
+
+#if !NET
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
+
+#if !NET
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public static bool IsExecutableLoadable (NSUrl url)
+		{
+			if (url == null)
+				throw new ArgumentNullException (nameof (url));
+
+			return CFBundleIsExecutableLoadableForURL (url.Handle);
+		}
+
+#if !NET
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
+
+#if !NET
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
+
+#endif
 	}
 }

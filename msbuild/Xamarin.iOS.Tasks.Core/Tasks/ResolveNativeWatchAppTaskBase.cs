@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 using Microsoft.Build.Framework;
@@ -38,12 +38,12 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var currentSdk = IPhoneSdks.GetSdk (TargetFrameworkMoniker);
-			IPhoneSdkVersion version;
+			var currentSdk = Sdks.GetSdk (TargetFrameworkMoniker);
+			AppleSdkVersion version;
 			string sdk_path;
 
 			if (IsWatchFramework) {
-				if (!IPhoneSdkVersion.TryParse (SdkVersion, out version)) {
+				if (!AppleSdkVersion.TryParse (SdkVersion, out version)) {
 					Log.LogError (MSBStrings.E0066, SdkVersion);
 					return false;
 				}
@@ -60,12 +60,12 @@ namespace Xamarin.iOS.Tasks
 					return false;
 				}
 
-				if (!IPhoneSdkVersion.TryParse (SdkVersion, out version)) {
+				if (!AppleSdkVersion.TryParse (SdkVersion, out version)) {
 					Log.LogError (MSBStrings.E0066, SdkVersion);
 					return false;
 				}
 
-				if (version < IPhoneSdkVersion.V8_2) {
+				if (version < AppleSdkVersion.V8_2) {
 					Log.LogError (MSBStrings.E0069, version);
 					return false;
 				}

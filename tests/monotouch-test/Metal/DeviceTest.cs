@@ -1,8 +1,9 @@
-﻿
+
 #if !__WATCHOS__
 
 using System;
 
+using Foundation;
 using Metal;
 
 using NUnit.Framework;
@@ -10,6 +11,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Metal {
 	
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class DeviceTest {
 		
 		[Test]

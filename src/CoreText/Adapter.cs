@@ -95,7 +95,7 @@ namespace CoreText {
 			var value = dictionary [key];
 			if (value == null)
 				return Array.Empty<string> ();
-			return NSArray.StringArrayFromHandle (value.Handle);
+			return CFArray.StringArrayFromHandle (value.Handle);
 		}
 
 		public static string GetStringValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
@@ -222,4 +222,3 @@ namespace CoreText {
 		}
 	}
 }
-

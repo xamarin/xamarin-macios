@@ -60,6 +60,14 @@ namespace UIKit {
 			return GetLocationInCoordinateSpace ((IUICoordinateSpace) coordinateSpace);
 		}
 	}
+
+	public partial class UIMarkupTextPrintFormatter {
+
+		[Obsolete ("Use '.ctor(string)' instead.")]
+		public UIMarkupTextPrintFormatter ()
+		{
+		}
+	}
 #endif
 
 #endif

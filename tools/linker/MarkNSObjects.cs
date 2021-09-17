@@ -33,6 +33,9 @@ using System;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
+#if NET
+using Mono.Linker.Steps;
+#endif
 
 namespace Xamarin.Linker.Steps {
 
@@ -95,7 +98,7 @@ namespace Xamarin.Linker.Steps {
 				return false;
 
 			var overrides = Annotations.GetOverrides (method);
-			if (overrides == null || overrides.Count == 0)
+			if (overrides == null)
 				return false;
 
 			foreach (var @override in overrides)
@@ -141,6 +144,9 @@ namespace Xamarin.Linker.Steps {
 			var name = type.Module.Assembly.Name.Name;
 			switch (name) {
 			case "Xamarin.Forms.Platform.iOS":
+				return true;
+			case "Xamarin.iOS":
+				// for Catalyst this has extra stubs and must be considered has _product_ to remove extra binding code
 				return true;
 			default:
 				return name == ProductAssembly;

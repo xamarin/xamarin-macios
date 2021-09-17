@@ -33,6 +33,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 
 using AudioToolbox;
@@ -56,6 +57,18 @@ namespace AudioUnit
 		InvalidElement				= -10877,		
 	}
 
+#if !NET
+	[Deprecated (PlatformName.iOS, 14,0, message: "Use 'AVAudioEngine' instead.")]
+	[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'AVAudioEngine' instead.")]
+#else
+	[UnsupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("macos11.0")]
+#if IOS
+	[Obsolete ("Starting with ios14.0 use 'AVAudioEngine' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+	[Obsolete ("Starting with macos11.0 use 'AVAudioEngine' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class AUGraph : INativeObject, IDisposable
 	{
 		readonly GCHandle gcHandle;
@@ -463,13 +476,13 @@ namespace AudioUnit
 		static extern int /* OSStatus */ DisposeAUGraph(IntPtr inGraph);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsOpen (IntPtr inGraph, out bool outIsOpen);
+		static extern AUGraphError AUGraphIsOpen (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsOpen);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsInitialized (IntPtr inGraph, out bool outIsInitialized);
+		static extern AUGraphError AUGraphIsInitialized (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsInitialized);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsRunning (IntPtr inGraph, out bool outIsRunning);
+		static extern AUGraphError AUGraphIsRunning (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsRunning);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphGetCPULoad (IntPtr inGraph, out float /* Float32* */ outAverageCPULoad);
@@ -481,7 +494,7 @@ namespace AudioUnit
 		static extern AUGraphError AUGraphSetNodeInputCallback (IntPtr inGraph, int /* AUNode = SInt32 */ inDestNode, uint /* UInt32 */ inDestInputNumber, ref AURenderCallbackStruct inInputCallback);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphUpdate (IntPtr inGraph, out bool outIsUpdated);
+		static extern AUGraphError AUGraphUpdate (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsUpdated);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
 		static extern void CAShow (IntPtr handle);

@@ -13,7 +13,7 @@ using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
 #endif
 using NUnit.Framework;
@@ -37,6 +37,7 @@ namespace Introspection {
 			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
 			case "GameController":
 			case "MonoTouch.GameController":
+			case "MLCompute": // xcode 12 beta 3
 				return Runtime.Arch == Arch.SIMULATOR;
 
 			case "CoreAudioKit":
@@ -47,10 +48,13 @@ namespace Introspection {
 				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
+			case "Chip":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
+			case "Phase":
+			case "ThreadNetwork":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -70,13 +74,18 @@ namespace Introspection {
 //				if (Runtime.Arch == Arch.DEVICE)
 //					return true;
 //				break;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
 				if (!WCSession.IsSupported)
 					return true;
 				break;
-#endif // !__TVOS__
+#endif // HAS_WATCHCONNECTIVITY
+			case "ShazamKit":
+				// ShazamKit is not fully supported in the simulator
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {
@@ -157,6 +166,13 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+			case "AVUrlAsset":
+				switch (name) {
+				// fails because it is in-lined via protocol AVContentKeyRecipient
+				case "contentKeySession:didProvideContentKey:":
+					return true;
+				}
+				break;
 			case "NSNull":
 				switch (name) {
 				// conformance to CAAction started with iOS8
@@ -257,14 +273,14 @@ namespace Introspection {
 				case "shouldUpdateFocusInContext:":
 				case "updateFocusIfNeeded":
 				case "canBecomeFocused":
-#if !__TVOS__
+#if !__TVOS__ && !__MACCATALYST__
 				case "preferredFocusedView":
 #endif
 					int major = declaredType.Name == "SKNode" ? 8 : 9;
 					if (!TestRuntime.CheckXcodeVersion (major, 0))
 						return true;
 					break;
-#if __TVOS__
+#if __TVOS__ || __MACCATALYST__
 				case "preferredFocusedView":
 					return true;
 #endif
@@ -343,9 +359,72 @@ namespace Introspection {
 					break;
 				}
 				break;
-			}
+#if __TVOS__ || __MACCATALYST__
+			// broken with Xcode 12 beta 1
+			case "CKDiscoveredUserInfo":
+				switch (name) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "CKSubscription":
+				switch (name) {
+				case "setZoneID:":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
+#if __IOS__
+			// broken with Xcode 12 beta 1
+			case "ARBodyTrackingConfiguration":
+			case "ARImageTrackingConfiguration":
+			case "ARObjectScanningConfiguration":
+			case "ARWorldTrackingConfiguration":
+				switch (name) {
+				case "isAutoFocusEnabled":
+				case "setAutoFocusEnabled:":
+					if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "ARReferenceImage":
+				switch (name) {
+				case "copyWithZone:":
+					if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			// ARImageAnchor was added in iOS 11.3 but the conformance to ARTrackable, where `isTracked` comes from, started with iOS 12.0
+			case "ARImageAnchor":
+				switch (name) {
+				case "isTracked":
+					if (!TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+#endif
+#if __WATCHOS__
+			case "INUserContext":
+				switch (name) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
+			break;
+		}
 
-			switch (name) {
+		switch (name) {
 			// UIResponderStandardEditActions - stuffed inside UIResponder
 			case "cut:":
 			case "copy:":
@@ -353,6 +432,10 @@ namespace Introspection {
 			case "delete:":
 			case "select:":
 			case "selectAll:":
+			case "pasteAndGo:":
+			case "pasteAndMatchStyle:":
+			case "pasteAndSearch:":
+			case "print:":
 			// A subclass of UIResponder typically implements this method...
 			case "toggleBoldface:":
 			case "toggleItalics:":
@@ -744,6 +827,10 @@ namespace Introspection {
 				case "SKAttributeValue":
 					return !TestRuntime.CheckXcodeVersion (7, 2);
 #endif
+				case "MLDictionaryFeatureProvider":
+				case "MLMultiArray":
+				case "MLFeatureValue":
+					return !TestRuntime.CheckXcodeVersion (10,0);
 				}
 				break;
 			case "mutableCopyWithZone:":
@@ -779,6 +866,16 @@ namespace Introspection {
 						return true;
 					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "objectWithItemProviderData:typeIdentifier:error:":
+			case "readableTypeIdentifiersForItemProvider":
+				switch (declaredType.Name) {
+				case "PHLivePhoto":
+					// not yet conforming to NSItemProviderReading
+					if (!TestRuntime.CheckXcodeVersion (10,0))
 						return true;
 					break;
 				}

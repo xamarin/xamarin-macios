@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using CoreText;
 using Foundation;
 
@@ -13,3 +14,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

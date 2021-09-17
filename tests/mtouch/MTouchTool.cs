@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -45,6 +45,7 @@ namespace Xamarin
 		public bool? NoSign;
 		public bool? FastDev;
 		public bool? Dlsym;
+		public string DlsymString;
 		public string Executable;
 		public string AppPath;
 		public string Device; // --device
@@ -315,9 +316,11 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (Mono))
 				sb.Add ($"--mono:{Mono}");
-			
+
 			if (Dlsym.HasValue)
 				sb.Add ($"--dlsym:{(Dlsym.Value ? "true" : "false")}");
+			else if (!string.IsNullOrEmpty (DlsymString))
+				sb.Add ($"--dlsym:{DlsymString}");
 
 			if (!string.IsNullOrEmpty (Executable)) {
 				sb.Add ("--executable");
@@ -858,7 +861,8 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
 					return false;
 
-				if (v == "no symbols")
+				// nm changed its output on xcode 12.5 (it will fail, on purpose, with earlier versions)
+				if (v.EndsWith (": no symbols", StringComparison.Ordinal))
 					return false;
 
 				return true;

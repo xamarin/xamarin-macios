@@ -32,12 +32,14 @@ using CoreFoundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreImage {
 
 	public partial class CIImageInitializationOptions
 	{
 #if !COREBUILD
-		public CGColorSpace ColorSpace {
+		public CGColorSpace? ColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIImageInitializationOptionsKeys.ColorSpaceKey);
 			}

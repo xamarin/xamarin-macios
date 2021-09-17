@@ -6,3 +6,6 @@
 
 ## - (null_unspecified instancetype)init NS_DEPRECATED(10_11, 10_13, 9_0, 11_0, "Use initWithStringValue:");
 !missing-selector! CNPhoneNumber::init not bound
+
+## Will add conformance once https://github.com/xamarin/xamarin-macios/issues/3217 is fixed. Otherwise we're duplicating members from 'NSObject'.
+!missing-protocol-conformance! NSString should conform to CNKeyDescriptor (defined in 'Contacts' category)

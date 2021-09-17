@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MPSAccelerationStructure
 //
 // Authors:
@@ -22,16 +22,18 @@ using OpenTK;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSAccelerationStructureTests {
 
 		IMTLDevice device;
 		nuint vector3Size = (nuint) Marshal.SizeOf<OpenTK.NVector3> ();
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default

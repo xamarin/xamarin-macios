@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the generated API for all iOS CoreImage filters
 //
 // Authors:

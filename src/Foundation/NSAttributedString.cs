@@ -26,6 +26,7 @@
 //
 
 using System;
+using CoreFoundation;
 using CoreText;
 using ObjCRuntime;
 #if !MONOMAC
@@ -37,7 +38,7 @@ namespace Foundation {
 
 		public string Value {
 			get {
-				return NSString.FromHandle (LowLevelValue);
+				return CFString.FromHandle (LowLevelValue);
 			}
 		}
 

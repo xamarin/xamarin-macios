@@ -1,4 +1,4 @@
-﻿#if MONOMAC
+#if MONOMAC
 using System;
 using Foundation;
 using MediaToolbox;

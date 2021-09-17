@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -15,6 +15,7 @@ namespace Extrospection {
 		iOS,
 		watchOS,
 		tvOS,
+		MacCatalyst,
 	}
 
 	public static partial class Helpers {
@@ -22,6 +23,7 @@ namespace Extrospection {
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
 			{ "AudioChannelBitmap", "AudioChannelBit" },
+			{ "CIRAWDecoderVersion", "CIRawDecoderVersion" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
 			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
 			{ "GKErrorCode", "GKError" },
@@ -36,6 +38,8 @@ namespace Extrospection {
 			{ "NEVPNIKEv2DiffieHellmanGroup", "NEVpnIke2DiffieHellman" },
 			{ "NEVPNIKEv2EncryptionAlgorithm", "NEVpnIke2EncryptionAlgorithm" },
 			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
+			{ "NEDNSProtocol", "NEDnsProtocol"},
+			{ "NEDNSSettingsManagerError", "NEDnsSettingsManagerError"},
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
 			{ "NSFileProviderErrorCode", "NSFileProviderError" },
 			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
@@ -53,6 +57,17 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			{ "MIDIProtocolID", "MidiProtocolId" },
+			{ "MIDICVStatus", "MidiCVStatus" },
+			{ "MIDIMessageType", "MidiMessageType" },
+			{ "MIDISysExStatus", "MidiSysExStatus" },
+			{ "MIDISystemStatus", "MidiSystemStatus" },
+			{ "NFCFeliCaEncryptionId", "EncryptionId" },
+			{ "NFCFeliCaPollingRequestCode", "PollingRequestCode" },
+			{ "NFCFeliCaPollingTimeSlot", "PollingTimeSlot" },
+			{ "NFCVASErrorCode", "VasErrorCode" },
+			{ "NFCVASMode", "VasMode" },
+			{ "NFCISO15693RequestFlag", "RequestFlag" },
 			// not enums
 		};
 
@@ -72,7 +87,7 @@ namespace Extrospection {
 
 		public static int GetPlatformManagedValue (Platforms platform)
 		{
-			// None, MacOSX, iOS, WatchOS, TvOS
+			// None, MacOSX, iOS, WatchOS, TvOS, MacCatalyst
 			switch (platform) {
 			case Platforms.macOS:
 				return 1;
@@ -82,6 +97,8 @@ namespace Extrospection {
 				return 3;
 			case Platforms.tvOS:
 				return 4;
+			case Platforms.MacCatalyst:
+				return 5;
 			default:
 				throw new InvalidOperationException ($"Unexpected Platform {Platform} in GetPlatformManagedValue");
 			}
@@ -100,10 +117,44 @@ namespace Extrospection {
 					return "watchos";
 				case Platforms.tvOS:
 					return "tvos";
+				case Platforms.MacCatalyst:
+					return "macos";
 				default:
 					throw new InvalidOperationException ($"Unexpected Platform {Platform} in ClangPlatformName");
 				}
 			}
+		}
+
+		public static bool IsAvailable (this ICustomAttributeProvider cap)
+		{
+			if (!cap.HasCustomAttributes)
+				return true;
+
+			foreach (var ca in cap.CustomAttributes) {
+				switch (ca.Constructor.DeclaringType.Name) {
+				case "UnavailableAttribute":
+					if (GetPlatformManagedValue (Platform) == (byte) ca.ConstructorArguments [0].Value)
+						return false;
+					break;
+				case "NoiOSAttribute":
+					if (Platform == Platforms.iOS)
+						return false;
+					break;
+				case "NoTVAttribute":
+					if (Platform == Platforms.tvOS)
+						return false;
+					break;
+				case "NoWatchAttribute":
+					if (Platform == Platforms.watchOS)
+						return false;
+					break;
+				case "NoMacAttribute":
+					if (Platform == Platforms.macOS)
+						return false;
+					break;
+				}
+			}
+			return true;
 		}
 
 		public static bool IsAvailable (this Decl decl)
@@ -126,9 +177,9 @@ namespace Extrospection {
 				}
 			}
 				
-			// but right now most frameworks consider tvOS and watchOS like iOS unless 
+			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS)))
+			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
 				result = decl.IsAvailable (Platforms.iOS);
 			return !result.HasValue ? true : result.Value;
 		}
@@ -144,14 +195,15 @@ namespace Extrospection {
 				var avail = (attr as AvailabilityAttr);
 				if (avail == null)
 					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
 				// if the headers says it's not available then we won't report it as missing
-				if (avail.Unavailable && (avail.Platform.Name == platform))
+				if (avail.Unavailable && (availName == platform))
 					return false;
 				// for iOS we won't report missing members that were deprecated before 5.0
-				if (!avail.Deprecated.IsEmpty && avail.Platform.Name == "ios" && avail.Deprecated.Major < 5)
+				if (!avail.Deprecated.IsEmpty && availName == "ios" && avail.Deprecated.Major < 5)
 					return false;
 				// can't return true right away as it can be deprecated too
-				if (!avail.Introduced.IsEmpty && (avail.Platform.Name == platform))
+				if (!avail.Introduced.IsEmpty && (availName == platform))
 					result = true;
 			}
 			return result;

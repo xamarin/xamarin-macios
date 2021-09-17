@@ -15,4 +15,3 @@ namespace BindingTests
 		void TestMethod (MyBlockToBind myBlockToBind);
 	}
 }
-

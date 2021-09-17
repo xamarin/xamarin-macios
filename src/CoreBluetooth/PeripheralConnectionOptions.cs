@@ -30,10 +30,15 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
+
+#nullable enable
 
 namespace CoreBluetooth {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public class PeripheralConnectionOptions : DictionaryContainer
 	{
 #if !COREBUILD
@@ -94,4 +99,3 @@ namespace CoreBluetooth {
 #endif
 	}
 }
-

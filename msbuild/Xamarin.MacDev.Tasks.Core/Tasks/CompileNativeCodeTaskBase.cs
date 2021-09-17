@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
@@ -19,9 +21,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string MinimumOSVersion { get; set; }
 
-		[Output]
-		public ITaskItem [] ObjectFiles { get; set; }
-
 		[Required]
 		public string SdkDevPath { get; set; }
 
@@ -35,10 +34,6 @@ namespace Xamarin.MacDev.Tasks {
 		public override bool Execute ()
 		{
 			var processes = new Task<Execution> [CompileInfo.Length];
-			var objectFiles = new List<ITaskItem> ();
-
-			if (ObjectFiles != null)
-				objectFiles.AddRange (ObjectFiles);
 
 			for (var i = 0; i < CompileInfo.Length; i++) {
 				var info = CompileInfo [i];
@@ -46,8 +41,34 @@ namespace Xamarin.MacDev.Tasks {
 				var arguments = new List<string> ();
 
 				arguments.Add ("clang");
+				arguments.Add ("-g");
 
-				arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
+				var arch = info.GetMetadata ("Arch");
+
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.MacOSX:
+					arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
+
+					if (!string.IsNullOrEmpty (arch)) {
+						arguments.Add ("-arch");
+						arguments.Add (arch);
+					}
+
+					break;
+				case ApplePlatform.MacCatalyst:
+					arguments.Add ($"-target");
+					arguments.Add ($"{arch}-apple-ios{MinimumOSVersion}-macabi");
+					arguments.Add ("-isystem");
+					arguments.Add (Path.Combine (SdkRoot, "System", "iOSSupport", "usr", "include"));
+					arguments.Add ("-iframework");
+					arguments.Add (Path.Combine (SdkRoot, "System", "iOSSupport", "System", "Library", "Frameworks"));
+					break;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
 
 				arguments.Add ("-isysroot");
 				arguments.Add (SdkRoot);
@@ -64,11 +85,6 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				arguments.AddRange (parsed_args);
 
-				var arch = info.GetMetadata ("Arch");
-				if (!string.IsNullOrEmpty (arch)) {
-					arguments.Add ("-arch");
-					arguments.Add (arch);
-				}
 
 				var outputFile = info.GetMetadata ("OutputFile");
 				if (string.IsNullOrEmpty (outputFile))
@@ -76,7 +92,6 @@ namespace Xamarin.MacDev.Tasks {
 				outputFile = Path.GetFullPath (outputFile);
 				arguments.Add ("-o");
 				arguments.Add (outputFile);
-				objectFiles.Add (new TaskItem (outputFile));
 
 				arguments.Add ("-c");
 				arguments.Add (src);
@@ -85,8 +100,6 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			System.Threading.Tasks.Task.WaitAll (processes);
-
-			ObjectFiles = objectFiles.ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}

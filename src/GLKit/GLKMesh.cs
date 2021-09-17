@@ -3,10 +3,12 @@
 using Foundation;
 using ModelIO;
 
+#nullable enable
+
 namespace GLKit {
 
 	public partial class GLKMesh {
-		public static GLKMesh [] FromAsset (MDLAsset asset, out MDLMesh [] sourceMeshes, out NSError error)
+		public static GLKMesh []? FromAsset (MDLAsset asset, out MDLMesh [] sourceMeshes, out NSError error)
 		{
 			NSArray aret;
 

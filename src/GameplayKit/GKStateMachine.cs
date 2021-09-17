@@ -1,4 +1,4 @@
-﻿//
+//
 // GKStateMachine.cs: Implements some nicer methods for GKStateMachine
 //
 // Authors:

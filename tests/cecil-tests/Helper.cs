@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -24,10 +24,14 @@ namespace Cecil.Tests {
 				return null;
 			if (!cache.TryGetValue (assembly, out var ad)) {
 				if (parameters == null) {
-					ad = AssemblyDefinition.ReadAssembly (assembly);
-				} else {
-					ad = AssemblyDefinition.ReadAssembly (assembly, parameters);
+					var resolver = new DefaultAssemblyResolver ();
+					resolver.AddSearchDirectory (GetBCLDirectory (assembly));
+					parameters = new ReaderParameters () {
+						AssemblyResolver = resolver,
+					};
 				}
+
+				ad = AssemblyDefinition.ReadAssembly (assembly, parameters);
 				cache.Add (assembly, ad);
 			}
 			return ad;
@@ -61,16 +65,40 @@ namespace Cecil.Tests {
 			yield break;
 		}
 
+		public static string GetBCLDirectory (string assembly)
+		{
+			var rv = string.Empty;
+
+			switch (Path.GetFileName (assembly)) {
+			case "Xamarin.iOS.dll":
+				rv = Path.GetDirectoryName (Configuration.XamarinIOSDll);
+				break;
+			case "Xamarin.WatchOS.dll":
+				rv = Path.GetDirectoryName (Configuration.XamarinWatchOSDll);
+				break;
+			case "Xamarin.TVOS.dll":
+				rv = Path.GetDirectoryName (Configuration.XamarinTVOSDll);
+				break;
+			case "Xamarin.Mac.dll":
+				rv = Path.GetDirectoryName (assembly);
+				break;
+			default:
+				throw new NotImplementedException (assembly);
+			}
+
+			return rv;
+		}
+
 		public static IEnumerable PlatformAssemblies {
 			get {
 				// we want to process 32/64 bits individually since their content can differ
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "Xamarin.iOS.dll"));
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "Xamarin.iOS.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll"));
 
 				// XamarinWatchOSDll is stripped of its IL
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "Xamarin.WatchOS.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
 				// XamarinTVOSDll is stripped of it's IL
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "Xamarin.TVOS.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "tvOS", "Xamarin.TVOS.dll"));
 
 				yield return new TestCaseData (Configuration.XamarinMacMobileDll);
 				yield return new TestCaseData (Configuration.XamarinMacFullDll);

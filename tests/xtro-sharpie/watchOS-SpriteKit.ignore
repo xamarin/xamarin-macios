@@ -8,12 +8,3 @@
 !missing-selector! SKVideoNode::initWithVideoURL: not bound
 !missing-selector! +SKVideoNode::videoNodeWithVideoFileNamed: not bound
 !missing-selector! +SKVideoNode::videoNodeWithVideoURL: not bound
-
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'SpriteKit.SKSpriteNode SpriteKit.SKSpriteNode::FromColor(UIKit.UIColor,CoreGraphics.CGSize)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::.ctor(SpriteKit.SKTexture,UIKit.UIColor,CoreGraphics.CGSize)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::.ctor(UIKit.UIColor,CoreGraphics.CGSize)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::set_Color(UIKit.UIColor)' has a extraneous [NullAllowed] on parameter #0
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'System.Void SpriteKit.SKLabelNode::set_FontColor(UIKit.UIColor)' is missing an [NullAllowed] on parameter #0

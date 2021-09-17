@@ -6,73 +6,34 @@
 //
 // Copyright 2016 Xamarin Inc. (http://xamarin.com)
 
+#if !__MACCATALYST__
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
+using CoreFoundation;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
 namespace AppKit
 {
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilityOrientation : long
-	{
-		Unknown = 0,
-		Vertical = 1,
-		Horizontal = 2
-	}
+#if !NET
+	[Mac (10,10)] // protocol added in 10.10
+#endif
+	public partial interface INSAccessibility {}
 
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilitySortDirection : long
-	{
-		Unknown = 0,
-		Ascending = 1,
-		Descending = 2
-	}
-
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilityRulerMarkerType : long
-	{
-		Unknown = 0,
-		TabStopLeft = 1,
-		TabStopRight = 2,
-		TabStopCenter = 3,
-		TabStopDecimal = 4,
-		IndentHead = 5,
-		IndentTail = 6,
-		IndentFirstLine = 7
-	}
-
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilityUnits : long
-	{
-		Unknown = 0,
-		Inches = 1,
-		Centimeters = 2,
-		Points = 3,
-		Picas = 4
-	}
-
-	[Mac (10,9)]
-	[Native]
-	public enum NSAccessibilityPriorityLevel : long
-	{
-		Low = 10,
-		Medium = 50,
-		High = 90
-	}
-
-#if !COREBUILD
+#if !NET
+	[Mac (10,9)] // but the field/notifications are in 10.9
+#endif
 	public partial class NSAccessibility
 	{
+#if !COREBUILD
+#if !NET
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGRect NSAccessibilityFrameInView (NSView parentView, CGRect frame);
 
@@ -81,7 +42,9 @@ namespace AppKit
 			return NSAccessibilityFrameInView (parentView, frame);
 		}
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGPoint NSAccessibilityPointInView (NSView parentView, CGPoint point);
 
@@ -139,7 +102,7 @@ namespace AppKit
 				subroleHandle = subrole.Handle;
 
 			IntPtr handle = NSAccessibilityRoleDescription (role.Handle, subroleHandle);
-			return NSString.FromHandle (handle);
+			return CFString.FromHandle (handle);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -151,7 +114,7 @@ namespace AppKit
 				throw new ArgumentNullException ("element");
 
 			IntPtr handle = NSAccessibilityRoleDescriptionForUIElement (element.Handle);
-			return NSString.FromHandle (handle);
+			return CFString.FromHandle (handle);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -163,7 +126,7 @@ namespace AppKit
 				throw new ArgumentNullException ("action");
 
 			IntPtr handle = NSAccessibilityActionDescription (action.Handle);
-			return NSString.FromHandle (handle);
+			return CFString.FromHandle (handle);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -217,14 +180,15 @@ namespace AppKit
 			return NSArray.ArrayFromHandle<NSObject> (handle);
 		}
 
-		[Mac (10, 9)]
 		[DllImport (Constants.AppKitLibrary)]
-		static extern bool NSAccessibilitySetMayContainProtectedContent (bool flag);
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool NSAccessibilitySetMayContainProtectedContent ([MarshalAs (UnmanagedType.I1)] bool flag);
 
 		public static bool SetMayContainProtectedContent (bool flag)
 		{
 			return NSAccessibilitySetMayContainProtectedContent (flag);
 		}
-	}
 #endif
+	}
 }
+#endif // !__MACCATALYST__

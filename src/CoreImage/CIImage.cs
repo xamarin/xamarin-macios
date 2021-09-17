@@ -32,6 +32,8 @@ using UIKit;
 using CoreVideo;
 #endif
 
+#nullable enable
+
 namespace CoreImage {
 	public class CIAutoAdjustmentFilterOptions {
 
@@ -41,16 +43,20 @@ namespace CoreImage {
 		// The default value is true
 		public bool? RedEye;
 
-		public CIFeature [] Features;
+		public CIFeature []? Features;
 
 		public CIImageOrientation? ImageOrientation;
 
+#if !NET
 		[iOS (8,0)]
+#endif
 		public bool? AutoAdjustCrop;
+#if !NET
 		[iOS (8,0)]
+#endif
 		public bool? AutoAdjustLevel;
 		
-		internal NSDictionary ToDictionary ()
+		internal NSDictionary? ToDictionary ()
 		{
 			int n = 0;
 			if (Enhance.HasValue && Enhance.Value == false)
@@ -111,7 +117,7 @@ namespace CoreImage {
 			var ret = new CIFilter [count];
 			for (nuint i = 0; i < count; i++){
 				IntPtr filterHandle = filters.ValueAt (i);
-				string filterName = CIFilter.GetFilterName (filterHandle);
+				string? filterName = CIFilter.GetFilterName (filterHandle);
 									 
 				ret [i] = CIFilter.FromName (filterName, filterHandle);
 			}
@@ -121,7 +127,7 @@ namespace CoreImage {
 		public static CIImage FromCGImage (CGImage image, CGColorSpace colorSpace)
 		{
 			if (colorSpace == null)
-				throw new ArgumentNullException ("colorSpace");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorSpace));
 			
 			using (var arr = NSArray.FromIntPtrs (new IntPtr [] { colorSpace.Handle })){
 				using (var keys = NSArray.FromIntPtrs (new IntPtr [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle } )){
@@ -138,9 +144,9 @@ namespace CoreImage {
 			return GetAutoAdjustmentFilters (null);
 		}
 		
-		public CIFilter [] GetAutoAdjustmentFilters (CIAutoAdjustmentFilterOptions options)
+		public CIFilter [] GetAutoAdjustmentFilters (CIAutoAdjustmentFilterOptions? options)
 		{
-			NSDictionary dict = options == null ? null : options.ToDictionary ();
+			var dict = options == null ? null : options.ToDictionary ();
 			return WrapFilters (_GetAutoAdjustmentFilters (dict));
 		}
 

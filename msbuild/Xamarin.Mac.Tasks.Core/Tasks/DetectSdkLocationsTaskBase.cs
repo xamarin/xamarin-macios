@@ -5,20 +5,15 @@ namespace Xamarin.Mac.Tasks
 {
 	public abstract class DetectSdkLocationsTaskBase : DetectSdkLocationsCoreTaskBase
 	{
-		protected override IAppleSdk CurrentSdk {
-			get {
-				return MacOSXSdks.Native;
-			}
-		}
-
 		protected override IAppleSdkVersion GetDefaultSdkVersion ()
 		{
-			return MacOSXSdkVersion.GetDefault (CurrentSdk);
+			var v = CurrentSdk.GetInstalledSdkVersions (false);
+			return v.Count > 0 ? v [v.Count - 1] : AppleSdkVersion.UseDefault;
 		}
 
 		protected override string GetDefaultXamarinSdkRoot ()
 		{
-			return MacOSXSdks.XamMac.FrameworkDirectory;
+			return Sdks.XamMac.FrameworkDirectory;
 		}
 	}
 }

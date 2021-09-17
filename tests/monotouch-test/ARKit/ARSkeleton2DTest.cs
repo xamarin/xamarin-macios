@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for ARSkeleton2D
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2019 Microsoft. All rights reserved.
 //
 
-#if __IOS__
+#if HAS_ARKIT
 
 using System;
 using System.Runtime.InteropServices;
@@ -62,6 +62,8 @@ namespace MonoTouchFixtures.ARKit {
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -76,4 +78,4 @@ namespace MonoTouchFixtures.ARKit {
 	}
 }
 
-#endif // __IOS__
+#endif // HAS_ARKIT

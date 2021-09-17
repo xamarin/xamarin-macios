@@ -51,8 +51,12 @@ namespace MonoTouchFixtures.UIKit {
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
+#if __MACCATALYST__
+				pc.PresentFromBarButtonItem (bbi, UIPopoverArrowDirection.Down, true);
+#else
 				// UIBarButtonItem is itself 'ok' but it's not assigned to a view
 				Assert.Throws<MonoTouchException> (() => pc.PresentFromBarButtonItem (bbi, UIPopoverArrowDirection.Down, true));
+#endif
 				// fails with:
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[UIPopoverController presentPopoverFromBarButtonItem:permittedArrowDirections:animated:]: Popovers cannot be presented from a view which does not have a window.
 			}

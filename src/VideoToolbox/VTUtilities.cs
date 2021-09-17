@@ -9,13 +9,20 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreGraphics;
+using CoreMedia;
 using CoreVideo;
 
 namespace VideoToolbox {
+
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+#else
 	[Mac (10,11), iOS (9,0), TV (10,2)]
+#endif
 	public static class VTUtilities {
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCreateCGImageFromCVPixelBuffer (
@@ -45,5 +52,30 @@ namespace VideoToolbox {
 
 			return ret;
 		}
+
+#if MONOMAC
+
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[NoWatch, NoTV, NoiOS, Mac (11,0)]
+#endif
+		[DllImport (Constants.VideoToolboxLibrary)]
+		static extern void VTRegisterSupplementalVideoDecoderIfAvailable (uint codecType);
+
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[NoWatch, NoTV, NoiOS, Mac (11,0)]
+#endif
+		public static void RegisterSupplementalVideoDecoder (CMVideoCodecType codecType)
+			=> VTRegisterSupplementalVideoDecoderIfAvailable ((uint) codecType);
+#endif
 	}
 }

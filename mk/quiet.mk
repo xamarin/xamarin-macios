@@ -33,6 +33,7 @@ Q_SN=   $(if $(V),,@echo "SN       $(@F)";)
 Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)
 Q_TT=   $(if $(V),,@echo "TT       $(@F)";)
 Q_BUILD=$(if $(V),,@echo "BUILD    $(@F)";)
+Q_CURL=$(if $(V),,@echo "CURL     $(@F)";)
 
 Q_DOTNET_BUILD=$(if $(V),,@echo "CSC      [dotnet] $(@F)";)
 Q_DOTNET_GEN  =$(if $(V),,@echo "GEN      [dotnet] $(@F)";)
@@ -70,6 +71,7 @@ MMP_VERBOSITY=-q
 MTOUCH_VERBOSITY=-q
 MDTOOL_VERBOSITY=
 DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
+DOTNET_BUILD_VERBOSITY=--verbosity quiet --nologo -consoleLoggerParameters:NoSummary
 NUGET_VERBOSITY=-verbosity quiet
 else
 # CI build
@@ -79,6 +81,7 @@ MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
 MDTOOL_VERBOSITY=-v -v -v -v
 DOTNET_PACK_VERBOSITY=
+DOTNET_BUILD_VERBOSITY=
 NUGET_VERBOSITY=
 endif
 else
@@ -89,6 +92,7 @@ MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
 MDTOOL_VERBOSITY=-v -v -v -v
 DOTNET_PACK_VERBOSITY=--verbosity:detailed
+DOTNET_BUILD_VERBOSITY=--verbosity detailed
 NUGET_VERBOSITY=-verbosity detailed
 endif
 MSBUILD_VERBOSITY=$(XBUILD_VERBOSITY)

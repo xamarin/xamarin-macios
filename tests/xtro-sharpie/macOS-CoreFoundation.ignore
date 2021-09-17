@@ -4,6 +4,10 @@
 ## dlfcn.h
 !unknown-pinvoke! dladdr bound
 
+## deprecated in macOS 10.15
+!missing-pinvoke! CFBundleCloseBundleResourceMap is not bound
+!missing-pinvoke! CFBundleOpenBundleResourceFiles is not bound
+!missing-pinvoke! CFBundleOpenBundleResourceMap is not bound
 
 ## unsorted
 
@@ -14,8 +18,6 @@
 !missing-field! kCFURLApplicationIsScriptableKey not bound
 !missing-field! kCFURLQuarantinePropertiesKey not bound
 !missing-field! kCFURLTagNamesKey not bound
-!missing-field! kCFURLVolumeAvailableCapacityForImportantUsageKey not bound
-!missing-field! kCFURLVolumeAvailableCapacityForOpportunisticUsageKey not bound
 !missing-field! kCFUserNotificationAlertHeaderKey not bound
 !missing-field! kCFUserNotificationAlertMessageKey not bound
 !missing-field! kCFUserNotificationAlternateButtonTitleKey not bound

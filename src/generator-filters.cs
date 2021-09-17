@@ -2,9 +2,7 @@
 // Copyright Microsoft Corp.
 using System;
 using System.Collections.Generic;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-
+using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 
@@ -86,18 +84,18 @@ public partial class Generator {
 		print ("public {0} (NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
 		print ("{");
 		indent++;
-		print ("if (coder == null)");
+		print ("if (coder is null)");
 		indent++;
 		print ("throw new ArgumentNullException (nameof (coder));");
 		indent--;
 		print ("IntPtr h;");
 		print ("if (IsDirectBinding) {");
 		indent++;
-		print ("h = global::{0}.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", ns.CoreObjCRuntime);
+		print ("h = global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);");
 		indent--;
 		print ("} else {");
 		indent++;
-		print ("h = global::{0}.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", ns.CoreObjCRuntime);
+		print ("h = global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);");
 		indent--;
 		print ("}");
 		print ("InitializeHandle (h, \"initWithCoder:\");");
@@ -117,7 +115,7 @@ public partial class Generator {
 		}
 
 		// properties
-		GenerateProperties (type);
+		GenerateProperties (type, type);
 
 		// protocols
 		GenerateProtocolProperties (type, new HashSet<string> ());
@@ -146,14 +144,14 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i, fromProtocol: true);
+			GenerateProperties (i, type, fromProtocol: true);
 
 			// also include base interfaces/protocols
 			GenerateProtocolProperties (i, processed);
 		}
 	}
 
-	void GenerateProperties (Type type, bool fromProtocol = false)
+	void GenerateProperties (Type type, Type originalType = null, bool fromProtocol = false)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
@@ -162,7 +160,13 @@ public partial class Generator {
 				continue;
 			
 			print ("");
-			PrintPropertyAttributes (p);
+
+			// an export will be present (only) if it's defined in a protocol
+			var export = AttributeManager.GetCustomAttribute<ExportAttribute> (p);
+
+			// this is a bit special since CoreImage filter protocols are much newer than the our generated, key-based bindings
+			// so we do not want to advertise the protocol versions since most properties would be incorrectly advertised
+			PrintPropertyAttributes (p, originalType, skipTypeInjection: export != null);
 			print_generated_code ();
 
 			var ptype = p.PropertyType.Name;
@@ -197,9 +201,6 @@ public partial class Generator {
 				nullable = true;
 			print ("public {0}{1} {2} {{", ptype, nullable ? "?" : "", p.Name);
 			indent++;
-
-			// an export will be present (only) if it's defined in a protocol
-			var export = AttributeManager.GetCustomAttribute<ExportAttribute> (p);
 
 			var name = AttributeManager.GetCustomAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
 			// we can skip the name when it's identical to a protocol selector
@@ -263,15 +264,17 @@ public partial class Generator {
 			break;
 		// NSObject should not be added
 		// NSNumber should not be added - it should be bound as a float (common), int32 or bool
-		case "AVCameraCalibrationData":
 		case "CGColorSpace":
 		case "CGImage":
 		case "ImageIO.CGImageMetadata":
 		case "CIBarcodeDescriptor":
+			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
+			break;
+		case "AVCameraCalibrationData":
 		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
-			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
+			print ("return Runtime.GetNSObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
 			break;
 		case "CIColor":
 		case "CIImage":
@@ -294,13 +297,17 @@ public partial class Generator {
 		case "nint":
 			print ("return GetNInt (\"{0}\");", propertyName);
 			break;
+		case "nuint":
+			print ("return GetNUInt (\"{0}\");", propertyName);
+			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
-			print ("return (string) (ValueForKey (\"{0}\") as NSString);", propertyName);
+			print ($"var handle = GetHandle (\"{propertyName}\");");
+			print ("return CFString.FromHandle (handle)!;");
 			break;
 		case "CIVector[]":
 			print ($"var handle = GetHandle (\"{propertyName}\");");
-			print ("return NSArray.ArrayFromHandle<CIVector> (handle);");
+			print ("return CFArray.ArrayFromHandle<CIVector> (handle)!;");
 			break;
 		default:
 			throw new BindingException (1075, true, propertyType);
@@ -331,6 +338,9 @@ public partial class Generator {
 		case "nint":
 			print ("SetNInt (\"{0}\", value);", propertyName);
 			break;
+		case "nuint":
+			print ("SetNUInt (\"{0}\", value);", propertyName);
+			break;
 		// NSObject should not be added
 		case "AVCameraCalibrationData":
 		case "CGColorSpace":
@@ -352,22 +362,18 @@ public partial class Generator {
 			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
-			print ("using (var ns = new NSString (value))");
-			indent++;
-			print ("SetValue (\"{0}\", ns);", propertyName);
-			indent--;
+			print ($"SetString (\"{propertyName}\", value);");
 			break;
 		case "CIVector[]":
-			print ("if (value == null) {");
+			print ("if (value is null) {");
 			indent++;
 			print ($"SetHandle (\"{propertyName}\", IntPtr.Zero);");
 			indent--;
 			print ("} else {");
 			indent++;
-			print ("using (var array = NSArray.FromNSObjects (value))");
-			indent++;
-			print ($"SetHandle (\"{propertyName}\", array.GetHandle ());");
-			indent--;
+			print ("var ptr = CFArray.Create (value);");
+			print ($"SetHandle (\"{propertyName}\", ptr);");
+			print ($"CFObject.CFRelease (ptr);");
 			indent--;
 			print ("}");
 			break;

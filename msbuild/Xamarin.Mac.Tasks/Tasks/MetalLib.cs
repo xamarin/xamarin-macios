@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 

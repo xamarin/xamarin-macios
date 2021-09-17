@@ -8,10 +8,11 @@
  *    Miguel de Icaza
  */
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
@@ -20,6 +21,12 @@ using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics {
+
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public sealed class CGEvent : IDisposable, INativeObject {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
@@ -86,7 +93,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventCreateKeyboardEvent (IntPtr source, ushort virtualKey, bool keyDown);
+		extern static IntPtr CGEventCreateKeyboardEvent (IntPtr source, ushort virtualKey, [MarshalAs (UnmanagedType.I1)] bool keyDown);
 
 		public CGEvent (CGEventSource source, ushort virtualKey, bool keyDown)
 		{
@@ -330,7 +337,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static void CGEventTapEnable (IntPtr machPort, bool enable);
+		extern static void CGEventTapEnable (IntPtr machPort, [MarshalAs (UnmanagedType.I1)] bool enable);
 
 		public static void TapEnable (CFMachPort machPort)
 		{
@@ -347,6 +354,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGEventTapIsEnabled (IntPtr machPort);
 
 		public static bool IsTapEnabled (CFMachPort machPort)
@@ -428,6 +436,42 @@ namespace CoreGraphics {
 			}
 			return result;
 		}
+
+#if !NET
+		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
+#endif
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightListenEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
+		public static extern bool PreflightListenEventAccess ();
+
+#if !NET
+		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
+#endif
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestListenEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
+		public static extern bool RequestListenEventAccess ();
+
+#if !NET
+		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
+#endif
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightPostEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
+		public static extern bool PreflightPostEventAccess ();
+
+#if !NET
+		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
+#endif
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestPostEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
+		public static extern bool RequestPostEventAccess ();
 
 	}
 

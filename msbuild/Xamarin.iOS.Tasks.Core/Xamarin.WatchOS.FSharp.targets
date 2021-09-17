@@ -21,22 +21,12 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.WatchOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-		<_IsUnifiedDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__UNIFIED__($|;)'))</_IsUnifiedDefined>
-		<_IsMobileDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MOBILE__($|;)'))</_IsMobileDefined>
-		<_IsWATCHOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__WATCHOS__($|;)'))</_IsWATCHOSDefined>
 
-		<DefineConstants Condition="!$(_IsUnifiedDefined)">__UNIFIED__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(_IsMobileDefined)">__MOBILE__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(_IsWATCHOSDefined)">__WATCHOS__;$(DefineConstants)</DefineConstants>
-		
 		<!-- This should be done in the F# target files, but _DebugFileExt is not an upstream
 		     msbuild feature yet, so F# doesn't have this. Once, upstream F# adds it, we can
 		     remove this -->
 		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
 		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
-
-		<!-- Enable nuget package conflict resolution -->
-		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 	<Import Project="Xamarin.WatchOS.Common.targets" />
 

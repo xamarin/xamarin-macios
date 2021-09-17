@@ -1,9 +1,10 @@
 #nullable enable
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins {
 	public class ErrorKnowledgeBase : IErrorKnowledgeBase {
@@ -17,7 +18,7 @@ namespace Xharness.Jenkins {
 			["error MT5210: Native linking failed, undefined symbol: ___multi3"] = (HumanMessage: "Undefined symbol ___multi3 on Release Mode.", IssueLink:"https://github.com/mono/mono/issues/18560"),
 		};
 		
-		static bool TryFindErrors (ILog? log, Dictionary<string, (string HumanMessage, string IssueLink)> errorMap, out (string HumanMessage, string IssueLink)? failureMessage)
+		static bool TryFindErrors (IFileBackedLog? log, Dictionary<string, (string HumanMessage, string IssueLink)> errorMap, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? failureMessage)
 		{
 			failureMessage = null;
 			if (log == null) {
@@ -44,13 +45,13 @@ namespace Xharness.Jenkins {
 			return false;
 		}
 
-		public bool IsKnownBuildIssue (ILog buildLog, out (string HumanMessage, string IssueLink)? knownFailureMessage) => 
+		public bool IsKnownBuildIssue (IFileBackedLog buildLog, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? knownFailureMessage) => 
 			TryFindErrors (buildLog, buildErrorMaps, out knownFailureMessage);
 
-		public bool IsKnownTestIssue (ILog runLog, out (string HumanMessage, string IssueLink)? knownFailureMessage) =>
+		public bool IsKnownTestIssue (IFileBackedLog runLog, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? knownFailureMessage) =>
 			TryFindErrors (runLog, testErrorMaps, out knownFailureMessage);
 
-		public bool IsKnownInstallIssue (ILog installLog, out (string HumanMessage, string IssueLink)? knownFailureMessage)
+		public bool IsKnownInstallIssue (IFileBackedLog installLog, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? knownFailureMessage)
 		{
 			// nothing yet that we are aware of
 			knownFailureMessage = null;

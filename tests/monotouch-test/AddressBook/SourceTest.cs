@@ -7,7 +7,7 @@
 // Copyright 2012-2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC && !__MACCATALYST__
 
 using System;
 using Foundation;
@@ -22,6 +22,13 @@ namespace MonoTouchFixtures.AddressBook {
 	[Preserve (AllMembers = true)]
 	public class SourceTest {
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void Default ()
 		{
@@ -42,4 +49,4 @@ namespace MonoTouchFixtures.AddressBook {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__

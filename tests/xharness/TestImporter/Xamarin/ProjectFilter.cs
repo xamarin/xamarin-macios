@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
+using Xharness.TestImporter.Templates;
 
 namespace Xharness.TestImporter.Xamarin {
 	public class ProjectFilter : IProjectFilter {

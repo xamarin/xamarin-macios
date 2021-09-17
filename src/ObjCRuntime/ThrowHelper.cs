@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 // the linker will remove the attributes
 using System.Diagnostics.CodeAnalysis;
 
@@ -6,10 +7,29 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ObjCRuntime {
 
-	static class ThrowHelper {
+	[EditorBrowsable (EditorBrowsableState.Never)]
+	public static class ThrowHelper {
 
 		[DoesNotReturn]
-		static internal void ThrowObjectDisposedException (object o)
+		public static void ThrowArgumentException (string argumentName)
+		{
+			throw new ArgumentException (argumentName);
+		}
+
+		[DoesNotReturn]
+		public static void ThrowArgumentException (string argumentName, string message)
+		{
+			throw new ArgumentException (message, argumentName);
+		}
+
+		[DoesNotReturn]
+		public static void ThrowArgumentNullException (string argumentName)
+		{
+			throw new ArgumentNullException (argumentName);
+		}
+
+		[DoesNotReturn]
+		public static void ThrowObjectDisposedException (object o)
 		{
 			throw new ObjectDisposedException (o.GetType ().ToString ());
 		}

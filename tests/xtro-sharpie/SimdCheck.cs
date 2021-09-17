@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,6 +43,8 @@ namespace Extrospection
 			{ "vector_uint2", new NativeSimdInfo { Managed = "Vector2i", }},
 			{ "vector_uint3", new NativeSimdInfo { Managed = "Vector3i", }},
 			{ "vector_uint4", new NativeSimdInfo { Managed = "Vector4i", }},
+			// simd_doubleX is typedefed to vector_doubleX
+			{ "simd_double2", new NativeSimdInfo { Managed = "Vector2d" }},
 			// simd_floatX is typedefed to vector_floatX
 			{ "simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
 			{ "simd_float3", new NativeSimdInfo { Managed = "Vector3" }},
@@ -254,6 +256,10 @@ namespace Extrospection
 			const string _nsrefinedforswift = "NS_REFINED_FOR_SWIFT ";
 			if (native_name.StartsWith (_nsrefinedforswift, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (_nsrefinedforswift.Length));
+
+			const string _nsreturnsinnerpointer = "NS_RETURNS_INNER_POINTER ";
+			if (native_name.StartsWith (_nsreturnsinnerpointer, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_nsreturnsinnerpointer.Length));
 
 			const string _Nonnull = " _Nonnull";
 			if (native_name.EndsWith (_Nonnull, StringComparison.Ordinal))

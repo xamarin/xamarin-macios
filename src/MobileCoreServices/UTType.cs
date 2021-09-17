@@ -27,6 +27,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
@@ -35,15 +36,21 @@ namespace MobileCoreServices {
 
 	public static partial class UTType {
 
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static int /* Boolean */ UTTypeIsDynamic (IntPtr /* CFStringRef */ handle);
 		
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static int /* Boolean */ UTTypeIsDeclared (IntPtr /* CFStringRef */ handle);
 
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		public static bool IsDynamic (string utType)
 		{
 			if (utType == null)
@@ -53,7 +60,9 @@ namespace MobileCoreServices {
 				return UTTypeIsDynamic (x.Handle) != 0;
 		}
 
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		public static bool IsDeclared (string utType)
 		{
 			if (utType == null)
@@ -71,7 +80,7 @@ namespace MobileCoreServices {
 			var a = NSString.CreateNative (tagClass);
 			var b = NSString.CreateNative (tag);
 			var c = NSString.CreateNative (conformingToUti);
-			var ret = NSString.FromHandle (UTTypeCreatePreferredIdentifierForTag (a, b, c));
+			var ret = CFString.FromHandle (UTTypeCreatePreferredIdentifierForTag (a, b, c));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			NSString.ReleaseNative (c);
@@ -91,18 +100,22 @@ namespace MobileCoreServices {
 			var a = NSString.CreateNative (tagClass);
 			var b = NSString.CreateNative (tag);
 			var c = NSString.CreateNative (conformingToUti);
-			var ret = NSArray.StringArrayFromHandle (UTTypeCreateAllIdentifiersForTag (a, b, c));
+			var ret = CFArray.StringArrayFromHandle (UTTypeCreateAllIdentifiersForTag (a, b, c));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			NSString.ReleaseNative (c);
 			return ret;
 		}
 		
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString Array */ UTTypeCopyAllTagsWithClass (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ tagClassStr);
 		
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		public static string [] CopyAllTags (string uti, string tagClass)
 		{
 			if (uti == null)
@@ -112,7 +125,7 @@ namespace MobileCoreServices {
 
 			var a = NSString.CreateNative (uti);
 			var b = NSString.CreateNative (tagClass);
-			var ret = NSArray.StringArrayFromHandle (UTTypeCopyAllTagsWithClass (a, b));
+			var ret = CFArray.StringArrayFromHandle (UTTypeCopyAllTagsWithClass (a, b));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			return ret;
@@ -145,7 +158,7 @@ namespace MobileCoreServices {
 				throw new ArgumentNullException ("uti");
 
 			var a = NSString.CreateNative (uti);
-			var ret = NSString.FromHandle (UTTypeCopyDescription (a));
+			var ret = CFString.FromHandle (UTTypeCopyDescription (a));
 			NSString.ReleaseNative (a);
 			return ret;
 		}
@@ -162,7 +175,7 @@ namespace MobileCoreServices {
 
 			var a = NSString.CreateNative (uti);
 			var b = NSString.CreateNative (tagClass);
-			var ret = NSString.FromHandle (UTTypeCopyPreferredTagWithClass (a, b));
+			var ret = CFString.FromHandle (UTTypeCopyPreferredTagWithClass (a, b));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			return ret;
@@ -200,7 +213,12 @@ namespace MobileCoreServices {
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool /* Boolean */ UTTypeEqual (/* CFStringRef */ IntPtr inUTI1, /* CFStringRef */ IntPtr inUTI2);
 
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
 		[iOS (12,0)][TV (12,0)][Watch (5,0)]
+#endif
 		public static bool Equals (NSString uti1, NSString uti2)
 		{
 			if (uti1 == null)

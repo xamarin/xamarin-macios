@@ -1,4 +1,4 @@
-﻿//
+//
 // CSSearchableIndex.cs: Implements some nicer methods for CSSearchableIndex
 //
 // Authors:
@@ -14,14 +14,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace CoreSpotlight {
-
-	[iOS (9,0)]
-	public enum CSFileProtection {
-		None,
-		Complete,
-		CompleteUnlessOpen,
-		CompleteUntilFirstUserAuthentication
-	}
 
 	public partial class CSSearchableIndex {
 

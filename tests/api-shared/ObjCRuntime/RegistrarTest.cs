@@ -17,6 +17,7 @@ using NUnit.Framework;
 
 namespace XamarinTests.ObjCRuntime {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class RegistrarSharedTest {
 		public static Registrars CurrentRegistrar {
 			get {
@@ -38,7 +39,7 @@ namespace XamarinTests.ObjCRuntime {
 				lines.Add ("Selector: conformsToProtocol:");
 				lines.Add ("InvokeConformsToProtocol");
 				foreach (var line in lines)
-					Assert.That (ex.ToString (), Is.StringContaining (line), "#message");
+					Assert.That (ex.ToString (), Does.Contain (line), "#message");
 			} finally {
 				Messaging.void_objc_msgSend (ptr, Selector.GetHandle ("release"));
 			}

@@ -1,8 +1,9 @@
-#if IOS
+#if IOS || MONOMAC
 
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -12,7 +13,6 @@ namespace Security {
 
 	public static partial class SecSharedCredential {
 
-		[iOS (8,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static void SecAddSharedWebCredential (IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account, IntPtr /* CFStringRef */ password,
 			IntPtr /* void (^completionHandler)( CFErrorRef error) ) */ completionHandler);
@@ -34,7 +34,6 @@ namespace Security {
 			} 
 		} 
 
-		[iOS (8,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
 		{
@@ -65,8 +64,14 @@ namespace Security {
 			}
 		}
 
-		[iOS (8,0)]
 		[DllImport (Constants.SecurityLibrary)]
+#if !NET
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#else
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#endif
 		extern static void SecRequestSharedWebCredential ( IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account,
 			IntPtr /* void (^completionHandler)( CFArrayRef credentials, CFErrorRef error) */ completionHandler);
 
@@ -97,7 +102,18 @@ namespace Security {
 		}
 #endif
 
-		[iOS (8,0)]
+#if !NET
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0 use 'ASAuthorizationPasswordRequest' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos11.0 use 'ASAuthorizationPasswordRequest' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RequestSharedWebCredential (string domainName, string account, Action<SecSharedCredentialInfo[], NSError> handler)
 		{
@@ -135,15 +151,13 @@ namespace Security {
 			}
 		}
 
-		[iOS (8,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFStringRef */ SecCreateSharedWebCredentialPassword ();
 
-		[iOS (8,0)]
 		public static string CreateSharedWebCredentialPassword ()
 		{
 			var handle = SecCreateSharedWebCredentialPassword ();
-			var str = NSString.FromHandle (handle);
+			var str = CFString.FromHandle (handle);
 			NSObject.DangerousRelease (handle);
 			return str;
 		}

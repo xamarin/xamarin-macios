@@ -73,8 +73,10 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
 		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
+			if (singleLine.StartsWith ("warning:", StringComparison.Ordinal))
+				Log.LogWarning (singleLine);
+			else
+				Log.LogMessage (messageImportance, singleLine);
 		}
 	}
 }

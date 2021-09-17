@@ -1,4 +1,4 @@
-﻿//
+//
 // IdentityLookup C# bindings
 //
 // Authors:
@@ -15,17 +15,25 @@ using ObjCRuntime;
 namespace IdentityLookup {
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[Native]
 	public enum ILMessageFilterAction : long {
 		None = 0,
 		Allow = 1,
-		Filter = 2,
+		Junk = 2,
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Junk' instead.")]
+		Filter = Junk,
+#endif
+		[iOS (14,0)]
+		[Introduced (PlatformName.MacCatalyst, 14,0)]
+		Promotion = 3,
+		[iOS (14,0)]
+		[Introduced (PlatformName.MacCatalyst, 14,0)]
+		Transaction = 4,
 	}
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[ErrorDomain ("ILMessageFilterErrorDomain")]
 	[Native]
@@ -38,7 +46,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (12, 0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[Native]
 	enum ILClassificationAction : long {
@@ -49,7 +56,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -57,7 +63,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExtensionContext))]
@@ -71,7 +76,6 @@ namespace IdentityLookup {
 	interface IILMessageFilterQueryHandling { }
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[Protocol]
 	interface ILMessageFilterQueryHandling {
@@ -82,7 +86,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -96,7 +99,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -107,7 +109,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (11,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -121,7 +122,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (ILClassificationRequest))]
 	[DisableDefaultCtor]
@@ -132,7 +132,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (ILCommunication))]
 	[DisableDefaultCtor]
@@ -144,7 +143,6 @@ namespace IdentityLookup {
 
 	[Abstract]
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -153,7 +151,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -177,7 +174,6 @@ namespace IdentityLookup {
 
 	[Abstract]
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -194,7 +190,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (ILClassificationRequest))]
 	[DisableDefaultCtor]
@@ -205,7 +200,6 @@ namespace IdentityLookup {
 	}
 
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (ILCommunication))]
 	[DisableDefaultCtor]

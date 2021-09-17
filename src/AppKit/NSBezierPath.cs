@@ -26,8 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -119,7 +122,9 @@ namespace AppKit {
 		}
 #endif
 
+#if !NET
 		[Mac (10,13)]
+#endif
 		public unsafe void Append (uint[] glyphs, NSFont font)
 		{
 			if (glyphs == null)
@@ -132,3 +137,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

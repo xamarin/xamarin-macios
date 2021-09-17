@@ -1,7 +1,8 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
+using Foundation;
 using ObjCRuntime;
 using Metal;
 
@@ -10,6 +11,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class HeapDescriptorTest {
 		MTLHeapDescriptor hd = null;
 

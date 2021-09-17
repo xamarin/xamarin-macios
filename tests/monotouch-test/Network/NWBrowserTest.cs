@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.Network {
 		string type = "_tictactoe._tcp";
 		string domain = "local.";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
@@ -83,8 +83,8 @@ namespace MonoTouchFixtures.Network {
 			// 5. The browser is not yet canceled, so it picks up that the service/listener is not longer then and returns it.
 			// 
 			// The test will block until the different events are set by the callbacks that are executed in a diff thread.
-
-			bool firstRun = true;
+			bool didRun = false;
+			bool receivedNotNullChange = false;
 			bool eventsDone = false;
 			bool listeningDone = false;
 			Exception ex = null;
@@ -94,23 +94,15 @@ namespace MonoTouchFixtures.Network {
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 				// start the browser, before the listener
 				browser.SetStateChangesHandler ((st, er) => {
-					Assert.IsNotNull (st, "State");
+					// assert here with a `st` of `Fail`
 					Assert.IsNull (er, "Error");
 					if (st == NWBrowserState.Ready)
 						browserReady.Set ();
 				});
 				browser.SetChangesHandler ((oldResult, newResult) => {
-					// first time, listener appears, so we do not have an old result, second time
-					// listener goes, so we do not have a new result
+					didRun = true;
 					try {
-						if (firstRun) {
-							Assert.IsNull (oldResult, "oldResult first run.");
-							Assert.IsNotNull (newResult, "newResult first run");
-							firstRun = false;
-						} else {
-							Assert.IsNotNull (oldResult, "oldResult first run.");
-							Assert.IsNull (newResult, "newResult first run");
-						}
+						receivedNotNullChange = oldResult != null || newResult != null;
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -149,9 +141,11 @@ namespace MonoTouchFixtures.Network {
 			}, () => eventsDone);
 
 			finalEvent.WaitOne (30000);
-			Assert.IsTrue (eventsDone);
-			Assert.IsTrue (listeningDone);
+			Assert.IsTrue (eventsDone, "eventDone");
+			Assert.IsTrue (listeningDone, "listeningDone");
 			Assert.IsNull (ex, "Exception");
+			Assert.IsTrue (didRun, "didRan");
+			Assert.IsTrue (receivedNotNullChange, "receivedNotNullChange");
 			browser.Cancel ();
 		}
 	}

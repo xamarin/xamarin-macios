@@ -6,11 +6,15 @@
 //
 // Copyright 2019 Microsoft
 //
+
+#nullable enable
+
 #if MONOMAC
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -21,21 +25,16 @@ using OS_dispatch_data=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
-	public delegate void NWEthernetChannelReceiveDelegate (DispatchData content, ushort vlanTag, string localAddress, string remoteAddress);
+#endif
+	public delegate void NWEthernetChannelReceiveDelegate (DispatchData? content, ushort vlanTag, string? localAddress, string? remoteAddress);
 
+#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
-	public enum NWEthernetChannelState 
-	{
-		Invalid = 0,
-		Waiting = 1,
-		Preparing = 2,
-		Ready = 3,
-		Failed = 4,
-		Cancelled = 5,
-	}
-
-	[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#else
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWEthernetChannel : NativeObject {
 
 		internal NWEthernetChannel (IntPtr handle, bool owns) : base (handle, owns) {}
@@ -90,16 +89,15 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_ethernet_channel_send_completion_t))]
 		static void TrampolineSendCompletion (IntPtr block, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
 			if (del != null) {
-				var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
+				using NWError? err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 				del (err);
-				err?.Dispose ();
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void Send (ReadOnlySpan<byte> content, ushort vlanTag, string remoteAddress, Action<NWError> callback)
+		public void Send (ReadOnlySpan<byte> content, ushort vlanTag, string remoteAddress, Action<NWError?> callback)
 		{
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
@@ -164,15 +162,15 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_ethernet_channel_state_changed_handler_t))]
 		static void TrampolineStateChangesHandler (IntPtr block, NWEthernetChannelState state, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWEthernetChannelState, NWError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWEthernetChannelState, NWError?>> (block);
 			if (del != null) {
-				var nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
+				NWError? nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
 				del (state, nwError);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetStateChangesHandler (Action<NWBrowserState, NWError> handler)
+		public void SetStateChangesHandler (Action<NWBrowserState, NWError?> handler)
 		{
 			unsafe {
 				if (handler == null) {

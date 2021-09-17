@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKStateMachine
 //
 // Authors:
@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.GameplayKit {
 	[Preserve (AllMembers = true)]
 	public class GKStateMachineTests {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);

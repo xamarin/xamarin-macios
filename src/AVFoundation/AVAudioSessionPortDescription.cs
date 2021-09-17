@@ -27,4 +27,3 @@ namespace AVFoundation {
 	}
 }
 #endif
-

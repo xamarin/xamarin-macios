@@ -1,4 +1,4 @@
-﻿namespace Xamarin.MacDev.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public static class PlatformUtils
 	{
@@ -19,6 +19,8 @@
 				return "appletvsimulator";
 			case "AppleTVOS":
 				return "appletvos";
+			case "MacCatalyst":
+				return "macosx";
 			}
 
 			return null;

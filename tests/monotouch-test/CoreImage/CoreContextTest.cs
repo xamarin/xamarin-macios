@@ -22,7 +22,9 @@ using AppKit;
 using OpenGL;
 #else
 using UIKit;
+#if HAS_OPENGLES
 using OpenGLES;
+#endif
 #endif
 
 using NUnit.Framework;
@@ -65,7 +67,7 @@ namespace MonoTouchFixtures.CoreImage {
 			}
 		}
 
-#if !MONOMAC // No EAGLContext for Mac
+#if HAS_OPENGLES
 		[Test]
 		public void FromContext_13983 ()
 		{
@@ -88,7 +90,7 @@ namespace MonoTouchFixtures.CoreImage {
 				ci.Render (img, cv, CGRect.Empty, null);
 			}
 		}
-#endif
+#endif // HAS_OPENGLES
 	}
 }
 

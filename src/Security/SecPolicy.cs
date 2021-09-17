@@ -9,56 +9,54 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
 namespace Security {
 
-	// untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
-	// which is defined as in CFBase.h (do not trust Apple web documentation)
-	[iOS (7,0)]
-	[Flags]
-	[Native]
-	public enum SecRevocation : ulong {
-		None,
-		OCSPMethod = 1,
-		CRLMethod = 2,
-		PreferCRL = 4,
-		RequirePositiveResponse = 8,
-		NetworkAccessDisabled = 16,
-		UseAnyAvailableMethod = OCSPMethod | CRLMethod
-	}
-
 	public partial class SecPolicy {
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable CFDictionaryRef */ SecPolicyCopyProperties (IntPtr /* SecPolicyRef */ policyRef);
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public NSDictionary GetProperties ()
 		{
 			var dict = SecPolicyCopyProperties (Handle);
 			return Runtime.GetNSObject<NSDictionary> (dict, true);
 		}
 
+#if !NET
 		[Mac (10,9)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateRevocation (/* CFOptionFlags */ nuint revocationFlags);
 
+#if !NET
 		[Mac (10,9)][iOS (7,0)]
+#endif
 		static public SecPolicy CreateRevocationPolicy (SecRevocation revocationFlags)
 		{
 			var policy = SecPolicyCreateRevocation ((nuint)(ulong) revocationFlags);
 			return policy == IntPtr.Zero ? null : new SecPolicy (policy, true);
 		}
 
+#if !NET
 		[Mac (10,9)][iOS (7,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateWithProperties (IntPtr /* CFTypeRef */ policyIdentifier, IntPtr /* CFDictionaryRef */ properties);
 
+#if !NET
 		[Mac (10,9)][iOS (7,0)]
+#endif
 		static public SecPolicy CreatePolicy (NSString policyIdentifier, NSDictionary properties)
 		{
 			if (policyIdentifier == null)

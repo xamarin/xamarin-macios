@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSMutableOrderedSet Generic support
 //
 // Authors:
@@ -19,6 +19,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableOrderedSet1Test {
 
 		[Test]

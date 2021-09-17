@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	// lets try and keep this class stateless, will make our lifes better
 	class RunSimulatorTasksFactory {
 
-		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -20,38 +20,57 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 
-				bool ignored = !jenkins.IncludeSimulator;
+				bool ignored = project.Ignore ?? !jenkins.IncludeSimulator;
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				if (!project.SkipiOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !jenkins.IncludeiOS64));
-				if (project.MonoNativeInfo != null)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !jenkins.IncludeiOS64));
-				if (!project.SkiptvOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !jenkins.IncludetvOS));
-				if (!project.SkipwatchOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !jenkins.IncludewatchOS));
+				if (!project.GenerateVariations) {
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, project.TestPlatform, ignored));
+				} else {
+					if (!project.SkipiOSVariation)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored));
+					if (project.MonoNativeInfo != null)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored));
+					if (!project.SkiptvOSVariation)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored));
+					if (!project.SkipwatchOSVariation)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored));
+				}
 
 				var configurations = project.Configurations;
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
 					foreach (var pair in ps) {
-						MSBuildTask derived;
-						if (project.IsDotNetProject) {
-							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
-						} else {
-							derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
+						var configIgnored = pair.Item3;
+						var testPlatform = pair.Item2;
+						switch (testPlatform) {
+						case TestPlatform.iOS_Unified:
+						case TestPlatform.iOS_TodayExtension64:
+							configIgnored |= !jenkins.IncludeiOS64;
+							break;
+						case TestPlatform.tvOS:
+							configIgnored |= !jenkins.IncludetvOS;
+							break;
+						case TestPlatform.watchOS:
+							configIgnored |= !jenkins.IncludewatchOS;
+							break;
+						default:
+							Console.WriteLine ("Unknown test platform for ignore check: {0}", testPlatform);
+							break;
 						}
+
+						configIgnored |= project.IsDotNetProject && !jenkins.IncludeDotNet;
+
+						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 						derived.ProjectConfiguration = config;
 						derived.ProjectPlatform = "iPhoneSimulator";
-						derived.Platform = pair.Item2;
-						derived.Ignored = pair.Item3;
+						derived.Platform = testPlatform;
+						derived.Ignored = configIgnored;
 						derived.TestName = project.Name;
 						derived.Dependency = project.Dependency;
-						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1);
+						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1, HarnessConfiguration.RootDirectory);
 						var simTasks = CreateAsync (jenkins, processManager, derived);
 						runSimulatorTasks.AddRange (simTasks);
 						foreach (var task in simTasks) {
@@ -69,7 +88,6 @@ namespace Xharness.Jenkins {
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
-					tunnelBore: jenkins.TunnelBore,
 					candidates: candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
 
 			if (jenkins.IsServerMode)
@@ -89,7 +107,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		IEnumerable<RunSimulatorTask> CreateAsync (Jenkins jenkins, IProcessManager processManager, MSBuildTask buildTask)
+		IEnumerable<RunSimulatorTask> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, MSBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
@@ -139,7 +157,6 @@ namespace Xharness.Jenkins {
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
-					tunnelBore: jenkins.TunnelBore,
 					candidates: sims) {
 					Platform = platforms [i],
 					Ignored = ignored [i] || buildTask.Ignored

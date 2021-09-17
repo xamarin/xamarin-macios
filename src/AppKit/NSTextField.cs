@@ -1,6 +1,9 @@
 //
 // NSTextField.cs: Support for the NSTextField class
 //
+
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -14,3 +17,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

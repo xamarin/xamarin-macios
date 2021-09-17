@@ -1,0 +1,31 @@
+{
+	"Projects": [
+	  {
+		"LanguageSet": "VS_Main_Languages",
+		"LocItems": [
+		  {
+			"SourceFile": "@WORKING_DIRECTORY@/../../msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx",
+			"Languages": "",
+			"CopyOption": "LangIDOnName",
+			"OutputPath": "@WORKING_DIRECTORY@/../../msbuild/Xamarin.Localization.MSBuild/TranslatedAssemblies",
+			"LclFile": "",
+			"LciFile": "",
+			"Parser": "",
+			"LssFiles": []
+		  },
+		  {
+			"SourceFile": "@WORKING_DIRECTORY@/../../tools/mtouch/Errors.resx",
+			"Languages": "",
+			"CopyOption": "LangIDOnName",
+			"OutputPath": "@WORKING_DIRECTORY@/../../tools/mtouch/TranslatedAssemblies",
+			"LclFile": "",
+			"LciFile": "",
+			"Parser": "",
+			"LssFiles": []
+		  }
+		],
+		"LssFiles": [],
+		"CloneLanguageSet": ""
+	  }
+	]
+}

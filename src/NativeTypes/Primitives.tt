@@ -393,7 +393,7 @@ namespace System
 		{
 			if (source == IntPtr.Zero)
 				throw new ArgumentNullException ("source");
-			if (destination == null)
+			if (destination is null)
 				throw new ArgumentNullException ("destination");
 			if (destination.Rank != 1)
 				throw new ArgumentException ("destination", "array is multi-dimensional");
@@ -410,7 +410,7 @@ namespace System
 
 		public static void CopyArray (<#= type.NSName #> [] source, int startIndex, IntPtr destination, int length)
 		{
-			if (source == null)
+			if (source is null)
 				throw new ArgumentNullException ("source");
 			if (destination == IntPtr.Zero)
 				throw new ArgumentNullException ("destination");

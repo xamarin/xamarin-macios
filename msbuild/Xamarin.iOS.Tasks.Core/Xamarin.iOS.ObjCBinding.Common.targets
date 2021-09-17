@@ -15,53 +15,10 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.ObjCBinding.Common.props" 
-			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.ObjCBinding.Common.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
-
-	<!-- Add our own pre-build steps -->
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
-		<BuildDependsOn>
-			BuildOnlySettings;
-			_CreateGeneratedSourcesDir;
-			_CreateEmbeddedResources;
-			$(BuildDependsOn)
-		</BuildDependsOn>
-	</PropertyGroup>
-
-	<!-- Add our own Clean steps -->
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
-		<CleanDependsOn>
-			_CleanGeneratedSources;
-			$(CleanDependsOn)
-		</CleanDependsOn>
-	</PropertyGroup>
-
-	<!-- Create a directory to contain the generated sources -->
-	<Target Name="_CreateGeneratedSourcesDir">
-		<MakeDir Directories="$(GeneratedSourcesDir)" />
-	</Target>
-
-	<!-- Clean the generated sources -->
-	<Target Name="_CleanGeneratedSources">
-		<RemoveDir Directories="$(GeneratedSourcesDir)" Condition="Exists ('$(GeneratedSourcesDir)')" />
-	</Target>
-
-	<Target Name="_AssignBundleResourceNames">
-		<AssignBundleResourceNames BundleResources="@(BundleResource)" ResourceDirectoryPrefixes="$(_ResourcePrefix)">
-			<Output ItemName="_BundleResourceWithName" TaskParameter="BundleResourcesWithNames" />
-		</AssignBundleResourceNames>
-	</Target>
-
-	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
-		<CreateEmbeddedResources BundleResources="@(_BundleResourceWithLogicalName)" Prefix="monotouch">
-			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" />
-		</CreateEmbeddedResources>
-	</Target>
-
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.NativeReference.Stubs.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

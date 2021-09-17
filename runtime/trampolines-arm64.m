@@ -41,7 +41,7 @@ dump_state (struct XamarinCallState *state, const char *prefix)
 #endif
 
 static int
-param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
+param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, GCHandle *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	char type = *type_ptr;
@@ -136,7 +136,7 @@ param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *targ
 }
 
 static void
-param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle)
+param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, GCHandle *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	struct ParamIterator *it = (struct ParamIterator *) context;
@@ -159,7 +159,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 
 	char struct_name [5]; // we don't care about structs with more than 4 fields.
 	xamarin_collapse_struct_name (type, struct_name, sizeof (struct_name), exception_gchandle);
-	if (*exception_gchandle != 0)
+	if (*exception_gchandle != INVALID_GCHANDLE)
 		return;
 
 	if (size > 16 && strcmp (struct_name, "dddd") && strcmp (struct_name, "ddd")) {
@@ -183,7 +183,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	uint8_t *targ = (uint8_t *) target;
 	do {
 		int c = param_read_primitive (it, t, targ, size, exception_gchandle);
-		if (*exception_gchandle != 0)
+		if (*exception_gchandle != INVALID_GCHANDLE)
 			return;
 		if (targ != NULL)
 			targ += c;
@@ -191,7 +191,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 }
 
 static void
-marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
+marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, GCHandle *exception_gchandle)
 {
 	// COOP: accessing managed memory (as input), so must be in unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -221,7 +221,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		 */
 
 		xamarin_collapse_struct_name (type, struct_name, sizeof (struct_name), exception_gchandle);
-		if (*exception_gchandle != 0)
+		if (*exception_gchandle != INVALID_GCHANDLE)
 			return;
 
 		if ((size == 32 && !strncmp (struct_name, "dddd", 4)) ||

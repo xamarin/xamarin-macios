@@ -6,8 +6,9 @@ using ObjCRuntime;
 
 namespace Compression
 {
-
+#if !NET
 		[iOS (9,0), Mac (10,11)]
+#endif
 		[StructLayout(LayoutKind.Sequential)]
 		struct CompressionStreamStruct {
 			public IntPtr Destination; // uint8_t * dst_ptr

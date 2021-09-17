@@ -1,4 +1,4 @@
-﻿//
+//
 // INSetCarLockStatusIntent.cs
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if IOS || TVOS
+#if IOS
 
 using Foundation;
 using Intents;

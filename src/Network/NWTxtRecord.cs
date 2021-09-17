@@ -6,9 +6,13 @@
 //
 // Copyright 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using System.Text;
 using ObjCRuntime;
 using Foundation;
@@ -21,23 +25,20 @@ using OS_nw_txt_record=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWTxtRecordFindKey {
-		Invalid = 0,
-		NotPresent = 1,
-		NoValue = 2,
-		EmptyValue = 3,
-		NonEmptyValue = 4,
-	}
-	
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWTxtRecord : NativeObject {
 		internal NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte *txtBytes, nuint len);
 
-		public static NWTxtRecord FromBytes (ReadOnlySpan<byte> bytes)
+		public static NWTxtRecord? FromBytes (ReadOnlySpan<byte> bytes)
 		{
 			unsafe {
 				fixed (byte* mh = bytes) {
@@ -52,7 +53,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_txt_record_create_dictionary ();
 
-		public static NWTxtRecord CreateDictionary ()
+		public static NWTxtRecord? CreateDictionary ()
 		{
 			var x = nw_txt_record_create_dictionary ();
 			if (x == IntPtr.Zero)
@@ -106,6 +107,7 @@ namespace Network {
 		public bool IsDictionary => nw_txt_record_is_dictionary (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_txt_record_is_equal (OS_nw_txt_record left, OS_nw_txt_record right);
 
 		public bool Equals (NWTxtRecord other)
@@ -116,6 +118,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, ref BlockLiteral applier);
 
 		delegate bool nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
@@ -190,6 +193,7 @@ namespace Network {
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, string key, ref BlockLiteral access_value);
 
 		unsafe delegate void nw_txt_record_access_key_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
@@ -227,6 +231,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_txt_record_access_bytes (OS_nw_txt_record txt_record, ref BlockLiteral access_bytes);
 
 		unsafe delegate void nw_txt_record_access_bytes_t (IntPtr block, IntPtr value, nuint valueLen);

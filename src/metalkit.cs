@@ -49,7 +49,7 @@ namespace MetalKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[NullAllowed, Export ("device", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("device", ArgumentSemantic.Retain)]
 		IMTLDevice Device { get; set; }
 
 		[NullAllowed, Export ("currentDrawable")]

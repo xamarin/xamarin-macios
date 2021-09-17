@@ -1,0 +1,5 @@
+<FileList>
+	<!-- bgen -->
+	<File Path="tools/bin/bgen" Permission="755" />
+	<File Path="tools/lib/bgen/bgen" Permission="755" />
+ </FileList>

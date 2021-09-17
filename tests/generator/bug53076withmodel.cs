@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Foundation;
 using ObjCRuntime;
@@ -39,4 +39,3 @@ namespace Bug53076WithModelTest {
 	[BaseType (typeof (NSObject))]
 	interface RequiredReturnMethodObjResult {}
 }
-

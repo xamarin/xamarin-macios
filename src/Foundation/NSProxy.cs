@@ -1,4 +1,4 @@
-﻿//
+//
 // NSProxy.cs
 //
 // Authors:

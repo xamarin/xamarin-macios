@@ -27,23 +27,36 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics {
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	// uint32_t -> CGWindow.h (OSX SDK only)
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Flags]	
 	public enum CGWindowImageOption : uint {
 		Default             = 0,
 		BoundsIgnoreFraming = (1 << 0),
 		ShouldBeOpaque      = (1 << 1),
-		OnlyShadows         = (1 << 2)
+		OnlyShadows         = (1 << 2),
+		BestResolution      = (1 << 3),
+		NominalResolution   = (1 << 4),
 	}
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Flags]
 	public enum CGWindowListOption : uint {
 		All                 = 0,
@@ -167,7 +180,7 @@ namespace CoreGraphics {
 		extern static /* CGImageRef */ IntPtr CGImageCreate (/* size_t */ nint width, /* size_t */ nint height, 
 			/* size_t */ nint bitsPerComponent, /* size_t */ nint bitsPerPixel, /* size_t */ nint bytesPerRow,
 			/* CGColorSpaceRef */ IntPtr space, CGBitmapFlags bitmapInfo, /* CGDataProviderRef */ IntPtr provider,
-			/* CGFloat[] */ nfloat [] decode, bool shouldInterpolate, CGColorRenderingIntent intent);
+			/* CGFloat[] */ nfloat [] decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
 
 		public CGImage (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow,
 				CGColorSpace colorSpace, CGBitmapFlags bitmapFlags, CGDataProvider provider,
@@ -211,15 +224,30 @@ namespace CoreGraphics {
 						shouldInterpolate, intent);
 		}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
         
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static CGImage ScreenImage (int windownumber, CGRect bounds)
 		{
 			return ScreenImage (windownumber, bounds, CGWindowListOption.IncludingWindow, CGWindowImageOption.Default);
 		}
 
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static CGImage ScreenImage (int windownumber, CGRect bounds, CGWindowListOption windowOption,
 			CGWindowImageOption imageOption)
 		{
@@ -240,7 +268,7 @@ namespace CoreGraphics {
 	
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGImageRef */ IntPtr CGImageCreateWithJPEGDataProvider (/* CGDataProviderRef */ IntPtr source,
-			/* CGFloat[] */ nfloat [] decode, bool shouldInterpolate, CGColorRenderingIntent intent);
+			/* CGFloat[] */ nfloat [] decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
 
 		public static CGImage FromJPEG (CGDataProvider provider, nfloat [] decode, bool shouldInterpolate, CGColorRenderingIntent intent)
 		{
@@ -253,7 +281,7 @@ namespace CoreGraphics {
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGImageRef */ IntPtr CGImageCreateWithPNGDataProvider (/* CGDataProviderRef */ IntPtr source,
-			/* CGFloat[] */ nfloat [] decode, bool shouldInterpolate, CGColorRenderingIntent intent);
+			/* CGFloat[] */ nfloat [] decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate, CGColorRenderingIntent intent);
 
 		public static CGImage FromPNG (CGDataProvider provider, nfloat [] decode, bool shouldInterpolate, CGColorRenderingIntent intent)
 		{
@@ -267,7 +295,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGImageRef */ IntPtr CGImageMaskCreate (/* size */ nint width, /* size */ nint height, 
 			/* size */ nint bitsPerComponent, /* size */ nint bitsPerPixel, /* size */ nint bytesPerRow, 
-			/* CGDataProviderRef */ IntPtr provider, /* CGFloat[] */ nfloat [] decode, bool shouldInterpolate);
+			/* CGDataProviderRef */ IntPtr provider, /* CGFloat[] */ nfloat [] decode, [MarshalAs (UnmanagedType.I1)] bool shouldInterpolate);
 
 		public static CGImage CreateMask (int width, int height, int bitsPerComponent, int bitsPerPixel, int bytesPerRow, CGDataProvider provider, nfloat [] decode, bool shouldInterpolate)
 		{
@@ -335,6 +363,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGImageIsMask (/* CGImageRef */ IntPtr image);
 
 		public bool IsMask {
@@ -427,6 +456,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGImageGetShouldInterpolate (/* CGImageRef */ IntPtr image);
 
 		public bool ShouldInterpolate {
@@ -453,12 +483,16 @@ namespace CoreGraphics {
 			}
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr /* CFStringRef */ CGImageGetUTType (/* __nullable CGImageRef* */ IntPtr image);
 
 		// we return an NSString, instead of a string, as all our UTType constants are NSString (see mobilecoreservices.cs)
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public NSString UTType {
 			get {
 				var h = CGImageGetUTType (handle);
@@ -466,18 +500,38 @@ namespace CoreGraphics {
 			}
 		}
 
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImagePixelFormatInfo CGImageGetPixelFormatInfo (/* __nullable CGImageRef */ IntPtr handle);
 		
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public CGImagePixelFormatInfo PixelFormatInfo => CGImageGetPixelFormatInfo (handle);
 			
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImageByteOrderInfo CGImageGetByteOrderInfo (/* __nullable CGImageRef */ IntPtr handle);
 
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public CGImageByteOrderInfo ByteOrderInfo => CGImageGetByteOrderInfo (handle);
 		
 #endif // !COREBUILD

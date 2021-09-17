@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class IBToolTaskBase : XcodeCompilerToolTask
 	{
 		static readonly string[] WatchAppExtensions = { "-glance.plist", "-notification.plist" };
-		PDictionary plist;
 
 		#region Inputs
 
@@ -39,7 +39,11 @@ namespace Xamarin.MacDev.Tasks
 			get { return "ibtool"; }
 		}
 
-		protected abstract bool AutoActivateCustomFonts { get; }
+		protected bool AutoActivateCustomFonts {
+			get {
+				return Platform != ApplePlatform.MacOSX;
+			}
+		}
 
 		protected override bool UseCompilationDirectory {
 			get { return AppleSdkSettings.XcodeVersion >= new Version (6, 3); }
@@ -56,7 +60,7 @@ namespace Xamarin.MacDev.Tasks
 
 			args.Add ("--minimum-deployment-target", MinimumOSVersion);
 			
-			foreach (var targetDevice in GetTargetDevices (plist))
+			foreach (var targetDevice in GetTargetDevices ())
 				args.Add ("--target-device", targetDevice);
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 6 && AutoActivateCustomFonts)
@@ -179,7 +183,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var mapping = new Dictionary<string, IDictionary> ();
 			var unique = new Dictionary<string, ITaskItem> ();
-			var targets = GetTargetDevices (plist).ToList ();
+			var targets = GetTargetDevices ().ToList ();
 
 			changed = false;
 
@@ -414,10 +418,6 @@ namespace Xamarin.MacDev.Tasks
 			bool changed;
 
 			if (InterfaceDefinitions.Length > 0) {
-				if (AppManifest != null) {
-					plist = PDictionary.FromFile (AppManifest.ItemSpec);
-				}
-
 				Directory.CreateDirectory (ibtoolManifestDir);
 				Directory.CreateDirectory (ibtoolOutputDir);
 

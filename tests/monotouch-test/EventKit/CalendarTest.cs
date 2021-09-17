@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.EventKit {
 
 		void RequestPermission ()
 		{
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 			TestRuntime.RequestEventStorePermission (EKEntityType.Event, true);
 			TestRuntime.RequestEventStorePermission (EKEntityType.Reminder, true);
 #endif
@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.EventKit {
 			RequestPermission ();
 
 			EKEventStore store = new EKEventStore ();
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			var c = EKCalendar.Create (EKEntityType.Event, store);
 #else
 			var c = EKCalendar.FromEventStore (store);
@@ -76,7 +76,7 @@ namespace MonoTouchFixtures.EventKit {
 
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
@@ -115,7 +115,7 @@ namespace MonoTouchFixtures.EventKit {
 #endif
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
@@ -133,7 +133,7 @@ namespace MonoTouchFixtures.EventKit {
 			RequestPermission ();
 
 			EKEventStore store = new EKEventStore ();
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			var c = EKCalendar.Create (EKEntityType.Event, store);
 #else
 			var c = EKCalendar.FromEventStore (store);
@@ -145,7 +145,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void FromEventStore_Null ()
 		{
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			Assert.Throws<ArgumentNullException> (() => EKCalendar.Create (EKEntityType.Event, null));
 #else
 			Assert.Throws<ArgumentNullException> (() => EKCalendar.FromEventStore (null));

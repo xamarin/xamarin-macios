@@ -1,4 +1,4 @@
-﻿//
+//
 // NEHotspotEapSettings.cs
 //
 // Authors:

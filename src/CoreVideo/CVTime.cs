@@ -27,13 +27,18 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace CoreVideo {
 
 	// CVBase.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVTime {
 
 		public /* int64_t */ long TimeValue;
@@ -45,18 +50,18 @@ namespace CoreVideo {
 #if !COREBUILD
 		public static CVTime ZeroTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime));
+				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime))!;
 			}
 		}
 
 		public static CVTime IndefiniteTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime));
+				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime))!;
 			}
 		}
 #endif
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (!(other is CVTime))
 				return false;

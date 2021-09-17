@@ -11,12 +11,14 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MediaPlayer {
 	public partial class MPSkipIntervalCommand {
-		public double[] PreferredIntervals {
+		public double[]? PreferredIntervals {
 			get {
 				NSArray a = _PreferredIntervals;
-				if (a == null)
+				if ((a == null) || (a.Count == 0))
 					return null;
 
                 return NSArray.ArrayFromHandle<double> (a.Handle, input => {
@@ -25,7 +27,7 @@ namespace MediaPlayer {
 			}
 			set {
 				if (value == null)
-					_PreferredIntervals = null;
+					_PreferredIntervals = new NSArray ();
 				else {
 					NSObject [] nsoa = new NSObject [value.Length];
 					for (int i = 0; i < value.Length; i++)

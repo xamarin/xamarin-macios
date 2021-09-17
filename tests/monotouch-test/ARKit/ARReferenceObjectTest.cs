@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for ARReferenceObject
 //
 // Authors:
@@ -7,11 +7,12 @@
 // Copyright 2018 Microsoft. All rights reserved.
 //
 
-#if __IOS__
+#if HAS_ARKIT
 
 using System;
 using ARKit;
 using Foundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 using VectorFloat3 = global::OpenTK.NVector3;
@@ -27,11 +28,15 @@ namespace MonoTouchFixtures.ARKit {
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]
 		public void MarshallingTest ()
 		{
+			if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+				Assert.Ignore ("broken with beta 1 - can't instantiate the object");
 			var model3 = new ARReferenceObject (NSUrl.FromFilename ("Model3.arobject"), out NSError error);
 			Assert.AreEqual ("Model3", model3.Name, "Name");
 			Assert.NotNull (model3.Center, "Center");
@@ -42,4 +47,4 @@ namespace MonoTouchFixtures.ARKit {
 	}
 }
 
-#endif
+#endif // HAS_ARKIT

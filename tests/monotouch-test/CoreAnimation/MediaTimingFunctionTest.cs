@@ -99,4 +99,3 @@ namespace MonoTouchFixtures.CoreMotion {
 }
 
 #endif // !__WATCHOS__
-

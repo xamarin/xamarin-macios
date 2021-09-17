@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__MACCATALYST__ && HAS_ADDRESSBOOK
 
 using System;
 using Foundation;
@@ -24,6 +24,13 @@ namespace MonoTouchFixtures.AddressBook {
 		
 		// very general ABSource related tests (works on both simulator and devices)
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void GetAllSources ()
 		{
@@ -54,4 +61,4 @@ namespace MonoTouchFixtures.AddressBook {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__MACCATALYST__ && HAS_ADDRESSBOOK - Crashes with maccat

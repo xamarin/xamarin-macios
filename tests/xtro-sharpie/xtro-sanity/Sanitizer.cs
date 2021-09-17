@@ -1,11 +1,47 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Extrospection {
 	class Sanitizer {
 
-		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS" };
+		static List<string> platforms;
+
+		static List<string> Platforms {
+			get {
+				if (platforms != null)
+					return platforms;
+
+				platforms = new List<string> (4);
+				foreach (var line in File.ReadAllLines ("../../Make.config")) {
+					var eq = line.IndexOf ('=');
+					if (eq == -1)
+						continue;
+					if (!line.StartsWith ("INCLUDE_", StringComparison.Ordinal))
+						continue;
+
+					switch (line.Substring (0, eq)) {
+					case "INCLUDE_IOS":
+						platforms.Add ("iOS");
+						break;
+					case "INCLUDE_TVOS":
+						platforms.Add ("tvOS");
+						break;
+					case "INCLUDE_WATCH":
+						platforms.Add ("watchOS");
+						break;
+					case "INCLUDE_MAC":
+						platforms.Add ("macOS");
+						break;
+					case "INCLUDE_MACCATALYST":
+						platforms.Add ("MacCatalyst");
+						break;
+					}
+				}
+				return platforms;
+			}
+		}
 
 		static bool IsEntry (string line)
 		{
@@ -71,6 +107,8 @@ namespace Extrospection {
 		static void NoIgnoredTodo ()
 		{
 			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				if (!IsIncluded (file))
+					continue;
 				var last = file.LastIndexOf ('-');
 				var fx = file.Substring (last + 1, file.Length - last - 6);
 				// check if it's in common or in the same platform
@@ -95,27 +133,65 @@ namespace Extrospection {
 			}
 		}
 
+		static bool IsIncluded (string file)
+		{
+			var name = Path.GetFileName (file);
+			foreach (var p in Platforms) {
+				if (name.StartsWith (p, StringComparison.Ordinal))
+					return true;
+			}
+			return false;
+		}
+
 		static void NoFixedTodo ()
 		{
 			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				if (!IsIncluded (file))
+					continue;
 				var last = file.LastIndexOf ('-');
 				var fx = file.Substring (last + 1, file.Length - last - 6);
 				var raw = Path.ChangeExtension (file, ".raw");
+				var failures = new List<string> ();
+				var entries = File.ReadAllLines (file);
 				if (File.Exists (raw)) {
 					var specific = new List<string> (File.ReadAllLines (raw));
-					foreach (var entry in File.ReadAllLines (file)) {
+					foreach (var entry in entries) {
 						if (!IsEntry (entry))
 							continue;
-						if (!specific.Contains (entry))
+						if (!specific.Contains (entry)) {
 							Log ($"?fixed-todo? Entry '{entry}' in '{Path.GetFileName (file)}' is not found in corresponding '{Path.GetFileName (raw)}' file");
+							failures.Add (entry);
+						}
 					}
 				} else {
 					// no .raw then everything is fixed
-					foreach (var entry in File.ReadAllLines (file)) {
+					foreach (var entry in entries) {
 						if (!IsEntry (entry))
 							continue;
 						Log ($"?fixed-todo? Entry '{entry}' in '{Path.GetFileName (file)}' might be fixed since there's no corresponding '{Path.GetFileName (raw)}' file");
+						failures.Add (entry);
 					}
+				}
+				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+					var sanitized = new List<string> (entries);
+					foreach (var failure in failures)
+						sanitized.Remove (failure);
+					File.WriteAllLines (file, sanitized);
+					// since we are in AUTO_SANITIZE, if the file is empty, remove it.
+					if (sanitized.Count == 0) {
+						File.Delete (file);
+					}
+				}
+			}
+		}
+
+		static void NoEmptyTodo ()
+		{
+			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				if (!IsIncluded (file))
+					continue;
+				if (!(File.ReadLines(file).Count() > 0)) {
+					Log ($"?empty-todo? File '{Path.GetFileName (file)}' is empty. Empty todo files should be removed.");
 				}
 			}
 		}
@@ -133,6 +209,7 @@ namespace Extrospection {
 		public static int Main (string [] args)
 		{
 			directory = args.Length == 0 ? "." : args [0];
+			Environment.CurrentDirectory = directory;
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
@@ -151,6 +228,8 @@ namespace Extrospection {
 				CorrectEntries (common, $"common-{fx}.ignore");
 			}
 			foreach (var file in Directory.GetFiles (directory, "*.ignore")) {
+				if (!IsIncluded (file))
+					continue;
 				var filename = Path.GetFileName (file);
 				// already processed from cache - don't reload them
 				if (filename.StartsWith ("common-", StringComparison.Ordinal))
@@ -181,7 +260,7 @@ namespace Extrospection {
 				var fx = kvp.Key;
 				var common = kvp.Value;
 				//ExistingCommonEntries (common, $"common-{fx}.ignore");
-				List<string> [] raws = new List<string> [Platforms.Length];
+				List<string> [] raws = new List<string> [Platforms.Count];
 				for (int i=0; i < raws.Length; i++) {
 					var fname = Path.Combine (directory, $"{Platforms[i]}-{fx}.raw");
 					if (File.Exists (fname))
@@ -213,6 +292,8 @@ namespace Extrospection {
 			}
 			// * a platform ignore must existing in it's corresponding raw file
 			foreach (var file in Directory.GetFiles (directory, "*.ignore")) {
+				if (!IsIncluded (file))
+					continue;
 				var shortname = Path.GetFileName (file);
 				if (shortname.StartsWith ("common-", StringComparison.Ordinal))
 					continue;
@@ -246,6 +327,9 @@ namespace Extrospection {
 
 			// entries in .todo should be found in .raw files - else it's likely fixed (and out of date)
 			NoFixedTodo ();
+
+			// empty files should be removed
+			NoEmptyTodo ();
 
 			if (count == 0)
 				Console.WriteLine ("Sanity check passed");

@@ -9,9 +9,6 @@
 !missing-enum! CGWindowBackingType not bound
 !missing-enum! CGWindowLevelKey not bound
 !missing-enum! CGWindowSharingType not bound
-!missing-field! kCGColorBlack not bound
-!missing-field! kCGColorClear not bound
-!missing-field! kCGColorWhite not bound
 !missing-field! kCGDisplayShowDuplicateLowResolutionModes not bound
 !missing-field! kCGDisplayStreamColorSpace not bound
 !missing-field! kCGDisplayStreamDestinationRect not bound
@@ -24,14 +21,6 @@
 !missing-field! kCGDisplayStreamYCbCrMatrix_ITU_R_601_4 not bound
 !missing-field! kCGDisplayStreamYCbCrMatrix_ITU_R_709_2 not bound
 !missing-field! kCGDisplayStreamYCbCrMatrix_SMPTE_240M_1995 not bound
-!missing-field! kCGPDFContextOutputIntent not bound
-!missing-field! kCGPDFContextOutputIntents not bound
-!missing-field! kCGPDFXDestinationOutputProfile not bound
-!missing-field! kCGPDFXInfo not bound
-!missing-field! kCGPDFXOutputCondition not bound
-!missing-field! kCGPDFXOutputConditionIdentifier not bound
-!missing-field! kCGPDFXOutputIntentSubtype not bound
-!missing-field! kCGPDFXRegistryName not bound
 !missing-field! kCGWindowAlpha not bound
 !missing-field! kCGWindowBackingLocationVideoMemory not bound
 !missing-field! kCGWindowBounds not bound
@@ -49,7 +38,6 @@
 !missing-pinvoke! CGAssociateMouseAndMouseCursorPosition is not bound
 !missing-pinvoke! CGBeginDisplayConfiguration is not bound
 !missing-pinvoke! CGCancelDisplayConfiguration is not bound
-!missing-pinvoke! CGColorCreateGenericCMYK is not bound
 !missing-pinvoke! CGCompleteDisplayConfiguration is not bound
 !missing-pinvoke! CGConfigureDisplayFadeEffect is not bound
 !missing-pinvoke! CGConfigureDisplayMirrorOfDisplay is not bound
@@ -173,3 +161,5 @@
 !missing-pinvoke! CGWindowListCreateImageFromArray is not bound
 !missing-pinvoke! CGWindowServerCFMachPort is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound
+!missing-pinvoke! CGPreflightScreenCaptureAccess is not bound
+!missing-pinvoke! CGRequestScreenCaptureAccess is not bound

@@ -8,7 +8,6 @@ namespace Xamarin.Mac.Tasks {
 		{
 			if (!IsAppExtension || (IsAppExtension && IsXPCService))
 				plist.SetIfNotPresent ("MonoBundleExecutable", AssemblyName + ".exe");
-			plist.SetIfNotPresent (ManifestKeys.CFBundleName, AppBundleName);
 
 			return !Log.HasLoggedErrors;
 		}

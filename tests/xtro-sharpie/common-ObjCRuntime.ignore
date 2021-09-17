@@ -4,6 +4,7 @@
 !unknown-pinvoke! class_addMethod bound
 !unknown-pinvoke! class_addProperty bound
 !unknown-pinvoke! class_addProtocol bound
+!unknown-pinvoke! class_getInstanceMethod bound
 !unknown-pinvoke! class_getInstanceVariable bound
 !unknown-pinvoke! class_getMethodImplementation bound
 !unknown-pinvoke! class_getName bound

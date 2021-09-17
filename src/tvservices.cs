@@ -375,4 +375,12 @@ namespace TVServices {
 		[Export ("playbackProgress")]
 		double PlaybackProgress { get; set; }
 	}
+
+	[TV (14,3)]
+	[Static]
+	interface TVUserActivityType {
+
+		[Field ("TVUserActivityTypeBrowsingChannelGuide")]
+		NSString BrowsingChannelGuide { get; }
+	}
 }

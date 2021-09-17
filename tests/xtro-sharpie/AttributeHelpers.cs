@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Clang;
@@ -104,6 +104,19 @@ namespace Extrospection
 			return false;
 		}
 
+		public static bool HasAnyObsoleted (ICustomAttributeProvider item)
+		{
+			if (Skip (item))
+				return false;
+
+			foreach (var attribute in item.CustomAttributes) {
+				if (AttributeHelpers.HasObsoleted (attribute, Helpers.Platform))
+					return true;
+			}
+
+			return false;
+		}
+
 		static Platforms[] GetRelatedPlatforms ()
 		{
 			// TV and Watch also implictly accept iOS
@@ -116,6 +129,8 @@ namespace Extrospection
 				return new Platforms[] { Platforms.iOS, Platforms.tvOS };
 			case Platforms.watchOS:
 				return new Platforms[] { Platforms.iOS, Platforms.watchOS };
+			case Platforms.MacCatalyst:
+				return new Platforms [] { Platforms.iOS, Platforms.MacCatalyst };
 			default:
 				throw new InvalidOperationException ($"Unknown {Helpers.Platform} in GetPlatforms");
 			}

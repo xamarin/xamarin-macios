@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>MyPartialAppManifestApp</ApplicationTitle>
+		<ApplicationId>com.xamarin.mypartialappmanifestapp</ApplicationId>
+		<ApplicationVersion>3.14</ApplicationVersion>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+		<PartialAppManifest Include="../Partial.plist" />
+	</ItemGroup>
+</Project>

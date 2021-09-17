@@ -21,6 +21,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
 	
+#if !XAMCORE_3_0
 	class AnnotationViewPoker : MKAnnotationView {
 		
 		static FieldInfo bkAnnotation;
@@ -46,6 +47,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 	}
+#endif
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -78,6 +80,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 
+#if !XAMCORE_3_0
 		[Test]
 		public void Annotation_BackingFields ()
 		{
@@ -90,6 +93,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.AreSame (a, av.Annotation, "2a");
 			}
 		}
+#endif // !XAMCORE_3_0
 
 		[Test]
 		public void Default ()

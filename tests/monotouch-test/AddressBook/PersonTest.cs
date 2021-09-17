@@ -22,6 +22,13 @@ namespace MonoTouchFixtures.AddressBook {
 	[Preserve (AllMembers = true)]
 	public class PersonTest {
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void UpdateAddressLine ()
 		{

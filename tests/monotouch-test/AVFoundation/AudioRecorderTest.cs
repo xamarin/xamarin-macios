@@ -1,4 +1,4 @@
-﻿// Unit test for AVAudioRecorder
+// Unit test for AVAudioRecorder
 // Authors: 
 // 		Paola Villarreal (paola.villarreal@xamarin.com)
 // Copyright 2014 Xamarin Inc. All rights reserved.

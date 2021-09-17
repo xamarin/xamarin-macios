@@ -14,6 +14,7 @@ namespace Xamarin.Linker {
 		public const string AppKit = nameof (AppKit);
 		public const string AVFoundation = nameof (AVFoundation);
 		public const string AVKit = nameof (AVKit);
+		public const string Chip = nameof (Chip);
 		public const string CloudKit = nameof (CloudKit);
 		public const string Contacts = nameof (Contacts);
 		public const string ContactsUI = nameof (ContactsUI);
@@ -72,6 +73,7 @@ namespace Xamarin.Linker {
 		public const string Social = nameof (Social);
 		public const string SpriteKit = nameof (SpriteKit);
 		public const string StoreKit = nameof (StoreKit);
+		public const string ThreadNetwork = nameof (ThreadNetwork);
 		public const string UIKit = nameof (UIKit);
 		public const string VideoSubscriberAccount = nameof (VideoSubscriberAccount);
 		public const string VideoToolbox = nameof (VideoToolbox);
@@ -84,7 +86,13 @@ namespace Xamarin.Linker {
 		const string INativeObject = Namespaces.ObjCRuntime + ".INativeObject";
 		public static bool IsNSObject (this TypeReference type, DerivedLinkContext link_context)
 		{
-			return type.Resolve ().IsNSObject (link_context);
+			return
+#if NET
+				link_context.LinkerConfiguration.Context.Resolve (type)
+#else
+				type.Resolve ()
+#endif
+				.IsNSObject (link_context);
 		}
 
 		// warning: *Is* means does 'type' inherits from MonoTouch.Foundation.NSObject ?
@@ -93,7 +101,11 @@ namespace Xamarin.Linker {
 			if (link_context?.CachedIsNSObject != null)
 				return link_context.CachedIsNSObject.Contains (type);
 
-			return type.Inherits (Namespaces.Foundation, "NSObject");
+			return type.Inherits (Namespaces.Foundation, "NSObject"
+#if NET
+				, link_context.LinkerConfiguration.Context
+#endif
+			);
 		}
 
 		public static bool IsNativeObject (this TypeDefinition type)

@@ -1,0 +1,15 @@
+parameters:
+
+- name: statusContext
+  type: string 
+  default: 'Windows Integration Tests'
+
+steps:
+
+- checkout: self
+- checkout: maccore
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- pwsh : |
+    gci env: | format-table -autosize -wrap
+  displayName: 'Dump Environment'

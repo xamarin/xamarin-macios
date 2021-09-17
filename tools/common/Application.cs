@@ -3,23 +3,37 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
+using Mono.Tuner;
 
+using Xamarin;
 using Xamarin.Linker;
+using Xamarin.MacDev;
 using Xamarin.Utils;
 
 using ObjCRuntime;
 
 #if MONOTOUCH
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
-#else
+#elif MMP
 using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
+#elif NET
+using PlatformResolver = Xamarin.Linker.DotNetResolver;
+#else
+#error Invalid defines
 #endif
 
 namespace Xamarin.Bundler {
+
+	public enum BuildTarget {
+		None,
+		Simulator,
+		Device,
+	}
 
 	public enum MonoNativeMode {
 		None,
@@ -48,6 +62,7 @@ namespace Xamarin.Bundler {
 		public bool EnableDebug;
 		// The list of assemblies that we do generate debugging info for.
 		public bool DebugAll;
+		public bool UseInterpreter; // Only applicable to mobile platforms.
 		public List<string> DebugAssemblies = new List<string> ();
 		internal RuntimeOptions RuntimeOptions;
 		public Optimizations Optimizations = new Optimizations ();
@@ -56,13 +71,36 @@ namespace Xamarin.Bundler {
 		public SymbolMode SymbolMode;
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
+		// The AOT arguments are currently not used for macOS, but they could eventually be used there as well (there's no mmp option to set these yet).
+		public List<string> AotArguments = new List<string> ();
+		public List<string> AotOtherArguments = null;
+
+		public DlsymOptions DlsymOptions;
+		public List<Tuple<string, bool>> DlsymAssemblies;
+
+		public string CompilerPath;
+
+		public Application ContainerApp; // For extensions, this is the containing app
+		public bool IsCodeShared { get; private set; }
+
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
+		public bool IsExtension;
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
+		public List<string> MonoLibraries = new List<string> ();
+		public List<string> InterpretedAssemblies = new List<string> ();
+
+		// EnableMSym: only implemented for Xamarin.iOS
+		bool? enable_msym;
+		public bool EnableMSym {
+			get { return enable_msym.Value; }
+			set { enable_msym = value; }
+		}
+
 		// Linker config
-		public LinkMode LinkMode = LinkMode.All;
+		public LinkMode LinkMode = LinkMode.Full;
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
 		public I18nAssemblies I18n;
@@ -88,9 +126,290 @@ namespace Xamarin.Bundler {
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
+		public BuildTarget BuildTarget;
+
+		public bool? DisableLldbAttach = null; // Only applicable to Xamarin.Mac
+		public bool? DisableOmitFramePointer = null; // Only applicable to Xamarin.Mac
+		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac and Mac Catalyst
+
+		public XamarinRuntime XamarinRuntime;
+		public bool? UseMonoFramework;
+
+		// The bitcode mode to compile to.
+		// This variable does not apply to macOS, because there's no bitcode on macOS.
+		public BitCodeMode BitCodeMode { get; set; }
+
+		public bool EnableAsmOnlyBitCode { get { return BitCodeMode == BitCodeMode.ASMOnly; } }
+		public bool EnableLLVMOnlyBitCode { get { return BitCodeMode == BitCodeMode.LLVMOnly; } }
+		public bool EnableMarkerOnlyBitCode { get { return BitCodeMode == BitCodeMode.MarkerOnly; } }
+		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
+
+		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
+		// An assembly can be compiled into: static object (.o), dynamic library (.dylib) or a framework (.framework).
+		// In the case of a framework, each framework may contain the native code for multiple assemblies.
+		// This variable does not apply to macOS (if assemblies are AOT-compiled, the AOT compiler will output a .dylib next to the assembly and there's nothing extra for us)
+		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
+
+		public string ContentDirectory {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return AppDirectory;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine (AppDirectory, "Contents", CustomBundleName);
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string FrameworksDirectory {
+			get {
+				return Path.Combine (AppDirectory, RelativeFrameworksPath);
+			}
+		}
+
+		public string RelativeFrameworksPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return "Frameworks";
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine ("Contents", "Frameworks");
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string RelativeDylibPublishPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return string.Empty;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine ("Contents", CustomBundleName);
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		// How Mono should be embedded into the app.
+		AssemblyBuildTarget? libmono_link_mode;
+		public AssemblyBuildTarget LibMonoLinkMode {
+			get {
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+
+				if (Platform == ApplePlatform.MacOSX) {
+					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibMonoLinkMode isn't a valid operation for macOS apps.");
+				}
+
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks || UseMonoFramework.Value) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+			set {
+				libmono_link_mode = value;
+			}
+		}
+
+		// How libxamarin should be embedded into the app.
+		AssemblyBuildTarget? libxamarin_link_mode;
+		public AssemblyBuildTarget LibXamarinLinkMode {
+			get {
+				if (libxamarin_link_mode.HasValue)
+					return libxamarin_link_mode.Value;
+
+				if (Platform == ApplePlatform.MacOSX) {
+					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibXamarinLinkMode isn't a valid operation for macOS apps.");
+				}
+
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+			set {
+				libxamarin_link_mode = value;
+			}
+		}
+
+		// How the generated libpinvoke library should be linked into the app.
+		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
+		// How the profiler library should be linked into the app.
+		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
+
+		// How the libmononative library should be linked into the app.
+		public AssemblyBuildTarget LibMonoNativeLinkMode {
+			get {
+				// if there's a specific way libmono is being linked, use the same way.
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary: AssemblyBuildTarget.StaticObject;
+			}
+		}
+
+		// If all assemblies are compiled into static libraries.
+		public bool OnlyStaticLibraries {
+			get {
+				if (Platform == ApplePlatform.MacOSX)
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Using assembly_build_targets isn't a valid operation for macOS apps.");
+
+				return assembly_build_targets.All ((abt) => abt.Value.Item1 == AssemblyBuildTarget.StaticObject);
+			}
+		}
+
+		// If any assembly in the app is compiled into a dynamic library.
+		public bool HasDynamicLibraries {
+			get {
+				if (Platform == ApplePlatform.MacOSX)
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Using assembly_build_targets isn't a valid operation for macOS apps.");
+
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.DynamicLibrary);
+			}
+		}
+
+		// If any assembly in the app is compiled into a framework.
+		public bool HasFrameworks {
+			get {
+				if (Platform == ApplePlatform.MacOSX)
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Using assembly_build_targets isn't a valid operation for macOS apps.");
+
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.Framework);
+			}
+		}
+
+		// If this application has a Frameworks directory (or if any frameworks should be put in a containing app's Framework directory).
+		// This is used to know where to place embedded .frameworks (for app extensions they should go into the containing app's Frameworks directory).
+		// This logic works on all platforms.
+		public bool HasFrameworksDirectory {
+			get {
+				if (!IsExtension)
+					return true;
+
+				if (IsWatchExtension && Platform == ApplePlatform.WatchOS)
+					return true;
+
+				return false;
+			}
+		}
+
+		bool RequiresXcodeHeaders {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
+					return LinkMode == LinkMode.None;
+				case ApplePlatform.MacOSX:
+					return Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string LocalBuildDir {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
+					return "_ios-build";
+				case ApplePlatform.MacOSX:
+					return "_mac-build";
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string FrameworkLocationVariable {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
+					return "MD_MTOUCH_SDK_ROOT";
+				case ApplePlatform.MacOSX:
+					return "XAMMAC_FRAMEWORK_PATH";
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public bool IsDeviceBuild {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return BuildTarget == BuildTarget.Device;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return false;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public bool IsSimulatorBuild {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return BuildTarget == BuildTarget.Simulator;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return false;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		// It seems the watch simulator is able to correctly select which architecture to use
+		// for a fat executable, so limit ourselves to arch-specific executables anymore.
+		public bool ArchSpecificExecutable {
+			get {
+				return !IsWatchExtension;
+			}
+		}
+
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
-		public Version SdkVersion;
+		public Version SdkVersion; // for Mac Catalyst this is the iOS version
+		public Version NativeSdkVersion; // this is the same as SdkVersion, except that for Mac Catalyst it's the macOS SDK version.
 	
 		public MonoNativeMode MonoNativeMode { get; set; }
 		List<Abi> abis;
@@ -118,6 +437,22 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public Version GetMacCatalystmacOSVersion (Version iOSVersion)
+		{
+			if (!MacCatalystSupport.TryGetMacOSVersion (Driver.GetFrameworkDirectory (this), iOSVersion, out var value))
+				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the iOS version {0} to a macOS version for Mac Catalyst */, iOSVersion.ToString ());
+
+			return value;
+		}
+
+		public Version GetMacCatalystiOSVersion (Version macOSVersion)
+		{
+			if (!MacCatalystSupport.TryGetiOSVersion (Driver.GetFrameworkDirectory (this), macOSVersion, out var value))
+				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst */, macOSVersion.ToString ());
+
+			return value;
+		}
+
 		public string GetProductName ()
 		{
 			return ProductName;
@@ -135,7 +470,16 @@ namespace Xamarin.Bundler {
 
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 
-		public Application (string[] arguments)
+		public Application ()
+		{
+		}
+
+		public Application (string [] arguments)
+		{
+			CreateCache (arguments);
+		}
+
+		public void CreateCache (string [] arguments)
 		{
 			Cache = new Cache (arguments);
 		}
@@ -144,6 +488,13 @@ namespace Xamarin.Bundler {
 			get {
 				return Optimizations.RemoveDynamicRegistrar != true;
 			}
+		}
+
+		public void ParseInterpreter (string value)
+		{
+			UseInterpreter = true;
+			if (!string.IsNullOrEmpty (value))
+				InterpretedAssemblies.AddRange (value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 
 		public void ParseI18nAssemblies (string i18n)
@@ -165,6 +516,53 @@ namespace Xamarin.Bundler {
 			I18n = assemblies;
 		}
 
+		public bool IsTodayExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.widget-extension";
+			}
+		}
+
+		public bool IsWatchExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.watchkit";
+			}
+		}
+
+		public bool IsTVExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.tv-services";
+			}
+		}
+
+		public string ExtensionIdentifier {
+			get {
+				if (!IsExtension)
+					return null;
+
+				var plist = Driver.FromPList (InfoPListPath);
+				var dict = plist.Get<PDictionary> ("NSExtension");
+				if (dict == null)
+					return null;
+				return dict.GetString ("NSExtensionPointIdentifier");
+			}
+		}
+
+		public string InfoPListPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return Path.Combine (AppDirectory, "Info.plist");
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					return Path.Combine (AppDirectory, "Contents", "Info.plist");
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
 		// This is just a name for this app to show in log/error messages, etc.
 		public string Name {
 			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
@@ -172,13 +570,16 @@ namespace Xamarin.Bundler {
 
 		public bool RequiresPInvokeWrappers {
 			get {
-#if MTOUCH
+				if (Platform == ApplePlatform.MacOSX)
+					return false;
+
 				if (IsSimulatorBuild)
 					return false;
+
+				if (Platform == ApplePlatform.MacCatalyst)
+					return false;
+
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
-#else
-				return false;
-#endif
 			}
 		}
 
@@ -193,6 +594,8 @@ namespace Xamarin.Bundler {
 					return "watchOS";
 				case ApplePlatform.MacOSX:
 					return "macOS";
+				case ApplePlatform.MacCatalyst:
+					return "MacCatalyst";
 				default:
 					throw new NotImplementedException ();
 				}
@@ -287,60 +690,36 @@ namespace Xamarin.Bundler {
 		// if it's later than the timestamp of the "target" file itself.
 		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
 		{
-			if (Driver.Force)
-				return false;
-
-			DateTime max_source = DateTime.MinValue;
-			string max_s = null;
-
-			if (sources.Count () == 0 || targets.Count () == 0)
-				throw ErrorHelper.CreateError (1013, Errors.MT1013);
-
-			foreach (var s in sources) {
-				var sfi = new FileInfo (s);
-				if (!sfi.Exists) {
-					Driver.Log (3, "Prerequisite '{0}' does not exist.", s);
-					return false;
-				}
-
-				var st = sfi.LastWriteTimeUtc;
-				if (st > max_source) {
-					max_source = st;
-					max_s = s;
-				}
-			}
-
-
-			foreach (var t in targets) {
-				var tfi = new FileInfo (t);
-				if (!tfi.Exists) {
-					Driver.Log (3, "Target '{0}' does not exist.", t);
-					return false;
-				}
-
-				if (check_stamp) {
-					var tfi_stamp = new FileInfo (t + ".stamp");
-					if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
-						Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", t, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
-						tfi = tfi_stamp;
-					}
-				}
-
-				var lwt = tfi.LastWriteTimeUtc;
-				if (max_source > lwt) {
-					Driver.Log (3, "Prerequisite '{0}' is newer than target '{1}' ({2} vs {3}).", max_s, t, max_source, lwt);
-					return false;
-				}
-			}
-
-			Driver.Log (3, "Prerequisite(s) '{0}' are all older than the target(s) '{1}'.", string.Join ("', '", sources.ToArray ()), string.Join ("', '", targets.ToArray ()));
-
-			return true;
+			return FileCopier.IsUptodate (sources, targets, check_stamp);
 		}
 		
 		public static void UpdateDirectory (string source, string target)
 		{
 			FileCopier.UpdateDirectory (source, target);
+		}
+
+		static string[] NonEssentialDirectoriesInsideFrameworks = { "CVS", ".svn", ".git", ".hg", "Headers", "PrivateHeaders", "Modules" };
+
+		// Duplicate xcode's `builtin-copy` exclusions
+		public static void ExcludeNonEssentialFrameworkFiles (string framework)
+		{
+			// builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd
+			File.Delete (Path.Combine (framework, ".DS_Store"));
+			File.Delete (Path.Combine (framework, "*.tbd"));
+			foreach (var dir in NonEssentialDirectoriesInsideFrameworks)
+				DeleteDir (Path.Combine (framework, dir));
+		}
+
+		static void DeleteDir (string dir)
+		{
+			// Xcode generates symlinks inside macOS frameworks
+			var realdir = Target.GetRealPath (dir, warnIfNoSuchPathExists: false);
+			// unlike File.Delete this would throw if the directory does not exists
+			if (Directory.Exists (realdir)) {
+				Directory.Delete (realdir, true);
+				if (realdir != dir)
+					File.Delete (dir); // because a symlink is a file :)
+			}
 		}
 
 		[DllImport (Constants.libSystemLibrary)]
@@ -372,31 +751,33 @@ namespace Xamarin.Bundler {
 			Driver.Log (1, "Copied {0} to {1}", source, target);
 		}
 
-		public static void TryDelete (string path)
-		{
-			try {
-				if (File.Exists (path))
-					File.Delete (path);
-			} catch {
-			}
-		}
-
 		public void InitializeCommon ()
 		{
+			InitializeDeploymentTarget ();
 			SelectRegistrar ();
 			SelectMonoNative ();
 
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
 
-			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
-				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
+			if (Platform == ApplePlatform.MacCatalyst) {
+				// Our input SdkVersion is the macOS SDK version, but the rest of our code expects the supporting iOS version, so convert here.
+				// The macOS SDK version is still stored in NativeSdkVersion for when we need it.
+				SdkVersion = GetMacCatalystiOSVersion (NativeSdkVersion);
 			}
 
-			if (DeploymentTarget != null) {
-				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform))
-					throw new ProductException (73, true, Errors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
-				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform))
-					throw new ProductException (74, true, Errors.MX0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
+			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (this)) {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
+					throw ErrorHelper.CreateError (180, Errors.MX0180, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+				case ApplePlatform.MacOSX:
+					throw ErrorHelper.CreateError (179, Errors.MX0179, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+				default:
+					// Default to the iOS error message, it's better than showing MX0071 (unknown platform), which would be completely unrelated
+					goto case ApplePlatform.iOS;
+				}
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
@@ -405,41 +786,8 @@ namespace Xamarin.Bundler {
 			if (!EnableCoopGC.HasValue)
 				EnableCoopGC = Platform == ApplePlatform.WatchOS;
 
-			if (EnableCoopGC.Value) {
-				switch (MarshalObjectiveCExceptions) {
-				case MarshalObjectiveCExceptionMode.UnwindManagedCode:
-				case MarshalObjectiveCExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
-				}
-				switch (MarshalManagedExceptions) {
-				case MarshalManagedExceptionMode.UnwindNativeCode:
-				case MarshalManagedExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
-				}
-			}
-
-
-			bool isSimulatorOrDesktopDebug = EnableDebug;
-#if MTOUCH
-			isSimulatorOrDesktopDebug &= IsSimulatorBuild;
-#endif
-
-			if (MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Default) {
-				if (EnableCoopGC.Value || (Platform == ApplePlatform.MacOSX && EnableDebug)) {
-					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
-				} else {
-					MarshalObjectiveCExceptions = isSimulatorOrDesktopDebug ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
-				}
-			}
-
-			if (MarshalManagedExceptions == MarshalManagedExceptionMode.Default) {
-				if (EnableCoopGC.Value) {
-					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
-				} else {
-					MarshalManagedExceptions = isSimulatorOrDesktopDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
-				}
-				IsDefaultMarshalManagedExceptionMode = true;
-			}
+			SetObjectiveCExceptionMode ();
+			SetManagedExceptionMode ();
 
 			if (SymbolMode == SymbolMode.Default) {
 #if MONOTOUCH
@@ -471,7 +819,33 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (3007, Errors.MX3007);
 			}
 
-			Optimizations.Initialize (this);
+			Optimizations.Initialize (this, out var messages);
+			ErrorHelper.Show (messages);
+			if (Driver.Verbosity > 3)
+				Driver.Log (4, $"Enabled optimizations: {Optimizations}");
+		}
+
+		void InitializeDeploymentTarget ()
+		{
+#if ENABLE_BITCODE_ON_IOS
+			if (Platform == ApplePlatform.iOS)
+				DeploymentTarget = new Version (9, 0);
+#endif
+
+			if (DeploymentTarget == null)
+				DeploymentTarget = SdkVersions.GetVersion (this);
+
+			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
+				ErrorHelper.Warning (78, Errors.MT0078, DeploymentTarget);
+				DeploymentTarget = new Version (8, 0);
+			}
+
+			if (DeploymentTarget != null) {
+				if (DeploymentTarget < SdkVersions.GetMinVersion (this))
+					throw new ProductException (73, true, Errors.MT0073, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
+				if (DeploymentTarget > SdkVersions.GetVersion (this))
+					throw new ProductException (74, true, Errors.MX0074, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
+			}
 		}
 
 		void SelectMonoNative ()
@@ -494,6 +868,9 @@ namespace Xamarin.Bundler {
 				else
 					MonoNativeMode = MonoNativeMode.Compat;
 				break;
+			case ApplePlatform.MacCatalyst:
+				MonoNativeMode = MonoNativeMode.Unified;
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
@@ -503,6 +880,9 @@ namespace Xamarin.Bundler {
 		{
 			switch (MonoNativeMode) {
 			case MonoNativeMode.Unified:
+				if (Platform == ApplePlatform.MacCatalyst)
+					return "libmono-native";
+
 				return "libmono-native-unified";
 			case MonoNativeMode.Compat:
 				return "libmono-native-compat";
@@ -529,8 +909,9 @@ namespace Xamarin.Bundler {
 				CommandLineAssemblies = RootAssemblies,
 #endif
 			};
+			resolver.Configure ();
 
-			if (Platform == ApplePlatform.iOS) {
+			if (Platform == ApplePlatform.iOS && !Driver.IsDotNet) {
 				if (Is32Build) {
 					resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				} else {
@@ -589,13 +970,14 @@ namespace Xamarin.Bundler {
 #endif
 			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
-				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
+				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else
-				registrar.Generate (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
+				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
 		}
 
 		public IEnumerable<Abi> Abis {
 			get { return abis; }
+			set { abis = new List<Abi> (value); }
 		}
 
 		public bool IsArchEnabled (Abi arch)
@@ -639,6 +1021,10 @@ namespace Xamarin.Bundler {
 				if (abis.Count == 0)
 					abis.Add (Abi.x86_64);
 				break;
+			case ApplePlatform.MacCatalyst:
+				if (abis.Count == 0)
+					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.MacCatalyst");
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
@@ -676,6 +1062,7 @@ namespace Xamarin.Bundler {
 					validAbis.Add (Abi.ARM64_32 | Abi.LLVM);
 				} else {
 					validAbis.Add (Abi.i386);
+					validAbis.Add (Abi.x86_64);
 				}
 				break;
 			case ApplePlatform.TVOS:
@@ -687,7 +1074,9 @@ namespace Xamarin.Bundler {
 				}
 				break;
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				validAbis.Add (Abi.x86_64);
+				validAbis.Add (Abi.ARM64);
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
@@ -782,6 +1171,44 @@ namespace Xamarin.Bundler {
 			abis = res;
 		}
 
+		public void ParseRegistrar (string v)
+		{
+			var split = v.Split ('=');
+			var name = split [0];
+			var value = split.Length > 1 ? split [1] : string.Empty;
+			switch (name) {
+			case "static":
+				Registrar = RegistrarMode.Static;
+				break;
+			case "dynamic":
+				Registrar = RegistrarMode.Dynamic;
+				break;
+			case "default":
+				Registrar = RegistrarMode.Default;
+				break;
+#if !MTOUCH
+			case "partial":
+			case "partial-static":
+				Registrar = RegistrarMode.PartialStatic;
+				break;
+#endif
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
+
+			switch (value) {
+			case "trace":
+				RegistrarOptions = RegistrarOptions.Trace;
+				break;
+			case "default":
+			case "":
+				RegistrarOptions = RegistrarOptions.Default;
+				break;
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
+		}
+
 		public static string GetArchitectures (IEnumerable<Abi> abis)
 		{
 			var res = new List<string> ();
@@ -811,6 +1238,7 @@ namespace Xamarin.Bundler {
 					else
 						ret += ",major=marksweep";
 					return ret;
+				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
 					return EnableSGenConc ? "major=marksweep-conc" : "major=marksweep";
 				default:
@@ -825,6 +1253,415 @@ namespace Xamarin.Bundler {
 		{
 			foreach (var t in Targets)
 				t.LoadSymbols ();
+		}
+
+		public bool IsFrameworkAvailableInSimulator (string framework)
+		{
+			if (!Driver.GetFrameworks (this).TryGetValue (framework, out var fw))
+				return true; // Unknown framework, assume it's valid for the simulator
+
+			return fw.IsFrameworkAvailableInSimulator (this);
+		}
+
+		public static bool TryParseManagedExceptionMode (string value, out MarshalManagedExceptionMode mode)
+		{
+			mode = MarshalManagedExceptionMode.Default;
+
+			switch (value) {
+			case "default":
+				mode = MarshalManagedExceptionMode.Default;
+				break;
+			case "unwindnative":
+			case "unwindnativecode":
+				mode = MarshalManagedExceptionMode.UnwindNativeCode;
+				break;
+			case "throwobjectivec":
+			case "throwobjectivecexception":
+				mode = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				break;
+			case "abort":
+				mode = MarshalManagedExceptionMode.Abort;
+				break;
+			case "disable":
+				mode = MarshalManagedExceptionMode.Disable;
+				break;
+			default:
+				return false;
+			}
+
+			return true;
+		}
+
+		public static bool TryParseObjectiveCExceptionMode (string value, out MarshalObjectiveCExceptionMode mode)
+		{
+			mode = MarshalObjectiveCExceptionMode.Default;
+			switch (value) {
+			case "default":
+				mode = MarshalObjectiveCExceptionMode.Default;
+				break;
+			case "unwindmanaged":
+			case "unwindmanagedcode":
+				mode = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+				break;
+			case "throwmanaged":
+			case "throwmanagedexception":
+				mode = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				break;
+			case "abort":
+				mode = MarshalObjectiveCExceptionMode.Abort;
+				break;
+			case "disable":
+				mode = MarshalObjectiveCExceptionMode.Disable;
+				break;
+			default:
+				return false;
+			}
+			return true;
+		}
+
+		public void SetManagedExceptionMode ()
+		{
+			switch (MarshalManagedExceptions) {
+			case MarshalManagedExceptionMode.Default:
+				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				} else if (EnableCoopGC.Value) {
+					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				} else {
+					switch (Platform) {
+					case ApplePlatform.iOS:
+					case ApplePlatform.TVOS:
+					case ApplePlatform.WatchOS:
+						MarshalManagedExceptions = EnableDebug && IsSimulatorBuild ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
+						break;
+					case ApplePlatform.MacOSX:
+					case ApplePlatform.MacCatalyst:
+						MarshalManagedExceptions = EnableDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
+						break;
+					default:
+						throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, Platform, ProductName);
+					}
+				}
+				IsDefaultMarshalManagedExceptionMode = true;
+				break;
+			case MarshalManagedExceptionMode.UnwindNativeCode:
+			case MarshalManagedExceptionMode.Disable:
+				if (EnableCoopGC.Value)
+					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+				if (XamarinRuntime == XamarinRuntime.CoreCLR)
+					throw ErrorHelper.CreateError (185, Errors.MX0185 /* The option '{0}' cannot take the value '{1}' when using CoreCLR. */, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+				break;
+			}
+		}
+
+		public void SetObjectiveCExceptionMode ()
+		{
+			switch (MarshalObjectiveCExceptions) {
+			case MarshalObjectiveCExceptionMode.Default:
+				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				} else if (EnableCoopGC.Value) {
+					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				} else {
+					switch (Platform) {
+					case ApplePlatform.iOS:
+					case ApplePlatform.TVOS:
+					case ApplePlatform.WatchOS:
+						MarshalObjectiveCExceptions = EnableDebug && IsSimulatorBuild ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
+						break;
+					case ApplePlatform.MacOSX:
+					case ApplePlatform.MacCatalyst:
+						MarshalObjectiveCExceptions = EnableDebug ? MarshalObjectiveCExceptionMode.ThrowManagedException : MarshalObjectiveCExceptionMode.Disable;
+						break;
+					default:
+						throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, Platform, ProductName);
+					}
+				}
+				break;
+			case MarshalObjectiveCExceptionMode.UnwindManagedCode:
+			case MarshalObjectiveCExceptionMode.Disable:
+				if (EnableCoopGC.Value)
+					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+				if (XamarinRuntime == XamarinRuntime.CoreCLR)
+					throw ErrorHelper.CreateError (185, Errors.MX0185 /* The option '{0}' cannot take the value '{1}' when using CoreCLR. */, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+				break;
+			}
+		}
+
+		// For mobile device builds: returns whether an assembly is interpreted.
+		// For macOS: N/A
+		public bool IsInterpreted (string assembly)
+		{
+			if (Platform == ApplePlatform.MacOSX)
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsInterpreted isn't a valid operation for macOS apps.");
+
+#if !NET
+			if (IsSimulatorBuild)
+				return false;
+#endif
+
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
+			if (!UseInterpreter)
+				return false;
+
+			// Go through the list of assemblies to interpret in reverse order,
+			// so that the last option passed to mtouch takes precedence.
+			for (int i = InterpretedAssemblies.Count - 1; i >= 0; i--) {
+				var opt = InterpretedAssemblies [i];
+				if (opt == "all")
+					return true;
+				else if (opt == "-all")
+					return false;
+				else if (opt == assembly)
+					return true;
+				else if (opt [0] == '-' && opt.Substring (1) == assembly)
+					return false;
+			}
+
+			// There's an implicit 'all' at the start of the list.
+			return true;
+		}
+
+		// For mobile device builds: returns whether an assembly is AOT-compiled.
+		// For macOS: while AOT is supported for macOS, this particular method was not written for macOS, and would need
+		// revision/testing to be used so desired.
+		public bool IsAOTCompiled (string assembly)
+		{
+#if NET
+			if (Platform == ApplePlatform.MacOSX)
+				return false; // AOT on .NET for macOS hasn't been implemented yet.
+#else	
+			if (Platform == ApplePlatform.MacOSX)
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsAOTCompiled isn't a valid operation for macOS apps.");
+#endif
+			if (!UseInterpreter) {
+				if (Platform == ApplePlatform.MacCatalyst)
+					return IsArchEnabled (Abi.ARM64);
+
+				return IsDeviceBuild;
+			}
+
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
+			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
+			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
+			if (assembly == Driver.CorlibName)
+				return true;
+
+			return !IsInterpreted (assembly);
+		}
+
+		public IList<string> GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
+		{
+			GetAotArguments (filename, abi, outputDir, outputFile, llvmOutputFile, dataFile, out var processArguments, out var aotArguments);
+			processArguments.Add (string.Join (",", aotArguments));
+			processArguments.Add (filename);
+			return processArguments;
+		}
+
+		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, out List<string> processArguments, out List<string> aotArguments, string llvm_path = null)
+		{
+			string fname = Path.GetFileName (filename);
+			processArguments = new List<string> ();
+			var app = this;
+			bool enable_llvm = (abi & Abi.LLVM) != 0;
+			bool enable_thumb = (abi & Abi.Thumb) != 0;
+			bool enable_debug = app.EnableDebug;
+			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
+			bool llvm_only = app.EnableLLVMOnlyBitCode;
+			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
+			bool interp_full = !interp && app.UseInterpreter;
+			bool is32bit = (abi & Abi.Arch32Mask) > 0;
+			string arch = abi.AsArchString ();
+
+			processArguments.Add ("--debug");
+
+			if (enable_llvm)
+				processArguments.Add ("--llvm");
+
+			if (!llvm_only && !interp)
+				processArguments.Add ("-O=gsharedvt");
+			if (app.AotOtherArguments != null)
+				processArguments.AddRange (app.AotOtherArguments);
+			aotArguments = new List<string> ();
+			if (Platform == ApplePlatform.MacCatalyst) {
+				aotArguments.Add ($"--aot=mtriple={arch}-apple-ios{DeploymentTarget}-macabi");
+			} else {
+				aotArguments.Add ($"--aot=mtriple={(enable_thumb ? arch.Replace ("arm", "thumb") : arch)}-ios");
+			}
+			aotArguments.Add ($"data-outfile={dataFile}");
+			aotArguments.Add ("static");
+			aotArguments.Add ("asmonly");
+			if (app.LibMonoLinkMode == AssemblyBuildTarget.StaticObject)
+				aotArguments.Add ("direct-icalls");
+			aotArguments.AddRange (app.AotArguments);
+			if (llvm_only)
+				aotArguments.Add ("llvmonly");
+			else if (interp) {
+				if (fname != Driver.CorlibName + ".dll")
+					throw ErrorHelper.CreateError (99, Errors.MX0099, fname);
+				aotArguments.Add ("interp");
+			} else if (interp_full) {
+				aotArguments.Add ("interp");
+				aotArguments.Add ("full");
+			} else
+				aotArguments.Add ("full");
+
+			var aname = Path.GetFileNameWithoutExtension (fname);
+			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
+
+			if (enable_llvm)
+				aotArguments.Add ("nodebug");
+			else if (!(enable_debug || enable_debug_symbols))
+				aotArguments.Add ("nodebug");
+			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
+				aotArguments.Add ("soft-debug");
+
+			aotArguments.Add ("dwarfdebug");
+
+			/* Needed for #4587 */
+			if (enable_debug && !enable_llvm)
+				aotArguments.Add ("no-direct-calls");
+
+			if (!app.UseDlsym (filename))
+				aotArguments.Add ("direct-pinvoke");
+
+			if (app.EnableMSym) {
+				var msymdir = Path.Combine (outputDir, "Msym");
+				aotArguments.Add ($"msym-dir={msymdir}");
+			}
+
+			if (enable_llvm) {
+				if (!string.IsNullOrEmpty (llvm_path)) {
+					aotArguments.Add ($"llvm-path={llvm_path}");
+				} else {
+					aotArguments.Add ($"llvm-path={Driver.GetFrameworkCurrentDirectory (app)}/LLVM/bin/");
+				}
+			}
+
+			aotArguments.Add ($"outfile={outputFile}");
+			if (enable_llvm)
+				aotArguments.Add ($"llvm-outfile={llvmOutputFile}");
+		}
+
+		public string AssemblyName {
+			get {
+				return Path.GetFileName (RootAssemblies [0]);
+			}
+		}
+
+		internal ProductConstants ProductConstants {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.MacCatalyst:
+					return ProductConstants.iOS;
+				case ApplePlatform.TVOS:
+					return ProductConstants.tvOS;
+				case ApplePlatform.WatchOS:
+					return ProductConstants.watchOS;
+				case ApplePlatform.MacOSX:
+					return ProductConstants.macOS;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public void SetDlsymOption (string asm, bool dlsym)
+		{
+			if (DlsymAssemblies == null)
+				DlsymAssemblies = new List<Tuple<string, bool>> ();
+
+			DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
+
+			DlsymOptions = DlsymOptions.Custom;
+		}
+
+		public void ParseDlsymOptions (string options)
+		{
+			bool dlsym;
+			if (Driver.TryParseBool (options, out dlsym)) {
+				DlsymOptions = dlsym ? DlsymOptions.All : DlsymOptions.None;
+			} else {
+				if (DlsymAssemblies == null)
+					DlsymAssemblies = new List<Tuple<string, bool>> ();
+
+				var assemblies = options.Split (',');
+				foreach (var assembly in assemblies) {
+					var asm = assembly;
+					if (assembly.StartsWith ("+", StringComparison.Ordinal)) {
+						dlsym = true;
+						asm = assembly.Substring (1);
+					} else if (assembly.StartsWith ("-", StringComparison.Ordinal)) {
+						dlsym = false;
+						asm = assembly.Substring (1);
+					} else {
+						dlsym = true;
+					}
+					DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
+				}
+
+				DlsymOptions = DlsymOptions.Custom;
+			}
+		}
+
+		public bool UseDlsym (string assembly)
+		{
+			string asm;
+
+			if (DlsymAssemblies != null) {
+				asm = Path.GetFileNameWithoutExtension (assembly);
+				foreach (var tuple in DlsymAssemblies) {
+					if (string.Equals (tuple.Item1, asm, StringComparison.Ordinal))
+						return tuple.Item2;
+				}
+			}
+
+			switch (DlsymOptions) {
+			case DlsymOptions.All:
+				return true;
+			case DlsymOptions.None:
+				return false;
+			}
+
+			if (EnableLLVMOnlyBitCode)
+				return false;
+
+			// Even if this assembly is aot'ed, if we are using the interpreter we can't yet
+			// guarantee that code in this assembly won't be executed in interpreted mode,
+			// which can happen for virtual calls between assemblies, during exception handling
+			// etc. We make sure we don't strip away symbols needed for pinvoke calls.
+			// https://github.com/mono/mono/issues/14206
+			if (UseInterpreter)
+				return true;
+
+			switch (Platform) {
+			case ApplePlatform.iOS:
+				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
+				return false;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+			}
+		}
+
+		public bool VerifyDynamicFramework (string framework_path)
+		{
+			var framework_filename = Path.Combine (framework_path, Path.GetFileNameWithoutExtension (framework_path));
+			var dynamic = false;
+
+			try {
+				dynamic = MachO.IsDynamicFramework (framework_filename);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (140, e, Errors.MT0140, framework_filename);
+			}
+
+			if (!dynamic)
+				Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_path);
+
+			return dynamic;
 		}
 	}
 }

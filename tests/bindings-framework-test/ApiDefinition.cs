@@ -2,7 +2,6 @@ using System;
 
 using ObjCRuntime;
 using Foundation;
-using UIKit;
 
 namespace Bindings.Test {
 	[BaseType (typeof (NSObject))]

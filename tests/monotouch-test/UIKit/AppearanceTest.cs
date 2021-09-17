@@ -1,4 +1,4 @@
-﻿//
+//
 // UIAppearance Unit Tests
 //
 // Authors:

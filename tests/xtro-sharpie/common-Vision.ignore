@@ -35,6 +35,14 @@
 !unknown-native-enum! VNGenerateObjectnessBasedSaliencyImageRequestRevision bound
 !unknown-native-enum! VNRecognizeAnimalsRequestRevision bound
 !unknown-native-enum! VNRecognizeTextRequestRevision bound
+!unknown-native-enum! VNDetectContourRequestRevision bound
+!unknown-native-enum! VNDetectHumanBodyPoseRequestRevision bound
+!unknown-native-enum! VNDetectHumanHandPoseRequestRevision bound
+!unknown-native-enum! VNDetectTrajectoriesRequestRevision bound
+!unknown-native-enum! VNGenerateOpticalFlowRequestRevision bound
+!unknown-native-enum! VNStatefulRequestRevision bound
+!unknown-native-enum! VNDetectDocumentSegmentationRequestRevision bound
+!unknown-native-enum! VNGeneratePersonSegmentationRequestRevision bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 
@@ -46,6 +54,62 @@
 ## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
 !missing-selector! VNRequest::init not bound
 
-## Will be removed in future xcode11 beta
-!missing-field! VNAnimalDetectorCat not bound
-!missing-field! VNAnimalDetectorDog not bound
+# Not really needed anymore, this old(?) unbound APIs got replaced
+!missing-field! VNVideoProcessingOptionFrameCadence not bound
+!missing-field! VNVideoProcessingOptionTimeInterval not bound
+
+# API introduced and deprecated at the same time in Xcode 12
+!missing-field! VNBodyLandmarkKeyLeftAnkle not bound
+!missing-field! VNBodyLandmarkKeyLeftEar not bound
+!missing-field! VNBodyLandmarkKeyLeftElbow not bound
+!missing-field! VNBodyLandmarkKeyLeftEye not bound
+!missing-field! VNBodyLandmarkKeyLeftHip not bound
+!missing-field! VNBodyLandmarkKeyLeftKnee not bound
+!missing-field! VNBodyLandmarkKeyLeftShoulder not bound
+!missing-field! VNBodyLandmarkKeyLeftWrist not bound
+!missing-field! VNBodyLandmarkKeyNeck not bound
+!missing-field! VNBodyLandmarkKeyNose not bound
+!missing-field! VNBodyLandmarkKeyRightAnkle not bound
+!missing-field! VNBodyLandmarkKeyRightEar not bound
+!missing-field! VNBodyLandmarkKeyRightElbow not bound
+!missing-field! VNBodyLandmarkKeyRightEye not bound
+!missing-field! VNBodyLandmarkKeyRightHip not bound
+!missing-field! VNBodyLandmarkKeyRightKnee not bound
+!missing-field! VNBodyLandmarkKeyRightShoulder not bound
+!missing-field! VNBodyLandmarkKeyRightWrist not bound
+!missing-field! VNBodyLandmarkKeyRoot not bound
+!missing-field! VNBodyLandmarkRegionKeyFace not bound
+!missing-field! VNBodyLandmarkRegionKeyLeftArm not bound
+!missing-field! VNBodyLandmarkRegionKeyLeftLeg not bound
+!missing-field! VNBodyLandmarkRegionKeyRightArm not bound
+!missing-field! VNBodyLandmarkRegionKeyRightLeg not bound
+!missing-field! VNBodyLandmarkRegionKeyTorso not bound
+!missing-selector! +VNPoint::distanceBetweenPoint:point: not bound
+!missing-selector! VNDetectContoursRequest::detectDarkOnLight not bound
+!missing-selector! VNDetectContoursRequest::setDetectDarkOnLight: not bound
+!missing-selector! VNDetectTrajectoriesRequest::maximumObjectSize not bound
+!missing-selector! VNDetectTrajectoriesRequest::minimumObjectSize not bound
+!missing-selector! VNDetectTrajectoriesRequest::setMaximumObjectSize: not bound
+!missing-selector! VNDetectTrajectoriesRequest::setMinimumObjectSize: not bound
+!missing-selector! VNStatefulRequest::requestFrameAnalysisSpacing not bound
+!missing-selector! VNVideoProcessor::addRequest:withProcessingOptions:error: not bound
+!missing-selector! VNVideoProcessor::analyzeWithTimeRange:error: not bound
+
+# Existing enums with name changes relevant only to Swift
+!missing-field! VNBarcodeSymbologyAztec_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode128_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39Checksum_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39FullASCII_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39FullASCIIChecksum_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode93_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode93i_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyDataMatrix_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyEAN13_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyEAN8_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyI2of5_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyI2of5Checksum_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyITF14_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyPDF417_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyQR_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyUPCE_SwiftDeprecated not bound

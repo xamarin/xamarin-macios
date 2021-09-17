@@ -1,4 +1,4 @@
-﻿//
+//
 // PlatformFramework.cs
 //
 // Author: Jeffrey Stedfast <jeff@xamarin.com>
@@ -24,7 +24,9 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
@@ -61,9 +63,10 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.WatchOS:
 				return ManifestKeys.MinimumOSVersion;
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				return ManifestKeys.LSMinimumSystemVersion;
 			default:
-				throw new InvalidOperationException ($"Invalid platform: {platform}");
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, platform));
 			}
 		}
 
@@ -89,6 +92,39 @@ namespace Xamarin.MacDev.Tasks
 		public static string GetMinimumVersionArgument (string targetFrameworkMoniker, bool isSimulator, string minimumOSVersion)
 		{
 			return $"-m{GetMinimumVersionOperatingSystem (targetFrameworkMoniker, isSimulator)}-version-min={minimumOSVersion}";
+		}
+
+		public static string GetAppManifestPath (ApplePlatform platform, string appBundlePath)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return Path.Combine (appBundlePath, "Info.plist");
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (appBundlePath, "Contents", "Info.plist");
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, platform));
+			}
+		}
+
+		public static string GetSdkPlatform (ApplePlatform platform, bool isSimulator)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return isSimulator ? "iPhoneSimulator" : "iPhoneOS";
+			case ApplePlatform.TVOS:
+				return isSimulator ? "AppleTVSimulator" : "AppleTVOS";
+			case ApplePlatform.WatchOS:
+				return isSimulator ? "WatchSimulator" : "WatchOS";
+			case ApplePlatform.MacOSX:
+				return "MacOSX";
+			case ApplePlatform.MacCatalyst:
+				return "MacCatalyst";
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, platform));
+			}
 		}
 	}
 }

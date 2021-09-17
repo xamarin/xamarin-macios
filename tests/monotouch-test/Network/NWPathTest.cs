@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.Network {
 		List<NWInterface> interfaces = new List<NWInterface> ();
 		NWConnection connection;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			connection?.Cancel ();
@@ -110,7 +110,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void HasIPV4PropertyTest ()
 		{
-#if !MONOMAC	
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.False (path.HasIPV4, "By default the interface does not support IPV4 on the simulator"); 
 			else
@@ -128,7 +128,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void HasDnsPropertyTest ()
 		{
-#if !MONOMAC	
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.False (path.HasDns,  "By default the interface does not support DNS on the simulator");
 			else
@@ -173,6 +173,13 @@ namespace MonoTouchFixtures.Network {
 				e.Set ();
 			});
 			e.WaitOne (10000);
+		}
+
+		[Test]
+		public void GetUnsatisfiedReason ()
+		{
+			TestRuntime.AssertXcodeVersion (12,2);
+			Assert.That (path.GetUnsatisfiedReason (), Is.EqualTo (NWPathUnsatisfiedReason.NotAvailable));
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKAgent3D
 //
 // Authors:

@@ -1,6 +1,7 @@
 // Copyright 2012-2013, 2016 Xamarin Inc. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -9,25 +10,56 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 
 using MonoTouch.Tuner;
-#if MONOMAC
-using MonoMac.Tuner;
+#if NET
+using Mono.Linker.Steps;
 #endif
 
 namespace Xamarin.Linker {
 
-	public abstract class CoreOptimizeGeneratedCode : ExceptionalSubStep {
+#if NET
+	public class OptimizeGeneratedCodeHandler : ExceptionalMarkHandler {
+#else
+	public class OptimizeGeneratedCodeSubStep : ExceptionalSubStep {
 		// If the type currently being processed is a direct binding or not.
 		// A null value means it's not a constant value, and can't be inlined.
 		bool? isdirectbinding_constant;
+#endif
 
 		protected override string Name { get; } = "Binding Optimizer";
 		protected override int ErrorCode { get; } = 2020;
 
+#if NET
+		Dictionary<AssemblyDefinition, bool?> _hasOptimizableCode;
+		Dictionary<AssemblyDefinition, bool?> HasOptimizableCode {
+			get {
+				if (_hasOptimizableCode == null)
+					_hasOptimizableCode = new Dictionary<AssemblyDefinition, bool?> ();
+				return _hasOptimizableCode;
+			}
+		}
+
+		Dictionary<AssemblyDefinition, bool> _inlineIntPtrSize;
+		Dictionary<AssemblyDefinition, bool> InlineIntPtrSize {
+			get {
+				if (_inlineIntPtrSize == null)
+					_inlineIntPtrSize = new Dictionary<AssemblyDefinition, bool> ();
+				return _inlineIntPtrSize;
+			}
+		}
+#else
 		protected bool HasOptimizableCode { get; private set; }
 		protected bool IsExtensionType { get; private set; }
 
+		// This is per assembly, so we set it in 'void Process (AssemblyDefinition)'
+		bool InlineIntPtrSize { get; set; }
+#endif
+
 		public bool IsDualBuild {
 			get { return LinkContext.App.IsDualBuild; }
+		}
+
+		public bool Device {
+			get { return LinkContext.App.IsDeviceBuild; }
 		}
 
 		public int Arch {
@@ -40,12 +72,13 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		// This is per assembly, so we set it in 'void Process (AssemblyDefinition)'
-		bool InlineIntPtrSize { get; set; }
-
 		bool? is_arm64_calling_convention;
 
+#if NET
+		public override void Initialize (LinkContext context, MarkContext markContext)
+#else
 		public override void Initialize (LinkContext context)
+#endif
 		{
 			base.Initialize (context);
 
@@ -77,18 +110,41 @@ namespace Xamarin.Linker {
 					is_arm64_calling_convention = false;
 				}
 			}
+#if NET
+			markContext.RegisterMarkMethodAction (ProcessMethod);
+#endif
 		}
 
+
+#if !NET
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly | SubStepTargets.Type | SubStepTargets.Method; }
 		}
-		
+#endif
+
+#if NET
+		bool IsActiveFor (AssemblyDefinition assembly, out bool hasOptimizableCode)
+#else
 		public override bool IsActiveFor (AssemblyDefinition assembly)
+#endif
 		{
+#if NET
+			hasOptimizableCode = false;
+			if (HasOptimizableCode.TryGetValue (assembly, out bool? optimizable)) {
+				if (optimizable == true)
+					hasOptimizableCode = true;
+				return optimizable != null;
+			}
+#else
+			bool hasOptimizableCode = false;
+#endif
 			// we're sure "pure" SDK assemblies don't use XamMac.dll (i.e. they are the Product assemblies)
 			if (Profile.IsSdkAssembly (assembly)) {
 #if DEBUG
 				Console.WriteLine ("Assembly {0} : skipped (SDK)", assembly);
+#endif
+#if NET
+				HasOptimizableCode.Add (assembly, null);
 #endif
 				return false;
 			}
@@ -99,14 +155,16 @@ namespace Xamarin.Linker {
 #if DEBUG
 				Console.WriteLine ("Assembly {0} : skipped ({1})", assembly, action);
 #endif
+#if NET
+				HasOptimizableCode.Add (assembly, null);
+#endif
 				return false;
 			}
 			
 			// if the assembly does not refer to [CompilerGeneratedAttribute] then there's not much we can do
-			HasOptimizableCode = false;
 			foreach (TypeReference tr in assembly.MainModule.GetTypeReferences ()) {
 				if (tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute")) {
-					HasOptimizableCode = true;
+					hasOptimizableCode = true;
 					break;
 				}
 
@@ -114,29 +172,34 @@ namespace Xamarin.Linker {
 #if DEBUG
 					Console.WriteLine ("Assembly {0} : processing", assembly);
 #endif
-					HasOptimizableCode = true;
+					hasOptimizableCode = true;
 					break;
 				}
 			}
 #if DEBUG
-			if (!HasOptimizableCode)
+			if (!hasOptimizableCode)
 				Console.WriteLine ("Assembly {0} : no [CompilerGeneratedAttribute] nor [BindingImplAttribute] present (applying basic optimizations)", assembly);
 #endif
 			// we always apply the step
+#if NET
+			HasOptimizableCode.Add (assembly, hasOptimizableCode);
+#else
+			HasOptimizableCode = hasOptimizableCode;
+#endif
 			return true;
 		}
 
+#if !NET
 		protected override void Process (TypeDefinition type)
 		{
 			if (!HasOptimizableCode)
 				return;
 
-			isdirectbinding_constant = type.IsNSObject (LinkContext) ? type.GetIsDirectBindingConstant (LinkContext) : null;
+			isdirectbinding_constant = IsDirectBindingConstant (type);
 
-			// if 'type' inherits from NSObject inside an assembly that has [GeneratedCode]
-			// or for static types used for optional members (using extensions methods), they can be optimized too
-			IsExtensionType = type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
+			IsExtensionType = GetIsExtensionType (type);
 		}
+#endif
 
 		// [GeneratedCode] is not enough - e.g. it's used for anonymous delegates even if the 
 		// code itself is not tool/compiler generated
@@ -152,7 +215,7 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
-		protected static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, Code expected)
+		internal static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, Code expected)
 		{
 			if (ins.OpCode.Code != expected) {
 				Driver.Log (1, "Could not {0} in {1} at offset {2}, expected {3} got {4}", operation, caller, ins.Offset, expected, ins);
@@ -162,7 +225,7 @@ namespace Xamarin.Linker {
 			return true;
 		}
 
-		protected static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, params Code [] expected)
+		internal static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, params Code [] expected)
 		{
 			foreach (var code in expected) {
 				if (ins.OpCode.Code == code)
@@ -236,6 +299,10 @@ namespace Xamarin.Linker {
 			case Code.Conv_I1:
 			case Code.Conv_I2:
 			case Code.Conv_I4:
+			case Code.Conv_U:
+			case Code.Sizeof:
+			case Code.Ldfld:
+			case Code.Ldflda:
 				return null; // just to not hit the CWL below
 #endif
 			default:
@@ -562,7 +629,7 @@ namespace Xamarin.Linker {
 					}
 				}
 			}
-#if TRACE
+#if false
 			Console.WriteLine ($"{caller.FullName}:");
 			for (int i = 0; i < reachable.Length; i++) {
 				Console.WriteLine ($"{(reachable [i] ? "   " : "-  ")} {instructions [i]}");
@@ -592,8 +659,14 @@ namespace Xamarin.Linker {
 				instructions.RemoveAt (last_reachable + 1);
 		}
 
-		protected override void Process (AssemblyDefinition assembly)
+		bool GetInlineIntPtrSize (AssemblyDefinition assembly)
 		{
+#if NET
+			if (InlineIntPtrSize.TryGetValue (assembly, out bool inlineIntPtrSize))
+				return inlineIntPtrSize;
+#else
+			bool inlineIntPtrSize;
+#endif
 			// The "get_Size" is a performance (over size) optimization.
 			// It always makes sense for platform assemblies because:
 			// * Xamarin.TVOS.dll only ship the 64 bits code paths (all 32 bits code is extra weight better removed)
@@ -607,38 +680,62 @@ namespace Xamarin.Linker {
 			//
 			// TODO: we could make this an option "optimize for size vs optimize for speed" in the future
 			if (Optimizations.InlineIntPtrSize.HasValue) {
-				InlineIntPtrSize = Optimizations.InlineIntPtrSize.Value;
+				inlineIntPtrSize = Optimizations.InlineIntPtrSize.Value;
 			} else if (!IsDualBuild) {
-				InlineIntPtrSize = true;
+				inlineIntPtrSize = true;
 			} else {
-				InlineIntPtrSize = (Profile.Current as BaseProfile).ProductAssembly == assembly.Name.Name;
+				inlineIntPtrSize = (Profile.Current as BaseProfile).ProductAssembly == assembly.Name.Name;
 			}
-			Driver.Log (4, "Optimization 'inline-intptr-size' enabled for assembly '{0}'.", assembly.Name);
+			if (inlineIntPtrSize)
+				Driver.Log (4, "Optimization 'inline-intptr-size' enabled for assembly '{0}'.", assembly.Name);
+
+#if NET
+			InlineIntPtrSize.Add (assembly, inlineIntPtrSize);
+#else
+			InlineIntPtrSize = inlineIntPtrSize;
+#endif
+			return inlineIntPtrSize;
+		}
+
+#if !NET
+		protected override void Process (AssemblyDefinition assembly)
+		{
+			GetInlineIntPtrSize (assembly);
 
 			base.Process (assembly);
+		}
+#endif
+
+		bool GetIsExtensionType (TypeDefinition type)
+		{
+			// if 'type' inherits from NSObject inside an assembly that has [GeneratedCode]
+			// or for static types used for optional members (using extensions methods), they can be optimized too
+			return type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
 		}
 
 		protected override void Process (MethodDefinition method)
 		{
+#if NET
+			if (!IsActiveFor (method.DeclaringType.Module.Assembly, out bool hasOptimizableCode))
+				return;
+#endif
+
 			if (!method.HasBody)
 				return;
 
 			if (method.IsBindingImplOptimizableCode (LinkContext)) {
 				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
-			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (IsExtensionType || IsExport (method)))) {
+			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (
+#if NET
+				GetIsExtensionType (method.DeclaringType)
+#else
+				IsExtensionType
+#endif
+				|| IsExport (method)))) {
 				// We optimize methods that have the [GeneratedCodeAttribute] and is either an extension type or an exported method
 			} else {
 				// but it would be too risky to apply on user-generated code
 				return;
-			}
-
-			if (!LinkContext.App.DynamicRegistrationSupported && method.Name == "get_DynamicRegistrationSupported" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
-				// Rewrite to return 'false'
-				var instr = method.Body.Instructions;
-				instr.Clear ();
-				instr.Add (Instruction.Create (OpCodes.Ldc_I4_0));
-				instr.Add (Instruction.Create (OpCodes.Ret));
-				return; // nothing else to do here.
 			}
 
 			if (Optimizations.InlineIsARM64CallingConvention == true && is_arm64_calling_convention.HasValue && method.Name == "GetIsARM64CallingConvention" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
@@ -680,9 +777,13 @@ namespace Xamarin.Linker {
 			case "get_IsDirectBinding":
 				ProcessIsDirectBinding (caller, ins);
 				break;
+#if !NET
+			// ILLink does this optimization since the property returns a constant `true` (built time)
+			// or `false` - if `RegistrarRemovalTrackingStep` decide it's possible to do without
 			case "get_DynamicRegistrationSupported":
 				ProcessIsDynamicSupported (caller, ins);
 				break;
+#endif
 			case "SetupBlock":
 			case "SetupBlockUnsafe":
 				return ProcessSetupBlock (caller, ins);
@@ -698,31 +799,27 @@ namespace Xamarin.Linker {
 			case "IsARM64CallingConvention":
 				ProcessIsARM64CallingConvention (caller, ins);
 				break;
+			case "Arch":
+				// https://app.asana.com/0/77259014252/77812690163
+				ProcessRuntimeArch (caller, ins);
+				break;
 			}
 		}
 
 		void ProcessEnsureUIThread (MethodDefinition caller, Instruction ins)
 		{
-#if MONOTOUCH
-			const string operation = "remove calls to UIApplication::EnsureUIThread";
-#else
-			const string operation = "remove calls to NSApplication::EnsureUIThread";
-#endif
-
 			if (Optimizations.RemoveUIThreadChecks != true)
 				return;
 
 			// Verify we're checking the right get_EnsureUIThread call
+			var declaringTypeNamespace = LinkContext.App.Platform == Utils.ApplePlatform.MacOSX ? Namespaces.AppKit : Namespaces.UIKit;
+			var declaringTypeName = LinkContext.App.Platform == Utils.ApplePlatform.MacOSX ? "NSApplication" : "UIApplication";
 			var mr = ins.Operand as MethodReference;
-#if MONOTOUCH
-			if (!mr.DeclaringType.Is (Namespaces.UIKit, "UIApplication"))
+			if (!mr.DeclaringType.Is (declaringTypeNamespace, declaringTypeName))
 				return;
-#else
-			if (!mr.DeclaringType.Is (Namespaces.AppKit, "NSApplication"))
-				return;
-#endif
 
 			// Verify a few assumptions before doing anything
+			const string operation = "remove calls to [NS|UI]Application::EnsureUIThread";
 			if (!ValidateInstruction (caller, ins, operation, Code.Call))
 				return;
 
@@ -732,8 +829,13 @@ namespace Xamarin.Linker {
 
 		void ProcessIntPtrSize (MethodDefinition caller, Instruction ins)
 		{
+#if NET
+			if (!GetInlineIntPtrSize (caller.Module.Assembly))
+				return;
+#else
 			if (!InlineIntPtrSize)
 				return;
+#endif
 
 			// This will inline IntPtr.Size to load the corresponding constant value instead
 
@@ -747,6 +849,11 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
+		bool? IsDirectBindingConstant (TypeDefinition type)
+		{
+			return type.IsNSObject (LinkContext) ? type.GetIsDirectBindingConstant (LinkContext) : null;
+		}
+
 		void ProcessIsDirectBinding (MethodDefinition caller, Instruction ins)
 		{
 			const string operation = "inline IsDirectBinding";
@@ -754,6 +861,9 @@ namespace Xamarin.Linker {
 			if (Optimizations.InlineIsDirectBinding != true)
 				return;
 
+#if NET
+			bool? isdirectbinding_constant = IsDirectBindingConstant (caller.DeclaringType);
+#endif
 			// If we don't know the constant isdirectbinding value, then we can't inline anything
 			if (!isdirectbinding_constant.HasValue)
 				return;
@@ -778,6 +888,7 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
+#if !NET
 		void ProcessIsDynamicSupported (MethodDefinition caller, Instruction ins)
 		{
 			const string operation = "inline Runtime.DynamicRegistrationSupported";
@@ -797,6 +908,7 @@ namespace Xamarin.Linker {
 			ins.OpCode = LinkContext.App.DynamicRegistrationSupported ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
 			ins.Operand = null;
 		}
+#endif
 
 		int ProcessSetupBlock (MethodDefinition caller, Instruction ins)
 		{
@@ -929,6 +1041,28 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 
 			return 0;
+		}
+
+		void ProcessRuntimeArch (MethodDefinition caller, Instruction ins)
+		{
+			const string operation = "inline Runtime.Arch";
+
+			if (Optimizations.InlineRuntimeArch != true)
+				return;
+
+			// Verify we're checking the right Arch field
+			var fr = ins.Operand as FieldReference;
+			if (!fr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
+				return;
+
+			// Verify a few assumptions before doing anything
+			if (!ValidateInstruction (caller, ins, operation, Code.Ldsfld))
+				return;
+
+			// We're fine, inline the Runtime.Arch condition
+			// The enum values are Runtime.DEVICE = 0 and Runtime.SIMULATOR = 1,
+			ins.OpCode = Device ? OpCodes.Ldc_I4_0 : OpCodes.Ldc_I4_1;
+			ins.Operand = null;
 		}
 
 		// Returns the type of the value pushed on the stack by the given instruction.

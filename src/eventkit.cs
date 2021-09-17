@@ -251,6 +251,7 @@ namespace EventKit {
 		bool Immutable { [Bind ("isImmutable")] get;  }
 
 #if !MONOMAC
+		[NoMacCatalyst] // It's in the documentation and headers, but throws a "+[EKCalendar calendarWithEventStore:]: unrecognized selector" exception at runtime
 		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'Create (EKEntityType, EKEventStore)' instead.")]
 		[Static, Export ("calendarWithEventStore:")]
 		EKCalendar FromEventStore (EKEventStore eventStore);
@@ -356,6 +357,7 @@ namespace EventKit {
 #else
 #if !WATCH
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContactPredicate'.")]
+		[MacCatalyst (14,0)]
 		[return: NullAllowed]
 		[Export ("ABRecordWithAddressBook:")]
 		ABRecord GetRecord (ABAddressBook addressBook);
@@ -489,7 +491,7 @@ namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
-		[NoiOS, Mac (10,11), NoWatch]
+		[NoiOS, Mac (10,11), NoWatch, NoMacCatalyst]
 		[Export ("initWithSources:")]
 		IntPtr Constructor (EKSource[] sources);
 
@@ -654,5 +656,72 @@ namespace EventKit {
 		[Export ("reminderWithEventStore:")]
 		[Static]
 		EKReminder Create (EKEventStore eventStore);	
+	}
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface EKVirtualConferenceDescriptor
+	{
+		[Export ("initWithTitle:URLDescriptors:conferenceDetails:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string title, EKVirtualConferenceUrlDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[Export ("URLDescriptors", ArgumentSemantic.Copy)]
+		EKVirtualConferenceUrlDescriptor[] UrlDescriptors { get; }
+
+		[NullAllowed, Export ("conferenceDetails")]
+		string ConferenceDetails { get; }
+	}
+
+	delegate void VirtualConferenceRoomTypeHandler (NSArray<EKVirtualConferenceRoomTypeDescriptor> virtualConferenceRoomTypeDescriptor, NSError error);
+	delegate void VirtualConferenceHandler (EKVirtualConferenceDescriptor virtualConferenceDescriptor, NSError error);
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	interface EKVirtualConferenceProvider : NSExtensionRequestHandling
+	{
+		[Async]
+		[Export ("fetchAvailableRoomTypesWithCompletionHandler:")]
+		void FetchAvailableRoomTypes (VirtualConferenceRoomTypeHandler handler);
+
+		[Async]
+		[Export ("fetchVirtualConferenceForIdentifier:completionHandler:")]
+		void FetchVirtualConference (string identifier, VirtualConferenceHandler handler);
+	}
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface EKVirtualConferenceRoomTypeDescriptor
+	{
+		[Export ("initWithTitle:identifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string title, string identifier);
+
+		[Export ("title")]
+		string Title { get; }
+
+		[Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject), Name = "EKVirtualConferenceURLDescriptor")]
+	[DisableDefaultCtor]
+	interface EKVirtualConferenceUrlDescriptor
+	{
+		[Export ("initWithTitle:URL:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string title, NSUrl url);
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[Export ("URL", ArgumentSemantic.Copy)]
+		NSUrl Url { get; }
 	}
 }

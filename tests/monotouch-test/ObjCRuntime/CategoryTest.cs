@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -99,6 +99,7 @@ namespace MonoTouchFixtures {
 		public void NavigationControllerOverride ()
 		{
 			TestRuntime.IgnoreOnTVOS (); // shouldAutorotate is not available on TVOS.
+			TestRuntime.IgnoreOnMacCatalyst (); // rotation is not available on Mac Catalyst
 
 			try {
 				bool category_invoked = false;
@@ -133,4 +134,3 @@ namespace MonoTouchFixtures {
 	}
 #endif // !__WATCHOS__
 }
-

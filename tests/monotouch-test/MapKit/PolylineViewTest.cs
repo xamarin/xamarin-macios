@@ -12,6 +12,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
 	
+#if !XAMCORE_3_0
 	class PolylineViewPoker : MKPolylineView {
 		
 		static FieldInfo bkPolyline;
@@ -41,6 +42,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 	}
+#endif // !XAMCORE_3_0
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -54,6 +56,8 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (pl.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
+
+#if !XAMCORE_3_0
 		[Test]
 		public void Defaults_BackingFields ()
 		{
@@ -78,6 +82,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.AreSame (p, pv.Polyline, "2a");
 			}
 		}
+#endif // !XAMCORE_3_0
 	}
 }
 

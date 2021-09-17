@@ -9,6 +9,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableSet1Test {
 
 		[Test]

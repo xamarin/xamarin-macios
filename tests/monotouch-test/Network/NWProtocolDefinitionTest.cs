@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.Network {
 	[Preserve (AllMembers = true)]
 	public class NWProtocolDefinitionTest {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (10, 0);
 
 

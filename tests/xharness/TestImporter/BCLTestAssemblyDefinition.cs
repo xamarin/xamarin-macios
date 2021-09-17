@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using Xharness.BCLTestImporter.Templates;
+using Xharness.TestImporter;
 
 namespace Xharness.BCLTestImporter {
 	public class BCLTestAssemblyDefinition {

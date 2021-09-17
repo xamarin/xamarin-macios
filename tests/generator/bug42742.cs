@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Foundation;
 using ObjCRuntime;
@@ -68,4 +68,3 @@ namespace bug42742
 		IFooProtocol Delegate { get; set; }
 	}
 }
-

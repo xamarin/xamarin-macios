@@ -1,4 +1,4 @@
-﻿using Xamarin.MacDev;
+using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
 {

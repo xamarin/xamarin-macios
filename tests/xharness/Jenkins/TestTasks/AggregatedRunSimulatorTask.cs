@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -63,15 +63,20 @@ namespace Xharness.Jenkins.TestTasks {
 					await task.SelectSimulatorAsync ();
 				}
 
-				var devices = executingTasks.FirstOrDefault ()?.Simulators; 
-				if (devices == null) { 
+				var devices = executingTasks.FirstOrDefault ()?.Simulators;
+				if (devices == null || !devices.Any()) { 
 					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;
 				}
-				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
+				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Count() > 0 ? devices.First().Name : "none");
 
-				foreach (var dev in devices)
-					await dev.PrepareSimulator (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
+				foreach (var dev in devices) {
+					using var tcclog = Logs.Create ($"prepare-simulator-{Xharness.Harness.Helpers.Timestamp}.log", "Simulator preparation");
+					var rv = await dev.PrepareSimulator (tcclog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
+					tcclog.Description += rv ? " ✅ " : " (failed) ⚠️";
+					foreach (var task in executingTasks.Where ((v) => v.Simulators.Contains (dev)))
+						task.Logs.Add (tcclog);
+				}
 
 				foreach (var task in executingTasks) {
 					task.AcquiredResource = desktop;

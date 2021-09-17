@@ -14,6 +14,7 @@ using System.Text;
 using System.Xml;
 
 using Foundation;
+using ObjCRuntime;
 
 using NUnit.Framework;
 

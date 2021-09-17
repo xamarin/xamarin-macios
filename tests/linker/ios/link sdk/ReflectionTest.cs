@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Xamarin Inc. All rights reserved.
+// Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Reflection;
@@ -25,7 +25,8 @@ namespace Linker.Shared.Reflection {
 
 			var mi = this.GetType ().GetMethod ("MethodWithParameters");
 			var p = mi.GetParameters ();
-#if DEBUG
+#if DEBUG && !NET
+			// dotnet has adopted (and adapted) the metadata reducer and runs it on it's own conditions
 			var optimized = false;
 #else
 			var optimized = TestRuntime.IsLinkAll;
@@ -37,8 +38,8 @@ namespace Linker.Shared.Reflection {
 				Assert.That (p [0].ToString (), Is.EqualTo ("System.String firstParameter"), "1");
 				Assert.That (p [1].ToString (), Is.EqualTo ("Int32 secondParameter"), "2");
 			} else {
-				Assert.That (p [0].ToString (), Is.EqualTo ("System.String "), "1");
-				Assert.That (p [1].ToString (), Is.EqualTo ("Int32 "), "2");
+				Assert.That (p [0].ToString (), Is.EqualTo ("System.String ").Or.EqualTo ("System.String"), "1");
+				Assert.That (p [1].ToString (), Is.EqualTo ("Int32 ").Or.EqualTo ("Int32"), "2");
 			}
 		}
 	}

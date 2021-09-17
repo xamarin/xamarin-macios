@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using System.Text;
 using System.Net;
@@ -11,6 +11,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSStreamTest 
 	{
 		[Test]
@@ -132,4 +133,3 @@ namespace MonoTouchFixtures.Foundation {
 #endif // !__WATCHOS__
 	}
 }
-

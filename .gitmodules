@@ -1,7 +1,7 @@
-[submodule "external/guiunit"]
-    path = external/guiunit
-    url = ../../mono/guiunit.git
-    branch = main
+[submodule "external/ikvm-fork"]
+    path = external/ikvm-fork
+    url = ../../mono/ikvm-fork
+    branch = master
 [submodule "external/macios-binaries"]
     path = external/macios-binaries
     url = ../../xamarin/macios-binaries

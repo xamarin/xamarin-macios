@@ -1,11 +1,10 @@
 using System;
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace HomeKit {
 
-	[iOS (8,0)]
-	[TV (10,0)]
 	partial class HMCharacteristic 
 	{
 		public bool SupportsEventNotification {
@@ -38,8 +37,9 @@ namespace HomeKit {
 			}
 		}
 
+#if !NET
 		[iOS (9,3)][Watch (2,2)]
-		[TV (10,0)]
+#endif
 		public bool Hidden {
 			get {
 				foreach (var p in Properties) {

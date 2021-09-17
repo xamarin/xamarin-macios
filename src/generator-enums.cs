@@ -2,12 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
+using System.Reflection;
+using System.Text;
 using Foundation;
 using ObjCRuntime;
-using System.IO;
 
 public partial class Generator {
 
@@ -51,10 +51,33 @@ public partial class Generator {
 
 		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
 		if (native != null) {
-			if (String.IsNullOrEmpty (native.NativeName))
-				print ("[Native]");
-			else
-				print ("[Native (\"{0}\")]", native.NativeName);
+			var sb = new StringBuilder ();
+			sb.Append ("[Native");
+			var hasNativeName = !string.IsNullOrEmpty (native.NativeName);
+			var hasConvertToManaged = !string.IsNullOrEmpty (native.ConvertToManaged);
+			var hasConvertToNative = !string.IsNullOrEmpty (native.ConvertToNative);
+			if (hasNativeName || hasConvertToManaged || hasConvertToNative ) {
+				sb.Append (" (");
+				if (hasNativeName)
+					sb.Append ('"').Append (native.NativeName).Append ('"');
+				if (hasConvertToManaged) {
+					if (hasNativeName)
+						sb.Append (", ");
+					sb.Append ("ConvertToManaged = \"");
+					sb.Append (native.ConvertToManaged);
+					sb.Append ('"');
+				}
+				if (hasConvertToNative) {
+					if (hasNativeName || hasConvertToManaged)
+						sb.Append (", ");
+					sb.Append ("ConvertToNative = \"");
+					sb.Append (native.ConvertToNative);
+					sb.Append ('"');
+				}
+				sb.Append (")");
+			}
+			sb.Append ("]");
+			print (sb.ToString ());
 		}
 		CopyObsolete (type);
 
@@ -63,7 +86,7 @@ public partial class Generator {
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
 		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
-		print ("public enum {0} : {1} {{", type.Name, underlying_type);
+		print ("{0} enum {1} : {2} {{", AttributeManager.HasAttribute<InternalAttribute> (type) ? "internal" : "public", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 
@@ -119,7 +142,7 @@ public partial class Generator {
 			print ("public static NSString? GetDomain (this {0} self)", type.Name);
 			print ("{");
 			indent++;
-			print ("if (_domain == null)");
+			print ("if (_domain is null)");
 			indent++;
 			print ("_domain = Dlfcn.GetStringConstant (Libraries.{0}.Handle, \"{1}\");", library_name, error.ErrorDomain);
 			indent--;
@@ -192,7 +215,7 @@ public partial class Generator {
 			print ("public static {0} GetValue (NSString{1} constant)", type.Name, nullable ? "?" : "");
 			print ("{");
 			indent++;
-			print ("if (constant == null)");
+			print ("if (constant is null)");
 			indent++;
 			// if we do not have a enum value that maps to a null field then we throw
 			if (!nullable)

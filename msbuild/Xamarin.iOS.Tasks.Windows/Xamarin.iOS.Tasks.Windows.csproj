@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <MergeSystemAssemblies>false</MergeSystemAssemblies>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNetZip" Version="1.14.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
+    <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
+    <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
+    <PackageReference Include="Xamarin.iOS.HotRestart.Client" Version="$(HotRestartVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" GeneratePathProperty="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
+      <ExcludeAssets>all</ExcludeAssets>
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <IsAgent>True</IsAgent>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="*.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="*.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\external\macios-binaries\HotRestart\Xamarin.PreBuilt.iOS.app.zip">
+      <Link>Xamarin.PreBuilt.iOS.app.zip</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\Xamarin.iOS.Windows.Client.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgSystem_Diagnostics_Tracer)\lib\netstandard1.3\System.Diagnostics.Tracer.pdb" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
+
+  <!-- Replaces the reference assemblies by the runtime implementation -->
+  <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
+    <ItemGroup>
+      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalToRemove)" />
+      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
+      <ReferencePath Remove="@(ReferencePathToRemove)" />
+      <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
+      <ReferencePath Include="@(ReferencePathToAdd)">
+        <DestinationSubDirectory />
+      </ReferencePath>
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.Pkcs'" />
+    </ItemGroup>
+  </Target>
+</Project>

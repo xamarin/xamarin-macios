@@ -147,7 +147,7 @@ namespace CoreFoundation {
 		public string GetStringValue (string key)
 		{
 			using (var str = new CFString (key)) {
-				return CFString.FetchString (CFDictionaryGetValue (Handle, str.Handle));
+				return CFString.FromHandle (CFDictionaryGetValue (Handle, str.Handle));
 			}
 		}
 
@@ -194,12 +194,15 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool CFNumberGetValue (IntPtr number, nint theType, out int value);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool CFNumberGetValue (IntPtr number, nint theType, out long value);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFDictionaryContainsKey (IntPtr theDict, IntPtr key);
 	}
 

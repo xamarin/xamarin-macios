@@ -5,6 +5,8 @@
 //   Regan Sarwas (find me on gmail as rsarwas)
 //
 
+#if !__MACCATALYST__
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -80,3 +82,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

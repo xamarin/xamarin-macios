@@ -70,7 +70,6 @@ namespace MonoTouch.Tuner {
 			context.LinkSymbols = options.LinkSymbols;
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
-			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
 			context.ExcludedFeatures = new [] { "remoting", "com", "sre" };
 			context.SymbolWriterProvider = new CustomSymbolWriterProvider ();
@@ -84,7 +83,7 @@ namespace MonoTouch.Tuner {
 		static SubStepDispatcher GetSubSteps ()
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
-			sub.Add (new ApplyPreserveAttribute ());
+			sub.Add (new MobileApplyPreserveAttribute ());
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep ());
 			sub.Add (new RemoveUserResourcesSubStep ());
@@ -144,6 +143,7 @@ namespace MonoTouch.Tuner {
 
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());
+				pipeline.Append (new RegistrarRemovalTrackingStep ());
 
 				pipeline.Append (GetSubSteps ());
 
@@ -225,7 +225,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class CustomizeIOSActions : CustomizeActions
+	public class CustomizeIOSActions : CustomizeCoreActions
 	{
 		LinkMode link_mode;
 

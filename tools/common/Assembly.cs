@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Mono.Cecil;
+using Mono.Tuner;
 using MonoTouch.Tuner;
 using ObjCRuntime;
 using Xamarin;
@@ -47,6 +48,9 @@ namespace Xamarin.Bundler {
 
 	public partial class Assembly
 	{
+		public AssemblyBuildTarget BuildTarget;
+		public string BuildTargetName;
+		public bool IsCodeShared;
 		public List<string> Satellites;
 		public Application App { get { return Target.App; } }
 
@@ -55,25 +59,31 @@ namespace Xamarin.Bundler {
 
 		public AssemblyDefinition AssemblyDefinition;
 		public Target Target;
-		public bool IsFrameworkAssembly { get { return is_framework_assembly.Value; } }
+		public bool? IsFrameworkAssembly { get { return is_framework_assembly; } }
 		public string FullPath {
 			get {
 				return full_path;
 			}
 			set {
 				full_path = value;
-				if (!is_framework_assembly.HasValue) {
+				if (!is_framework_assembly.HasValue && !string.IsNullOrEmpty (full_path)) {
+#if NET
+					is_framework_assembly = Target.App.Configuration.FrameworkAssemblies.Contains (GetIdentity (full_path));
+#else
 					var real_full_path = Target.GetRealPath (full_path);
 					is_framework_assembly = real_full_path.StartsWith (Path.GetDirectoryName (Path.GetDirectoryName (Target.Resolver.FrameworkDirectory)), StringComparison.Ordinal);
+#endif
 				}
 			}
 		}
 		public string FileName { get { return Path.GetFileName (FullPath); } }
-		public string Identity { get { return GetIdentity (FullPath); } }
+		public string Identity { get { return GetIdentity (AssemblyDefinition); } }
 
 		public static string GetIdentity (AssemblyDefinition ad)
 		{
-			return Path.GetFileNameWithoutExtension (ad.MainModule.FileName);
+			if (!string.IsNullOrEmpty (ad.MainModule.FileName))
+				return Path.GetFileNameWithoutExtension (ad.MainModule.FileName);
+			return ad.Name.Name;
 		}
 
 		public static string GetIdentity (string path)
@@ -108,6 +118,12 @@ namespace Xamarin.Bundler {
 			this.FullPath = definition.MainModule.FileName;
 		}
 
+		public bool HasValidSymbols {
+			get {
+				return AssemblyDefinition.MainModule.HasSymbols;
+			}
+		}
+
 		public void LoadSymbols ()
 		{	
 			if (symbols_loaded.HasValue)
@@ -137,7 +153,7 @@ namespace Xamarin.Bundler {
 		public void ExtractNativeLinkInfo ()
 		{
 			// ignore framework assemblies, they won't have any LinkWith attributes
-			if (IsFrameworkAssembly)
+			if (IsFrameworkAssembly == true)
 				return;
 
 			var assembly = AssemblyDefinition;
@@ -151,18 +167,24 @@ namespace Xamarin.Bundler {
 					LogNativeReference (metadata);
 					ProcessNativeReferenceOptions (metadata);
 
-					if (metadata.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (metadata.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
 						Frameworks.Add (metadata.LibraryName);
 #if MMP // HACK - MMP currently doesn't respect Frameworks on non-App - https://github.com/xamarin/xamarin-macios/issues/5203
 						App.Frameworks.Add (metadata.LibraryName);
 #endif
-
-					} else {
+						break;
+					case ".xcframework":
+						// this is resolved, at msbuild time, into a framework
+						// but we must ignore it here (can't be the `default` case)
+						break;
+					default:
 #if MMP // HACK - MMP currently doesn't respect LinkWith - https://github.com/xamarin/xamarin-macios/issues/5203
 						Driver.native_references.Add (metadata.LibraryName);
 #endif
 						LinkWith.Add (metadata.LibraryName);
+						break;
 					}
 				}
 			}
@@ -231,7 +253,7 @@ namespace Xamarin.Bundler {
 					continue;
 
 				TypeReference type = attr.Constructor.DeclaringType;
-				if (!type.IsPlatformType ("ObjCRuntime", "LinkWithAttribute"))
+				if (!type.Is ("ObjCRuntime", "LinkWithAttribute"))
 					continue;
 
 				// Let the linker remove it the attribute from the assembly
@@ -251,12 +273,18 @@ namespace Xamarin.Bundler {
 				ProcessNativeReferenceOptions (metadata);
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
-					if (linkWith.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (linkWith.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
-
 						Frameworks.Add (ExtractFramework (assembly, metadata));
-					} else {
+						break;
+					case ".xcframework":
+						// this is resolved, at msbuild time, into a framework
+						// but we must ignore it here (can't be the `default` case)
+						break;
+					default:
 						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
+						break;
 					}
 				}
 			}
@@ -264,12 +292,10 @@ namespace Xamarin.Bundler {
 
 		void AssertiOSVersionSupportsUserFrameworks (string path)
 		{
-#if MONOTOUCH
-			if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
+			if (App.Platform == ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
 				throw ErrorHelper.CreateError (1305, Errors.MT1305,
 					FileName, Path.GetFileName (path), App.DeploymentTarget);
 			}
-#endif
 		}
 
 		void ProcessNativeReferenceOptions (NativeReferenceMetadata metadata)
@@ -436,21 +462,25 @@ namespace Xamarin.Bundler {
 
 		void AddFramework (string file)
 		{
-			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
-			else {
-#if MTOUCH
-				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
-#else
-				var strong = (framework == null) || (App.DeploymentTarget >= framework.Version);
-#endif
-				if (strong) {
-					if (Frameworks.Add (file))
-						Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
-				} else {
-					if (WeakFrameworks.Add (file))
-						Driver.Log (3, "Linking (weakly) with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
+			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework)) {
+				if (framework.Unavailable) {
+					ErrorHelper.Warning (182, Errors.MX0182 /* Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}). */, framework.Name, FileName, App.PlatformName);
+					return;
 				}
+
+				if (framework.Version > App.SdkVersion) {
+					ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+					return;
+				}
+			}
+
+			var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
+			if (strong) {
+				if (Frameworks.Add (file))
+					Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
+			} else {
+				if (WeakFrameworks.Add (file))
+					Driver.Log (3, "Linking (weakly) with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 			}
 		}
 
@@ -462,6 +492,7 @@ namespace Xamarin.Bundler {
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.iOS:
+			case ApplePlatform.MacCatalyst:
 				if (App.DeploymentTarget >= new Version (9,0))
 					return "-lcompression";
 				return "-weak-lcompression";
@@ -486,12 +517,10 @@ namespace Xamarin.Bundler {
 					
 					string file = Path.GetFileNameWithoutExtension (name);
 
-#if !MONOMAC
-					if (App.IsSimulatorBuild && !Driver.IsFrameworkAvailableInSimulator (App, file)) {
+					if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (file)) {
 						Driver.Log (3, "Not linking with {0} (referenced by a module reference in {1}) because it's not available in the simulator.", file, FileName);
 						continue;
 					}
-#endif
 
 					switch (file) {
 					// special case
@@ -534,25 +563,33 @@ namespace Xamarin.Bundler {
 						if (Frameworks.Add ("OpenAL"))
 							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
-					default:
-#if MONOMAC
-						string path = Path.GetDirectoryName (name);
-						if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
-							continue;
-
-						// CoreServices has multiple sub-frameworks that can be used by customer code
-						if (path.StartsWith ("/System/Library/Frameworks/CoreServices.framework/", StringComparison.Ordinal)) {
-							if (Frameworks.Add ("CoreServices"))
-								Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
+#if NET
+					case "Carbon":
+						if (App.Platform != ApplePlatform.MacOSX) {
+							Driver.Log (3, $"Not linking with the framework {file} (referenced by a module reference in {FileName}) because it doesn't exist on the target platform.");
 							break;
 						}
-						// ApplicationServices has multiple sub-frameworks that can be used by customer code
-						if (path.StartsWith ("/System/Library/Frameworks/ApplicationServices.framework/", StringComparison.Ordinal)) {
-							if (Frameworks.Add ("ApplicationServices"))
-								Driver.Log (3, "Linking with the framework ApplicationServices because {0} is referenced by a module reference in {1}", file, FileName);
-							break;
-						}
+						break;
 #endif
+					default:
+						if (App.Platform == ApplePlatform.MacOSX) {
+							string path = Path.GetDirectoryName (name);
+							if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
+								continue;
+
+							// CoreServices has multiple sub-frameworks that can be used by customer code
+							if (path.StartsWith ("/System/Library/Frameworks/CoreServices.framework/", StringComparison.Ordinal)) {
+								if (Frameworks.Add ("CoreServices"))
+									Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
+								break;
+							}
+							// ApplicationServices has multiple sub-frameworks that can be used by customer code
+							if (path.StartsWith ("/System/Library/Frameworks/ApplicationServices.framework/", StringComparison.Ordinal)) {
+								if (Frameworks.Add ("ApplicationServices"))
+									Driver.Log (3, "Linking with the framework ApplicationServices because {0} is referenced by a module reference in {1}", file, FileName);
+								break;
+							}
+						}
 
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
@@ -665,6 +702,68 @@ namespace Xamarin.Bundler {
 					Directory.CreateDirectory (target_dir);
 
 				CopyAssembly (a, target_s);
+			}
+		}
+
+		public delegate bool StripAssembly (string path);
+
+		// returns false if the assembly was not copied (because it was already up-to-date).
+		public bool CopyAssembly (string source, string target, bool copy_debug_symbols = true, StripAssembly strip = null)
+		{
+			var copied = false;
+
+			try {
+				var strip_assembly = strip != null && strip (source);
+				if (!Application.IsUptodate (source, target) && (strip_assembly || !Cache.CompareAssemblies (source, target))) {
+					copied = true;
+					if (strip_assembly) {
+						PathUtils.FileDelete (target);
+						Directory.CreateDirectory (Path.GetDirectoryName (target));
+						MonoTouch.Tuner.Stripper.Process (source, target);
+					} else {
+						Application.CopyFile (source, target);
+					}
+				} else {
+					Driver.Log (3, "Target '{0}' is up-to-date.", target);
+				}
+
+				// Update the debug symbols file even if the assembly didn't change.
+				if (copy_debug_symbols && HasValidSymbols) {
+					// Unfortunately Cecil won't tell us the path of the symbol file, so we have to try all we support (.pdb+.mdb)
+					if (File.Exists (source + ".mdb"))
+						Application.UpdateFile (source + ".mdb", target + ".mdb", true);
+
+					var spdb = Path.ChangeExtension (source, "pdb");
+					if (File.Exists (spdb))
+						Application.UpdateFile (spdb, Path.ChangeExtension (target, "pdb"), true);
+				}
+
+				CopyConfigToDirectory (Path.GetDirectoryName (target));
+			} catch (Exception e) {
+				throw new ProductException (1009, true, e, Errors.MX1009, source, target, e.Message);
+			}
+
+			return copied;
+		}
+
+		public void CopyConfigToDirectory (string directory)
+		{
+			string config_src = FullPath + ".config";
+			if (File.Exists (config_src)) {
+				string config_target = Path.Combine (directory, FileName + ".config");
+				Application.UpdateFile (config_src, config_target, true);
+			}
+		}
+
+		public bool IsInterpreted {
+			get {
+				return App.IsInterpreted (Identity);
+			}
+		}
+
+		public bool IsAOTCompiled {
+			get {
+				return App.IsAOTCompiled (Identity);
 			}
 		}
 	}

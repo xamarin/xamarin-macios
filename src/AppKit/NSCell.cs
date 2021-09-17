@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -37,7 +39,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		extern static void NSDrawThreePartImage (CGRect rect,
 			IntPtr /* NSImage* */ startCap, IntPtr /* NSImage* */ centerFill, IntPtr /* NSImage* */ endCap,
-			bool vertial, nint op, nfloat alphaFraction, bool flipped);
+			[MarshalAs (UnmanagedType.I1)] bool vertial, nint op, nfloat alphaFraction, [MarshalAs (UnmanagedType.I1)] bool flipped);
 		
 		public void DrawThreePartImage (CGRect frame,
 			NSImage startCap, NSImage centerFill, NSImage endCap,
@@ -55,7 +57,7 @@ namespace AppKit {
 			IntPtr /* NSImage* */ topLeftCorner, IntPtr /* NSImage* */ topEdgeFill, IntPtr /* NSImage* */ topRightCorner,
 			IntPtr /* NSImage* */ leftEdgeFill, IntPtr /* NSImage* */ centerFill, IntPtr /* NSImage* */ rightEdgeFill,
 			IntPtr /* NSImage* */ bottomLeftCorner, IntPtr /* NSImage* */ bottomEdgeFill, IntPtr /* NSImage* */ bottomRightCnint,
-			nint op, nfloat alphaFraction, bool flipped);
+			nint op, nfloat alphaFraction, [MarshalAs (UnmanagedType.I1)] bool flipped);
 
 		public void DrawNinePartImage (CGRect frame,
 			NSImage topLeftCorner, NSImage topEdgeFill, NSImage topRightCorner,
@@ -77,3 +79,4 @@ namespace AppKit {
  		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -185,7 +185,7 @@ get_mono_env_options (int *count)
 	if (n == 0)
 		return NULL;
 
-	argv = (char **) malloc (sizeof (char *) * (n + 1));
+	argv = (char **) malloc (sizeof (char *) * ((unsigned long) n + 1));
 	i = 0;
 
 	while (list != NULL) {
@@ -294,12 +294,13 @@ update_environment (xamarin_initialize_data *data)
 	NSString *monobundle_dir;
 
 	if (data->launch_mode == XamarinLaunchModeEmbedded) {
-		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/MonoBundle"];
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current"];
 		res_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/Resources"];
 	} else {
-		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MonoBundle"];
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents"];
 		res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
 	}
+	monobundle_dir = [monobundle_dir stringByAppendingPathComponent: xamarin_custom_bundle_name];
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	NSString *bin_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MacOS"];
@@ -314,10 +315,11 @@ update_environment (xamarin_initialize_data *data)
 	push_env ("PKG_CONFIG_PATH", [res_dir stringByAppendingPathComponent: @"/lib/pkgconfig"]);
 	push_env ("PKG_CONFIG_PATH", [res_dir stringByAppendingPathComponent: @"/share/pkgconfig"]);
 	
-	
 	push_env ("MONO_GAC_PREFIX", res_dir);
 	push_env ("PATH", bin_dir);
-	
+
+	push_env ("MONO_PATH", monobundle_dir);
+
 	data->requires_relaunch = true;
 #else
 	// disable /dev/shm since Apple refuse applications that uses it in the Mac App Store
@@ -450,10 +452,17 @@ app_initialize (xamarin_initialize_data *data)
 	if (data->launch_mode == XamarinLaunchModeApp) {
 		NSString *exeName = NULL;
 		NSString *exePath;
-		if (plist != NULL)
-			exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
-		else
-			fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+
+		if (xamarin_executable_name != NULL) {
+			exeName = [NSString stringWithUTF8String: xamarin_executable_name];
+		}
+
+		if (exeName == NULL) {
+			if (plist != NULL)
+				exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
+			else
+				fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+		}
 
 		if (exeName == NULL)
 			exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".exe"];
@@ -541,13 +550,15 @@ run_application_init (xamarin_initialize_data *data)
 
 	MonoImage *image = mono_assembly_get_image (assembly);
 
+	xamarin_mono_object_release (&assembly);
+
 	MonoClass *app_class = mono_class_from_name (image, "AppKit", "NSApplication");
 	if (!app_class)
 		xamarin_assertion_message ("Fatal error: failed to load the NSApplication class");
 
 	MonoMethod *initialize = mono_class_get_method_from_name (app_class, "Init", 0);
 	if (!initialize)
-		xamarin_assertion_message ("Fatal error: failed to load the NSApplication.Init method");
+		xamarin_assertion_message ("Fatal error: failed to load the %s.%s method", "NSApplication", "Init");
 
 	mono_runtime_invoke (initialize, NULL, NULL, NULL);
 }
@@ -597,7 +608,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		if (xamarin_mac_modern)
 			new_argc += 1;
 
-		char **new_argv = (char **) malloc (sizeof (char *) * (new_argc + 1 /* null terminated */));
+		char **new_argv = (char **) malloc (sizeof (char *) * ((unsigned long) new_argc + 1 /* null terminated */));
 		const char **ptr = (const char **) new_argv;
 		// binary
 		*ptr++ = argv [0];

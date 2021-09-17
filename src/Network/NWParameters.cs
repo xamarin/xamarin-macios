@@ -6,9 +6,13 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -16,17 +20,14 @@ using CoreFoundation;
 using nw_parameters_t=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWMultiPathService {
-		Disabled = 0,
-		Handover = 1,
-		Interactive = 2,
-		Aggregate = 3, 
-	}
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWParameters : NativeObject {
 		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -44,7 +45,7 @@ namespace Network {
 			if (del != null) {
 				using (var tempOptions = new NWProtocolOptions (iface, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
-					NWProtocolOptions castedOptions = null;
+					NWProtocolOptions? castedOptions = null;
 
 					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
 						castedOptions = new NWProtocolTcpOptions (iface, owns: false);
@@ -58,8 +59,11 @@ namespace Network {
 						castedOptions = new NWWebSocketOptions (iface, owns: false);
 					} 
 
-					del (castedOptions ?? tempOptions);
-					castedOptions?.Dispose ();
+					try {
+						del (castedOptions ?? tempOptions);
+					} finally {
+						castedOptions?.Dispose ();
+					}
 				}
 			}
 		}
@@ -71,7 +75,7 @@ namespace Network {
 		// If you pass null, to either configureTls, or configureTcp they will use the default options
 		//
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateSecureTcp (Action<NWProtocolOptions> configureTls = null, Action<NWProtocolOptions> configureTcp = null)
+		public unsafe static NWParameters CreateSecureTcp (Action<NWProtocolOptions>? configureTls = null, Action<NWProtocolOptions>? configureTcp = null)
 		{
 			var tlsHandler = new BlockLiteral ();
 			var tcpHandler = new BlockLiteral ();
@@ -101,7 +105,7 @@ namespace Network {
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		// If you pass null to configureTcp, it will use the default options
-		public unsafe static NWParameters CreateTcp (Action<NWProtocolOptions> configureTcp = null)
+		public unsafe static NWParameters CreateTcp (Action<NWProtocolOptions>? configureTcp = null)
 		{
 			var tcpHandler = new BlockLiteral ();
 
@@ -128,7 +132,7 @@ namespace Network {
 		// If you pass null, to either configureTls, or configureTcp they will use the default options
 		//
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateSecureUdp (Action<NWProtocolOptions> configureTls = null, Action<NWProtocolOptions> configureUdp = null)
+		public unsafe static NWParameters CreateSecureUdp (Action<NWProtocolOptions>? configureTls = null, Action<NWProtocolOptions>? configureUdp = null)
 		{
 			var tlsHandler = new BlockLiteral ();
 			var udpHandler = new BlockLiteral ();
@@ -159,7 +163,7 @@ namespace Network {
 
 		// If you pass null to configureTcp, it will use the default options
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateUdp (Action<NWProtocolOptions> configureUdp = null)
+		public unsafe static NWParameters CreateUdp (Action<NWProtocolOptions>? configureUdp = null)
 		{
 			var udpHandler = new BlockLiteral ();
 
@@ -178,13 +182,21 @@ namespace Network {
 		}
 
 #if MONOMAC
+#if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
 
+#if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions> configureCustomIP = null)
+		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions>? configureCustomIP = null)
 		{
 			var ipHandler = new BlockLiteral ();
 
@@ -276,7 +288,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_parameters_copy_required_interface (nw_parameters_t parameters);
 
-		public NWInterface RequiredInterface {
+		public NWInterface? RequiredInterface {
 			get {
 				var iface = nw_parameters_copy_required_interface (GetCheckedHandle ());
 
@@ -451,7 +463,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_local_endpoint (IntPtr handle, IntPtr endpoint);
 
-		public NWEndpoint LocalEndpoint {
+		public NWEndpoint? LocalEndpoint {
 			get {
 				var x = nw_parameters_copy_local_endpoint (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
@@ -467,7 +479,7 @@ namespace Network {
 
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, bool includePeerToPeer);
+		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool includePeerToPeer);
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -478,27 +490,37 @@ namespace Network {
 			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value);
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_parameters_get_prohibit_constrained (IntPtr parameters);
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, bool prohibit_constrained);
+		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, [MarshalAs (UnmanagedType.I1)] bool prohibit_constrained);
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public bool ProhibitConstrained {
 			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ());
 			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value);
 		}
-	}
-
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWParametersExpiredDnsBehavior {
-		Default = 0,
-		Allow = 1,
-		Prohibit = 2,
 	}
 }

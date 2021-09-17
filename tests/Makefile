@@ -1,10 +1,14 @@
 TOP = ..
-SUBDIRS=test-libraries dotnet
+SUBDIRS=test-libraries
 
 # disabled for now: mac-test
 
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
+
+ifdef ENABLE_DOTNET
+SUBDIRS += dotnet
+endif
 
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
@@ -82,7 +86,7 @@ endif
 package-tests:
 	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
-test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
+test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
@@ -94,13 +98,15 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
-	@echo "DOTNET5=$(DOTNET5)" >> $@
+	@echo "DOTNET6=$(DOTNET6)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "OSX_SDK_VERSION=$(OSX_SDK_VERSION)" >> $@
+	@echo "DOTNET6_BCL_DIR=$(DOTNET6_BCL_DIR)" >> $@
+	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
 
-test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
+test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@
@@ -110,7 +116,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
-	@echo "DOTNET5=$(DOTNET5)" >> $@
+	@echo "DOTNET6=$(DOTNET6)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
@@ -180,26 +186,16 @@ logdev:
 	$(MTOUCH) --logdev
 
 $(UNIT_SERVER): $(wildcard $(UNIT_SERVER_DIR)/*.cs)
-	(cd $(UNIT_SERVER_DIR) && $(SYSTEM_MSBUILD))
+	(cd $(UNIT_SERVER_DIR) && $(SYSTEM_MSBUILD) /bl)
 
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-Makefile.inc: xharness/xharness.exe
+.stamp-xharness-configure: xharness/xharness.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
+	$(Q) touch $@
 
--include Makefile.inc
-
-$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe:
-	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
-
-$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe:
-	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_xammac_mobile.csproj
-
-Makefile-mac.inc: xharness/xharness.exe
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure  --autoconf --mac --rootdir $(CURDIR)
-
--include Makefile-mac.inc
+all-local:: .stamp-xharness-configure
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
@@ -209,7 +205,8 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
-	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
 -include xharness/xharness.csproj.inc
 
@@ -219,11 +216,15 @@ killall:
 	@killall Touch.Server >/dev/null 2>&1 || true
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug
-	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE) || touch $(CURDIR)/.$@-failed-stamp
-	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
-	@if test -e $(CURDIR)/.$@-failed-stamp; then rm $(CURDIR)/.$@-failed-stamp; exit 1; fi
+test-ios-tasks: test-macdev-tests test-macdev-tasks
+
+test-macdev-tests: verify-system-vsmac-xcode-match
+	$(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug /r
+	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/bin/Debug/net472/Xamarin.MacDev.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE)
+
+test-macdev-tasks: verify-system-vsmac-xcode-match
+	$(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug /r
+	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/bin/Debug/net472/Xamarin.MacDev.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tasks.Tests.xml)" -labels=Before $(TEST_FIXTURE)
 
 test-install-sources:
 	$(SYSTEM_XIBUILD) -- $(TOP)/tools/install-source/InstallSourcesTests/InstallSourcesTests.csproj
@@ -280,6 +281,14 @@ mac-test-package.zip:
 	./package-mac-tests.sh
 else
 mac-test-package.zip:
+	@echo Not enabled
+endif
+
+ifdef INCLUDE_DOTNET
+dotnet-test-package.7z:
+	./package-dotnet-tests.sh
+else
+dotnet-test-package.7z:
 	@echo Not enabled
 endif
 

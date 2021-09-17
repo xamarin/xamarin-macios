@@ -75,9 +75,12 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	@property char Pc4;
 	@property char Pc5;
 
+	@property (nonatomic, retain) NSObject* someObject;
+	@property (nonatomic, retain) NSArray* someArray;
 #include "libtest.properties.h"
 
 	-(void) V;
+	+(void) staticV;
 
 	-(float) F;
 	-(double) D;

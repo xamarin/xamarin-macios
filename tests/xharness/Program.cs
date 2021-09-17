@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using Mono.Options;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
+using Microsoft.DotNet.XHarness.Common;
 
 namespace Xharness {
 	class MainClass {
@@ -39,7 +40,6 @@ namespace Xharness {
 				{ "v|verbose", "Show verbose output", (v) => configuration.Verbosity++ },
 				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => configuration.UseSystemXamarinIOSMac = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
 				// Configure
-				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => configuration.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },
@@ -125,6 +125,10 @@ namespace Xharness {
 
 			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
 			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
+
+			// MSBuild gets confused sometimes, and runs into some sort of deadlock. Disable node re-use to try to mitigate that.
+			// Ref: https://github.com/xamarin/maccore/issues/2444
+			Environment.SetEnvironmentVariable ("MSBUILDDISABLENODEREUSE", "1");
 
 			var harness = new Harness (new XmlResultParser (), action, configuration);
 

@@ -1,7 +1,11 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src msbuild tools dotnet
+SUBDIRS=builds runtime fsharp src msbuild tools
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
+
+ifdef ENABLE_DOTNET
+SUBDIRS += dotnet
+endif
 
 #
 # Common
@@ -18,6 +22,8 @@ world: check-system
 
 .PHONY: check-system
 check-system:
+ifdef INCLUDE_MAC
+ifdef INCLUDE_IOS
 	@if [[ "x$(IOS_COMMIT_DISTANCE)" != "x$(MAC_COMMIT_DISTANCE)" ]]; then \
 		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)) and Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are different.$(COLOR_CLEAR)"; \
 		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for both $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
@@ -29,6 +35,8 @@ check-system:
 		echo "$(COLOR_RED)*** Once fixed, you need to commit the changes for them to pass this check.$(COLOR_CLEAR)"; \
 		exit 1; \
 	fi
+endif
+endif
 	@./system-dependencies.sh
 	@echo "Building the packages:"
 	@echo "    Xamarin.iOS $(IOS_PACKAGE_VERSION)"
@@ -38,6 +46,7 @@ check-system:
 	@echo "    Xamarin.tvOS $(TVOS_NUGET_VERSION_FULL)"
 	@echo "    Xamarin.watchOS $(WATCHOS_NUGET_VERSION_FULL)"
 	@echo "    Xamarin.macOS $(MACOS_NUGET_VERSION_FULL)"
+	@echo "    Xamarin.MacCatalyst $(MACCATALYST_NUGET_VERSION_FULL)"
 
 check-permissions:
 ifdef INCLUDE_MAC
@@ -49,9 +58,14 @@ ifdef INCLUDE_IOS
 	@echo Validated file permissions for Xamarin.iOS.
 endif
 
-all-local:: global.json
-global.json: Make.config Makefile
-	$(Q) printf "{\n\t\"sdk\": {\n\t\t\"version\": \"$(DOTNET_VERSION)\"\n\t}\n}\n" > $@
+all-local:: global6.json
+
+# This tells NuGet to use the exact same dotnet version we've configured in Make.config
+global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
+	$(Q_GEN) \
+		printf "{\n" > $@; \
+		printf "\t\"sdk\": { \"version\": \"$(DOTNET6_VERSION)\" }\n" >> $@; \
+		printf "\n}\n" >> $@
 
 install-hook::
 	@$(MAKE) check-permissions
@@ -129,6 +143,12 @@ fix-install-permissions:
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.iOS.framework
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.Mac.framework
 
+fix-xcode-select:
+	sudo xcode-select -s $(XCODE_DEVELOPER_ROOT)
+
+fix-xcode-first-run:
+	$(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -runFirstLaunch
+
 git-clean-all:
 	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"
 	@echo "$(COLOR_RED)You have 5 seconds to cancel (Ctrl-C) if you wish.$(COLOR_CLEAR)"
@@ -138,13 +158,23 @@ git-clean-all:
 	@test -d external/mono && echo "Cleaning mono..." && cd external/mono && git clean -xffdq && git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q' || true
 	@git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q'
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
-ifdef ENABLE_XAMARIN
-	@./configure --enable-xamarin
-	$(MAKE) reset
-	@echo "Done (Xamarin-specific build has been re-enabled)"
-else
-	@echo "Done"
-endif
+
+	@if [ -n "$(ENABLE_XAMARIN)" ] || [ -n "$(ENABLE_DOTNET)"]; then \
+		CONFIGURE_FLAGS=""; \
+		if [ -n "$(ENABLE_XAMARIN)" ]; then \
+			echo "Xamarin-specific build has been re-enabled"; \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-xamarin"; \
+		fi; \
+		if [ -n "$(ENABLE_DOTNET)" ]; then \
+			echo "Dotnet-specific build has been re-enabled"; \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-dotnet"; \
+		fi; \
+		./configure "$$CONFIGURE_FLAGS"; \
+		$(MAKE) reset; \
+		echo "Done"; \
+	else \
+		echo "Done"; \
+	fi; \
 
 ifdef ENABLE_XAMARIN
 SUBDIRS += $(MACCORE_PATH)

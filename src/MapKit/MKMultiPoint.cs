@@ -5,6 +5,8 @@ using Foundation;
 using CoreLocation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 	public partial class MKMultiPoint {

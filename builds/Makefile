@@ -11,18 +11,22 @@ PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 ##
 
 download: download-mono
-download-mono: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
+download-mono: \
+	downloads/$(basename $(MONO_IOS_FILENAME)) \
+	downloads/$(basename $(MONO_MAC_FILENAME)) \
+	downloads/$(basename $(MONO_MACCATALYST_FILENAME)) \
 
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
-downloads/$(DOTNET_BCL_REF_NAME): MONO_URL=$(DOTNET_BCL_REF_URL)
+downloads/$(basename $(MONO_MACCATALYST_FILENAME)): MONO_URL=$(MONO_MACCATALYST_URL)
+downloads/$(DOTNET6_TARBALL_NAME): MONO_URL=$(DOTNET6_TARBALL)
 
 include $(TOP)/mk/colors.mk
 
 DOWNLOADS = \
 	downloads/$(MONO_IOS_FILENAME) \
 	downloads/$(MONO_MAC_FILENAME) \
-	downloads/$(DOTNET_BCL_REF_NAME) \
+	downloads/$(MONO_MACCATALYST_FILENAME) \
 
 # This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
 # If doing many clean builds, it's possible to copy the downloaded zip file to ~/Library/Caches/xamarin-macios
@@ -43,6 +47,11 @@ $(DOWNLOADS):
 			if test -n "$$FAILURE_REASON_PATH"; then printf "$$MSG\n" "[$(notdir $@)]($(MONO_URL))" >> "$$FAILURE_REASON_PATH"; fi; \
 		fi; \
 		if [[ x$$EC != x0 ]]; then exit $$EC; fi; \
+		if [[ "x$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
+			mkdir -p ~/Library/Caches/xamarin-macios/; \
+			$(CP) $@.tmp ~/Library/Caches/xamarin-macios/"$(notdir $@)"; \
+			echo "Cached the download of $(notdir $@) in ~/Library/Caches/xamarin-macios"; \
+		fi; \
 	fi
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"
@@ -63,12 +72,77 @@ downloads/%: downloads/%.nupkg
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
+downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))): dotnet-install.sh
+	$(Q) echo "Downloading and installing .NET $(DOTNET6_VERSION) into $@..."
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET6_VERSION)" --architecture x64 --no-path
+	$(Q) rm -Rf "$@"
+	$(Q) mv "$@.tmp" "$@"
+	$(Q) echo "Downloaded and installed .NET $(DOTNET6_VERSION) into $@."
+
+dotnet-install.sh: Makefile
+	$(Q) curl --retry 20 --retry-delay 2 --connect-timeout 15 -S -L $(if $(V),-v,-s) https://dot.net/v1/dotnet-install.sh --output $@.tmp
+	$(Q) chmod +x $@.tmp
+	$(Q) mv $@.tmp $@
+
+# Fix the BCL assemblies we get for Mac Catalyst
+fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-maccatalyst-assembly/*.cs*) Makefile
+	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
+
+define FixMacCatalystAssembly
+$(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
+
+downloads/fix-maccatalyst-tmpdir/$(1).dll: $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
+	$(Q) mkdir -p $$(dir $$@)
+	$(Q) mono fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe $$(abspath $$<) $$(abspath $$@).tmp
+	$(Q) mv $$(abspath $$@).tmp $$(abspath $$@)
+
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(1).dll: downloads/fix-maccatalyst-tmpdir/$(1).dll | $(PREFIX)/lib/mono/Xamarin.MacCatalyst
+	$(Q) $(CP) $$< $$@
+endef
+$(eval $(call FixMacCatalystAssembly,Mono.Security))
+$(eval $(call FixMacCatalystAssembly,mscorlib))
+$(eval $(call FixMacCatalystAssembly,System))
+$(eval $(call FixMacCatalystAssembly,System.Net.Http))
+
 .stamp-download-mono: $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) download-mono
 	$(Q) touch $@
 
+ifdef CUSTOM_DOTNET
+DOWNLOAD_DOTNET_VERSION=$(CUSTOM_DOTNET_VERSION)
+endif
+
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
+	$(Q_GEN) cd package-download && $(DOTNET6) \
+		build \
+		download-packages.proj \
+		/t:WriteBundledNETCorePlatformsPackageVersion \
+		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
+		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
+		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
+		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
+		/bl \
+		$(DOTNET_BUILD_VERBOSITY)
+	$(Q) touch $@
+
+BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
+
+package-download/global.json: $(TOP)/global6.json Makefile
+	$(Q) $(CP) $< $@
+
+# put any downloaded packages in our own directory, not in ~
+package-download/NuGet.config: $(TOP)/NuGet.config Makefile
+	$(Q) $(CP) $< $@
+	$(Q) $(CP) $< $@.tmp
+	$(Q) nuget config -Set globalPackagesFolder=$(abspath $(CURDIR)/downloads) -Config $@.tmp
+ifdef CUSTOM_DOTNET
+	$(Q) nuget sources add -Name dev-runtime-feed -Source $(abspath $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping) -ConfigFile $@.tmp
+endif
+	$(Q) mv $@.tmp $@
+
 DOTNET_DOWNLOADS = \
-	downloads/$(basename $(DOTNET_BCL_REF_NAME)) \
+	downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) \
+	.stamp-download-dotnet-packages \
 
 dotnet: $(DOTNET_DOWNLOADS)
 ifdef ENABLE_DOTNET
@@ -77,14 +151,6 @@ endif
 
 clean-local::
 	$(Q) rm -Rf downloads .stamp-download-mono
-
-ifdef INJECT_X86_64_SLICE
-X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
-$(X86_64_SLICE): Makefile
-	echo "void xamarin_x86_64_function_for_notarization_workaround () {}" | $(MAC_CC) -shared -x c -o$@ -
-else
-X86_64_SLICE=
-endif
 
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
 
@@ -117,6 +183,7 @@ SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
 $(SDK_CONFIG):
 	echo "ENABLE_IOS=1" >> $@
 	echo "ENABLE_MAC=1" >> $@
+	echo "ENABLE_MACCAT=1" >> $@
 
 
 ifdef DISABLE_BUILDS_MAKEFILE_DEP
@@ -132,6 +199,7 @@ endif
 .stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios package-ios-bcl $(SDK_ARGS)
 	$(MAKE) -C $(SDK_BUILDDIR) package-mac package-mac-bcl $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) package-maccat package-maccat-bcl $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-local::
@@ -151,7 +219,7 @@ INSTALL_STRIP_FLAG=-s
 endif
 
 #
-# Xamarin.iOS/WatchOS/TVOS/Mac BCL assemblies
+# Xamarin.iOS/WatchOS/TVOS/Mac/MacCatalyst BCL assemblies
 #
 install-local:: install-bcl
 all-local:: install-bcl
@@ -405,16 +473,19 @@ MOBILE_ADDITIONAL_FACADE_ASSEMBLIES = \
 
 TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(filter-out Mono.Security Mono.Data.Tds,$(IOS_ASSEMBLIES))
+MACCATALYST_ASSEMBLIES = $(IOS_ASSEMBLIES)
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
+MACCATALYST_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 
 IOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 TVOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 WATCHOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 MAC_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 MAC_4_5_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) System.Net.Http.Rtc
+MACCATALYST_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 
 IOS_BCL_DIRECTORIES = \
 	$(PREFIX)/lib/mono/2.1 \
@@ -433,6 +504,11 @@ TVOS_BCL_DIRECTORIES = \
 	$(PREFIX)/lib/mono/Xamarin.TVOS \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/Facades \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/repl
+
+MACCATALYST_BCL_DIRECTORIES = \
+	$(PREFIX)/lib/mono/Xamarin.MacCatalyst \
+	$(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades \
+	$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl
 
 MAC_BCL_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac \
@@ -468,6 +544,16 @@ TVOS_BCL_TARGETS = \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
+
+MACCATALYST_BCL_TARGETS = \
+	$(foreach file,$(MACCATALYST_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(file).dll)                                    \
+	$(foreach file,$(filter-out $(NO_PDB_ASSEMBLIES),$(MACCATALYST_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(file).pdb) \
+	$(foreach file,$(MACCATALYST_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades/$(file).dll)                     \
+
+# the mono archive doesn't have the repl assemblies yet
+MACCATALYST_BCL_TARGETS_DISABLED = \
+	$(foreach file,$(MACCATALYST_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl/$(file).dll)                          \
+	$(foreach file,$(MACCATALYST_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl/$(file).pdb)                          \
 
 MAC_BCL_TARGETS = \
 	$(foreach file,$(MAC_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).dll)                \
@@ -513,6 +599,15 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/li
 $(PREFIX)/lib/mono/Xamarin.TVOS/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.TVOS
 	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/$(notdir $@) $@
 
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades
+	$(Q) install -m 0755 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/Facades/$(notdir $@) $@
+
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl
+	$(Q) install -m 0755 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch_runtime/$(notdir $@) $@
+
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.MacCatalyst
+	$(Q) install -m 0755 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(notdir $@) $@
+
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades
 	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac/Facades/$(notdir $@) $@
 
@@ -525,7 +620,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/%: .stamp-$(MONO
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
 	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/$(notdir $@) $@
 
-$(IOS_BCL_DIRECTORIES) $(WATCHOS_BCL_DIRECTORIES) $(TVOS_BCL_DIRECTORIES) $(MAC_BCL_DIRECTORIES):
+$(IOS_BCL_DIRECTORIES) $(WATCHOS_BCL_DIRECTORIES) $(TVOS_BCL_DIRECTORIES) $(MAC_BCL_DIRECTORIES) $(MACCATALYST_BCL_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES = Mono.Simd System.Runtime.CompilerServices.Unsafe nunitlite  # TODO check if we should add them
@@ -567,15 +662,24 @@ mac-45-assemblies-check: $(MAC_BCL_TARGETS)
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5 " not defined in MAC_4_5_ASSEMBLIES or MAC_4_5_FACADE_ASSEMBLIES ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
+maccatalyst-assemblies-check: $(MACCATALYST_BCL_TARGETS)
+	$(Q) rm -f .$@*
+	$(Q) echo $(MACCATALYST_ASSEMBLIES) $(MACCATALYST_FACADE_ASSEMBLIES) $(MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch" not defined in MACCATALYST_ASSEMBLIES or MACCATALYST_FACADE_ASSEMBLIES ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
+
 install-bcl-ios: $(IOS_BCL_TARGETS) ios-assemblies-check
 install-bcl-tvos: $(TVOS_BCL_TARGETS) tvos-assemblies-check
 install-bcl-watchos: $(WATCHOS_BCL_TARGETS) watchos-assemblies-check
 install-bcl-mac: $(MAC_BCL_TARGETS) mac-assemblies-check mac-45-assemblies-check
+install-bcl-maccatalyst: $(MACCATALYST_BCL_TARGETS) maccatalyst-assemblies-check
 
 install-bcl:: install-bcl-ios
 install-bcl:: install-bcl-watchos
 install-bcl:: install-bcl-tvos
 install-bcl:: install-bcl-mac
+install-bcl:: install-bcl-maccatalyst
 ### TODO END
 
 verify-signature:
@@ -618,7 +722,6 @@ all-local:: install-mac-common
 MAC_COMMON_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR) \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk \
 
 MAC_COMMON_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current \
@@ -627,7 +730,6 @@ MAC_COMMON_TARGETS = \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/Versions.plist \
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions
 	$(Q_LN) ln -hfs $(MAC_INSTALL_VERSION) $@
@@ -648,10 +750,13 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: $(TOP)/Make.config.inc
 	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
-	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_MAC_SDK_DESTDIR)/mac-mono-version.txt)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
 
 $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/Versions.plist: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/buildinfo: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools
 	$(Q) $(CP) $< $@
 
 $(MAC_COMMON_DIRECTORIES):
@@ -687,6 +792,7 @@ MAC_TARGETS = \
 	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/pkgconfig/mono-2.pc                          \
 	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System/System.config         \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen                            \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/aarch64-darwin-mono-sgen             \
 
 $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib
 	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-libs/$(notdir $@) $@
@@ -705,6 +811,9 @@ $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System/System.config: mac
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bin/mono-sgen $@
 
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/aarch64-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bin/aarch64-darwin-mono-sgen $@
+
 $(MAC_DIRECTORIES):
 	$(Q) mkdir -p $@
 
@@ -719,9 +828,6 @@ all-local:: install-ios-common
 IOS_COMMON_DIRECTORIES = \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk \
 
 IOS_COMMON_TARGETS = \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current \
@@ -729,9 +835,6 @@ IOS_COMMON_TARGETS = \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/Versions.plist \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/Versions.plist \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/Versions.plist \
 
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
 	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
@@ -749,10 +852,13 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: $(TOP)/Make.config.inc
 	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
-	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
 
 $(DOTNET_DESTDIR)/%.Sdk/Versions.plist: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist | $(DOTNET_DESTDIR)/%.Sdk
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/%.Sdk/tools/buildinfo: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo | $(DOTNET_DESTDIR)/%.Sdk/tools
 	$(Q) $(CP) $< $@
 
 $(IOS_COMMON_DIRECTORIES):
@@ -863,6 +969,39 @@ $(TVSIMULATOR_DIRECTORIES):
 install-tvsimulator: $(TVSIMULATOR_TARGETS)
 
 #
+# Mac Catalyst Mono runtime pieces
+#
+install-local:: install-maccatalyst
+all-local:: install-maccatalyst
+
+MACCATALYST_DIRECTORIES = \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib \
+
+MACCATALYST_TARGETS = \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmonosgen-2.0.a                 \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmono-profiler-log.a            \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmono-native.a                  \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmonosgen-2.0.dylib             \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmono-native.dylib              \
+
+$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib
+	$(Q) $(CP) $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-libs/$(notdir $@) $@
+	$(Q) if test -d $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-libs/$(notdir $@).dSYM; then $(CP) -R $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-libs/$(notdir $@).dSYM $(dir $@); fi
+
+$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-frameworks/ios-sim/Mono.framework $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-frameworks/ios-sim/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks
+
+$(XAMARIN_MACCATALYST_SDK_DIRECTORIES):
+	$(Q) mkdir -p $@
+
+$(MACCATALYST_DIRECTORIES):
+	$(Q) mkdir -p $@
+
+install-maccatalyst:: $(MACCATALYST_TARGETS)
+
+#
 # iPhone device Mono runtime pieces
 #
 install-local:: install-iphoneos
@@ -886,20 +1025,13 @@ IPHONEOS_TARGETS =                                                     \
 	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib
-	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $@
-	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $(X86_64_SLICE) -create -output $@
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
-ifdef INJECT_X86_64_SLICE
-	@# inject x86-64 slice
-	$(Q) mv $@ $@.tmp
-	$(Q_LIPO) lipo $@.tmp $(X86_64_SLICE) -create -output $@
-	$(Q) rm $@.tmp
-endif
 
 $(IPHONEOS_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -930,20 +1062,13 @@ WATCHOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib
-	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $@
-	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $(X86_64_SLICE) -create -output $@
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos/Mono.framework $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
-ifdef INJECT_X86_64_SLICE
-	@# inject x86-64 slice
-	$(Q) mv $@ $@.tmp
-	$(Q_LIPO) lipo $@.tmp $(X86_64_SLICE) -create -output $@
-	$(Q) rm $@.tmp
-endif
 
 $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -974,25 +1099,38 @@ TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
-	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $@
-	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $(X86_64_SLICE) -create -output $@
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos/Mono.framework $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
-ifdef INJECT_X86_64_SLICE
-	@# inject x86-64 slice
-	$(Q) mv $@ $@.tmp
-	$(Q_LIPO) lipo $@.tmp $(X86_64_SLICE) -create -output $@
-	$(Q) rm $@.tmp
-endif
 
 $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 install-tvos: $(TVOS_TARGETS)
+
+#
+# .NET
+#
+
+
+DOTNET_COMMON_DIRECTORIES += \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools) \
+
+DOTNET_COMMON_TARGETS = \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/Versions.plist) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools/buildinfo) \
+
+$(DOTNET_COMMON_DIRECTORIES):
+	$(Q) mkdir -p $@
+
+install-dotnet: $(DOTNET_COMMON_TARGETS)
+install-local:: install-dotnet
+all-local:: install-dotnet
 
 #
 # Cross compilers

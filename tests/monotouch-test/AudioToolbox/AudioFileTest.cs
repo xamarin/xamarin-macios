@@ -19,11 +19,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void ReadTest ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 			var af = AudioFile.Open (CFUrl.FromFile (path), AudioFilePermission.Read, AudioFileType.CAF);
 		
 			int len;

@@ -25,12 +25,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
 
+#if NET
+using System.Runtime.InteropServices.ObjectiveC;
+#endif
+
 using ObjCRuntime;
 #if !COREBUILD
+using Xamarin.Bundler;
 #if MONOTOUCH
 using UIKit;
 #if !WATCH
@@ -47,6 +53,9 @@ namespace Foundation {
 		NSObjectFlag () {}
 	}
 
+#if NET && !COREBUILD
+	[ObjectiveCTrackedType]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public partial class NSObject 
 #if !COREBUILD
@@ -65,14 +74,38 @@ namespace Foundation {
 		// replace older Mono[Touch|Mac]Assembly field (ease code sharing across platforms)
 		public static readonly Assembly PlatformAssembly = typeof (NSObject).Assembly;
 
-		// The order of 'handle' and 'class_handle' is important: do not re-order unless SuperHandle is modified accordingly.
 		IntPtr handle;
-		IntPtr class_handle;
+		IntPtr super; /* objc_super* */
+
+#if !NET
 		Flags flags;
+#else
+		// See  "Toggle-ref support for CoreCLR" in coreclr-bridge.m for more information.
+		Flags actual_flags;
+		internal unsafe Runtime.TrackedObjectInfo* tracked_object_info;
+		internal GCHandle? tracked_object_handle;
+
+		unsafe Flags flags {
+			get {
+				// Get back the InFinalizerQueue flag, it's the only flag we'll set in the tracked object info structure.
+				// The InFinalizerQueue will never be cleared once set, so there's no need to unset it here if it's not set in the tracked_object_info structure.
+				if (tracked_object_info != null && ((tracked_object_info->Flags) & Flags.InFinalizerQueue) == Flags.InFinalizerQueue)
+					actual_flags |= Flags.InFinalizerQueue;
+
+				return actual_flags;
+			}
+			set {
+				actual_flags = value;
+				// Update the flags value that we can access them from the toggle ref callback as well.
+				if (tracked_object_info != null)
+					tracked_object_info->Flags = value;
+			}
+		}
+#endif // NET
 
 		// This enum has a native counterpart in runtime.h
 		[Flags]
-		enum Flags : byte {
+		internal enum Flags : byte {
 			Disposed = 1,
 			NativeRef = 2,
 			IsDirectBinding = 4,
@@ -83,9 +116,28 @@ namespace Foundation {
 			IsCustomType = 128,
 		}
 
+		// Must be kept in sync with the same enum in trampolines.h
+		enum XamarinGCHandleFlags : uint {
+			None = 0,
+			WeakGCHandle = 1,
+			HasManagedRef = 2,
+			InitialSet = 4,
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct objc_super {
+			public IntPtr Handle;
+			public IntPtr ClassHandle;
+		}
+
 		bool disposed { 
 			get { return ((flags & Flags.Disposed) == Flags.Disposed); } 
 			set { flags = value ? (flags | Flags.Disposed) : (flags & ~Flags.Disposed);	}
+		}
+
+		bool HasManagedRef {
+			get { return (flags & Flags.HasManagedRef) == Flags.HasManagedRef; }
+			set { flags = value ? (flags | Flags.HasManagedRef) : (flags & ~Flags.HasManagedRef); }
 		}
 
 		internal bool IsRegisteredToggleRef { 
@@ -145,19 +197,86 @@ namespace Foundation {
 			GC.SuppressFinalize (this);
 		}
 
+		internal static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, Flags flags)
+		{
+			// This function is called from native code before any constructors have executed.
+			var type = (Type) Runtime.GetGCHandleTarget (type_gchandle);
+			try {
+				var obj = (NSObject) RuntimeHelpers.GetUninitializedObject (type);
+				obj.handle = handle;
+				obj.flags = flags;
+				return Runtime.AllocGCHandle (obj);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (8041, e, Errors.MX8041 /* Unable to create an instance of the type {0} */, type.FullName);
+			}
+		}
+
+		IntPtr GetSuper ()
+		{
+			if (super == IntPtr.Zero) {
+				IntPtr ptr;
+
+				unsafe {
+					ptr = Marshal.AllocHGlobal (sizeof (objc_super));
+					*(objc_super*) ptr = default (objc_super); // zero fill
+				}
+
+				var previousValue = Interlocked.CompareExchange (ref super, ptr, IntPtr.Zero);
+				if (previousValue != IntPtr.Zero) {
+					// somebody beat us to the assignment.
+					Marshal.FreeHGlobal (ptr);
+					ptr = IntPtr.Zero;
+				}
+			}
+
+			unsafe {
+				objc_super* sup = (objc_super*) super;
+				if (sup->ClassHandle == IntPtr.Zero)
+					sup->ClassHandle = ClassHandle;
+				sup->Handle = handle;
+			}
+
+			return super;
+		}
+
 		internal static IntPtr Initialize ()
 		{
 			return class_ptr;
 		}
 
+#if NET
+		internal Flags FlagsInternal {
+			get { return flags; }
+			set { flags = value; }
+		}
+#endif
+
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
-		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj);
+		[DllImport ("__Internal")]
+		static extern void xamarin_release_managed_ref (IntPtr handle, bool user_type);
 
-		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain);
+#if NET
+		static void RegisterToggleRefMonoVM (NSObject obj, IntPtr handle, bool isCustomType)
+		{
+			// We need this indirection for CoreCLR, otherwise JITting RegisterToggleReference will throw System.Security.SecurityException: ECall methods must be packaged into a system module.
+			RegisterToggleRef (obj, handle, isCustomType);
+		}
+#endif
+
+		static void RegisterToggleReference (NSObject obj, IntPtr handle, bool isCustomType)
+		{
+#if NET
+			if (Runtime.IsCoreCLR) {
+				Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
+			} else {
+				RegisterToggleRefMonoVM (obj, handle, isCustomType);
+			}
+#else
+			RegisterToggleRef (obj, handle, isCustomType);
+#endif
+		}
 
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
@@ -184,7 +303,7 @@ namespace Foundation {
 				return;
 			
 			IsRegisteredToggleRef = true;
-			RegisterToggleRef (this, Handle, allowCustomTypes);
+			RegisterToggleReference (this, Handle, allowCustomTypes);
 		}
 
 		private void InitializeObject (bool alloced) {
@@ -214,22 +333,49 @@ namespace Foundation {
 			IsDirectBinding = (this.GetType ().Assembly == PlatformAssembly);
 			Runtime.RegisterNSObject (this, handle);
 
-			// If the NativeRef bit is set, it means that this call was surfaced by
-			// monotouch_ctor_trampoline, which means we do not want to invoke Retain directly,
-			// it will be done by monotouch_ctor_trampoline on return.
 			bool native_ref = (flags & Flags.NativeRef) == Flags.NativeRef;
-			if (!native_ref)
-				CreateManagedRef (!alloced);
+			CreateManagedRef (!alloced || native_ref);
 		}
+
+		[DllImport ("__Internal")]
+		static extern bool xamarin_set_gchandle_with_flags_safe (IntPtr handle, IntPtr gchandle, XamarinGCHandleFlags flags);
 
 		void CreateManagedRef (bool retain)
 		{
-			xamarin_create_managed_ref (handle, this, retain);
+			HasManagedRef = true;
+			bool isUserType = Runtime.IsUserType (handle);
+			if (isUserType) {
+				var flags = XamarinGCHandleFlags.HasManagedRef | XamarinGCHandleFlags.InitialSet | XamarinGCHandleFlags.WeakGCHandle;
+				var gchandle = GCHandle.Alloc (this, GCHandleType.WeakTrackResurrection);
+				var h = GCHandle.ToIntPtr (gchandle);
+				if (!xamarin_set_gchandle_with_flags_safe (handle, h, flags)) {
+					// A GCHandle already existed: this shouldn't happen, but let's handle it anyway.
+					Runtime.NSLog ("Tried to create a managed reference from an object that already has a managed reference (type: {0})", GetType ());
+					gchandle.Free ();
+				}
+			}
+
+			if (retain)
+				DangerousRetain ();
 		}
 
 		void ReleaseManagedRef ()
 		{
-			xamarin_release_managed_ref (handle, this);
+			var handle = this.Handle; // Get a copy of the handle, because it will be cleared out when calling Runtime.NativeObjectHasDied, and we still need the handle later.
+			var user_type = Runtime.IsUserType (handle);
+			HasManagedRef = false;
+			if (!user_type) {
+				/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
+				Runtime.NativeObjectHasDied (handle, this);
+			}
+			xamarin_release_managed_ref (handle, user_type);
+			FreeData ();
+#if NET
+			if (tracked_object_handle.HasValue) {
+				tracked_object_handle.Value.Free ();
+				tracked_object_handle = null;
+			}
+#endif
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)
@@ -393,13 +539,7 @@ namespace Foundation {
 				if (handle == IntPtr.Zero)
 					throw new ObjectDisposedException (GetType ().Name);
 
-				if (class_handle == IntPtr.Zero)
-					class_handle = ClassHandle;
-
-				unsafe {
-					fixed (IntPtr *ptr = &handle)
-						return (IntPtr) (ptr);
-				}
+				return GetSuper ();
 			}
 		}
 		
@@ -413,6 +553,13 @@ namespace Foundation {
 					Runtime.UnregisterNSObject (handle);
 				
 				handle = value;
+
+#if NET
+				unsafe {
+					if (tracked_object_info != null)
+						tracked_object_info->Handle = value;
+				}
+#endif
 
 				if (handle != IntPtr.Zero)
 					Runtime.RegisterNSObject (this, handle);
@@ -694,6 +841,8 @@ namespace Foundation {
 
 		public override string ToString ()
 		{
+			if (disposed)
+				return base.ToString ();
 			return Description ?? base.ToString ();
 		}
 
@@ -725,6 +874,16 @@ namespace Foundation {
 				} else {
 					NSObject_Disposer.Add (this);
 				}
+			} else {
+				FreeData ();
+			}
+		}
+
+		unsafe void FreeData ()
+		{
+			if (super != IntPtr.Zero) {
+				Marshal.FreeHGlobal (super);
+				super = IntPtr.Zero;
 			}
 		}
 

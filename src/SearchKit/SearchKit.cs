@@ -1,4 +1,4 @@
-﻿//
+//
 // SearchKit.cs: simple bindings for Searchkit
 //
 // Copyright 2015 Xamarin Inc
@@ -68,7 +68,8 @@ namespace SearchKit
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKSearchFindMatches (IntPtr handle, nint maxCount, IntPtr ids, IntPtr scores, double time, out nint foundCount);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKSearchFindMatches (IntPtr handle, nint maxCount, IntPtr ids, IntPtr scores, double time, out nint foundCount);
 
 		public bool FindMatches (nint maxCount, ref nint [] ids, double waitTime, out nint foundCount)
 		{
@@ -201,7 +202,7 @@ namespace SearchKit
 				var n = SKDocumentGetName (handle);
 				if (n == IntPtr.Zero)
 					return null;
-				return NSString.FromHandle (n);
+				return CFString.FromHandle (n);
 			}
 		}
 
@@ -225,7 +226,7 @@ namespace SearchKit
 				var s = SKDocumentGetSchemeName (handle);
 				if (s == IntPtr.Zero)
 					return null;
-				return NSString.FromHandle (s);
+				return CFString.FromHandle (s);
 			}
 		}
 	}
@@ -240,7 +241,7 @@ namespace SearchKit
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr SKIndexCreateWithMutableData (IntPtr url, IntPtr str, SKIndexType type, IntPtr dict);
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static IntPtr SKIndexOpenWithURL (IntPtr url, IntPtr str, bool writeAccess);
+		extern static IntPtr SKIndexOpenWithURL (IntPtr url, IntPtr str, [MarshalAs (UnmanagedType.I1)] bool writeAccess);
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr SKIndexOpenWithMutableData (IntPtr mutableData, IntPtr str);
 		[DllImport (Constants.SearchKitLibrary)]
@@ -349,7 +350,8 @@ namespace SearchKit
 
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKIndexAddDocumentWithText (IntPtr h, IntPtr doc, IntPtr str, bool canreplace);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKIndexAddDocumentWithText (IntPtr h, IntPtr doc, IntPtr str, [MarshalAs (UnmanagedType.I1)] bool canreplace);
 
 		public bool AddDocumentWithText (SKDocument document, string text, bool canReplace)
 		{
@@ -365,7 +367,8 @@ namespace SearchKit
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKIndexAddDocument (IntPtr h, IntPtr doc, IntPtr mimeHintStr, bool canReplace);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKIndexAddDocument (IntPtr h, IntPtr doc, IntPtr mimeHintStr, [MarshalAs (UnmanagedType.I1)] bool canReplace);
 
 		public bool AddDocument (SKDocument document, string mimeHint, bool canReplace)
 		{
@@ -379,13 +382,15 @@ namespace SearchKit
 		public extern static void LoadDefaultExtractorPlugIns ();
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKIndexFlush (IntPtr h);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKIndexFlush (IntPtr h);
 		public bool Flush ()
 		{
 			return SKIndexFlush (handle);
 		}
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKIndexCompact (IntPtr h);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKIndexCompact (IntPtr h);
 		public bool Compact ()
 		{
 			return SKIndexCompact (handle);
@@ -425,7 +430,8 @@ namespace SearchKit
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKIndexMoveDocument (IntPtr h, IntPtr document, IntPtr newParent);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKIndexMoveDocument (IntPtr h, IntPtr document, IntPtr newParent);
 		public bool MoveDocument (SKDocument document, SKDocument newParent)
 		{
 			if (document == null)
@@ -437,7 +443,8 @@ namespace SearchKit
 
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKIndexRemoveDocument (IntPtr h, IntPtr doc);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKIndexRemoveDocument (IntPtr h, IntPtr doc);
 
 		public bool RemoveDocument (SKDocument document)
 		{
@@ -448,7 +455,8 @@ namespace SearchKit
 
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static bool SKIndexRenameDocument (IntPtr h, IntPtr doc, IntPtr newName);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		extern static bool SKIndexRenameDocument (IntPtr h, IntPtr doc, IntPtr newName);
 		public bool RenameDocument (SKDocument document, string newName)
 		{
 			if (document == null)
@@ -465,7 +473,7 @@ namespace SearchKit
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static nint SKIndexGetMaximumBytesBeforeFlush (IntPtr h);
 
-		[Advice ("Apple recommends to use Flush instead of setting these parameters")]
+		[Advice ("Apple recommends to use Flush instead of setting these parameters.")]
 		public nint MaximumBytesBeforeFlush {
 			get {
 				return SKIndexGetMaximumBytesBeforeFlush (handle);
@@ -679,24 +687,23 @@ namespace SearchKit
 
 		public string GetSentence (nint idx)
 		{
-			return CFString.FetchString (SKSummaryCopySentenceAtIndex (handle, idx), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopySentenceAtIndex (handle, idx), releaseHandle: true);
 		}
 
 		public string GetParagraph (nint idx)
 		{
-			return CFString.FetchString (SKSummaryCopyParagraphAtIndex (handle, idx), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopyParagraphAtIndex (handle, idx), releaseHandle: true);
 		}
 
 		public string GetSentenceSummary (nint maxSentences)
 		{
-			return CFString.FetchString (SKSummaryCopySentenceSummaryString (handle, maxSentences), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopySentenceSummaryString (handle, maxSentences), releaseHandle: true);
 		}
 
 		public string GetParagraphSummary (nint maxParagraphs)
 		{
-			return CFString.FetchString (SKSummaryCopyParagraphSummaryString (handle, maxParagraphs), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopyParagraphSummaryString (handle, maxParagraphs), releaseHandle: true);
 		}
 		
 	}
 }
-

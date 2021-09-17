@@ -1,4 +1,4 @@
-﻿#define COMPAT_REV1519 // Keeps compatibility with revision 1519
+#define COMPAT_REV1519 // Keeps compatibility with revision 1519
 
  #region License
  //

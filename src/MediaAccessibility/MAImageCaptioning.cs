@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -9,7 +10,13 @@ using Foundation;
 
 namespace MediaAccessibility {
 
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
 	[TV (13,0), Mac (10,15), iOS (13,0)]
+#endif
 	public static partial class MAImageCaptioning {
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
@@ -23,7 +30,7 @@ namespace MediaAccessibility {
 
 			var result = MAImageCaptioningCopyCaption (url.Handle, out var e);
 			error = e == IntPtr.Zero ? null : new NSError (e);
-			return CFString.FetchString (result, releaseHandle: true);
+			return CFString.FromHandle (result, releaseHandle: true);
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
@@ -51,7 +58,7 @@ namespace MediaAccessibility {
 
 		static public string GetMetadataTagPath ()
 		{
-			return CFString.FetchString (MAImageCaptioningCopyMetadataTagPath (), releaseHandle: true);
+			return CFString.FromHandle (MAImageCaptioningCopyMetadataTagPath (), releaseHandle: true);
 		}
 	}
 }

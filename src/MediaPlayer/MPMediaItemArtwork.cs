@@ -15,6 +15,8 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace MediaPlayer {
 	public partial class MPMediaItemArtwork {
 #if !XAMCORE_3_0

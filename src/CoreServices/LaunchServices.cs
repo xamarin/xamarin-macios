@@ -23,7 +23,9 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
@@ -81,11 +83,15 @@ namespace CoreServices
 	{
 		#region Locating an Application
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForURL (IntPtr inUrl, LSRoles inRole, /*out*/ IntPtr outError);
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		public static NSUrl GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
 			if (url == null)
@@ -96,11 +102,15 @@ namespace CoreServices
 			);
 		}
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForContentType (IntPtr inContentType, LSRoles inRole, /*out*/ IntPtr outError);
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		public static NSUrl GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
 			if (contentType == null)
@@ -150,11 +160,15 @@ namespace CoreServices
 			return CanUrlAcceptUrl (itemUrl, targetUrl, roles, acceptanceFlags, out result);
 		}
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyApplicationURLsForBundleIdentifier (IntPtr inBundleIdentifier, /*out*/ IntPtr outError);
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		public static NSUrl [] GetApplicationUrlsForBundleIdentifier (string bundleIdentifier)
 		{
 			if (bundleIdentifier == null)
@@ -218,7 +232,7 @@ namespace CoreServices
 			if (contentType == null)
 				throw new ArgumentNullException (nameof (contentType));
 
-			return NSArray.StringArrayFromHandle (
+			return CFArray.StringArrayFromHandle (
 				LSCopyAllRoleHandlersForContentType (new NSString (contentType).Handle, roles)
 			);
 		}
@@ -256,22 +270,48 @@ namespace CoreServices
 			);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10,15)]
+#else
+		[UnsupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllHandlersForURLScheme (IntPtr inUrlScheme);
 
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
+#else
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'GetApplicationUrlsForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public static string [] GetAllHandlersForUrlScheme (string urlScheme)
 		{
 			if (urlScheme == null)
 				throw new ArgumentNullException (nameof (urlScheme));
 
-			return NSArray.StringArrayFromHandle (
+			return CFArray.StringArrayFromHandle (
 				LSCopyAllHandlersForURLScheme (new NSString (urlScheme).Handle)
 			);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10,15)]
+#else
+		[UnsupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultHandlerForURLScheme (IntPtr inUrlScheme);
 
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetDefaultApplicationUrlForUrl' instead.")]
+#else
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'GetDefaultApplicationUrlForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public static string GetDefaultHandlerForUrlScheme (string urlScheme)
 		{
 			if (urlScheme == null)

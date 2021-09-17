@@ -28,96 +28,12 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics {
-
-	// untyped enum -> CGPath.h
-	public enum CGLineJoin {
-		Miter,
-		Round,
-		Bevel
-	}
-	
-	// untyped enum -> CGPath.h
-	public enum CGLineCap {
-		Butt,
-		Round,
-		Square
-	}
-	
-	// untyped enum -> CGContext.h
-	public enum CGPathDrawingMode {
-		Fill,
-		EOFill,
-		Stroke,
-		FillStroke,
-		EOFillStroke
-	}
-	
-	// untyped enum -> CGContext.h
-	public enum CGTextDrawingMode : uint {
-		Fill,
-		Stroke,
-		FillStroke,
-		Invisible,
-		FillClip,
-		StrokeClip,
-		FillStrokeClip,
-		Clip
-	}
-
-	// untyped enum -> CGContext.h
-	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Deprecated (PlatformName.MacOSX, 10, 9)]
-	public enum CGTextEncoding {
-		FontSpecific,
-		MacRoman
-	}
-
-	// untyped enum -> CGContext.h
-	public enum CGInterpolationQuality {
-		Default,
-		None,	
-		Low,	
-		High,
-		Medium		       /* Yes, in this order, since Medium was added in 4 */
-	}
-	
-	// untyped enum -> CGContext.h
-	public enum CGBlendMode {
-		Normal,
-		Multiply,
-		Screen,
-		Overlay,
-		Darken,
-		Lighten,
-		ColorDodge,
-		ColorBurn,
-		SoftLight,
-		HardLight,
-		Difference,
-		Exclusion,
-		Hue,
-		Saturation,
-		Color,
-		Luminosity,
-		
-		Clear,
-		Copy,	
-		SourceIn,	
-		SourceOut,	
-		SourceAtop,		
-		DestinationOver,	
-		DestinationIn,	
-		DestinationOut,	
-		DestinationAtop,	
-		XOR,		
-		PlusDarker,		
-		PlusLighter		
-	}
 
 	public class CGContext : INativeObject
 #if !COREBUILD
@@ -432,6 +348,7 @@ namespace CoreGraphics {
 
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGContextIsPathEmpty (/* CGContextRef */ IntPtr context);
 
 		public bool IsPathEmpty ()
@@ -456,6 +373,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGContextPathContainsPoint (/* CGContextRef */ IntPtr context, CGPoint point, CGPathDrawingMode mode);
 
 		public bool PathContainsPoint (CGPoint point, CGPathDrawingMode mode)
@@ -580,10 +498,20 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		extern static void CGContextResetClip (/* CGContextRef */ IntPtr c);
 
+#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public void ResetClip ()
 		{
 			CGContextResetClip (handle);
@@ -901,12 +829,29 @@ namespace CoreGraphics {
 			CGContextSetFontSize (handle, size);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSelectFont (/* CGContextRef */ IntPtr c,
 			/* const char* __nullable */ string name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void SelectFont (string name, nfloat size, CGTextEncoding textEncoding)
 		{
 			CGContextSelectFont (handle, name, size, textEncoding);
@@ -926,11 +871,28 @@ namespace CoreGraphics {
 			CGContextShowGlyphsAtPositions (handle, glyphs, positions, count);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ string s, /* size_t */ nint length);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowText (string str, int count)
 		{
 			if (str == null)
@@ -940,18 +902,45 @@ namespace CoreGraphics {
 			CGContextShowText (handle, str, count);
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowText (string str)
 		{
 			CGContextShowText (handle, str, str == null ? 0 : str.Length);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ byte[] bytes, /* size_t */ nint length);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowText (byte[] bytes, int count)
 		{
 			if (bytes == null)
@@ -961,31 +950,75 @@ namespace CoreGraphics {
 			CGContextShowText (handle, bytes, count);
 		}
 		
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowText (byte[] bytes)
 		{
 			CGContextShowText (handle, bytes, bytes == null ? 0 : bytes.Length);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowTextAtPoint (/* CGContextRef __nullable */ IntPtr c, /* CGFloat */ nfloat x, 
 			/* CGFloat */ nfloat y, /* const char* __nullable */ string str, /* size_t */ nint length);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowTextAtPoint (nfloat x, nfloat y, string str, int length)
 		{
 			CGContextShowTextAtPoint (handle, x, y, str, length);
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowTextAtPoint (nfloat x, nfloat y, string str)
 		{
 			CGContextShowTextAtPoint (handle, x, y, str, str == null ? 0 : str.Length);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowTextAtPoint (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* const char* */ byte[] bytes, /* size_t */ nint length);
 
@@ -999,19 +1032,46 @@ namespace CoreGraphics {
 			CGContextShowTextAtPoint (handle, x, y, bytes, bytes == null ? 0 : bytes.Length);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowGlyphs (/* CGContextRef __nullable */ IntPtr c,
 			/* const CGGlyph * __nullable */ ushort [] glyphs, /* size_t */ nint count);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowGlyphs (ushort [] glyphs)
 		{
 			CGContextShowGlyphs (handle, glyphs, glyphs == null ? 0 : glyphs.Length);
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowGlyphs (ushort [] glyphs, int count)
 		{
 			if (glyphs == null)
@@ -1021,12 +1081,29 @@ namespace CoreGraphics {
 			CGContextShowGlyphs (handle, glyphs, count);
 		}
 		
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowGlyphsAtPoint (/* CGContextRef */ IntPtr context, /* CGFloat */ nfloat x,
 			/* CGFloat */ nfloat y, /* const CGGlyph * __nullable */ ushort [] glyphs, /* size_t */ nint count);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowGlyphsAtPoint (nfloat x, nfloat y, ushort [] glyphs, int count)
 		{
 			if (glyphs == null)
@@ -1036,20 +1113,47 @@ namespace CoreGraphics {
 			CGContextShowGlyphsAtPoint (handle, x, y, glyphs, count);
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowGlyphsAtPoint (nfloat x, nfloat y, ushort [] glyphs)
 		{
 			CGContextShowGlyphsAtPoint (handle, x, y, glyphs, glyphs == null ? 0 : glyphs.Length);
 		}
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowGlyphsWithAdvances (/* CGContextRef __nullable */ IntPtr c,
 			/* const CGGlyph * __nullable */ ushort [] glyphs,
 			/* const CGSize * __nullable */ CGSize [] advances, /* size_t */ nint count);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public void ShowGlyphsWithAdvances (ushort [] glyphs, CGSize [] advances, int count)
 		{
 			if (glyphs == null)
@@ -1107,7 +1211,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, bool shouldAntialias);
+		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldAntialias);
 
 		public void SetShouldAntialias (bool shouldAntialias)
 		{
@@ -1115,14 +1219,14 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, bool allowsAntialiasing);
+		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsAntialiasing);
 		public void SetAllowsAntialiasing (bool allowsAntialiasing)
 		{
 			CGContextSetAllowsAntialiasing (handle, allowsAntialiasing);
 		}
 			
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, bool shouldSmoothFonts);
+		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSmoothFonts);
 
 		public void SetShouldSmoothFonts (bool shouldSmoothFonts)
 		{
@@ -1216,7 +1320,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
 
 		public void SetAllowsFontSmoothing (bool allows)
 		{
@@ -1224,7 +1328,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, bool allowsFontSubpixelPositioning);
+		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsFontSubpixelPositioning);
 
 		public void SetAllowsSubpixelPositioning (bool allows)
 		{
@@ -1232,7 +1336,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
 
 		public void SetAllowsFontSubpixelQuantization (bool allows)
 		{
@@ -1240,7 +1344,7 @@ namespace CoreGraphics {
 		}
 			
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
 
 		public void SetShouldSubpixelPositionFonts (bool shouldSubpixelPositionFonts)
 		{
@@ -1248,7 +1352,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
 
 		public void ShouldSubpixelQuantizeFonts (bool shouldSubpixelQuantizeFonts)
 		{
@@ -1284,17 +1388,5 @@ namespace CoreGraphics {
 			return new CGBitmapContext (Handle, false);
 		}
 #endif // !COREBUILD
-	}
-
-	[iOS(11,0), Mac(10,13)]
-	public enum CGPDFAccessPermissions : uint {
-		AllowsLowQualityPrinting    = (1 << 0),
-		AllowsHighQualityPrinting   = (1 << 1),
-		AllowsDocumentChanges       = (1 << 2),
-		AllowsDocumentAssembly      = (1 << 3),
-		AllowsContentCopying        = (1 << 4),
-		AllowsContentAccessibility  = (1 << 5),
-		AllowsCommenting            = (1 << 6),
-		AllowsFormFieldEntry        = (1 << 7),
 	}
 }

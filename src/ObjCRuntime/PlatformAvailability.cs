@@ -20,6 +20,7 @@ using System.Text;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if !COREBUILD
 #if MONOMAC
@@ -288,6 +289,11 @@ namespace ObjCRuntime
 		const int sys2 = 1937339186;
 
 		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
+#else
+		[UnsupportedOSPlatform ("macos10.8")]
+#endif
 		[DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
 		static extern int Gestalt (int selector, out int result);
 
@@ -350,7 +356,7 @@ namespace ObjCRuntime
 		static void Check (string property, Platform existing, Platform updated)
 		{
 			if (!PlatformHelper.IsValid (updated)){
-				throw new Exception (String.Format ("Platform setting deteremined invalid, cannot set '{0}' to '{1}' " +
+				throw new Exception (String.Format ("Platform setting determined invalid, cannot set '{0}' to '{1}' " +
 					"as it is already set for the same platform to '{2}'",
 					property, updated, existing));
 			}

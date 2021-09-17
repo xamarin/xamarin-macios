@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -15,4 +16,4 @@ namespace AppKit
 		}
 	}
 }
-
+#endif // !__MACCATALYST__

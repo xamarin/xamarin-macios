@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.CoreData {
 	[Preserve (AllMembers = true)]
 	public class FetchedResultsControllerTest {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Cache ()
 		{
 			// null -> delete all cache
@@ -150,7 +150,7 @@ namespace MonoTouchFixtures.CoreData {
 						}
 
 						var sections = fetchedResultsController.Sections;
-						Assert.That (sections [0].GetType ().FullName, Is.StringEnding ("CoreData.NSFetchedResultsSectionInfoWrapper"), "Wrapper");
+						Assert.That (sections [0].GetType ().FullName, Does.EndWith ("CoreData.NSFetchedResultsSectionInfoWrapper"), "Wrapper");
 					}
 				}
 			}

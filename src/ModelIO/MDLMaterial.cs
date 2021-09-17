@@ -1,3 +1,5 @@
+#nullable enable
+
 namespace ModelIO {
 	public partial class MDLAsset {
 		public MDLMaterialProperty this [nuint index] {

@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !duplicate-field-name!

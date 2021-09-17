@@ -10,6 +10,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -20,18 +21,18 @@ using Foundation;
 
 namespace CoreGraphics {
 
-	// uint32_t enum -> CGColorConverter.h
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[Obsolete ("Use 'CGColorConversionInfoTransformType'.")]
-	public enum CGColorConverterTransformType : uint {
-		FromSpace,
-		ToSpace,
-		ApplySpace
-	}
-
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
+#if !NET
+	[TV (9,2)]
+	[iOS (9,3)]
+	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
+	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
+#else
+#if IOS
+		[Obsolete ("Starting with ios10.0 replaced by 'GColorConversionInfoTriple'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos10.0 replaced by 'GColorConversionInfoTriple'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CGColorConverterTriple {
 		public CGColorSpace Space;
@@ -40,8 +41,19 @@ namespace CoreGraphics {
 	}
 
 	// CGColorConverter.h
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
+#if !NET
+	[TV (9,2)]
+	[iOS (9,3)]
+	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
+	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
+#else
+#if IOS
+	[Obsolete ("Starting with ios10.0 replaced by 'CGColorConversionInfo'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos10.0 replaced by 'CGColorConversionInfo'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
+
 	public class CGColorConverter : INativeObject, IDisposable
 	{
 		/* invoked by marshallers */
@@ -78,4 +90,3 @@ namespace CoreGraphics {
 }
 
 #endif // !MONOMAC && !WATCH
-

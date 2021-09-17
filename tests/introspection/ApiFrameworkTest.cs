@@ -90,7 +90,9 @@ namespace Introspection {
 
 		Frameworks GetFrameworks ()
 		{
-#if __IOS__
+#if __MACCATALYST__
+			return Frameworks.GetMacCatalystFrameworks ();
+#elif __IOS__
 			return Frameworks.GetiOSFrameworks (app.IsSimulatorBuild);
 #elif __TVOS__
 			return Frameworks.TVOSFrameworks;
@@ -140,7 +142,7 @@ namespace Introspection {
 			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 		[Test]
 		public void Simlauncher ()
 		{

@@ -1,4 +1,4 @@
-﻿//
+//
 // Contacts bindings
 //
 // Authors:
@@ -210,4 +210,3 @@ namespace ContactsUI {
 	}
 #endif // MONOMAC
 }
-

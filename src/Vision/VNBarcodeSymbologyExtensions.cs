@@ -1,4 +1,4 @@
-﻿//
+//
 // VNBarcodeSymbologyExtensions.cs
 //
 // Authors:

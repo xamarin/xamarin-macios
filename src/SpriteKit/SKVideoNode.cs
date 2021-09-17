@@ -1,4 +1,4 @@
-﻿//
+//
 // SKVideoNode.cs: extensions to SKVideoNode
 //
 // Authors:
@@ -10,6 +10,8 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 #if !WATCH
 namespace SpriteKit {

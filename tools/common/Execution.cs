@@ -118,7 +118,7 @@ namespace Xamarin.Utils {
 
 						if (Timeout.HasValue) {
 							if (!p.WaitForExit ((int) Timeout.Value.TotalMilliseconds)) {
-								Log?.WriteLine ($"Command '{p.StartInfo.FileName} {p.StartInfo.Arguments}' didn't finish in {Timeout.Value.TotalMilliseconds} minutes, and will be killed.");
+								Log?.WriteLine ($"Command '{p.StartInfo.FileName} {p.StartInfo.Arguments}' didn't finish in {Timeout.Value.TotalMilliseconds} ms, and will be killed.");
 								TimedOut = true;
 								try {
 									p.Kill ();

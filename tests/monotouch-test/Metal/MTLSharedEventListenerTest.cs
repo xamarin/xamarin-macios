@@ -1,8 +1,9 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
 using CoreFoundation;
+using Foundation;
 using Metal;
 
 using NUnit.Framework;
@@ -10,6 +11,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLSharedEventListenerTest {
 		MTLSharedEventListener listener = null;
 		DispatchQueue queue = null;

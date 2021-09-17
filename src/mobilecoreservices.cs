@@ -3,6 +3,10 @@ using ObjCRuntime;
 
 namespace MobileCoreServices {
 
+	[Deprecated (PlatformName.iOS, 14, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.TvOS, 14, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.WatchOS, 7, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.MacOSX, 11, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Partial]
 	interface UTType {
 		[Field ("kUTTypeItem", "+CoreServices")]
@@ -511,6 +515,11 @@ namespace MobileCoreServices {
 		[TV (10,0)]
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }
+
+		[NoWatch]
+		[iOS (15,0), Mac(12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("kUTTypeUniversalSceneDescriptionMobile", "ModelIO")]
+		NSString UniversalSceneDescriptionMobile { get; }
 
 		[Watch (2,2)]
 		[iOS (9,1)][TV (9,0)]

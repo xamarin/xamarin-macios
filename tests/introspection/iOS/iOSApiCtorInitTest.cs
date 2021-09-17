@@ -70,6 +70,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "DeviceCheck": // Only available on device
+			case "MLCompute": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -126,7 +127,12 @@ namespace Introspection {
 				// and that new base class GKGameCenterViewController did not exists before 6.0
 				// which makes the type unusable in 5.x, ref: https://gist.github.com/spouliot/271b6230a3aa2b58bc6e
 				return !TestRuntime.CheckXcodeVersion (4, 5);
-
+#if __MACCATALYST__
+			// just like macOS the native 'init' method returned nil.
+			// Web docs mentions uthenticaing a local player is required and sample shows a null check after creating the vc
+			case "GKGameCenterViewController":
+				return true;
+#endif
 			// mistake - we should not have exposed those default ctor and now we must live with them
 			case "GCControllerElement":
 			case "GCControllerAxisInput":
@@ -222,9 +228,23 @@ namespace Introspection {
 				return TestRuntime.CheckXcodeVersion (11, 2);
 			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
 				return TestRuntime.CheckXcodeVersion (11, 3);
-			default:
-				return base.Skip (type);
+			case "THClient":
+				return Runtime.Arch == Arch.SIMULATOR;
+#if __TVOS__
+			case "MPSPredicate":
+				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)
+				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
+				return ((Runtime.Arch == Arch.DEVICE) && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
+#endif
+#if __TVOS__ || __WATCHOS__
+			case "NSMetadataQuery":
+				// hangs on xcode 13 beta 1 on simulator
+				if (TestRuntime.CheckXcodeVersion (13, 0))
+					return true;
+				break;
+#endif
 			}
+			return base.Skip (type);
 		}
 
 		static List<NSObject> do_not_dispose = new List<NSObject> ();
@@ -360,6 +380,16 @@ namespace Introspection {
 			// Xcode 9 Beta 1 to avoid crashes
 			case "CIImageAccumulator":
 				if (TestRuntime.CheckXcodeVersion (9, 0))
+					return;
+				break;
+			// crash with xcode 12 beta 2
+			case "AVMediaSelection":
+			case "AVMutableMediaSelection":
+			// crash with xcode 12 beta 3
+			case "GKTurnBasedMatch":
+			// crash with xcode 12 GM
+			case "CSLocalizedString":
+				if (TestRuntime.CheckXcodeVersion (12, 0))
 					return;
 				break;
 			default:

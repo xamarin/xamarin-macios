@@ -330,7 +330,7 @@ function run_xcode_first_launch ()
 			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
 			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 		else
-			fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+			fail "Xcode has pending first launch tasks. Execute 'make fix-xcode-first-run' to execute those tasks."
 			return
 		fi
 	fi
@@ -453,7 +453,7 @@ function install_coresimulator ()
 	local CURRENT_CORESIMULATOR_PATH=/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/CoreSimulator
 	local CURRENT_CORESIMULATOR_VERSION=0.0
 	if test -f "$CURRENT_CORESIMULATOR_PATH"; then
-		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g')
+		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g' | uniq)
 	fi
 
 	# Either version may be composed of either 2 or 3 numbers.
@@ -535,7 +535,7 @@ function check_specific_xcode () {
 				log "Clearing xcrun cache..."
 				xcrun -k
 			else
-				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'make fix-xcode-select' to fix."
 			fi
 		fi
 	fi
@@ -785,6 +785,18 @@ function check_osx_version () {
 	ok "Found OSX $ACTUAL_OSX_VERSION (at least $MIN_OSX_BUILD_VERSION is required)"
 }
 
+function check_checkout_dir () {
+	# use apple script to get the possibly translated special folders and check that we are not a subdir
+	for special in documents downloads desktop; do
+		path=$(osascript -e "set result to POSIX path of (path to $special folder as string)")
+		if [[ $PWD == $path* ]]; then
+			fail "Your checkout is under $path which is a special path. This can result in problems running the tests."
+		fi
+	done
+	ok "Checkout location will not result in test problems."
+}
+
+
 function install_cmake () {
 	if ! brew --version >& /dev/null; then
 		fail "Asked to install cmake, but brew is not installed."
@@ -1002,51 +1014,27 @@ function check_dotnet ()
 {
 	if test -n "$IGNORE_DOTNET"; then return; fi
 
-	local SUFFIX=$1
 	local DOTNET_VERSION
-	local DOTNET_INSTALL_DIR
-	local DOTNET_URL
-	local DOTNET_TARBALL
 	local DOTNET_FILENAME
 	local URL
-	local INSTALL_LOCALLY
 	local INSTALL_DIR
 	local CACHED_FILE
 	local DOWNLOADED_FILE
 
-	# If there's a TARBALL url, use that and install into builds/download, otherwise install the pkg.
+	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
+	URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
+	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
 
-	DOTNET_VERSION=$(grep "^DOTNET${SUFFIX}_VERSION=" Make.config | sed 's/.*=//')
-	DOTNET_URL=$(grep "^DOTNET${SUFFIX}_URL"= Make.config | sed 's/.*=//')
-	DOTNET_TARBALL=$(grep "^DOTNET${SUFFIX}_TARBALL"= Make.config | sed 's/.*=//' || true) # this variable might not exist
-	DOTNET_INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
-	DOTNET_LOCAL_INSTALL_DIR="builds/downloads/dotnet/$DOTNET_VERSION"
-
-	if test -n "$DOTNET_TARBALL"; then
-		INSTALL_LOCALLY=1
-	fi
-
-	if test -d "$DOTNET_INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION in $DOTNET_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-		return
-	elif test -d "$DOTNET_LOCAL_INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION in $DOTNET_LOCAL_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
+	if test -d "$INSTALL_DIR"; then
+		ok "Found dotnet $DOTNET_VERSION in $INSTALL_DIR (exactly $DOTNET_VERSION is required)."
 		return
 	fi
-
 	if test -z "$PROVISION_DOTNET"; then
-		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$DOTNET_URL${COLOR_RESET}."
+		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$URL${COLOR_RESET}."
 		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
 		return
 	fi
 
-	if test -n "$INSTALL_LOCALLY"; then
-		URL=$DOTNET_TARBALL
-		INSTALL_DIR=$DOTNET_LOCAL_INSTALL_DIR
-	else
-		URL=$DOTNET_URL
-		INSTALL_DIR=$DOTNET_INSTALL_DIR
-	fi
 	DOTNET_FILENAME=$(basename "$URL")
 
 	CACHED_FILE=$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME
@@ -1061,21 +1049,7 @@ function check_dotnet ()
 	fi
 
 	log "Installing dotnet $DOTNET_VERSION into $INSTALL_DIR..."
-	if test -n "$INSTALL_LOCALLY"; then
-		rm -Rf "$INSTALL_DIR-tmp"
-		mkdir -p "$INSTALL_DIR-tmp"
-		local TAR_ARGS
-		if test -n "$VERBOSE"; then
-			TAR_ARGS=xvf
-		else
-			TAR_ARGS=xf
-		fi
-		tar $TAR_ARGS "$DOWNLOADED_FILE" -C "$INSTALL_DIR-tmp"
-		xattr -s -d -r com.apple.quarantine "$INSTALL_DIR-tmp"
-		mv "$INSTALL_DIR-tmp" "$INSTALL_DIR"
-	else
-		$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
-	fi
+	$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
 
 	ok "Installed dotnet $DOTNET_VERSION into $INSTALL_DIR."
 }
@@ -1083,6 +1057,7 @@ function check_dotnet ()
 echo "Checking system..."
 
 check_osx_version
+check_checkout_dir
 check_xcode
 check_homebrew
 check_autotools
@@ -1094,7 +1069,6 @@ check_7z
 check_objective_sharpie
 check_simulators
 check_dotnet ""
-check_dotnet "5"
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
 	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)

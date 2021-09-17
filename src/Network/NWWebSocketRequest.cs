@@ -6,9 +6,13 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -17,11 +21,18 @@ using OS_nw_ws_request=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWWebSocketRequest : NativeObject {
 		internal NWWebSocketRequest (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, string header, string value);
@@ -52,6 +63,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, string subprotocol);

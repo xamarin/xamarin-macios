@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKQuantityTypeIdentifier
 //
 // Authors:
@@ -7,9 +7,10 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !MONOMAC
+#if HAS_HEALTHKIT
 
 using System;
+using System.Collections.Generic;
 
 using Foundation;
 using HealthKit;
@@ -26,6 +27,8 @@ namespace MonoTouchFixtures.HealthKit {
 		public void EnumValues_22351 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+
+			var failures = new List<string> ();
 
 			foreach (HKQuantityTypeIdentifier value in Enum.GetValues (typeof (HKQuantityTypeIdentifier))) {
 
@@ -67,6 +70,25 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion(11, 0))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.SixMinuteWalkTestDistance:
+				case HKQuantityTypeIdentifier.StairAscentSpeed:
+				case HKQuantityTypeIdentifier.StairDescentSpeed:
+				case HKQuantityTypeIdentifier.WalkingAsymmetryPercentage:
+				case HKQuantityTypeIdentifier.WalkingDoubleSupportPercentage:
+				case HKQuantityTypeIdentifier.WalkingSpeed:
+				case HKQuantityTypeIdentifier.WalkingStepLength:
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.AppleMoveTime:
+					if (!TestRuntime.CheckXcodeVersion (12, 5))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.AppleWalkingSteadiness:
+				case HKQuantityTypeIdentifier.NumberOfAlcoholicBeverages:
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						continue;
+					break;
 				}
 
 				try {
@@ -75,11 +97,13 @@ namespace MonoTouchFixtures.HealthKit {
 					}
 				}
 				catch (Exception e) {
-					Assert.Fail ("{0} could not be created: {1}", value, e);
+					failures.Add ($"{value} could not be created: {e}");
 				}
 			}
+
+			Assert.That (failures, Is.Empty, "No failures");
 		}
 	}
 }
 
-#endif // !__TVOS__
+#endif // HAS_HEALTHKIT

@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <_PlatformName>iOS</_PlatformName>
-    <_RuntimeIdentifier>ios-x64</_RuntimeIdentifier>
-  </PropertyGroup>
-
-  <Import Project="../microsoft.runtime.csproj" />
-</Project>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -85,6 +85,13 @@ namespace Xamarin.Bundler {
 				try {
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					params_cache [assembly.Name.ToString ()] = parameters;
+					if (!assembly.MainModule.HasSymbols) {
+						// We Cecil didn't load symbols, but there's a pdb, then something went wrong loading it (maybe an old-style pdb?).
+						// Warn about this.
+						var pdb = Path.ChangeExtension (fileName, "pdb");
+						if (File.Exists (pdb))
+							ErrorHelper.Show (ErrorHelper.CreateWarning (178, Errors.MX0178, fileName));
+					}
 				}
 				catch (SymbolsNotMatchingException) {
 					parameters.ReadSymbols = false;
@@ -128,6 +135,10 @@ namespace Xamarin.Bundler {
 			}
 
 			return String.Empty;
+		}
+
+		public virtual void Configure ()
+		{
 		}
 	}
 }

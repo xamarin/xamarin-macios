@@ -1,4 +1,4 @@
-#if IOS || TVOS || MONOMAC
+#if HAS_MEDIATOOLBOX
 //
 // MTAudioProcessingTap.cs: Type wrapper for MTAudioProcessingTap
 //
@@ -43,13 +43,14 @@ using CoreMedia;
 
 namespace MediaToolbox
 {
-	[iOS (6,0)][Mac (10,9)]
 	public class MTAudioProcessingTap : INativeObject
 #if !COREBUILD
 , IDisposable
 #endif
 	{
 #if !COREBUILD
+		delegate void Action_IntPtr (IntPtr arg);
+
 		// MTAudioProcessingTapCallbacks
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		unsafe struct Callbacks
@@ -58,9 +59,9 @@ namespace MediaToolbox
 			/* int */ int version; // kMTAudioProcessingTapCallbacksVersion_0 == 0
 			public /* void* */ IntPtr clientInfo;
 			public /* MTAudioProcessingTapInitCallback */ MTAudioProcessingTapInitCallbackProxy init;
-			public /* MTAudioProcessingTapFinalizeCallback */ Action<IntPtr> finalize;
+			public /* MTAudioProcessingTapFinalizeCallback */ Action_IntPtr finalize;
 			public /* MTAudioProcessingTapPrepareCallback */ MTAudioProcessingTapPrepareCallbackProxy prepare;
-			public /* MTAudioProcessingTapUnprepareCallback */ Action<IntPtr> unprepare;
+			public /* MTAudioProcessingTapUnprepareCallback */ Action_IntPtr unprepare;
 			public /* MTAudioProcessingTapProcessCallback */ MTAudioProcessingTapProcessCallbackProxy process;
 #pragma warning restore 169
 		}
@@ -218,7 +219,7 @@ namespace MediaToolbox
 			numberFramesOut = (IntPtr) numberOut;
 		}
 
-		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
+		[MonoPInvokeCallback (typeof (Action_IntPtr))]
 		static void FinalizeProxy (IntPtr tap)
 		{
 			MTAudioProcessingTap apt;
@@ -236,7 +237,7 @@ namespace MediaToolbox
 			apt.callbacks.Prepare (apt, (nint) maxFrames, ref processingFormat);
 		}
 
-		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
+		[MonoPInvokeCallback (typeof (Action_IntPtr))]
 		static void UnprepareProxy (IntPtr tap)
 		{
 			MTAudioProcessingTap apt;
@@ -298,4 +299,4 @@ namespace MediaToolbox
 	public class AudioBufferList {}
 #endif
 }
-#endif // IOS || TVOS
+#endif // HAS_MEDIATOOLBOX

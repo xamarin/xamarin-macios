@@ -10,6 +10,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -17,32 +18,9 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-	// untyped enum (used as OSStatus) -> CMBlockBuffer.h
+#if !NET
 	[Watch (6,0)]
-	public enum CMBlockBufferError : int {
-		None						= 0,
-		StructureAllocationFailed	= -12700,
-		BlockAllocationFailed		= -12701,
-		BadCustomBlockSource		= -12702,
-		BadOffsetParameter			= -12703,
-		BadLengthParameter			= -12704,
-		BadPointerParameter			= -12705,
-		EmptyBlockBuffer			= -12706,
-		UnallocatedBlock			= -12707,
-		InsufficientSpace			= -12708,
-	}
-
-	// uint32_t -> CMBlockBuffer.h
-	[Flags]
-	[Watch (6,0)]
-	public enum CMBlockBufferFlags : uint {
-		AssureMemoryNow			= (1<<0),
-		AlwaysCopyData			= (1<<1),
-		DontOptimizeDepth		= (1<<2),
-		PermitEmptyReference	= (1<<3)
-	}
-
-	[Watch (6,0)]
+#endif
 	public class CMBlockBuffer : ICMAttachmentBearer, IDisposable {
 		internal IntPtr handle;
 		internal CMCustomBlockAllocator customAllocator;

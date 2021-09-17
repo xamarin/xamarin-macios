@@ -6,8 +6,12 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -20,8 +24,13 @@ using nw_protocol_options_t=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWProtocolStack : NativeObject {
 		public NWProtocolStack (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -53,7 +62,7 @@ namespace Network {
 			if (del != null) {
 				using (var tempOptions = new NWProtocolOptions (options, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
-					NWProtocolOptions castedOptions = null;
+					NWProtocolOptions? castedOptions = null;
 
 					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
 						castedOptions = new NWProtocolTcpOptions (options, owns: false);
@@ -95,7 +104,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_protocol_stack_set_transport_protocol (nw_protocol_stack_t stack, IntPtr value);
 
-		public NWProtocolOptions TransportProtocol {
+		public NWProtocolOptions? TransportProtocol {
 			get {
 				var pHandle = nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ());
 				if (pHandle == IntPtr.Zero)
@@ -103,7 +112,7 @@ namespace Network {
 				var tempOptions = new NWProtocolOptions (pHandle, owns: true); 
 
 				using (var definition = tempOptions.ProtocolDefinition) {
-					NWProtocolOptions castedOptions = null;
+					NWProtocolOptions? castedOptions = null;
 					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
 						castedOptions = new NWProtocolTcpOptions (pHandle, owns: true);
 					}
@@ -125,9 +134,9 @@ namespace Network {
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
 #if XAMCORE_4_0 
-		public NWProtocolIPOptions InternetProtocol {
+		public NWProtocolIPOptions? InternetProtocol {
 #else
-		public NWProtocolOptions InternetProtocol {
+		public NWProtocolOptions? InternetProtocol {
 #endif
 			get {
 				var pHandle = nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ());

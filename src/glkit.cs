@@ -455,30 +455,37 @@ namespace GLKit {
 	interface GLKTextureLoader {
 		[Static]
 		[Export ("textureWithContentsOfFile:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromFile (string path, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("textureWithContentsOfURL:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromUrl (NSUrl url, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("textureWithContentsOfData:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromData (NSData data, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("textureWithCGImage:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromImage (CGImage cgImage, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("cubeMapWithContentsOfFiles:options:error:"), Internal]
+		[return: NullAllowed]
 		GLKTextureInfo CubeMapFromFiles (NSArray paths, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("cubeMapWithContentsOfFile:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo CubeMapFromFile (string path, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("cubeMapWithContentsOfURL:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo CubeMapFromUrl (NSUrl url, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]

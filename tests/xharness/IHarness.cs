@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.DotNet.XHarness.Common;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness {
-	
+
 	/// <summary>
 	/// Interface that represents the harness class that contains all the needed info to execute the tests.
 	/// </summary>
@@ -14,11 +15,12 @@ namespace Xharness {
 		
 		#region Properties
 		HarnessAction Action { get; }
-		ILog HarnessLog { get; set; }
+		IFileBackedLog HarnessLog { get; set; }
 		int Verbosity { get; }
 		HashSet<string> Labels { get; }
 		XmlResultJargon XmlJargon { get; }
 		IResultParser ResultParser { get; }
+		AppBundleLocator AppBundleLocator { get; }
 		ITunnelBore TunnelBore { get; }
 		string XIBuildPath { get; }
 		List<iOSTestProject> IOSTestProjects { get; }
@@ -41,6 +43,7 @@ namespace Xharness {
 		string MONO_IOS_SDK_DESTDIR { get; }
 		string MONO_MAC_SDK_DESTDIR { get; }
 		bool ENABLE_XAMARIN { get; }
+		bool ENABLE_DOTNET { get; }
 		string XcodeRoot { get; }
 		string LogDirectory { get; } 
 		double Timeout { get; }

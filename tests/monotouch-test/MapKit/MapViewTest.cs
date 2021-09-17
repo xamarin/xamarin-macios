@@ -17,6 +17,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
 	
+#if !XAMCORE_3_0
 	class MapViewPoker : MKMapView {
 
 		static FieldInfo bkAnnotations;
@@ -63,6 +64,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 	}
+#endif // !XAMCORE_3_0
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -82,6 +84,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 
+#if !XAMCORE_3_0
 		[Test]
 		public void Annotations_BackingFields ()
 		{
@@ -213,6 +216,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (mv.Overlays.Length, Is.EqualTo (2), "9b");
 			}
 		}
+#endif // !XAMCORE_3_0
 
 		[Test]
 		public void Overlays () 

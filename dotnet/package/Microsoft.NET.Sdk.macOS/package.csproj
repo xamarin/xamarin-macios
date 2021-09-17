@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <_PlatformName>macOS</_PlatformName>
+  </PropertyGroup>
+
+  <Import Project="../microsoft.workloads.csproj" />
+</Project>

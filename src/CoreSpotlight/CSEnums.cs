@@ -1,4 +1,4 @@
-﻿//
+//
 // CoreSpotlight enums
 //
 // Authors:
@@ -37,5 +37,14 @@ namespace CoreSpotlight {
 		IndexUnreachable = -2001,
 		InvalidQuery = -2002,
 		Cancelled = -2003
+	}
+
+	[iOS (9,0)]
+	[NoTV][NoMac]
+	public enum CSFileProtection {
+		None,
+		Complete,
+		CompleteUnlessOpen,
+		CompleteUntilFirstUserAuthentication,
 	}
 }

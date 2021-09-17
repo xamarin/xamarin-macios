@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,60 +16,77 @@ namespace GeneratorTests
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
 	{
+		// Removing the following variable might make running the unit tests in VSMac fail.
+		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
+
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_Smoke (Profile profile)
 		{
 			BuildFile (profile, "bmac_smoke.cs");
 		}
 
+#if !NET // There's no System.Drawing in the .NET BCL
 		[Test]
 		[TestCase (Profile.macOSSystem)]
 		public void BMac_NonAbsoluteReference_StillBuilds (Profile profile)
 		{
 			BuildFile (profile, true, false, new List<string> () { "System.Drawing" }, "bmac_smoke.cs");
 		}
+#endif
 
+#if !NET
 		[Test]
 		[TestCase (Profile.macOSSystem)]
 		public void BMac_AbsoluteSystemReference_StillBuilds (Profile profile)
 		{
 			BuildFile (profile, true, false, new List<string> () { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll" }, "bmac_smoke.cs");
 		}
+#endif
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_With_Hyphen_In_Name (Profile profile)
 		{
 			BuildFile (profile, "bmac-with-hyphen-in-name.cs");
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void PropertyRedefinitionMac (Profile profile)
 		{
 			BuildFile (profile, "property-redefination-mac.cs");
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void NSApplicationPublicEnsureMethods (Profile profile)
 		{
 			BuildFile (profile, "NSApplicationPublicEnsureMethods.cs");
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void ProtocolDuplicateAbstract (Profile profile)
 		{
 			BuildFile (profile, "protocol-duplicate-abstract.cs");
@@ -87,11 +104,14 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "bug15307.cs");
 		}
 
+#if !NET
+		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
 		public void Bug15799 ()
 		{
 			BuildFile (Profile.iOS, "bug15799.cs");
 		}
+#endif
 
 		[Test]
 		public void Bug16036 ()
@@ -105,11 +125,14 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "bug17232.cs");
 		}
 
+#if !NET
+		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
 		public void Bug23041 ()
 		{
 			BuildFile (Profile.iOS, "bug23041.cs");
 		}
+#endif
 
 		[Test]
 		public void Bug24078 ()
@@ -170,9 +193,11 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void Bug31788 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -182,8 +207,8 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 
-			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend", "MarshalInProperty.Shared getter");
-			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend", "MarshalOnProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalInProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
 		}
 
 		[Test]
@@ -202,9 +227,13 @@ namespace GeneratorTests
 				.Union (allTypes.SelectMany ((type) => type.Methods))
 				.Union (allTypes.SelectMany ((type) => type.Fields))
 				.Union (allTypes.SelectMany ((type) => type.Properties));
-
-			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "IntroducedAttribute"));
-			Assert.AreEqual (8, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+#if NET
+			const string attrib = "SupportedOSPlatformAttribute";
+#else
+			const string attrib = "IntroducedAttribute";
+#endif
+			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
+			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
 		[Test]
@@ -297,11 +326,14 @@ namespace GeneratorTests
 			Assert.AreEqual (10, methodCount, "Async method count");
 		}
 
+#if !NET
+		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
 		public void StackOverflow20696157 ()
 		{
 			BuildFile (Profile.iOS, "sof20696157.cs");
 		}
+#endif
 
 		[Test]
 		public void HyphenInName ()
@@ -563,7 +595,7 @@ namespace GeneratorTests
 			bgen.AddTestApiDefinition ("ghissue5416b.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
-			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'NSString Method(Foundation.NSDate, Foundation.NSObject)', but only on properties, parameters and return values.");
+			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'Foundation.NSString Method(Foundation.NSDate, Foundation.NSObject)', but only on properties, parameters and return values.");
 		}
 
 		[Test]
@@ -574,14 +606,14 @@ namespace GeneratorTests
 			bgen.AddTestApiDefinition ("ghissue5416a.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
-			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'Void set_Setter(Foundation.NSString)', but only on properties, parameters and return values.");
+			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'System.Void set_Setter(Foundation.NSString)', but only on properties, parameters and return values.");
 		}
 
 		[Test]
 		public void GHIssue5692 () => BuildFile (Profile.iOS, "ghissue5692.cs");
 
 		[Test]
-		public void GHIssue7304 () => BuildFile (Profile.macOSFull, "ghissue7304.cs");
+		public void GHIssue7304 () => BuildFile (Profile.macOSMobile, "ghissue7304.cs");
 
 		[Test]
 		public void RefOutParameters ()
@@ -602,6 +634,17 @@ namespace GeneratorTests
 		public void StrongDictsNativeEnums () => BuildFile (Profile.iOS, "strong-dict-native-enum.cs");
 
 		[Test]
+		public void IgnoreUnavailableProtocol ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/ignore-unavailable-protocol.cs");
+			var myClass = bgen.ApiAssembly.MainModule.GetType ("NS", "MyClass");
+			var myProtocol = bgen.ApiAssembly.MainModule.GetType ("NS", "IMyProtocol");
+			var myClassInterfaces = myClass.Interfaces.Select (v => v.InterfaceType.Name).ToArray ();
+			Assert.That (myClassInterfaces, Does.Not.Contain ("IMyProtocol"), "IMyProtocol");
+			Assert.IsNull (myProtocol, "MyProtocol null");
+		}
+
+		[Test]
 		public void VSTS970507 ()
 		{
 			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
@@ -611,6 +654,101 @@ namespace GeneratorTests
 		public void DiamondProtocol ()
 		{
 			BuildFile (Profile.iOS, "tests/diamond-protocol.cs");
+		}
+
+		[Test]
+		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
+
+		// looking for [BindingImpl (BindingImplOptions.Optimizable)]
+		bool IsOptimizable (MethodDefinition method)
+		{
+			const int Optimizable = 0x2; // BindingImplOptions flag
+
+			if (!method.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Name != "BindingImplAttribute")
+					continue;
+				foreach (var a in ca.ConstructorArguments)
+					return (((int) a.Value & Optimizable) == Optimizable);
+			}
+			return false;
+		}
+
+		[Test]
+		public void DisposeAttributeOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/dispose-attribute.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [Dispose] is, by default, not optimizable
+			var with_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose, "WithDispose");
+			Assert.That (IsOptimizable (with_dispose), Is.False, "WithDispose/Optimizable");
+
+			// [Dispose] can opt-in being optimizable
+			var with_dispose_optin = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDisposeOptInOptimizable").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose_optin, "WithDisposeOptInOptimizable");
+			Assert.That (IsOptimizable (with_dispose_optin), Is.True, "WithDisposeOptInOptimizable/Optimizable");
+
+			// Without a [Dispose] attribute the generated method is optimizable
+			var without_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithoutDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (without_dispose, "WitoutDispose");
+			Assert.That (IsOptimizable (without_dispose), Is.True, "WitoutDispose/Optimizable");
+		}
+
+		[Test]
+		public void SnippetAttributesOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/snippet-attributes.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [SnippetAttribute] subclasses are, by default, not optimizable
+			var not_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "NotOptimizable");
+			Assert.NotNull (not_opt, "NotOptimizable");
+			var pre_not_opt = not_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_not_opt), Is.False, "NotOptimizable/Pre");
+			var prologue_not_opt = not_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_not_opt), Is.False, "NotOptimizable/Prologue");
+			var post_not_opt = not_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_not_opt), Is.False, "NotOptimizable/Post");
+
+			// [SnippetAttribute] subclasses can opt-in being optimizable
+			var optin_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "OptInOptimizable");
+			Assert.NotNull (optin_opt, "OptInOptimizable");
+			var pre_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_optin_opt), Is.True, "OptInOptimizable/Pre");
+			var prologue_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_optin_opt), Is.True, "OptInOptimizable/Prologue");
+			var post_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_optin_opt), Is.True, "OptInOptimizable/Post");
+
+			// Without a [SnippetAttribute] subclass attribute the generated method is optimizable
+			var nothing = bgen.ApiAssembly.MainModule.GetType ("NS", "NoSnippet").Methods.First ((v) => v.Name == "Nothing");
+			Assert.NotNull (nothing, "NoSnippet");
+			Assert.That (IsOptimizable (nothing), Is.True, "Nothing/Optimizable");
+		}
+
+		[Test]
+		public void NativeEnum ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.ProcessEnums = true;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.Sources = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum-extensions.cs") }.ToList ();
+			bgen.ApiDefinitions = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum.cs") }.ToList ();
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

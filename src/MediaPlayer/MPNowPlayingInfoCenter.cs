@@ -7,12 +7,19 @@
 // Copyright 2011, Xamarin Inc
 //
 
+using System.Diagnostics.CodeAnalysis;
+
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
+
+#nullable enable
 
 namespace MediaPlayer {
 
+#if !NET
 	[Mac (10,12,2)]
+#endif
 	public class MPNowPlayingInfo {
 		public MPNowPlayingInfo ()
 		{
@@ -30,36 +37,63 @@ namespace MediaPlayer {
 		public int? DiscNumber;
 		public ulong? PersistentID;
 		public double? PlaybackDuration;
+#if !NET
 		[iOS (8,0)]
+#endif
 		public double? DefaultPlaybackRate;
 
+#if !NET
 		[iOS (9,0)]
-		public MPNowPlayingInfoLanguageOptionGroup[] AvailableLanguageOptions { get; set; }
+#endif
+		public MPNowPlayingInfoLanguageOptionGroup[]? AvailableLanguageOptions { get; set; }
+#if !NET
 		[iOS (9,0)]
-		public MPNowPlayingInfoLanguageOption[] CurrentLanguageOptions { get; set; }
+#endif
+		public MPNowPlayingInfoLanguageOption[]? CurrentLanguageOptions { get; set; }
+#if !NET
 		[iOS (10,0)]
-		public string CollectionIdentifier { get; set; }
+#endif
+		public string? CollectionIdentifier { get; set; }
+#if !NET
 		[iOS (10,0)]
-		public string ExternalContentIdentifier { get; set; }
+#endif
+		public string? ExternalContentIdentifier { get; set; }
+#if !NET
 		[iOS (10,0)]
-		public string ExternalUserProfileIdentifier { get; set; }
+#endif
+		public string? ExternalUserProfileIdentifier { get; set; }
+#if !NET
 		[iOS (10,0)]
+#endif
 		public float? PlaybackProgress { get; set; }
+#if !NET
 		[iOS (10,0)]
+#endif
 		public MPNowPlayingInfoMediaType? MediaType { get; set; }
+#if !NET
 		[iOS (10,0)]
+#endif
 		public bool? IsLiveStream { get; set; }
+#if !NET
 		[iOS (10,3)]
-		public NSUrl AssetUrl { get; set; }
+#else
+		[SupportedOSPlatform ("ios10.3")]
+#endif
+		public NSUrl? AssetUrl { get; set; }
+#if !NET
 		[iOS (11,1), TV (11,1), Mac (10,13,1)]
-		public NSDate CurrentPlaybackDate { get; set; }
+#else
+		[SupportedOSPlatform ("ios11.1")]
+		[SupportedOSPlatform ("tvos11.1")]
+#endif
+		public NSDate? CurrentPlaybackDate { get; set; }
 
-		public string AlbumTitle;
-		public string Artist;
-		public MPMediaItemArtwork Artwork;
-		public string Composer;
-		public string Genre;
-		public string Title;
+		public string? AlbumTitle;
+		public string? Artist;
+		public MPMediaItemArtwork? Artwork;
+		public string? Composer;
+		public string? Genre;
+		public string? Title;
 
 		internal NSDictionary ToDictionary ()
 		{
@@ -136,27 +170,35 @@ namespace MediaPlayer {
 				dictionary.Add (key, value);
 		}
 
-		internal MPNowPlayingInfo (NSDictionary source)
+		bool TryGetValue (NSDictionary source, NSObject? key, [NotNullWhen (true)] out NSObject? result)
+		{
+			if (key != null)
+				return source.TryGetValue (key, out result);
+			result = null;
+			return false;
+		}
+
+		internal MPNowPlayingInfo (NSDictionary? source)
 		{
 			if (source == null)
 				return;
 			
-			NSObject result;
+			NSObject? result;
 
-			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyElapsedPlaybackTime, out result))
-				ElapsedPlaybackTime = (result as NSNumber).DoubleValue;
-			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyPlaybackRate, out result))
-				PlaybackRate = (result as NSNumber).DoubleValue;
-			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyPlaybackQueueIndex, out result))
-				PlaybackQueueIndex = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyPlaybackQueueCount, out result))
-				PlaybackQueueCount = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyChapterNumber, out result))
-				ChapterNumber = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyChapterCount, out result))
-				ChapterCount = (int) (result as NSNumber).UInt32Value;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyElapsedPlaybackTime, out result))
+				ElapsedPlaybackTime = (result as NSNumber)?.DoubleValue;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyPlaybackRate, out result))
+				PlaybackRate = (result as NSNumber)?.DoubleValue;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyPlaybackQueueIndex, out result))
+				PlaybackQueueIndex = (result as NSNumber)?.Int32Value;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyPlaybackQueueCount, out result))
+				PlaybackQueueCount = (result as NSNumber)?.Int32Value;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyChapterNumber, out result))
+				ChapterNumber = (result as NSNumber)?.Int32Value;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyChapterCount, out result))
+				ChapterCount = (result as NSNumber)?.Int32Value;
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyDefaultPlaybackRate, out result))
-				DefaultPlaybackRate = (double) (result as NSNumber).DoubleValue;
+				DefaultPlaybackRate = (result as NSNumber)?.DoubleValue;
 
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyAvailableLanguageOptions, out result))
 				AvailableLanguageOptions = NSArray.ArrayFromHandle<MPNowPlayingInfoLanguageOptionGroup> (result.Handle);
@@ -169,49 +211,41 @@ namespace MediaPlayer {
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyExternalUserProfileIdentifier, out result))
 				ExternalUserProfileIdentifier = (string) (result as NSString);
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyPlaybackProgress, out result))
-				PlaybackProgress = (float) (result as NSNumber).FloatValue;
+				PlaybackProgress = (result as NSNumber)?.FloatValue;
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyMediaType, out result))
-				MediaType = (MPNowPlayingInfoMediaType) (result as NSNumber).UInt32Value;
+				MediaType = (MPNowPlayingInfoMediaType?) (result as NSNumber)?.UInt32Value;
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyIsLiveStream, out result))
-				IsLiveStream = (bool) (result as NSNumber).BoolValue;
+				IsLiveStream = (result as NSNumber)?.BoolValue;
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyAssetUrl, out result))
 				AssetUrl = result as NSUrl;
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyCurrentPlaybackDate, out result))
 				CurrentPlaybackDate = result as NSDate;
 
-			if (source.TryGetValue (MPMediaItem.AlbumTrackCountProperty, out result))
-				AlbumTrackCount = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPMediaItem.AlbumTrackNumberProperty, out result))
-				AlbumTrackNumber = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPMediaItem.DiscCountProperty, out result))
-				DiscCount = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPMediaItem.DiscNumberProperty, out result))
-				DiscNumber = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPMediaItem.PersistentIDProperty, out result))
-				PersistentID = (result as NSNumber).UInt64Value;
-			if (source.TryGetValue (MPMediaItem.PlaybackDurationProperty, out result))
-				PlaybackDuration = (result as NSNumber).DoubleValue;
+			if (TryGetValue (source, MPMediaItem.AlbumTrackCountProperty, out result))
+				AlbumTrackCount = (result as NSNumber)?.Int32Value;
+			if (TryGetValue (source, MPMediaItem.AlbumTrackNumberProperty, out result))
+				AlbumTrackNumber = (result as NSNumber)?.Int32Value;
+			if (TryGetValue (source, MPMediaItem.DiscCountProperty, out result))
+				DiscCount = (result as NSNumber)?.Int32Value;
+			if (TryGetValue (source, MPMediaItem.DiscNumberProperty, out result))
+				DiscNumber = (result as NSNumber)?.Int32Value;
+			if (TryGetValue (source, MPMediaItem.PersistentIDProperty, out result))
+				PersistentID = (result as NSNumber)?.UInt64Value;
+			if (TryGetValue (source, MPMediaItem.PlaybackDurationProperty, out result))
+				PlaybackDuration = (result as NSNumber)?.DoubleValue;
 
-			if (source.TryGetValue (MPMediaItem.AlbumTitleProperty, out result))
+			if (TryGetValue (source, MPMediaItem.AlbumTitleProperty, out result))
 				AlbumTitle = (string) (result as NSString);
-			if (source.TryGetValue (MPMediaItem.ArtistProperty, out result))
+			if (TryGetValue (source, MPMediaItem.ArtistProperty, out result))
 				Artist = (string) (result as NSString);
-			if (source.TryGetValue (MPMediaItem.ArtworkProperty, out result))
+			if (TryGetValue (source, MPMediaItem.ArtworkProperty, out result))
 				Artwork = result as MPMediaItemArtwork;
-			if (source.TryGetValue (MPMediaItem.ComposerProperty, out result))
+			if (TryGetValue (source, MPMediaItem.ComposerProperty, out result))
 				Composer = (string) (result as NSString);
-			if (source.TryGetValue (MPMediaItem.GenreProperty, out result))
+			if (TryGetValue (source, MPMediaItem.GenreProperty, out result))
 				Genre = (string) (result as NSString);
-			if (source.TryGetValue (MPMediaItem.TitleProperty, out result))
+			if (TryGetValue (source, MPMediaItem.TitleProperty, out result))
 				Title = (string) (result as NSString);
-		}
-
-		bool TryGetValue (NSDictionary source, NSObject key, out NSObject result)
-		{
-			result = null;
-			if (key != null)
-				return source.TryGetValue (key, out result);
-			return false;
 		}
 	}
 	

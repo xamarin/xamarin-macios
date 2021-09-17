@@ -155,6 +155,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CFPreferencesGetAppBooleanValue (IntPtr key, IntPtr applicationId,
 			/*out bool*/ IntPtr keyExistsAndHasValidFormat);
 
@@ -285,6 +286,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CFPreferencesAppSynchronize (IntPtr applicationId);
 
 		public static bool AppSynchronize ()
@@ -313,6 +315,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CFPreferencesAppValueIsForced (IntPtr key, IntPtr applicationId);
 
 		public static bool AppValueIsForced (string key)

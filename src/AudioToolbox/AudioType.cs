@@ -34,6 +34,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Diagnostics;
 using CoreFoundation;
 using ObjCRuntime;
@@ -80,8 +81,13 @@ namespace AudioToolbox {
 		AES3                    = 0x61657333, // 'aes3'
 		EnhancedAES3            = 0x65632d33, // 'ec-3'
 		Flac                    = 0x666c6163, // 'flac'
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+#if !NET
 		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		LatmInLoas              = 0x6c6f6173, // 'loas'
 		Opus                    = 0x6f707573, // 'opus'
 	}
@@ -148,8 +154,18 @@ namespace AudioToolbox {
 		const int AudioUnitSampleFractionBits = 24;
 		const AudioFormatFlags AudioFormatFlagIsBigEndian = 0;
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
+#else
+		[UnsupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("macos10.10")]
+#if IOS
+		[Obsolete ("Starting with ios8.0 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.10 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public static readonly AudioFormatFlags AudioFormatFlagsAudioUnitCanonical = AudioFormatFlags.IsSignedInteger | (BitConverter.IsLittleEndian ? 0 : AudioFormatFlags.IsBigEndian) |
 			AudioFormatFlags.IsPacked | AudioFormatFlags.IsNonInterleaved | (AudioFormatFlags) (AudioUnitSampleFractionBits << (int)AudioFormatFlags.LinearPCMSampleFractionShift);
 		
@@ -345,7 +361,9 @@ namespace AudioToolbox {
 		}
 	}
 
+#if !NET
 	[Watch (3,0)]
+#endif
 	[Flags]
 	public enum AudioChannelFlags : uint { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
@@ -471,6 +489,8 @@ namespace AudioToolbox {
 		HoaAcn14               = (2 << 16) | 14,
 		HoaAcn15               = (2 << 16) | 15,
 		HoaAcn65024            = (2 << 16) | 65024,
+		HoaSn3d	               = HoaAcn0,
+		HoaN3d                 = (3 << 16),
 	}
 
 #if !COREBUILD
@@ -750,6 +770,42 @@ namespace AudioToolbox {
 		Atmos_7_1_4              = (192 << 16) | 12,
 		Atmos_9_1_6              = (193 << 16) | 16,
 		Atmos_5_1_2              = (194 << 16) | 8,
+		Atmos_5_1_4              = (195U<<16) | 10,
+		Atmos_7_1_2              = (196U<<16) | 10,
+
+		Logic_Mono               = Mono,
+		Logic_Stereo             = Stereo,
+		Logic_Quadraphonic       = Quadraphonic,
+		Logic_4_0_A              = MPEG_4_0_A,
+		Logic_4_0_B              = MPEG_4_0_B,
+		Logic_4_0_C              = (197U<<16) | 4,
+		Logic_5_0_A              = MPEG_5_0_A,
+		Logic_5_0_B              = MPEG_5_0_B,
+		Logic_5_0_C              = MPEG_5_0_C,
+		Logic_5_0_D              = MPEG_5_0_D,
+		Logic_5_1_A              = MPEG_5_1_A,
+		Logic_5_1_B              = MPEG_5_1_B,
+		Logic_5_1_C              = MPEG_5_1_C,
+		Logic_5_1_D              = MPEG_5_1_D,
+		Logic_6_0_A              = AAC_6_0,
+		Logic_6_0_B              = (198U<<16) | 6,
+		Logic_6_0_C              = AudioUnit_6_0,
+		Logic_6_1_A              = AAC_6_1,
+		Logic_6_1_B              = (199U<<16) | 7,
+		Logic_6_1_C              = MPEG_6_1_A,
+		Logic_6_1_D              = (200U<<16) | 7,
+		Logic_7_1_A              = AudioUnit_7_1,
+		Logic_7_1_B              = (201U<<16) | 8,
+		Logic_7_1_C              = MPEG_7_1_C,
+		Logic_7_1_SDDS_A         = MPEG_7_1_A,
+		Logic_7_1_SDDS_B         = MPEG_7_1_B,
+		Logic_7_1_SDDS_C         = Emagic_Default_7_1,
+		Logic_Atmos_5_1_2        = Atmos_5_1_2,
+		Logic_Atmos_5_1_4        = Atmos_5_1_4,
+		Logic_Atmos_7_1_2        = Atmos_7_1_2,
+		Logic_Atmos_7_1_4_A      = Atmos_7_1_4,
+		Logic_Atmos_7_1_4_B      = (202U<<16) | 12,
+		Logic_Atmos_7_1_6        = (203U<<16) | 14,
 		
 		DiscreteInOrder          = (147<<16) | 0,                       // needs to be ORed with the actual number of channels  
 		Unknown                  = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
@@ -1078,7 +1134,9 @@ namespace AudioToolbox {
 		TimeRunning = 1 << 1
 	}
 
+#if !NET
 	[Watch (3,0)]
+#endif
 	public enum MPEG4ObjectID { // long
 		AacMain = 1,
 		AacLc = 2,
@@ -1129,19 +1187,22 @@ namespace AudioToolbox {
 
 	public enum SmpteTimeType : uint // UInt32 in AudioFileRegionList
 	{
-		None		= 0,
-		Type24		= 1,
-		Type25		= 2,
-		Type30Drop    = 3,
-		Type30        = 4,
-		Type2997      = 5,
-		Type2997Drop  = 6,
-		Type60        = 7,
-		Type5994      = 8,
-		Type60Drop    = 9,
-		Type5994Drop  = 10,
-		Type50        = 11,
-		Type2398      = 12
+#if !XAMCORE_4_0
+		[Obsolete ("Value is not to be used with any API.")]
+		None          = uint.MaxValue,
+#endif
+		Type24        = 0,
+		Type25        = 1,
+		Type30Drop    = 2,
+		Type30        = 3,
+		Type2997      = 4,
+		Type2997Drop  = 5,
+		Type60        = 6,
+		Type5994      = 7,
+		Type60Drop    = 8,
+		Type5994Drop  = 9,
+		Type50        = 10,
+		Type2398      = 11,
 	}
 	
 	[StructLayout(LayoutKind.Sequential)]

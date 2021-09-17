@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLLight Unit Tests
 //
 // Authors:
@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.ModelIO {
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class MDLMeshTest {
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);

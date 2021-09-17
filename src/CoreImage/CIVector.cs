@@ -30,6 +30,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreImage {
 	public partial class CIVector {
 		nfloat this [nint index] {
@@ -48,7 +50,7 @@ namespace CoreImage {
 		public unsafe CIVector (nfloat [] values, nint count) : base (NSObjectFlag.Empty)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (count > values.Length)
 				throw new ArgumentOutOfRangeException (nameof (count));
 
@@ -66,7 +68,7 @@ namespace CoreImage {
 		public unsafe static CIVector FromValues (nfloat [] values)
 		{
 			if (values == null)
-				throw new ArgumentNullException ("values");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			fixed (nfloat *ptr = values)
 				return _FromValues ((IntPtr) ptr, values.Length);
 		}

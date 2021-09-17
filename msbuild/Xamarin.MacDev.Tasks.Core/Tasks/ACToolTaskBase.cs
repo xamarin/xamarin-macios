@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Linq;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev.Tasks;
-using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -18,7 +16,6 @@ namespace Xamarin.MacDev.Tasks
 	{
 		ITaskItem partialAppManifest;
 		string outputSpecs;
-		PDictionary plist;
 
 		#region Inputs
 
@@ -56,93 +53,67 @@ namespace Xamarin.MacDev.Tasks
 			get { return "actool"; }
 		}
 
-		static bool IsWatchExtension (PDictionary plist)
-		{
-			PDictionary extension;
-			PString id;
-
-			if (!plist.TryGetValue ("NSExtension", out extension))
-				return false;
-
-			if (!extension.TryGetValue ("NSExtensionPointIdentifier", out id))
-				return false;
-
-			return id.Value == "com.apple.watchkit";
-		}
-
-		static bool IsMessagesExtension (PDictionary plist)
-		{
-			PDictionary extension;
-			PString id;
-
-			if (!plist.TryGetValue ("NSExtension", out extension))
-				return false;
-
-			if (!extension.TryGetValue ("NSExtensionPointIdentifier", out id))
-				return false;
-
-			return id.Value == "com.apple.message-payload-provider";
+		bool IsMessagesExtension {
+			get {
+				return NSExtensionPointIdentifier == "com.apple.message-payload-provider";
+			}
 		}
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
-			if (plist != null) {
-				PString value;
+			var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
 
-				var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
+			if (!string.IsNullOrEmpty (XSAppIconAssets)) {
+				int index = XSAppIconAssets.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
+				string assetDir = null;
+				var rpath = XSAppIconAssets;
 
-				if (plist.TryGetValue (ManifestKeys.XSAppIconAssets, out value) && !string.IsNullOrEmpty (value.Value)) {
-					int index = value.Value.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
-					string assetDir = null;
-					var rpath = value.Value;
+				if (index != -1)
+					assetDir = rpath.Substring (0, index + ".xcassets".Length);
 
-					if (index != -1)
-						assetDir = rpath.Substring (0, index + ".xcassets".Length);
+				if (assetDirs != null && assetDirs.Contains (assetDir)) {
+					var assetName = Path.GetFileNameWithoutExtension (rpath);
 
-					if (assetDirs != null && assetDirs.Contains (assetDir)) {
-						var assetName = Path.GetFileNameWithoutExtension (rpath);
+					if (PartialAppManifest == null) {
+						args.Add ("--output-partial-info-plist");
+						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
 
-						if (PartialAppManifest == null) {
-							args.Add ("--output-partial-info-plist");
-							args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
-
-							PartialAppManifest = partialAppManifest;
-						}
-
-						args.Add ("--app-icon");
-						args.AddQuoted (assetName);
-
-						if (IsMessagesExtension (plist))
-							args.Add ("--product-type com.apple.product-type.app-extension.messages");
+						PartialAppManifest = partialAppManifest;
 					}
+
+					args.Add ("--app-icon");
+					args.AddQuoted (assetName);
+
+					if (IsMessagesExtension)
+						args.Add ("--product-type com.apple.product-type.app-extension.messages");
 				}
-
-				if (plist.TryGetValue (ManifestKeys.XSLaunchImageAssets, out value) && !string.IsNullOrEmpty (value.Value)) {
-					int index = value.Value.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
-					string assetDir = null;
-					var rpath = value.Value;
-
-					if (index != -1)
-						assetDir = rpath.Substring (0, index + ".xcassets".Length);
-
-					if (assetDirs != null && assetDirs.Contains (assetDir)) {
-						var assetName = Path.GetFileNameWithoutExtension (rpath);
-
-						if (PartialAppManifest == null) {
-							args.Add ("--output-partial-info-plist");
-							args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
-
-							PartialAppManifest = partialAppManifest;
-						}
-
-						args.Add ("--launch-image");
-						args.AddQuoted (assetName);
-					}
-				}
-
-				if (plist.TryGetValue (ManifestKeys.CLKComplicationGroup, out value) && !string.IsNullOrEmpty (value.Value))
-					args.Add ("--complication", value);
 			}
+
+			if (!string.IsNullOrEmpty (XSLaunchImageAssets)) {
+				int index = XSLaunchImageAssets.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
+				string assetDir = null;
+				var rpath = XSLaunchImageAssets;
+
+				if (index != -1)
+					assetDir = rpath.Substring (0, index + ".xcassets".Length);
+
+				if (assetDirs != null && assetDirs.Contains (assetDir)) {
+					var assetName = Path.GetFileNameWithoutExtension (rpath);
+
+					if (PartialAppManifest == null) {
+						args.Add ("--output-partial-info-plist");
+						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
+
+						PartialAppManifest = partialAppManifest;
+					}
+
+					args.Add ("--launch-image");
+					args.AddQuoted (assetName);
+				}
+			}
+
+			if (!string.IsNullOrEmpty (CLKComplicationGroup))
+				args.Add ("--complication", CLKComplicationGroup);
 
 			if (OptimizePNGs)
 				args.Add ("--compress-pngs");
@@ -163,10 +134,13 @@ namespace Xamarin.MacDev.Tasks
 				}
 			}
 
-			if (plist != null) {
-				foreach (var targetDevice in GetTargetDevices (plist))
-					args.Add ("--target-device", targetDevice);
-			}
+			if (Platform == ApplePlatform.MacCatalyst) {
+				args.Add ("--ui-framework-family");
+				args.Add ("uikit");
+			}				
+
+			foreach (var targetDevice in GetTargetDevices ())
+				args.Add ("--target-device", targetDevice);
 
 			args.Add ("--minimum-deployment-target", MinimumOSVersion);
 
@@ -222,36 +196,11 @@ namespace Xamarin.MacDev.Tasks
 			var outputManifests = new List<ITaskItem> ();
 			var catalogs = new List<ITaskItem> ();
 			var unique = new HashSet<string> ();
-			string bundleIdentifier = null;
+
 			var knownSpecs = new HashSet<string> ();
 			var clones = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
 			var specs = new PArray ();
-
-			switch (SdkPlatform) {
-			case "iPhoneSimulator":
-			case "iPhoneOS":
-			case "MacOSX":
-			case "WatchSimulator":
-			case "WatchOS":
-			case "AppleTVSimulator":
-			case "AppleTVOS":
-				break;
-			default:
-				Log.LogError (MSBStrings.E0089, SdkPlatform);
-				return false;
-			}
-
-			if (AppManifest != null) {
-				try {
-					plist = PDictionary.FromFile (AppManifest.ItemSpec);
-				} catch (Exception ex) {
-					Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "{0}", ex.Message);
-					return false;
-				}
-
-				bundleIdentifier = plist.GetCFBundleIdentifier ();
-			}
 
 			for (int i = 0; i < ImageAssets.Length; i++) {
 				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets[i], !string.IsNullOrEmpty (SessionId));
@@ -366,7 +315,7 @@ namespace Xamarin.MacDev.Tasks
 					catalogs.Add (item);
 				}
 
-				if (AppleSdkSettings.XcodeVersion.Major >= 7 && !string.IsNullOrEmpty (bundleIdentifier) && SdkPlatform != "WatchSimulator") {
+				if (AppleSdkSettings.XcodeVersion.Major >= 7 && SdkPlatform != "WatchSimulator") {
 					var text = File.ReadAllText (items[i].ItemSpec);
 
 					if (string.IsNullOrEmpty (text))
@@ -411,7 +360,7 @@ namespace Xamarin.MacDev.Tasks
 					var tagList = tags.ToList ();
 					tagList.Sort ();
 
-					var assetDir = AssetPackUtils.GetAssetPackDirectory (intermediate, bundleIdentifier, tagList, out hash);
+					var assetDir = AssetPackUtils.GetAssetPackDirectory (intermediate, BundleIdentifier, tagList, out hash);
 
 					if (knownSpecs.Add (hash)) {
 						var assetpack = new PDictionary ();
@@ -422,7 +371,7 @@ namespace Xamarin.MacDev.Tasks
 						for (int j = 0; j < tagList.Count; j++)
 							ptags.Add (new PString (tagList[j]));
 
-						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", bundleIdentifier, hash)));
+						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", BundleIdentifier, hash)));
 						assetpack.Add ("bundle-path", new PString (Path.GetFullPath (assetDir)));
 						assetpack.Add ("tags", ptags);
 						specs.Add (assetpack);

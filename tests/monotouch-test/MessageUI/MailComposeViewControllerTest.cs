@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_MESSAGEUI
 
 using System;
 using System.Drawing;
@@ -29,8 +29,12 @@ namespace MonoTouchFixtures.MessageUI {
 			if (!MFMailComposeViewController.CanSendMail)
 				Assert.Inconclusive ("Not configured to send emails");
 
+#if XAMCORE_3_0
+			var cancelAttributes = new UIStringAttributes ();
+#else
 			var cancelAttributes = new UITextAttributes ();
 			cancelAttributes.TextShadowOffset = new UIOffset (0, -1);
+#endif
 			UIBarButtonItem.AppearanceWhenContainedIn (typeof(UISearchBar)).SetTitleTextAttributes (cancelAttributes, UIControlState.Disabled);
 			using (var mail = new MFMailComposeViewController ()) {
 				// we're happy the .ctor did not crash (only on iOS6) because the dictionary had a null key (typo)
@@ -53,4 +57,4 @@ namespace MonoTouchFixtures.MessageUI {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_MESSAGEUI

@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -65,6 +66,7 @@ namespace CoreText {
 		LeftToRight = 0,
 		RightToLeft = 1,
 
+		// part of an unnamed enum inside CTStringAttributes.h
 		Embedding = (0 << 1),
 		Override = (1 << 1)
 	}
@@ -81,8 +83,18 @@ namespace CoreText {
 		LineHeightMultiple      = 7,
 		MaximumLineHeight       = 8,
 		MinimumLineHeight       = 9,
-		[Deprecated (PlatformName.iOS, 6, 0, message : "Please use MaximumLineSpacing")]
-		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Please use MaximumLineSpacing")]
+#if !NET
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'MaximumLineSpacing' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'MaximumLineSpacing' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios6.0")]
+		[UnsupportedOSPlatform ("macos10.8")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'MaximumLineSpacing' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.8 use 'MaximumLineSpacing' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		LineSpacing             = 10,
 		ParagraphSpacing        = 11,
 		ParagraphSpacingBefore  = 12,
@@ -402,6 +414,7 @@ namespace CoreText {
 
 #region Paragraph Style Access
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool CTParagraphStyleGetValueForSpecifier (IntPtr paragraphStyle, CTParagraphStyleSpecifier spec, nuint valueBufferSize, void* valueBuffer);
 
 		public unsafe CTTextTab[] GetTabStops ()
@@ -554,4 +567,3 @@ public
 #endregion
 	}
 }
-

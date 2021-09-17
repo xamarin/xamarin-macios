@@ -1,3 +1,5 @@
+dotnet-install.sh
+BundledNETCorePlatformsPackageVersion.txt
 downloads
 .stamp*
 .deps.*.mk

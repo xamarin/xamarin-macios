@@ -128,7 +128,11 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (MyView v = new MyView ("note"))
 			using (var b = new UIBarButtonItem (v)) {
-				b.SetTitleTextAttributes (null, UIControlState.Disabled);
+#if XAMCORE_3_0
+				b.SetTitleTextAttributes ((UIStringAttributes) null, UIControlState.Disabled);
+#else
+				b.SetTitleTextAttributes ((UITextAttributes) null, UIControlState.Disabled);
+#endif
 			}
 		}
 #endif

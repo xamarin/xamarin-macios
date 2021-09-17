@@ -15,15 +15,15 @@ namespace Xamarin.iOS.Tasks
 	public abstract class CompileAppManifestTaskCore : CompileAppManifestTaskBase
 	{
 		IPhoneDeviceType supportedDevices;
-		IPhoneSdkVersion sdkVersion;
+		AppleSdkVersion sdkVersion;
 
 		bool IsIOS { get { return Platform == ApplePlatform.iOS; } }
 
 		protected override bool Compile (PDictionary plist)
 		{
-			var currentSDK = IPhoneSdks.GetSdk (Platform);
+			var currentSDK = Sdks.GetAppleSdk (Platform);
 
-			sdkVersion = IPhoneSdkVersion.Parse (DefaultSdkVersion);
+			sdkVersion = AppleSdkVersion.Parse (DefaultSdkVersion);
 			if (!currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
 				Log.LogError (null, null, null, null, 0, 0, 0, 0, MSBStrings.E0013, Platform, sdkVersion);
 				return false;
@@ -32,7 +32,7 @@ namespace Xamarin.iOS.Tasks
 			supportedDevices = plist.GetUIDeviceFamily ();
 
 			if (!IsWatchApp) {
-				var version = IPhoneSdks.MonoTouch.ExtendedVersion;
+				var version = Sdks.XamIOS.ExtendedVersion;
 				// This key is our supported way of determining if an app
 				// was built with Xamarin, so it needs to be present in all apps.
 
@@ -42,7 +42,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			var sdkSettings = currentSDK.GetSdkSettings (sdkVersion, SdkIsSimulator);
-			var dtSettings = currentSDK.GetDTSettings ();
+			var dtSettings = currentSDK.GetAppleDTSettings ();
 
 			SetValue (plist, ManifestKeys.BuildMachineOSBuild, dtSettings.BuildMachineOSBuild);
 			// We have an issue here, this is for consideration by the platform:
@@ -61,18 +61,10 @@ namespace Xamarin.iOS.Tasks
 					LogAppManifestError (MSBStrings.E0014, executable);
 			}
 
-			if (IsIOS) {
-				if (!plist.ContainsKey (ManifestKeys.CFBundleName))
-					plist [ManifestKeys.CFBundleName] = plist.ContainsKey (ManifestKeys.CFBundleDisplayName) ? plist.GetString (ManifestKeys.CFBundleDisplayName).Clone () : new PString (AppBundleName);
-			} else {
-				plist.SetIfNotPresent (ManifestKeys.CFBundleName, AppBundleName);
-			}
-
 			if (!string.IsNullOrEmpty (ResourceRules))
 				plist.SetIfNotPresent (ManifestKeys.CFBundleResourceSpecification, Path.GetFileName (ResourceRules));
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist[ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
-			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, plist.GetCFBundleVersion ());
 
 			string dtCompiler = null;
 			string dtPlatformBuild = null;
@@ -150,10 +142,6 @@ namespace Xamarin.iOS.Tasks
 				if (Debug)
 					SetAppTransportSecurity (plist);
 			}
-
-			// Remove any Xamarin Studio specific keys
-			plist.Remove (ManifestKeys.XSLaunchImageAssets);
-			plist.Remove (ManifestKeys.XSAppIconAssets);
 
 			SetRequiredArchitectures (plist);
 
@@ -298,12 +286,15 @@ namespace Xamarin.iOS.Tasks
 
 		void Validation (PDictionary plist)
 		{
+			if (!Validate)
+				return;
+
 			var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
 			                     || supportedDevices == IPhoneDeviceType.NotSet;
 			var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;
 
 			// Validation...
-			if (!IsAppExtension && sdkVersion >= IPhoneSdkVersion.V3_2) {
+			if (!IsAppExtension && sdkVersion >= AppleSdkVersion.V3_2) {
 				IPhoneOrientation orientation;
 
 				if (supportsIPhone) {

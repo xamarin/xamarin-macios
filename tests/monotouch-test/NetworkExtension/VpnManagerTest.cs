@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NEVpnManager
 //
 // Authors:
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.NetworkExtension {
 				Assert.Inconclusive ("Requires enabling Personal PVN (entitlements)");
 
 			Assert.That (shared.Connection.Status, Is.EqualTo (NEVpnStatus.Invalid), "Connection");
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			Assert.True (shared.Enabled, "Enabled");
 #else
 			Assert.False (shared.Enabled, "Enabled");
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.NetworkExtension {
 			var HasLocalizedDescription = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11);
 #endif
 			if (HasLocalizedDescription) {
-#if MONOMAC
+#if MONOMAC && !NET
 				Assert.AreEqual ("xammac_tests", shared.LocalizedDescription, "LocalizedDescription");
 #else
 				Assert.AreEqual ("MonoTouchTest", shared.LocalizedDescription, "LocalizedDescription");

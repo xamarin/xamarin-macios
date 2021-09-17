@@ -1,4 +1,4 @@
-﻿#region --- License ---
+#region --- License ---
 /*
  * Copyright 2014 Xamarin Inc, All Rights Reserved
  
@@ -38,6 +38,8 @@ using pfloat = System.nfloat;
 #else
 using pfloat = System.Single;
 #endif
+
+#nullable enable
 
 namespace SceneKit
 {
@@ -1057,7 +1059,7 @@ namespace SceneKit
         /// </summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>True if the instances are equal; false otherwise.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals (object? obj)
         {
             if (!(obj is SCNVector4))
                 return false;

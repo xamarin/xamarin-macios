@@ -1,4 +1,4 @@
-﻿//
+//
 // ClockKit Enums
 //
 // Authors:
@@ -32,6 +32,8 @@ namespace ClockKit {
 		GraphicCircular,
 		[Watch (5,0)]
 		GraphicRectangular,
+		[Watch (7,0)]
+		GraphicExtraLarge = 12,
 	}
 
 	[Native]
@@ -87,4 +89,3 @@ namespace ClockKit {
 		Fill,
 	}
 }
-

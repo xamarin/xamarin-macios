@@ -21,6 +21,28 @@ namespace Introspection {
 	[TestFixture]
 	public class MonoMacFixtures : ApiProtocolTest {
 
+		protected override bool Skip (Type type)
+		{
+			switch (type.Name) {
+#if !XAMCORE_4_0
+			case "NSDraggingInfo":
+				return true; // Incorrectly bound (BaseType on protocol), will be fixed for XAMCORE_4_0.
+#endif
+			// special cases wrt sandboxing
+			case "NSRemoteOpenPanel":
+			case "NSRemoteSavePanel":
+				return true;
+			case "AVCaptureSynchronizedDataCollection":
+			case "AVCaptureSynchronizedData":
+			case "CXProvider":
+				return TestRuntime.IsVM; // skip only on vms
+			case "NSMenuView": // not longer supported
+				return true;
+			default:
+				return base.Skip (type);
+			}
+		}
+
 		protected override bool Skip (Type type, string protocolName)
 		{
 			switch (protocolName) {
@@ -85,6 +107,21 @@ namespace Introspection {
 				case "NSPrintInfo": // Conformance not in headers
 				case "NSPrinter": // Conformance not in headers
 					return true;
+				// Xcode 12.5
+				case "CXCall": // Conformance not in headers
+				case "CXCallUpdate": // Conformance not in headers
+				case "CXProviderConfiguration": // Conformance not in headers
+					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
+					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
 					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))
@@ -110,6 +147,16 @@ namespace Introspection {
 				case "NSCollectionViewUpdateItem": // Not declared in header file
 				case "MLPredictionOptions": // Not declared in header file
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				// Xcode 12.5
+				case "CXCall": // Conformance not in headers
+					return true;
+				// xcode 13 / macOS 12
+				case "PHCloudIdentifier":
+				case "NSMergePolicy":
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSPropertyMapping":
+				case "HMAccessoryOwnershipToken":
 					return true;
 				}
 				break;
@@ -126,6 +173,10 @@ namespace Introspection {
 				case "EKRecurrenceRule": // Not declared in header file
 				case "EKReminder": // Not declared in header file
 				case "INPerson": // Not declared in header file
+					return true;
+				// xcode 13 / macOS 12
+				case "NSMergePolicy":
+				case "UNNotificationSettings":
 					return true;
 				}
 				break;
@@ -170,6 +221,20 @@ namespace Introspection {
 				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				// Xcode 12.5
+				case "CXCall": // Conformance not in headers
+				case "CXCallUpdate": // Conformance not in headers
+				case "CXProviderConfiguration": // Conformance not in headers
+					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
 					return true;
 				}
 				break;
@@ -246,6 +311,10 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 14)) // Was added in 10.14
 						return true;
 					break;
+				case "NSMenu":
+					if (!Mac.CheckSystemVersion (11, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSUserInterfaceValidations":
@@ -272,6 +341,20 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 11)) // NSNull started implementing the CAAction protocol in 10.11
 						return true;
 					break;
+				}
+				break;
+			case "NSTextContent":
+				switch (type.Name) {
+				case "NSTextField":
+				case "NSTextView":
+				case "NSTokenField":
+				case "NSComboBox":
+				case "NSSearchField":
+				case "NSSecureTextField":
+					if (!Mac.CheckSystemVersion (11, 0))
+						return true;
+					break;
+
 				}
 				break;
 			}

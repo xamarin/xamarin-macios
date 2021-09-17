@@ -45,6 +45,7 @@
 !missing-field! kCMFormatDescriptionExtension_AlphaChannelMode not bound
 !missing-field! kCMFormatDescriptionExtension_AuxiliaryTypeInfo not bound
 !missing-field! kCMFormatDescriptionExtension_ContainsAlphaChannel not bound
+!missing-field! kCMFormatDescriptionExtension_ProtectedContentOriginalFormat not bound
 !missing-field! kCMFormatDescriptionExtensionKey_MetadataKeyTable not bound
 !missing-field! kCMFormatDescriptionFieldDetail_SpatialFirstLineEarly not bound
 !missing-field! kCMFormatDescriptionFieldDetail_SpatialFirstLineLate not bound

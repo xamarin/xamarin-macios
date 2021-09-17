@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
@@ -8,7 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 namespace Xharness.Jenkins.TestTasks {
 	class RunXtroTask : MacExecuteTask
 	{
-		public RunXtroTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+		public RunXtroTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
 			: base (jenkins, build_task, processManager, crashReportSnapshotFactory)
 		{
 		}
@@ -16,7 +16,6 @@ namespace Xharness.Jenkins.TestTasks {
 		public override async Task RunTestAsync ()
 		{
 			var projectDir = System.IO.Path.GetDirectoryName (ProjectFile);
-			var name = System.IO.Path.GetFileName (projectDir);
 
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {

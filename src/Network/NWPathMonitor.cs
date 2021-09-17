@@ -6,25 +6,34 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWPathMonitor : NativeObject {
 		public NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();
 
-		NWPath currentPath;
-		public NWPath CurrentPath => currentPath;
+		NWPath? currentPath;
+		public NWPath? CurrentPath => currentPath;
 		public NWPathMonitor ()
 		{
 			InitializeHandle (nw_path_monitor_create ());
@@ -97,8 +106,8 @@ namespace Network {
 			}
 		}
 
-		Action<NWPath> userSnapshotHandler;
-		public Action<NWPath> SnapshotHandler {
+		Action<NWPath>? userSnapshotHandler;
+		public Action<NWPath>? SnapshotHandler {
 			get => userSnapshotHandler;
 			set => userSnapshotHandler = value;
 		}

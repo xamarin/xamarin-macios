@@ -31,6 +31,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 #if IOS && !COREBUILD
@@ -55,6 +56,7 @@ namespace CoreLocation {
 		}
 
 		[DllImport (Constants.CoreLocationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern /* BOOL */ bool CLLocationCoordinate2DIsValid (CLLocationCoordinate2D cord);
 		
 		public bool IsValid ()
@@ -70,7 +72,11 @@ namespace CoreLocation {
 
 #if IOS && !COREBUILD // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
 	public partial class CLPlacemark {
-		[iOS (10, 0)]
+#if !NET
+		[iOS (10, 0), Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
+#endif
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)
 		{
 			return (null as CLPlacemark)._GetPlacemark (location, name, postalAddress);

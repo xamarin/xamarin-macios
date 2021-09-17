@@ -14,7 +14,7 @@ using System.Reflection;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#if !__TVOS__
+#if HAS_IAD
 using iAd;
 #endif
 using NUnit.Framework;
@@ -113,7 +113,9 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (vc.ModalViewController, "ModalViewController");
 				Assert.Null (vc.RotatingFooterView, "RotatingFooterView");
 				Assert.Null (vc.RotatingHeaderView, "RotatingHeaderView");
+#if !__MACCATALYST__
 				Assert.Null (vc.SearchDisplayController, "SearchDisplayController");
+#endif
 				Assert.False (vc.WantsFullScreenLayout, "WantsFullScreenLayout");
 #endif
 				Assert.Null (vc.SplitViewController, "SplitViewController");
@@ -172,7 +174,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-#if !__TVOS__
+#if HAS_IAD
 		[Test]
 		public void InterstitialAds_New ()
 		{
@@ -180,7 +182,7 @@ namespace MonoTouchFixtures.UIKit {
 			
 			UIViewController.PrepareForInterstitialAds ();
 		}
-#endif // !__TVOS__
+#endif // HAS_IAD
 	}
 }
 

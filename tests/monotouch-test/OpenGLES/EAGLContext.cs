@@ -1,4 +1,4 @@
-﻿//
+//
 // EAGLContext Unit Tests
 //
 // Authors:
@@ -7,7 +7,8 @@
 // Copyright 2017 Microsoft
 //
 
-#if !__WATCHOS__ && !MONOMAC
+#if !NET // OpenTK-1.0.dll not yet supported for .NET
+#if HAS_OPENGLES
 
 using System;
 using Foundation;
@@ -39,4 +40,5 @@ namespace MonoTouchFixtures.OpenGLES
 	}
 }
 
-#endif // !__WATCHOS__
+#endif // HAS_OPENGLES
+#endif // !NET

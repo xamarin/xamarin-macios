@@ -307,8 +307,13 @@ namespace iTunesLibrary {
 		[Export ("name")]
 		string Name { get; }
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'Primary' instead.")]
 		[Export ("master")]
 		bool Master { [Bind ("isMaster")] get; }
+
+		[Mac (12,0)]
+		[Export ("primary")]
+		bool Primary { [Bind ("isPrimary")] get; }
 
 		[NullAllowed, Export ("parentID", ArgumentSemantic.Retain)]
 		NSNumber ParentId { get; }

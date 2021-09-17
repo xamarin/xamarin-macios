@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLAssert Unit Tests
 //
 // Authors:
@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.ModelIO
 	[Preserve (AllMembers = true)]
 	public class MDLVoxelArrayTest
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);

@@ -45,7 +45,7 @@ namespace Introspection {
 
 		static Type CIFilterType = typeof (CIFilter);
 
-#if true
+#if false
 		static TextWriter BindingOutput;
 #else
 		static TextWriter BindingOutput = Console.Out;
@@ -59,6 +59,8 @@ namespace Introspection {
 		protected virtual bool Skip (string nativeName)
 		{
 			switch (nativeName) {
+			case "CIRawFilter":
+				return true;
 			// Both reported in radar #21548819
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
@@ -75,6 +77,7 @@ namespace Introspection {
 		// this test checks that all native filters have a managed peer, i.e. against missing filters
 		public void CheckNativeFilters ()
 		{
+			Errors = 0;
 			List<string> filters = new List<string> ();
 			int n = 0;
 			string qname = CIFilterType.AssemblyQualifiedName;
@@ -97,6 +100,7 @@ namespace Introspection {
 		// this test checks that all managed filters have a native peer, i.e. against extra filters
 		public void CheckManagedFilters ()
 		{
+			Errors = 0;
 			ContinueOnFailure = true;
 			List<string> filters = new List<string> (CIFilter.FilterNamesInCategories (null));
 			var superFilters = new List<string> ();
@@ -210,6 +214,7 @@ namespace Introspection {
 		[Test]
 		public void Protocols ()
 		{
+			Errors = 0;
 			var to_confirm_manually = new StringBuilder ();
 			ContinueOnFailure = true;
 			var nspace = CIFilterType.Namespace;
@@ -363,6 +368,7 @@ namespace Introspection {
 		[Test]
 		public void Keys ()
 		{
+			Errors = 0;
 			ContinueOnFailure = true;
 			var nspace = CIFilterType.Namespace;
 			var types = CIFilterType.Assembly.GetTypes ();
@@ -424,6 +430,13 @@ namespace Introspection {
 								break;
 							case "underColorRemoval":
 								key = "inputUCR";
+								break;
+							}
+							break;
+						case "CIGlassDistortion":
+							switch (key) {
+							case "textureImage":
+								key = "texture";
 								break;
 							}
 							break;
@@ -503,6 +516,17 @@ namespace Introspection {
 						switch (key) {
 						case "outputImageV1":
 							// existed briefly in macOS 10.11, but neither before nor after.
+							continue;
+						}
+						break;
+					case "CIAreaAverage":
+					case "CIAreaHistogram":
+					case "CIAreaMinMax":
+						switch (key) {
+						case "outputImageMPS":
+						case "outputImageMPS:":
+						case "outputImageNonMPS:":
+							// no doc for argument
 							continue;
 						}
 						break;

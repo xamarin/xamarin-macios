@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<CurrentBranch>@CURRENT_BRANCH@</CurrentBranch>
+		<CurrentHash>@CURRENT_HASH_LONG@</CurrentHash>
+
+		<_ShortPackageVersion>@NUGET_VERSION_NO_METADATA@</_ShortPackageVersion>
+		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
+		<_DefaultTargetPlatformVersion>@DEFAULT_TARGET_PLATFORM_VERSION@</_DefaultTargetPlatformVersion>
+	</PropertyGroup>
+</Project>

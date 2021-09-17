@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -198,10 +199,13 @@ namespace IOSurface {
 		[Export ("removeAttachmentForKey:")]
 		void RemoveAttachment (NSString key);
 	
-		// in ObjC it's not defined as a `@property` and the getter can return null but the setter does not accept it
-		[return: MaybeNull]
 		[Export ("allAttachments")]
-		NSDictionary<NSString, NSObject> AllAttachments { get; set; }
+		NSDictionary<NSString, NSObject> AllAttachments { 
+			// in ObjC it's not defined as a `@property` and the getter can return null but the setter does not accept it
+			[return: MaybeNull]
+			get;
+			set;
+		}
 	
 		[Export ("removeAllAttachments")]
 		void RemoveAllAttachments ();

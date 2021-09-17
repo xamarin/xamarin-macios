@@ -13,13 +13,14 @@ namespace Introspection
 	{
 		NSSpellChecker checker;
 
-		[SetUp]
-		public void SetUp ()
+		public override void TypoTest ()
 		{
 			var sdk = new Version (Constants.SdkVersion);
 			if (!PlatformHelper.CheckSystemVersion (sdk.Major, sdk.Minor))
 				Assert.Ignore ("Typos only verified using the latest SDK");
 			checker = new NSSpellChecker ();
+
+			base.TypoTest ();
 		}
 
 		public override string GetTypo (string txt)

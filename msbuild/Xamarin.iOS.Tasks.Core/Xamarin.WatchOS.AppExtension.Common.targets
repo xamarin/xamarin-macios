@@ -19,21 +19,16 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<IsAppExtension>True</IsAppExtension>
 		<IsWatchExtension>True</IsWatchExtension>
 		<IOSDebugOverWiFi>True</IOSDebugOverWiFi>
-		<AppBundleExtension>.appex</AppBundleExtension>
 		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
 
 		<!-- This must be set before importing Microsoft.CSharp.targets -->
 		<!-- See Xamarin.iOS.AppExtension.CSharp.targets for a detailed explanation of this variable -->
 		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
-
-		<!-- Enable nuget package conflict resolution -->
-		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.WatchOS.AppExtension.Common.props" 
-			Condition="'$(_XamarinWatchOSAppExtensionCommonPropsHasBeenImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.WatchOS.AppExtension.Common.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
@@ -42,8 +37,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 	<Target Name="GetBundleTargetPath" DependsOnTargets="_GenerateBundleName;$(GetTargetPathDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
 	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GenerateBundleName;$(BuildDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
 	<Target Name="Rebuild" Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GenerateBundleName;$(RebuildDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
-
-	<Target Name="CreateIpa"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

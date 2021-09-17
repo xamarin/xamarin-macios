@@ -138,7 +138,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			// on iOS8 device this now ends with "/StoreKit/sandboxReceipt" 
 			// instead of "/StokeKit/receipt"
-			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Is.StringEnding ("eceipt"), "AppStoreReceiptUrl");
+			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Does.EndWith ("eceipt"), "AppStoreReceiptUrl");
 		}
 
 #if !XAMCORE_4_0

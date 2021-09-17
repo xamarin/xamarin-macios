@@ -18,3 +18,19 @@
 !unknown-type! INRadioTypeResolutionResult bound
 !unknown-type! INRelativeReferenceResolutionResult bound
 !unknown-type! INRelativeSettingResolutionResult bound
+
+## These do not make sense to have on watchOS, we can bind later if needed
+!missing-field! INStartVideoCallIntentIdentifier not bound
+!unknown-native-enum! INCarAirCirculationMode bound
+!unknown-native-enum! INCarAudioSource bound
+!unknown-native-enum! INCarDefroster bound
+!unknown-native-enum! INCarSeat bound
+!unknown-native-enum! INRadioType bound
+!unknown-native-enum! INRelativeReference bound
+!unknown-native-enum! INRelativeSetting bound
+!unknown-type! INParameter bound
+
+## SDK shipping with Xcode 12.5 is for watchOS 7.4 (not 7.3)
+!deprecated-attribute-wrong! INCallRecord::caller has 7.4 not 7.3 on [Deprecated] attribute
+!deprecated-attribute-wrong! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen: has 7.4 not 7.3 on [Deprecated] attribute
+!deprecated-attribute-wrong! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: has 7.4 not 7.3 on [Deprecated] attribute

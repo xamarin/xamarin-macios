@@ -6,9 +6,13 @@
 //
 // Copyright 2019 Microsoft
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -23,7 +27,13 @@ using OS_nw_parameters=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWFramerMessage : NWProtocolMetadata {
 		internal NWFramerMessage (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -77,6 +87,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_framer_message_access_value (OS_nw_protocol_metadata message, string key, ref BlockLiteral access_value);
 		delegate bool nw_framer_message_access_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_access_value_t static_AccessValueHandler = TrampolineAccessValueHandler;

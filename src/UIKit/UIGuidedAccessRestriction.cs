@@ -11,6 +11,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using Foundation;
 using ObjCRuntime;
@@ -18,21 +19,17 @@ using UIKit;
 
 namespace UIKit {
 
-	// NSInteger -> UIGuidedAccessRestrictions.h
-	[Native]
-	[iOS (7,0)]
-	public enum UIGuidedAccessRestrictionState : long {
-		Allow,
-		Deny
-	}
-
 	public static partial class UIGuidedAccessRestriction {
 #if !COREBUILD
+#if !NET
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* UIGuidedAccessRestrictionState */ nint UIGuidedAccessRestrictionStateForIdentifier (/* NSString */ IntPtr restrictionIdentifier);
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public static UIGuidedAccessRestrictionState GetState (string restrictionIdentifier)
 		{
 			IntPtr p = NSString.CreateNative (restrictionIdentifier);
@@ -42,11 +39,17 @@ namespace UIKit {
 		}
 
 #if IOS
+#if !NET
 		[iOS (12,2)]
+#else
+		[SupportedOSPlatform ("ios12.2")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
-		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, bool enabled, IntPtr completion);
+		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr completion);
 
+#if !NET
 		[iOS (12,2)]
+#endif
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
 
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -65,7 +68,11 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[iOS (12,2)]
+#else
+		[SupportedOSPlatform ("ios12.2")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConfigureAccessibilityFeatures (UIGuidedAccessAccessibilityFeature features, bool enabled, UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler completionHandler)
 		{
@@ -84,7 +91,11 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[iOS (12,2)]
+#else
+		[SupportedOSPlatform ("ios12.2")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static Task<(bool Success, NSError Error)> ConfigureAccessibilityFeaturesAsync (UIGuidedAccessAccessibilityFeature features, bool enabled)
 		{

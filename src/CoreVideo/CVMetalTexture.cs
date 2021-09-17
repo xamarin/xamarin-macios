@@ -8,19 +8,24 @@
 //
 //
 
-#if IOS || TVOS
+#if !__WATCHOS__
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using Metal;
 
+#nullable enable
+
 namespace CoreVideo {
 
-	[iOS (8,0)]
+#if !NET
+	[iOS (8,0), Mac (12,0), MacCatalyst (15,0)]
+#endif
 	public class CVMetalTexture : INativeObject, IDisposable {
 
 		internal IntPtr handle;
@@ -59,6 +64,7 @@ namespace CoreVideo {
 			/* CVMetalTextureRef __nonnull */ IntPtr image);
 
 		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CVMetalTextureIsFlipped (/* CVMetalTextureRef __nonnull */ IntPtr image);
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -95,4 +101,3 @@ namespace CoreVideo {
 }
 
 #endif // IOS || TVOS
-

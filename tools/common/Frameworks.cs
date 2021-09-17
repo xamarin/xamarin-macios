@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 using Xamarin.Bundler;
+using Registrar;
 #endif
 
 using Xamarin.Utils;
@@ -12,10 +13,22 @@ using Xamarin.Utils;
 public class Framework
 {
 	public string Namespace;
-	public string Name;
+	public string Name; // this is the name to pass to the linker when linking. This can be an umbrella framework.
+	public string SubFramework; // if Name is an umbrella framework, this is the name of the actual sub framework.
 	public Version Version;
 	public Version VersionAvailableInSimulator;
 	public bool AlwaysWeakLinked;
+	public bool Unavailable;
+
+	public string LibraryPath {
+		get {
+			if (string.IsNullOrEmpty (SubFramework)) {
+				return $"/System/Library/Frameworks/{Name}.framework/{Name}";
+			} else {
+				return $"/System/Library/Frameworks/{Name}.framework/Versions/A/Frameworks/{SubFramework}.framework/{SubFramework}";
+			}
+		}
+	}
 
 #if MTOUCH || MMP || BUNDLER
 	public bool IsFrameworkAvailableInSimulator (Application app)
@@ -48,6 +61,11 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, @namespace, new Version (major_version, minor_version));
 	}
 
+	public void Add (string @namespace, int major_version, int minor_version, string subFramework = null)
+	{
+		Add (@namespace, @namespace, new Version (major_version, minor_version), subFramework: subFramework);
+	}
+
 	public void Add (string @namespace, string framework, int major_version, bool alwaysWeakLink)
 	{
 		Add (@namespace, framework, new Version (major_version, 0), null, alwaysWeakLink);
@@ -58,12 +76,17 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, framework, new Version (major_version, minor_version));
 	}
 
+	public void Add (string @namespace, string framework, int major_version, int minor_version, string umbrellaFramework = null)
+	{
+		Add (@namespace, framework, new Version (major_version, minor_version), subFramework: umbrellaFramework);
+	}
+
 	public void Add (string @namespace, string framework, int major_version, int minor_version, int build_version)
 	{
 		Add (@namespace, framework, new Version (major_version, minor_version, build_version));
 	}
 
-	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null, bool alwaysWeakLink = false)
+	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null, bool alwaysWeakLink = false, string subFramework = null)
 	{
 		var fr = new Framework () {
 			Namespace = @namespace,
@@ -71,6 +94,7 @@ public class Frameworks : Dictionary <string, Framework>
 			Version = version,
 			VersionAvailableInSimulator = version_available_in_simulator ?? version,
 			AlwaysWeakLinked = alwaysWeakLink,
+			SubFramework = subFramework,
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -92,15 +116,25 @@ public class Frameworks : Dictionary <string, Framework>
 				mac_frameworks = new Frameworks () {
 					{ "Accelerate", 10, 0 },
 					{ "AppKit", 10, 0 },
-					{ "CoreGraphics", "QuartzCore", 10, 0 },
-					{ "CoreImage", "QuartzCore", 10, 0 },
+					{ "CoreAudio", "CoreAudio", 10, 0 },
+					{ "CoreFoundation", "CoreFoundation", 10, 0 },
+					{ "CoreGraphics", "ApplicationServices", 10, 0, "CoreGraphics" },
+					// The CoreImage framework by itself was introduced in 10.11
+					// Up until 10.10 it was a sub framework in the QuartzCore umbrella framework
+					// They both existed until 10.13, when the sub framework was removed.
+					{ "CoreImage", 10, 0 },
 					{ "Foundation", 10, 0 },
-					{ "ImageKit", "Quartz", 10, 0 },
-					{ "PdfKit", "Quartz", 10, 0 },
+					{ "ImageKit", "Quartz", 10, 0, "ImageKit" },
+					{ "PdfKit", "Quartz", 10, 0, "PDFKit" },
 					{ "Security", 10, 0 },
 
+					{ "GSS", "GSS", 10, 1 },
+
+					{ "AddressBook", 10, 2 },
 					{ "AudioUnit", 10, 2 },
 					{ "CoreMidi", "CoreMIDI", 10, 2 },
+					{ "IOBluetooth", 10, 2 },
+					{ "IOBluetoothUI", 10, 2 },
 					{ "WebKit", 10, 2},
 
 					{ "AudioToolbox", 10, 3 },
@@ -108,27 +142,27 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreVideo", 10, 3 },
 					{ "MobileCoreServices", "CoreServices", 10, 3 },
 					{ "OpenGL", 10, 3 },
-					{ "SearchKit", "CoreServices", 10,3 },
+					{ "SearchKit", "CoreServices", 10,3, "SearchKit" },
 					{ "SystemConfiguration", 10, 3 },
 
 					{ "CoreData", 10, 4 },
-					{ "ImageIO", 10, 4 },
+					{ "ImageIO", 10, 4 },  // it's own framework since at least 10.9
 					{ "OpenAL", 10, 4 },
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
-					{ "CoreText", 10, 5 },
-					{ "PrintCore", "CoreServices", 10,5 },
+					{ "CoreText", 10, 5 }, // it's own framework since at least 10.9
+					{ "InputMethodKit", 10, 5 },
+					{ "PrintCore", "ApplicationServices", 10,5, "PrintCore" },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
-					{ "QuartzComposer", "Quartz", 10, 5 },
+					{ "QuartzComposer", "Quartz", 10, 5, "QuartzComposer" },
 					{ "ImageCaptureCore", "ImageCaptureCore", 10,5 },
 
 					{ "QTKit", 10, 6 },
-					{ "QuickLookUI", "Quartz", 10, 6 },
+					{ "QuickLookUI", "Quartz", 10, 6, "QuickLookUI" },
 
 					{ "MediaToolbox", 10, 9 },
 					{ "AVFoundation", 10, 7 },
-					{ "CoreBluetooth", "IOBluetooth", 10, 7 },
 					{ "CoreLocation", 10, 7 },
 					{ "CoreMedia", 10, 7 },
 					{ "CoreWlan", "CoreWLAN", 10, 7 },
@@ -145,6 +179,10 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoToolbox", 10, 8 },
 
 					{ "AVKit", 10, 9 },
+					// The CoreBluetooth framework was added as a sub framework of the IOBluetooth framework in 10.7
+					// Then it was moved to its own top-level framework in 10.10
+					// and the sub framework was deleted in 10.12
+					{ "CoreBluetooth", 10, 9 },
 					{ "GameController", 10, 9 },
 					{ "MapKit", 10, 9 },
 					{ "MediaAccessibility", 10, 9 },
@@ -207,6 +245,28 @@ public class Frameworks : Dictionary <string, Framework>
 					//{ "CoreHaptics", "CoreHaptics", 10,15 },
 
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
+
+					{ "Accessibility", "Accessibility", 11,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 11,0 },
+					{ "CallKit", "CallKit", 11,0 },
+					{ "ClassKit", "ClassKit", 11,0 },
+					{ "MLCompute", "MLCompute", 11,0 },
+					{ "NearbyInteraction", "NearbyInteraction", 11,0 },
+					{ "OSLog", "OSLog", 11,0 },
+					{ "PassKit", "PassKit", 11,0 },
+					{ "ReplayKit", "ReplayKit", 11,0 },
+					{ "ScreenTime", "ScreenTime", 11,0 },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 11,0 },
+					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
+
+					{ "AdServices", "AdServices", 11,1 },
+
+					{ "Chip", "CHIP", 12, 0 },
+					{ "LocalAuthenticationEmbeddedUI", "LocalAuthenticationEmbeddedUI", 12, 0 },
+					{ "MailKit", "MailKit", 12, 0 },
+					{ "MetricKit", 12, 0 },
+					{ "Phase", "PHASE", 12, 0 },
+					{ "ShazamKit", "ShazamKit", 12,0 },
 				};
 			}
 			return mac_frameworks;
@@ -216,8 +276,14 @@ public class Frameworks : Dictionary <string, Framework>
 	static Frameworks ios_frameworks;
 	public static Frameworks GetiOSFrameworks (bool is_simulator_build)
 	{
-		if (ios_frameworks == null) {
-			ios_frameworks = new Frameworks () {
+		if (ios_frameworks == null)
+			ios_frameworks = CreateiOSFrameworks (is_simulator_build);
+		return ios_frameworks;
+	}
+
+	public static Frameworks CreateiOSFrameworks (bool is_simulator_build)
+	{
+		return new Frameworks () {
 				{ "AddressBook",  "AddressBook", 3 },
 				{ "Security", "Security", 3 },
 				{ "AudioUnit", "AudioToolbox", 3 },
@@ -226,7 +292,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AVFoundation", "AVFoundation", 3 },
 				{ "CFNetwork", "CFNetwork", 3 },
 				{ "CoreAnimation", "QuartzCore", 3 },
+				{ "CoreAudio", "CoreAudio", 3 },
 				{ "CoreData", "CoreData", 3 },
+				{ "CoreFoundation", "CoreFoundation", 3 },
 				{ "CoreGraphics", "CoreGraphics", 3 },
 				{ "CoreLocation", "CoreLocation", 3 },
 				{ "ExternalAccessory", "ExternalAccessory", 3 },
@@ -261,6 +329,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },
+				{ "GSS", "GSS", 5 },
 
 				{ "MediaToolbox", "MediaToolbox", 6 },
 				{ "PassKit", "PassKit", 6 },
@@ -312,7 +381,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IntentsUI", "IntentsUI", 10 },
 
 				{ "ARKit", "ARKit", 11 },
-				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
+				{ "CoreNFC", "CoreNFC", new Version (11, 0), NotAvailableInSimulator, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked; doesn't work in the simulator in Xcode 12 (https://stackoverflow.com/q/63915728/183422) */
 				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (13, 0) },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
@@ -328,6 +397,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AuthenticationServices", "AuthenticationServices", 12,0 },
 				{ "CarPlay", "CarPlay", 12,0 },
+				{ "CoreServices", "MobileCoreServices", 12, 0 },
 				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				{ "Network", "Network", 12, 0 },
@@ -343,6 +413,26 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
 
+				{ "Accessibility", "Accessibility", 14,0 },
+				{ "AppClip", "AppClip", 14,0 },
+				{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
+				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
+				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
+				{ "ScreenTime", "ScreenTime", 14,0 },
+				{ "SensorKit", "SensorKit", 14,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+
+				{ "AdServices", "AdServices", 14,3 },
+
+				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
+
+				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "OSLog", "OSLog", 15,0 },
+				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
+				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
@@ -351,8 +441,6 @@ public class Frameworks : Dictionary <string, Framework>
 				// 
 				// * RegistrarTest.MT4134
 			};
-		}
-		return ios_frameworks;
 	}
 
 	static Frameworks watch_frameworks;
@@ -365,6 +453,7 @@ public class Frameworks : Dictionary <string, Framework>
 				// { "CFNetwork", "CFNetwork", 2 },
 				{ "ClockKit", "ClockKit", 2 },
 				{ "Contacts", "Contacts", 2 },
+				{ "CoreAudio", "CoreAudio", 2 },
 				{ "CoreData", "CoreData", 2 },
 				{ "CoreFoundation", "CoreFoundation", 2 },
 				{ "CoreGraphics", "CoreGraphics", 2 },
@@ -406,8 +495,15 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 				{ "CoreMedia", "CoreMedia", 6 },
-				{ "StoreKit", "StoreKit", 6,2 }
+				{ "StoreKit", "StoreKit", 6,2 },
 
+				{ "Accessibility", "Accessibility", 7,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
+
+				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
+				{ "OSLog", "OSLog", 8,0 },
+				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
 			};
 		}
 		return watch_frameworks;
@@ -430,10 +526,12 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreAudio", "CoreAudio", 9 },
 					{ "CoreBluetooth", "CoreBluetooth", 9 },
 					{ "CoreData", "CoreData", 9 },
+					{ "CoreFoundation", "CoreFoundation", 9 },
 					{ "CoreGraphics", "CoreGraphics", 9 },
 					{ "CoreImage", "CoreImage", 9 },
 					{ "CoreLocation", "CoreLocation", 9 },
 					{ "CoreMedia", "CoreMedia", 9 },
+					{ "CoreSpotlight", "CoreSpotlight", 9 },
 					{ "CoreText", "CoreText", 9 },
 					{ "CoreVideo", "CoreVideo", 9 },
 					{ "Foundation", "Foundation", 9 },
@@ -449,7 +547,6 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", new Version (9, 0), new Version (10, 0) },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), NotAvailableInSimulator /* not available in the simulator */ },
-					{ "CoreServices", "CFNetwork", 9 },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
 					{ "ModelIO", "ModelIO", 9 },
 					{ "OpenGLES", "OpenGLES", 9 },
@@ -479,6 +576,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 					{ "Vision", "Vision", 11 },
 
+					{ "CoreServices", "MobileCoreServices", 12 },
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
@@ -486,10 +584,86 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
+
+					{ "Accessibility", "Accessibility", 14,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
+					{ "CoreHaptics", "CoreHaptics", 14, 0 },
+					{ "LinkPresentation", "LinkPresentation", 14,0 },
+					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+					{ "Intents", "Intents", 14,0 },
+
+					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+					{ "OSLog", "OSLog", 15,0 },
+					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 				};
 			}
 			return tvos_frameworks;
 		}
+	}
+
+	static Frameworks catalyst_frameworks;
+	public static Frameworks GetMacCatalystFrameworks ()
+	{
+		if (catalyst_frameworks == null) {
+			catalyst_frameworks = CreateiOSFrameworks (false);
+			// not present in iOS but present in catalyst
+			catalyst_frameworks.Add ("CoreWlan", "CoreWLAN", 15, 0);
+
+			var min = new Version (13, 0);
+			var v14_2 = new Version (14, 2);
+			foreach (var f in catalyst_frameworks.Values) {
+				switch (f.Name) {
+				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
+				case "AddressBook":
+				case "ClassKit":
+				case "UserNotificationsUI":
+					f.Version = v14_2;
+					f.VersionAvailableInSimulator = v14_2;
+					break;
+				// These frameworks are not available on Mac Catalyst
+				case "OpenGLES":
+				case "NewsstandKit":
+				case "MediaSetup":
+				case "NotificationCenter":
+				case "GLKit":
+				case "VideoSubscriberAccount":
+				// The headers for FileProviderUI exist, but the native linker fails
+				case "FileProviderUI":
+				// The headers for Twitter are there, , but no documentation whatsoever online and the native linker fails too
+				case "Twitter":
+				// headers-based xtro reporting those are *all* unknown API for Catalyst
+				case "AddressBookUI":
+				case "AppClip":
+				case "ARKit":
+				case "AssetsLibrary":
+				case "CarPlay":
+				case "CoreTelephony":
+				case "EventKitUI":
+				case "HealthKit":
+				case "HealthKitUI":
+				case "iAd":
+				case "IdentityLookupUI":
+				case "Messages":
+				case "MessageUI":
+				case "VisionKit":
+				case "WatchConnectivity":
+					f.Unavailable = true;
+					break;
+				// and nothing existed before Catalyst 13.0
+				default:
+					if (f.Version < min)
+						f.Version = min;
+					if (f.VersionAvailableInSimulator < min)
+						f.VersionAvailableInSimulator = min;
+					break;
+				}
+			}
+
+			// Add frameworks that are not in iOS
+			catalyst_frameworks.Add ("AppKit", 13, 0);
+		}
+		return catalyst_frameworks;
 	}
 
 	// returns null if the platform doesn't exist (the ErrorHandler machinery is heavy and this file is included in several projects, which makes throwing an exception complicated)
@@ -504,6 +678,8 @@ public class Frameworks : Dictionary <string, Framework>
 			return TVOSFrameworks;
 		case ApplePlatform.MacOSX:
 			return MacFrameworks;
+		case ApplePlatform.MacCatalyst:
+			return GetMacCatalystFrameworks ();
 		default:
 			return null;
 		}
@@ -536,9 +712,14 @@ public class Frameworks : Dictionary <string, Framework>
 			if (app.IsSimulatorBuild && !framework.IsFrameworkAvailableInSimulator (app))
 				continue;
 
-			var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
+			var weak_link = framework.AlwaysWeakLinked || app.DeploymentTarget < framework.Version;
+			var add_to = weak_link ? weak_frameworks : frameworks;
 			add_to.Add (framework.Name);
 		}
+
+		// Make sure there are no duplicates between frameworks and weak frameworks.
+		// Keep the weak ones.
+		frameworks.ExceptWith (weak_frameworks);
 	}
 
 	static bool FilterFrameworks (Application app, Framework framework)
@@ -547,6 +728,7 @@ public class Frameworks : Dictionary <string, Framework>
 		case ApplePlatform.iOS:
 		case ApplePlatform.TVOS:
 		case ApplePlatform.WatchOS:
+		case ApplePlatform.MacCatalyst:
 			break; // Include all frameworks by default
 		case ApplePlatform.MacOSX:
 			switch (framework.Name) {

@@ -24,14 +24,22 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+using System.Runtime.Versioning;
+
 using Foundation;
 using CoreGraphics;
 using CoreFoundation;
 using ObjCRuntime;
 #if !MONOMAC
 using Metal;
+#endif
+#if HAS_OPENGLES
 using OpenGLES;
 #endif
+
+#nullable enable
+
 namespace CoreImage {
 	public class CIContextOptions : DictionaryContainer {
 
@@ -44,7 +52,7 @@ namespace CoreImage {
 		{
 		}
 
-		public CGColorSpace OutputColorSpace {
+		public CGColorSpace? OutputColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIContext.OutputColorSpace);
 			}
@@ -53,7 +61,7 @@ namespace CoreImage {
 			}
 		}
 
-		public CGColorSpace WorkingColorSpace {
+		public CGColorSpace? WorkingColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIContext._WorkingColorSpace);
 			}
@@ -81,7 +89,9 @@ namespace CoreImage {
 			}
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public bool? PriorityRequestLow {
 			get {
 				return GetBoolValue (CIContext.PriorityRequestLow);
@@ -100,7 +110,9 @@ namespace CoreImage {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public bool? OutputPremultiplied {
 			get {
 				return GetBoolValue (CIContext.OutputPremultiplied);
@@ -110,7 +122,9 @@ namespace CoreImage {
 			}
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
+#endif
 		public bool? CacheIntermediates {
 			get {
 				return GetBoolValue (CIContext.CacheIntermediates);
@@ -120,7 +134,13 @@ namespace CoreImage {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+#endif
 		public bool? AllowLowPower {
 			get {
 				return GetBoolValue (CIContext.AllowLowPower);
@@ -129,28 +149,46 @@ namespace CoreImage {
 				SetBooleanValue (CIContext.AllowLowPower, value);
 			}
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+#endif
+		public string? Name {
+			get {
+				return GetStringValue (CIContext.Name);
+			}
+			set {
+				SetStringValue (CIContext.Name, value);
+			}
+		}
 	}
 	
 	public partial class CIContext {
 
+#if !NET
 		[iOS (8,0)]
+#endif
 		public CIContext (CIContextOptions options) :
 			this (options?.Dictionary)
 		{
 		}
 
-		public static CIContext FromContext (CGContext ctx, CIContextOptions options)
+		public static CIContext FromContext (CGContext ctx, CIContextOptions? options)
 		{
 			return FromContext (ctx, options?.Dictionary);
 		}
 		
 		public static CIContext FromContext (CGContext ctx)
 		{
-			return FromContext (ctx, (CIContextOptions) null);
+			return FromContext (ctx, (NSDictionary?) null);
 		}
 
-#if !MONOMAC
-		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions options)
+#if HAS_OPENGLES
+		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions? options)
 		{
 			if (options == null)
 				return FromContext (eaglContext);
@@ -158,7 +196,7 @@ namespace CoreImage {
 			return FromContext (eaglContext, options.Dictionary);
 		}
 
-		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions options)
+		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions? options)
 		{
 			if (options == null)
 				return FromMetalDevice (device);
@@ -168,18 +206,22 @@ namespace CoreImage {
 #endif
 
 #if MONOMAC
+#if NET
+		[UnsupportedOSPlatform ("macos10.11")]
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		public CGLayer CreateCGLayer (CGSize size)
+#endif
+		public CGLayer? CreateCGLayer (CGSize size)
 		{
 			return CreateCGLayer (size, null);
 		}
 #else
-		public static CIContext FromOptions (CIContextOptions options)
+		public static CIContext FromOptions (CIContextOptions? options)
 		{
 			return FromOptions (options?.Dictionary);
 		}
 		
-		public CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace colorSpace)
+		public CGImage? CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace? colorSpace)
 		{
 			return CreateCGImage (image, fromRect, CIImage.CIFormatToInt (ciImageFormat), colorSpace);
 		}

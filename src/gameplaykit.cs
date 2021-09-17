@@ -1,4 +1,4 @@
-﻿//
+//
 // GameplayKit bindings
 //
 // Authors:
@@ -1778,6 +1778,7 @@ namespace GameplayKit {
 
 		[Export ("elementsInBoundingRectMin:rectMax:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions]
 		ElementType [] GetElements (Vector2 rectMin, Vector2 rectMax);
 	}
 
@@ -1924,6 +1925,7 @@ namespace GameplayKit {
 
 		[Export ("addElement:withPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions]
 		GKQuadTreeNode AddElement (NSObject element, Vector2 point);
 
 		[Export ("addElement:withQuad:")]
@@ -1948,36 +1950,46 @@ namespace GameplayKit {
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("initWithMinPosition:maxPosition:minCellSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions]
 		IntPtr Constructor (Vector2 min, Vector2 max, float minCellSize);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("addDataWithPoint:point:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions] // added
 		GKQuadTreeNode AddData (NSObject data, Vector2 point);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("addDataWithQuad:quadOrigin:quadSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions]
 		GKQuadTreeNode AddData (NSObject data, Vector2 quadOrigin, Vector2 quadSize);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("queryDataForPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NSObject[] QueryData (Vector2 point);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("queryDataForQuad:quadSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions]
 		NSObject[] QueryData (Vector2 quadOrigin, Vector2 quadSize);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("removeData:withNode:")]
 		bool RemoveData (NSObject data, GKQuadTreeNode node);
 #endif

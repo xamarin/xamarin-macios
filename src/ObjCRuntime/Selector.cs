@@ -26,6 +26,8 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 
+#nullable enable
+
 namespace ObjCRuntime {
 	public partial class Selector : IEquatable<Selector>, INativeObject {
 		internal const string Alloc = "alloc";
@@ -33,27 +35,29 @@ namespace ObjCRuntime {
 		internal const string Release = "release";
 		internal const string Retain = "retain";
 		internal const string Autorelease = "autorelease";
-		internal const string Dealloc = "dealloc";
-		internal const string DoesNotRecognizeSelector = "doesNotRecognizeSelector:";
 		internal const string PerformSelectorOnMainThreadWithObjectWaitUntilDone = "performSelectorOnMainThread:withObject:waitUntilDone:";
-		internal const string PerformSelectorInBackground = "performSelectorInBackground:withObject:";
+#if MONOMAC
+		internal const string DoesNotRecognizeSelector = "doesNotRecognizeSelector:";
 		internal const string PerformSelectorWithObjectAfterDelay = "performSelector:withObject:afterDelay:";
+#endif
 
 		IntPtr handle;
-		string name;
+		string? name;
 
 		public Selector (IntPtr sel)
-			: this (sel, true)
 		{
-		}
-
-		internal unsafe Selector (IntPtr sel, bool check)
-		{
-			if (check && !sel_isMapped (sel))
-				throw new ArgumentException ("sel is not a selector handle.");
+			if (!sel_isMapped (sel))
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
 
 			this.handle = sel;
-			name = GetName (sel);
+		}
+
+		// this .ctor is required, like for any INativeObject implementation
+		// even if selectors are not disposable
+		[Preserve (Conditional = true)]
+		internal Selector (IntPtr handle, bool /* unused */ owns)
+		{
+			this.handle = handle;
 		}
 
 		public Selector (string name)
@@ -67,7 +71,11 @@ namespace ObjCRuntime {
 		}
 
 		public string Name {
-			get { return name; }
+			get {
+				if (name == null)
+					name = GetName (handle);
+				return name;
+			}
 		}
 
 		public static bool operator!= (Selector left, Selector right) {
@@ -75,21 +83,24 @@ namespace ObjCRuntime {
 		}
 
 		public static bool operator== (Selector left, Selector right) {
-			if (((object)left) == null)
-				return (((object)right) == null);
-			if (((object)right) == null)
+			if (left is null)
+				return (right is null);
+			if (right is null)
 				return false;
 
 			// note: there's a sel_isEqual function but it's safe to compare pointers
+			// ref: https://opensource.apple.com/source/objc4/objc4-551.1/runtime/objc-sel.mm.auto.html
 			return left.handle == right.handle;
 		}
 
-		public override bool Equals (object right) {
+		public override bool Equals (object? right)
+		{
 			return Equals (right as Selector);
 		}
 
-		public bool Equals (Selector right) {
-			if (right == null)
+		public bool Equals (Selector? right)
+		{
+			if (right is null)
 				return false;
 
 			return handle == right.handle;
@@ -102,12 +113,12 @@ namespace ObjCRuntime {
 
 		internal static string GetName (IntPtr handle)
 		{
-			return Marshal.PtrToStringAuto (sel_getName (handle));
+			return Marshal.PtrToStringAuto (sel_getName (handle))!;
 		}
 
 		// return null, instead of throwing, if an invalid pointer is used (e.g. IntPtr.Zero)
 		// so this looks better in the debugger watch when no selector is assigned (ref: #10876)
-		public static Selector FromHandle (IntPtr sel)
+		public static Selector? FromHandle (IntPtr sel)
 		{
 			if (!sel_isMapped (sel))
 				return null;
@@ -130,6 +141,7 @@ namespace ObjCRuntime {
 
 		// objc/objc.h
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static /* BOOL */ bool sel_isMapped (/* SEL */ IntPtr sel);
 	}
 }

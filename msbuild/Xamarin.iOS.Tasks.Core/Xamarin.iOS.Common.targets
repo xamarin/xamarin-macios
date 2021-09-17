@@ -15,8 +15,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.props" 
-			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
@@ -35,39 +34,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />			
 
 	<PropertyGroup>
-		<_CanOutputAppBundle>False</_CanOutputAppBundle>
-		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">True</_CanOutputAppBundle>
-
-		<_CanArchive>False</_CanArchive>
-		<_CanArchive Condition="'$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">True</_CanArchive>
-
 		<_CanDeployToDeviceOrSimulator>False</_CanDeployToDeviceOrSimulator>
 		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
 
-		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
-
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
-
-		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
-	</PropertyGroup>
-	
-	<PropertyGroup>
-		<ImplicitlyExpandDesignTimeFacades>true</ImplicitlyExpandDesignTimeFacades>
-		<CheckForSystemRuntimeDependency>true</CheckForSystemRuntimeDependency>
-
-		<ResolveReferencesDependsOn>
-			_SeparateAppExtensionReferences;
-			_SeparateWatchAppReferences;
-			$(ResolveReferencesDependsOn);
-			ImplicitlyExpandDesignTimeFacades
-		</ResolveReferencesDependsOn>
-
-		<ImplicitlyExpandDesignTimeFacadesDependsOn>
-			$(ImplicitlyExpandDesignTimeFacadesDependsOn);
-			GetReferenceAssemblyPaths
-		</ImplicitlyExpandDesignTimeFacadesDependsOn>
 	</PropertyGroup>
 
 	<ItemDefinitionGroup>
@@ -77,63 +48,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</_BundleResourceWithLogicalName>
 	</ItemDefinitionGroup>
 
-	<UsingTask
-		TaskName="GetDependsOnNETStandard"
-		AssemblyFile="$(MicrosoftNETBuildExtensionsTasksAssembly)" />
-
-	<Target Name="ImplicitlyExpandDesignTimeFacades" Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
-		<ItemGroup>
-			<XI_CandidateNETStandardReferences Include="@(Reference);@(_ResolvedProjectReferencePaths)" />
-			<XI_InboxNETStandardFolders Include="$(TargetFrameworkDirectory)" />
-		</ItemGroup>
-
-		<PropertyGroup>
-			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true' or '%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable' 
-								or '%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
-
-			<XI_NETStandardInbox Condition="'$(XI_NETStandardInbox)' == '' and Exists('%(XI_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XI_NETStandardInbox>
-
-			<!--
-				This is `true` if any of the references depends on `netstandard`.
-
-				In cases where `ResolveAssemblyReference` task does get run, it populates `$(_DependsOnNETStandard)` property, so we don't
-				need to check this again.
-			-->
-			<XI_DependsOnNETStandard Condition="'$(XI_DependsOnNETStandard)' == ''">$(_DependsOnNETStandard)</XI_DependsOnNETStandard>
-		</PropertyGroup>
-
-		<!--
-		     Facades are expanded if we have a reference that depends on System.Runtime .
-
-		     XI projects have `$(TargetFrameworkIdentifier) != .NETFramework`, so Microsoft.NET.Build.Extensions (which provides support for ns 2.0 projects) doesn't get
-		     imported. And netstandard.dll reference, even if required, doesn't get added.
-
-		     So, we need to check if any references depend on `netstandard`. And if so, expand the facades, which include netstandard.dll .
-
-		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
-		-->
-		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(XI_DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
-			References="@(XI_CandidateNETStandardReferences)">
-			<Output TaskParameter="DependsOnNETStandard" PropertyName="XI_DependsOnNETStandard" />
-		</GetDependsOnNETStandard>
-
-		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true' or ('$(XI_NETStandardInbox)' == 'true' and '$(XI_DependsOnNETStandard)' == 'true')">
-			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
-			<ReferencePath Remove="@(_DesignTimeFacadeAssemblies)"/>
-			<ReferencePath Include="%(_DesignTimeFacadeAssemblies.Identity)">
-				<WinMDFile>false</WinMDFile>
-				<CopyLocal>false</CopyLocal>
-				<ResolvedFrom>ImplicitlyExpandDesignTimeFacades</ResolvedFrom>
-			</ReferencePath>
-			<ReferenceDependencyPath Include="@(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
-		</ItemGroup>
-
-		<Message Importance="Low" Text="Including @(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
-	</Target>
-
 	<!-- Insert our app bundle generation step -->
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<BuildDependsOn>
 			BuildOnlySettings;
 			PrepareForBuild;
@@ -156,27 +72,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			$(CleanDependsOn);
 			_ComputeTargetArchitectures;
 			_CleanUploaded;
-			_CleanAppBundle;
-			_CleanDebugSymbols;
-			_CleanITunesArtwork;
-			_CleanDeviceSpecificOutput;
-			_CleanIntermediateToolOutput;
 		</CleanDependsOn>
 	</PropertyGroup>
-
-	<PropertyGroup>
-		<CompileColladaAssetsDependsOn>
-			_CollectColladaAssets;
-			_CoreCompileColladaAssets
-		</CompileColladaAssetsDependsOn>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<_IsContainerApp>false</_IsContainerApp>
-		<_IsContainerApp Condition="$(IsAppExtension) == 'false' And '$(IsWatchApp)' == 'false'">true</_IsContainerApp>
-	</PropertyGroup>
-
-	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
 
 	<PropertyGroup>
 		<OptimizePngImagesDependsOn>
@@ -208,19 +105,18 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_OptimizeLocalizationFiles" DependsOnTargets="$(OptimizeLocalizationFilesDependsOn)" />
 
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<CreateAppBundleDependsOn>
-			_DetectAppManifest;
+			$(CreateAppBundleDependsOn);
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
 			_CreateAssetPackManifest;
 			_SmeltMetal;
-			_ForgeMetal;
 			_TemperMetal;
 			_CompileCoreMLModels;
 			_PrepareResourceRules;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_GetNativeExecutableName;
 			_ParseBundlerArguments;
 			_CompileToNative;
@@ -231,7 +127,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CreateDebugConfiguration;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
-			_CopyWatchOS1AppsToBundle;
 			_CopyWatchOS2AppsToBundle;
 			_ReadAppExtensionDebugSymbolProperties;
 			_GenerateAppExtensionDebugSymbols;
@@ -243,7 +138,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
-			_EmbedMobileProvision;
+			_EmbedProvisionProfile;
 			_CodesignNativeLibraries;
 			_CollectFrameworks;
 			_CodesignFrameworks;
@@ -262,23 +157,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CreateAppBundle;
 			$(CodesignDependsOn);
 		</CodesignDependsOn>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<!-- Extensibility point for VS Publishing Workflow -->
-		<_BeforeCreateIpaForDistributionDependsOn />
-		
-		<CreateIpaDependsOn>
-			_BeforeCreateIpaForDistribution;
-			_CompileEntitlements;
-			_CoreCreateIpa;
-			_PackageOnDemandResources;
-			_ZipIpa
-		</CreateIpaDependsOn>
-
-		<ArchiveDependsOn>
-			_CoreArchive
-		</ArchiveDependsOn>
 	</PropertyGroup>
 
 	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
@@ -303,71 +181,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
-
-	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
-	
-	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(CreateIpaDependsOn)" />
-
-	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)mtouch.stamp" />
-	</Target>
-
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath).uploaded" />
 	</Target>
-
-	<Target Name="_CleanDebugSymbols" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<GetDirectories SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(DeviceSpecificOutputPath)" Pattern="*.dSYM">
-			<Output TaskParameter="Directories" ItemName="_DebugSymbolDir" />
-		</GetDirectories>
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).mSYM;@(_DebugSymbolDir)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)dsym.items" />
-	</Target>
-
-	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)iTunesMetadata.plist;$(DeviceSpecificOutputPath)iTunesArtwork@2x;$(DeviceSpecificOutputPath)iTunesArtwork" />
-	</Target>
-
-	<Target Name="_CleanDeviceSpecificOutput" Condition="'$(_CanOutputAppBundle)' == 'true'">
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IntermediateOutputPath)device-builds;$(OutputPath)device-builds" />
-	</Target>
-
-	<Target Name="_CleanIntermediateToolOutput" DependsOnTargets="_ComputeTargetArchitectures">
-		<RemoveDir SessionId="$(BuildSessionId)" 
-			Condition="'$(IsMacEnabled)' == 'true'" 
-			Directories="$(DeviceSpecificIntermediateOutputPath)actool;
-					$(DeviceSpecificIntermediateOutputPath)assetpacks;
-					$(DeviceSpecificIntermediateOutputPath)codesign;
-					$(DeviceSpecificIntermediateOutputPath)coremlc;
-					$(DeviceSpecificIntermediateOutputPath)ibtool;
-					$(DeviceSpecificIntermediateOutputPath)ibtool-link;
-					$(DeviceSpecificIntermediateOutputPath)ibtool-manifests;
-					$(DeviceSpecificIntermediateOutputPath)ipa;
-					$(DeviceSpecificIntermediateOutputPath)metal;
-					$(DeviceSpecificIntermediateOutputPath)optimized;
-					$(DeviceSpecificIntermediateOutputPath)scntool;
-					$(DeviceSpecificIntermediateOutputPath)TextureAtlas;
-					$(DeviceSpecificIntermediateOutputPath)mtouch-cache;
-					$(DeviceSpecificIntermediateOutputPath)" />
-
-		<ItemGroup>
-			<_IpaPackageFile Include="$(DeviceSpecificOutputPath)*.ipa" />
-		</ItemGroup>
-
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign.items" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
-	</Target>
-
-	<PropertyGroup>
-		<_CollectBundleResourcesDependsOn>
-			$(_CollectBundleResourcesDependsOn);
-			_CompileCoreMLModels;
-		</_CollectBundleResourcesDependsOn>
-	</PropertyGroup>
 
 	<Target Name="_CreateAssetPackManifest" DependsOnTargets="_CopyResourcesToBundle">
 		<CreateAssetPackManifest
@@ -378,112 +194,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			PrefetchOrder="$(OnDemandResourcesPrefetchOrder)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 		/>
-	</Target>
-
-	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GetMinimumOSVersion">
-		<Metal
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)"
-			SourceFile="@(Metal)">
-			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
-		</Metal>
-	</Target>
-
-	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
-		Inputs="@(_SmeltedMetal)" Outputs="$(DeviceSpeficicIntermediateOutputPath)metal\default.metal-ar">
-		<ArTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' and '$(_IsXcode8)' == 'false'"
-			Items="@(_SmeltedMetal)"
-			Archive="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar">
-		</ArTool>
-
-		<!-- If !Xcode8 -->
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar"
-					Condition="'$(_IsXcode8)' == 'false'">
-			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
-		</CreateItem>
-
-		<!-- Else -->
-		<CreateItem Include="@(_SmeltedMetal)"
-					Condition="'$(_IsXcode8)' == 'true'">
-			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_ForgedMetal)' != ''" DependsOnTargets="_ForgeMetal"
-		Inputs="@(_ForgedMetal)" Outputs="$(_AppBundlePath)default.metallib">
-		<MetalLib
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_ForgedMetal)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkRoot="$(_SdkRoot)"
-			OutputLibrary="$(_AppBundlePath)default.metallib">
-		</MetalLib>
-	</Target>
-
-	<Target Name="_PackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'false'" DependsOnTargets="_CollectBundleResources">
-		<PackLibraryResources
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Prefix="monotouch"
-			BundleResourcesWithLogicalNames="@(_BundleResourceWithLogicalName)">
-			<Output TaskParameter="EmbeddedResources" ItemName="EmbeddedResource" />
-		</PackLibraryResources>
-	</Target>
-
-	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources">
-		<UnpackLibraryResources
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Prefix="monotouch"
-			NoOverwrite="@(_BundleResourceWithLogicalName)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
-			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
-		</UnpackLibraryResources>
-	</Target>
-
-	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_GenerateAppBundleName;_GenerateAppExBundleName">
-		<PropertyGroup>
-			<_AppResourcesPath>$(_AppBundlePath)</_AppResourcesPath>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="_GenerateAppBundleName" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' != 'true'" DependsOnTargets="_ComputeTargetArchitectures">
-		<PropertyGroup>
-			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<AppBundleDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="_GenerateAppExBundleName" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
-		<PropertyGroup>
-			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-
-			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
-			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
-		</PropertyGroup>
-		<ItemGroup>
-			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
-				<!-- We need this metadata to fix the source in VS -->
-				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
-				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
-			</_AppExtensionBundlePath>
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_GetWatchAppBundlePath" DependsOnTargets="_GenerateBundleName;$(_GetWatchAppBundlePathDependsOn)">
@@ -511,14 +221,25 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</_CompileAppManifestDependsOn>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<_CompileITunesMetadataDependsOn>
+			$(_CompileITunesMetadataDependsOn);
+			_DetectSdkLocations;
+			_GenerateBundleName;
+			_ReadAppManifest;
+		</_CompileITunesMetadataDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CompileITunesMetadata" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'"
-		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_CompileAppManifest"
-		Inputs="$(_AppManifest);@(ITunesMetadata)"
+		DependsOnTargets="$(_CompileITunesMetadataDependsOn)"
+		Inputs="@(ITunesMetadata)"
 		Outputs="$(DeviceSPecificOutputPath)iTunesMetadata.plist" >
 		<CompileITunesMetadata
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
+			CFBundleIdentifier="$(_BundleIdentifier)"
+			CFBundleVersion="$(_CFBundleVersion)"
+			CFBundleDisplayName="$(_CFBundleDisplayName)"
 			ITunesMetadata="@(ITunesMetadata)"
 			OutputPath="$(DeviceSpecificOutputPath)iTunesMetadata.plist"
 		/>
@@ -545,29 +266,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_GetNativeExecutableName" DependsOnTargets="_DetectAppManifest;_GenerateBundleName;_CompileAppManifest">
-		<GetNativeExecutableName
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundlePath)Info.plist"
-			>
-			<Output TaskParameter="ExecutableName" PropertyName="_ExecutableName" />
-		</GetNativeExecutableName>
-
-		<PropertyGroup>
-			<_NativeExecutable>$(_AppBundlePath)$(_ExecutableName)</_NativeExecutable>
-		</PropertyGroup>
-	</Target>
-
 	<PropertyGroup>
 		<_CompileToNativeDependsOn>
+			_ComputeLinkMode;
 			_ComputeTargetFrameworkMoniker;
-			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
 			_DetectSigningIdentity;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_ResolveAppExtensionReferences;
 			_ExtendAppExtensionReferences;
 			_GetNativeExecutableName;
@@ -576,24 +283,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</_CompileToNativeDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_GetCompileToNativeInputs">
-		<ItemGroup>
-			<!-- Skip the reference assemblies. There is currently no scenario where it is valid to pass them to 'mtouch'. They are impossible to AOT. Fixes: https://github.com/xamarin/xamarin-macios/issues/3199 -->
-			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
-			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
-			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
-			<!-- This requires nuget libraries to be copied locally, which by default only happens for executable projects, so we set 'CopyNuGetImplementations' to true for extensions (see comment in Xamarin.iOS.AppExtension.CSharp.targets for more info) -->
-			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
-			<MTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
-			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(ReferencePath);@(MTouchReferencePath)" />
-			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
-		Condition = "'$(IsAppDistribution)' != 'true'"
-		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
-		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
+		Condition = "'$(IsAppDistribution)' != 'true' And '$(UsingAppleNETSdk)' != 'true'"
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
+		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
 
 		<MTouch
 			SessionId="$(BuildSessionId)"
@@ -616,11 +309,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			LinkMode="$(_LinkMode)"
 			MainAssembly="$(TargetPath)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			NativeReferences="@(NativeReference)"
+			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			Profiling="$(MtouchProfiling)"
 			ProjectDir="$(MtouchProjectDirectory)"
-			References="@(ReferencePath);@(MTouchReferencePath)"
+			References="@(ReferencePath);@(_BundlerReferencePath)"
 			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -631,7 +324,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			UseFloat32="$(MtouchFloat32)"
 			UseThumb="$(MtouchUseThumb)"
 			EnableBitcode="$(MtouchEnableBitcode)"
-			EnableSGenConc="$(MtouchEnableSGenConc)"
+			EnableSGenConc="$(EnableSGenConc)"
 			Interpreter="$(MtouchInterpreter)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
@@ -646,171 +339,13 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
-			Files="$(DeviceSpecificOutputPath)mtouch.stamp"
+			Files="$(DeviceSpecificOutputPath)bundler.stamp"
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
 	</Target>
 
-	<Target Name="_ReadAppExtensionDebugSymbolProperties">
-		<ReadItemsFromFile File="%(_ResolvedAppExtensionReferences.Identity)\..\dsym.items" Condition="Exists('%(_ResolvedAppExtensionReferences.Identity)\..\dsym.items')">
-			<Output TaskParameter="Items" ItemName="_AppExtensionDebugSymbolProperties" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_GenerateAppExtensionDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false'"
-		DependsOnTargets="_ParseBundlerArguments;_CompileToNative;_ReadAppExtensionDebugSymbolProperties"
-		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-		Outputs="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM\Contents\Info.plist">
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM" />
-
-		<!-- run dsymutil on the main bundle -->
-		<DSymUtil
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoDSymUtil)' == 'false'"
-			AppBundleDir="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)"
-			Architectures="%(_AppExtensionDebugSymbolProperties.CompiledArchitectures)"
-			DSymDir="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM"
-			Executable="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
-		>
-		</DSymUtil>
-
-		<!-- strip the debug symbols from the $(_NativeExecutable) -->
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoSymbolStrip)' == 'false'"
-			Executable="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-			IsFramework="false"
-			SymbolFile="%(_AppExtensionDebugSymbolProperties.SymbolsList)"
-		>
-		</SymbolStrip>
-
-		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoSymbolStrip)' == 'false'"
-			Files="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM\Contents\Info.plist"
-		>
-		</Touch>
-	</Target>
-
-	<Target Name="_GenerateFrameworkDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;_CollectFrameworks"
-		Inputs="%(_Frameworks.Identity)"
-		Outputs="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM\Contents\Info.plist"
-		>
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM" />
-
-		<!-- run dsymutil on embedded frameworks -->
-		<DSymUtil
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false'"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures=""
-			DSymDir="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM"
-			Executable="%(_Frameworks.Identity)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)">
-		</DSymUtil>
-
-		<!-- strip embedded frameworks -->
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoSymbolStrip)' == 'false'"
-			Executable="%(_Frameworks.Identity)"
-			IsFramework="true"
-			SymbolFile=""
-		>
-		</SymbolStrip>
-
-		<!-- _GenerateDebugSymbols will run spotlight to index the dSYMs -->
-	</Target>
-
-	<Target Name="_PrepareDebugSymbolGeneration" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'true' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments"
-			Inputs="$(_NativeExecutable)" Outputs="$(DeviceSpecificOutputPath)dsym.items">
-		<!-- For App Extensions, we delay running dsymutil & strip until it has been copied into the main app bundle... -->
-		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(_MtouchSymbolsList)">
-			<Output TaskParameter="FullPath" PropertyName="_SymbolsListFullPath" />
-		</GetFullPath>
-
-		<PropertyGroup>
-			<!-- [System.IO.Path]::GetFileName() is safe to use -->
-			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
-			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
-		</PropertyGroup>
-
-		<ItemGroup>
-			<_AppExtensionDebugSymbolProperties Remove="@(_AppExtensionDebugSymbolProperties)" />
-
-			<_AppExtensionDebugSymbolProperties Include="$(_AppBundleFileName)">
-				<CompiledArchitectures>$(_CompiledArchitectures)</CompiledArchitectures>
-				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
-				<NoSymbolStrip>$(MtouchNoSymbolStrip)</NoSymbolStrip>
-				<SymbolsList>$(_SymbolsListFullPath)</SymbolsList>
-				<NoDSymUtil>$(_NoDSymUtil)</NoDSymUtil>
-			</_AppExtensionDebugSymbolProperties>
-		</ItemGroup>
-
-		<WriteItemsToFile
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_AppExtensionDebugSymbolProperties)"
-			ItemName="_AppExtensionDebugSymbolProperties"
-			File="$(DeviceSpecificOutputPath)dsym.items"
-			IncludeMetadata="true"
-			Overwrite="true"
-		/>
-	</Target>
-
-	<Target Name="_GenerateDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;_GenerateFrameworkDebugSymbols;_GenerateAppExtensionDebugSymbols;_PrepareDebugSymbolGeneration"
-		Inputs="$(_NativeExecutable)" Outputs="$(AppBundleDir).dSYM\Contents\Info.plist">
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Directories="$(AppBundleDir).dSYM" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
-
-		<!-- run dsymutil on the main bundle -->
-		<DSymUtil
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures="$(_CompiledArchitectures)"
-			DSymDir="$(AppBundleDir).dSYM"
-			Executable="$(_NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
-		>
-		</DSymUtil>
-
-		<!-- strip the debug symbols from the $(_NativeExecutable) -->
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
-			Executable="$(_NativeExecutable)"
-			IsFramework="false"
-			SymbolFile="$(_MtouchSymbolsList)"
-		>
-		</SymbolStrip>
-
-		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
-			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
-		>
-		</Touch>
-
-		<!-- make sure spotlight indexes everything we've built -->
-		<SpotlightIndexer
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
-			Input="$(AppBundleDir)/../"
-		>
-		</SpotlightIndexer>
-	</Target>
-
-	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
+	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false' And '$(_PlatformName)' != 'MacCatalyst'"
 		DependsOnTargets="_CopyResourcesToBundle"
 		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
 		<CreateDebugSettings
@@ -824,11 +359,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CreateDebugConfiguration" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
-		Outputs="$(_AppBundlePath)MonoTouchDebugConfiguration.txt" >
+		Outputs="$(_AppResourcesPath)MonoTouchDebugConfiguration.txt" >
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppResourcesPath)" />
 		<CreateDebugConfiguration
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
+			AppBundleDir="$(_AppResourcesPath)"
 			DebugOverWiFi="$(IOSDebugOverWiFi)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			DebuggerPort="$(IOSDebuggerPort)"
@@ -940,225 +476,17 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CollectColladaAssets">
-		<CollectBundleResources
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			BundleResources="@(Collada)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
-		</CollectBundleResources>
-	</Target>
+	<PropertyGroup>
+		<_CompileTextureAtlasesDependsOn>
+			$(_CompileTextureAtlasesDependsOn);
+			_DetectSdkLocations;
+			_BeforeCompileTextureAtlases;
+			_ReadCoreCompileTextureAtlases;
+			_CoreCompileTextureAtlases;
+		</_CompileTextureAtlasesDependsOn>
+	</PropertyGroup>
 
-	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
-		Inputs="@(_ColladaAssetWithLogicalName)"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
-		>
-
-		<ScnTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(ScnToolExe)"
-			ToolPath="$(ScnToolPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkVersion="$(_SdkVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
-			OutputScene="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
-		</ScnTool>
-
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName);Optimize='False'">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
-
-	<Target Name="_BeforeCoreCompileImageAssets"
-		Inputs="@(ImageAsset);$(_AppManifest)"
-		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)">
-		
-		<!-- If any ImageAsset or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileImageAssets
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
-		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)actool" />
-	</Target>
-
-	<Target Name="_ReadCompileImageAssets"					
-		DependsOnTargets="_BeforeCoreCompileImageAssets">
-
-		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
-		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
-		<ReadItemsFromFile File="$(_ACTool_PartialAppManifestCache)" Condition="Exists('$(_ACTool_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
-		</ReadItemsFromFile>
-		<ReadItemsFromFile File="$(_ACTool_BundleResourceCache)" Condition="Exists('$(_ACTool_BundleResourceCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileImageAssets" 
-		Inputs="@(ImageAsset);$(_AppManifest)"
-		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
-		DependsOnTargets="_GetMinimumOSVersion;_DetectSdkLocations;_BeforeCoreCompileImageAssets">
-
-		<ACTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(ImageAsset)' != ''"
-			ToolExe="$(ACToolExe)"
-			ToolPath="$(ACToolPath)"
-			AppManifest="$(_AppManifest)"
-			DeviceModel="$(TargetDeviceModel)"
-			DeviceOSVersion="$(TargetDeviceOSVersion)"
-			EnableOnDemandResources="$(EnableOnDemandResources)"
-			ImageAssets="@(ImageAsset)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			OptimizePNGs="$(OptimizePNGs)"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			IsWatchApp="$(IsWatchApp)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)"
-			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(_SdkVersion)">
-			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="PartialAppManifest" ItemName="_ACTool_PartialAppManifest" />
-			<Output TaskParameter="BundleResources" ItemName="_ACTool_BundleResources" />
-		</ACTool>
-
-		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
-		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileSceneKitAssets;_ReadCoreCompileSceneKitAssets;_CoreCompileSceneKitAssets" />
-
-	<Target Name="_BeforeCoreCompileSceneKitAssets"
-		Inputs="@(SceneKitAsset)"
-		Outputs="$(_SceneKitCache)">
-
-		<!-- If any SceneKitAsset is newer than the generated items list, we delete them so that the _CoreCompileSceneKitAssets 
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_SceneKitCache)" />
-	</Target>
-
-	<Target Name="_ReadCoreCompileSceneKitAssets"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets">
-
-		<!-- If _BeforeCoreCompileSceneKitAssets did not delete the generated items lists from _CoreCompileSceneKitAssets, then we read them
-		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
-		<ReadItemsFromFile File="$(_SceneKitCache)" Condition="Exists('$(_SceneKitCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileSceneKitAssets"
-		Inputs="@(SceneKitAsset)"
-		Outputs="$(_SceneKitCache)"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName;_ComputeTargetFrameworkMoniker">
-
-		<CompileSceneKitAssets
-			SessionId="$(BuildSessionId)"
-			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(CopySceneKitAssetsExe)"
-			ToolPath="$(CopySceneKitAssetsPath)"
-			SceneKitAssets="@(SceneKitAsset)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			IsWatchApp="$(IsWatchApp)"
-			SdkPlatform="$(_SdkPlatform)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)">
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="BundleResources" ItemName="_SceneKitAssets_BundleResources" />
-		</CompileSceneKitAssets>
-
-		<WriteItemsToFile Items="@(_SceneKitAssets_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_SceneKitCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_SceneKitCache)" />
-		</ItemGroup>
-	</Target>
-	
-	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileInterfaceDefinitions;_ReadCoreCompileInterfaceDefinitions;_CoreCompileInterfaceDefinitions" />
-	
-	<Target Name="_BeforeCoreCompileInterfaceDefinitions"
-		Inputs="@(InterfaceDefinition)"
-		Outputs="$(_IBToolCache)">
-
-		<!-- If any InterfaceDefinition is newer than the generated items list, we delete them so that the _CoreCompileInterfaceDefinitions 
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_IBToolCache)" />
-	</Target>
-
-	<Target Name="_ReadCoreCompileInterfaceDefinitions"	DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions">
-		<!-- If _BeforeCoreCompileInterfaceDefinitions did not delete the generated items lists from _CoreCompileInterfaceDefinitions, then we read them
-		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
-		<ReadItemsFromFile File="$(_IBToolCache)" Condition="Exists('$(_IBToolCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileInterfaceDefinitions"
-		Inputs="@(InterfaceDefinition)"
-		Outputs="$(_IBToolCache)"
-		DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions;_GetMinimumOSVersion">
-
-		<IBTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(IBToolExe)"
-			ToolPath="$(IBToolPath)"
-			AppManifest="$(_AppManifest)"
-			EnableOnDemandResources="$(EnableOnDemandResources)"
-			InterfaceDefinitions="@(InterfaceDefinition)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			IsWatchApp="$(IsWatchApp)"
-			IsWatch2App="$(IsWatch2App)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(_SdkVersion)">
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="BundleResources" ItemName="_IBTool_BundleResources" />
-		</IBTool>
-
-		<!-- Cached the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_IBTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_IBToolCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_IBToolCache)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileTextureAtlases;_ReadCoreCompileTextureAtlases;_CoreCompileTextureAtlases" />
+	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
 
 	<Target Name="_BeforeCompileTextureAtlases"
 		Inputs="@(AtlasTexture)"
@@ -1210,195 +538,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileCoreMLModels" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCompileCoreMLModels;_ReadCompileCoreMLModels;_CoreCompileCoreMLModels" />
-
-	<Target Name="_BeforeCompileCoreMLModels"
-		Inputs="@(CoreMLModel);$(_AppManifest)"
-		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)">
-		<!-- If any CoreMLModel or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileCoreMLModels
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
-		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)coremlc" />
-	</Target>
-
-	<Target Name="_ReadCompileCoreMLModels"	DependsOnTargets="_BeforeCompileCoreMLModels">
-		<!-- If _BeforeCompileCoreMLModels did not delete the generated items lists from _CoreCompileCoreMLModels, then we read them
-		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
-		<ReadItemsFromFile File="$(_CoreMLModel_PartialAppManifestCache)" Condition="Exists('$(_CoreMLModel_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
-		</ReadItemsFromFile>
-		<ReadItemsFromFile File="$(_CoreMLModel_BundleResourceCache)" Condition="Exists('$(_CoreMLModel_BundleResourceCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileCoreMLModels" 
-		Inputs="@(CoreMLModel);$(_AppManifest)"
-		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileCoreMLModels">
-
-		<CoreMLCompiler
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(CoreMLCompilerExe)"
-			ToolPath="$(CoreMLCompilerPath)"
-			Models="@(CoreMLModel)"
-			EnableOnDemandResources="$(EnableOnDemandResources)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)">
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-			<Output TaskParameter="PartialAppManifests" ItemName="_PartialAppManifest" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="PartialAppManifests" ItemName="_CoreMLModel_PartialAppManifest" />
-			<Output TaskParameter="BundleResources" ItemName="_CoreMLModel_BundleResources" />
-		</CoreMLCompiler>
-
-		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
-		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CreatePkgInfo" Condition="'$(IsAppExtension)' == 'false'" DependsOnTargets="_GenerateBundleName" Outputs="$(_AppBundlePath)PkgInfo">
-		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)PkgInfo" />
-	</Target>
-
-	<Target Name="_EmbedMobileProvision" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
-		Outputs="$(_AppBundlePath)embedded.mobileprovision">
-		<EmbedMobileProvision
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			ProvisioningProfile="$(_ProvisioningProfile)"
-			SdkPlatform="$(_SdkPlatform)"
-			>
-		</EmbedMobileProvision>
-	</Target>
-
-	<Target Name="_CompileEntitlements" Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectSigningIdentity;_ComputeTargetFrameworkMoniker"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
-		<CompileEntitlements
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			AppIdentifier="$(_AppIdentifier)"
-			BundleIdentifier="$(_BundleIdentifier)"
-			Entitlements="$(CodesignEntitlements)"
-			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
-			IsAppExtension="$(IsAppExtension)"
-			ProvisioningProfile="$(_ProvisioningProfile)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(_SdkVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-
-			<!-- We output the same task parameter to 2 different properties because they will be used differently -->
-
-			<!-- $(_CompiledEntitlements) will be passed to the MTouch task (only really needed for iOS Simulator builds,
-				 but does not cause harm when set for device builds). -->
-			<Output TaskParameter="CompiledEntitlements" PropertyName="_CompiledEntitlements" />
-
-			<!-- $(_CompiledCodesignEntitlements) will be used only with Codesign tasks when building for device. MUST NOT BE SET for iOS Simulator builds. -->
-			<Output TaskParameter="CompiledEntitlements" PropertyName="_CompiledCodesignEntitlements" Condition="'$(_SdkIsSimulator)' == 'false'" />
-		</CompileEntitlements>
-	</Target>
-
-	<Target Name="_PrepareResourceRules" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
-		<PrepareResourceRules
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(CodesignResourceRules)' != '' And '$(ComputedPlatform)' == 'iPhone'"
-			AppBundleDir="$(AppBundleDir)"
-			ResourceRules="$(CodesignResourceRules)"
-			SdkVersion="$(_SdkVersion)"
-			>
-			<Output TaskParameter="PreparedResourceRules" PropertyName="_PreparedResourceRules"/>
-		</PrepareResourceRules>
-	</Target>
-
-	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration">
-		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
-			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
-		</CreateItem>
-
-		<ItemGroup>
-			<ProjectReference Remove="@(_AppExtensionReference)" />
-		</ItemGroup>
-
-		<!--<Warning Text="_SeparateAppExtensionReferences: @(_AppExtensionReference)"/>-->
-	</Target>
-
-	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
-		<!-- assign configs if building a solution file -->
-		<AssignProjectConfiguration
-			ProjectReferences = "@(_AppExtensionReference)"
-			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
-			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
-
-			<Output TaskParameter="AssignedProjects" ItemName="_AppExtensionReferenceWithConfiguration"/>
-		</AssignProjectConfiguration>
-
-		<!-- Else, just -->
-		<CreateItem Include="@(_AppExtensionReference)"
-					Condition="'$(CurrentSolutionConfigurationContents)' == ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfiguration"/>
-		</CreateItem>
-
-		<!--<Warning Text="_AssignAppExtensionConfiguration: @(_AppExtensionReferenceWithConfiguration)"/>-->
-	</Target>
-
-	<!-- Split iOS App Extension projects into 2 lists
-		_AppExtensionReferenceWithConfigurationExistent: Projects existent on disk
-		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
-	<Target Name="_SplitAppExtensionReferencesByExistent" DependsOnTargets="_AssignAppExtensionConfiguration">
-		<CreateItem Include="@(_AppExtensionReferenceWithConfiguration)" Condition="'@(_AppExtensionReferenceWithConfiguration)' != ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationExistent" 
-				Condition="Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationNonExistent"
-				Condition="!Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-		</CreateItem>
-
-		<!--<Warning Text="_SplitAppExtensionReferencesByExistent: @(_AppExtensionReferenceWithConfigurationExistent)"/>-->
-	</Target>
-
-	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
-		<PropertyGroup>
-			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
-			     the referenced projects unless building from IDE. -->
-			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
-		</PropertyGroup>
-
-		<!-- If the referenced projects have already been built, then just get the target paths -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Targets="GetBundleTargetPath"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<!-- Build the referenced project if required -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true' ">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<Warning Text="Referenced iOS App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
-			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
-	</Target>
-
-	<Target Name="_DetectDebugNetworkConfiguration">
+	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">
 		<DetectDebugNetworkConfiguration
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1411,26 +551,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</DetectDebugNetworkConfiguration>
 	</Target>
 
-	<Target Name="_CopyAppExtensionsToBundle" DependsOnTargets="_ResolveAppExtensionReferences" Inputs="@(_ResolvedAppExtensionReferences)" 
-		  Outputs="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)">
-		
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''" Directories="$(_AppBundlePath)PlugIns" />
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != ''"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedAppExtensionReferences)"
-			Destination="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
-		/>
-
-		<!-- Delete any code signatures and dSYM dirs since they are now invalid -->
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)\_CodeSignature;
-			$(_AppBundlePath)..\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension).dSYM" />
-	</Target>
-
-	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
+	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
 		<ValidateAppBundleTask
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -1474,7 +595,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<!-- Split iOS Watch App projects into 2 lists
 		_WatchAppReferenceWithConfigurationExistent: Projects existent on disk
 		_WatchAppReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
-	<Target Name="_SplitWatchAppReferencesByExistent" DependsOnTargets="_AssignWatchAppConfiguration">
+	<Target Name="_SplitWatchAppReferencesByExistent" DependsOnTargets="_SeparateWatchAppReferences;_AssignWatchAppConfiguration">
 		<CreateItem Include="@(_WatchAppReferenceWithConfiguration)" Condition="'@(_WatchAppReferenceWithConfiguration)' != ''">
 			<Output TaskParameter="Include" ItemName="_WatchAppReferenceWithConfigurationExistent" 
 				Condition="Exists ('%(_WatchAppReferenceWithConfiguration.Identity)')"/>
@@ -1520,17 +641,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CopyWatchOS1AppsToBundle" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ResolveWatchAppReferences">
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedWatchAppReferences)"
-			Destination="$(_AppBundlePath)%(_ResolvedWatchAppReferences.FileName)%(_ResolvedWatchAppReferences.Extension)"
-		/>
-	</Target>
-
 	<Target Name="_CopyWatchOS2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
@@ -1540,78 +650,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Source="@(_ResolvedWatchAppReferences)"
 			Destination="$(_AppBundlePath)Watch\%(_ResolvedWatchAppReferences.FileName)%(_ResolvedWatchAppReferences.Extension)"
 		/>
-	</Target>
-
-	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_CompileToNative">
-		<CollectFrameworks
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundlePath="$(_AppBundlePath)"
-			>
-			<Output TaskParameter="Frameworks" ItemName="_Frameworks"/>
-		</CollectFrameworks>
-	</Target>
-
-	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
-	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CompileToNative">
-
-		<PropertyGroup>
-			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
-			<_LibraryCodeSigningKey>$(_CodeSigningKey)</_LibraryCodeSigningKey>
-			<_LibraryCodeSigningKey Condition="'$(_LibraryCodeSigningKey)' == ''">-</_LibraryCodeSigningKey>
-		</PropertyGroup>
-
-		<CodesignNativeLibraries
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			AppBundleDir="$(AppBundleDir)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)codesign"
-			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_CodesignDisableTimestamp)"
-			Keychain="$(CodesignKeychain)"
-			SigningKey="$(_LibraryCodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			>
-		</CodesignNativeLibraries>
-	</Target>
-
-	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
-		Inputs="%(_Frameworks.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)">
-
-		<PropertyGroup>
-			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
-			<_FrameworkCodeSigningKey>$(_CodeSigningKey)</_FrameworkCodeSigningKey>
-			<_FrameworkCodeSigningKey Condition="'$(_FrameworkCodeSigningKey)' == ''">-</_FrameworkCodeSigningKey>
-		</PropertyGroup>
-
-		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_CodesignDisableTimestamp)"
-			Keychain="$(CodesignKeychain)"
-			Resources="@(_Frameworks)"
-			SigningKey="$(_FrameworkCodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			>
-		</Codesign>
-
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)codesign" />
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
 	</Target>
 
 	<Target Name="_ReadAppExtensionCodesignProperties">
@@ -1625,20 +663,32 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
 		Outputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
 
-		<CodesignNativeLibraries
+		<PropertyGroup>
+			<_CodesignAppExtensionsLibraryPath>$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_CodesignAppExtensionsLibrary
+				Include="$(_CodesignAppExtensionsLibraryPath)**\*.dylib;$(_CodesignAppExtensionsLibraryPath)**\*.metallib"
+				Exclude="$(_CodesignAppExtensionsLibraryPath)Watch\**;$(_CodesignAppExtensionsLibraryPath)PlugIns\**"
+				>
+			</_CodesignAppExtensionsLibrary>
+		</ItemGroup>
+
+		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
-			AppBundleDir="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			Resources="@(_CodesignAppExtensionsLibrary)"
 			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
 			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
 			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
 			SigningKey="%(_AppExtensionCodesignProperties.LibrarySigningKey)"
+			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
 			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
 			>
-		</CodesignNativeLibraries>
+		</Codesign>
 
 		<Codesign
 			SessionId="$(BuildSessionId)"
@@ -1746,6 +796,23 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
+		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
+		<!-- Use a task to collect the files, so that we get the correct behavior on Windows -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="mono_crash.mem.*"
+			Recursive="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
+		</GetFileSystemEntries>
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_MonoCrashDumpsInAppBundle)"
+		/>
+
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1774,28 +841,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="_CodesignAppBundle">
-		<CodesignVerify
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Resource="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.Filename)%(_ResolvedAppExtensionReferences.Extension)"
-		>
-		</CodesignVerify>
-
-		<CodesignVerify
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Resource="$(AppBundleDir)"
-		>
-		</CodesignVerify>
-	</Target>
-
 	<Target Name="_CoreCreateIpa" Condition="'$(BuildIpa)' == 'true'" DependsOnTargets="Codesign">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa" />
 
@@ -1813,21 +858,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolPath="$(DittoPath)"
 			Source="$(AppBundleDir)"
 			Destination="$(_IpaAppBundleDir)"
-		/>
-
-		<FindWatchOS1AppExtensionBundle
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''"
-			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
-			>
-			<Output TaskParameter="WatchOS1AppExtensionBundle" PropertyName="_WatchOS1AppExtensionBundle"/>
-		</FindWatchOS1AppExtensionBundle>
-
-		<Copy
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_WatchOS1AppExtensionBundle)' != ''"
-			SourceFiles="$(_WatchOS1AppExtensionBundle)\_WatchKitStub\WK"
-			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport"
 		/>
 
 		<FindWatchOS2AppBundle
@@ -1871,8 +901,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<!-- Calculate IpaPackageDir and IpaPackageName based on IpaPackagePath, if defined. -->
-			<IpaPackageDir Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetDirectoryName('$(IpaPackagePath)'))</IpaPackageDir>
-			<IpaPackageName Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetFileName('$(IpaPackagePath)'))</IpaPackageName>
+			<IpaPackageDir Condition="'$(IpaPackagePath)' != ''">$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))</IpaPackageDir>
+			<IpaPackageName Condition="'$(IpaPackagePath)' != ''">$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))</IpaPackageName>
 
 			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
 			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->
@@ -2021,37 +1051,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</Zip>
 	</Target>
 
-	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="Codesign">
-		<CollectITunesSourceFiles
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == ''"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			>
-			<Output TaskParameter="ITunesSourceFiles" PropertyName="_ITunesSourceFile"/>
-		</CollectITunesSourceFiles>
-
-		<Archive
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
-			InsightsApiKey="$(XamarinInsightsApiKey)"
-			ITunesSourceFiles="@(_ITunesSourceFile)"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			ProjectName="$(MSBuildProjectName)"
-			ProjectGuid="$(ProjectGuid)"
-			ProjectTypeGuids="$(ProjectTypeGuids)"
-			SolutionPath="$(SolutionPath)"
-			SigningKey="$(_CodeSigningKey)"
-			WatchAppReferences="@(_ResolvedWatchAppReferences)"
-			>
-			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir"/>
-		</Archive>
-	</Target>
-
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.NativeReference.Stubs.targets" />
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
-
+		
 </Project>

@@ -10,7 +10,7 @@ using Mono.Cecil.Cil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	static partial class ErrorHelper {
+	public static partial class ErrorHelper {
 		public static ApplePlatform Platform;
 
 		internal static string Prefix {
@@ -19,11 +19,11 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.None: // Return "MT" by default instead of throwing an exception, because any exception here will most likely hide whatever other error we're trying to show.
 					return "MT";
 				case ApplePlatform.MacOSX:
 					return "MM";
-				case ApplePlatform.None:
-					throw new InvalidOperationException ($"ErrorHelper.Platform has not been set.");
 				default:
 					// Do not use the ErrorHandler machinery, because it will probably end up recursing and eventually throwing a StackOverflowException.
 					throw new InvalidOperationException ($"Unknown platform: {Platform}");
@@ -272,11 +272,8 @@ namespace Xamarin.Bundler {
 
 		public static void Show (IEnumerable<Exception> list)
 		{
-			List<Exception> exceptions = new List<Exception> ();
+			var exceptions = CollectExceptions (list);
 			bool error = false;
-
-			foreach (var e in list)
-				CollectExceptions (e, exceptions);
 
 			foreach (var ex in exceptions)
 				error |= ShowInternal (ex);
@@ -310,8 +307,7 @@ namespace Xamarin.Bundler {
 
 				Console.Error.WriteLine (mte.ToString ());
 
-				if (Verbosity > 1)
-					ShowInner (e);
+				ShowInner (e);
 
 				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
 					Console.Error.WriteLine (e.StackTrace);
@@ -320,8 +316,7 @@ namespace Xamarin.Bundler {
 				Console.Error.WriteLine (e.ToString ());
 			} else {
 				Console.Error.WriteLine (e.ToString ());
-				if (Verbosity > 1)
-					ShowInner (e);
+				ShowInner (e);
 				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
 					Console.Error.WriteLine (e.StackTrace);
 			}
@@ -339,7 +334,7 @@ namespace Xamarin.Bundler {
 				Console.Error.WriteLine ("--- inner exception");
 				Console.Error.WriteLine (ie);
 				Console.Error.WriteLine ("---");
-			} else {
+			} else if (Verbosity > 0 || ie is ProductException) {
 				Console.Error.WriteLine ("\t{0}", ie.Message);
 			}
 			ShowInner (ie);

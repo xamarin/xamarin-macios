@@ -143,7 +143,7 @@ namespace PrintCore {
 			int c = (int) arr.Count;
 			ret = new string [c];
 			for (int i = 0; i < c; i++)
-				ret [i] = CFString.FetchString (arr.GetValue (i));
+				ret [i] = CFString.FromHandle (arr.GetValue (i));
 			arr.Dispose ();
 
 			return ret;
@@ -159,7 +159,7 @@ namespace PrintCore {
 				return code;
 			}
 
-			printerList = NSArray.StringArrayFromHandle (array);
+			printerList = CFArray.StringArrayFromHandle (array);
 			CFObject.CFRelease (array);
 			if (printerHandle != IntPtr.Zero){
 				// Now get the printer, we do not own it, so retain.
@@ -446,7 +446,7 @@ namespace PrintCore {
 				var code = PMPaperGetID (handle, out s);
 				if (code != PMStatusCode.Ok)
 					return null;
-				return CFString.FetchString (s);
+				return CFString.FromHandle (s);
 			}
 		}
 
@@ -488,7 +488,7 @@ namespace PrintCore {
 			var code = PMPaperCreateLocalizedName (handle, printer.handle, out name);
 			if (code != PMStatusCode.Ok)
 				return null;
-			var str = CFString.FetchString (name);
+			var str = CFString.FromHandle (name);
 			CFObject.CFRelease (name);
 			return str;
 		}
@@ -548,7 +548,7 @@ namespace PrintCore {
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static IntPtr PMPrinterGetName (IntPtr handle);
-		public string Name => CFString.FetchString (PMPrinterGetName (handle));
+		public string Name => CFString.FromHandle (PMPrinterGetName (handle));
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPrinterCopyDeviceURI (IntPtr handle, out IntPtr url);
@@ -585,7 +585,7 @@ namespace PrintCore {
 			get {
 				IntPtr v;
 				if (PMPrinterGetMakeAndModelName (handle, out v) == PMStatusCode.Ok){
-					return CFString.FetchString (v);
+					return CFString.FromHandle (v);
 				}
 				return null;
 			}
@@ -617,7 +617,7 @@ namespace PrintCore {
 				mimeTypes = null;
 				return code;
 			}
-			mimeTypes = NSArray.StringArrayFromHandle (m);
+			mimeTypes = CFArray.StringArrayFromHandle (m);
 			return PMStatusCode.Ok;
 		}
 
@@ -664,10 +664,9 @@ namespace PrintCore {
 			if (fileUrl == null)
 				throw new ArgumentNullException (nameof (fileUrl));
 				    
-			IntPtr mime = CFString.LowLevelCreate (mimeType);
+			IntPtr mime = CFString.CreateNative (mimeType);
 			var code = PMPrinterPrintWithFile (handle, settings.handle, pageFormat == null ? IntPtr.Zero : pageFormat.handle, mime, fileUrl.Handle);
-			if (mime != IntPtr.Zero)
-				CFObject.CFRelease (mime);
+			CFString.ReleaseNative (mime);
 			return code;
 		}
 
@@ -681,10 +680,9 @@ namespace PrintCore {
 			if (provider == null)
 				throw new ArgumentNullException (nameof (provider));
 				    
-			IntPtr mime = CFString.LowLevelCreate (mimeType);
+			IntPtr mime = CFString.CreateNative (mimeType);
 			var code = PMPrinterPrintWithProvider (handle, settings.handle, pageFormat == null ? IntPtr.Zero : pageFormat.handle, mime, provider.Handle);
-			if (mime != IntPtr.Zero)
-				CFObject.CFRelease (mime);
+			CFString.ReleaseNative (mime);
 			return code;
 		}
 
@@ -758,7 +756,7 @@ namespace PrintCore {
 
 		public string Id {
 			get {
-				return CFString.FetchString (PMPrinterGetID (handle));
+				return CFString.FromHandle (PMPrinterGetID (handle));
 			}
 		}
 
@@ -770,7 +768,7 @@ namespace PrintCore {
 				PMStatusCode code = PMPrinterCopyHostName (handle, out IntPtr hostName);
 				if (code != PMStatusCode.Ok)
 					return null;
-				return CFString.FetchString (hostName, true);
+				return CFString.FromHandle (hostName, true);
 			}
 		}
 	}

@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {

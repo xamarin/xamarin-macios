@@ -118,4 +118,3 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 	}
 }
-

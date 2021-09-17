@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVAssetDownloadTask.cs: AVAssetDownloadTask class
 //
 // Authors:

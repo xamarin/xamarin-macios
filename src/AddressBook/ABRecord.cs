@@ -31,35 +31,28 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
 namespace AddressBook {
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABRecordType : uint /* uint32_t */ {
-		Person = 0,
-		Group = 1,
-		Source = 2
-	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPropertyType : uint /* uint32_t */ {
-		Invalid         = 0,
-		String          = 0x1,
-		Integer         = 0x2,
-		Real            = 0x3,
-		DateTime        = 0x4,
-		Dictionary      = 0x5,
-		MultiString     = ABMultiValue.Mask | String,
-		MultiInteger    = ABMultiValue.Mask | Integer,
-		MultiReal       = ABMultiValue.Mask | Real,
-		MultiDateTime   = ABMultiValue.Mask | DateTime,
-		MultiDictionary = ABMultiValue.Mask | Dictionary,
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ABRecord : INativeObject, IDisposable {
 
 		public const int InvalidRecordId = -1;
@@ -171,6 +164,7 @@ namespace AddressBook {
 		// TODO: Should SetValue/CopyValue/RemoveValue be public?
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABRecordSetValue (IntPtr record, int /* ABPropertyID = int32_t */ property, IntPtr value, out IntPtr error);
 		internal void SetValue (int property, IntPtr value)
 		{
@@ -198,6 +192,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABRecordRemoveValue (IntPtr record, int /* ABPropertyID = int32_t */ property, out IntPtr error);
 		internal void RemoveValue (int property)
 		{

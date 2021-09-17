@@ -1,15 +1,36 @@
 // Copyright 2014-2016 Xamarin Inc. All rights reserved.
 
-#if !WATCH
-
 using System;
 using System.ComponentModel;
 using OpenTK;
 using CoreMedia;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
+#if !XAMCORE_4_0
+	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
+
+	partial class AVAudioNode {
+		internal AVAudioNode() {}
+	}
+
+	partial class AVAudioSourceNode {
+		[Obsolete("Use 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' instead.")]
+		public AVAudioSourceNode (AVAudioSourceNodeRenderHandler renderHandler)
+		{
+			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' constructor instead.");
+		}
+
+		[Obsolete("Use 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' instead.")]
+		public AVAudioSourceNode (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
+		{
+			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' constructor instead.");
+		}
+	}
+#endif // !XAMCORE_4_0
+#if !WATCH
 #if MONOMAC && !XAMCORE_4_0
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
@@ -169,7 +190,7 @@ namespace AVFoundation {
 		}
 	}
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 	partial class AVSampleBufferAudioRenderer
 	{
 		[Obsolete ("This API is not available on this platform.")]
@@ -193,8 +214,13 @@ namespace AVFoundation {
 
 #if TVOS
 	// tvOS removed some types - we need to keep stubs of them for binary compatibility
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public class AVAssetDownloadDelegate : NSObject, IAVAssetDownloadDelegate {
 		public AVAssetDownloadDelegate ()
 		{
@@ -259,13 +285,23 @@ namespace AVFoundation {
 		}
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public interface IAVAssetDownloadDelegate : INativeObject, IDisposable, INSUrlSessionTaskDelegate, INSUrlSessionDelegate {
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public static class AVAssetDownloadDelegate_Extensions {
 
 		public static void DidFinishDownloadingToUrl (this IAVAssetDownloadDelegate This, NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location)
@@ -284,8 +320,13 @@ namespace AVFoundation {
 		}
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public class AVAssetDownloadTask : NSUrlSessionTask {
 
 		public override IntPtr ClassHandle {
@@ -349,8 +390,13 @@ namespace AVFoundation {
 		}
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public class AVAssetDownloadUrlSession : NSUrlSession {
 
 		public new static NSUrlSession SharedSession {
@@ -496,6 +542,109 @@ namespace AVFoundation {
 
 #endif // TVOS
 #endif // !XAMCORE_4_0
-}
+#endif // !WATCH
 
+#if !XAMCORE_4_0 && IOS // includes __MACCATALYST__
+	public partial class AVCaptureManualExposureBracketedStillImageSettings {
+		[Obsolete ("Use the static 'Create' method to create a working instance of this type.")]
+		public AVCaptureManualExposureBracketedStillImageSettings () : base (NSObjectFlag.Empty)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	public partial class AVCaptureAutoExposureBracketedStillImageSettings {
+		[Obsolete ("Use the static 'Create' method to create a working instance of this type.")]
+		public AVCaptureAutoExposureBracketedStillImageSettings () : base (NSObjectFlag.Empty)
+		{
+			throw new NotImplementedException ();
+		}
+	}
 #endif
+
+#if !XAMCORE_4_0
+	// "compatibility shim" in xcode 12.5 were removed in xcode 13
+	public partial class AVPlayerInterstitialEventController {
+
+		[Obsolete ("Use 'GetInterstitialEventController' instead.")]
+		public static AVPlayerInterstitialEventController GetPlayerInterstitialEventController (AVPlayer primaryPlayer)
+		{
+			return GetInterstitialEventController (primaryPlayer);
+		}
+
+		[Obsolete ("Use 'Events' instead.")]
+		public virtual AVPlayerInterstitialEvent[] InterstitialEvents {
+			get { return Events; }
+			set { Events = value; }
+		}
+	}
+
+	public partial class AVPlayerInterstitialEvent {
+
+		[Obsolete ("Use 'TemplateItems' instead.")]
+		public virtual AVPlayerItem[] InterstitialTemplateItems {
+			get { return TemplateItems; }
+		}
+	}
+
+	#nullable enable
+#if !NET
+	[Obsolete ("Removed in Xcode 13.")]
+	[Deprecated (PlatformName.TvOS, 15,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.MacOSX, 12,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.iOS, 15,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.MacCatalyst, 15,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.WatchOS, 8,0, PlatformArchitecture.All)]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+		[Obsolete ("Removed in Xcode 13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	public partial class AVPlayerInterstitialEventObserver : NSObject {
+		
+		public virtual AVPlayerInterstitialEvent[] InterstitialEvents => throw new NotImplementedException ();
+
+		public override IntPtr ClassHandle => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected AVPlayerInterstitialEventObserver (NSObjectFlag t) : base (t) => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected internal AVPlayerInterstitialEventObserver (IntPtr handle) : base (handle) => throw new NotImplementedException ();
+
+		[DesignatedInitializer]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public AVPlayerInterstitialEventObserver (AVPlayer primaryPlayer) : base (NSObjectFlag.Empty) => throw new NotImplementedException ();
+		
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayerInterstitialEvent? CurrentEvent => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayerInterstitialEvent[] Events => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVQueuePlayer? InterstitialPlayer => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayer? PrimaryPlayer => throw new NotImplementedException ();
+
+		public static NSString CurrentEventDidChangeNotification => throw new NotImplementedException ();
+		public static NSString EventsDidChangeNotification => throw new NotImplementedException ();
+
+		//
+		// Notifications
+		//
+		public static partial class Notifications {
+			public static NSObject ObserveCurrentEventDidChange (EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveCurrentEventDidChange (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveEventsDidChange (EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveEventsDidChange (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+		}
+	} /* class AVPlayerInterstitialEventObserver */
+	#nullable disable
+#endif
+}

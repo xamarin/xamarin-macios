@@ -367,7 +367,7 @@ namespace AudioUnit
         static extern ExtAudioFileError ExtAudioFileOpenUrl (IntPtr inUrl, out IntPtr outExtAudioFile);
 
         [DllImport (Constants.AudioToolboxLibrary)]
-        static extern ExtAudioFileError ExtAudioFileWrapAudioFileID (IntPtr inFileID, bool inForWriting, IntPtr outExtAudioFile);    
+        static extern ExtAudioFileError ExtAudioFileWrapAudioFileID (IntPtr inFileID, [MarshalAs (UnmanagedType.I1)] bool inForWriting, IntPtr outExtAudioFile);    
 
         [DllImport(Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileRead (IntPtr inExtAudioFile, ref uint /* UInt32* */ ioNumberFrames, IntPtr ioData);

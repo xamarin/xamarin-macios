@@ -8,6 +8,7 @@ DEV7s_I := $(COMMON_I)
 DEV64_I := $(COMMON_I)
 
 SIMW_I  := $(COMMON_I)
+SIMW64_I  := $(COMMON_I)
 DEVW_I  := $(COMMON_I)
 DEVW64_32_I := $(COMMON_I)
 
@@ -88,22 +89,69 @@ define NativeCompilationTemplate
 .libs/iphoneos/%$(1).arm64.framework: | .libs/iphoneos
 	$$(call Q_2,LD,    [iphoneos]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks -fapplication-extension  -miphoneos-version-min=8.0
 
+## maccatalyst (ios on macOS / Catalyst)
+
+.libs/maccatalyst/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,OBJC,  [maccatalyst]) $(XCODE_CC) $(MACCATALYST_X86_64_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).x86_64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,CC,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_X86_64_CFLAGS)      $$(EXTRA_DEFINES) $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).x86_64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,ASM,   [maccatalyst]) $(XCODE_CC) $(MACCATALYST_X86_64_CFLAGS)                        $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).x86_64.dylib: | .libs/maccatalyst
+	$$(call Q_2,LD,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_X86_64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib -fapplication-extension
+
+.libs/maccatalyst/%$(1).x86_64.framework: | .libs/maccatalyst
+	$$(call Q_2,LD,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_X86_64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks -fapplication-extension
+
+.libs/maccatalyst/%$(1).arm64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,OBJC,  [maccatalyst]) $(XCODE_CC) $(MACCATALYST_ARM64_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).arm64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,CC,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_ARM64_CFLAGS)      $$(EXTRA_DEFINES) $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).arm64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,ASM,   [maccatalyst]) $(XCODE_CC) $(MACCATALYST_ARM64_CFLAGS)                        $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).arm64.dylib: | .libs/maccatalyst
+	$$(call Q_2,LD,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_ARM64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib -fapplication-extension
+
+.libs/maccatalyst/%$(1).arm64.framework: | .libs/maccatalyst
+	$$(call Q_2,LD,    [maccatalyst]) $(XCODE_CC) $(MACCATALYST_ARM64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks -fapplication-extension
+
 ## watch simulator
 
 .libs/watchsimulator/%$(1).x86.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,OBJC,  [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
+	$$(call Q_2,OBJC,  [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_OBJC_CFLAGS)   $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
 
 .libs/watchsimulator/%$(1).x86.o: %.c $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,CC,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)      $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
+	$$(call Q_2,CC,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
 
 .libs/watchsimulator/%$(1).x86.o: %.s $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
-	$$(call Q_2,ASM,   [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)      $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
+	$$(call Q_2,ASM,   [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_DEFINES) $(SIMW_I) -g $(2) -c $$< -o $$@
 
 .libs/watchsimulator/%$(1).x86.dylib: | .libs/watchsimulator
-	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib -fapplication-extension
+	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib -fapplication-extension
 
 .libs/watchsimulator/%$(1).x86.framework: | .libs/watchsimulator
-	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks -fapplication-extension
+	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH_CFLAGS)        $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks -fapplication-extension
+
+.libs/watchsimulator/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
+	$$(call Q_2,OBJC,  [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(SIMW64_I) -g $(2) -c $$< -o $$@
+
+.libs/watchsimulator/%$(1).x86_64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
+	$$(call Q_2,CC,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_DEFINES) $(SIMW64_I) -g $(2) -c $$< -o $$@
+
+.libs/watchsimulator/%$(1).x86_64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
+	$$(call Q_2,ASM,   [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_DEFINES) $(SIMW64_I) -g $(2) -c $$< -o $$@
+
+.libs/watchsimulator/%$(1).x86_64.dylib: | .libs/watchsimulator
+	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib -fapplication-extension
+
+.libs/watchsimulator/%$(1).x86_64.framework: | .libs/watchsimulator
+	$$(call Q_2,LD,    [watchsimulator]) $(SIMULATOR_CC) $(SIMULATORWATCH64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks -fapplication-extension
 
 ## watch device
 
@@ -164,12 +212,49 @@ define NativeCompilationTemplate
 
 .libs/tvos/%$(1).arm64.framework: | .libs/tvos
 	$$(call Q_2,LD,    [tvos]) $(DEVICE_CC)    $(DEVICETV_CFLAGS)            $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks -fapplication-extension
+
+## macOS
+
+.libs/mac/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,OBJC,  [mac]) $(MAC_CC) $(MAC_OBJC_CFLAGS) $$(EXTRA_DEFINES) -arch x86_64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).x86_64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,CC,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_DEFINES) -arch x86_64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).x86_64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,ASM,   [mac]) $(MAC_CC) $(MAC_CFLAGS)                        -arch x86_64  $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).x86_64.dylib: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch x86_64 -dynamiclib -o $$@ $$^ -L$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib -fapplication-extension
+
+.libs/mac/%$(1).x86_64.framework: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch x86_64 -dynamiclib -o $$@ $$^ -F$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/Frameworks -fapplication-extension
+
+.libs/mac/%$(1).arm64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,OBJC,  [mac]) $(MAC_CC) $(MAC_OBJC_CFLAGS) $$(EXTRA_DEFINES) -arch arm64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).arm64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,CC,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_DEFINES) -arch arm64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).arm64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,ASM,   [mac]) $(MAC_CC) $(MAC_CFLAGS)                        -arch arm64  $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).arm64.dylib: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch arm64 -dynamiclib -o $$@ $$^ -L$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib -fapplication-extension
+
+.libs/mac/%$(1).arm64.framework: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch arm64 -dynamiclib -o $$@ $$^ -F$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/Frameworks -fapplication-extension
+
 endef
 
 $(eval $(call NativeCompilationTemplate,,-O2))
 $(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
+$(eval $(call NativeCompilationTemplate,-dotnet,-O2 -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-debug,-DDEBUG -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-coreclr,-O2 -DCORECLR_RUNTIME -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-coreclr-debug,-DDEBUG -DCORECLR_RUNTIME -DDOTNET))
 
-.libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/iosmac:
+.libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst .libs/mac:
 	$(Q) mkdir -p $@
 
 %.csproj.inc: %.csproj $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/tools/common/create-makefile-fragment.sh

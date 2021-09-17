@@ -15,6 +15,8 @@ using System.Drawing;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace SpriteKit {
 	public partial class SKKeyframeSequence {
 
@@ -26,34 +28,14 @@ namespace SpriteKit {
 
 		[DesignatedInitializer]
 		public SKKeyframeSequence (NSObject [] values, float [] times) :
-			this (values, Convert (times))
+			this (values, NSArray.From (times))
 		{
 		}
 
 		[DesignatedInitializer]
 		public SKKeyframeSequence (NSObject [] values, double [] times) :
-			this (values, Convert (times))
+			this (values, NSArray.From (times))
 		{
-		}
-
-		static NSNumber[] Convert (float [] values)
-		{
-			if (values == null)
-				return null;
-			NSNumber[] array = new NSNumber [values.Length];
-			for (int i = 0 ; i < array.Length; i++)
-				array [i] = NSNumber.FromFloat (values [i]);
-			return array;
-		}
-
-		static NSNumber[] Convert (double [] values)
-		{
-			if (values == null)
-				return null;
-			NSNumber[] array = new NSNumber [values.Length];
-			for (int i = 0 ; i < array.Length; i++)
-				array [i] = NSNumber.FromDouble (values [i]);
-			return array;
 		}
 	}
 }

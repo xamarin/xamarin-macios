@@ -108,6 +108,7 @@
 //
 using System;
 using System.Diagnostics;
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
@@ -115,9 +116,14 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#nullable enable
+
 namespace CoreImage {
 	public partial class CIFilter {
+
+#if !NET
 		[iOS (8,0)]
+#endif
 		protected CIFilter () : base ()
 		{
 		}
@@ -132,7 +138,7 @@ namespace CoreImage {
 			return _FilterNamesInCategories (categories);
 		}
 
-		public NSObject this [NSString key] {
+		public NSObject? this [NSString key] {
 			get {
 				return ValueForKey (key);
 			}
@@ -141,13 +147,13 @@ namespace CoreImage {
 			}
 		}
 
-		internal NSObject ValueForKey (string key)
+		internal NSObject? ValueForKey (string key)
 		{
 			using (var nskey = new NSString (key))
 				return ValueForKey (nskey);
 		}
 
-		internal void SetValue (string key, NSObject value)
+		internal void SetValue (string key, NSObject? value)
 		{
 			using (var nskey = new NSString (key)){
 				SetValueForKey (value, nskey);
@@ -179,10 +185,23 @@ namespace CoreImage {
 				SetValueForKey (new NSNumber (value), nskey);
 		}
 
+		internal void SetNUInt (string key, nuint value)
+		{
+			using (var nskey = new NSString (key))
+				SetValueForKey (new NSNumber (value), nskey);
+		}
+
 		internal void SetBool (string key, bool value)
 		{
 			using (var nskey = new NSString (key))
 				SetValueForKey (new NSNumber (value ? 1 : 0), nskey);
+		}
+
+		internal void SetString (string key, string value)
+		{
+			var ptr = CFString.CreateNative (value);
+			SetHandle (key, ptr);
+			CFString.ReleaseNative (ptr);
 		}
 
 		internal void SetValue (string key, CGPoint value)
@@ -201,7 +220,7 @@ namespace CoreImage {
 			}
 		}
 
-		internal T Get<T> (string key) where T : class
+		internal T? Get<T> (string key) where T : class
 		{
 			using (var nskey = new NSString (key)) {
 				return ValueForKey (nskey) as T;
@@ -223,6 +242,11 @@ namespace CoreImage {
 			return Get<NSNumber> (key)?.NIntValue ?? default (nint);
 		}
 
+		internal nuint GetNUInt (string key)
+		{
+			return Get<NSNumber> (key)?.NUIntValue ?? default (nuint);
+		}
+
 		internal bool GetBool (string key)
 		{
 			return Get<NSNumber> (key)?.BoolValue ?? default (bool);
@@ -230,7 +254,7 @@ namespace CoreImage {
 
 		internal void SetHandle (string key, IntPtr handle)
 		{
-			var nsname = NSString.CreateNative (key);
+			var nsname = CFString.CreateNative (key);
 			
 			if (IsDirectBinding) {
 				Messaging.void_objc_msgSend_IntPtr_IntPtr (
@@ -239,7 +263,7 @@ namespace CoreImage {
 				Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (
 					this.SuperHandle, Selector.GetHandle ("setValue:forKey:"), handle, nsname);
 			}
-			NSString.ReleaseNative (nsname);
+			CFString.ReleaseNative (nsname);
 		}
 
 		internal IntPtr GetHandle (string key)
@@ -269,19 +293,19 @@ namespace CoreImage {
 		}
 
 #if MONOMAC
-		public virtual CIImage OutputImage {
+		public virtual CIImage? OutputImage {
 			get { return ValueForKey (CIFilterOutputKey.Image) as CIImage; }
 		}
 #endif
 
 		// Calls the selName selector for cases where we do not have an instance created
-		static internal string GetFilterName (IntPtr filterHandle)
+		static internal string? GetFilterName (IntPtr filterHandle)
 		{
-			return NSString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend (filterHandle, Selector.GetHandle ("name")));
+			return CFString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend (filterHandle, Selector.GetHandle ("name")));
 		}
 
 		// TODO could be generated too
-		internal static CIFilter FromName (string filterName, IntPtr handle)
+		internal static CIFilter FromName (string? filterName, IntPtr handle)
 		{
 			switch (filterName){
 			case "CIAdditionCompositing":
@@ -448,6 +472,8 @@ namespace CoreImage {
 				return new CIMaximumComponent (handle);
 			case "CIMinimumComponent":
 				return new CIMinimumComponent (handle);
+			case "CIPersonSegmentation":
+				return new CIPersonSegmentation (handle);
 			case "CIPerspectiveTile":
 				return new CIPerspectiveTile (handle);
 			case "CIPerspectiveTransform":
@@ -500,6 +526,16 @@ namespace CoreImage {
 				return new CIConvolution9Horizontal (handle);
 			case "CIConvolution9Vertical":
 				return new CIConvolution9Vertical (handle);
+			case "CIConvolutionRGB3X3":
+				return new CIConvolutionRGB3X3 (handle);
+			case "CIConvolutionRGB5X5":
+				return new CIConvolutionRGB5X5 (handle);
+			case "CIConvolutionRGB7X7":
+				return new CIConvolutionRGB7X7 (handle);
+			case "CIConvolutionRGB9Horizontal":
+				return new CIConvolutionRGB9Horizontal (handle);
+			case "CIConvolutionRGB9Vertical":
+				return new CIConvolutionRGB9Vertical (handle);
 			case "CILinearToSRGBToneCurve":
 				return new CILinearToSRGBToneCurve (handle);
 			case "CIPerspectiveTransformWithExtent":
@@ -546,12 +582,16 @@ namespace CoreImage {
 				return new CILinearBurnBlendMode (handle);
 			case "CILinearDodgeBlendMode":
 				return new CILinearDodgeBlendMode (handle);
+			case "CILinearLightBlendMode":
+				return new CILinearLightBlendMode (handle);
 			case "CIPerspectiveCorrection":
 				return new CIPerspectiveCorrection (handle);
 			case "CIPinLightBlendMode":
 				return new CIPinLightBlendMode (handle);
 			case "CISubtractBlendMode":
 				return new CISubtractBlendMode (handle);
+			case "CIVividLightBlendMode":
+				return new CIVividLightBlendMode (handle);
 			case "CIAccordionFoldTransition":
 				return new CIAccordionFoldTransition (handle);
 			case "CIAreaAverage":
@@ -682,7 +722,7 @@ namespace CoreImage {
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger
 		[Obsolete ("Use 'InputImage' instead. If not available then the filter does not support it.")]
-		public CIImage Image {
+		public CIImage? Image {
 			get {
 				return SupportsInputImage ? ValueForKey (CIFilterInputKey.Image) as CIImage : null;
 			}

@@ -9,8 +9,8 @@ static class C {
 	enum Architecture
 	{
 		None = 0,
-		Sim32 = 1,
-		Sim64 = 2,
+		X86 = 1,
+		X64 = 2,
 		Arm32 = 4,
 		Armv7k = 8,
 		// Arm64 is never stret
@@ -1625,10 +1625,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				w.Append ("TrampolineTest.IsArm32 || ");
 			if ((stret & Architecture.Armv7k) == Architecture.Armv7k)
 				w.Append ("TrampolineTest.IsArmv7k || ");
-			if ((stret & Architecture.Sim32) == Architecture.Sim32)
-				w.Append ("TrampolineTest.IsSim32 || ");
-			if ((stret & Architecture.Sim64) == Architecture.Sim64)
-				w.Append ("TrampolineTest.IsSim64 || ");
+			if ((stret & Architecture.X86) == Architecture.X86)
+				w.Append ("TrampolineTest.IsX86 || ");
+			if ((stret & Architecture.X64) == Architecture.X64)
+				w.Append ("TrampolineTest.IsX64 || ");
 			w.Length -= 4;
 			w.AppendLine (") {");
 		}

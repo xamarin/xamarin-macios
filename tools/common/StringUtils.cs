@@ -84,7 +84,6 @@ namespace Xamarin.Utils {
 			foreach (var c in f) {
 				if (c == '"') {
 					s.Append ('\\');
-					s.Append (c).Append (c);
 				} else if (c == '\\') {
 					s.Append (c);
 				}
@@ -220,39 +219,6 @@ namespace Xamarin.Utils {
 			if (int.TryParse (v, out major))
 				return new Version (major, 0);
 			return Version.Parse (v);
-		}
-
-		public static string SanitizeObjectiveCName (string name)
-		{
-			StringBuilder sb = null;
-
-			for (int i = 0; i < name.Length; i++) {
-				var ch = name [i];
-				switch (ch) {
-				case '.':
-				case '+':
-				case '/':
-				case '`':
-				case '@':
-				case '<':
-				case '>':
-				case '$':
-				case '-':
-					if (sb == null)
-						sb = new StringBuilder (name, 0, i, name.Length);
-					sb.Append ('_');
-					break;
-				default:
-					if (sb != null)
-						sb.Append (ch);
-					break;
-				}
-			}
-
-			if (sb != null)
-				return sb.ToString ();
-
-			return name;
 		}
 	}
 

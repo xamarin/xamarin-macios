@@ -1,4 +1,4 @@
-﻿//
+//
 // AVDepthData.cs
 //
 // Authors:

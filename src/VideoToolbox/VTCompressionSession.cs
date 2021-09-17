@@ -9,6 +9,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -17,7 +18,12 @@ using CoreMedia;
 using CoreVideo;
 
 namespace VideoToolbox {
+
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+#else
 	[iOS (8,0), TV (10,2)]
+#endif
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
 
@@ -198,11 +204,15 @@ namespace VideoToolbox {
 			return null;
 		}
 
-		[Mac (10,9), iOS (8,0)]
+#if !NET
+		[Mac (10,9)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionPrepareToEncodeFrames (IntPtr handle);
 
-		[Mac (10,9), iOS (8,0)]
+#if !NET
+		[Mac (10,9)]
+#endif
 		public VTStatus PrepareToEncodeFrames ()
 		{
 			if (Handle == IntPtr.Zero)
@@ -300,11 +310,15 @@ namespace VideoToolbox {
 			return VTCompressionSessionCompleteFrames (Handle, completeUntilPresentationTimeStamp);
 		}
 
-		[Mac (10,10), iOS (8,0)]
+#if !NET
+		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionBeginPass (IntPtr session, VTCompressionSessionOptionFlags flags, IntPtr reserved);
 
-		[Mac (10,10), iOS (8,0)]
+#if !NET
+		[Mac (10,10)]
+#endif
 		public VTStatus BeginPass (VTCompressionSessionOptionFlags flags)
 		{
 			if (Handle == IntPtr.Zero)
@@ -312,15 +326,21 @@ namespace VideoToolbox {
 			return VTCompressionSessionBeginPass (Handle, flags, IntPtr.Zero);
 		}
 
-		[Mac (10,10), iOS (8,0)]
+#if !NET
+		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, out byte furtherPassesRequestedOut, IntPtr reserved);
 
-		[Mac (10,10), iOS (8,0)]
+#if !NET
+		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, IntPtr ptrByte, IntPtr reserved);
 
-		[Mac (10,10), iOS (8,0)]
+#if !NET
+		[Mac (10,10)]
+#endif
 		public VTStatus EndPass (out bool furtherPassesRequested)
 		{
 			if (Handle == IntPtr.Zero)
@@ -341,14 +361,18 @@ namespace VideoToolbox {
 			return VTCompressionSessionEndPass (Handle, IntPtr.Zero, IntPtr.Zero);
 		}
 
-		[Mac (10,10), iOS (8,0)]
+#if !NET
+		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionGetTimeRangesForNextPass (
 			/* VTCompressionSessionRef */ IntPtr session, 
 			/* CMItemCount* */ out int itemCount, 
 			/* const CMTimeRange** */ out IntPtr target);
 
-		[Mac (10,10), iOS (8,0)]
+#if !NET
+		[Mac (10,10)]
+#endif
 		public VTStatus GetTimeRangesForNextPass (out CMTimeRange [] timeRanges)
 		{
 			if (Handle == IntPtr.Zero)

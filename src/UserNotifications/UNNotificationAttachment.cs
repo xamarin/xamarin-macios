@@ -1,4 +1,4 @@
-﻿//
+//
 // UNNotificationAttachment extensions & syntax sugar
 //
 // Authors:
@@ -21,4 +21,3 @@ namespace UserNotifications {
 	}
 }
 #endif // !TVOS
-

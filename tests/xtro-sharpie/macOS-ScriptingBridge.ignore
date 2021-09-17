@@ -5,6 +5,3 @@
 !missing-null-allowed! 'Foundation.NSObject ScriptingBridge.SBObject::get_Get()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject[] ScriptingBridge.SBElementArray::Get()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class ScriptingBridge.SBApplication::ClassForScripting(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ScriptingBridge.SBApplication ScriptingBridge.SBApplication::FromBundleIdentifier(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ScriptingBridge.SBApplication ScriptingBridge.SBApplication::FromProcessIdentifier(System.Int32)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ScriptingBridge.SBApplication ScriptingBridge.SBApplication::FromURL(Foundation.NSUrl)' is missing an [NullAllowed] on return type

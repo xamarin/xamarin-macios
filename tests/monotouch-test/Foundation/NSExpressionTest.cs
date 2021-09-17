@@ -41,8 +41,8 @@ namespace MonoTouchFixtures.Foundation
 			}
 		}
 
-		[TestCase ("Foo", Result = "Foo")]
-		[TestCase (null, Result = null)]
+		[TestCase ("Foo", ExpectedResult = "Foo")]
+		[TestCase (null, ExpectedResult = null)]
 		public object FromConstant (object input)
 		{
 			NSObject value = null;

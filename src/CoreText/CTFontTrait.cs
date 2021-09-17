@@ -154,4 +154,3 @@ namespace CoreText {
 		internal const uint StylisticClassMask  = ((uint) 15 << ClassMaskShift);
 	}
 }
-

@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 using Foundation;
 using ModelIO;
 using ObjCRuntime;
 using Metal;
+
+#nullable enable
 
 namespace ModelIO {
 	public partial class MDLVertexDescriptor {
@@ -18,13 +20,17 @@ namespace ModelIO {
 			return Runtime.GetNSObject<MDLVertexDescriptor> (MTKModelIOVertexDescriptorFromMetal (descriptor.Handle));
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
+#endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MDLVertexDescriptor __nonnull */ IntPtr MTKModelIOVertexDescriptorFromMetalWithError (/* MTLVertexDescriptor __nonnull */ IntPtr metalDescriptor, out /* NSError */ IntPtr error);
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
+#endif
 		public static MDLVertexDescriptor FromMetal (MTLVertexDescriptor descriptor, out NSError error)
 		{
 			if (descriptor == null)

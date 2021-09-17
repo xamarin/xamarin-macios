@@ -28,6 +28,10 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#if XAMCORE_4_0
+#error Turn this entire file into generated code.
+#endif
+
 namespace Foundation {
 	[Register ("NSAutoreleasePool", true)]
 	public class NSAutoreleasePool : NSObject
@@ -38,16 +42,15 @@ namespace Foundation {
 #if !COREBUILD
 		public override IntPtr ClassHandle { get { return Class.GetHandle ("NSAutoreleasePool"); } }
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		[Export ("init")]
 		public NSAutoreleasePool () : base (NSObjectFlag.Empty)
 		{
-			IsDirectBinding = GetType () == typeof (NSAutoreleasePool);
 			if (IsDirectBinding) {
 				Handle = Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("init"));
 			} else {
 				Handle = Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("init"));
 			}
-
 		}
 
 #if XAMCORE_4_0

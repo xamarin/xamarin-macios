@@ -2,15 +2,18 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 	public partial class MTLRasterizationRateLayerDescriptor
 	{
-/*  Selectors reported as not working by instrospection: https://github.com/xamarin/maccore/issues/1976
-		[NoMac, NoTV, iOS (13,0)]
+/*  Selectors reported as not working by introspection: https://github.com/xamarin/maccore/issues/1976
+		[NoMac]
 		public double[] HorizontalSampleStorage { 
 			get {
 				var width = (int)SampleCount.Width;
@@ -20,7 +23,7 @@ namespace Metal {
 			}
 		}
 
-		[NoMac, NoTV, iOS (13,0)]
+		[NoMac]
 		public double[] VerticalSampleStorage {
 			get {
 				var height = (int)SampleCount.Height;
@@ -30,13 +33,17 @@ namespace Metal {
 			}
 		}
 */
-		[NoMac, NoTV, iOS (13,0)]
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+#endif
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
 			if (horizontal == null)
-				throw new ArgumentNullException (nameof (horizontal));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (horizontal));
 			if (vertical == null)
-				throw new ArgumentNullException (nameof (vertical));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vertical));
 			if (sampleCount.Width != horizontal.Length)
 				throw new ArgumentOutOfRangeException ("Horizontal length should be equal to the sampleCount.Width.");
 			if (sampleCount.Height != vertical.Length)

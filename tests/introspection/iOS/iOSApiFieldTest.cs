@@ -51,6 +51,7 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+			case "Phase":
 			case "DeviceCheck": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
@@ -58,7 +59,10 @@ namespace Introspection {
 			case "IOSurface":
 				// Available in the simulator starting with iOS 11
 				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
-
+			case "iAd":
+				// largely removed in xcode 13, including ADClient.ErrorDomain
+				// since using this code leads to rejections it's totally removed (so no version check)
+				return true;
 			}
 
 			switch (p.Name) {
@@ -97,6 +101,9 @@ namespace Introspection {
 			// Just available on device
 			case "UsageKey":
 				return Runtime.Arch == Arch.SIMULATOR;
+			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
+			case "BarometricPressure":
+				return true;
 			default:
 				return base.Skip (p);
 			}
@@ -134,6 +141,7 @@ namespace Introspection {
 			case "kCVMetalTextureCacheMaximumTextureAgeKey":
 			case "kCVMetalTextureUsage":
 			case "MPSRectNoClip":
+			case "MTLCommandBufferErrorDomain":
 			case "MTKTextureLoaderErrorDomain":
 			case "MTKTextureLoaderErrorKey":
 			case "MTKTextureLoaderOptionAllocateMipmaps":
@@ -143,6 +151,9 @@ namespace Introspection {
 			case "MTKModelErrorDomain":
 			case "MTKModelErrorKey":
 				return Runtime.Arch == Arch.SIMULATOR;
+			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
+			case "HKMetadataKeyBarometricPressure":
+				return true;
 			default:
 				return false;
 			}

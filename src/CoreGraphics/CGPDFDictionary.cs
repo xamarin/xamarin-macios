@@ -61,7 +61,8 @@ namespace CoreGraphics {
 		// CGPDFBoolean -> unsigned char -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetBoolean (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFBoolean* */ out bool value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetBoolean (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFBoolean* */ [MarshalAs (UnmanagedType.I1)] out bool value);
 
 		public bool GetBoolean (string key, out bool result)
 		{
@@ -73,6 +74,7 @@ namespace CoreGraphics {
 		// CGPDFInteger -> long int so 32/64 bits -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDictionaryGetInteger (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFInteger* */ out nint value);
 
 		public bool GetInt (string key, out nint result)
@@ -85,6 +87,7 @@ namespace CoreGraphics {
 		// CGPDFReal -> CGFloat -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDictionaryGetNumber (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFReal* */ out nfloat value);
 
 		public bool GetFloat (string key, out nfloat result)
@@ -95,6 +98,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDictionaryGetName (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* const char ** */ out IntPtr value);
 
 		public bool GetName (string key, out string result)
@@ -108,6 +112,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDictionaryGetDictionary (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFDictionaryRef* */ out IntPtr result);
 
 		public bool GetDictionary (string key, out CGPDFDictionary result)
@@ -121,6 +126,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDictionaryGetStream (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFStreamRef* */ out IntPtr value);
 
 		public bool GetStream (string key, out CGPDFStream result)
@@ -134,6 +140,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDictionaryGetArray (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFArrayRef* */ out IntPtr value);
 
 		public bool GetArray (string key, out CGPDFArray array)
@@ -198,6 +205,7 @@ namespace CoreGraphics {
 		// CGPDFDictionary.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDictionaryGetString (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFStringRef* */ out IntPtr value);
 
 		public bool GetString (string key, out string result)

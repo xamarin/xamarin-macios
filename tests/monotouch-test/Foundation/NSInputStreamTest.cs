@@ -5,6 +5,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSInputStreamTest
 	{
 		[Test]
@@ -27,17 +28,21 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
-#if !MONOMAC //NSData.FromFile ("Info.plist") returns null.  Trying the same in xcode also returns nil
 		[Test]
 		public void Data ()
 		{
-			using (var d = NSData.FromFile ("Info.plist"))
+#if MONOMAC || __MACCATALYST__
+			// Info.Plist isn't there to load from the same location on mac
+			var plistPath = global::System.IO.Path.Combine (NSBundle.MainBundle.BundlePath, "Contents", "Info.plist");
+#else
+			var plistPath = global::System.IO.Path.Combine (NSBundle.MainBundle.BundlePath, "Info.plist");
+#endif
+			using (var d = NSData.FromFile (plistPath))
 			using (var s = new NSInputStream (d)) {
 				// initWithData: does not respond (see dontlink.app) but it works
 				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
-#endif
 
 		[Test]
 		public void Url ()
@@ -87,4 +92,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-

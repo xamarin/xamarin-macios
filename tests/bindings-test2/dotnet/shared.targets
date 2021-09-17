@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <RootNamespace>bindingstest2</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <LangVersion>latest</LangVersion>
+    <IsBindingProject>true</IsBindingProject>
+
+    <BindingsTest2Directory>$(RootTestsDirectory)\bindings-test2</BindingsTest2Directory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiProtocol.cs" />
+    <ObjcBindingCoreSource Include="$(BindingsTest2Directory)\StructsAndEnums.cs" />
+    <ObjcBindingNativeLibrary Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest2.a">
+      <Link>libtest2.a</Link>
+    </ObjcBindingNativeLibrary>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(BindingsTest2Directory)\libtest2.linkwith.cs">
+      <DependentUpon>libtest2.a</DependentUpon>
+    </Compile>
+    <Compile Include="$(BindingsTest2Directory)\BindingTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(TestLibrariesDirectory)\libtest2.m">
+      <Link>libtest2.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest2.h">
+      <Link>libtest2.h</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.m" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.h" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.cs" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\Makefile" />
+    <GeneratedTestOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest2.a" />
+  </ItemGroup>
+
+  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+  </Target>
+</Project>

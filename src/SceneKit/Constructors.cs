@@ -11,6 +11,8 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace SceneKit {
 
 	public partial class SCNText {

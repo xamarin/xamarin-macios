@@ -6,9 +6,13 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -18,21 +22,13 @@ using IntPtr=System.IntPtr;
 
 namespace Network {
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	public enum NWIPLocalAddressPreference {
-		Default = 0,
-		Temporary = 1,
-		Stable = 2,
-	}
-
-	[Watch (6,0), TV (12,0), Mac (10,14), iOS (12,0)]
-	public enum NWIPVersion {
-		Any = 0,
-		Version4 = 1,
-		Version6 = 2,
-	}
-
+#if !NET
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWProtocolIPOptions : NWProtocolOptions {
 		internal NWProtocolIPOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -51,7 +47,6 @@ namespace Network {
 		public void SetCalculateReceiveTime (bool shouldCalculateReceiveTime)
 			=> nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), shouldCalculateReceiveTime);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public void SetIPLocalAddressPreference (NWIPLocalAddressPreference localAddressPreference)
 			=> nw_ip_options_set_local_address_preference (GetCheckedHandle (), localAddressPreference);
 	}

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSArray Generic support
 //
 // Authors:
@@ -18,6 +18,7 @@ using Foundation;
 
 namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSArray1Test {
 		[Test]
 		public void Ctor ()

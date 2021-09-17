@@ -490,11 +490,7 @@
 		</value>
 	</data>
 
-	<data name="MX0091" xml:space="preserve">
-		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
-		</value>
-	</data>
-
+	<!-- MX0091 has been used in the past -->
 	<!-- MT0092 has been used in the past -->
 
 	<data name="MT0093" xml:space="preserve">
@@ -536,46 +532,6 @@
 		</value>
 	</data>
 
-	<data name="MX0129" xml:space="preserve">
-		<value>Debugging symbol file for '{0}' does not match the assembly and is ignored.
-		</value>
-	</data>
-
-	<data name="MX0130" xml:space="preserve">
-		<value>No root assemblies found. You should provide at least one root assembly.
-		</value>
-	</data>
-	
-	<data name="MX0131" xml:space="preserve">
-		<value>Product assembly '{0}' not found in assembly list: '{1}'
-		</value>
-	</data>
-	
-	<data name="MX0132" xml:space="preserve">
-		<value>Unknown optimization: '{0}'. Valid optimizations are: {1}.
-		</value>
-	</data>
-	
-	<data name="MX0133" xml:space="preserve">
-		<value>Found more than 1 assembly matching '{0}' choosing first:{1}{2}
-		</value>
-	</data>
-	
-	<data name="MX0135" xml:space="preserve">
-		<value>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
-		</value>
-	</data>
-	
-	<data name="MX0148" xml:space="preserve">
-		<value>Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
-		</value>
-	</data>
-	
-	<data name="MT0150" xml:space="preserve">
-		<value>Internal error: The interpreter is currently only available for 64 bits.
-		</value>
-	</data>
-	
 	<data name="MT0100" xml:space="preserve">
 		<value>Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</value>
@@ -792,6 +748,36 @@
 		</value>
 	</data>
 
+	<data name="MX0129" xml:space="preserve">
+		<value>Debugging symbol file for '{0}' does not match the assembly and is ignored.
+		</value>
+	</data>
+
+	<data name="MX0130" xml:space="preserve">
+		<value>No root assemblies found. You should provide at least one root assembly.
+		</value>
+	</data>
+	
+	<data name="MX0131" xml:space="preserve">
+		<value>Product assembly '{0}' not found in assembly list: '{1}'
+		</value>
+	</data>
+	
+	<data name="MX0132" xml:space="preserve">
+		<value>Unknown optimization: '{0}'. Valid optimizations are: {1}.
+		</value>
+	</data>
+	
+	<data name="MX0133" xml:space="preserve">
+		<value>Found more than 1 assembly matching '{0}' choosing first:{1}{2}
+		</value>
+	</data>
+	
+	<data name="MX0135" xml:space="preserve">
+		<value>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
+		</value>
+	</data>
+	
 	<data name="MT0136" xml:space="preserve">
 		<value>Cannot find the assembly '{0}' referenced from '{1}'.
 		</value>
@@ -839,6 +825,16 @@
 
 	<data name="MM0147" xml:space="preserve">
 		<value>Unable to parse the cflags '{0} from pkg-config: {1}
+		</value>
+	</data>
+	
+	<data name="MX0148" xml:space="preserve">
+		<value>Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
+		</value>
+	</data>
+
+	<data name="MT0150" xml:space="preserve">
+		<value>Internal error: The interpreter is currently only available for 64 bits.
 		</value>
 	</data>
 
@@ -904,6 +900,39 @@
 
 	<data name="MX0177" xml:space="preserve">
 		<value>Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.</value>
+	</data>
+	
+    <data name="MX0178" xml:space="preserve">
+        <value>Debugging symbol file for '{0}' is not valid and was ignored.
+        </value>
+    </data>
+
+	<data name="MX0179" xml:space="preserve">
+		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options > Linker Behavior) (to try to avoid the new APIs).</value>
+	</data>
+
+	<data name="MX0180" xml:space="preserve">
+		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).</value>
+	</data>
+
+	<data name="MX0181" xml:space="preserve">
+		<value>Not linking with the framework {0} (used by the type {1}) because it's not available on the current platform ({2}).</value>
+	</data>
+
+	<data name="MX0182" xml:space="preserve">
+		<value>Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}).</value>
+	</data>
+    
+    <data name="MX0183" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a macOS version for Mac Catalyst</value>
+    </data>
+    
+    <data name="MX0184" xml:space="preserve">
+        <value>Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst</value>
+    </data>
+
+	<data name="MX0185" xml:space="preserve">
+		<value>The option '{0}' cannot take the value '{1}' when using CoreCLR.</value>
 	</data>
 
 	<data name="MX1009" xml:space="preserve">
@@ -1036,6 +1065,11 @@
 		</value>
 	</data>
 
+	<data name="MT1601" xml:space="preserve">
+		<value>Not a Mach-O static library (unknown header '{0}', expected '!&#60;arch&#62;').
+		</value>
+	</data>
+
 	<data name="MX1602" xml:space="preserve">
 		<value>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
 		</value>
@@ -1048,11 +1082,6 @@
 
 	<data name="MX1604" xml:space="preserve">
 		<value>File of type {0} is not a MachO file ({1}).
-		</value>
-	</data>
-
-	<data name="MT1601" xml:space="preserve">
-		<value>Not a Mach-O static library (unknown header '{0}', expected '!&#60;arch&#62;').
 		</value>
 	</data>
 
@@ -1075,15 +1104,20 @@
 		<value>Option '--optimize={0}{1}' will be ignored since the static registrar is not enabled
 		</value>
 	</data>
-	
-	<data name="MT2003_A" xml:space="preserve">
-		<value>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</value>
-	</data>
+
+	<!-- MT2003_A is not in use anymore -->
 
 	<data name="MT2003_B" xml:space="preserve">
 		<value>Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</value>
+	</data>
+
+	<data name="MT2003_C" xml:space="preserve">
+		<value>Option '--optimize={0}' will be ignored since it's only applicable to {1}.</value>
+		<comment>This is a warning that is shown when the command-line option --optimize=... is not valid for a particular platform
+{0} - The optimization option that is not valid for the current platform
+{1} - The platforms in question, such as 'iOS'.
+		</comment>
 	</data>
 
 	<data name="MX2004" xml:space="preserve">
@@ -1163,7 +1197,24 @@
 		</value>
 	</data>
 
-	<!-- 2020 -> 2099 is used by the linker -->
+	<!-- 2020 -> 2099 is used by ExceptionalSubStep subclasses in the linker -->
+
+	<data name="MX_ExceptionalSubSteps" xml:space="preserve">
+		<value>The linker step '{0}' failed processing `{1}`.</value>
+		<comment>This is a message when processing an assembly/type/field/method/property/event fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly/type/field/method/property/event that failed processing.
+		</comment>
+	</data>
+
+	<!-- 202x: OptimizeGeneratedCodeSubStep -->
+	<!-- 203x: RemoveUserResourcesSubStep -->
+	<!-- 204x: CoreHttpMessageHandler -->
+	<!-- 205x: RemoveCode -->
+	<!-- 206x: SealerSubStep -->
+	<!-- 207x: MetadataReducerSubStep -->
+	<!-- 208x: MarkNSObjects -->
+	<!-- 209x: InlinerSubStep -->
 
 	<data name="MT2101" xml:space="preserve">
 		<value>Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.
@@ -1259,6 +1310,40 @@
 		<value>Can not find the corlib assembly '{0}' in the list of loaded assemblies.
 		</value>
 	</data>
+
+	<!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
+	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
+	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
+	<!-- 222x: RemoveRejectedTypesStep -->
+	<!-- 223x: CollectUnmarkedMembersSubStep -->
+	<!-- 224x: PreserveBlockCodeSubStep -->
+	
+	<!-- 2300 -> 2399 is used by/reserved for ConfigurationAwareStep subclasses in the linker -->
+
+	<data name="MX_ConfigurationAwareStep" xml:space="preserve">
+		<value>The linker step '{0}' failed during processing: {1}</value>
+		<comment>This is a message when processing fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - A string describing what failed.
+		</comment>
+	</data>
+
+	<data name="MX_ConfigurationAwareStepWithAssembly" xml:space="preserve">
+		<value>The linker step '{0}' failed while processing {1}: {2}</value>
+		<comment>This is a message when processing an assembly fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly that failed processing.
+			{1} - A string describing what failed
+		</comment>
+	</data>
+
+	<!-- 230x: SetupStep -->
+	<!-- 231x: GatherFrameworksStep -->
+	<!-- 232x: GenerateMainStep -->
+	<!-- 233x: CollectAssembliesStep -->
+	<!-- 234x: ExtractBindingLibrariesStep -->
+	<!-- 235x: LoadNonSkippedAssembliesStep -->
+	<!-- 236x: RegistrarStep -->
 
 	<data name="MX3001" xml:space="preserve">
 		<value>Could not {0} the assembly '{1}'
@@ -1616,6 +1701,11 @@
 	
 	<!-- MT4162: split up into multiple messages -->
 	
+	<data name="MT4162_A" xml:space="preserve">
+		<value>The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
+		</value>
+	</data>
+
 	<data name="MT4162_BaseType" xml:space="preserve">
 		<value>The type '{0}' (used as a base type of {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
 		</value>
@@ -1642,19 +1732,6 @@
 		</comment>
 	</data>
 	
-	<data name="MT4162_ReturnType" xml:space="preserve">
-		<value>The type '{0}' (used as a return type in {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
-		</value>
-		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
-{0} - The full C# type name.
-{1} - The name of the method.
-{2} - The platform name, such as 'iOS'.
-{3} - The current platform version number.
-{4} - The platform version where the type was introduced.
-{5} - An additional message about the platform version introducing the type.
-		</comment>
-	</data>
-	
 	<data name="MT4162_PropertyType" xml:space="preserve">
 		<value>The type '{0}' (used as the property type of {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
 		</value>
@@ -1668,9 +1745,17 @@
 		</comment>
 	</data>
 	
-	<data name="MT4162_A" xml:space="preserve">
-		<value>The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
+	<data name="MT4162_ReturnType" xml:space="preserve">
+		<value>The type '{0}' (used as a return type in {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
 		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
 	</data>
 	
 	<data name="MT4163" xml:space="preserve">
@@ -1932,11 +2017,20 @@
 		<value>Linking against framework '{0}'. It is prohibited (rejected) by the Mac App Store
 		</value>
 	</data>
+
 	
-    <data name="MX5222" xml:space="preserve">
-        <value>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-        </value>
-    </data>
+	<data name="MX5222" xml:space="preserve">
+		<value>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+ 		</value>
+	</data>
+
+	<data name="MX5223" xml:space="preserve">
+		<value>Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.</value>
+		<comment>This is a warning explaining why a native framework won't be referenced from the app when building for the simulator. The following are literal names and should not be translated: SDK
+			{0}: The name of the native framework
+			{1}: The current platform (will be either iOS, tvOS, watchOS or macOS).
+		</comment>
+	</data>
 
 	<data name="MT5301" xml:space="preserve">
 		<value>Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component
@@ -2016,4 +2110,39 @@
 		<value>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
 	</data>
+
+	<!-- 8000 -> 8036 are missing here (except 8018), so skip to 8037 -->
+	<data name="MX8037" xml:space="preserve">
+		<value>Don't know how to marshal the parameter of type {0} for parameter {1} in call to {2}</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+
+	<data name="MX8038" xml:space="preserve">
+		<value>Don't know how to marshal back the parameter of type {0} for parameter {1} in call to {2}</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+
+	<data name="MX8039" xml:space="preserve">
+		<value>Unable to marshal from {0} to an Objective-C object. The managed class must either inherit from NSObject or implement INativeObject.</value>
+		<comment>
+{0} - The name of a type.
+		</comment>
+	</data>
+
+	<data name="MX8040" xml:space="preserve">
+		<value>Invalid type encoding for parameter.</value>
+	</data>
+
+	<data name="MX8041" xml:space="preserve">
+		<value>Unable to create an instance of the type {0}.</value>
+	</data>
+
 </root>

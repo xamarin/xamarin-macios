@@ -356,6 +356,16 @@ namespace Contacts {
 
 		[Field ("CNContactPropertyAttribute")]
 		NSString ContactPropertyAttribute { get; }
+
+		[Static]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Export ("descriptorForRequiredKeysForDelimiter")]
+		ICNKeyDescriptor RequiredKeysForDelimiter { get; }
+
+		[Static]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Export ("descriptorForRequiredKeysForNameOrder")]
+		ICNKeyDescriptor RequiredKeysForNameOrder { get; }
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -1248,6 +1258,16 @@ namespace Contacts {
 		[Field ("CNLabelContactRelationSonInLawOrBrotherInLaw")]
 		NSString SonInLawOrBrotherInLaw { get; }
 
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[MacCatalyst (14,0)]
+		[Field ("CNLabelContactRelationGranddaughterOrNiece")]
+		NSString GranddaughterOrNiece { get; }
+
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[MacCatalyst (14,0)]
+		[Field ("CNLabelContactRelationGrandsonOrNephew")]
+		NSString GrandsonOrNephew { get; }
+
 	}
 
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
@@ -2059,6 +2079,11 @@ namespace Contacts {
 		[Field ("CNLabelPhoneNumberiPhone")]
 		NSString iPhone { get; }
 
+		[Watch (7,2), Mac (11,1), iOS (14,3)]
+		[MacCatalyst (14,3)]
+		[Field ("CNLabelPhoneNumberAppleWatch")]
+		NSString AppleWatch { get; }
+
 		[Field ("CNLabelPhoneNumberMobile")]
 		NSString Mobile { get; }
 
@@ -2245,6 +2270,10 @@ namespace Contacts {
 
 		[Export ("removeMember:fromGroup:")]
 		void RemoveMember (CNContact contact, CNGroup group);
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("transactionAuthor")]
+		string TransactionAuthor { get; set; }
 	}
 #endif // !WATCH
 

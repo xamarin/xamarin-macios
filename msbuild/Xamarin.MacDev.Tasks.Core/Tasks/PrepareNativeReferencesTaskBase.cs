@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -102,7 +103,7 @@ namespace Xamarin.MacDev.Tasks
 
 				value = NativeReferences[i].GetMetadata ("Kind") ?? string.Empty;
 				if (!Enum.TryParse (value, out kind)) {
-					Log.LogError (null, null, null, NativeReferences[i].ItemSpec, 0, 0, 0, 0, "Unknown native reference type: {0}", value);
+					Log.LogError (null, null, null, NativeReferences[i].ItemSpec, 0, 0, 0, 0, MSBStrings.W0051, value);
 					continue;
 				}
 
@@ -115,6 +116,8 @@ namespace Xamarin.MacDev.Tasks
 					nativeFrameworks.Add (item);
 				} else {
 					item.SetMetadata ("LogicalName", logicalName);
+					item.SetMetadata ("WithCulture", "false");
+					item.SetMetadata ("Type", "Non-Resx");
 					embeddedResources.Add (item);
 				}
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSIndexPath
 //
 // Authors:
@@ -14,6 +14,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class IndexPathTest {
 		[Test]
 		public void FromIndex ()

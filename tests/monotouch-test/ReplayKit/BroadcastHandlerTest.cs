@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace monotouchtest.ReplayKit
 {
 	public class BroadcastHandlerTest

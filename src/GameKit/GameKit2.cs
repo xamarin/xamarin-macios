@@ -13,6 +13,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#nullable enable
+
 namespace GameKit {
 #if !MONOMAC && !TVOS && !WATCH
 	public class GKDataReceivedEventArgs : EventArgs {
@@ -31,7 +33,7 @@ namespace GameKit {
 	public partial class GKSession {
 		[Register ("MonoTouch_GKSession_ReceivedObject")]
 		internal class ReceiverObject : NSObject {
-			internal EventHandler<GKDataReceivedEventArgs> receiver;
+			internal EventHandler<GKDataReceivedEventArgs>? receiver;
 
 			public ReceiverObject ()
 			{
@@ -50,8 +52,8 @@ namespace GameKit {
 
 		//
 		// This delegate is used by the 
-		ReceiverObject receiver;
-		public event EventHandler<GKDataReceivedEventArgs> ReceiveData {
+		ReceiverObject? receiver;
+		public event EventHandler<GKDataReceivedEventArgs>? ReceiveData {
 			add {
 				if (receiver == null){
 					receiver = new ReceiverObject ();
@@ -79,12 +81,12 @@ namespace GameKit {
 		//
 		Mono_GKSessionDelegate EnsureDelegate ()
 		{
-                      NSObject del = WeakDelegate;
-                        if (del == null || (!(del is Mono_GKSessionDelegate))){
-                                del = new Mono_GKSessionDelegate ();
-                                WeakDelegate = del;
-                        }
-                        return (Mono_GKSessionDelegate) del;
+			var del = WeakDelegate;
+			if (del == null || (!(del is Mono_GKSessionDelegate))){
+					del = new Mono_GKSessionDelegate ();
+					WeakDelegate = del;
+			}
+			return (Mono_GKSessionDelegate) del;
 		}
 
 		public event EventHandler<GKPeerChangedStateEventArgs> PeerChanged {
@@ -128,8 +130,8 @@ namespace GameKit {
 	}
 
 	class Mono_GKSessionDelegate : GKSessionDelegate {
-		internal EventHandler<GKPeerChangedStateEventArgs> cbPeerChanged;
-		internal EventHandler<GKPeerConnectionEventArgs> cbConnectionRequest, cbConnectionFailed, cbFailedWithError;
+		internal EventHandler<GKPeerChangedStateEventArgs>? cbPeerChanged;
+		internal EventHandler<GKPeerConnectionEventArgs>? cbConnectionRequest, cbConnectionFailed, cbFailedWithError;
 
 		public Mono_GKSessionDelegate ()
 		{
@@ -181,15 +183,15 @@ namespace GameKit {
 	}
 
 	public class GKPeerConnectionEventArgs : EventArgs {
-		public GKPeerConnectionEventArgs (GKSession session, string peerID, NSError error)
+		public GKPeerConnectionEventArgs (GKSession session, string? peerID, NSError? error)
 		{
 			Session = session;
 			PeerID = peerID;
 			Error = error;
 		}
 		public GKSession Session { get; private set; }
-		public string PeerID { get; private set; }
-		public NSError Error { get; private set; }
+		public string? PeerID { get; private set; }
+		public NSError? Error { get; private set; }
 	}
 #endif
 
@@ -199,7 +201,10 @@ namespace GameKit {
 		[Obsolete ("Use 'SetMute (bool, string)' method.")]
 		public virtual void SetMute (bool isMuted, GKPlayer player)
 		{
-			SetMute (isMuted, player == null ? null : player.PlayerID);
+			if (player == null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (player));
+
+			SetMute (isMuted, player.PlayerID);
 		}
 #endif
 	}

@@ -226,7 +226,7 @@ namespace ObjCRuntime {
 				return Runtime.Registrar.Lookup (klass, throw_on_error);
 
 			if (throw_on_error)
-				throw ErrorHelper.CreateError (8026, $"Can't lookup the Objective-C class 0x{klass.ToString ("x")} ({class_getName (klass)}) when the dynamic registrar has been linked away.");
+				throw ErrorHelper.CreateError (8026, $"Can't lookup the Objective-C class 0x{klass.ToString ("x")} ({Marshal.PtrToStringAuto (class_getName (klass))}) when the dynamic registrar has been linked away.");
 
 			return null;
 		}
@@ -264,7 +264,7 @@ namespace ObjCRuntime {
 				var rv = class_map.handle;
 				is_custom_type = (class_map.flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 #if LOG_TYPELOAD
-				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {class_getName (rv)}.");
+				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {Marshal.PtrToStringAuto (class_getName (rv))}.");
 #endif
 				return rv;
 			}
@@ -591,15 +591,19 @@ namespace ObjCRuntime {
 		internal static extern void objc_registerClassPair (IntPtr cls);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProtocol (IntPtr cls, IntPtr protocol);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
@@ -617,7 +621,11 @@ namespace ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
 
+		[DllImport ("/usr/lib/libobjc.dylib")]
+		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
+
 		[DllImport ("/usr/lib/libobjc.dylib", CharSet=CharSet.Ansi)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
 
 		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Ansi)]

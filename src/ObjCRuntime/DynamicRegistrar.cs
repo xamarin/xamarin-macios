@@ -144,6 +144,12 @@ namespace Registrar {
 			}
 		}
 
+		protected override bool IsARM64 {
+			get {
+				return Runtime.IsARM64CallingConvention;
+			}
+		}
+
 		public void RegisterMethod (Type type, MethodInfo minfo, ExportAttribute ea)
 		{
 			if (!IsNSObject (type))
@@ -934,7 +940,9 @@ namespace Registrar {
 					UnlockRegistrar ();
 			}
 
-			throw ErrorHelper.CreateError (4143, "The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", Marshal.PtrToStringAuto (Class.class_getName (original_class)));
+			if (throw_on_error)
+				throw ErrorHelper.CreateError (4143, "The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", Marshal.PtrToStringAuto (Class.class_getName (original_class)));
+			return null;
 		}
 
 		bool RegisterMethod (ObjCMethod method)
@@ -1003,6 +1011,12 @@ namespace Registrar {
 				break;
 			case Trampoline.SetGCHandle:
 				tramp = Method.SetGCHandleTrampoline;
+				break;
+			case Trampoline.GetFlags:
+				tramp = Method.GetFlagsTrampoline;
+				break;
+			case Trampoline.SetFlags:
+				tramp = Method.SetFlagsTrampoline;
 				break;
 			default:
 				throw ErrorHelper.CreateError (4144, "Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", method.DeclaringType.Type.FullName, method.Name);
@@ -1131,4 +1145,3 @@ namespace Registrar {
 		}
 	}
 }
-

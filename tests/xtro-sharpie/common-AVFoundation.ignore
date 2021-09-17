@@ -72,5 +72,13 @@
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AVFoundation.AVPlayerMediaSelectionCriteria::.ctor(AVFoundation.AVMediaCharacteristics[],AVFoundation.AVMediaCharacteristics[],System.String[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AVFoundation.AVPlayerMediaSelectionCriteria::.ctor(AVFoundation.AVMediaCharacteristics[],AVFoundation.AVMediaCharacteristics[],System.String[])' is missing an [NullAllowed] on parameter #1
+
+# intro says that this is not true
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
+
+# no tests/samples
+!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+
+# adding abstract member to an existing type would be a breaking change
+!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract

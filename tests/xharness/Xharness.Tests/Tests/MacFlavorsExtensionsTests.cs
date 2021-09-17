@@ -1,4 +1,4 @@
-﻿using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using NUnit.Framework;
 
 namespace Xharness.Tests.Tests {

@@ -9,11 +9,15 @@ using Registrar;
 using Mono.Tuner;
 using Xamarin.Bundler;
 
+#if NET
+using LinkContext = Xamarin.Bundler.DotNetLinkContext;
+#endif
+
 namespace Xamarin.Tuner
 {
 	public class DerivedLinkContext : LinkContext
 	{
-		internal StaticRegistrar StaticRegistrar;
+		internal StaticRegistrar StaticRegistrar => Target.StaticRegistrar;
 		internal Target Target;
 		Symbols required_symbols;
 
@@ -93,11 +97,13 @@ namespace Xamarin.Tuner
 			get; set;
 		}
 
+#if !NET
 		public DerivedLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{
 			UserAction = AssemblyAction.Link;
 		}
+#endif
 
 		public Dictionary<IMetadataTokenProvider, object> GetAllCustomAttributes (string storage_name)
 		{

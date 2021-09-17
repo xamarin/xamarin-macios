@@ -9,15 +9,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
+
+#nullable enable
 
 namespace SceneKit {
 
 	public partial class SCNSkinner {
 
-		static SCNMatrix4 [] FromNSArray (NSArray nsa)
+		static SCNMatrix4 []? FromNSArray (NSArray? nsa)
 		{
 			if (nsa == null)
 				return null;
@@ -30,7 +33,7 @@ namespace SceneKit {
 			return ret;
 		}
 
-		static NSArray ToNSArray (SCNMatrix4 [] items)
+		static NSArray ToNSArray (SCNMatrix4 []? items)
 		{
 			if (items == null)
 				return new NSArray ();
@@ -50,14 +53,16 @@ namespace SceneKit {
 			return nsa;
 		}
 
+#if !NET
 		[Mac (10, 10)]
-		[iOS (8, 0)]
-		public SCNMatrix4 [] BoneInverseBindTransforms {
+#endif
+		public SCNMatrix4 []? BoneInverseBindTransforms {
 			get { return FromNSArray (_BoneInverseBindTransforms); }
 		}
 
+#if !NET
 		[Mac (10, 10)]
-		[iOS (8, 0)]
+#endif
 		public static SCNSkinner Create (SCNGeometry baseGeometry,
 			SCNNode [] bones, SCNMatrix4 [] boneInverseBindTransforms,
 			SCNGeometrySource boneWeights, SCNGeometrySource boneIndices)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,6 +30,7 @@ namespace Extrospection {
 				new RequiresSuperCheck (),
 				new DeprecatedCheck (),
 				new NullabilityCheck (),
+				new UIAppearanceCheck (),
 //				new ListNative (), // for debug
 			};
 			foreach (var assemblyName in assemblyNames) {
@@ -42,6 +43,8 @@ namespace Extrospection {
 					Helpers.Platform = Platforms.watchOS;
 				else if (name.EndsWith (".TVOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.tvOS;
+				else if (name.EndsWith (".MacCatalyst", StringComparison.Ordinal))
+					Helpers.Platform = Platforms.MacCatalyst;
 				managed_reader.Load (assemblyName);
 			}
 			managed_reader.Process ();

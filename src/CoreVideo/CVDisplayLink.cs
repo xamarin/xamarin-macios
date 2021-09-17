@@ -26,11 +26,15 @@
 #if MONOMAC
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 using OpenGL;
+
+#nullable enable
 
 namespace CoreVideo {
 	public class CVDisplayLink : INativeObject, IDisposable {
@@ -54,6 +58,127 @@ namespace CoreVideo {
 
 			this.handle = handle;
 		}
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public static CVDisplayLink? CreateFromDisplayId (uint displayId, out CVReturn error)
+		{
+			error = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
+			if (error != 0)
+				return null;
+
+			return new CVDisplayLink (handle, true);
+		}
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public static CVDisplayLink? CreateFromDisplayId (uint displayId)
+			=> CreateFromDisplayId (displayId, out var _);
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint[] displayArray, nint count, out IntPtr displayLink);
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
+		{
+			if (displayIds == null)
+				throw new ArgumentNullException (nameof (displayIds));
+			error = 0;
+			IntPtr handle = IntPtr.Zero;
+			error = CVDisplayLinkCreateWithCGDisplays (displayIds, displayIds.Length, out handle);
+
+			if (error != 0)
+				return null;
+
+			return new CVDisplayLink (handle, true);
+		}
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds)
+			=> CreateFromDisplayIds (displayIds, out var _);
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask, out CVReturn error)
+		{
+			error = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
+			if (error != 0)
+				return null;
+			return new CVDisplayLink (handle, true);
+		}
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask)
+			=> CreateFromOpenGLMask (mask, out var _);
 
 		~CVDisplayLink ()
 		{
@@ -162,6 +287,7 @@ namespace CoreVideo {
 		}
 			
 		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CVDisplayLinkIsRunning (IntPtr displayLink);
 		public bool IsRunning {
 			get {
@@ -189,7 +315,7 @@ namespace CoreVideo {
 		static CVReturn OutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext)
 		{
 			GCHandle callbackHandle = GCHandle.FromIntPtr (displayLinkContext);
-			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target;
+			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target!;
 			CVDisplayLink delegateDisplayLink = new CVDisplayLink(displayLink, false);
 			return func (delegateDisplayLink, ref inNow, ref inOutputTime, flagsIn, ref flagsOut);
 		}
@@ -203,8 +329,56 @@ namespace CoreVideo {
 				
 			return ret;
 		}
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern nuint CVDisplayLinkGetTypeID ();
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public static nuint GetTypeId ()
+			=> CVDisplayLinkGetTypeID ();
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
+
+#if !NET
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#else
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+		public bool TryTranslateTime (CVTimeStamp inTime, ref CVTimeStamp outTime)
+		{
+			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref outTime) == 0) {
+				return true;
+			}
+			return false;
+		}
 	}
 }
 
 #endif // MONOMAC
-

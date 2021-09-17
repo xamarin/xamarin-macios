@@ -1,4 +1,4 @@
-﻿//
+//
 // CXProvider extensions and syntax sugar
 //
 // Authors:

@@ -31,6 +31,8 @@
 !missing-field! kIOSurfacePlaneWidth not bound
 !missing-field! kIOSurfaceSubsampling not bound
 !missing-field! kIOSurfaceWidth not bound
+!missing-field! kIOSurfaceColorSpace not bound
+!missing-field! kIOSurfaceICCProfile not bound
 !missing-pinvoke! IOSurfaceAlignProperty is not bound
 !missing-pinvoke! IOSurfaceAllowsPixelSizeCasting is not bound
 !missing-pinvoke! IOSurfaceCopyAllValues is not bound

@@ -16,6 +16,8 @@ using ObjCRuntime;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
 
+#nullable enable
+
 namespace SceneKit {
 
 	[Watch (3,0)]
@@ -281,7 +283,7 @@ namespace SceneKit {
 		None,
 		Multisampling2X,
 		Multisampling4X,
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		Multisampling8X,
 		Multisampling16X,
 #endif
@@ -361,7 +363,7 @@ namespace SceneKit {
 	{
 		Metal,
 #if !MONOMAC
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)]
 		OpenGLES2,
 #else
 		OpenGLLegacy,
@@ -479,5 +481,14 @@ namespace SceneKit {
 	{
 		Rectangle = 1,
 		Polygon = 4,
+	}
+
+	[Mac (10, 10)]
+	[iOS (8, 0)]
+	public enum SCNPhysicsShapeType
+	{
+		ConvexHull,
+		BoundingBox,
+		ConcavePolyhedron,
 	}
 }

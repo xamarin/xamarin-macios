@@ -1,4 +1,4 @@
-﻿//
+//
 // SecureTransport Unit Tests
 //
 // Authors:
@@ -137,6 +137,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("Fails on ARM64 due to: https://github.com/xamarin/xamarin-macios/issues/11498)")]
+#endif
 		public void SslSupportedCiphers ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
@@ -217,7 +220,7 @@ namespace MonoTouchFixtures.Security {
 
 				string s = Encoding.UTF8.GetString (data, 0, (int) processed);
 				// The result apparently depends on where you are: I get a 302, the bots get a 200.
-				Assert.That (s, Is.StringStarting ("HTTP/1.0 302 Found").Or.StringStarting ("HTTP/1.0 200 OK"), "response");
+				Assert.That (s, Does.StartWith ("HTTP/1.0 302 Found").Or.StartWith ("HTTP/1.0 200 OK"), "response");
 			}
 		}
 #endif // !__WATCHOS__

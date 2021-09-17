@@ -85,9 +85,9 @@ namespace ObjCRuntime {
 				runtime_library = new IntPtr (-2 /* RTLD_DEFAULT */);
 				rv = Dlfcn.dlsym (runtime_library, name);
 				if (rv == IntPtr.Zero) {
-					runtime_library = Dlfcn.dlopen ("libxammac.dylib", 0);
+					runtime_library = Dlfcn.dlopen ("libxammac.dylib", 0, false);
 					if (runtime_library == IntPtr.Zero)
-						runtime_library = Dlfcn.dlopen (Path.Combine (Path.GetDirectoryName (typeof (NSApplication).Assembly.Location), "libxammac.dylib"), 0);
+						runtime_library = Dlfcn.dlopen (Path.Combine (Path.GetDirectoryName (typeof (NSApplication).Assembly.Location), "libxammac.dylib"), 0, false);
 					if (runtime_library == IntPtr.Zero)
 						throw new DllNotFoundException ("Could not find the runtime library libxammac.dylib");
 					rv = Dlfcn.dlsym (runtime_library, name);

@@ -5,7 +5,6 @@ using System;
 
 namespace PushKit 
 {
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[iOS (8,0)]
@@ -19,7 +18,6 @@ namespace PushKit
 		NSData Token { get; }
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[iOS (8,0)]
@@ -33,7 +31,6 @@ namespace PushKit
 		NSDictionary DictionaryPayload { get; }
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[iOS (8,0)]
@@ -62,8 +59,8 @@ namespace PushKit
 	[iOS (8,0)]
 	[Static]
 	interface PKPushType {
-		
-		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NoWatch]
 		[NoMac]
 		[Field ("PKPushTypeVoIP")]
@@ -71,13 +68,12 @@ namespace PushKit
 
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use directly from watchOS instead.")]
-		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Watch (6,0)]
 		[NoMac]
+		[NoMacCatalyst]
 		[Field ("PKPushTypeComplication")]
 		NSString Complication { get; }
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[iOS (11,0)]
 		[NoWatch]
 		[Mac (10,15)]
@@ -86,7 +82,6 @@ namespace PushKit
 	}
 
 	[iOS (8,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[Model]
@@ -101,6 +96,7 @@ namespace PushKit
 		[NoMac]
 		[Abstract] // now optional in iOS 11
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use the 'DidReceiveIncomingPushWithPayload' overload accepting an 'Action' argument instead.")]
+		[NoMacCatalyst]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:"), EventArgs ("PKPushRegistryRecieved"), EventName ("IncomingPushReceived")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type);
 

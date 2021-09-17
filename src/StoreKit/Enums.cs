@@ -1,3 +1,4 @@
+using Foundation;
 using ObjCRuntime;
 using System;
 
@@ -43,6 +44,15 @@ namespace StoreKit {
 		InvalidSignature,
 		MissingOfferParams,
 		InvalidOfferPrice,
+		OverlayCancelled = 15,
+
+		// iOS 14
+		OverlayInvalidConfiguration = 16,
+		OverlayTimeout = 17,
+		IneligibleForOffer = 18,
+		UnsupportedPlatform = 19,
+		// iOS 14.5
+		OverlayPresentedInBackgroundScene = 20,
 	}
 
 	// typedef NSInteger SKDownloadState;
@@ -54,7 +64,7 @@ namespace StoreKit {
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
-	[NoWatch]
+	[Watch (7,0)]
 	[iOS (9,3)]
 	[Native]
 	public enum SKCloudServiceAuthorizationStatus : long {
@@ -64,7 +74,7 @@ namespace StoreKit {
 		Authorized
 	}
 
-	[NoWatch]
+	[Watch (7,0)]
 	[iOS (9,3)]
 	[Native]
 	public enum SKCloudServiceCapability : ulong {
@@ -74,8 +84,11 @@ namespace StoreKit {
 		MusicCatalogSubscriptionEligible = 1 << 1,
 		AddToCloudMusicLibrary = 1 << 8
 	}
+#endif
 
-	[iOS (11,0)][TV (11,0)][NoMac][NoWatch]
+#if !XAMCORE_4_0
+
+	[iOS (11,0)][TV (11,0)][Mac (11,0)][NoWatch]
 	[Native]
 	public enum SKProductStorePromotionVisibility : long {
 		Default,
@@ -98,5 +111,13 @@ namespace StoreKit {
 		PayAsYouGo,
 		PayUpFront,
 		FreeTrial,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[Native]
+	public enum SKOverlayPosition : long {
+		SKOverlayPositionBottom = 0,
+		Raised = 1,
 	}
 }

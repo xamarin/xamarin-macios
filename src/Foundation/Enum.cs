@@ -27,14 +27,45 @@ using System;
 using ObjCRuntime;
 
 namespace Foundation  {
-#if COREBUILD
-	[Protocol]
-	public interface INSCopying {}
-	[Protocol]
-	public interface INSCoding {}
-	[Protocol]
-	public interface INSSecureCoding {}
-#endif
+
+	[Native]
+	public enum NSStringEncoding : ulong {
+		ASCIIStringEncoding = 1,
+		NEXTSTEP = 2,
+		JapaneseEUC = 3,
+		UTF8 = 4,
+		ISOLatin1 = 5,
+		Symbol = 6,
+		NonLossyASCII = 7,
+		ShiftJIS = 8,
+		ISOLatin2 = 9,
+		Unicode = 10,
+		WindowsCP1251 = 11,
+		WindowsCP1252 = 12,
+		WindowsCP1253 = 13,
+		WindowsCP1254 = 14,
+		WindowsCP1250 = 15,
+		ISO2022JP = 21,
+		MacOSRoman = 30,
+		UTF16BigEndian = 0x90000100,
+		UTF16LittleEndian = 0x94000100,
+		UTF32 = 0x8c000100,
+		UTF32BigEndian = 0x98000100,
+		UTF32LittleEndian = 0x9c000100,
+	};
+
+	[Native]
+	public enum NSStringCompareOptions : ulong {
+		CaseInsensitiveSearch = 1,
+		LiteralSearch = 2,
+		BackwardsSearch = 4,
+		AnchoredSearch = 8,
+		NumericSearch = 64,
+		DiacriticInsensitiveSearch = 128,
+		WidthInsensitiveSearch = 256,
+		ForcedOrderingSearch = 512,
+		RegularExpressionSearch = 1024,
+	}
 
 	[Native]
 	public enum NSUrlCredentialPersistence : ulong {
@@ -55,7 +86,9 @@ namespace Foundation  {
 		I386   = 0x00000007,
 		PPC    = 0x00000012,
 		X86_64 = 0x01000007,
-		PPC64  = 0x01000012
+		PPC64  = 0x01000012,
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		ARM64  = 0x0100000c,
 	}
 #endif
 
@@ -144,7 +177,8 @@ namespace Foundation  {
 		BadArgumentError = -72004,
 		CancelledError = -72005,
 		InvalidError = -72006,
-		TimeoutError = -72007
+		TimeoutError = -72007,
+		MissingRequiredConfigurationError = -72008,
 	}
 
 	[Flags]
@@ -165,7 +199,10 @@ namespace Foundation  {
 
 	[Native]
 	public enum NSDateFormatterBehavior : ulong {
-		Default = 0, Mode_10_4 = 1040
+		Default = 0,
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+		Mode_10_0 = 1000,
+		Mode_10_4 = 1040,
 	}
 
 	[Native]
@@ -205,7 +242,10 @@ namespace Foundation  {
 	public enum NSDataReadingOptions : ulong {
 		Mapped =   1 << 0,
 		Uncached = 1 << 1,
+#if !XAMCORE_4_0
+		[Obsolete ("This option is unavailable.")]
 		Coordinated = 1 << 2,
+#endif
 		MappedAlways = 1 << 3
 	}
 
@@ -215,11 +255,15 @@ namespace Foundation  {
 		Atomic = 1,
 
 		WithoutOverwriting  = 2,
-			
+		[Mac (11,0)]
 		FileProtectionNone = 0x10000000,
+		[Mac (11,0)]
 		FileProtectionComplete = 0x20000000,
+		[Mac (11,0)]
 		FileProtectionMask = 0xf0000000,
+		[Mac (11,0)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
+		[Mac (11,0)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 	}
 	
@@ -343,7 +387,6 @@ namespace Foundation  {
 
 		CoderReadCorruptError = 4864,
 		CoderValueNotFoundError = 4865,
-		[Mac (10,13), iOS (11,0), Watch (4,0), TV (11,0)]
 		CoderInvalidValueError = 4866,
 		CoderErrorMinimum = 4864,
 		CoderErrorMaximum = 4991,
@@ -355,30 +398,18 @@ namespace Foundation  {
 		BundleOnDemandResourceExceededMaximumSizeError = 4993,
 		BundleOnDemandResourceInvalidTagError = 4994,
 
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNetworkFailureError = 5120,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingQuotaExceededError = 5121,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingTooManyParticipantsError = 5122,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingConflictError = 5123,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNoPermissionError = 5124,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingOtherError = 5375,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMinimum = 5120,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMaximum = 5375,
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionFailedError = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		DecompressionFailedError = 5377,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMinimum = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMaximum = 5503,
 	}
 	
@@ -548,7 +579,11 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : ulong {
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'None' instead.")]
 		SkipsNone                    = 0,
+#endif
+		None                         = 0,
 		SkipsSubdirectoryDescendants = 1 << 0,
 		SkipsPackageDescendants      = 1 << 1,
 		SkipsHiddenFiles             = 1 << 2,
@@ -624,8 +659,12 @@ namespace Foundation  {
 	public enum NSStringDrawingOptions : ulong {
 		UsesLineFragmentOrigin = (1 << 0),
 		UsesFontLeading = (1 << 1),
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10,11)]
 		DisableScreenFontSubstitution = (1 << 2),
 		UsesDeviceMetrics = (1 << 3),
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10,11)]
 		OneShot = (1 << 4),
 		TruncatesLastVisibleLine = (1 << 5)
 	}		
@@ -637,12 +676,21 @@ namespace Foundation  {
 		Currency = 2,
 		Percent = 3,
 		Scientific = 4,
-		SpellOut = 5
+		SpellOut = 5,
+		[Mac (10,11)]
+		OrdinalStyle = 6,
+		[Mac (10,11)]
+		CurrencyIsoCodeStyle = 8,
+		[Mac (10,11)]
+		CurrencyPluralStyle = 9,
+		[Mac (10,11)]
+		CurrencyAccountingStyle = 10,
 	}
 
 	[Native]
 	public enum NSNumberFormatterBehavior : ulong {
 		Default = 0,
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		Version_10_0 = 1000,
 		Version_10_4 = 1040
 	}
@@ -688,7 +736,9 @@ namespace Foundation  {
 		ForDeleting = 1,
 		ForMoving = 2,
 		ForMerging = 4,
-		ForReplacing = 8
+		ForReplacing = 8,
+		[iOS (8,0)][Mac (10,10)]
+		ContentIndependentMetadataOnly = 16,
 	}
 
 	[Flags]
@@ -787,9 +837,9 @@ namespace Foundation  {
 		LongestEffectiveRangeNotRequired = 1 << 20
 	}
 
-#if !MONOMAC
-	// MonoMac AppKit redefines this
-	// NSInteger -> NSAttributedString.h
+#if XAMCORE_4_0 || !MONOMAC
+	// macOS has defined this in AppKit as well, but starting with XAMCORE_4_0 we're going
+	// to use this one only.
 	[Native]
 	public enum NSUnderlineStyle : long {
 		None	= 0x00,
@@ -807,15 +857,14 @@ namespace Foundation  {
 	}
 #endif
 
-#if !MONOMAC || !XAMCORE_3_0
+	// There's an AppKit.NSWritingDirection, which is deprecated.
+	// There's also an UIKit.UITextWritingDirection, which is deprecated too.
+	// This is the enum we should be using.
+	// See https://github.com/xamarin/xamarin-macios/issues/6573
 	[Native]
-#if MONOMAC
-	[Obsolete ("Use NSWritingDirection in AppKit instead.")]
-#endif
 	public enum NSWritingDirection : long {
 		Natural = -1, LeftToRight = 0, RightToLeft = 1,
 	}
-#endif // !MONOMAC || !XAMCORE_3_0
 
 	[Flags]
 	[Native]
@@ -999,6 +1048,7 @@ namespace Foundation  {
 		UserInitiated = 0x00FFFFFFUL | IdleSystemSleepDisabled,
 		Background = 0x000000ffUL,
 		LatencyCritical = 0xFF00000000UL,
+		InitiatedAllowingIdleSystemSleep = UserInitiated & ~IdleSystemSleepDisabled,
 	}
 
 	[Native]
@@ -1125,23 +1175,6 @@ namespace Foundation  {
 		Utility = 17,
 		Background = 9,
 		Default = -1
-	}
-
-	// NSProcessInfo.h
-	public struct NSOperatingSystemVersion {
-		public nint Major, Minor, PatchVersion;
-		
-		public NSOperatingSystemVersion (nint major, nint minor, nint patchVersion)
-		{
-			Major = major;
-			Minor = minor;
-			PatchVersion = patchVersion;
-		}
-
-		public override string ToString ()
-		{
-			return Major + "." + Minor + "." + PatchVersion;
-		}
 	}
 
 	[Mac (10,10,3)]

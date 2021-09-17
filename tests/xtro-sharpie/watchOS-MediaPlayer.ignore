@@ -1,4 +1,5 @@
 
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaEntity::GetObject(Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaEntity::ValueForProperty(Foundation.NSString)' is missing an [NullAllowed] on return type
+## stuff removed in Xcode 12 -> XAMCORE_4_0
+!unknown-field! MPMediaEntityPropertyPersistentID bound
+!unknown-protocol! MPMediaPlayback bound
+!unknown-type! MPMediaEntity bound

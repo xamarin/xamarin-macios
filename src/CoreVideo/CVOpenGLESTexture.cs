@@ -8,7 +8,7 @@
 //
 //
 
-#if !WATCH
+#if HAS_OPENGLES
 
 using System;
 using System.Runtime.InteropServices;
@@ -21,6 +21,8 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using OpenGLES;
+
+#nullable enable
 
 namespace CoreVideo {
 

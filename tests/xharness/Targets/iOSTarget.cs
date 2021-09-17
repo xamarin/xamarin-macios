@@ -27,12 +27,11 @@ namespace Xharness.Targets
 		{
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, OriginalInfoPListInclude));
 			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
 			info_plist.SetUIDeviceFamily (UIDeviceFamily);
-			info_plist.Save (target_info_plist, (l,m) => Harness.Log (l,m));
+			info_plist.Save (target_info_plist, Harness);
 		}
 	}
 }
-

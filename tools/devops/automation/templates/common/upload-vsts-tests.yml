@@ -1,0 +1,31 @@
+# imports the xml to the vsts test results for the job
+parameters:
+
+- name: devicePrefix
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
+# did the provisioning work?
+- name: provisioningFailed
+  type: string 
+  default: 'False'
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+- ${{ if eq(parameters.provisioningFailed, 'False') }}:
+  - template: download-artifacts.yml 
+    parameters:
+      devicePrefix: ${{ parameters.devicePrefix }}
+
+  # Upload test results to vsts.
+  - task: PublishTestResults@2
+    displayName: 'Publish NUnit Device Test Results'
+    inputs:
+      testResultsFormat: NUnit
+      testResultsFiles: '**/vsts-*.xml'
+      failTaskOnFailedTests: true
+    continueOnError: true
+    condition: succeededOrFailed()

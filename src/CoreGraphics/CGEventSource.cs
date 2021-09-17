@@ -8,10 +8,11 @@
  *    Miguel de Icaza
  */
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
@@ -20,6 +21,11 @@ using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics {
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public sealed class CGEventSource : IDisposable, INativeObject {
 		IntPtr handle;
 
@@ -109,9 +115,11 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSourceButtonState")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public extern static bool GetButtonState (CGEventSourceStateID stateID, CGMouseButton button);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSourceKeyState")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public extern static bool GetKeyState (CGEventSourceStateID stateID, ushort keycode);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSourceFlagsState")]

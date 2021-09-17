@@ -3,6 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using Foundation;
 using Metal;
 
 using NUnit.Framework;
@@ -10,6 +11,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Metal {
 	
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class StructTest {
 		
 		[Test]
@@ -29,4 +31,3 @@ namespace MonoTouchFixtures.Metal {
 }
 
 #endif // !__WATCHOS__
-

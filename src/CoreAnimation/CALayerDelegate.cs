@@ -31,14 +31,16 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	public unsafe partial class CALayerDelegate {
 		IntPtr calayer;
 
-		internal void SetCALayer (CALayer layer)
+		internal void SetCALayer (CALayer? layer)
 		{
-			calayer = layer == null ? IntPtr.Zero : layer.Handle;
+			calayer = layer.GetHandle ();
 		}
 
 		protected override void Dispose (bool disposing)

@@ -22,10 +22,10 @@ using System.Text;
 
 using Foundation;
 using ObjCRuntime;
-using Xamarin.Utils;
 using Xamarin.Bundler;
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
+using Xamarin.Utils;
 using TAssembly=Mono.Cecil.AssemblyDefinition;
 using TType=Mono.Cecil.TypeReference;
 using TMethod=Mono.Cecil.MethodDefinition;
@@ -41,11 +41,11 @@ using TField=System.Reflection.FieldInfo;
 using R=ObjCRuntime.Runtime;
 #endif
 
-#if !(MTOUCH || MMP)
+#if !(MTOUCH || MMP || BUNDLER)
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 // static registrar needs them but they might not be marked (e.g. if System.Console is not used)
 [assembly: Preserve (typeof (System.Action))]
 [assembly: Preserve (typeof (System.Action<string>))]
@@ -84,7 +84,7 @@ namespace Registrar {
 	}
 
 	abstract partial class Registrar {
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 		public Application App { get; protected set; }
 #endif
 
@@ -124,7 +124,7 @@ namespace Registrar {
 			public bool IsInformalProtocol;
 			public bool IsWrapper;
 			public bool IsGeneric;
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 			public IntPtr Handle;
 #else
 			public TType ProtocolWrapperType;
@@ -140,7 +140,7 @@ namespace Registrar {
 
 			public bool IsCategory { get { return CategoryAttribute != null; } }
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 			HashSet<ObjCType> all_protocols;
 			// This contains all protocols in the type hierarchy.
 			// Given a type T that implements a protocol with super protocols:
@@ -437,7 +437,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = CategoryAttribute;
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return StringUtils.SanitizeObjectiveCName (name);
+					return SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -447,7 +447,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = Registrar.GetProtocolAttribute (Type);
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return StringUtils.SanitizeObjectiveCName (name);
+					return SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -567,6 +567,8 @@ namespace Registrar {
 					case Trampoline.Retain:
 					case Trampoline.GetGCHandle:
 					case Trampoline.SetGCHandle:
+					case Trampoline.GetFlags:
+					case Trampoline.SetFlags:
 						return true;
 					default:
 						return false;
@@ -585,7 +587,7 @@ namespace Registrar {
 				}
 			}
 
-#if !MMP && !MTOUCH
+#if !MMP && !MTOUCH && !BUNDLER
 			// The ArgumentSemantic enum is public, and
 			// I don't want to add another enum value there which
 			// is just an internal implementation detail, so just
@@ -832,15 +834,23 @@ namespace Registrar {
 					if (trampoline != Trampoline.None)
 						return trampoline;
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 					throw ErrorHelper.CreateError (8018, Errors.MT8018);
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
 #if __WATCHOS__
-					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					if (Runtime.Arch == Arch.DEVICE) {
+						is_stret = Stret.ArmNeedStret (NativeReturnType, null);
+					} else {
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
+					}
 #elif MONOMAC
-					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					if (Runtime.IsARM64CallingConvention) {
+						is_stret = false;
+					} else {
+						is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					}
 #elif __IOS__
 					if (Runtime.Arch == Arch.DEVICE) {
 						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType, null);
@@ -1001,7 +1011,7 @@ namespace Registrar {
 		}
 
 		internal class ObjCField : ObjCMember {
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 			public int Size;
 			public byte Alignment;
 #else
@@ -1096,6 +1106,7 @@ namespace Registrar {
 		protected abstract int GetValueTypeSize (TType type);
 		protected abstract bool IsSimulatorOrDesktop { get; }
 		protected abstract bool Is64Bits { get; }
+		protected abstract bool IsARM64 { get; } 
 		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object[] args);
 		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TType type, string message, params object [] args);
 		protected abstract string PlatformName { get; }
@@ -1248,7 +1259,7 @@ namespace Registrar {
 			}
 		}
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 		internal static string AppKit {
 			get {
 				return "AppKit";
@@ -1256,34 +1267,38 @@ namespace Registrar {
 		}
 #endif
 
-#if MONOMAC
-		internal const string AssemblyName = "Xamarin.Mac";
-#else
-#if MTOUCH
+#if MTOUCH || MMP || BUNDLER
 		internal string AssemblyName
 		{
 			get {
 				switch (App.Platform) {
-				case Xamarin.Utils.ApplePlatform.iOS:
+				case ApplePlatform.iOS:
 					return "Xamarin.iOS";
-				case Xamarin.Utils.ApplePlatform.WatchOS:
+				case ApplePlatform.WatchOS:
 					return "Xamarin.WatchOS";
-				case Xamarin.Utils.ApplePlatform.TVOS:
+				case ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
+				case ApplePlatform.MacOSX:
+					return "Xamarin.Mac";
+				case ApplePlatform.MacCatalyst:
+					return "Xamarin.MacCatalyst";
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 			}
 		}
+#elif MONOMAC
+		internal const string AssemblyName = "Xamarin.Mac";
 #elif WATCH
 		internal const string AssemblyName = "Xamarin.WatchOS";
 #elif TVOS
 		internal const string AssemblyName = "Xamarin.TVOS";
+#elif __MACCATALYST__
+		internal const string AssemblyName = "Xamarin.MacCatalyst";
 #elif IOS
 		internal const string AssemblyName = "Xamarin.iOS";
 #else
 #error Unknown platform
-#endif
 #endif
 		internal static class StringConstants {
 				internal const string ExportAttribute         =	"ExportAttribute";
@@ -1305,7 +1320,7 @@ namespace Registrar {
 			}
 		}
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 		// "#if MTOUCH" code does not need locking when accessing 'types', because mtouch is single-threaded.
 		public Dictionary<TType, ObjCType> Types {
 			get { return types; }
@@ -1758,7 +1773,7 @@ namespace Registrar {
 						Type = iface,
 						IsProtocol = true,
 					};
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 					objcType.ProtocolWrapperType = GetProtocolAttributeWrapperType (objcType.Type);
 					objcType.IsWrapper = objcType.ProtocolWrapperType != null;
 #endif
@@ -1884,7 +1899,7 @@ namespace Registrar {
 			
 		protected bool SupportsModernObjectiveC {
 			get {
-#if MTOUCH || MONOTOUCH
+#if MTOUCH || MONOTOUCH || BUNDLER
 				return true;
 #elif MMP
 				return App.Is64Build;
@@ -1935,7 +1950,7 @@ namespace Registrar {
 				isInformalProtocol = pAttr.IsInformal;
 				isProtocol = true;
 
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 				if (pAttr.FormalSinceVersion != null && pAttr.FormalSinceVersion > App.SdkVersion)
 					isInformalProtocol = !isInformalProtocol;
 #endif
@@ -1969,7 +1984,7 @@ namespace Registrar {
 			objcType.VerifyAdoptedProtocolsNames (ref exceptions);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 			objcType.ProtocolWrapperType = (isProtocol && !isInformalProtocol) ? GetProtocolAttributeWrapperType (objcType.Type) : null;
 #endif
 			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);
@@ -2040,8 +2055,22 @@ namespace Registrar {
 					}, ref exceptions);
 
 					objcType.Add (new ObjCMethod (this, objcType, null) {
-						Selector = "xamarinSetGCHandle:",
+						Selector = "xamarinSetGCHandle:flags:",
 						Trampoline = Trampoline.SetGCHandle,
+						Signature = "v@:^vi",
+						IsStatic = false,
+					}, ref exceptions);
+
+					objcType.Add (new ObjCMethod (this, objcType, null) {
+						Selector = "xamarinGetFlags",
+						Trampoline = Trampoline.GetFlags,
+						Signature = "i@:",
+						IsStatic = false,
+					}, ref exceptions);
+
+					objcType.Add (new ObjCMethod (this, objcType, null) {
+						Selector = "xamarinSetFlags:",
+						Trampoline = Trampoline.SetFlags,
 						Signature = "v@:i",
 						IsStatic = false,
 					}, ref exceptions);
@@ -2064,7 +2093,7 @@ namespace Registrar {
 					}
 				}
 
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 				// Special fields
 				if (is_first_nonWrapper) {
 					// static registrar
@@ -2131,7 +2160,7 @@ namespace Registrar {
 						}
 					} else {
 						TMethod method = null;
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 						method = attrib.Method;
 #endif
 						var objcMethod = new ObjCMethod (this, objcType, method) {
@@ -2180,7 +2209,7 @@ namespace Registrar {
 						objcType.Add (new ObjCField () {
 							DeclaringType = objcType,
 							Name = ca.Name ?? GetPropertyName (property),
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 							Size = Is64Bits ? 8 : 4,
 							Alignment = (byte) (Is64Bits ? 3 : 2),
 #endif
@@ -2278,9 +2307,16 @@ namespace Registrar {
 
 			var custom_conforms_to_protocol = !is_first_nonWrapper; // we only have to generate the conformsToProtocol method for the first non-wrapper type.
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 			ObjCMethod custom_copy_with_zone = null;
-			var isNSCellSubclass = IsSubClassOf (type, AppKit, "NSCell");
+			var isNSCellSubclass = false;
+#if BUNDLER
+			var isMac = App.Platform == ApplePlatform.MacOSX;
+#elif MONOMAC
+			const bool isMac = true;
+#endif
+			if (isMac)
+				isNSCellSubclass = IsSubClassOf (type, AppKit, "NSCell");
 #endif
 			Dictionary<TMethod, List<TMethod>> method_map = null;
 
@@ -2330,7 +2366,7 @@ namespace Registrar {
 				if (!objcMethod.SetExportAttribute (ea, ref exceptions))
 					continue;
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 				if (objcMethod.Selector == "copyWithZone:")
 					custom_copy_with_zone = objcMethod;
 #endif
@@ -2358,7 +2394,7 @@ namespace Registrar {
 				}, ref exceptions);
 			}
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 			if (isNSCellSubclass) {
 				if (custom_copy_with_zone != null) {
 					custom_copy_with_zone.Trampoline = Trampoline.CopyWithZone2;
@@ -2460,7 +2496,7 @@ namespace Registrar {
 
 			if (exceptions.Count > 0) {
 				Exception ae = exceptions.Count == 1 ? exceptions [0] : new AggregateException (exceptions);
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 				Runtime.NSLog (ae.ToString ());
 #endif
 				throw ae;
@@ -2564,7 +2600,7 @@ namespace Registrar {
 			}
 			if (name == null)
 				name = GetTypeFullName (type);
-			return StringUtils.SanitizeObjectiveCName (name);
+			return SanitizeObjectiveCName (name);
 		}
 
 		protected string GetExportedTypeName (TType type)
@@ -2594,7 +2630,7 @@ namespace Registrar {
 			case "System.Boolean":
 				// map managed 'bool' to ObjC BOOL = 'unsigned char' in OSX and 32bit iOS architectures and 'bool' in 64bit iOS architectures
 				#if MONOMAC
-				return "c";
+				return IsARM64 ? "B" : "c";
 				#else
 				return Is64Bits ? "B" : "c";
 				#endif
@@ -2689,7 +2725,7 @@ namespace Registrar {
 			System.Threading.Monitor.Exit (types);
 		}
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 		internal static void NSLog (string format, params object [] args)
 		{
 			Console.WriteLine (format, args);
@@ -2756,12 +2792,11 @@ namespace Registrar {
 		StaticLong,
 		X86_DoubleABI_StaticStretTrampoline,
 		X86_DoubleABI_StretTrampoline,
-#if MONOMAC
 		CopyWithZone1,
 		CopyWithZone2,
-#endif
 		GetGCHandle,
 		SetGCHandle,
+		GetFlags,
+		SetFlags,
 	}
 }
-

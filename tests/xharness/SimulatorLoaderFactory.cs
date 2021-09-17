@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
@@ -9,9 +9,9 @@ namespace Xharness {
 	}
 
 	public class SimulatorLoaderFactory : ISimulatorLoaderFactory {
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 
-		public SimulatorLoaderFactory (IProcessManager processManager)
+		public SimulatorLoaderFactory (IMlaunchProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}

@@ -11,6 +11,8 @@ using System;
 using System.Runtime.InteropServices;
 using Vector3 = global::OpenTK.NVector3;
 
+#nullable enable
+
 namespace ARKit {
 	public partial class ARPointCloud {
 

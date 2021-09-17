@@ -25,11 +25,24 @@
 #define DEBUG_LAUNCH_TIME_PRINT(...)
 #endif
 
+// Uncomment the TRACK_MONOOBJECTS define to show a summary at process exit of
+// the MonoObjects that were created, and if any were not freed. If there are
+// leaked MonoObjects, a list of them will be printed.
+// This has an equivalent variable in src/ObjCRuntime/Runtime.CoreCLR.cs,
+// which must be set for tracking to work.
+//#define TRACK_MONOOBJECTS
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void *xamarin_marshal_return_value (SEL sel, MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle);
+void *xamarin_marshal_return_value (SEL sel, MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, GCHandle *exception_gchandle);
+
+void xamarin_dyn_objc_msgSend ();
+void xamarin_dyn_objc_msgSendSuper ();
+void xamarin_dyn_objc_msgSend_stret ();
+void xamarin_dyn_objc_msgSendSuper_stret ();
+void xamarin_add_internal_call (const char *name, const void *method);
 
 #ifdef __cplusplus
 }
@@ -42,11 +55,11 @@ void *xamarin_marshal_return_value (SEL sel, MonoType *mtype, const char *type, 
  */
 @interface XamarinGCHandle : NSObject {
 @public
-	uint32_t handle;
+	GCHandle handle;
 }
-+(XamarinGCHandle *) createWithHandle: (uint32_t) handle;
++(XamarinGCHandle *) createWithHandle: (GCHandle) handle;
 -(void) dealloc;
--(uint32_t) getHandle;
+-(GCHandle) getHandle;
 @end
 
 #endif /* __RUNTIME_INTERNAL_H__ */

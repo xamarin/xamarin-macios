@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class DeviceTest {
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__
 		[Test]
 		public void Battery ()
 		{
@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.UIKit {
 				device.BatteryMonitoringEnabled = false;
 			}
 		}
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__
 	}
 }
 #endif

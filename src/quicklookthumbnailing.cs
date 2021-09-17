@@ -5,6 +5,7 @@ using System;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+using UniformTypeIdentifiers;
 
 #if MONOMAC
 using AppKit;
@@ -94,6 +95,10 @@ namespace QuickLookThumbnailing {
 
 		[Export ("representationTypes")]
 		QLThumbnailGenerationRequestRepresentationTypes RepresentationTypes { get; }
+
+		[Mac (11,0)][iOS (14,0)]
+		[NullAllowed, Export ("contentType", ArgumentSemantic.Copy)]
+		UTType ContentType { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0)]
@@ -113,6 +118,10 @@ namespace QuickLookThumbnailing {
 		[NoiOS]
 		[Export ("NSImage", ArgumentSemantic.Strong)]
 		NSImage NSImage { get; }
+
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("contentRect")]
+		CGRect ContentRect { get; }
 	}
 }
 
@@ -136,6 +145,11 @@ namespace QuickLookThumbnailing {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLThumbnailReply {
+
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("extensionBadge")]
+		string ExtensionBadge { get; set; }
+
 		[Static]
 		[Export ("replyWithContextSize:drawingBlock:")]
 		QLThumbnailReply CreateReply (CGSize contextSize, Func<CGContext, bool> drawingBlock);

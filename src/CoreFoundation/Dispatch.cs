@@ -33,6 +33,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 using ObjCRuntime;
 using Foundation;
@@ -152,20 +153,24 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		internal extern static void dispatch_suspend (IntPtr o);
 
+#if !NET
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		public void Activate ()
 		{
 			dispatch_activate (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.libcLibrary)]
+#if !NET
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
 #endif // !COREBUILD
 	}
@@ -204,10 +209,12 @@ namespace CoreFoundation {
 				throw new Exception ("Error creating dispatch queue");
 		}
 		
+#if !NET
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		public DispatchQueue (string label, Attributes attributes, DispatchQueue target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
@@ -223,7 +230,9 @@ namespace CoreFoundation {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public static string CurrentQueueLabel {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (IntPtr.Zero));
@@ -258,8 +267,10 @@ namespace CoreFoundation {
 			}
 		}
 	
+#if !NET
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+#endif
 		public static DispatchQueue CurrentQueue {
 			get {
 				return new DispatchQueue (dispatch_get_current_queue (), false);
@@ -467,8 +478,10 @@ namespace CoreFoundation {
 			return gchandle.Target;
 		}
 
+#if !NET
 		[Mac (10,10)]
 		[iOS (8,0)]
+#endif
 		public DispatchQualityOfService GetQualityOfService (out int relative_priority)
 		{
 			unsafe {
@@ -477,8 +490,10 @@ namespace CoreFoundation {
 			}
 		}
 
+#if !NET
 		[Mac (10,10)]
 		[iOS (8,0)]
+#endif
 		public DispatchQualityOfService QualityOfService {
 			get {
 				unsafe {
@@ -493,11 +508,13 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
 
+#if !NET
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
-		[DllImport (Constants.libcLibrary)]
+#endif
+		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
 		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
 
 		[DllImport (Constants.libcLibrary)]
@@ -530,6 +547,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
+#if !NET
+		[Deprecated (PlatformName.iOS, 6,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
+#endif
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_current_queue ();
 
@@ -547,8 +568,10 @@ namespace CoreFoundation {
 		[DllImport(Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
+#if !NET
 		[Mac (10,10)]
 		[iOS (8,0)]
+#endif
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
 
@@ -597,24 +620,32 @@ namespace CoreFoundation {
 		{
 			public bool Concurrent { get; set; }
 
+#if !NET
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			public bool IsInitiallyInactive { get; set; }
 
+#if !NET
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
+#if !NET
 			[Mac (10,10)]
 			[iOS (8,0)]
+#endif
 			public int RelativePriority { get; set; }
 
+#if !NET
 			[Mac (10,10)]
 			[iOS (8,0)]
+#endif
 			public DispatchQualityOfService? QualityOfService { get; set; }
 
 			internal IntPtr Create ()
@@ -636,30 +667,38 @@ namespace CoreFoundation {
 				return rv;
 			}
 
+#if !NET
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
 
+#if !NET
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
 
+#if !NET
 			[Mac (10,10)]
 			[iOS (8,0)]
+#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
 		}
 
+#if !NET
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		[Native]
 		public enum AutoreleaseFrequency : ulong /* unsigned long */
 		{

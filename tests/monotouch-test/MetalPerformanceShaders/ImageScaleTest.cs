@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 using Foundation;
@@ -12,18 +12,19 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class ImageScaleTest {
 
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertXcodeVersion (9,0);
 
 #if !MONOMAC
-			if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major >= 15)
-				Assert.Inconclusive ("Metal is not supported in the simulator on macOS 10.15");
+			if (Runtime.Arch == Arch.SIMULATOR)
+				Assert.Inconclusive ("Metal Performance Shaders is not supported in the simulator");
 #endif
 
 			device = MTLDevice.SystemDefault;

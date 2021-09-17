@@ -51,5 +51,6 @@ namespace CoreText {
 		CancelledByUser = 304,
 		DuplicatedName = 305,
 		InvalidFilePath = 306,
+		UnsupportedScope = 307,
 	}
 }

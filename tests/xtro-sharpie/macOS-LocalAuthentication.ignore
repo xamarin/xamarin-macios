@@ -1,0 +1,3 @@
+# added and deprecated 
+!missing-selector! LAContext::maxBiometryFailures not bound
+!missing-selector! LAContext::setMaxBiometryFailures: not bound

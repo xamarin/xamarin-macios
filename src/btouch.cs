@@ -24,14 +24,16 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Linq;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Reflection;
 using Mono.Options;
 
 using ObjCRuntime;
@@ -45,17 +47,18 @@ public class BindingTouch {
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
 	public bool skipSystemDrawing;
-	public string outfile;
+	public string? outfile;
 
-	string baselibdll;
-	string attributedll;
+	string? baselibdll;
+	string? attributedll;
 
 	List<string> libs = new List<string> ();
+	List<string> references = new List<string> ();
 
-	public Universe universe;
+	public MetadataLoadContext? universe;
 	public TypeManager TypeManager = new TypeManager ();
-	public Frameworks Frameworks;
-	public AttributeManager AttributeManager;
+	public Frameworks? Frameworks;
+	public AttributeManager? AttributeManager;
 
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
@@ -63,7 +66,7 @@ public class BindingTouch {
 	}
 
 	public TargetFramework TargetFramework {
-		get { return target_framework.Value; }
+		get { return target_framework!.Value; }
 	}
 
 	public static string ToolName {
@@ -95,7 +98,7 @@ public class BindingTouch {
 	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
-			return attributedll;
+			return attributedll!;
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -104,6 +107,8 @@ public class BindingTouch {
 			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
 		case PlatformName.TvOS:
 			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.TVOS.BindingAttributes.dll");
+		case PlatformName.MacCatalyst:
+			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.MacCatalyst.BindingAttributes.dll");
 		case PlatformName.MacOSX:
 			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
@@ -132,6 +137,9 @@ public class BindingTouch {
 			case PlatformName.TvOS:
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
 				break;
+			case PlatformName.MacCatalyst:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.MacCatalyst");
+				break;
 			case PlatformName.MacOSX:
 				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 					yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
@@ -153,31 +161,13 @@ public class BindingTouch {
 			yield return lib;
 	}
 
-	string LocateAssembly (string name)
-	{
-		foreach (var asm in universe.GetAssemblies ()) {
-			if (asm.GetName ().Name == name)
-				return asm.Location;
-		}
-
-		foreach (var lib in GetLibraryDirectories ()) {
-			var path = Path.Combine (lib, name);
-			if (File.Exists (path))
-				return path;
-			path += ".dll";
-			if (File.Exists (path))
-				return path;
-		}
-
-		throw new FileNotFoundException ($"Could not find the assembly '{name}' in any of the directories: {string.Join (", ", GetLibraryDirectories ())}");
-	}
-
 	string GetSDKRoot ()
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
 		case PlatformName.WatchOS:
 		case PlatformName.TvOS:
+		case PlatformName.MacCatalyst:
 			var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
 			if (string.IsNullOrEmpty (sdkRoot))
 				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
@@ -213,9 +203,9 @@ public class BindingTouch {
 	{
 		bool show_help = false;
 		bool zero_copy = false;
-		string basedir = null;
-		string tmpdir = null;
-		string ns = null;
+		string? basedir = null;
+		string? tmpdir = null;
+		string? ns = null;
 		bool delete_temp = true, debug = false;
 		bool unsafef = true;
 		bool external = false;
@@ -225,12 +215,11 @@ public class BindingTouch {
 		List<string> sources;
 		var resources = new List<string> ();
 		var linkwith = new List<string> ();
-		var references = new List<string> ();
 		var api_sources = new List<string> ();
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
 		var defines = new List<string> ();
-		string generate_file_list = null;
+		string? generate_file_list = null;
 		bool process_enums = false;
 		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
 
@@ -255,8 +244,8 @@ public class BindingTouch {
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
 			{ "api=", "Adds a API definition source file", v => api_sources.Add (v) },
 			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (v) },
-			{ "q", "Quiet", v => Driver.Verbosity++ },
-			{ "v", "Sets verbose mode", v => Driver.Verbosity-- },
+			{ "q", "Quiet", v => ErrorHelper.Verbosity-- },
+			{ "v", "Sets verbose mode", v => ErrorHelper.Verbosity++ },
 			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (v) },
 			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => external = true },
 			{ "p", "Sets private mode", v => public_mode = false },
@@ -364,6 +353,16 @@ public class BindingTouch {
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
 			}
 			break;
+		case ApplePlatform.MacCatalyst:
+			CurrentPlatform = PlatformName.MacCatalyst;
+			nostdlib = true;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
+			if (!IsDotNet) {
+				// references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst", references);
+			}
+			break;
 		case ApplePlatform.MacOSX:
 			CurrentPlatform = PlatformName.MacOSX;
 			nostdlib = true;
@@ -450,47 +449,18 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (2, compile_output.ToString ().Replace ("\n", "\n\t"));
-				
+				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
 
-			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
-			if (IsDotNet) {
-				// IKVM tries uses reflection to locate assemblies on disk, but .NET doesn't include reflection so that fails.
-				// Instead intercept assembly resolution and look for assemblies where we know they are.
-				var resolved_assemblies = new Dictionary<string, Assembly> ();
-				universe.AssemblyResolve += (object sender, IKVM.Reflection.ResolveEventArgs rea) => {
-					var an = new AssemblyName (rea.Name);
-
-					// Check if we've already found this assembly
-					if (resolved_assemblies.TryGetValue (an.Name, out var rv))
-						return rv;
-
-					// Check if the assembly has already been loaded into IKVM
-					var assemblies = universe.GetAssemblies ();
-					foreach (var asm in assemblies) {
-						if (asm.GetName ().Name == an.Name) {
-							resolved_assemblies [an.Name] = asm;
-							return asm;
-						}
-					}
-
-					// Look in the references to find a matching one and get the path from there.
-					foreach (var r in references) {
-						var fn = Path.GetFileNameWithoutExtension (r);
-						if (fn == an.Name) {
-							rv = universe.LoadFile (r);
-							resolved_assemblies [an.Name] = rv;
-							return rv;
-						}
-					}
-
-					throw ErrorHelper.CreateError (1081, rea.Name);
-				};
-			}
+			universe = new MetadataLoadContext (
+				new SearchPathsAssemblyResolver (
+					GetLibraryDirectories ().ToArray (),
+					references.ToArray ()),
+				"mscorlib"
+			);
 
 			Assembly api;
 			try {
-				api = universe.LoadFile (tmpass);
+				api = universe.LoadFromAssemblyPath (tmpass);
 			} catch (Exception e) {
 				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
@@ -501,7 +471,7 @@ public class BindingTouch {
 
 			Assembly baselib;
 			try {
-				baselib = universe.LoadFile (baselibdll);
+				baselib = universe.LoadFromAssemblyPath (baselibdll);
 			} catch (Exception e){
 				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
@@ -513,11 +483,10 @@ public class BindingTouch {
 			AttributeManager = new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
 
-			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
-			universe.LoadFile (GetAttributeLibraryPath ());
+			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			TypeManager.Initialize (this, api, corlib_assembly, baselib);
+			TypeManager.Initialize (this, api, universe.CoreAssembly, baselib);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -541,7 +510,7 @@ public class BindingTouch {
 
 				if (File.Exists (r)) {
 					try {
-						universe.LoadFile (r);
+						universe.LoadFromAssemblyPath (r);
 					} catch (Exception ex) {
 						ErrorHelper.Warning (1104, r, ex.Message);
 					}
@@ -604,7 +573,7 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (1000, generated_compile_output.ToString ().Replace ("\n", "\n\t"));
+				throw ErrorHelper.CreateError (1000, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{generated_compile_output}".Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);
@@ -657,5 +626,42 @@ static class ReferenceFixer
 			references.Remove (r);
 			AddSDKReference (references, sdk_path, r + ".dll");
 		}
+	}
+}
+
+class SearchPathsAssemblyResolver : MetadataAssemblyResolver
+{
+	readonly string[] libraryPaths;
+	readonly string[] references;
+
+	public SearchPathsAssemblyResolver (string[] libraryPaths, string[] references)
+	{
+		this.libraryPaths = libraryPaths;
+		this.references = references;
+	}
+
+	public override Assembly? Resolve (MetadataLoadContext context, AssemblyName assemblyName)
+	{
+		string? name = assemblyName.Name;
+		if (name != null) {
+			foreach (var asm in context.GetAssemblies ()) {
+				if (asm.GetName ().Name == name)
+					return asm;
+			}
+
+			string dllName = name + ".dll";
+			foreach (var libraryPath in libraryPaths) {
+				string path = Path.Combine (libraryPath, dllName);
+				if (File.Exists (path)) {
+					return context.LoadFromAssemblyPath (path);
+				}
+			}
+			foreach (var reference in references) {
+				if (Path.GetFileName (reference).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
+					return context.LoadFromAssemblyPath (reference);
+				}
+			}
+		}
+		return null;
 	}
 }

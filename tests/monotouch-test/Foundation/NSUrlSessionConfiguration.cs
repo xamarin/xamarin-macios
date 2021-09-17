@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using NUnit.Framework;
 
@@ -8,6 +8,7 @@ using ObjCRuntime;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSUrlSessionConfigurationTest {
 
 		[Test]

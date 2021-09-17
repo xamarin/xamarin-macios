@@ -11,14 +11,19 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using JavaScriptCore;
 
+#nullable enable
+
 namespace SceneKit
 {
+#if !NET
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	public static class SCNJavaScript
 	{
 		[DllImport (Constants.SceneKitLibrary)]
@@ -27,7 +32,7 @@ namespace SceneKit
 		public static void ExportModule (JSContext context)
 		{
 			if (context == null)
-				throw new ArgumentNullException ("context");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
 			SCNExportJavaScriptModule (context.Handle);
 		}

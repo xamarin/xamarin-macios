@@ -7,6 +7,7 @@
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
+using System.Runtime.Versioning;
 
 using System;
 
@@ -22,8 +23,12 @@ namespace UIKit {
 			return CGRect.Empty;
 		}
 
-#if !TVOS
+#if !TVOS && !__MACCATALYST__
+#if !NET
 		[Deprecated (PlatformName.iOS, 3, 2)]
+#else
+		[UnsupportedOSPlatform ("ios3.2")]
+#endif
 		public static CGRect BoundsFromNotification (NSNotification n)
 		{
 			return RectangleFFrom (BoundsUserInfoKey, n);
@@ -60,14 +65,22 @@ namespace UIKit {
 			return val.CGPointValue;
 		}
 
-#if !TVOS
+#if !TVOS && !__MACCATALYST__
+#if !NET
 		[Deprecated (PlatformName.iOS, 3, 2)]
+#else
+		[UnsupportedOSPlatform ("ios3.2")]
+#endif
 		static public CGPoint CenterBeginFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterBeginUserInfoKey, n);
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 3, 2)]
+#else
+		[UnsupportedOSPlatform ("ios3.2")]
+#endif
 		static public CGPoint CenterEndFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterEndUserInfoKey, n);

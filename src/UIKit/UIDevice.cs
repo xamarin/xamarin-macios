@@ -16,6 +16,8 @@ namespace UIKit {
 		{
 #if WATCH
 			return Runtime.CheckSystemVersion (major, minor, WatchKit.WKInterfaceDevice.CurrentDevice.SystemVersion);
+#elif __MACCATALYST__
+			return Runtime.CheckSystemVersion (major, minor, Runtime.iOSSupportVersion);	
 #else
 			return Runtime.CheckSystemVersion (major, minor, SystemVersion);
 #endif

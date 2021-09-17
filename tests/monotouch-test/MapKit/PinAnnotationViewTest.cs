@@ -80,7 +80,8 @@ namespace MonoTouchFixtures.MapKit {
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call
 				}
 #else
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0))
+				bool not_null = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0);
+				if (not_null)
 					Assert.NotNull (av.PinTintColor, "PinTintColor");
 				else
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call

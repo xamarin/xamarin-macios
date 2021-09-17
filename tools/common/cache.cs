@@ -13,6 +13,8 @@ public class Cache {
 	const string NAME = "mmp";
 #elif MTOUCH
 	const string NAME = "mtouch";
+#elif BUNDLER
+	const string NAME = "dotnet-linker";
 #else
 	#error Wrong defines
 #endif
@@ -144,52 +146,15 @@ public class Cache {
 			return false;
 		}
 
-		var ab = new byte[2048];
-		var bb = new byte[2048];
-		
-		do {
-			int ar = astream.Read (ab, 0, ab.Length);
-			int br = bstream.Read (bb, 0, bb.Length);
-
-			if (ar != br) {
-				Driver.Log (6, " > streams are considered different because their lengths do not match.");
-				return false;
-			}
-
-			if (ar == 0)
-				return true;
-
-			fixed (byte *aptr = ab, bptr = bb) {
-				long *l1 = (long *) aptr;
-				long *l2 = (long *) bptr;
-				int len = ar;
-				// Compare one long at a time.
-				for (int i = 0; i < len / 8; i++) {
-					if (l1 [i] != l2 [i]) {
-						Driver.Log (6, " > streams differ at index {0}-{1}", i, i + 8);
-						return false;
-					}
-				}
-				// Compare any remaining bytes.
-				int mod = len % 8;
-				if (mod > 0) {
-					for (int i = len - mod; i < len; i++) {
-						if (ab [i] != bb [i]) {						
-							Driver.Log (6, " > streams differ at byte index {0}", i);
-							return false;
-						}
-					}
-				}
-			}
-		} while (true);
+		return FileUtils.CompareStreams (astream, bstream);
 	}
 	
-	string GetArgumentsForCacheData ()
+	string GetArgumentsForCacheData (Application app)
 	{
 		var sb = new StringBuilder ();
 		var args = new List<string> (arguments);
 
-		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
+		sb.Append ("# Version: ").Append (app.ProductConstants.Version).Append ('.').Append (app.ProductConstants.Revision).AppendLine ();
 		sb.Append (Driver.GetFullPath ()).AppendLine (" \\");
 		CollectArgumentsForCache (args, 0, sb);
 		return sb.ToString ();
@@ -222,7 +187,7 @@ public class Cache {
 		}
 	}
 
-	public bool IsCacheValid ()
+	public bool IsCacheValid (Application app)
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
@@ -230,7 +195,7 @@ public class Cache {
 		if (!File.Exists (pcache)) {
 			Driver.Log (3, "A full rebuild will be performed because the cache is either incomplete or entirely missing.");
 			return false;
-		} else if (GetArgumentsForCacheData () != File.ReadAllText (pcache)) {
+		} else if (GetArgumentsForCacheData (app) != File.ReadAllText (pcache)) {
 			Driver.Log (3, "A full rebuild will be performed because the arguments to " + NAME + " has changed with regards to the cached data.");
 			return false;
 		}
@@ -245,9 +210,9 @@ public class Cache {
 		return true;
 	}
 
-	public bool VerifyCache ()
+	public bool VerifyCache (Application app)
 	{
-		if (!IsCacheValid ()) {
+		if (!IsCacheValid (app)) {
 			Clean ();
 			return false;
 		}
@@ -255,11 +220,11 @@ public class Cache {
 		return true;
 	}
 
-	public void ValidateCache ()
+	public void ValidateCache (Application app)
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
-		File.WriteAllText (pcache, GetArgumentsForCacheData ());
+		File.WriteAllText (pcache, GetArgumentsForCacheData (app));
 	}
 
 	// A stream that reads an assembly and skips the header and the GUID table.

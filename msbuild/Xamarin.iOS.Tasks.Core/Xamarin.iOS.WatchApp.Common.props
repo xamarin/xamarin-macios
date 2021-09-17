@@ -17,13 +17,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
 
-	<!-- This is used to determine whether Xamarin.iOS.WatchApp.Common.targets needs to import 
-         Xamarin.iOS.WatchApp.Common.props itself, or whether it has been imported previously,
-         e.g. by the project itself. -->
-	<PropertyGroup>
-		<_XamarinWatchAppCommonPropsHasBeenImported>true</_XamarinWatchAppCommonPropsHasBeenImported>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 

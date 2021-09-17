@@ -37,6 +37,10 @@ if test -z "$BUILD_EXECUTABLE"; then
 	BUILD_EXECUTABLE=msbuild
 fi
 
+if test -z "$BUILD_VERBOSITY"; then
+	BUILD_VERBOSITY=/verbosity:diag
+fi
+
 # ProjectInspector.csproj is an MSBuild file with a target
 # (WriteProjectReferences) that takes another project file as input (the
 # ProjectFile variable) and writes all the project references (recursively) to
@@ -44,7 +48,7 @@ fi
 (
 cp ProjectInspector.csproj "$PROJECT_DIR"
 cd "$PROJECT_DIR"
-$BUILD_EXECUTABLE ProjectInspector.csproj "/t:WriteProjectReferences" "/p:ProjectFile=$PROJECT_FILE" "/p:ReferenceListPath=$REFERENCES_PATH" /verbosity:quiet /nologo
+$BUILD_EXECUTABLE ProjectInspector.csproj "/t:WriteProjectReferences" "/p:ProjectFile=$PROJECT_FILE" "/p:ReferenceListPath=$REFERENCES_PATH" $BUILD_VERBOSITY /nologo
 rm -f ProjectInspector.csproj
 )
 
@@ -91,7 +95,7 @@ for proj in $(sort "$REFERENCES_PATH" | uniq); do
 
 	(
 	cd "$(dirname "$proj")"
-	$BUILD_EXECUTABLE "$TMPPROJ" "/t:WriteInputs" "/p:ProjectFile=$proj" "/p:InputsPath=$inputs_path" /verbosity:quiet /nologo
+	$BUILD_EXECUTABLE "$TMPPROJ" "/t:WriteInputs" "/p:ProjectFile=$proj" "/p:InputsPath=$inputs_path" $BUILD_VERBOSITY /nologo
 	)
 
 	# The output contains relative paths, relative to the csproj directory

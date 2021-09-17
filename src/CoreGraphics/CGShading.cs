@@ -60,7 +60,7 @@ namespace CoreGraphics {
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingCreateAxial (/* CGColorSpaceRef */ IntPtr space, 
-			CGPoint start, CGPoint end, /* CGFunctionRef */ IntPtr functionHandle, bool extendStart, bool extendEnd);
+			CGPoint start, CGPoint end, /* CGFunctionRef */ IntPtr functionHandle, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);
 
 		public static CGShading CreateAxial (CGColorSpace colorspace, CGPoint start, CGPoint end, CGFunction function, bool extendStart, bool extendEnd)
 		{
@@ -79,7 +79,7 @@ namespace CoreGraphics {
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingCreateRadial (/* CGColorSpaceRef */ IntPtr space, 
 			CGPoint start, /* CGFloat */ nfloat startRadius, CGPoint end, /* CGFloat */ nfloat endRadius,
-			/* CGFunctionRef */ IntPtr function, bool extendStart, bool extendEnd);
+			/* CGFunctionRef */ IntPtr function, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);
 
 		public static CGShading CreateRadial (CGColorSpace colorspace, CGPoint start, nfloat startRadius, CGPoint end, nfloat endRadius,
 						      CGFunction function, bool extendStart, bool extendEnd)

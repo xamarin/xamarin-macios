@@ -31,6 +31,8 @@ using CoreGraphics;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreImage {
 
 	// convenience enum on kCISamplerWrap[Black|Clamp] fields -> CISampler.h (headers hidden under QuartzCore.framework)
@@ -50,7 +52,7 @@ namespace CoreImage {
 		public CGAffineTransform? AffineMatrix { get; set; }
 		public CIWrapMode? WrapMode { get; set; }
 		public CIFilterMode? FilterMode { get; set; }
-		public CGColorSpace ColorSpace { get; set; }
+		public CGColorSpace? ColorSpace { get; set; }
 		
 		internal NSDictionary ToDictionary ()
 		{
@@ -80,7 +82,7 @@ namespace CoreImage {
 		[Obsolete ("This default constructor does not provide a valid instance")]
 		public CISampler () {}
 #endif
-		public CISampler FromImage (CIImage sourceImage, CISamplerOptions options)
+		public CISampler FromImage (CIImage sourceImage, CISamplerOptions? options)
 		{
 			if (options == null)
 				return FromImage (sourceImage);
@@ -88,7 +90,7 @@ namespace CoreImage {
 		}
 
 		[DesignatedInitializer]
-		public CISampler (CIImage sourceImage, CISamplerOptions options) : this (sourceImage, options == null ? null : options.ToDictionary ())
+		public CISampler (CIImage sourceImage, CISamplerOptions? options) : this (sourceImage, options?.ToDictionary ())
 		{
 		}
 	}

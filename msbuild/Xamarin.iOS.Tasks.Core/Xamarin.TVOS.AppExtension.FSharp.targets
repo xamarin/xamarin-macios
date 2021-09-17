@@ -26,22 +26,11 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 		<!-- See Xamarin.iOS.AppExtension.CSharp.targets for a detailed explanation of this variable -->
 		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
 
-		<_IsUnifiedDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__UNIFIED__($|;)'))</_IsUnifiedDefined>
-		<_IsMobileDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MOBILE__($|;)'))</_IsMobileDefined>
-		<_IsTVOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__TVOS__($|;)'))</_IsTVOSDefined>
-
-		<DefineConstants Condition="!$(_IsUnifiedDefined)">__UNIFIED__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(_IsMobileDefined)">__MOBILE__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(_IsTVOSDefined)">__TVOS__;$(DefineConstants)</DefineConstants>
-
 		<!-- This should be done in the F# target files, but _DebugFileExt is not an upstream
 		     msbuild feature yet, so F# doesn't have this. Once, upstream F# adds it, we can
 		     remove this -->
 		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
 		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
-
-		<!-- Enable nuget package conflict resolution -->
-		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<Import Project="Xamarin.TVOS.AppExtension.Common.targets" />

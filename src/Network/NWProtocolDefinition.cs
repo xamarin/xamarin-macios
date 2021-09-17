@@ -6,9 +6,13 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -17,8 +21,13 @@ using OS_nw_protocol_definition=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWProtocolDefinition : NativeObject {
 		public NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -75,20 +84,44 @@ namespace Network {
 
 		public static NWProtocolDefinition CreateTlsDefinition () => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
 #if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 		public static NWProtocolDefinition WebSocketDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 #endif
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public static NWProtocolDefinition CreateWebSocketDefinition () => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if !NET
+		[TV (13,0), Mac (10,15)]
+#else
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (string identifier, NWFramerCreateFlags flags, ref BlockLiteral start_handler);
 		delegate NWFramerStartResult nw_framer_create_definition_t (IntPtr block, IntPtr framer);
@@ -106,7 +139,13 @@ namespace Network {
 			return NWFramerStartResult.Unknown;
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static NWProtocolDefinition CreateFramerDefinition (string identifier, NWFramerCreateFlags flags, Func<NWFramer, NWFramerStartResult> startCallback)
 		{

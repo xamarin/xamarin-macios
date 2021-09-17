@@ -22,17 +22,21 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 	<PropertyGroup Condition="'$(_PlatformName)' == ''">
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">iOS</_PlatformName>
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">tvOS</_PlatformName>
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">watchOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">MacCatalyst</_PlatformName>
 		<_PlatformName Condition="'$(_PlatformName)' == ''">macOS</_PlatformName> <!-- detecting Xamarin.Mac is a bit more complicated, so just fall back to macOS if none of the others match -->
+
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<!-- _XamarinSdkRoot
-			Xamarin.Mac: Defaults to XamarinMacFrameworkRoot, otherwise /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+			Xamarin.Mac: Defaults to XamarinMacFrameworkRoot, otherwise use XAMMAC_FRAMEWORK_PATH, otherwise /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 			Xamarin.iOS: Defaults to MonoTouchSdkRoot, otherwise use MD_MTOUCH_SDK_ROOT, otherwise /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 		-->
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">$(XamarinMacFrameworkRoot)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">$(XAMMAC_FRAMEWORK_PATH)</_XamarinSdkRoot>
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</_XamarinSdkRoot>
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MonoTouchSdkRoot)</_XamarinSdkRoot>
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MD_MTOUCH_SDK_ROOT)</_XamarinSdkRoot>
@@ -56,7 +60,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     another property name, we "opt out" of this "smart" behavior
 		-->
 		<ComputedPlatform Condition="'$(ComputedPlatform)' == ''">$(Platform)</ComputedPlatform>
-		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
+		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
 	</PropertyGroup>
 
 	<Choose>
@@ -64,24 +68,38 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<When Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
 			<PropertyGroup>
 				<TargetFrameworkName>Modern</TargetFrameworkName>
-				<MacBclPath>$(_XamarinSdkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
+				<_XamarinBclPath>$(_XamarinSdkRoot)/lib/mono/Xamarin.Mac/</_XamarinBclPath>
 			</PropertyGroup>
 		</When>
 		<!-- If TargetFrameworkIdentifier is not 'Xamarin.Mac', but we're still a macOS app and UseXamMacFullFramework is true, then we're in Full mode -->
 		<When Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' == 'true'">
 			<PropertyGroup>
 				<TargetFrameworkName>Full</TargetFrameworkName>
-				<MacBclPath>$(_XamarinSdkRoot)/lib/mono/4.5</MacBclPath>
+				<_XamarinBclPath>$(_XamarinSdkRoot)/lib/mono/4.5/</_XamarinBclPath>
 			</PropertyGroup>
 		</When>
 		<!-- If the two other conditions don't match, but we're still a macOS app, then we're in System mode -->
 		<When Condition="'$(_PlatformName)' == 'macOS'">
 			<PropertyGroup>
 				<TargetFrameworkName>System</TargetFrameworkName>
-				<MacBclPath>$(_XamarinSdkRoot)/lib/mono/4.5</MacBclPath>
+				<_XamarinBclPath>$(_XamarinSdkRoot)/lib/mono/4.5/</_XamarinBclPath>
 			</PropertyGroup>
 		</When>
 	</Choose>
+	<PropertyGroup Condition="'$(_XamarinBclPath)' == ''">
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'MacCatalyst'">$(_XamarinSdkRoot)/lib/mono/Xamarin.MacCatalyst/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
+	</PropertyGroup>
+	<PropertyGroup>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'MacCatalyst'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_XamarinPlatformAssemblyName)</_XamarinPlatformAssemblyPath>
+	</PropertyGroup>
 
 	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
 	<PropertyGroup>
@@ -97,30 +115,66 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_SdkVersion Condition="'$(_PlatformName)' == 'macOS'">$(MacOSXSdkVersion)</_SdkVersion>
 		<_SdkVersion Condition="'$(_PlatformName)' != 'macOS'">$(MtouchSdkVersion)</_SdkVersion>
 
-		<!-- LinkMode -->
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
+		<!-- Other variables that are used in code signing / packaging, but that are by default empty (so no need for any logic): -->
+		<!-- CodesignProvision: the name of the provisioning profile to use when signing the bundle -->
+		<!-- CodesignEntitlements: the path to the Entitlements.plist to use when signing the bundle -->
+		<!-- CodesignExtraArgs: any extra arguments to pass to 'codesign' -->
+		<!-- PackageSigningKey: the certificate used to sign packages (.pkg). Applicable to macOS and Mac Catalyst -->
+		<!-- PackagingExtraArgs: any extra arguments passed to the productbuild tool when creating packages (.pkg). Applicable to macOS and Mac Catalyst -->
+		<!-- ProductDefinition: the product definition template (plist) used when creating the product definition to pass to the product build tool when creating packages (.pkg). Applicable to mcOS and Mac Catalyst -->
 
-		<!-- RequireCodeSigning -->
-		<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning> <!-- except that device builds must be signed -->
-		<!-- macOS is a bit more complicated:
-			* 'EnableCodeSigning' specifies whether the app is signed or not, and this defaults to false if it's not set.
-			* Extensions are special, because they must be signed. However, due to historical reasons, extension projects will have set EnableCodeSigning=false. So we do the following:
-			    * If we're an extension, and code signing is disabled: enable code signing, set the code signing key (_CodeSigningKey) to '-', and pass this value to the _DetectCodeSigning task.
-		-->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning> <!-- Xamarin.Mac projects use the 'EnableCodeSigning' variable to enable code signing -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.Mac projects: disable by default -->
-		<_CodeSigningKey Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey> <!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning> <!-- But extensions must be signed, so make sure they are -->
+		<!-- _RequireProvisioningProfile -->
+		<!-- Default: false -->
+		<!-- macOS: true if a provisioning profile is used -->
+		<!-- iOS/tvOS/watchOS: true if building for device or if a custom entitlements file is used -->
+		<!-- Mac Catalyst: true if a provisioning profile is used -->
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'macOS' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And ('$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != '')">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'MacCatalyst' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == ''">false</_RequireProvisioningProfile>
+	</PropertyGroup>
 
+	<!-- RequireCodeSigning -->
+	<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
+	<PropertyGroup Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
+		<_RequireCodeSigning Condition="'$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning> <!-- except that device builds must be signed -->
+	</PropertyGroup>
+	<!-- macOS is a bit more complicated:
+		* 'EnableCodeSigning' specifies whether the app is signed or not, and this defaults to false if it's not set.
+		* Extensions are special, because they must be signed. However, due to historical reasons, extension projects will have set EnableCodeSigning=false. So we do the following:
+		    * If we're an extension, and code signing is disabled: enable code signing, set the code signing key (_CodeSigningKey) to '-', and pass this value to the _DetectCodeSigning task.
+	-->
+	<PropertyGroup Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">
+		<!-- macOS and Mac Catalyst projects use the 'EnableCodeSigning' variable to enable code signing -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning>
+		<!-- Signing must be enabled when archiving -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == '' And '$(ArchiveOnBuild)' == 'true'">true</_RequireCodeSigning>
+		<!-- Extensions must be signed, so make sure they are -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == '' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning>
+		<!-- Otherwise code signing is disabled by default -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning>
+
+		<!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
+		<_CodeSigningKey Condition="'$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<!-- SpecifiedCodeSigningKey -->
-		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' == 'macOS'">$(CodeSigningKey)</_SpecifiedCodesignKey> <!-- Xamarin.Mac projects use 'CodeSigningKey' -->
-		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' != 'macOS'">$(CodesignKey)</_SpecifiedCodesignKey> <!-- Xamarin.iOS projects use 'CodesignKey' -->
+		<!-- Xamarin.Mac projects use 'CodeSigningKey', and Xamarin.iOS projects use 'CodesignKey'. -->
+		<!-- Here we accept both, and we'll recommend using 'CodesignKey' for all platforms going forward -->
+		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodeSigningKey)</_SpecifiedCodesignKey>
+		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodesignKey)</_SpecifiedCodesignKey>
 
+		<!-- If we should create a .pkg or not (only relevant for macOS / Mac Catalyst) -->
+		<!-- The equivalent property for the other platforms is 'BuildIpa' -->
+		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
+
+		<!-- If the .pkg should be signed or not. Applicable to macOS and Mac Catalyst. Defaults to false. -->
+		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<!-- TargetArchitectures -->
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS'">$(XamMacArch)</TargetArchitectures>
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchArch)</TargetArchitectures>
@@ -131,14 +185,38 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">ARMv7k</TargetArchitectures>
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">ARM64</TargetArchitectures>
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARMv7</TargetArchitectures>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">false</ArchiveOnBuild>
+		<IsAppExtension Condition="'$(IsAppExtension)' == ''">false</IsAppExtension>
+		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">false</IsWatchExtension>
+		<IsWatchApp Condition="'$(IsWatchApp)' == ''">false</IsWatchApp>
+
+		<!-- Xamarin.iOS projects use MtouchEnableSGenConc, and Xamarin.Mac projects use EnableSGenConc -->
+		<!-- Going forward we're sticking with EnableSGenConc, but we'll accept MtouchEnableSGenConc if it's set -->
+		<!-- If both are set, EnableSGenConc takes precedence -->
+		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">$(MtouchEnableSGenConc)</EnableSGenConc>
+		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
+
+		<_CanOutputAppBundle>false</_CanOutputAppBundle>
+		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">true</_CanOutputAppBundle>
+
+		<!-- We can archive: -->
+		<!-- macOS and Mac Catalyst: executable projects which aren't app extensions -->
+		<!-- iOS, tvOS and watchOS: executable projects built for device which aren't app extensions nor watch apps -->
+		<_CanArchive>false</_CanArchive>
+		<_CanArchive Condition="('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(OutputType)' == 'Exe' And '$(IsAppExtension)' == 'false'">true</_CanArchive>
+		<_CanArchive Condition="('$(_PlatformName)' == 'iOS'  Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And '$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">true</_CanArchive>
 
 		<!-- Debug -->
-		<!-- Xamarin.Mac: use MmpDebug, but if that isn't set, use DebugSymbols -->
-		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
-		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS' And '$(_BundlerDebug)' == ''">$(DebugSymbols)</_BundlerDebug>
+		<!-- Xamarin.Mac: use MmpDebug -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
 		<!-- Xamarin.iOS: Use MtouchDebug -->
-		<_BundlerDebug Condition="'$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
-		<!-- The default is false for all platforms -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<!-- Otherwise the default is true if we're building a Debug configuration -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(Configuration)' == 'Debug'">true</_BundlerDebug>
+		<!-- As a last resort, the default is false for all platforms -->
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
 
 		<!-- Extra arguments -->
@@ -146,15 +224,16 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_BundlerArguments Condition="'$(_PlatformName)' != 'macOS'">$(MtouchExtraArgs)</_BundlerArguments>
 
 		<!-- NoSymbolStrip -->
-		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip -->
-		<!-- in either case default to 'false' -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped -> true -->
+		<!-- default to 'false' -->
 		<_NoSymbolStrip Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</_NoSymbolStrip>
+		<_NoSymbolStrip Condition="'$(_PlatformName)' == 'macOS'">true</_NoSymbolStrip>
 		<_NoSymbolStrip Condition="'$(_NoSymbolStrip)' == ''">false</_NoSymbolStrip>
 
 		<!-- NoDSymUtil -->
-		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil -->
-		<!-- in either case default to 'false' -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil and never produced them -> now, produce them by default when archiving -->
 		<_NoDSymUtil Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoDSymUtil)</_NoDSymUtil>
+		<_NoDSymUtil Condition="'$(_PlatformName)' == 'macOS' And '$(ArchiveOnBuild)' != 'true'">true</_NoDSymUtil>
 		<_NoDSymUtil Condition="'$(_NoDSymUtil)' == ''">false</_NoDSymUtil>
 
 		<!-- DeviceSpecificIntermediateOutputPath -->
@@ -173,7 +252,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     handle this by calculating the corresponding relative path for
 		     DeviceSpecificOutputPath. -->
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
-		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
+		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
+		<!-- We assume elsewhere that DeviceSpecificOutputPath has a trailing slash, so make sure that's always the case -->
+		<DeviceSpecificOutputPath>$([MSBuild]::EnsureTrailingSlash('$(DeviceSpecificOutputPath)'))</DeviceSpecificOutputPath>
 
 		<!-- OptimizePNGs:
 			default to false if a binding project (both XI and XM)
@@ -196,13 +277,23 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- EnableOnDemandResources: default to true for Xamarin.iOS and false for Xamarin.Mac -->
 		<EnableOnDemandResources Condition="'$(_PlatformName)' == 'macOS' And '$(EnableOnDemandResources)' == ''">false</EnableOnDemandResources>
 		<EnableOnDemandResources Condition="'$(_PlatformName)' != 'macOS' And '$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
+
+		<!-- This is the prefix used for embedded resources, both for library projects and binding projects -->
+		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">xammac</_EmbeddedResourcePrefix>
+		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">monotouch</_EmbeddedResourcePrefix>
+
+		<_AppBundleManifestRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents/</_AppBundleManifestRelativePath>
+
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true' And '$(IsXpcService)' == 'true'">.xpc</AppBundleExtension>
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true'">.appex</AppBundleExtension>
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
+
+		<!-- Accept 'UseInterpreter' as an alternative for 'MtouchInterpreter', so that we have the same variable name as Android -->
+		<MtouchInterpreter Condition="'$(MtouchInterpreter)' == '' And '$(UseInterpreter)' == 'True'">all</MtouchInterpreter>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'iOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'macOS'">$(MacBclPath)/Xamarin.Mac.dll</BaseLibDllPath>
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix'">$(_XamarinPlatformAssemblyPath)</BaseLibDllPath>
 
 		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(BTouchToolPath)' == ''">$(_XamarinSdkRoot)/bin/</BTouchToolPath>
 		<BTouchToolPath Condition="'$(OS)' != 'Unix' And '$(_PlatformName)' != 'macOS' And '$(BTouchToolPath)' == ''">$(MSBuildExtensionsPath)\Xamarin\iOS\</BTouchToolPath>
@@ -242,6 +333,47 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 			<_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' != 'true' And $([MSBuild]::ValueOrDefault('$(_ComputedTargetFrameworkMoniker),', '').StartsWith('.NETFramework,', StringComparison.OrdinalIgnoreCase))">Xamarin.Mac,Version=v4.5,Profile=System</_ComputedTargetFrameworkMoniker>
 		</PropertyGroup>
 	</Target>
+
+	<!-- When looking for related files to copy, look for Mono debugging files as well -->
+	<PropertyGroup>
+		<AllowedReferenceRelatedFileExtensions>
+			$(AllowedReferenceRelatedFileExtensions);
+			.dll.mdb;
+			.exe.mdb;
+			.pdb
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
+
+	<!-- This is used to determine if VS is connected to mac. -->
+	<PropertyGroup>
+		<IsMacEnabled Condition="'$(IsMacEnabled)' == '' And !$([MSBuild]::IsOSPlatform('windows'))">true</IsMacEnabled>
+		<IsMacEnabled Condition="'$(IsMacEnabled)' == '' And  $([MSBuild]::IsOSPlatform('windows'))">false</IsMacEnabled>
+		<MtouchTargetsEnabled Condition="'$(_PlatformName)' != 'macOS'">$(IsMacEnabled)</MtouchTargetsEnabled>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<_IsUnifiedDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__UNIFIED__($|;)'))</_IsUnifiedDefined>
+		<_IsMobileDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MOBILE__($|;)'))</_IsMobileDefined>
+		<_IsIOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__IOS__($|;)'))</_IsIOSDefined>
+		<_IsTVOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__TVOS__($|;)'))</_IsTVOSDefined>
+		<_IsWatchOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__WATCHOS__($|;)'))</_IsWatchOSDefined>
+		<_IsMacOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MACOS__($|;)'))</_IsMacOSDefined>
+		<_IsMacCatalystDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MACCATALYST__($|;)'))</_IsMacCatalystDefined>
+
+		<DefineConstants Condition="!$(_IsUnifiedDefined)">__UNIFIED__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsMobileDefined) And '$(_PlatformName)' != 'macOS'">__MOBILE__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsIOSDefined) And '$(_PlatformName)' == 'iOS'">__IOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsTVOSDefined) And '$(_PlatformName)' == 'tvOS'">__TVOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsWatchOSDefined) And '$(_PlatformName)' == 'watchOS'">__WATCHOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsMacOSDefined) And '$(_PlatformName)' == 'macOS'">__MACOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsIOSDefined) And '$(_PlatformName)' == 'MacCatalyst'">__IOS__;$(DefineConstants)</DefineConstants> <!-- We define __IOS__ for MacCatalyst as well for now -->
+		<DefineConstants Condition="!$(_IsMacCatalystDefined) And '$(_PlatformName)' == 'MacCatalyst'">__MACCATALYST__;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

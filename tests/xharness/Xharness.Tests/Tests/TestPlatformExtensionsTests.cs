@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using NUnit.Framework;
 

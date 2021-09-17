@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -14,11 +14,11 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public class AOTTests
 	{
-		void ValidateAOTStatus (string tmpDir, Func<FileInfo, bool> shouldAOT, string buildResults)
+		void ValidateAOTStatus (string tmpDir, Func<FileInfo, bool> shouldAOT)
 		{ 
 			foreach (var file in GetOutputDirInfo (tmpDir).EnumerateFiles ()) {
 				bool shouldBeAOT = shouldAOT (file);
-				Assert.AreEqual (shouldBeAOT, File.Exists (file.FullName + ".dylib"), "{0} should {1}be AOT.\n{2}", file.FullName, shouldBeAOT ? "" : "not ", buildResults);
+				Assert.AreEqual (shouldBeAOT, File.Exists (file.FullName + ".dylib"), "{0} should {1}be AOT.", file.FullName, shouldBeAOT ? "" : "not ");
 
 			}
 		}
@@ -52,7 +52,6 @@ namespace Xamarin.MMP.Tests
 		bool IsFileManagedCode (FileInfo file) => file.Extension.ToLowerInvariant () == ".exe" || file.Extension.ToLowerInvariant () == ".dll";
 		bool ShouldBaseFilesBeAOT (FileInfo file) => file.Name == "Xamarin.Mac.dll" || file.Name == "System.dll" || file.Name == "mscorlib.dll";
 
-		// AOT unit tests can be found in tests/mmp-aot-tests
 		[TestCase (false)]
 		[TestCase (true)]
 		public void AOT_SmokeTest (bool useProjectTags) {
@@ -60,9 +59,8 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = GetTestConfig (TestType.Base, useProjectTags)
 				};
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-
-				ValidateAOTStatus (tmpDir, f => ShouldBaseFilesBeAOT (f), buildResults);
+				TI.TestUnifiedExecutable (test);
+				ValidateAOTStatus (tmpDir, f => ShouldBaseFilesBeAOT (f));
 			});
 		}
 
@@ -74,15 +72,14 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = GetTestConfig (TestType.Hybrid, useProjectTags)
 				};
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				TI.TestUnifiedExecutable (test);
 
 				foreach (var file in GetOutputDirInfo (tmpDir).EnumerateFiles ()) {
 					if (IsFileManagedCode (file))
 						TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", new [] { file.ToString () }, "Manually strip IL");
-
 				}
 
-				ValidateAOTStatus (tmpDir, IsFileManagedCode, buildResults);
+				ValidateAOTStatus (tmpDir, IsFileManagedCode);
 
 				TI.RunEXEAndVerifyGUID (tmpDir, test.guid, GetOutputAppPath (tmpDir));
 			});
@@ -96,11 +93,11 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = GetTestConfig (TestType.Hybrid, useProjectTags)
 				};
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				TI.TestUnifiedExecutable (test);
 
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", new [] { Path.Combine (GetOutputBundlePath (tmpDir), "UnifiedExample.exe") }, "Manually strip IL");
 
-				ValidateAOTStatus (tmpDir, IsFileManagedCode, buildResults);
+				ValidateAOTStatus (tmpDir, IsFileManagedCode);
 
 				TI.RunEXEAndVerifyGUID (tmpDir, test.guid, GetOutputAppPath (tmpDir));
 			});

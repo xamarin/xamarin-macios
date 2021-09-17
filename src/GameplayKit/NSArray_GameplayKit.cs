@@ -1,4 +1,4 @@
-﻿//
+//
 // NSArray_GameplayKit.cs: Generic extensions to NSArray
 //
 // Authors:
@@ -12,7 +12,10 @@ using Foundation;
 using ObjCRuntime;
 
 namespace GameplayKit {
+
+#if !NET
 	[iOS (10,0), TV (10,0), Mac (10,12)]
+#endif
 	public static class NSArray_GameplayKit {
 
 		[Export ("shuffledArrayWithRandomSource:")]

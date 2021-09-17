@@ -13,6 +13,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	// CATransform3D.h
@@ -28,13 +30,11 @@ namespace CoreAnimation {
 		static CATransform3D ()
 		{
 			Identity = new CATransform3D ();
-			Identity.m11 = 1f;
-			Identity.m22 = 1f;
-			Identity.m33 = 1f;
-			Identity.m44 = 1f;
+			Identity.m11 = Identity.m22 = Identity.m33 = Identity.m44 = 1f;
 		}
 		
 		[DllImport(Constants.QuartzLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DIsIdentity (CATransform3D t);
 
 		public bool IsIdentity {
@@ -44,6 +44,7 @@ namespace CoreAnimation {
 		}
 
 		[DllImport(Constants.QuartzLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
 
 		public bool Equals (CATransform3D other)
@@ -51,7 +52,7 @@ namespace CoreAnimation {
 			return CATransform3DEqualToTransform (this, other);
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (!(other is CATransform3D))
 				return false;
@@ -158,6 +159,7 @@ namespace CoreAnimation {
 		
 
 		[DllImport(Constants.QuartzLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DIsAffine (CATransform3D t);
 
 		public bool IsAffine {

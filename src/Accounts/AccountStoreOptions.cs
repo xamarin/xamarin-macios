@@ -31,6 +31,8 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Accounts {
 
 	// XI specific, not part of ObjC (NSString mapping)
@@ -54,7 +56,7 @@ namespace Accounts {
 		{
 		}
 
-		public string FacebookAppId {
+		public string? FacebookAppId {
 			set {
 				SetStringValue (ACFacebookKey.AppId, value);
 			}
@@ -66,9 +68,9 @@ namespace Accounts {
 		public void SetPermissions (ACFacebookAudience audience, params string[] permissions)
 		{
 			if (permissions == null)
-				throw new ArgumentNullException ("permissions");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (permissions));
 			if (permissions.Length == 0)
-				throw new ArgumentException ("permissions");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (permissions));
 
 			SetArrayValue (ACFacebookKey.Permissions, permissions);
 
@@ -91,7 +93,7 @@ namespace Accounts {
 			SetNativeValue (ACFacebookKey.Audience, v);
 		}
 
-		public string TencentWeiboAppId {
+		public string? TencentWeiboAppId {
 			set {
 				SetStringValue (ACTencentWeiboKey.AppId, value);
 			}

@@ -33,12 +33,14 @@ using Foundation;
 using ObjCRuntime;
 using CoreLocation;
 
+#nullable enable
+
 namespace MapKit {
 	public partial class MKGeodesicPolyline {
 		public static unsafe MKGeodesicPolyline FromPoints (MKMapPoint [] points)
 		{
 			if (points == null)
-				throw new ArgumentNullException ("points");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (points.Length == 0)
 				return PolylineWithPoints (IntPtr.Zero, 0);
 
@@ -50,7 +52,7 @@ namespace MapKit {
 		public static unsafe MKGeodesicPolyline FromCoordinates (CLLocationCoordinate2D [] coords)
 		{
 			if (coords == null)
-				throw new ArgumentNullException ("coords");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (coords));
 			if (coords.Length == 0)
 				return PolylineWithCoordinates (IntPtr.Zero, 0);
 

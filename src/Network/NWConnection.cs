@@ -6,8 +6,11 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -17,16 +20,6 @@ using nw_parameters_t=System.IntPtr;
 using nw_establishment_report_t=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWConnectionState {
-		Invalid   = 0,
-		Waiting   = 1,
-		Preparing = 2,
-		Ready     = 3,
-		Failed    = 4,
-		Cancelled = 5,
-	}
 
 	//
 	// Signature for a method invoked on data received, the "data" value can be null if the
@@ -35,22 +28,27 @@ namespace Network {
 	// be present, and *also* the error will be set, indicating that some data was
 	// retrieved, before the error was raised.
 	//
-	public delegate void NWConnectionReceiveCompletion (IntPtr data, nuint dataSize, NWContentContext context, bool isComplete, NWError error);
+	public delegate void NWConnectionReceiveCompletion (IntPtr data, nuint dataSize, NWContentContext? context, bool isComplete, NWError? error);
 
 	//
 	// Signature for a method invoked on data received, same as NWConnectionReceiveCompletion,
 	// but they receive DispatchData instead of data + dataSize
 	//
-	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData data, NWContentContext context, bool isComplete, NWError error);
+	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData? data, NWContentContext? context, bool isComplete, NWError? error);
 
 	//
 	// Signature for a method invoked on data received, same as NWConnectionReceiveCompletion,
 	// but they receive ReadOnlySpan rather than a data + dataSize
 	//
-	public delegate void NWConnectionReceiveReadOnlySpanCompletion (ReadOnlySpan<byte> data, NWContentContext context, bool isComplete, NWError error);
+	public delegate void NWConnectionReceiveReadOnlySpanCompletion (ReadOnlySpan<byte> data, NWContentContext? context, bool isComplete, NWError? error);
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWConnection : NativeObject {
 		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -69,7 +67,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_endpoint_t nw_connection_copy_endpoint (nw_connection_t connection);
 
-		public NWEndpoint Endpoint {
+		public NWEndpoint? Endpoint {
 			get {
 				var x = nw_connection_copy_endpoint (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
@@ -81,7 +79,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_parameters_t nw_connection_copy_parameters (nw_connection_t connection);
 
-		public NWParameters Parameters {
+		public NWParameters? Parameters {
 			get {
 				var x = nw_connection_copy_parameters (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
@@ -96,9 +94,9 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (StateChangeCallback))]
 		static void Trampoline_StateChangeCallback (IntPtr block, NWConnectionState state, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWConnectionState,NWError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWConnectionState,NWError?>> (block);
 			if (del != null) {
-				NWError err = error != IntPtr.Zero ? new NWError (error, owns: false) : null;
+				NWError? err = error != IntPtr.Zero ? new NWError (error, owns: false) : null;
 				del (state, err);
 			}
 		}
@@ -107,7 +105,7 @@ namespace Network {
 		unsafe static extern void nw_connection_set_state_changed_handler (nw_connection_t connection, void *handler);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError> stateHandler)
+		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError?> stateHandler)
 		{
 			if (stateHandler == null) {
 				nw_connection_set_state_changed_handler (GetCheckedHandle (), null);
@@ -265,7 +263,7 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveCompletion> (block);
 			if (del != null) {
-				DispatchData dispatchData = null, dataCopy = null;
+				DispatchData? dispatchData = null, dataCopy = null;
 				IntPtr bufferAddress = IntPtr.Zero;
 				nuint bufferSize = 0;
 
@@ -281,8 +279,8 @@ namespace Network {
 				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData != null) {
-					dataCopy.Dispose ();
-					dispatchData.Dispose ();
+					dataCopy?.Dispose ();
+					dispatchData?.Dispose ();
 				}
 			}
 		}
@@ -292,7 +290,7 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveDispatchDataCompletion> (block);
 			if (del != null) {
-				DispatchData dispatchData = null;
+				DispatchData? dispatchData = null;
 				IntPtr bufferAddress = IntPtr.Zero;
 
 				if (dispatchDataPtr != IntPtr.Zero)
@@ -434,7 +432,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_connection_send_completion_t))]
 		static void TrampolineSendCompletion (IntPtr block, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
 			if (del != null) {
 				var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 				del (err);
@@ -454,7 +452,7 @@ namespace Network {
 		// additional SendXxx methods to encode the few options that are currently
 		// configured via one of the three NWContentContext static properties
 		//
-		unsafe void LowLevelSend (IntPtr handle, DispatchData buffer, IntPtr contentContext, bool isComplete, void *callback)
+		unsafe void LowLevelSend (IntPtr handle, DispatchData? buffer, IntPtr contentContext, bool isComplete, void *callback)
 		{
 			nw_connection_send (handle: GetCheckedHandle (),
 					    dispatchData: buffer.GetHandle (),
@@ -463,18 +461,18 @@ namespace Network {
 					    callback: callback);
 		}
 
-		public void Send (byte [] buffer, NWContentContext context, bool isComplete, Action<NWError> callback)
+		public void Send (byte [] buffer, NWContentContext context, bool isComplete, Action<NWError?> callback)
 		{
-			DispatchData d = null;
+			DispatchData? d = null;
 			if (buffer != null)
 				d = DispatchData.FromByteBuffer (buffer);
 
 			Send (d, context, isComplete, callback);
 		}
 
-		public void Send (byte [] buffer, int start, int length, NWContentContext context, bool isComplete, Action<NWError> callback)
+		public void Send (byte [] buffer, int start, int length, NWContentContext context, bool isComplete, Action<NWError?> callback)
 		{
-			DispatchData d = null;
+			DispatchData? d = null;
 			if (buffer != null)
 				d = DispatchData.FromByteBuffer (buffer, start, length);
 
@@ -482,7 +480,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void Send (DispatchData buffer, NWContentContext context, bool isComplete, Action<NWError> callback)
+		public void Send (DispatchData? buffer, NWContentContext context, bool isComplete, Action<NWError?> callback)
 		{
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
@@ -502,7 +500,7 @@ namespace Network {
 			}
 		}
 
-		public unsafe void SendIdempotent (DispatchData buffer, NWContentContext context, bool isComplete)
+		public unsafe void SendIdempotent (DispatchData? buffer, NWContentContext context, bool isComplete)
 		{
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
@@ -512,11 +510,11 @@ namespace Network {
 
 		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)
 		{
-			DispatchData d = null;
+			DispatchData? d = null;
 			if (buffer != null)
 				d = DispatchData.FromByteBuffer (buffer);
 
-			SendIdempotent (buffer, context, isComplete);
+			SendIdempotent (d, context, isComplete);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -527,7 +525,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_connection_copy_current_path (IntPtr handle);
 
-		public NWPath CurrentPath {
+		public NWPath? CurrentPath {
 			get {
 				var x = nw_connection_copy_current_path (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
@@ -539,7 +537,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_connection_copy_protocol_metadata (IntPtr handle, IntPtr protocolDefinition);
 
-		public NWProtocolMetadata GetProtocolMetadata (NWProtocolDefinition definition)
+		public NWProtocolMetadata? GetProtocolMetadata (NWProtocolDefinition definition)
 		{
 			if (definition == null)
 				throw new ArgumentNullException (nameof (definition));
@@ -572,7 +570,13 @@ namespace Network {
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
 
@@ -590,7 +594,13 @@ namespace Network {
 			}
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if !NET
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
 		{

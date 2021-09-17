@@ -18,13 +18,11 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<IsAppExtension>True</IsAppExtension>
 		<IsWatchExtension>False</IsWatchExtension>
-		<AppBundleExtension>.appex</AppBundleExtension>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.targets" />
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.AppExtension.Common.props" 
-			Condition="'$(_XamarinAppExtensionCommonPropsHasBeenImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.AppExtension.Common.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
@@ -33,8 +31,6 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 	<Target Name="GetBundleTargetPath" DependsOnTargets="_GenerateBundleName;$(GetTargetPathDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
 	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GenerateBundleName;$(BuildDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
 	<Target Name="Rebuild" Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GenerateBundleName;$(RebuildDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
-
-	<Target Name="CreateIpa"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

@@ -39,6 +39,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Subject = "My Subject",
 				Title = "My Title",
 				UserPassword = "My UserPassword",
+				CreatePdfA2u = true,
+				CreateLinearizedPdf = true,
 			};
 		}
 
@@ -52,6 +54,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var info = GetInfo ();
 			UIGraphics.BeginPDFContext("file", CGRect.Empty, info); 
 		}
+#endif
 
 		[Test]
 		public void ToDictionaryWithPermissions ()
@@ -74,6 +77,5 @@ namespace MonoTouchFixtures.CoreGraphics {
 				}
 			}
 		}
-#endif
 	}
 }

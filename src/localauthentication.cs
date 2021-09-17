@@ -30,7 +30,7 @@ namespace LocalAuthentication {
 		string LocalizedFallbackTitle { get; set; }
 
 #if !XAMCORE_4_0
-		[iOS (8,3), Mac (10,10)]
+		[iOS (8,3)]
 		[Field ("LAErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif

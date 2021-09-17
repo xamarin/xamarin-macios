@@ -1,0 +1,58 @@
+!missing-enum! NSCollectionElementCategory not bound
+!missing-enum! NSCollectionViewDropOperation not bound
+!missing-enum! NSCollectionViewItemHighlightState not bound
+!missing-enum! NSCollectionViewScrollDirection not bound
+!missing-enum! NSCollectionViewScrollPosition not bound
+!missing-selector! +NSToolbarItemGroup::groupWithItemIdentifier:images:selectionMode:labels:target:action: not bound
+!missing-selector! +NSToolbarItemGroup::groupWithItemIdentifier:titles:selectionMode:labels:target:action: not bound
+!missing-selector! NSMenuToolbarItem::setShowsIndicator: not bound
+!missing-selector! NSMenuToolbarItem::showsIndicator not bound
+!missing-selector! NSToolbarItemGroup::controlRepresentation not bound
+!missing-selector! NSToolbarItemGroup::isSelectedAtIndex: not bound
+!missing-selector! NSToolbarItemGroup::selectedIndex not bound
+!missing-selector! NSToolbarItemGroup::selectionMode not bound
+!missing-selector! NSToolbarItemGroup::setControlRepresentation: not bound
+!missing-selector! NSToolbarItemGroup::setSelected:atIndex: not bound
+!missing-selector! NSToolbarItemGroup::setSelectedIndex: not bound
+!missing-selector! NSToolbarItemGroup::setSelectionMode: not bound
+!missing-selector! NSToolbarItemGroup::setSubitems: not bound
+!missing-selector! NSToolbarItemGroup::subitems not bound
+!missing-type! NSMenuToolbarItem not bound
+!missing-type! NSToolbarItemGroup not bound
+## appended from unclassified file
+!unknown-field! NSImageNameApplicationIcon bound
+!unknown-field! NSImageNameCaution bound
+!unknown-field! NSImageNameEnterFullScreenTemplate bound
+!unknown-field! NSImageNameExitFullScreenTemplate bound
+!unknown-field! NSImageNameFolder bound
+!unknown-field! NSImageNameFollowLinkFreestandingTemplate bound
+!unknown-field! NSImageNameIChatTheaterTemplate bound
+!unknown-field! NSImageNameInvalidDataFreestandingTemplate bound
+!unknown-field! NSImageNameLeftFacingTriangleTemplate bound
+!unknown-field! NSImageNameMenuMixedStateTemplate bound
+!unknown-field! NSImageNameMenuOnStateTemplate bound
+!unknown-field! NSImageNameMobileMe bound
+!unknown-field! NSImageNameRefreshFreestandingTemplate bound
+!unknown-field! NSImageNameRevealFreestandingTemplate bound
+!unknown-field! NSImageNameRightFacingTriangleTemplate bound
+!unknown-field! NSImageNameSmartBadgeTemplate bound
+!unknown-field! NSImageNameStatusAvailable bound
+!unknown-field! NSImageNameStatusNone bound
+!unknown-field! NSImageNameStatusPartiallyAvailable bound
+!unknown-field! NSImageNameStatusUnavailable bound
+!unknown-field! NSImageNameStopProgressFreestandingTemplate bound
+!unknown-field! NSImageNameTouchBarPlayheadTemplate bound
+!unknown-field! NSImageNameTrashEmpty bound
+!unknown-field! NSImageNameTrashFull bound
+!unknown-field! NSImageNameUserGuest bound
+!unknown-field! NSToolbarCustomizeToolbarItemIdentifier bound
+!unknown-field! NSToolbarSeparatorItemIdentifier bound
+!unknown-field! NSToolbarSidebarTrackingSeparatorItemIdentifier bound
+!unknown-field! NSTouchBarItemIdentifierCandidateList bound
+!unknown-field! NSTouchBarItemIdentifierCharacterPicker bound
+!unknown-field! NSTouchBarItemIdentifierTextAlignment bound
+!unknown-field! NSTouchBarItemIdentifierTextColorPicker bound
+!unknown-field! NSTouchBarItemIdentifierTextFormat bound
+!unknown-field! NSTouchBarItemIdentifierTextList bound
+!unknown-field! NSTouchBarItemIdentifierTextStyle bound
+!unknown-pinvoke! NSBeep bound

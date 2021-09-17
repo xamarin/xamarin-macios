@@ -33,13 +33,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
 namespace AddressBook {
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary info)
 		{
@@ -68,6 +82,11 @@ namespace AddressBook {
 
 		static InitConstants ()
 		{
+#if __MACCATALYST__
+			// avoid TypeLoadException if used before macOS 11.x
+			if (!UIKit.UIDevice.CurrentDevice.CheckSystemVersion (14,0))
+				return;
+#endif
 			// ensure we can init. This is needed before iOS6 (as per doc).
 			IntPtr p = ABAddressBook.ABAddressBookCreate ();
 
@@ -91,7 +110,20 @@ namespace AddressBook {
 		}
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ABAddressBook : INativeObject, IDisposable, IEnumerable<ABRecord> {
 
 		public static readonly NSString ErrorDomain;
@@ -102,7 +134,14 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		internal extern static IntPtr ABAddressBookCreate ();
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use the static Create method instead")]
+#else
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use the static Create method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public ABAddressBook ()
 		{
 			this.handle = ABAddressBookCreate ();
@@ -218,6 +257,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABAddressBookHasUnsavedChanges (IntPtr addressBook);
 		public bool HasUnsavedChanges {
 			get {
@@ -227,6 +267,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABAddressBookSave (IntPtr addressBook, out IntPtr error);
 		public void Save ()
 		{
@@ -245,6 +286,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABAddressBookAddRecord (IntPtr addressBook, IntPtr record, out IntPtr error);
 		public void Add (ABRecord record)
 		{
@@ -259,6 +301,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABAddressBookRemoveRecord (IntPtr addressBook, IntPtr record, out IntPtr error);
 		public void Remove (ABRecord record)
 		{

@@ -11,6 +11,7 @@ namespace MonoTouch.Tuner {
 			switch (assemblyName) {
 			case "MonoTouch.Dialog-1":
 			case "MonoTouch.NUnitLite":
+			case "Xamarin.iOS": // The Xamarin.iOS.dll implementation assembly for Mac Catalyst.
 				return true;
 			default:
 				return assemblyName == product_assembly;
@@ -19,11 +20,6 @@ namespace MonoTouch.Tuner {
 
 		public override string ProductAssembly { 
 			get { return product_assembly; }
-		}
-
-		public override string GetNamespace (string nspace)
-		{
-			return nspace;
 		}
 
 		public void SetProductAssembly (string assembly)

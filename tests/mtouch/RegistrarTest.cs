@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
@@ -346,6 +346,9 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "BackgroundTasks", Version = "13.0" },
 					new { Framework = "QuickLookThumbnailing", Version = "13.0" },
 					new { Framework = "AutomaticAssessmentConfiguration", Version = "13.4" },
+					new { Framework = "CoreLocationUI", Version = "15.0" },
+					new { Framework = "Chip", Version = "15.0" },
+					new { Framework = "ThreadNetwork", Version = "15.0" },
 				};
 				foreach (var framework in invalidFrameworks)
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
@@ -1857,4 +1860,3 @@ class C : NSObject {
 		}
 	}
 }
-

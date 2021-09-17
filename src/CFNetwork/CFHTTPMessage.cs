@@ -12,6 +12,7 @@ using System;
 using System.Net;
 using System.Security.Authentication;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
@@ -77,21 +78,38 @@ namespace CoreServices {
 		static IntPtr GetVersion (Version version)
 		{
 			if ((version == null) || version.Equals (HttpVersion.Version11))
-				return _HTTPVersion1_1.Handle;
-			else if (version.Equals (HttpVersion.Version10))
-				return _HTTPVersion1_0.Handle;
-			else if (version.Major == 2 && version.Minor == 0) {
-				if (_HTTPVersion2_0 != null && _HTTPVersion2_0.Handle != IntPtr.Zero)
-					return _HTTPVersion2_0.Handle;
+				return _HTTPVersion1_1;
+
+			if (version.Equals (HttpVersion.Version10))
+				return _HTTPVersion1_0;
+
+			if (version.Major == 3 && version.Minor == 0) {
+				// HTTP 3.0 requires OS X 10.16 or later.
+				if (_HTTPVersion3_0 != IntPtr.Zero)
+					return _HTTPVersion3_0;
+				else if (_HTTPVersion2_0 != IntPtr.Zero)
+					return _HTTPVersion2_0;
+				else 
+					return _HTTPVersion1_1;
+			}
+
+			if (version.Major == 2 && version.Minor == 0) {
 				// HTTP 2.0 requires OS X 10.11 or later.
-				return _HTTPVersion1_1.Handle;
-			} else
-				throw new ArgumentException ();
+				if (_HTTPVersion2_0 != IntPtr.Zero)
+					return _HTTPVersion2_0;
+				else 
+					return _HTTPVersion1_1;
+			}
+
+			if (_HTTPVersion1_1 != IntPtr.Zero)
+				return _HTTPVersion1_1;
+			// not supporting version 1.1 is something to worry about
+			throw new ArgumentException ();
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFHTTPMessageRef __nonnull */ IntPtr CFHTTPMessageCreateEmpty (
-			/* CFAllocatorRef __nullable */ IntPtr alloc, /* Boolean */ bool isRequest);
+			/* CFAllocatorRef __nullable */ IntPtr alloc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool isRequest);
 
 		public static CFHTTPMessage CreateEmpty (bool request)
 		{
@@ -147,6 +165,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageIsRequest (/* CFHTTPMessageRef __nonnull */ IntPtr message);
 
 		public bool IsRequest {
@@ -195,7 +214,7 @@ namespace CoreServices {
 				IntPtr ptr = CFHTTPMessageCopyVersion (handle);
 				try {
 					// FIXME: .NET HttpVersion does not include (yet) Version20, so Version11 is returned
-					if (ptr == _HTTPVersion1_0.Handle)
+					if (ptr == _HTTPVersion1_0)
 						return HttpVersion.Version10;
 					else
 						return HttpVersion.Version11;
@@ -207,6 +226,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageIsHeaderComplete (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message);
 
@@ -218,6 +238,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageAppendBytes (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message,
 			/* const UInt8* __nonnull */ byte[] newBytes, /* CFIndex */ nint numBytes);
@@ -278,6 +299,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageApplyCredentials (/* CFHTTPMessageRef */ IntPtr request, 
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFString */ IntPtr username, /* CFString */ IntPtr password,
 			/* CFStreamError* */ out CFStreamError error);
@@ -318,10 +340,23 @@ namespace CoreServices {
 			Negotiate,
 			NTLM,
 			Digest,
+#if !NET
 			[Mac (10, 9)][iOS (7,0)]
 			[Deprecated (PlatformName.iOS, 12,0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.TvOS, 12,0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.MacOSX, 10,14, message: "Not available anymore.")]
+#else
+			[UnsupportedOSPlatform ("ios12.0")]
+			[UnsupportedOSPlatform ("tvos12.0")]
+			[UnsupportedOSPlatform ("macos10.14")]
+#if IOS
+			[Obsolete ("Starting with ios12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+			[Obsolete ("Starting with tvos12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+			[Obsolete ("Starting with macos10.14 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 			OAuth1,
 		}
 
@@ -348,13 +383,14 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageAddAuthentication (
 			/* CFHTTPMessageRef __nonnull */ IntPtr request, 
 			/* CFHTTPMessageRef __nullable */ IntPtr authenticationFailureResponse,
 			/* CFStringRef __nonnull */ IntPtr username, 
 			/* CFStringRef __nonnull */ IntPtr password,
 			/* CFStringRef __nullable */ IntPtr authenticationScheme,
-			/* Boolean */ bool forProxy);
+			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool forProxy);
 
 		public bool AddAuthentication (CFHTTPMessage failureResponse, NSString username,
 		                               NSString password, AuthenticationScheme scheme,
@@ -371,6 +407,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageApplyCredentialDictionary (/* CFHTTPMessageRef */ IntPtr request, 
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFDictionaryRef */ IntPtr dict, /* CFStreamError* */ out CFStreamError error);
 

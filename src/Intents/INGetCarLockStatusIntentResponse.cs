@@ -1,4 +1,4 @@
-﻿// INGetCarLockStatusIntentResponse.cs
+// INGetCarLockStatusIntentResponse.cs
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
@@ -6,7 +6,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if IOS || TVOS
+#if IOS
 
 using Foundation;
 using Intents;

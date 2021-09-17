@@ -8,6 +8,8 @@
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace SpriteKit {
 
 	// NSInteger -> SKKeyframeSequence.h

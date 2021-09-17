@@ -14,6 +14,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 
 	public partial class MTLRenderPipelineColorAttachmentDescriptorArray {

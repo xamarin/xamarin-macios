@@ -76,7 +76,7 @@ namespace CoreGraphics {
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGPatternCreate (/* void* */ IntPtr info, CGRect bounds, CGAffineTransform matrix,
-			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, bool isColored,
+			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, [MarshalAs (UnmanagedType.I1)] bool isColored,
 			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);
 
 		static CGPatternCallbacks callbacks = new CGPatternCallbacks () {

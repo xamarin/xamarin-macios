@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -134,7 +134,7 @@ namespace Xamarin.MacDev.Tasks
 				}
 
 				// update AssetPackManifestTemplate.plist
-				resource.Add ("URL", new PString ("http://127.0.0.1" + Path.GetFullPath (dir)));
+				resource.Add ("URL", new PString ("http://127.0.0.1" + Uri.EscapeUriString (Path.GetFullPath (dir))));
 				resource.Add ("bundleKey", new PString (bundleIdentifier));
 
 				if (!double.IsNaN (priority))

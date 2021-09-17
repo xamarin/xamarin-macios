@@ -413,7 +413,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		[Advice ("Use DataFormat")]
+		[Advice ("Use 'DataFormat' instead.")]
 		public AudioStreamBasicDescription StreamBasicDescription {
 			get {
 				return DataFormat;

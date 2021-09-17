@@ -1,8 +1,9 @@
 using System;
 
-using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
@@ -30,7 +31,7 @@ namespace Xamarin.MacDev.Tasks {
 				case ApplePlatform.MacOSX:
 					return "Xamarin.Mac";
 				default:
-					throw new InvalidOperationException ($"Invalid platform: {Platform}");
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
 			}
 		}
@@ -67,10 +68,11 @@ namespace Xamarin.MacDev.Tasks {
 				case ApplePlatform.MacOSX:
 					return "macOS";
 				default:
-					throw new InvalidOperationException ($"Invalid platform: {Platform}");
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
 			}
 		}
+
+		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 	}
 }
-

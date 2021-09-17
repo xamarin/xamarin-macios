@@ -1,0 +1,61 @@
+**Source Link**
+
+https://github.com/DeepScale/SqueezeNet
+
+**Download Link** 
+
+https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/squeezenet_v1.1.caffemodel
+https://github.com/DeepScale/SqueezeNet/blob/master/SqueezeNet_v1.1/train_val.prototxt
+
+
+**Project Page** 
+
+https://github.com/DeepScale/SqueezeNet
+
+**Authors** 
+
+Original Paper Title: SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and <0.5MB model size
+Authors: Forrest N. Iandola and Song Han and Matthew W. Moskewicz and Khalid Ashraf and William J.
+
+Caffe Implementation: http://deepscale.ai
+
+**Labels**
+
+Imagenet Labels
+https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a
+
+**License**
+
+BSD License
+
+Redistribution and use in source and binary forms, with or without modification, are permitted
+provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions
+and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+and the following disclaimer in the documentation and/or other materials provided with the
+distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+https://github.com/DeepScale/SqueezeNet/blob/master/LICENSE
+
+**Changes Required**
+
+The train_valid.prototxt needs to be updated for deployment. To do so, the following changes are required:
+
+1. The data layer should be replaced by an input layer with dimensions equal to the crop size in the data layer.
+2. The accuracy layers from the end of the prototxt file need to be deleted as they are not required during
+   deployment. They can remain in the prototxt but they will be ignored.
+3. The loss layer will be ignored, and a layer of type softmax is required to be added, with bottom layer as
+   pool10 and top as "prob"
+4. In the conversion call, the biases provided in the train_valid data layer are required to be given as arguments

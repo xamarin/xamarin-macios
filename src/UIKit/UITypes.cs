@@ -10,6 +10,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -103,7 +104,9 @@ namespace UIKit {
 	}
 
 #if !WATCH
+#if !NET
 	[iOS (9,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIFloatRange : IEquatable<UIFloatRange> {
 
@@ -116,6 +119,7 @@ namespace UIKit {
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool UIFloatRangeIsInfinite (UIFloatRange range);
 
 		public bool IsInfinite {
@@ -149,7 +153,53 @@ namespace UIKit {
 		public static UIFloatRange Infinite = new UIFloatRange (nfloat.NegativeInfinity, nfloat.PositiveInfinity);
 	}
 #endif
-	
+
+#if IOS || __MACCATALYST__
+#if !NET
+	[Introduced (PlatformName.iOS, 15,0)]
+	[Introduced (PlatformName.MacCatalyst, 15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif //!NET
+	[StructLayout (LayoutKind.Sequential)]
+	public struct UIPointerAccessoryPosition {
+		public nfloat Offset, Angle;
+
+		public UIPointerAccessoryPosition (nfloat offset, nfloat angle)
+		{
+			Offset = offset;
+			Angle = angle;
+		}
+
+#if !COREBUILD
+		[Field ("UIPointerAccessoryPositionTop", "UIKit")]
+		public static UIPointerAccessoryPosition Top => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionTop"), typeof (UIPointerAccessoryPosition))!;
+
+		[Field ("UIPointerAccessoryPositionTopRight", "UIKit")]
+		public static UIPointerAccessoryPosition TopRight => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionTopRight"), typeof (UIPointerAccessoryPosition))!;
+
+		[Field ("UIPointerAccessoryPositionRight", "UIKit")]
+		public static UIPointerAccessoryPosition Right => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionRight"), typeof (UIPointerAccessoryPosition))!;
+
+		[Field ("UIPointerAccessoryPositionBottomRight", "UIKit")]
+		public static UIPointerAccessoryPosition BottomRight => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionBottomRight"), typeof (UIPointerAccessoryPosition))!;
+
+		[Field ("UIPointerAccessoryPositionBottom", "UIKit")]
+		public static UIPointerAccessoryPosition Bottom => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionBottom"), typeof (UIPointerAccessoryPosition))!;
+
+		[Field ("UIPointerAccessoryPositionBottomLeft", "UIKit")]
+		public static UIPointerAccessoryPosition BottomLeft => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionBottomLeft"), typeof (UIPointerAccessoryPosition))!;
+
+		[Field ("UIPointerAccessoryPositionLeft", "UIKit")]
+		public static UIPointerAccessoryPosition Left => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionLeft"), typeof (UIPointerAccessoryPosition))!;
+
+		[Field ("UIPointerAccessoryPositionTopLeft", "UIKit")]
+		public static UIPointerAccessoryPosition TopLeft => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionTopLeft"), typeof (UIPointerAccessoryPosition))!;
+#endif
+	}
+#endif
+
 #if false
 	[Protocol]
 	public interface IUITextInputTraits {

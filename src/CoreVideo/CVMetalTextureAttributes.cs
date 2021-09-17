@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CVMetalTextureAttributes.cs
 //
 // Authors: Alex Soto (alexsoto@microsoft.com)
@@ -10,6 +10,8 @@
 using System;
 using Foundation;
 using Metal;
+
+#nullable enable
 
 namespace CoreVideo {
 	public partial class CVMetalTextureAttributes : DictionaryContainer {

@@ -34,6 +34,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
@@ -55,7 +56,20 @@ namespace AddressBook {
 		}
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ABGroup : ABRecord, IEnumerable<ABRecord> {
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -109,6 +123,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABGroupAddMember (IntPtr group, IntPtr person, out IntPtr error);
 		public void Add (ABRecord person)
 		{
@@ -150,6 +165,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABGroupRemoveMember (IntPtr group, IntPtr member, out IntPtr error);
 		public void Remove (ABRecord member)
 		{

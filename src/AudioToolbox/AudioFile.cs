@@ -32,6 +32,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -46,7 +47,12 @@ namespace AudioToolbox {
 		AIFF = 0x41494646, // AIFF
 		AIFC = 0x41494643, // AIFC
 		WAVE = 0x57415645, // WAVE
+#if !NET
 		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
 		Next = 0x4e655854, // NeXT
@@ -62,10 +68,20 @@ namespace AudioToolbox {
 		ThreeGP = 0x33677070, // 3gpp
 		ThreeGP2 = 0x33677032, // 3gp2
 		AMR = 0x616d7266, // amrf
+#if !NET
 		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		FLAC =  0x666c6163, // flac
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+#if !NET
 		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		LatmInLoas = 0x6c6f6173, // loas
 	}
 
@@ -210,13 +226,18 @@ namespace AudioToolbox {
 
 		public string Name {
 			get {
-				return CFString.FetchString (Name_cfstringref);
+				return CFString.FromHandle (Name_cfstringref);
 			}
 		}
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRangeByteCountTranslation {
 		public long Packet;
@@ -224,24 +245,39 @@ namespace AudioToolbox {
 		public long ByteCountUpperBound;
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRollDistanceTranslation {
 		public long Packet;
 		public long RollDistance;
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioIndependentPacketTranslation {
 		public long Packet;
 		public long IndependentlyDecodablePacket;
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {
 		public long Packet;
@@ -387,7 +423,7 @@ namespace AudioToolbox {
 
 		public string Name {
 			get {
-				return CFString.FetchString (NameWeak);
+				return CFString.FromHandle (NameWeak);
 			}
 		}
 
@@ -688,7 +724,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioFileReadBytes (AudioFileID inAudioFile, bool useCache, long startingByte, ref int numBytes, IntPtr outBuffer);
+		extern static OSStatus AudioFileReadBytes (AudioFileID inAudioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, long startingByte, ref int numBytes, IntPtr outBuffer);
 
 		public int Read (long startingByte, byte [] buffer, int offset, int count, bool useCache)
 		{
@@ -721,7 +757,7 @@ namespace AudioToolbox {
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioFileWriteBytes (AudioFileID audioFile, bool useCache, long startingByte, ref int numBytes, IntPtr buffer);
+		extern static OSStatus AudioFileWriteBytes (AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, long startingByte, ref int numBytes, IntPtr buffer);
 
 		public int Write (long startingByte, byte [] buffer, int offset, int count, bool useCache)
 		{
@@ -764,7 +800,7 @@ namespace AudioToolbox {
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static OSStatus AudioFileReadPacketData (
-			AudioFileID audioFile, bool useCache, ref int numBytes, 
+			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, ref int numBytes, 
 			AudioStreamPacketDescription [] packetDescriptions, long inStartingPacket, ref int numPackets, IntPtr outBuffer);
 
 		public AudioStreamPacketDescription [] ReadPacketData (long inStartingPacket, int nPackets, byte [] buffer)
@@ -942,7 +978,7 @@ namespace AudioToolbox {
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioFileError AudioFileWritePackets (
-			AudioFileID audioFile, bool useCache, int inNumBytes, AudioStreamPacketDescription [] inPacketDescriptions,
+			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, int inNumBytes, AudioStreamPacketDescription [] inPacketDescriptions,
                         long inStartingPacket, ref int numPackets, IntPtr buffer);
 
 		public int WritePackets (bool useCache, long startingPacket, int numPackets, IntPtr buffer, int byteCount)

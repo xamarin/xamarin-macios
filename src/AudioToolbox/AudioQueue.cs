@@ -33,6 +33,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -70,7 +71,9 @@ namespace AudioToolbox {
 		EnqueueDuringReset   = -66632,
 		InvalidOfflineMode   = -66626,
 		BufferEnqueuedTwice  = -66666,
+#if !NET
 		[iOS (10,0), Mac (10,12)]
+#endif
 		CannotStartYet       = -66665,
 		
 		// There is countless of not well documented error codes returned
@@ -366,7 +369,7 @@ namespace AudioToolbox {
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioQueueDispose (IntPtr AQ, bool immediate);
+		extern static OSStatus AudioQueueDispose (IntPtr AQ, [MarshalAs (UnmanagedType.I1)] bool immediate);
 
 		protected virtual void Dispose (bool disposing)
 		{
@@ -423,7 +426,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueStop (IntPtr aq, bool immediate);
+		extern static AudioQueueStatus AudioQueueStop (IntPtr aq, [MarshalAs (UnmanagedType.I1)] bool immediate);
 		public AudioQueueStatus Stop (bool immediate)
 		{
 			return AudioQueueStop (handle, immediate);
@@ -622,7 +625,7 @@ namespace AudioToolbox {
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueGetCurrentTime (IntPtr AQ, IntPtr timelineHandle, ref AudioTimeStamp time, ref bool discontinuty);
+		extern static AudioQueueStatus AudioQueueGetCurrentTime (IntPtr AQ, IntPtr timelineHandle, ref AudioTimeStamp time, [MarshalAs (UnmanagedType.I1)] ref bool discontinuty);
 
 		public AudioQueueStatus GetCurrentTime (AudioQueueTimeline timeline, ref AudioTimeStamp time, ref bool timelineDiscontinuty)
 		{
@@ -951,7 +954,7 @@ namespace AudioToolbox {
 
 		public string CurrentDevice {
 			get {
-				return CFString.FetchString ((IntPtr) GetInt (AudioQueueProperty.CurrentDevice));
+				return CFString.FromHandle ((IntPtr) GetInt (AudioQueueProperty.CurrentDevice));
 			}
 
 			set {

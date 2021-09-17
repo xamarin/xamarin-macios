@@ -88,7 +88,7 @@ namespace MonoTouchFixtures.ImageIO {
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (NSMutableData destData = new NSMutableData ())
 #if MONOMAC
-			using (var uiimg = new NSImage (NSBundle.MainBundle.PathForResource ("basn3p08", "png")))
+			using (var uiimg = new NSImage (file))
 #else
 			using (var uiimg = UIImage.FromFile (file))
 #endif
@@ -106,7 +106,7 @@ namespace MonoTouchFixtures.ImageIO {
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (NSMutableData destData = new NSMutableData ())
 #if MONOMAC
-			using (var uiimg = new NSImage (NSBundle.MainBundle.PathForResource ("basn3p08", "png")))
+			using (var uiimg = new NSImage (file))
 #else
 			using (var uiimg = UIImage.FromFile (file))
 #endif
@@ -122,11 +122,7 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
 
-#if MONOMAC
 			using (NSData data = NSData.FromFile (NSBundle.MainBundle.PathForResource ("xamarin2", "png")))
-#else
-			using (NSData data = NSData.FromFile ("xamarin2.png"))
-#endif
 			using (var source = CGImageSource.FromData (data))
 			using (NSMutableData destData = new NSMutableData ())
 			using (var id = CGImageDestination.Create (destData, GoodUti, 1)) {

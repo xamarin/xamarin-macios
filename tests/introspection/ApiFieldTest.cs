@@ -50,6 +50,16 @@ namespace Introspection {
 		/// <param name="property">Property to be tested</param>
 		protected virtual bool Skip (PropertyInfo property)
 		{
+			switch (property.DeclaringType.Name) {
+				case "AVPlayerInterstitialEventObserver":
+					switch (property.Name) { // deprecated
+						case "CurrentEventDidChangeNotification":
+						case "EventsDidChangeNotification":
+							return true;
+						default:
+							return false;
+					}
+			}
 			return SkipDueToAttribute (property);
 		}
 
@@ -116,7 +126,7 @@ namespace Introspection {
 					// looking for properties with getters only
 					if (p.CanWrite || !p.CanRead)
 						continue;
-					if (SkipDueToAttribute (p))
+					if (Skip (p) || SkipDueToAttribute (p))
 						continue;
 
 					properties.Add (p);
@@ -225,6 +235,14 @@ namespace Introspection {
 					ReportError ("Could not open the library '{0}' to find the field '{1}': {2}", path, name, Dlfcn.dlerror ());
 					failed_fields.Add (name);
 				} else if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero) {
+#if __IOS__
+					switch (name) {
+					case "CPMaximumListItemImageSize":
+						if (TestRuntime.CheckXcodeVersion (12,0))
+							continue;
+						break;
+					}
+#endif
 					ReportError ("Could not find the field '{0}' in {1}", name, path);
 					failed_fields.Add (name);
 				}

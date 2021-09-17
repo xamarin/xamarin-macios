@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
 		MarshalManagedExceptionMode defaultManagedExceptionMode = MarshalManagedExceptionMode.Default;
 #else
-#if __MACOS__ && DEBUG
+#if (__MACOS__ || __MACCATALYST__) && DEBUG
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
 #else
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.UnwindManagedCode;
@@ -95,6 +95,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #if !DEBUG && !__WATCHOS__
 			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
+
 			InstallHandlers ();
 
 			try {

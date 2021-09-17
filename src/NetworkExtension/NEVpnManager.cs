@@ -1,4 +1,4 @@
-﻿//
+//
 // NEVpnManager.cs
 //
 // Authors:
@@ -12,11 +12,14 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using Security;
+using System.Runtime.Versioning;
 
 namespace NetworkExtension {
 	public partial class NEVpnManager {
 
+#if !NET
 		[Mac (10,11)]
+#endif
 		public void SetAuthorization (Authorization authorization)
 		{
 			if (authorization == null)

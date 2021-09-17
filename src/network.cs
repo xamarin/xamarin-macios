@@ -56,4 +56,13 @@ namespace Network {
 		IntPtr _ProtocolDisable { get; }
 
 	}
+
+	[iOS (14,2)][TV (14,2)][Watch (7,1)][Mac (11,0)]
+	// untyped `nw_path_unsatisfied_reason_t` enum
+	enum NWPathUnsatisfiedReason {
+		NotAvailable = 0,
+		CellularDenied = 1,
+		WifiDenied = 2,
+		LocalNetworkDenied = 3,
+	}
 }

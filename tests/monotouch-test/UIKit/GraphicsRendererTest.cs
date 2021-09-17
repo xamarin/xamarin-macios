@@ -1,4 +1,4 @@
-﻿//
+//
 // UIGraphicsRenderer* Unit Tests
 //
 // Authors:

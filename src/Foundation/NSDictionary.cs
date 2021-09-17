@@ -317,10 +317,9 @@ namespace Foundation {
 
 		internal bool TryGetValue<T> (INativeObject key, out T value) where T: class, INativeObject
 		{
-			if (key == null)
-				throw new ArgumentNullException (nameof (key));
-
 			value = null;
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 			var ptr = _ObjectForKey (key.Handle);
 			if (ptr == IntPtr.Zero)
@@ -332,6 +331,9 @@ namespace Foundation {
 
 		public bool TryGetValue (NSObject key, out NSObject value)
 		{
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
 			value = ObjectForKey (key);
 			// NSDictionary can not contain NULLs, if you want a NULL, it exists as an NSNull
 			return value != null;

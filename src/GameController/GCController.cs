@@ -13,16 +13,6 @@ using Foundation;
 
 namespace GameController {
 
-	[iOS (9,0)][Mac (10,11)]
-	[Native]
-	public enum GCControllerPlayerIndex : long {
-		Unset = -1,
-		Index1 = 0,
-		Index2,
-		Index3,
-		Index4
-	}
-
 	public partial class GCController {
 
 #if !XAMCORE_4_0

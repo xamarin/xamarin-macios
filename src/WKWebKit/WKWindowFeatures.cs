@@ -11,6 +11,8 @@ using System;
 
 using Foundation;
 
+#nullable enable
+
 namespace WebKit
 {
 	public partial class WKWindowFeatures
@@ -31,7 +33,7 @@ namespace WebKit
 			get { return allowsResizing == null ? (bool?)null : allowsResizing.BoolValue; }
 		}
 
-		static nfloat? NFloatValue (NSNumber number)
+		static nfloat? NFloatValue (NSNumber? number)
 		{
 			if (number == null)
 				return null;

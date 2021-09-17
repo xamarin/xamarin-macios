@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSMutableSet
 //
 // Authors:
@@ -16,6 +16,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableSetTest {
 
 		[Test]
@@ -70,4 +71,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-

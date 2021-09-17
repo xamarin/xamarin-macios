@@ -7,8 +7,6 @@
 !incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
 
 ## new types that has deprecated members (likely to be removed from headers at some point)
-!missing-selector! +INCallRecordTypeOptionsResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INCallRecordTypeOptionsResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
 
@@ -41,7 +39,6 @@
 
 ## NS_DEPRECATED(13_0, 13_0, 6_0, 6_0)
 !missing-selector! INMediaSearch::activityNames not bound
-!missing-selector! INMediaSearch::initWithMediaType:sortOrder:mediaName:artistName:albumName:genreNames:moodNames:activityNames:releaseDate:reference:mediaIdentifier: not bound
 
 ## unsorted
 
@@ -49,6 +46,7 @@
 
 ## Deprecated so no need to be bound
 !missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
+!missing-selector! INSendMessageIntent::initWithRecipients:outgoingMessageType:content:speakableGroupName:conversationIdentifier:serviceName:sender: not bound
 
 ## Research required before we can bind the following ones
 !missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat: not bound

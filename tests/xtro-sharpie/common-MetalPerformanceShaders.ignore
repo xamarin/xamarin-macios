@@ -40,9 +40,17 @@
 
 # Looks like these two types were removed at some point and we just ignored this mess,
 # just moving from the ignored file to here for now
-!unknown-type! MPSCNNConvolutionState bound
 !unknown-type! MPSCNNConvolutionStateNode bound
 
 # Looks like the following selectors were released ahead of their time: Xcode 12 / iOS 13 / macOS 15
-!missing-selector! +MPSNNGraph::graphWithDevice:resultImages:resultsAreNeeded: not bound
 !missing-selector! MPSNNGraph::initWithDevice:resultImages:resultsAreNeeded: not bound
+
+# `*Count` values can change over time -> breaking change for us
+!missing-enum-value! MPSCnnLossType native value MPSCNNLossTypeCount = 10 not bound
+!missing-enum-value! MPSCnnNeuronType native value MPSCNNNeuronTypeCount = 16 not bound
+!missing-enum-value! MPSCnnReductionType native value MPSCNNReductionTypeCount = 4 not bound
+!missing-enum-value! MPSImageFeatureChannelFormat native value MPSImageFeatureChannelFormatCount = 6 not bound
+!missing-enum-value! MPSRnnMatrixId native value MPSRNNMatrixId_count = 29 not bound
+
+# unused (came along some API yet to be bound)
+!unknown-simd-type-mapping! The Simd type vector_uchar16 does not have a mapping to a managed type. Please add one in SimdCheck.cs

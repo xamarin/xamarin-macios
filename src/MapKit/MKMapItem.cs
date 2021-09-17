@@ -7,9 +7,13 @@
 
 #if !TVOS
 
+using System.Runtime.Versioning;
+
 using Foundation;
 using CoreLocation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace MapKit {
 
@@ -17,7 +21,11 @@ namespace MapKit {
 	// to replace NSString fields
 	public enum MKDirectionsMode {
 		Driving, Walking, Transit,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (10,0)][NoTV][Watch (3,0)][Mac (10,12)]
+#endif
 		Default
 	}
 	
@@ -34,11 +42,14 @@ namespace MapKit {
 #endif
 
 #if !WATCH // The corresponding key (MKLaunchOptionsCameraKey) is allowed in WatchOS, but there's no MKMapCamera type.
+
+#if !NET
 		[iOS (7,0)]
-		public MKMapCamera Camera { get; set; }
+#endif
+		public MKMapCamera? Camera { get; set; }
 #endif
 
-		internal NSDictionary ToDictionary ()
+		internal NSDictionary? ToDictionary ()
 		{
 			int n = 0;
 			if (DirectionsMode.HasValue) n++;
@@ -110,14 +121,14 @@ namespace MapKit {
 	}
 	
 	public partial class MKMapItem {
-		public void OpenInMaps (MKLaunchOptions launchOptions = null)
+		public void OpenInMaps (MKLaunchOptions? launchOptions = null)
 		{
-			_OpenInMaps (launchOptions != null ? launchOptions.ToDictionary () : null);
+			_OpenInMaps (launchOptions?.ToDictionary ());
 		}
 
-		public static bool OpenMaps (MKMapItem [] mapItems = null, MKLaunchOptions launchOptions = null)
+		public static bool OpenMaps (MKMapItem [] mapItems, MKLaunchOptions? launchOptions = null)
 		{
-			return _OpenMaps (mapItems, launchOptions != null ? launchOptions.ToDictionary () : null);
+			return _OpenMaps (mapItems, launchOptions?.ToDictionary ());
 		}
 	}
 	

@@ -15,13 +15,15 @@ using Foundation;
 using Metal;
 #endif
 
+#nullable enable
+
 namespace SceneKit {
 	public partial class SCNGeometrySource {
 
 		public static unsafe SCNGeometrySource FromVertices (SCNVector3 [] vertices)
 		{
 			if (vertices == null)
-				throw new ArgumentNullException ("vertices");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (vertices));
 
 			fixed (SCNVector3 *ptr = &vertices [0])
 				return FromVertices ((IntPtr)ptr, vertices.Length);
@@ -30,7 +32,7 @@ namespace SceneKit {
 		public static unsafe SCNGeometrySource FromNormals (SCNVector3 [] normals)
 		{
 			if (normals == null)
-				throw new ArgumentNullException ("normals");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (normals));
 
 			fixed (SCNVector3 *ptr = &normals[0])
 				return FromNormals ((IntPtr)ptr, normals.Length);
@@ -39,7 +41,7 @@ namespace SceneKit {
 		public static unsafe SCNGeometrySource FromTextureCoordinates (CGPoint [] texcoords)
 		{
 			if (texcoords == null)
-				throw new ArgumentNullException ("texcoords");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (texcoords));
 
 			fixed (CGPoint *ptr = &texcoords[0])
 				return FromTextureCoordinates ((IntPtr)ptr, texcoords.Length);

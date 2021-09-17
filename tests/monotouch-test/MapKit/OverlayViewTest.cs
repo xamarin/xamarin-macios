@@ -14,6 +14,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
 	
+#if !XAMCORE_3_0
 	class OverlayViewPoker : MKOverlayView {
 		
 		static FieldInfo bkOverlay;
@@ -39,6 +40,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 	}
+#endif // !XAMCORE_3_0
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -54,6 +56,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 
+#if !XAMCORE_3_0
 		[Test]
 		public void Overlay_BackingFields ()
 		{
@@ -66,6 +69,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.AreSame (c, ov.Overlay, "2a");
 			}
 		}
+#endif // !XAMCORE_3_0
 	}
 }
 

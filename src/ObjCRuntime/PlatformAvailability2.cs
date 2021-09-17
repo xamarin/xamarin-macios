@@ -38,6 +38,7 @@ namespace ObjCRuntime
 		WatchOS,
 		TvOS,
 		MacCatalyst,
+		[Obsolete ("Use 'MacCatalyst' instead.")]
 		UIKitForMac = MacCatalyst, // temporary
 	}
 
@@ -50,6 +51,7 @@ namespace ObjCRuntime
 	}
 
 	[AttributeUsage (
+		AttributeTargets.Assembly |
 		AttributeTargets.Class |
 		AttributeTargets.Constructor |
 		AttributeTargets.Delegate |
@@ -91,6 +93,79 @@ namespace ObjCRuntime
 		public override string ToString ()
 		{
 			var builder = new StringBuilder ();
+#if NET && BGENERATOR
+			switch (AvailabilityKind) {
+			case AvailabilityKind.Introduced:
+				builder.Append ("[SupportedOSPlatform (\"");
+				break;
+			case AvailabilityKind.Obsoleted:
+				switch (Platform) {
+				case PlatformName.iOS:
+					builder.AppendLine ("#if __IOS__");
+					break;
+				case PlatformName.TvOS:
+					builder.AppendLine ("#if __TVOS__");
+					break;
+				case PlatformName.WatchOS:
+					builder.AppendLine ("#if __WATCHOS__");
+					break;
+				case PlatformName.MacOSX:
+					builder.AppendLine ("#if __MACOS__");
+					break;
+				case PlatformName.MacCatalyst:
+					builder.AppendLine ("#if __MACCATALYST__");
+					break;
+				default:
+					throw new NotSupportedException ($"Unknown platform: {Platform}");
+				}
+				builder.Append ("[Obsolete (\"Starting with ");
+				break;
+			case AvailabilityKind.Deprecated:
+			case AvailabilityKind.Unavailable:
+				builder.Append ("[UnsupportedOSPlatform (\"");
+				break;
+			}
+
+			switch (Platform) {
+			case PlatformName.iOS:
+				builder.Append ("ios");
+				break;
+			case PlatformName.TvOS:
+				builder.Append ("tvos");
+				break;
+			case PlatformName.WatchOS:
+				builder.Append ("watchos");
+				break;
+			case PlatformName.MacOSX:
+				builder.Append ("macos"); // no 'x'
+				break;
+			case PlatformName.MacCatalyst:
+				builder.Append ("maccatalyst");
+				break;
+			default:
+				throw new NotSupportedException ($"Unknown platform: {Platform}");
+			}
+
+			if (Version != null)
+				builder.Append (Version.ToString (Version.Build >= 0 ? 3 : 2));
+
+			switch (AvailabilityKind) {
+			case AvailabilityKind.Obsoleted:
+				if (!String.IsNullOrEmpty (Message))
+					builder.Append (' ').Append (Message);
+				else
+					builder.Append ('.'); // intro check messages to they end with a '.'
+				// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
+				builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
+				builder.Append ("#endif");
+				break;
+			case AvailabilityKind.Introduced:
+			case AvailabilityKind.Deprecated:
+			case AvailabilityKind.Unavailable:
+				builder.Append ("\")]");
+				break;
+			}
+#else
 			builder.AppendFormat ("[{0} ({1}.{2}", AvailabilityKind, nameof (PlatformName), Platform);
 			
 			if (Version != null) {
@@ -100,12 +175,13 @@ namespace ObjCRuntime
 			}
 
 			if (Architecture != PlatformArchitecture.None)
-				builder.AppendFormat (", {0}.{1}", nameof (PlatformArchitecture), Architecture);
+				builder.Append (", ObjCRuntime.PlatformArchitecture.").Append (Architecture);
 
 			if (Message != null)
 				builder.AppendFormat (", message: \"{0}\"", Message.Replace ("\"", "\"\""));
 
 			builder.Append (")]");
+#endif
 			return builder.ToString ();
 		}
 	}
@@ -263,6 +339,19 @@ namespace ObjCRuntime
 #endif
 	}
 
+	public sealed class MacCatalystAttribute : IntroducedAttribute
+	{
+		public MacCatalystAttribute (byte major, byte minor)
+			: base (PlatformName.MacCatalyst, (int) major, (int) minor)
+		{
+		}
+
+		public MacCatalystAttribute (byte major, byte minor, byte subminor)
+			: base (PlatformName.MacCatalyst, (int) major, (int) minor, subminor)
+		{
+		}
+	}
+
 	public sealed class NoMacAttribute : UnavailableAttribute
 	{
 		public NoMacAttribute ()
@@ -294,5 +383,12 @@ namespace ObjCRuntime
 		{
 		}
 	}
-}
 
+	public sealed class NoMacCatalystAttribute : UnavailableAttribute
+	{
+		public NoMacCatalystAttribute ()
+			: base (PlatformName.MacCatalyst)
+		{
+		}
+	}
+}

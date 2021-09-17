@@ -1,4 +1,4 @@
-﻿//
+//
 // CFMessagePort.cs: CFMessagePort is a wrapper around two native Mach ports with bidirectional communication support
 //
 // Authors:
@@ -85,7 +85,7 @@ namespace CoreFoundation {
 		public string Name {
 			get {
 				Check ();
-				return NSString.FromHandle (CFMessagePortGetName (handle));
+				return CFString.FromHandle (CFMessagePortGetName (handle));
 			}
 			set {
 				Check ();

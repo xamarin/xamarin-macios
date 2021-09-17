@@ -8,9 +8,12 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+
+using CoreFoundation;
 using Foundation;
 using Security;
 using ObjCRuntime;
@@ -19,7 +22,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Security {
 	
 	[TestFixture]
-	// we want the test to be availble if we use the linker
+	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class CertificateTest {
 
@@ -507,7 +510,9 @@ namespace MonoTouchFixtures.Security {
 
 				Assert.NotNull (cert.GetNormalizedIssuerSequence (), "GetNormalizedIssuerSequence");
 				Assert.NotNull (cert.GetNormalizedSubjectSequence (), "GetNormalizedSubjectSequence");
+#if !__MACCATALYST__
 				Assert.NotNull (cert.GetPublicKey (), "GetPublicKey");
+#endif
 			}
 			if (TestRuntime.CheckXcodeVersion (9,0)) {
 				NSError err;
@@ -547,8 +552,13 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (cert.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (CFGetRetainCount (cert.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 				using (var sc = new SecCertificate (cert)) {
+#if NET
+					// dotnet PAL layer does not return the same instance
+					CheckMailGoogleCom (sc, 1); // so the new one is RC == 1
+#else
 					Assert.That (sc.Handle, Is.EqualTo (cert.Handle), "Same Handle");
-					CheckMailGoogleCom (sc, 2);
+					CheckMailGoogleCom (sc, 2); // same handle means another reference was added
+#endif
 					Assert.That (cert.ToString (true), Is.EqualTo (sc.ToX509Certificate ().ToString (true)), "X509Certificate");
 				}
 			}
@@ -580,8 +590,8 @@ namespace MonoTouchFixtures.Security {
 			SecKey private_key;
 			SecKey public_key;
 			var att = new SecPublicPrivateKeyAttrs ();
-			att.Label = "NotDefault";
-			att.IsPermanent = true;
+			att.Label = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
+			att.IsPermanent = false;
 			att.ApplicationTag = new NSData ();
 			att.EffectiveKeySize = 1024;
 			att.CanEncrypt = false;
@@ -591,30 +601,37 @@ namespace MonoTouchFixtures.Security {
 			att.CanVerify = false;
 			att.CanUnwrap = false;
 
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
-			Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, out _, out _); }, "GenerateKeyPair - Invalid");
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "GenerateKeyPair - Param issue, invalid RSA key size");
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - Null optional params, success");
+			try {
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
+
+
+				Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, out _, out _); }, "GenerateKeyPair - Invalid");
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "GenerateKeyPair - Param issue, invalid RSA key size");
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - Null optional params, success");
 
 #if IOS
-			var att2 = new SecPublicPrivateKeyAttrs ();
-			att2.IsPermanent = false;
-			att2.EffectiveKeySize = 1024;
-			att2.CanEncrypt = true;
-			att2.CanDecrypt = true;
-			att2.CanDerive = true;
-			att2.CanSign = true;
-			att2.CanVerify = true;
-			att2.CanUnwrap = true;
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att2, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - iOS Only API");
+				var att2 = new SecPublicPrivateKeyAttrs ();
+				att2.Label = att.Label;
+				att2.IsPermanent = false;
+				att2.EffectiveKeySize = 1024;
+				att2.CanEncrypt = true;
+				att2.CanDecrypt = true;
+				att2.CanDerive = true;
+				att2.CanSign = true;
+				att2.CanVerify = true;
+				att2.CanUnwrap = true;
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att2, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - iOS Only API");
 #endif
-			if (TestRuntime.CheckXcodeVersion (8,0)) {
-				using (var attrs = public_key.GetAttributes ()) {
-					Assert.That (attrs.Count, Is.GreaterThan ((nuint) 0), "public/GetAttributes");
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					using (var attrs = public_key.GetAttributes ()) {
+						Assert.That (attrs.Count, Is.GreaterThan ((nuint) 0), "public/GetAttributes");
+					}
+					using (var attrs = private_key.GetAttributes ()) {
+						Assert.That (attrs.Count, Is.GreaterThan ((nuint) 0), "private/GetAttributes");
+					}
 				}
-				using (var attrs = private_key.GetAttributes ()) {
-					Assert.That (attrs.Count, Is.GreaterThan ((nuint) 0), "private/GetAttributes");
-				}
+			} finally {
+				KeyTest.DeleteKeysWithLabel (att.Label);
 			}
 		}
 

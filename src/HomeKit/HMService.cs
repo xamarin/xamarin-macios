@@ -5,8 +5,10 @@ using Foundation;
 
 namespace HomeKit {
 
+#if !NET
 	[TV (10,0)]
 	[iOS (8,0)]
+#endif
 	public partial class HMService {
 
 #if !WATCH && !TVOS

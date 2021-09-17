@@ -1,4 +1,4 @@
-﻿#if __IOS__
+#if __IOS__
 using System;
 using Foundation;
 using AVFoundation;
@@ -21,6 +21,9 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void CompareConstantEnum ()
 		{
+			TestRuntime.RequestCameraPermission (AVMediaType.Audio, true);
+			TestRuntime.RequestCameraPermission (AVMediaType.Video, true);
+
 			Compare (AVMediaType.Audio, AVMediaTypes.Audio);
 			Compare (AVMediaType.ClosedCaption, AVMediaTypes.ClosedCaption);
 			Compare (AVMediaType.Metadata, AVMediaTypes.Metadata);
@@ -34,10 +37,12 @@ namespace MonoTouchFixtures.AVFoundation {
 				Compare (AVMediaType.MetadataObject, AVMediaTypes.MetadataObject);
 
 			// obsoleted in iOS 6, removed in iOS12
-			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 12,0))
+#if !__MACCATALYST__
+			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 12, 0))
 				Assert.Null (AVMediaType.TimedMetadata, "AVMediaTypeTimedMetadata");
 			else
 				Compare (AVMediaType.TimedMetadata, AVMediaTypes.TimedMetadata);
+#endif
 		}
 	}
 }

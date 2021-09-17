@@ -11,6 +11,7 @@ using System;
 using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
+using UniformTypeIdentifiers;
 
 namespace CoreSpotlight {
 
@@ -257,8 +258,15 @@ namespace CoreSpotlight {
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use '.ctor(UTType)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use '.ctor(UTType)' instead.")]
 		[Export ("initWithItemContentType:")]
 		IntPtr Constructor (string itemContentType);
+
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
+		[Export ("initWithContentType:")]
+		IntPtr Constructor (UTType contentType);
 
 		// FIXME: Should we keep all the following Categories inline? or should we make them actual [Category] interfaces
 		// There are no methods on any of the following categories, just properties
@@ -977,6 +985,21 @@ namespace CoreSpotlight {
 		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Strong)]
 		NSNumber SupportsNavigation { get; set; }
 
+		[NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Field ("CSActionIdentifier")]
+		NSString ActionIdentifier { get; }
+
+		[NoTV, NoMac, iOS (15,0)]
+		[NoMacCatalyst]
+		[Export ("actionIdentifiers", ArgumentSemantic.Copy)]
+		string[] ActionIdentifiers { get; set; }
+
+		[NullAllowed]
+		[NoTV, NoMac, iOS (15,0)]
+		[NoMacCatalyst]
+		[Export ("sharedItemContentType", ArgumentSemantic.Copy)]
+		UTType SharedItemContentType { get; set; }
+
 		// CSContainment
 
 		[NullAllowed, Export ("containerTitle")]
@@ -1004,36 +1027,40 @@ namespace CoreSpotlight {
 
 		// CSSearchableItemAttributeSet_CSGeneral
 
-		[iOS (11,0), NoTV, Mac (10, 11)]
+		[iOS (11,0), NoTV]
 		[NullAllowed, Export ("userCreated", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCreated { [Bind ("isUserCreated")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("userOwned", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use[BindAs (typeof (bool?))]
 		NSNumber _IsUserOwned { [Bind ("isUserOwned")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("userCurated", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCurated { [Bind ("isUserCurated")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
 		NSNumber RankingHint { get; set; }
+		
+		[NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("darkThumbnailURL", ArgumentSemantic.Strong)]
+		NSUrl DarkThumbnailUrl { get; set; }
 
 		// CSSearchableItemAttributeSet_CSItemProvider
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerDataTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderDataTypeIdentifiers { get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderFileTypeIdentifiers { get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerInPlaceFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderInPlaceFileTypeIdentifiers { get; set; }
 	}
@@ -1067,5 +1094,14 @@ namespace CoreSpotlight {
 		[Export ("cancel")]
 		void Cancel ();
 	}
-}
 
+	[Abstract]
+	[NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface CSImportExtension : NSExtensionRequestHandling
+	{
+		[Export ("updateAttributes:forFileAtURL:error:")]
+		bool Update (CSSearchableItemAttributeSet attributes, NSUrl contentUrl, [NullAllowed] out NSError error);
+	}
+
+}

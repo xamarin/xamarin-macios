@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
@@ -18,8 +18,11 @@ namespace Xharness.Jenkins {
 		public bool? Ignored;
 		public bool EnableSGenConc;
 		public bool UseThumb;
-		public MonoNativeFlavor MonoNativeFlavor;
+		public bool UseLlvm;
+		public bool? UseMonoRuntime;
 		public MonoNativeLinkMode MonoNativeLinkMode;
 		public IEnumerable<IDevice> Candidates;
+		public string XamMacArch;
+		public string RuntimeIdentifier;
 	}
 }

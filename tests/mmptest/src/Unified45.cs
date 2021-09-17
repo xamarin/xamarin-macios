@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NUnit.Framework;
 using Xamarin.MMP.Tests;
@@ -12,16 +12,10 @@ namespace MonoTouchFixtures.Net45 {
 		[Test]
 		public void ProtobufShouldSerializeAndDeserialize ()
 		{
-			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/Protobuf_Test/Protobuf_Test");
+			var testFolder = Path.Combine (Configuration.TestProjectsDirectory, "Protobuf_Test", "Protobuf_Test");
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);
-
-			StringBuilder restoreOutput = new StringBuilder ();
-			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
-
-			if (code != 0)
-				Assert.Fail ("ProtobufShouldSerializeAndDeserialize failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/Protobuf_Test.csproj");
 
@@ -40,14 +34,7 @@ namespace MonoTouchFixtures.Net45 {
 		[Test]
 		public void Net45ShouldUseImmutableCollection ()
 		{
-			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/ImmutableCollection_Test/ImmutableCollection_Test");
-
-			StringBuilder restoreOutput = new StringBuilder ();
-
-			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
-
-			if (code != 0)
-				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
+			var testFolder = Path.Combine (Configuration.TestProjectsDirectory, "ImmutableCollection_Test", "ImmutableCollection_Test");
 
 			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj");
 
@@ -57,17 +44,10 @@ namespace MonoTouchFixtures.Net45 {
 		[Test]
 		public void BasicPCLTest ()
 		{
-			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/BasicPCLTest/BasicPCLTest");
+			var testFolder = Path.Combine (Configuration.TestProjectsDirectory, "BasicPCLTest", "BasicPCLTest");
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);
-
-			StringBuilder restoreOutput = new StringBuilder ();
-
-			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/../MyLibrary/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
-
-			if (code != 0)
-				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/BasicPCLTest.csproj");
 

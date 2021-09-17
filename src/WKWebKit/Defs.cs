@@ -11,6 +11,8 @@ using System;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace WebKit
 {
 	[Mac (10, 10)]
@@ -30,7 +32,9 @@ namespace WebKit
 	[Native]
 	public enum WKNavigationActionPolicy : long {
 		Cancel,
-		Allow
+		Allow,
+		[Mac (11,3)][iOS (14,5)]
+		Download,
 	}
 
 	[Mac (10, 10)]
@@ -38,7 +42,9 @@ namespace WebKit
 	[Native]
 	public enum WKNavigationResponsePolicy : long {
 		Cancel,
-		Allow
+		Allow,
+		[Mac (11,3)][iOS (14,5)]
+		Download,
 	}
 
 	[Mac (10, 10)]
@@ -68,6 +74,10 @@ namespace WebKit
 		// Xcode 11
 		AttributedStringContentFailedToLoad,
 		AttributedStringContentLoadTimedOut,
+		// Xcode 12
+		JavaScriptInvalidFrameTarget,
+		NavigationAppBoundDomain,
+		JavaScriptAppBoundDomain,
 	}
 
 #if !MONOMAC || !XAMCORE_4_0

@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the generated API for all Mac CoreImage filters
 //
 // Authors:
@@ -55,4 +55,3 @@ namespace Introspection {
 		}
 	}
 }
-

@@ -46,7 +46,7 @@ namespace Foundation {
 		{
 			if (kls == null)
 				throw new ArgumentNullException ("kls");
-			return NSString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("classNameForClass:"), kls.Handle));
+			return CFString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("classNameForClass:"), kls.Handle));
 		}
 
 		public bool RequiresSecureCoding {

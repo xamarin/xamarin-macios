@@ -26,7 +26,9 @@ using ObjCRuntime;
 #if !__WATCHOS__
 using StoreKit;
 #endif
+#if !__MACOS__
 using UIKit;
+#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
@@ -60,7 +62,10 @@ namespace LinkAll {
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
 	public class LinkAllRegressionTest {
-#if __IOS__
+#if __MACCATALYST__
+		public const string NamespacePrefix = "";
+		public const string AssemblyName = "Xamarin.MacCatalyst";
+#elif __IOS__
 		public const string NamespacePrefix = "";
 		public const string AssemblyName = "Xamarin.iOS";
 #elif __TVOS__
@@ -69,6 +74,9 @@ namespace LinkAll {
 #elif __WATCHOS__
 		public const string NamespacePrefix = "";
 		public const string AssemblyName = "Xamarin.WatchOS";
+#elif __MACOS__
+		public const string NamespacePrefix = "";
+		public const string AssemblyName = "Xamarin.Mac";
 #else
 	#error Unknown platform
 #endif
@@ -151,6 +159,8 @@ namespace LinkAll {
 			CertTRUSTEFAIL = 0x800B010B,
 		}
 
+#if !NET
+		// ICertificatePolicy has been removed from .NET 5+
 		class TestPolicy : ICertificatePolicy {
 
 			const int RecoverableTrustFailure = 5; // SecTrustResult
@@ -202,23 +212,29 @@ namespace LinkAll {
 				ServicePointManager.CertificatePolicy = old;
 			}
 		}
+#endif
 		
+#if !__MACOS__
 		[Test]
 		public void DetectPlatform ()
 		{
 #if !__WATCHOS__
 			// for (future) nunit[lite] platform detection - if this test fails then platform detection won't work
-			Assert.NotNull (Helper.GetType (NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName), "UIApplicationDelegate");
+			var typename = NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName;
+			Assert.NotNull (Helper.GetType (typename), typename);
 #endif
+#if NET
+			Assert.Null (Helper.GetType ("Mono.Runtime"), "Mono.Runtime");
+#else
 			// and you can trust the old trick with the linker
 			Assert.NotNull (Helper.GetType ("Mono.Runtime"), "Mono.Runtime");
+#endif
 		}
+#endif // !__MACOS__
 
 		[Test]
 #if !XAMCORE_3_0
 		[Availability ()]
-		[iOS (9,9)]
-		[Mac (10, 99)]
 #endif
 		[Introduced (PlatformName.None)]
 		[Deprecated (PlatformName.None)]
@@ -244,11 +260,16 @@ namespace LinkAll {
 		[Test]
 		public void Assembly_Load ()
 		{
+#if NET
+			Assembly mscorlib = Assembly.Load ("System.Private.CoreLib.dll");
+			Assert.NotNull (mscorlib, "System.Private.CoreLib.dll");
+#else
 			Assembly mscorlib = Assembly.Load ("mscorlib.dll");
 			Assert.NotNull (mscorlib, "mscorlib");
 
 			Assembly system = Assembly.Load ("System.dll");
 			Assert.NotNull (system, "System");
+#endif
 		}
 
 		string FindAssemblyPath ()
@@ -293,9 +314,15 @@ namespace LinkAll {
 		public void Assembly_ReflectionOnlyLoadFrom ()
 		{
 			string filename = FindAssemblyPath ();
+#if NET
+			// new behavior across all platforms, see https://github.com/dotnet/runtime/issues/50529
+			Assert.Throws<PlatformNotSupportedException> (() => Assembly.ReflectionOnlyLoadFrom (filename));
+#else
 			Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
+#endif
 		}
 
+#if !NET
 		[Test]
 		public void SystemDataSqlClient ()
 		{
@@ -310,8 +337,9 @@ namespace LinkAll {
 			}
 #endif
 		}
+#endif
 		
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void Pasteboard_ImagesTest ()
 		{
@@ -373,8 +401,10 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_Compare ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Single.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Single.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -383,18 +413,27 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_ToString ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			var ci = CultureInfo.InvariantCulture;
+#if NET
+			Assert.That (Single.Epsilon.ToString (ci), Is.EqualTo ("1E-45"), "Epsilon.ToString()");
+			Assert.That ((-Single.Epsilon).ToString (ci), Is.EqualTo ("-1E-45"), "-Epsilon.ToString()");
+#else
 			Assert.That (Single.Epsilon.ToString (ci), Is.EqualTo ("1.401298E-45"), "Epsilon.ToString()");
 			Assert.That ((-Single.Epsilon).ToString (ci), Is.EqualTo ("-1.401298E-45"), "-Epsilon.ToString()");
+#endif
 		}
 
 		[Test]
 		public void DoubleEpsilon_Compare ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Double.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Double.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -403,12 +442,19 @@ namespace LinkAll {
 		[Test]
 		public void DoubleEpsilon_ToString ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			var ci = CultureInfo.InvariantCulture;
 			// note: unlike Single this works on both my iPhone5S and iPodTouch5
+#if NET
+			Assert.That (Double.Epsilon.ToString (ci), Is.EqualTo ("5E-324"), "Epsilon.ToString()");
+			Assert.That ((-Double.Epsilon).ToString (ci), Is.EqualTo ("-5E-324"), "-Epsilon.ToString()");
+#else
 			Assert.That (Double.Epsilon.ToString (ci), Is.EqualTo ("4.94065645841247E-324"), "Epsilon.ToString()");
 			Assert.That ((-Double.Epsilon).ToString (ci), Is.EqualTo ("-4.94065645841247E-324"), "-Epsilon.ToString()");
+#endif
 		}
 
 		[Test]
@@ -423,7 +469,8 @@ namespace LinkAll {
 			}
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACCATALYST__
+#if !NET // OpenTK-1.0.dll isn't supported in .NET yet
 		[Test]
 		public void OpenTk10_Preserved ()
 		{
@@ -442,7 +489,8 @@ namespace LinkAll {
 			core = Helper.GetType ("OpenTK.Graphics.ES20.GL/Core, OpenTK-1.0", false);
 			Assert.NotNull (core, "ES20/Core");
 		}
-#endif // !__WATCHOS__
+#endif // !NET
+#endif // !__WATCHOS__ && !__MACCATALYST__
 
 		[Test]
 		public void NestedNSObject ()
@@ -583,6 +631,9 @@ namespace LinkAll {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("BUG https://github.com/xamarin/xamarin-macios/issues/11280")]
+#endif
 		public void LinkedAwayGenericTypeAsOptionalMemberInProtocol ()
 		{
 			// https://github.com/xamarin/xamarin-macios/issues/3523
@@ -607,10 +658,21 @@ namespace LinkAll {
 			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
 				Assert.Pass (corlib);
 
-			var bundlePath = NSBundle.MainBundle.BundlePath;
+#if __MACCATALYST__ || __MACOS__
+			var bundleLocation = Path.Combine ("Contents", "MonoBundle");
+#else
+			var bundleLocation = string.Empty;
+#endif
+			var bundlePath = Path.Combine (NSBundle.MainBundle.BundlePath, bundleLocation);
 			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
-			var suffix = isExtension ? "link all.appex/mscorlib.dll" : "link all.app/mscorlib.dll";
-			Assert.That (corlib, Is.StringEnding (suffix), corlib);
+			var bundleName = isExtension ? "link all.appex" : "link all.app";
+#if NET
+			const string corelib = "System.Private.CoreLib.dll";
+#else
+			const string corelib = "mscorlib.dll";
+#endif
+			var suffix = Path.Combine (bundleName, bundleLocation, corelib);
+			Assert.That (corlib, Does.EndWith (suffix), corlib);
 		}
 	}
 

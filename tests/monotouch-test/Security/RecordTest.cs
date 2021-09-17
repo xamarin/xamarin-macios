@@ -1,6 +1,9 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved
 
 using System;
+using System.Diagnostics;
+
+using CoreFoundation;
 using Foundation;
 using Security;
 #if MONOMAC
@@ -88,6 +91,9 @@ namespace MonoTouchFixtures.Security {
 #if MONOMAC
 		[Ignore ("Returns SecAccessible.Invalid")]
 #endif
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void Accessible_17579 ()
 		{
 			Accessible (SecAccessible.AfterFirstUnlock);
@@ -101,27 +107,35 @@ namespace MonoTouchFixtures.Security {
 		void Protocol (SecProtocol protocol)
 		{
 			var rec = new SecRecord (SecKind.InternetPassword) {
-				Account = "Protocol"
+				Account = $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
 			};
-			SecKeyChain.Remove (rec); // it might already exists (or not)
+			try {
+				SecKeyChain.Remove (rec); // it might already exists (or not)
 
-			rec = new SecRecord (SecKind.InternetPassword) {
-				Account = "Protocol",
-				ValueData = NSData.FromString ("Password"),
-				Protocol = protocol,
-				Server = "www.xamarin.com"
-			};
+				rec = new SecRecord (SecKind.InternetPassword) {
+					Account = "Protocol",
+					ValueData = NSData.FromString ("Password"),
+					Protocol = protocol,
+					Server = "www.xamarin.com"
+				};
 
-			Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
+				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
-			SecStatusCode code;
-			var match = SecKeyChain.QueryAsRecord (rec, out code);
-			Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
+				SecStatusCode code;
+				var match = SecKeyChain.QueryAsRecord (rec, out code);
+				Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
 
-			Assert.That (match.Protocol, Is.EqualTo (protocol), "Protocol");
+				Assert.That (match.Protocol, Is.EqualTo (protocol), "Protocol");
+			} finally {
+				// Clean up after us
+				SecKeyChain.Remove (rec);
+			}
 		}
 
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void Protocol_17579 ()
 		{
 			Protocol (SecProtocol.Afp);
@@ -165,21 +179,35 @@ namespace MonoTouchFixtures.Security {
 			SecKeyChain.Remove (rec); // it might already exists (or not)
 
 			rec = new SecRecord (SecKind.InternetPassword) {
-				Account = "AuthenticationType",
+				Account = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
 				ValueData = NSData.FromString ("Password"),
 				AuthenticationType = type,
 				Server = "www.xamarin.com"
 			};
 
-			Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
+			try {
+				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
-			SecStatusCode code;
-			var match = SecKeyChain.QueryAsRecord (rec, out code);
-			Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
+				var query = new SecRecord (SecKind.InternetPassword) {
+					Account = rec.Account,
+					AuthenticationType = rec.AuthenticationType,
+					Server = rec.Server,
+				};
 
-			Assert.That (match.AuthenticationType, Is.EqualTo (type), "AuthenticationType");
+				SecStatusCode code;
+				var match = SecKeyChain.QueryAsRecord (query, out code);
+				Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
+
+				Assert.That (match.AuthenticationType, Is.EqualTo (type), "AuthenticationType");
+			} finally {
+				// Clean up after us
+				SecKeyChain.Remove (rec);
+			}
 		}
 
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		[Test]
 		public void AuthenticationType_17579 ()
 		{
@@ -196,6 +224,9 @@ namespace MonoTouchFixtures.Security {
 		// Test Case provided by user
 		// This test case scenario used to fail under iOS 6 or lower
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void DeskCase_83099_InmutableDictionary ()
 		{
 			var testUsername = "testusername";
@@ -285,9 +316,14 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 #if MONOMAC
 		[Ignore ("SecStatusCode code = SecKeyChain.Add (rec); returns SecStatusCode.Param")]
+#elif __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
 #endif
 		public void IdentityRecordTest ()
 		{
+			if (TestRuntime.CheckXcodeVersion (13, 0))
+				Assert.Ignore ("code == errSecInternal (-26276)");
+
 			using (var identity = IdentityTest.GetIdentity ())
 			using (var rec = new SecRecord (identity)) {
 				SecStatusCode code = SecKeyChain.Add (rec);
@@ -313,7 +349,10 @@ namespace MonoTouchFixtures.Security {
 
 				var ret = rec.GetCertificate ();
 				Assert.That (ret.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+#if !NET
+				// dotnet PAL layer does not return the same instance
 				Assert.That (ret.Handle, Is.EqualTo (cert.Handle), "Same Handle");
+#endif
 				Assert.That (cert.ToString (true), Is.EqualTo (ret.ToX509Certificate ().ToString (true)), "X509Certificate");
 
 				Assert.Throws<InvalidOperationException> (() => rec.GetKey (), "GetKey should throw");

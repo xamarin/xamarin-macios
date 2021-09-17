@@ -80,6 +80,7 @@ namespace EventKit {
 		SourceMismatch,
 		NotificationCollectionMismatch,
 		NotificationSavedWithoutCollection,
+		ReminderAlarmContainsEmailOrUrl,
 	}
 
 	// untyped enum -> EKTypes.h

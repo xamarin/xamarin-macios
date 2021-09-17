@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
@@ -12,7 +12,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public string WorkingDirectory;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (5);
 
-		public MakeTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins, processManager)
+		public MakeTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins, null, processManager)
 		{
 		}
 

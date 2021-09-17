@@ -155,11 +155,6 @@ namespace Introspection {
 				// compat.
 				return true;
 #endif
-			case "waitUntilExit":
-				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
-				if (type.Name == "NSTask")
-					return true;
-				break;
 			case "readInBackgroundAndNotifyForModes:":
 			case "readInBackgroundAndNotify":
 			case "readToEndOfFileInBackgroundAndNotifyForModes:":
@@ -189,10 +184,6 @@ namespace Introspection {
 					break;
 				case "CBPeripheral":
 					if (!Mac.CheckSystemVersion (10, 9))
-						return true;
-					break;
-				case "MPSImageDescriptor":
-					if (!Mac.CheckSystemVersion (10, 14)) // Likely to be fixed when we do MPS binding
 						return true;
 					break;
 				case "SFSafariPage":
@@ -381,7 +372,12 @@ namespace Introspection {
 						return true;
 					}
 					break;
-
+				case "NSMenuView":
+					switch (selectorName) {
+					case "menuBarHeight":
+						return TestRuntime.IsVM; // skip on vms due to hadware problems
+					}
+					break;
 #if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":
@@ -672,6 +668,16 @@ namespace Introspection {
 				break;
 			case "AVFoundation":
 				switch (type.Name) {
+				case "AVCaptureDevice":
+					switch (selectorName) {
+					// macOS 11.0 / AVCaptureDeviceTransportControls category selectors don't respond anymore
+					case "setTransportControlsPlaybackMode:speed:":
+					case "transportControlsPlaybackMode":
+					case "transportControlsSpeed":
+					case "transportControlsSupported":
+						return true;
+					}
+					break;
 				case "AVCapturePhoto":
 					switch (selectorName) {
 					case "fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:":
@@ -1103,6 +1109,9 @@ namespace Introspection {
 			case "cancelPendingPrerolls":                   // 10.8+
 			case "masterClock":                             // 10.8+
 			case "setMasterClock:":				// 10.8+
+			// AVUrlAsset
+			case "contentKeySession:didProvideContentKey:": // fails because it is in-lined via protocol AVContentKeyRecipient
+				return true;
 			// NSDateComponents
 			case "isLeapMonth":				// 10.8+
 			case "setLeapMonth:":				// 10.8+
@@ -1265,17 +1274,10 @@ namespace Introspection {
 			// QTMovie
 			case "movieWithTimeRange:error:":
 			case "initWithQuickTimeMedia:error:":
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// NSAnimation
 			case "initWithDuration:animationCurve:":
 				return true;
 #endif
-			// NSImage
-			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:
 				return base.SkipInit (selector, m);
 			}

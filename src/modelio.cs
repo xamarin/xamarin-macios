@@ -109,7 +109,7 @@ namespace ModelIO {
 		IntPtr Constructor (NSUrl url);
 
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+		IntPtr Constructor ([NullAllowed] NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -118,7 +118,7 @@ namespace ModelIO {
 		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:preserveTopology:error:")]
-		IntPtr Constructor ([NullAllowed] NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator, bool preserveTopology, out NSError error);
+		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator, bool preserveTopology, out NSError error);
 
 		// note: by choice we do not export "exportAssetToURL:"
 		[Export ("exportAssetToURL:error:")]
@@ -227,17 +227,24 @@ namespace ModelIO {
 		[Export ("objectAtIndex:")]
 		MDLObject GetObject (nuint index);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'Originals' property instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'Originals' property instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'Originals' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'Originals' property instead.")]
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
 		[Export ("masters", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Masters { get; set; }
 
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Export ("originals", ArgumentSemantic.Retain)]
+		IMDLObjectContainerComponent Originals { get; set; }
+
 		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("animations", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Animations { get; set; }
 
-		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("assetWithSCNScene:")]
 		MDLAsset FromScene (SCNScene scene);
@@ -402,7 +409,6 @@ namespace ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("cameraWithSCNCamera:")]
 		MDLCamera FromSceneCamera (SCNCamera sceneCamera);
@@ -475,7 +481,6 @@ namespace ModelIO {
 		// No documentation to confirm but this should be a constant (hence NSString).
 		NSString ColorSpace { get; set; }
 
-		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("lightWithSCNLight:")]
 		MDLLight FromSceneLight (SCNLight sceneLight);
@@ -543,11 +548,11 @@ namespace ModelIO {
 
 		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("resolveTexturesWithResolver:")]
-		void ResolveTextures ([NullAllowed] IMDLAssetResolver resolver);
+		void ResolveTextures (IMDLAssetResolver resolver);
 
 		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("loadTexturesUsingResolver:")]
-		void LoadTextures ([NullAllowed] IMDLAssetResolver resolver);
+		void LoadTextures (IMDLAssetResolver resolver);
 
 		[Export ("scatteringFunction", ArgumentSemantic.Retain)]
 		MDLScatteringFunction ScatteringFunction { get; }
@@ -574,7 +579,6 @@ namespace ModelIO {
 		[Export ("materialFace", ArgumentSemantic.Assign)]
 		MDLMaterialFace MaterialFace { get; set; }
 
-		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("materialWithSCNMaterial:")]
 		MDLMaterial FromSceneMaterial (SCNMaterial material);
@@ -790,7 +794,7 @@ namespace ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 		}
 
-		[Export ("vertexDescriptor", ArgumentSemantic.Copy), NullAllowed]
+		[Export ("vertexDescriptor", ArgumentSemantic.Copy)]
 		MDLVertexDescriptor VertexDescriptor { get; set; }
 
 		[Export ("vertexCount")]
@@ -984,6 +988,7 @@ namespace ModelIO {
 
 		[Static]
 		[Export ("newSubdividedMesh:submeshIndex:subdivisionLevels:")]
+		[return: NullAllowed]
 		MDLMesh CreateSubdividedMesh (MDLMesh mesh, nuint submeshIndex, nuint subdivisionLevels);
 
 		[Export ("generateAmbientOcclusionTextureWithSize:raysPerSample:attenuationFactor:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:")]
@@ -1010,7 +1015,6 @@ namespace ModelIO {
 		[Export ("generateLightMapVertexColorsWithLightsToConsider:objectsToConsider:vertexAttributeNamed:")]
 		bool GenerateLightMapVertexColors (MDLLight [] lightsToConsider, MDLObject [] objectsToConsider, string vertexAttributeName);
 
-		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("meshWithSCNGeometry:")]
 		MDLMesh FromGeometry (SCNGeometry geometry);
@@ -1042,6 +1046,7 @@ namespace ModelIO {
 		IMDLMeshBufferAllocator Allocator { get; }
 
 		[Export ("zone", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		IMDLMeshBufferZone Zone { get; }
 
 		[Export ("type")]
@@ -1230,7 +1235,7 @@ namespace ModelIO {
 		[NullAllowed, Export ("transform", ArgumentSemantic.Retain)]
 		IMDLTransformComponent Transform { get; set; }
 
-		[Export ("children", ArgumentSemantic.Retain), NullAllowed]
+		[Export ("children", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Children { get; set; }
 
 		[iOS (10,0)]
@@ -1246,7 +1251,6 @@ namespace ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		MDLAxisAlignedBoundingBox GetBoundingBox (double atTime);
 
-		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("objectWithSCNNode:")]
 		MDLObject FromNode (SCNNode node);
@@ -1650,22 +1654,26 @@ namespace ModelIO {
 		[Static]
 		[Obsolete ("Use 'CreateTexture' instead.")]
 		[Wrap ("CreateTexture (name)")]
+		[return: NullAllowed]
 		MDLTexture FromBundle (string name);
 #endif
 
 		[Static]
 		[Export ("textureNamed:")]
+		[return: NullAllowed]
 		MDLTexture CreateTexture (string name);
 
 #if !XAMCORE_4_0
 		[Static]
 		[Obsolete ("Use 'CreateTexture' instead.")]
 		[Wrap ("CreateTexture (name, bundleOrNil)")]
+		[return: NullAllowed]
 		MDLTexture FromBundle (string name, [NullAllowed] NSBundle bundleOrNil);
 #endif
 
 		[Static]
 		[Export ("textureNamed:bundle:")]
+		[return: NullAllowed]
 		MDLTexture CreateTexture (string name, [NullAllowed] NSBundle bundleOrNil);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -1676,10 +1684,12 @@ namespace ModelIO {
 
 		[Static]
 		[Export ("textureCubeWithImagesNamed:")]
+		[return: NullAllowed]
 		MDLTexture CreateTextureCube (string[] imageNames);
 
 		[Static]
 		[Export ("textureCubeWithImagesNamed:bundle:")]
+		[return: NullAllowed]
 		MDLTexture CreateTextureCube (string[] imageNames, [NullAllowed] NSBundle bundleOrNil);
 
 		[Static]
@@ -2054,7 +2064,7 @@ namespace ModelIO {
 	[DisableDefaultCtor] // apple headers: created by MDLMesh's vertexAttributeData selector
 	interface MDLVertexAttributeData
 	{
-		[Export ("map", ArgumentSemantic.Retain), NullAllowed]
+		[Export ("map", ArgumentSemantic.Retain)]
 		MDLMeshBufferMap Map { get; set; }
 
 		[Export ("dataStart", ArgumentSemantic.Assign)]

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for SKShapeNodeTest
 //
 // Authors:
@@ -89,4 +89,3 @@ namespace MonoTouchFixtures.SpriteKit {
 }
 
 #endif // !__WATCHOS__
-

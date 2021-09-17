@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 using NUnit.Framework;
@@ -9,6 +9,7 @@ using ObjCRuntime;
 namespace monotouchtest
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableDictionaryTest {
 		
 		[Test]

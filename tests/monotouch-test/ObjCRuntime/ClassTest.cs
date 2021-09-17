@@ -98,7 +98,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				if (Runtime.DynamicRegistrationSupported) {
 					Assert.AreEqual ("The ObjectiveC class 'NSProxy' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", e.Message, "NSProxy exception message");
 				} else {
-					Assert.That (e.Message, Is.StringMatching ("Can't lookup the Objective-C class 0x.* w"), "NSProxy exception message 2");
+					Assert.That (e.Message, Does.Match ("Can't lookup the Objective-C class 0x.* w"), "NSProxy exception message 2");
 				}
 			}
 			Assert.Throws<ArgumentException> (() => new Class ("InexistentClass"), "inexistent");

@@ -11,6 +11,18 @@ using System;
 
 namespace Foundation {
 
+#if !XAMCORE_4_0 && MONOMAC
+	public partial class NSError {
+
+		// removed in Xcode 11 GM
+		[Obsolete ("This API has been removed.")]
+		public static NSError GetFileProviderErrorForOutOfDateItem (FileProvider.INSFileProviderItem updatedVersion)
+		{
+			return null;
+		}
+	}
+#endif
+
 #if !XAMCORE_3_0
 	public partial class NSOperation {
 

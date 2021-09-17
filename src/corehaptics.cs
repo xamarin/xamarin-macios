@@ -17,11 +17,11 @@ using ObjCRuntime;
 namespace CoreHaptics {
 
 // we are not binding the API on Mac OS X yet due to an issue on Apples side: https://github.com/xamarin/maccore/issues/1951
-#if MONOMAC
+#if MONOMAC || TV
 	interface AVAudioSession {}
 #endif
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticEventParameter {
@@ -37,7 +37,7 @@ namespace CoreHaptics {
 		IntPtr Constructor ([BindAs (typeof (CHHapticEventParameterId))] NSString parameterId, float value);
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticDynamicParameter {
@@ -56,7 +56,7 @@ namespace CoreHaptics {
 		IntPtr Constructor ([BindAs (typeof (CHHapticDynamicParameterId))] NSString parameterId, float value, double time);
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticParameterCurveControlPoint {
@@ -71,7 +71,7 @@ namespace CoreHaptics {
 		IntPtr Constructor (double time, float value);
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticParameterCurve {
@@ -90,7 +90,7 @@ namespace CoreHaptics {
 		IntPtr Constructor ([BindAs (typeof (CHHapticDynamicParameterId))]NSString parameterId, CHHapticParameterCurveControlPoint[] controlPoints, double relativeTime);
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0),  TV (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticEvent {
@@ -122,7 +122,7 @@ namespace CoreHaptics {
 
 	interface ICHHapticParameterAttributes { }
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14,0)]
 	[Protocol]
 	interface CHHapticParameterAttributes {
 		[Abstract]
@@ -140,7 +140,7 @@ namespace CoreHaptics {
 
 	interface ICHHapticDeviceCapability { } 
 
-	[iOS (13,0)][NoMac]
+	[iOS (13,0)][Mac (11,0), TV (14,0)]
 	[Protocol]
 	interface CHHapticDeviceCapability {
 		[Abstract]
@@ -166,7 +166,7 @@ namespace CoreHaptics {
 
 	interface ICHHapticPatternPlayer { }
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14,0)]
 	[Protocol]
 	interface CHHapticPatternPlayer {
 		[Abstract]
@@ -196,7 +196,7 @@ namespace CoreHaptics {
 
 	interface ICHHapticAdvancedPatternPlayer {}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14,0)]
 	[Protocol]
 	interface CHHapticAdvancedPatternPlayer : CHHapticPatternPlayer {
 		[Abstract]
@@ -232,7 +232,7 @@ namespace CoreHaptics {
 		new bool IsMuted { get; set; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticEngine
@@ -266,7 +266,7 @@ namespace CoreHaptics {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] out NSError error);
 
-		[NoMac]
+		[NoMac, NoTV]
 		[Export ("initWithAudioSession:error:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] AVAudioSession audioSession, [NullAllowed] out NSError error);
@@ -309,7 +309,7 @@ namespace CoreHaptics {
 
 	[Static]
 	[Internal]
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14, 0)]
 	partial interface CHHapticPatternDefinitionKeys {
 		[Field ("CHHapticPatternKeyVersion")]
 		NSString VersionKey { get; }
@@ -349,9 +349,13 @@ namespace CoreHaptics {
 
 		[Field ("CHHapticPatternKeyParameterCurveControlPoints")]
 		NSString ParameterCurveControlPointsKey { get; }
+
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("CHHapticPatternKeyEventWaveformUseVolumeEnvelope")]
+		NSString EventWaveformUseVolumeEnvelopeKey { get; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14, 0)]
 	[StrongDictionary ("CHHapticPatternDefinitionKeys")]
 	partial interface CHHapticPatternDefinition {
 		double Version { get; set; }
@@ -373,9 +377,12 @@ namespace CoreHaptics {
 		NSObject WeakParameterCurve { get; set; }
 		[Export ("ParameterCurveControlPointsKey")]
 		NSObject WeakParameterCurveControlPoints { get; set; }
+		[Advice ("The default value is true.")]
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		bool EventWaveformUseVolumeEnvelope { get; set; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), TV (14, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticPattern {
@@ -403,4 +410,20 @@ namespace CoreHaptics {
 		[return: NullAllowed]
 		CHHapticPatternDefinition Export ([NullAllowed] out NSError outError);
 	}
+
+	[Static]
+	[Internal]
+	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+	partial interface CHHapticAudioResourceKeys {
+		[Field ("CHHapticAudioResourceKeyUseVolumeEnvelope")]
+		NSString UseVolumeEnvelopeKey { get; }
+	}
+
+	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+	[StrongDictionary ("CHHapticAudioResourceKeys")]
+	partial interface CHHapticAudioResourceDefinition {
+		[Advice ("The default value is true.")]
+		bool UseVolumeEnvelope { get; set; }
+	}
+
 }

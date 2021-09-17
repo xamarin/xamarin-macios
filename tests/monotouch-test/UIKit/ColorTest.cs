@@ -2,6 +2,7 @@
 
 #if !MONOMAC
 using System;
+using System.IO;
 #if !__WATCHOS__
 using System.Drawing;
 #endif
@@ -77,9 +78,9 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
+		[DefaultFloatingPointTolerance (0.00001)]
 		public void HSBA ()
 		{
-			GlobalSettings.DefaultFloatingPointTolerance = 0.00001;
 			RoundtripHSBA (UIColor.Black);
 			RoundtripHSBA (UIColor.Blue);
 			RoundtripHSBA (UIColor.Brown);
@@ -244,7 +245,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Pattern_7362 ()
 		{
-			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (var img = UIImage.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")))
 			using (var color = UIColor.FromPatternImage (img)) {
 				Assert.That (color.ToString (), Is.EqualTo (color.Description), "not an RGBA color");
 			}
@@ -292,6 +293,18 @@ namespace MonoTouchFixtures.UIKit {
 			var r = new UIColor (nw, na);
 			Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
+
+#if !__WATCHOS__
+		[Test]
+		public void UIConfigurationColorTransformerTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
+			var redColor = UIColor.Red;
+			var transformer = UIConfigurationColorTransformer.Grayscale;
+			var grayColor = transformer (redColor);
+			Assert.NotNull (grayColor, "Not null");
+		}
+#endif
 	}
 }
 #endif

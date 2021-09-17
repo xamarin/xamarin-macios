@@ -1,4 +1,4 @@
-﻿// Copyright 2013 Xamarin Inc. All rights reserved.
+// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -11,13 +11,6 @@ using Mono.Cecil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	public enum AssemblyBuildTarget
-	{
-		StaticObject,
-		DynamicLibrary,
-		Framework,
-	}
-
 	public class AotInfo
 	{
 		public AOTTask Task;
@@ -30,9 +23,6 @@ namespace Xamarin.Bundler {
 
 	public partial class Assembly
 	{
-		public AssemblyBuildTarget BuildTarget;
-		public string BuildTargetName;
-		public bool IsCodeShared;
 		public bool BundleInContainerApp;
 
 		public Dictionary<Abi, AotInfo> AotInfos = new Dictionary<Abi, AotInfo> ();
@@ -49,12 +39,6 @@ namespace Xamarin.Bundler {
 		public HashSet<string> DependencyMap {
 			get {
 				return dependency_map;
-			}
-		}
-
-		public bool IsAOTCompiled {
-			get {
-				return App.IsAOTCompiled (Identity);
 			}
 		}
 
@@ -101,88 +85,6 @@ namespace Xamarin.Bundler {
 		public void ComputeDependencyMap (List<Exception> exceptions)
 		{
 			ComputeDependencies (exceptions);
-		}
-
-		public delegate bool StripAssembly (string path);
-
-		// returns false if the assembly was not copied (because it was already up-to-date).
-		public bool CopyAssembly (string source, string target, bool copy_debug_symbols = true, StripAssembly strip = null)
-		{
-			var copied = false;
-
-			try {
-				var strip_assembly = strip != null && strip (source);
-				if (!Application.IsUptodate (source, target) && (strip_assembly || !Cache.CompareAssemblies (source, target))) {
-					copied = true;
-					if (strip_assembly) {
-						Driver.FileDelete (target);
-						Directory.CreateDirectory (Path.GetDirectoryName (target));
-						MonoTouch.Tuner.Stripper.Process (source, target);
-					} else {
-						Application.CopyFile (source, target);
-					}
-				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date.", target);
-				}
-
-				// Update the debug symbols file even if the assembly didn't change.
-				if (copy_debug_symbols) {
-					if (File.Exists (source + ".mdb"))
-						Application.UpdateFile (source + ".mdb", target + ".mdb", true);
-
-					var spdb = Path.ChangeExtension (source, "pdb");
-					if (File.Exists (spdb))
-						Application.UpdateFile (spdb, Path.ChangeExtension (target, "pdb"), true);
-				}
-
-				CopyConfigToDirectory (Path.GetDirectoryName (target));
-			} catch (Exception e) {
-				throw new ProductException (1009, true, e, Errors.MX1009, source, target, e.Message);
-			}
-
-			return copied;
-		}
-
-		public void CopyDebugSymbolsToDirectory (string directory)
-		{
-			string mdb_src = FullPath + ".mdb";
-			if (File.Exists (mdb_src)) {
-				string mdb_target = Path.Combine (directory, FileName + ".mdb");
-				Application.UpdateFile (mdb_src, mdb_target);
-			}
-
-			var spdb = Path.ChangeExtension (FullPath, "pdb");
-			if (File.Exists (spdb))
-				Application.UpdateFile (spdb, Path.Combine (directory, Path.ChangeExtension (FileName, "pdb")), true);
-		}
-		
-		public void CopyMSymToDirectory (string directory)
-		{
-			string msym_src = FullPath + ".aotid.msym";
-			var dirInfo = new DirectoryInfo (msym_src);
-			if (!dirInfo.Exists) // got no aot data
-				return;
-			var subdirs = dirInfo.GetDirectories();
-			foreach (var subdir in subdirs) {
-				var destPath = Path.Combine (directory, subdir.Name.ToUpperInvariant ());
-				var destInfo = new DirectoryInfo (destPath);
-				if (!destInfo.Exists)
-					Directory.CreateDirectory (destPath);
-				var files = subdir.GetFiles ();
-				foreach (FileInfo file in files) {
-					string temppath = Path.Combine (destPath, file.Name);
-					file.CopyTo(temppath, true);
-				}
-			}
-		}
-
-		public void CopyConfigToDirectory (string directory)
-		{
-			string config_src = FullPath + ".config";
-			if (File.Exists (config_src)) {
-				string config_target = Path.Combine (directory, FileName + ".config");
-				Application.UpdateFile (config_src, config_target, true);
-			}
 		}
 
 		// this will copy (and optionally strip) the assembly and almost all the related files:
@@ -281,7 +183,7 @@ namespace Xamarin.Bundler {
 			aotInfo.AotDataFiles.Add (data);
 
 			var aotCompiler = Driver.GetAotCompiler (App, abi, Target.Is64Build);
-			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
+			var aotArgs = App.GetAotArguments (assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
 			var task = new AOTTask
 			{
 				Assembly = this,

@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 
+#nullable enable
+
 namespace ARKit {
 	public partial class ARPlaneGeometry {
 

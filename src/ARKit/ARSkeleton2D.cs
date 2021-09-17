@@ -11,6 +11,8 @@ using System;
 using System.Runtime.InteropServices;
 using Vector2 = global::OpenTK.Vector2;
 
+#nullable enable
+
 namespace ARKit {
 	public partial class ARSkeleton2D {
 

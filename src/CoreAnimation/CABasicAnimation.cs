@@ -7,6 +7,8 @@ using AppKit;
 #endif
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 	public partial class CABasicAnimation {
 		public T GetFromAs <T> () where T : class, INativeObject

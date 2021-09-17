@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -19,12 +19,80 @@ namespace Xamarin.MacDev.Tasks
 		const string AutomaticAdHocProvision = "Automatic:AdHoc";
 		const string AutomaticAppStoreProvision = "Automatic:AppStore";
 		const string AutomaticInHouseProvision = "Automatic:InHouse";
-		
-		protected abstract string DeveloperRoot { get; }
-		protected abstract string[] DevelopmentPrefixes { get; }
-		protected abstract string[] DirectDistributionPrefixes { get; }
-		protected abstract string[] AppStoreDistributionPrefixes { get; }
-		protected abstract string ApplicationIdentifierKey { get; }
+
+		static readonly string [] macAppStoreDistributionPrefixes = { "3rd Party Mac Developer Application", "Apple Distribution" };
+		static readonly string [] macDirectDistributionPrefixes = { "Developer ID Application" };
+		static readonly string [] macDevelopmentPrefixes = { "Mac Developer", "Apple Development" };
+
+		protected string DeveloperRoot {
+			get {
+				return Sdks.GetAppleSdk (TargetFrameworkMoniker).DeveloperRoot;
+			}
+		}
+
+		protected string [] DevelopmentPrefixes {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return IPhoneCertificate.DevelopmentPrefixes;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return macDevelopmentPrefixes;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		protected string [] DirectDistributionPrefixes {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return Array.Empty<string> ();
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return macDirectDistributionPrefixes;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		protected string [] AppStoreDistributionPrefixes {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return IPhoneCertificate.DistributionPrefixes;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return macAppStoreDistributionPrefixes;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		protected string ApplicationIdentifierKey {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return "application-identifier";
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return "com.apple.application-identifier";
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
 
 		string provisioningProfileName;
 		string codesignCommonName;
@@ -34,8 +102,7 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppBundleName { get; set; }
 
-		[Required]
-		public string AppManifest { get; set; }
+		public string BundleIdentifier { get; set; }
 
 		public string Keychain { get; set; }
 
@@ -58,12 +125,6 @@ namespace Xamarin.MacDev.Tasks
 
 		[Output]
 		public string DetectedAppId { get; set; }
-
-		[Output]
-		public string DetectedBundleId { get; set; }
-
-		[Output]
-		public string DetectedBundleVersion { get; set; }
 
 		// This is input too
 		[Output]
@@ -169,7 +230,7 @@ namespace Xamarin.MacDev.Tasks
 				Log.LogMessage (MessageImportance.High, "  Code Signing Key: \"{0}\" ({1})", codesignCommonName, DetectedCodeSigningKey);
 			if (provisioningProfileName != null)
 				Log.LogMessage (MessageImportance.High, "  Provisioning Profile: \"{0}\" ({1})", provisioningProfileName, DetectedProvisioningProfile);
-			Log.LogMessage (MessageImportance.High, "  Bundle Id: {0}", DetectedBundleId);
+			Log.LogMessage (MessageImportance.High, "  Bundle Id: {0}", BundleIdentifier);
 			Log.LogMessage (MessageImportance.High, "  App Id: {0}", DetectedAppId);
 		}
 
@@ -380,7 +441,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (matches.Count == 0) {
-				Log.LogWarning (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.W0137);
+				Log.LogWarning (MSBStrings.W0137);
 				return identity;
 			}
 
@@ -410,7 +471,6 @@ namespace Xamarin.MacDev.Tasks
 			IList<MobileProvision> profiles;
 			IList<X509Certificate2> certs;
 			List<CodeSignIdentity> pairs;
-			PDictionary plist;
 
 			switch (SdkPlatform) {
 			case "AppleTVSimulator":
@@ -426,8 +486,11 @@ namespace Xamarin.MacDev.Tasks
 			case "MacOSX":
 				platform = MobileProvisionPlatform.MacOS;
 				break;
+			case "MacCatalyst":
+				platform = MobileProvisionPlatform.MacOS;
+				break;
 			default:
-				Log.LogError ("Unknown SDK platform: {0}", SdkPlatform);
+				Log.LogError (MSBStrings.E0048, SdkPlatform);
 				return false;
 			}
 
@@ -438,27 +501,24 @@ namespace Xamarin.MacDev.Tasks
 			else if (ProvisioningProfile == AutomaticAdHocProvision)
 				type = MobileProvisionDistributionType.AdHoc;
 
-			try {
-				plist = PDictionary.FromFile (AppManifest);
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0010, AppManifest, ex.Message);
-				return false;
-			}
-
 			DetectedCodesignAllocate = Path.Combine (DeveloperRoot, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", "codesign_allocate");
-			DetectedBundleVersion = plist.GetCFBundleVersion ();
 			DetectedDistributionType = type.ToString ();
 
-			identity.BundleId = plist.GetCFBundleIdentifier ();
-			if (string.IsNullOrEmpty (identity.BundleId)) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0139, AppManifest);
-				return false;
-			}
+			identity.BundleId = BundleIdentifier;
+			DetectedAppId = BundleIdentifier; // default value that can be changed below
 
 			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
-					DetectedBundleId = identity.BundleId;
-					DetectedAppId = DetectedBundleId;
+					ReportDetectedCodesignInfo ();
+
+					return !Log.HasLoggedErrors;
+				}
+			} else if (Platform == ApplePlatform.MacCatalyst) {
+				var doesNotNeedCodeSigningCertificate = !RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey);
+				if (RequireProvisioningProfile)
+					doesNotNeedCodeSigningCertificate = false;
+				if (doesNotNeedCodeSigningCertificate) {
+					DetectedCodeSigningKey = "-";
 
 					ReportDetectedCodesignInfo ();
 
@@ -483,7 +543,7 @@ namespace Xamarin.MacDev.Tasks
 
 							identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 							if (identity.AppId == null) {
-								Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
+								Log.LogError (MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
 								return false;
 							}
 
@@ -491,8 +551,6 @@ namespace Xamarin.MacDev.Tasks
 
 							DetectedProvisioningProfile = identity.Profile.Uuid;
 							DetectedDistributionType = identity.Profile.DistributionType.ToString ();
-							DetectedBundleId = identity.BundleId;
-							DetectedAppId = DetectedBundleId;
 						} else {
 							certs = new X509Certificate2[0];
 
@@ -512,15 +570,11 @@ namespace Xamarin.MacDev.Tasks
 								provisioningProfileName = identity.Profile.Name;
 							}
 
-							DetectedBundleId = identity.BundleId;
 							DetectedAppId = identity.AppId;
 						}
 					} else {
 						// Note: Do not codesign. Codesigning seems to break the iOS Simulator in older versions of Xcode.
 						DetectedCodeSigningKey = null;
-
-						DetectedBundleId = identity.BundleId;
-						DetectedAppId = DetectedBundleId;
 					}
 
 					ReportDetectedCodesignInfo ();
@@ -552,8 +606,6 @@ namespace Xamarin.MacDev.Tasks
 
 				codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
 				DetectedCodeSigningKey = certs[0].Thumbprint;
-				DetectedBundleId = identity.BundleId;
-				DetectedAppId = DetectedBundleId;
 
 				ReportDetectedCodesignInfo ();
 
@@ -580,7 +632,7 @@ namespace Xamarin.MacDev.Tasks
 
 				identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 				if (identity.AppId == null) {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
+					Log.LogError (MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
 					return false;
 				}
 
@@ -593,7 +645,6 @@ namespace Xamarin.MacDev.Tasks
 
 				DetectedProvisioningProfile = identity.Profile.Uuid;
 				DetectedDistributionType = identity.Profile.DistributionType.ToString ();
-				DetectedBundleId = identity.BundleId;
 				DetectedAppId = identity.AppId;
 
 				ReportDetectedCodesignInfo ();
@@ -615,7 +666,6 @@ namespace Xamarin.MacDev.Tasks
 
 				DetectedCodeSigningKey = identity.SigningKey?.Thumbprint;
 				DetectedProvisioningProfile = identity.Profile.Uuid;
-				DetectedBundleId = identity.BundleId;
 				DetectedAppId = identity.AppId;
 
 				ReportDetectedCodesignInfo ();

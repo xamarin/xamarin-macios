@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	class RunDeviceTasksFactory {
 
-		public Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		public Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
 		{
 			var rv = new List<RunDeviceTask> ();
 			var projectTasks = new List<RunDeviceTask> ();
@@ -22,19 +20,39 @@ namespace Xharness.Jenkins {
 				if (project.SkipDeviceVariations)
 					continue;
 
-				bool ignored = !jenkins.IncludeDevice;
+				bool ignored = project.Ignore ?? !jenkins.IncludeDevice;
 				if (!jenkins.IsIncluded (project))
+					ignored = true;
+				if (project.IsDotNetProject)
 					ignored = true;
 
 				projectTasks.Clear ();
-				if (!project.SkipiOSVariation) {
+
+				bool createiOS;
+				bool createTodayExtension;
+				bool createtvOS;
+				bool createwatchOS;
+
+				if (project.GenerateVariations) {
+					createiOS = !project.SkipiOSVariation;
+					createTodayExtension = !project.SkipTodayExtensionVariation;
+					createtvOS = !project.SkiptvOSVariation;
+					createwatchOS = !project.SkipwatchOSVariation;
+				} else {
+					createiOS = project.TestPlatform == TestPlatform.iOS_Unified;
+					createTodayExtension = project.TestPlatform == TestPlatform.iOS_TodayExtension64;
+					createtvOS = project.TestPlatform == TestPlatform.tvOS;
+					createwatchOS = project.TestPlatform == TestPlatform.watchOS;
+				}
+
+				if (createiOS) {
 					var build64 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
 						ProjectConfiguration = "Debug64",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
 					};
-					build64.CloneTestProject (jenkins.MainLog, processManager, project);
+					build64.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: jenkins,
 						devices: jenkins.Devices,
@@ -51,7 +69,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
 					};
-					build32.CloneTestProject (jenkins.MainLog, processManager, project);
+					build32.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: jenkins,
 						devices: jenkins.Devices,
@@ -62,15 +80,15 @@ namespace Xharness.Jenkins {
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
 						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludeiOS32 });
 
-					if (!project.SkipTodayExtensionVariation) {
-						var todayProject = project.AsTodayExtensionProject ();
+					if (createTodayExtension) {
+						var todayProject = project.GenerateVariations ? project.AsTodayExtensionProject () : project;
 						var buildToday = new MSBuildTask (jenkins: jenkins, testProject: todayProject, processManager: processManager) {
 							ProjectConfiguration = "Debug64",
 							ProjectPlatform = "iPhone",
 							Platform = TestPlatform.iOS_TodayExtension64,
 							TestName = project.Name,
 						};
-						buildToday.CloneTestProject (jenkins.MainLog, processManager, todayProject);
+						buildToday.CloneTestProject (jenkins.MainLog, processManager, todayProject, HarnessConfiguration.RootDirectory);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: jenkins,
 							devices: jenkins.Devices,
@@ -83,15 +101,15 @@ namespace Xharness.Jenkins {
 					}
 				}
 
-				if (!project.SkiptvOSVariation) {
-					var tvOSProject = project.AsTvOSProject ();
+				if (createtvOS) {
+					var tvOSProject = project.GenerateVariations ? project.AsTvOSProject () : project;
 					var buildTV = new MSBuildTask (jenkins: jenkins, testProject: tvOSProject, processManager: processManager) {
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.tvOS,
 						TestName = project.Name,
 					};
-					buildTV.CloneTestProject (jenkins.MainLog, processManager, tvOSProject);
+					buildTV.CloneTestProject (jenkins.MainLog, processManager, tvOSProject, HarnessConfiguration.RootDirectory);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: jenkins,
 						devices: jenkins.Devices,
@@ -103,8 +121,8 @@ namespace Xharness.Jenkins {
 						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludetvOS });
 				}
 
-				if (!project.SkipwatchOSVariation) {
-					var watchOSProject = project.AsWatchOSProject ();
+				if (createwatchOS) {
+					var watchOSProject = project.GenerateVariations ? project.AsWatchOSProject () : project;
 					if (!project.SkipwatchOS32Variation) {
 						var buildWatch32 = new MSBuildTask (jenkins: jenkins, testProject: watchOSProject, processManager: processManager) {
 							ProjectConfiguration = "Debug32",
@@ -112,7 +130,7 @@ namespace Xharness.Jenkins {
 							Platform = TestPlatform.watchOS_32,
 							TestName = project.Name,
 						};
-						buildWatch32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject);
+						buildWatch32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject, HarnessConfiguration.RootDirectory);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: jenkins,
 							devices: jenkins.Devices,
@@ -131,7 +149,7 @@ namespace Xharness.Jenkins {
 							Platform = TestPlatform.watchOS_64_32,
 							TestName = project.Name,
 						};
-						buildWatch64_32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject);
+						buildWatch64_32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject, HarnessConfiguration.RootDirectory);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: jenkins,
 							devices: jenkins.Devices,

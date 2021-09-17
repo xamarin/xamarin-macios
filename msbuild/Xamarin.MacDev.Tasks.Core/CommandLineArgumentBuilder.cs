@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Collections.Generic;
 
@@ -167,6 +167,11 @@ namespace Xamarin.MacDev
 			Exception ex;
 
 			return TryParse (commandline, out argv, out ex);
+		}
+
+		public IList<string> ToList ()
+		{
+			return Parse (ToString ());
 		}
 
 		public static string[] Parse (string commandline)

@@ -12,6 +12,7 @@
 using System;
 using Foundation;
 using ExternalAccessory;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ExternalAccessory {
@@ -37,10 +38,12 @@ namespace MonoTouchFixtures.ExternalAccessory {
 			Assert.IsNotNull (am.ConnectedAccessories, "ConnectedAccessories");
 		}
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Test]
 		public void ShowBluetoothAccessoryPicker ()
 		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 			EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPicker (null, null);
 		}
 #endif

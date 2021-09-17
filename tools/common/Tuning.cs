@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 using Mono.Linker;
 using Mono.Linker.Steps;
+using Mono.Tuner;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -108,6 +110,27 @@ namespace MonoMac.Tuner {
 		public void Process (LinkContext context)
 		{
 			Driver.Watch (message, 2);
+		}
+	}
+
+	public class CustomizeCoreActions : CustomizeActions {
+
+		public CustomizeCoreActions (bool link_sdk_only, IEnumerable<string> skipped_assemblies)
+			: base (link_sdk_only, skipped_assemblies)
+		{
+		}
+
+		protected override bool IsLinkerSafeAttribute (CustomAttribute attribute)
+		{
+			var at = attribute.AttributeType;
+			switch (at.Name) {
+			case "LinkerSafeAttribute":
+				return true; // namespace is not important
+			case "AssemblyMetadataAttribute":
+				// this is only true for net6+ and can depends on other features not available on the legacy linker
+				return false;
+			}
+			return false;
 		}
 	}
 }

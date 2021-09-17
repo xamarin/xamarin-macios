@@ -31,6 +31,7 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
@@ -162,7 +163,9 @@ namespace AVFoundation {
 			}			
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
 			set {
 				NSString v = null;
@@ -200,7 +203,9 @@ namespace AVFoundation {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public AVSampleRateConverterAlgorithm? SampleRateConverterAlgorithm {
 			get {
 				var k = GetNSStringValue (AVAudioSettings.AVSampleRateConverterAlgorithmKey);
@@ -228,7 +233,9 @@ namespace AVFoundation {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public AVAudioQuality? EncoderAudioQualityForVBR {
 			get {
 				return (AVAudioQuality?) (long?) GetNIntValue (AVAudioSettings.AVEncoderAudioQualityForVBRKey);
@@ -247,4 +254,3 @@ namespace AVFoundation {
 #endif
 	}
 }
-

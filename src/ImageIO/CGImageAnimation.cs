@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using CoreGraphics;
 using Foundation;
@@ -22,24 +23,42 @@ namespace ImageIO
 
         public delegate void CGImageSourceAnimationHandler (nint index, CGImage image, out bool stop);
 
+#if !NET
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
+#else
+        [SupportedOSPlatform ("ios13.0")]
+        [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("macos10.15")]
+#endif
         [DllImport (Constants.ImageIOLibrary)]
         static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ ref BlockLiteral block);
 
+#if !NET
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
+#else
+        [SupportedOSPlatform ("ios13.0")]
+        [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("macos10.15")]
+#endif
         [DllImport (Constants.ImageIOLibrary)]
         static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ ref BlockLiteral block);
 
+#if !NET
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
+#else
+        [SupportedOSPlatform ("ios13.0")]
+        [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("macos10.15")]
+#endif
         [BindingImpl (BindingImplOptions.Optimizable)]
         public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
@@ -62,10 +81,16 @@ namespace ImageIO
 #endif
         }
 
+#if !NET
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
+#else
+        [SupportedOSPlatform ("ios13.0")]
+        [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("macos10.15")]
+#endif
         [BindingImpl (BindingImplOptions.Optimizable)]
         public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {

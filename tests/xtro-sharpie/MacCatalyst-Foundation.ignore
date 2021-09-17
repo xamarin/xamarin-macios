@@ -1,0 +1,14 @@
+## NSPortMessage is not available (and is being rejected if used on iOS)
+## but this protocol member expose that type... we cannot remove the 
+## protocol itself since it's subclassed
+!missing-protocol-member! NSPortDelegate::handlePortMessage: not found
+
+# deprecated API
+
+# these enums are in the headers, but not documented to be supported on Mac Catalyst, so ignore them until proven that we need them
+
+# unsorted
+!missing-enum! NSInsertionPosition not bound
+!missing-enum! NSRelativePosition not bound
+!missing-enum! NSSaveOptions not bound
+!missing-enum! NSTestComparisonOperation not bound

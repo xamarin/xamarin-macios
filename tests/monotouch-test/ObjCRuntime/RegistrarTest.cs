@@ -7,8 +7,10 @@ using System.Threading;
 
 using CoreFoundation;
 using MapKit;
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_ADDRESSBOOK
 using AddressBook;
+#endif
+#if HAS_ADDRESSBOOKUI
 using AddressBookUI;
 #endif
 using Foundation;
@@ -61,7 +63,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void RegistrarRemoval ()
 		{
 			// define set by xharness when creating test variations.
-			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correcty detects this),
+			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correctly detects this),
 			// so the dynamic registrar will only be removed if manually requested.
 			// Also removal of the dynamic registrar is not supported in XM
 #if OPTIMIZEALL && !__MACOS__
@@ -455,7 +457,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
 				Assert.Fail ("Expected [[Open_1 alloc] init] to fail.");
 			} catch (PlatformException mex) {
-				Assert.That (mex.ToString (), Is.StringContaining ("Cannot construct an instance of the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+Open`1' from Objective-C because the type is generic."), "Exception message");
+				Assert.That (mex.ToString (), Does.Contain ("Cannot construct an instance of the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+Open`1' from Objective-C because the type is generic."), "Exception message");
 			} finally {
 				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release")); // or should this be dealloc directly?
 			}
@@ -1228,6 +1230,31 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		void ThrowsICEIfDebug (TestDelegate code, string message, bool execute_release_mode = true)
 		{
+#if NET
+			if (TestRuntime.IsCoreCLR) {
+				if (execute_release_mode) {
+					// In CoreCLR will either throw an ArgumentException:
+					//     <System.ArgumentException: Object of type 'Foundation.NSObject' cannot be converted to type 'Foundation.NSSet'.
+					// or a RuntimeException:
+					//     <ObjCRuntime.RuntimeException: Failed to marshal the value at index 0.
+					var noException = false;
+					try {
+						code ();
+						noException = true;
+					} catch (ArgumentException) {
+						// OK
+					} catch (RuntimeException) {
+						// OK
+					} catch (Exception e) {
+						Assert.Fail ($"Unexpectedly failed with exception of type {e.GetType ()} - expected either ArgumentException or RuntimeException: {message}");
+					}
+					if (noException)
+						Assert.Fail ($"Unexpectedly no exception occured: {message}");
+				}
+				return;
+			}
+#endif
+
 // The type checks have been disabled for now.
 //#if DEBUG
 //			Assert.Throws<InvalidCastException> (code, message);
@@ -1259,7 +1286,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
 						Assert.AreEqual (IntPtr.Zero, value);
 
-						value = new IntPtr (0xdeadbeef);
+						value = new IntPtr ((unchecked ((int) 0xdeadbeef)));
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
 						Assert.AreEqual (IntPtr.Zero, value);
 
@@ -1359,7 +1386,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var cl = new Class (typeof (TestTypeEncodingsClass));
 			var sig = Runtime.GetNSObject<NSMethodSignature> (Messaging.IntPtr_objc_msgSend_IntPtr (cl.Handle, Selector.GetHandle ("methodSignatureForSelector:"), Selector.GetHandle ("foo::::::::::::::::")));
 #if MONOMAC
-			var boolEncoding = "c";
+			var boolEncoding = TrampolineTest.IsArm64CallingConvention ? "B" : "c";
 #else
 			var boolEncoding = (IntPtr.Size == 8 || TrampolineTest.IsArmv7k || TrampolineTest.IsArm64CallingConvention) ? "B" : "c";
 
@@ -2137,6 +2164,62 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if __MACOS__
+		[Test]
+		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
+		{
+			if (!global::Xamarin.Tests.Configuration.TryGetRootPath (out var rootPath))
+				Assert.Ignore ("This test must be executed a source checkout.");
+
+#if NET
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (rootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "dotnet", "macos", "custom-type-assembly.dll");
+#else
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (rootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "macos", "custom-type-assembly.dll");
+#endif
+			Assert.That (customTypeAssemblyPath, Does.Exist, "existence");
+
+			var size = 10;
+			var handles = new GCHandle [size];
+			var array = new NSMutableArray ();
+
+			// Create a bunch instances of a custom object the static registrar didn't know about at build time.
+			// We do this on a different thread to prevent the GC from finding these instances on the main thread's stack.
+			var thread = new Thread (() => {
+				var customTypeAssembly = global::System.Reflection.Assembly.LoadFrom (customTypeAssemblyPath);
+				var customType = customTypeAssembly.GetType ("MyCustomType");
+				for (var i = 0; i < size; i++) {
+					var obj = (NSObject) global::System.Activator.CreateInstance (customType);
+					array.Add (obj);
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+				}
+				// Run the GC a couple of times.
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+			}) {
+				IsBackground = true,
+				Name = "CustomUserTypeWithDynamicallyLoadedAssembly",
+			};
+			thread.Start ();
+			Assert.IsTrue (thread.Join (TimeSpan.FromSeconds (30)), "Background thread done");
+
+			// Run the main loop for a little while.
+			var counter = size;
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), () => { }, () => counter-- <= 0 );
+
+			// Verify that none of the managed instances have been collected by the GC:
+			for (var i = 0; i < size; i++) {
+				Assert.IsNotNull (handles [i].Target, $"Target #{i}");
+				((NSObject) handles [i].Target).Dispose ();
+			}
+
+			// Make sure the GC doesn't collect our array of custom objects.
+			array.Dispose ();
+			GC.KeepAlive (array);
+		}
+#endif
+
 #if !__WATCHOS__ && !MONOMAC
 		class Bug28757A : NSObject, IUITableViewDataSource
 		{
@@ -2196,10 +2279,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif // !__WATCHOS__
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC// No ABPeoplePickerNavigationControllerDelegate
+#if HAS_ADDRESSBOOK && HAS_ADDRESSBOOKUI
 		[Test]
 		public void VoidPtrToINativeObjectArgument ()
 		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+
 			using (var obj = new ABPeoplePickerNavigationControllerDelegateImpl ()) {
 				using (var person = new ABPerson ()) {
 					Messaging.void_objc_msgSend_IntPtr_IntPtr (obj.Handle, Selector.GetHandle ("peoplePickerNavigationController:didSelectPerson:"), IntPtr.Zero, person.Handle);
@@ -2216,7 +2302,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				personHandle = selectedPerson.Handle;
 			}
 		}
-#endif // !__TVOS__
+#endif // HAS_ADDRESSBOOKUI
 
 #if !__TVOS__ // No Contacts framework in TVOS
 		[Test]
@@ -2963,8 +3049,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreNotSame (dummyObj, outObj, "NSCoding-3A-ref-out");
 				Assert.AreEqual (refObj.Handle, outObj.Handle, "NSCoding-3A-out-ref-eq");
 				Assert.AreNotSame (refObj, outObj, "NSCoding-3A-ref-out-not-safe");
-				Assert.That (refObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
-				Assert.That (outObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
+				Assert.That (refObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
+				Assert.That (outObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
 
 				// managed
 				refObj = dummyObj; // set to non-null
@@ -3010,8 +3096,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSCoding-4A-ref");
 				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSCoding-4A-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSCoding-4A-ref-distinct");
-				Assert.That (refObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
-				Assert.That (outObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
+				Assert.That (refObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
+				Assert.That (outObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
 
 				// managed
 				refObj = null; // set to null
@@ -4055,8 +4141,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreNotSame (dummyObj, outObj, "NSCodingArray-3A-ref-out");
 				AssertAreEqual (refObj, outObj, "NSCodingArray-3A-out-ref-eq");
 				Assert.AreNotSame (refObj, outObj, "NSCodingArray-3A-ref-out-not-safe");
-				Assert.That (refObj [0].GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
-				Assert.That (outObj [0].GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
+				Assert.That (refObj [0].GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
+				Assert.That (outObj [0].GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
 
 				// managed
 				refObj = dummyObj; // set to non-null
@@ -4097,8 +4183,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.IsNotNull (refObj, "NSCodingArray-4A-ref");
 				Assert.IsNotNull (outObj, "NSCodingArray-4A-out");
 				AssertAreNotEqual (refObj, outObj, "NSCodingArray-4A-ref-distinct");
-				Assert.That (refObj [0].GetType ().FullName, Is.StringContaining ("NSNumber").Or.StringContaining ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
-				Assert.That (outObj [0].GetType ().FullName, Is.StringContaining ("NSNumber").Or.StringContaining ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
+				Assert.That (refObj [0].GetType ().FullName, Does.Contain ("NSNumber").Or.Contain ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
+				Assert.That (outObj [0].GetType ().FullName, Does.Contain ("NSNumber").Or.Contain ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
 
 				// managed
 				refObj = null; // set to null

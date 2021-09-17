@@ -1,3 +1,7 @@
+## sharpie maps it to CFNetServicesError, but current location match other values
+!extra-enum-value! Managed value -72008 for CFNetworkErrors.NetServiceMissingRequiredConfiguration not found in native headers
+
+## unsorted
 !missing-enum! CFHostInfoType not bound
 !missing-enum! CFNetDiagnosticStatusValues not bound
 !missing-enum! CFNetServiceBrowserFlags not bound

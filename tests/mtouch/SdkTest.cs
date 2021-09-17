@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -12,19 +12,20 @@ using NUnit.Framework;
 using Xamarin.Tests;
 
 namespace Xamarin.Linker {
-
-	public abstract class BaseProfile {
-
-		protected abstract bool IsSdk (string assemblyName);
-	}
-
 	public class ProfilePoker : MobileProfile {
 
 		static ProfilePoker p = new ProfilePoker ();
 
+		public override string ProductAssembly => throw new NotImplementedException ();
+
 		public static bool IsWellKnownSdk (string assemblyName)
 		{
 			return p.IsSdk (assemblyName);
+		}
+
+		protected override bool IsProduct (string assemblyName)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 
@@ -224,7 +225,7 @@ namespace Xamarin.Linker {
 			rv.AddRange (Directory.GetFiles (watchOSPath, "*.dll", SearchOption.TopDirectoryOnly).
 				Select ((v) => v.Substring (watchOSPath.Length)).ToArray ());
 			rv.Remove ("Xamarin.WatchOS.dll");
-			rv.Add (Path.Combine ("..", "..", "32bits", "Xamarin.WatchOS.dll"));
+			rv.Add (Path.Combine ("..", "..", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
 			return rv.ToArray ();
 		}
 

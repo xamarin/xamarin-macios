@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVMetadataObject
 //
 // Authors:
@@ -41,11 +41,13 @@ namespace MonoTouchFixtures.AVFoundation {
 				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
 					Assert.AreEqual (new CGRect (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
 
+#if !__MACCATALYST__ // https://github.com/xamarin/maccore/issues/2345
 				obj.WeakMetadataObjectTypes = null;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 				obj.MetadataObjectTypes = AVMetadataObjectType.None;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 				obj.SetDelegate (null, null);
+#endif // !__MACCATALYST__
 			}
 		}
 
@@ -121,6 +123,9 @@ namespace MonoTouchFixtures.AVFoundation {
 								case AVMetadataObjectType.SalientObject:
 									// fail *and crash* on iOS 8 (at least on 32bits devices)
 									if (!TestRuntime.CheckXcodeVersion (11, 0))
+										continue;
+									// xcode 12 beta 1 on device
+									if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
 										continue;
 									break;
 								}

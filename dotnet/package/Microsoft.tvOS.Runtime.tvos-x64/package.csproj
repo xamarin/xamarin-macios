@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <_PlatformName>tvOS</_PlatformName>
-    <_RuntimeIdentifier>tvos-x64</_RuntimeIdentifier>
-  </PropertyGroup>
-
-  <Import Project="../microsoft.runtime.csproj" />
-</Project>

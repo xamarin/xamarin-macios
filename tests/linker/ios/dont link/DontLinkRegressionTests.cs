@@ -18,12 +18,15 @@ using System.Security.Permissions;
 
 using MonoTouch;
 using Foundation;
+#if !__MACOS__
 using UIKit;
+#endif
 using ObjCRuntime;
 using NUnit.Framework;
 
 namespace DontLink {
 
+#if !NET
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
 	public class SecurityDeclarationDecoratedUserCode {
 
@@ -33,6 +36,7 @@ namespace DontLink {
 			return true;
 		}
 	}
+#endif
 
 	[TestFixture]
 	public class DontLinkRegressionTests {
@@ -58,12 +62,16 @@ namespace DontLink {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("MulticastDelegate.BeginInvoke isn't supported in .NET (https://github.com/dotnet/runtime/issues/16312)")]
+#endif
 		public void Bug5354 ()
 		{
 			Action<string> testAction = (string s) => { s.ToString (); };
 			testAction.BeginInvoke ("Teszt", null, null);
 		}
 
+#if !__MACOS__
 		[Test]
 		public void Autorelease ()
 		{
@@ -78,7 +86,9 @@ namespace DontLink {
 				img.CreateResizableImage (new UIEdgeInsets (1, 2, 3, 4));
 			}
 		}
+#endif // !__MACOS__
 
+#if !NET
 		[Test]
 		public void SecurityDeclaration ()
 		{
@@ -89,6 +99,7 @@ namespace DontLink {
 			Assert.NotNull (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
 			Assert.NotNull (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
 		}
+#endif
 
 		[Test]
 		public void DefaultEncoding ()
@@ -141,7 +152,11 @@ namespace DontLink {
 			}
 
 			var all_properties = type.GetProperties ();
-			var notsupported_properties = new string [] { "StandardError", "StandardInput", "StandardOutput", "StartInfo" };
+			var notsupported_properties = new string [] { "StandardError", "StandardInput", "StandardOutput",
+#if !NET
+				"StartInfo"
+#endif
+			};
 			foreach (var notsupported_property in notsupported_properties) {
 				foreach (var property in all_properties.Where ((v) => v.Name == notsupported_property)) {
 					if (property.GetGetMethod () != null)

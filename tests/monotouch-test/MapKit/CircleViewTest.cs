@@ -12,6 +12,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
 	
+#if !XAMCORE_3_0
 	class CircleViewPoker : MKCircleView {
 		
 		static FieldInfo bkCircle;
@@ -42,6 +43,7 @@ namespace MonoTouchFixtures.MapKit {
 		}
 	}
 	
+#endif // !XAMCORE_3_0
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CircleViewTest {
@@ -55,6 +57,7 @@ namespace MonoTouchFixtures.MapKit {
 			}
 		}
 		
+#if !XAMCORE_3_0
 		[Test]
 		public void Defaults_BackingFields ()
 		{
@@ -79,6 +82,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.AreSame (c, cv.Circle, "2a");
 			}
 		}
+#endif // !XAMCORE_3_0
 	}
 }
 

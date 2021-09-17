@@ -1,4 +1,4 @@
-﻿// Copyright 2013--2014 Xamarin Inc. All rights reserved.
+// Copyright 2013--2014 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -52,34 +52,6 @@ namespace Xamarin.Bundler
 		// If the assemblies were symlinked.
 		public bool Symlinked;
 
-		// If we're targetting a 32 bit arch for this target.
-		bool? is32bits;
-		public bool Is32Build {
-			get {
-				if (!is32bits.HasValue)
-					is32bits = Application.IsArchEnabled (Abis, Abi.Arch32Mask);
-				return is32bits.Value;
-			}
-		}
-
-		// If we're targetting a 64 bit arch for this target.
-		bool? is64bits;
-		public bool Is64Build {
-			get {
-				if (!is64bits.HasValue)
-					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
-				return is64bits.Value;
-			}
-		}
-
-		// If this is an app extension, this returns the equivalent (32/64bit) target for the container app.
-		// This may be null (it's possible to build an extension for 32+64bit, and the main app only for 64-bit, for instance.
-		public Target ContainerTarget {
-			get {
-				return App.ContainerApp.Targets.FirstOrDefault ((v) => v.Is32Build == Is32Build);
-			}
-		}
-
 		// This is a list of all the architectures we need to build, which may include any architectures
 		// in any extensions (but not the main app).
 		List<Abi> all_architectures;
@@ -115,14 +87,8 @@ namespace Xamarin.Bundler
 		{
 			BundleFileInfo info;
 
-			if (bundle_path == null) {
-				if (source.EndsWith (".framework", StringComparison.Ordinal)) {
-					var bundle_name = Path.GetFileNameWithoutExtension (source);
-					bundle_path = $"Frameworks/{bundle_name}.framework";
-				} else {
-					bundle_path = Path.GetFileName (source);
-				}
-			}
+			if (bundle_path == null)
+				bundle_path = Path.GetFileName (source);
 
 			if (!BundleFiles.TryGetValue (bundle_path, out info))
 				BundleFiles [bundle_path] = info = new BundleFileInfo () { DylibToFramework = dylib_to_framework_conversion };
@@ -215,7 +181,7 @@ namespace Xamarin.Bundler
 			get {
 				if (executables == null) {
 					executables = new Dictionary<Abi, string> ();
-					if (App.IsSimulatorBuild) {
+					if (App.IsSimulatorBuild && App.ArchSpecificExecutable) {
 						// When using simlauncher, we copy the executable directly to the target directory.
 						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
 						if (Abis.Count != 1)
@@ -356,9 +322,8 @@ namespace Xamarin.Bundler
 					// Load all the assemblies in the cached list of assemblies
 					foreach (var assembly in assemblies) {
 						var ad = ManifestResolver.Load (assembly);
-						var asm = new Assembly (this, ad);
+						var asm = AddAssembly (ad);
 						asm.ComputeSatellites ();
-						this.Assemblies.Add (asm);
 					}
 					return;
 				}
@@ -401,9 +366,8 @@ namespace Xamarin.Bundler
 			PrintAssemblyReferences (assembly);
 			assemblies.Add (fqname);
 
-			var asm = new Assembly (this, assembly);
+			var asm = AddAssembly (assembly);
 			asm.ComputeSatellites ();
-			this.Assemblies.Add (asm);
 
 			var main = assembly.MainModule;
 			foreach (AssemblyNameReference reference in main.AssemblyReferences) {
@@ -412,8 +376,14 @@ namespace Xamarin.Bundler
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
-					if (reference.Name != Driver.GetProductAssembly (App))
+				case "Xamarin.MacCatalyst":
+					if (reference.Name != Driver.GetProductAssembly (App)) {
+						if (App.Platform == ApplePlatform.MacCatalyst && reference.Name == "Xamarin.iOS") {
+							// This is allowed, because it's a facade
+							break;
+						}
 						exceptions.Add (ErrorHelper.CreateError (34, Errors.MT0034, reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
+					}
 					break;
 				}
 
@@ -974,6 +944,9 @@ namespace Xamarin.Bundler
 			if (App.IsSimulatorBuild)
 				return;
 
+			if (App.Platform == ApplePlatform.MacCatalyst)
+				return;
+
 			// Here we create the tasks to run the AOT compiler.
 			foreach (var a in Assemblies) {
 				if (!a.IsAOTCompiled)
@@ -1353,8 +1326,12 @@ namespace Xamarin.Bundler
 					method = "xamarin_create_classes_Xamarin_TVOS";
 					library = "Xamarin.TVOS.registrar.a";
 					break;
+				case ApplePlatform.MacCatalyst:
+					method = "xamarin_create_classes_Xamarin_MacCatalyst";
+					library = "Xamarin.MacCatalyst.registrar.a";
+					break;
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 
 				var lib = Path.Combine (Driver.GetProductSdkLibDirectory (App), library);
@@ -1460,6 +1437,8 @@ namespace Xamarin.Bundler
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
 				linker_flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (App));
+			} else if (App.Platform == ApplePlatform.MacCatalyst) {
+				CompileTask.GetCatalystCompilerFlags (linker_flags, abi, App);
 			} else {
 				CompileTask.GetSimulatorCompilerFlags (linker_flags, false, App);
 			}
@@ -1501,11 +1480,10 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-shared");
 				linker_flags.AddOtherFlag ("-install_name", $"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}");
 			} else {
-				string mainlib;
+				string mainlib = null;
 				if (App.IsWatchExtension) {
-					mainlib = "libwatchextension.a";
 					linker_flags.AddOtherFlag ("-e", "_xamarin_watchextension_main");
-					if (App.SdkVersion.Major >= 6) {
+					if (App.SdkVersion.Major >= 6 && App.DeploymentTarget.Major < 6) {
 						// watchOS 6.0's WatchKit contains a WKExtensionMain function, and that's the entry point for Xcode-compiled watch extensions.
 						// To make watch extensions work on earlier watchOS versions, there's a libWKExtensionMainLegacy.a library with a
 						// a WKExtensionMain function that does what's needed (Xcode links with this library when deployment target < 6.0).
@@ -1518,8 +1496,10 @@ namespace Xamarin.Bundler
 				} else {
 					mainlib = "libapp.a";
 				}
-				var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
-				linker_flags.AddLinkWith (libmain, true);
+				if (mainlib != null) {
+					var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
+					linker_flags.AddLinkWith (libmain, true);
+				}
 			}
 
 			var libmonodir = Driver.GetMonoLibraryDirectory (App);
@@ -1651,6 +1631,7 @@ namespace Xamarin.Bundler
 				compiler_flags.AddLinkWith (libnative);
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
+				case ApplePlatform.MacCatalyst:
 					Driver.Log (3, "Adding GSS framework reference.");
 					compiler_flags.AddFramework ("GSS");
 					break;
@@ -1661,7 +1642,7 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static void AdjustDylibs (string output)
+		public void AdjustDylibs (string output)
 		{
 			var sb = new List<string> ();
 			foreach (var dependency in Xamarin.MachO.GetNativeDependencies (output)) {
@@ -1674,7 +1655,7 @@ namespace Xamarin.Bundler
 			}
 			if (sb.Count > 0) {
 				sb.Add (output);
-				Driver.RunInstallNameTool (sb);
+				Driver.RunInstallNameTool (App, sb);
 				sb.Clear ();
 			}
 		}
@@ -1701,11 +1682,9 @@ namespace Xamarin.Bundler
 
 			var targetExecutable = Executables.Values.First ();
 
-			Application.TryDelete (targetExecutable);
-
 			try {
 				var launcher = new StringBuilder ();
-				launcher.Append (Path.Combine (Driver.FrameworkBinDirectory, "simlauncher"));
+				launcher.Append (Path.Combine (Driver.GetFrameworkBinDirectory (App), "simlauncher"));
 				if (Is32Build)
 					launcher.Append ("32");
 				else if (Is64Build)
@@ -1713,6 +1692,8 @@ namespace Xamarin.Bundler
 				launcher.Append ("-sgen");
 				if (Directory.Exists (targetExecutable))
 					throw new ArgumentException ($"{targetExecutable} is a directory.");
+				else
+					File.Delete (targetExecutable);
 				File.Copy (launcher.ToString (), targetExecutable);
 				File.SetLastWriteTime (targetExecutable, DateTime.Now);
 			} catch (ProductException) {

@@ -87,11 +87,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		}
 
 		string does_not_exists_asset_path = Path.Combine (NSBundle.MainBundle.BundlePath, "xamarin.mov");
-#if MONOMAC
-		string video_asset_path = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/xamvideotest.mp4");
-#else
-		string video_asset_path = Path.Combine (NSBundle.MainBundle.BundlePath, "xamvideotest.mp4");
-#endif
+		string video_asset_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "xamvideotest.mp4");
 		bool handled;
 		ManualResetEvent mre;
 

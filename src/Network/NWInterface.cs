@@ -6,9 +6,13 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -17,8 +21,13 @@ using OS_nw_interface=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWInterface : NativeObject {
 		public NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -30,21 +39,11 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_interface_get_name (OS_nw_interface iface);
 
-		public string Name => Marshal.PtrToStringAnsi (nw_interface_get_name (GetCheckedHandle ()));
+		public string? Name => Marshal.PtrToStringAnsi (nw_interface_get_name (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern /* uint32_t */ uint nw_interface_get_index (OS_nw_interface iface);
 
 		public uint Index => nw_interface_get_index (GetCheckedHandle ());
-	}
-
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWInterfaceType {
-		Other = 0,
-		Wifi = 1,
-		Cellular = 2,
-		Wired = 3,
-		Loopback = 4,
 	}
 }

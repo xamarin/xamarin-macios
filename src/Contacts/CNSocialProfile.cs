@@ -1,4 +1,4 @@
-﻿//
+//
 // CNSocialProfile.cs: Implements some nicer methods for CNSocialProfile
 //
 // Authors:
@@ -85,4 +85,3 @@ namespace Contacts {
 		}
 	}
 }
-

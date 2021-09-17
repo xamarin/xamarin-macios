@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.Foundation {
 				} catch (Exception ex) {
 					// Verify that the exception is an OOM (i.e. native code failed to init the object).
 					Assert.AreSame (typeof (Exception), ex.GetType (), "exception type");
-					Assert.That (ex.Message, Is.StringStarting ("Could not initialize an instance of the type 'Foundation.NSMutableData': the native 'initWithCapacity:' method returned nil."), "OOM");
+					Assert.That (ex.Message, Does.StartWith ("Could not initialize an instance of the type 'Foundation.NSMutableData': the native 'initWithCapacity:' method returned nil."), "OOM");
 				}
 			}
 

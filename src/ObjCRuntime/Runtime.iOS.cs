@@ -42,8 +42,12 @@ namespace ObjCRuntime {
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
+#if __MACCATALYST__
+			Arch = Arch.SIMULATOR;
+#else
 			if (options->IsSimulator)
 				Arch = Arch.SIMULATOR;
+#endif
 
 			UIApplication.Initialize ();
 		}
@@ -65,7 +69,7 @@ namespace ObjCRuntime {
 		}
 #endif
 			
-#if TVOS || WATCH
+#if TVOS || WATCH || __MACCATALYST__
 		[Advice ("This method is present only to help porting code.")]
 		public static void StartWWAN (Uri uri, Action<Exception> callback)
 		{

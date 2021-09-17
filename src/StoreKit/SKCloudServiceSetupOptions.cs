@@ -8,7 +8,6 @@ namespace StoreKit {
 
 	partial class SKCloudServiceSetupOptions {
 
-		[iOS (10,1)]
 		public virtual SKCloudServiceSetupAction? Action {
 			get {
 				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action));

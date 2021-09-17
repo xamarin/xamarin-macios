@@ -4,7 +4,7 @@
 variables:
   azure_build_url: '$(System.CollectionUri)/$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)'
   azpPoolName: 'Azure Pipelines'
-  macOSVersion: 'internal-macos-10.15'
+  macOSVersion: 'internal-macos-11'
   debug_filter: '^.*Debug.*$'
   release_filter: '^.*Release.*$'
   iphone_filter: '^iPhone$'
@@ -110,6 +110,11 @@ jobs:
 
   - bash: ./xamarin-macios/tools/devops/fetch-maccore.sh
     displayName: Fetch correct maccore hash
+
+  - bash: |
+      echo "Requested Xcode $XCODE_URL"
+      make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ provision-xcode.csx
+    displayName: 'Generate Xcode provisioning csx file'
 
   - task: provisionator@2
     displayName: Xcode

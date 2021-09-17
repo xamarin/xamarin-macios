@@ -15,9 +15,11 @@ using Foundation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if MONOMAC || __MACCATALYST__
+using EventKit;
+#endif
 #if MONOMAC
 using AppKit;
-using EventKit;
 #else
 #if !__TVOS__ && !__WATCHOS__
 using AddressBook;
@@ -42,6 +44,15 @@ partial class TestRuntime
 	static extern IntPtr IntPtr_objc_msgSend (IntPtr receiver, IntPtr selector);
 
 	public const string BuildVersion_iOS9_GM = "13A340";
+
+	// Xcode 12.0 removed macOS 11.0 SDK and moved it up to Xcode 12.2
+	// we use this constant to make up for that difference when using
+	// AssertXcodeVersion and CheckXcodeVersion
+#if __MACOS__ || __MACCATALYST__
+	public const int MinorXcode12APIMismatch = 2;
+#else
+	public const int MinorXcode12APIMismatch = 0;
+#endif
 
 	public static string GetiOSBuildVersion ()
 	{
@@ -75,6 +86,12 @@ partial class TestRuntime
 				version = new Version (major, minor, build);
 			}
 			return version;
+		}
+	}
+#elif __MACCATALYST__
+	public static Version OSXVersion {
+		get {
+			return Version.Parse (UIDevice.CurrentDevice.SystemVersion);
 		}
 	}
 #endif
@@ -131,6 +148,27 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertNotSimulator ()
+	{
+#if !__MACOS__
+		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
+			NUnit.Framework.Assert.Ignore ("This test does not work in the simulator.");
+#endif
+	}
+
+	public static bool IsVM => 
+		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("VM_VENDOR"));
+
+	public static void AssertNotVirtualMachine ()
+	{
+#if MONOMAC
+		// enviroment variable set by the CI when running on a VM
+		var vmVendor = Environment.GetEnvironmentVariable ("VM_VENDOR");
+		if (!string.IsNullOrEmpty (vmVendor))
+			NUnit.Framework.Assert.Ignore ($"This test only runs on device. Found vm vendor: {vmVendor}");
+#endif
+	}
+
 	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
 	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
 	{
@@ -173,12 +211,30 @@ partial class TestRuntime
 			watchOS = new { Major = 6, Minor = 0, Build = "?" },
 		};
 
+		var twelvedot2b2 = new {
+			Xcode = new { Major = 12, Minor = 2, Beta = 2 },
+			iOS = new { Major = 14, Minor = 2, Build = "18B5061" },
+			tvOS = new { Major = 14, Minor = 2, Build = "18K5036" },
+			macOS = new { Major = 11, Minor = 0, Build = "?" },
+			watchOS = new { Major = 7, Minor = 1, Build = "18R5561" },
+		};
+
+		var twelvedot2b3 = new {
+			Xcode = new { Major = 12, Minor = 2, Beta = 3 },
+			iOS = new { Major = 14, Minor = 2, Build = "18B5072" },
+			tvOS = new { Major = 14, Minor = 2, Build = "18K5047" },
+			macOS = new { Major = 11, Minor = 0, Build = "20A5395" },
+			watchOS = new { Major = 7, Minor = 1, Build = "18R5572" },
+		};
+
 		var versions = new [] {
 			nineb1,
 			nineb2,
 			nineb3,
 			elevenb5,
 			elevenb6,
+			twelvedot2b2,
+			twelvedot2b3,
 		};
 
 		foreach (var v in versions) {
@@ -197,6 +253,28 @@ partial class TestRuntime
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
 			return actual.StartsWith (v.iOS.Build, StringComparison.Ordinal);
+#elif __TVOS__
+			if (!CheckExacttvOSSystemVersion (v.tvOS.Major, v.tvOS.Minor))
+				return false;
+			if (v.tvOS.Build == "?")
+				throw new NotImplementedException ($"Build number for tvOS {v.tvOS.Major}.{v.tvOS.Minor} beta {beta} (candidate: {GetiOSBuildVersion ()})");
+			var actual = GetiOSBuildVersion ();
+			Console.WriteLine (actual);
+			return actual.StartsWith (v.tvOS.Build, StringComparison.Ordinal);
+#elif __MACOS__
+			if (!CheckExactmacOSSystemVersion (v.macOS.Major, v.macOS.Minor))
+				return false;
+			if (v.macOS.Build == "?")
+				throw new NotImplementedException ($"Build number for macOS {v.macOS.Major}.{v.macOS.Minor} beta {beta}.");
+			/*
+			 * I could be parsing the string but docs says it is not suitable for parsing and this is ugly enough so
+			 * an apology in advance (I'm very sorry =]) to my future self or whoever is dealing with this if it broke
+			 * but there are no better solutions at this time. That said this is good enough for the current use case.
+			 * Example: Version 10.16 (Build 20A5395g)
+			 *
+			 * The above statement also applies to 'CheckExactmacOSSystemVersion' =S
+			 */
+			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build, StringComparison.Ordinal);
 #else
 			throw new NotImplementedException ();
 #endif
@@ -208,6 +286,86 @@ partial class TestRuntime
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 13:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (8, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (15, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (15, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (12, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			default:
+				throw new NotImplementedException ();
+			}
+		case 12:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (11, 0, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 3);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 3);
+#elif MONOMAC
+				return CheckMacSystemVersion (11, 1, 0);
+#endif
+			case 5:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 4);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 5);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 5);
+#elif MONOMAC
+				return CheckMacSystemVersion (11, 3, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			default:
+				throw new NotImplementedException ();
+			}
 		case 11:
 			switch (minor) {
 			case 0:
@@ -239,10 +397,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 1);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 2);
-#elif __IOS__
-				return CheckiOSSystemVersion (13, 2);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 2);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -267,6 +425,30 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (13, 4);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 4);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 5:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion(13, 5);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 5);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 6:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion(13, 6);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -581,6 +763,9 @@ partial class TestRuntime
 		case PlatformName.WatchOS:
 			AssertWatchOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
+		case PlatformName.MacCatalyst:
+			AssertMacCatalystSystemVersion (major, minor, build, throwIfOtherPlatform);
+			break;
 		default:
 			throw new Exception ($"Unknown platform: {platform}");
 		}
@@ -614,6 +799,29 @@ partial class TestRuntime
 		return version.Major == major && version.Minor == minor;
 #else
 		throw new Exception ("Can't get iOS System version on other platforms.");
+#endif
+	}
+
+	static bool CheckExacttvOSSystemVersion (int major, int minor)
+	{
+#if __TVOS__
+		var version = Version.Parse (UIDevice.CurrentDevice.SystemVersion);
+		return version.Major == major && version.Minor == minor;
+#else
+		throw new Exception ("Can't get tvOS System version on other platforms.");
+#endif
+	}
+
+	static bool CheckExactmacOSSystemVersion (int major, int minor, int build = 0)
+	{
+#if __MACOS__
+		var v = NSProcessInfo.ProcessInfo.OperatingSystemVersion;
+		var currentVersion = new Version ((int) v.Major, (int) v.Minor, (int) v.PatchVersion);
+		if (currentVersion == new Version (10, 16, 0))
+			currentVersion = new Version (11, 0, 0);
+		return currentVersion == new Version (major, minor, build);
+#else
+		throw new Exception ("Can't get macOS System version on other platforms.");
 #endif
 	}
 
@@ -689,9 +897,26 @@ partial class TestRuntime
 #endif
 	}
 
+	static bool CheckMacCatalystSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
+	{
+#if __MACCATALYST__
+		return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
+#else
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get Mac Catalyst System version on other platforms.");
+		return true;
+#endif
+	}
+
 	static void AssertMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 		if (!CheckMacSystemVersion (major, minor, build, throwIfOtherPlatform))
+			NUnit.Framework.Assert.Ignore ($"This test requires macOS {major}.{minor}.{build}");
+	}
+
+	static void AssertMacCatalystSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	{
+		if (!CheckMacCatalystSystemVersion (major, minor, throwIfOtherPlatform))
 			NUnit.Framework.Assert.Ignore ($"This test requires macOS {major}.{minor}.{build}");
 	}
 
@@ -731,6 +956,13 @@ partial class TestRuntime
 		}
 	}
 
+	public static void IgnoreOnMacCatalyst (string message = "")
+	{
+#if __MACCATALYST__
+		NUnit.Framework.Assert.Ignore ($"This test is disabled on Mac Catalyst. {message}");
+#endif
+	}
+
 	public static bool IgnoreTestThatRequiresSystemPermissions ()
 	{
 		return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_SYSTEM_PERMISSION_TESTS"));
@@ -755,6 +987,12 @@ partial class TestRuntime
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void RequestCameraPermission (NSString mediaTypeToken, bool assert_granted = false)
 	{
+#if __MACCATALYST__
+		// Microphone requires a hardened runtime entitlement for Mac Catalyst: com.apple.security.device.microphonee,
+		// so just ignore these tests for now.
+		NUnit.Framework.Assert.Ignore ("Requires a hardened runtime entitlement: com.apple.security.device.microphone");
+#endif // __MACCATALYST__
+
 		if (AVCaptureDevice.GetAuthorizationStatus (mediaTypeToken) == AVAuthorizationStatus.NotDetermined) {
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the camera.");
@@ -817,6 +1055,9 @@ partial class TestRuntime
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void CheckAddressBookPermission (bool assert_granted = false)
 	{
+#if __MACCATALYST__
+		NUnit.Framework.Assert.Ignore ("CheckAddressBookPermission -> Ignore in MacCat, it hangs since our TCC hack does not work on BS.");
+#endif
 		switch (ABAddressBook.GetAuthorizationStatus ()) {
 		case ABAuthorizationStatus.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())
@@ -842,6 +1083,10 @@ partial class TestRuntime
 		// tvOS doesn't have a (developer-accessible) microphone, but it seems to have API that requires developers 
 		// to request microphone access on other platforms (which means that it makes sense to both run those tests
 		// on tvOS (because the API's there) and to request microphone access (because that's required on other platforms).
+#elif __MACCATALYST__
+		// Microphone requires a hardened runtime entitlement for Mac Catalyst: com.apple.security.device.microphonee,
+		// so just ignore these tests for now.
+		NUnit.Framework.Assert.Ignore ("Requires a hardened runtime entitlement: com.apple.security.device.microphone");
 #else
 		if (!CheckXcodeVersion (6, 0))
 			return; // The API to check/request permission isn't available in earlier versions, the dialog will just pop up.
@@ -895,7 +1140,7 @@ partial class TestRuntime
 	}
 #endif // !MONOMAC && !__TVOS__
 
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 	public static void RequestEventStorePermission (EKEntityType entityType, bool assert_granted = false)
 	{
 		TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
@@ -910,8 +1155,12 @@ partial class TestRuntime
 			// There's an instance method on EKEventStore to request permission,
 			// but creating the instance can end up blocking the app showing a permission dialog...
 			// (on Mavericks at least)
+#if __MACCATALYST__
+			return; // Crossing fingers that this won't hang.
+#else
 			if (TestRuntime.CheckMacSystemVersion (10, 10))
 				return; // Crossing fingers that this won't hang.
+#endif
 			NUnit.Framework.Assert.Ignore ("This test requires permission to access events, but there's no API to request access without potentially showing dialogs.");
 			break;
 		case EKAuthorizationStatus.Denied:
@@ -940,6 +1189,16 @@ partial class TestRuntime
 #endif
 	}
 	
+	public static byte GetFlags (NSObject obj)
+	{
+#if NET
+		const string fieldName = "actual_flags";
+#else
+		const string fieldName = "flags";
+#endif
+		return (byte) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
+	}
+
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
 	static bool? link_all;
 	public static bool IsLinkAll {
@@ -958,6 +1217,15 @@ partial class TestRuntime
 #else
 			return false;
 #endif
+		}
+	}
+
+	// There's no official API yet for distinguishing between CoreCLR and MonoVM (https://github.com/dotnet/runtime/issues/49481)
+	// (checking for the Mono.Runtime type doesn't work, because the BCL is the same, so there's never a Mono.Runtime type).
+	// However, the System.__Canon type seems to be CoreCLR-only.
+	public static bool IsCoreCLR {
+		get {
+			return !(Type.GetType ("System.__Canon") is null);
 		}
 	}
 }

@@ -1,14 +1,12 @@
-﻿namespace monotouchtestWatchKitExtension
+namespace monotouchtestWatchKitExtension
 
 open System
-open System.Collections
-open System.Linq
+open System.Collections.Generic
 open System.Threading
 
 open WatchKit
 open Foundation
 
-open NUnit.Framework.Internal.Filters
 open MonoTouch.NUnit.UI
 
 [<Register ("InterfaceController")>]
@@ -34,9 +32,20 @@ type InterfaceController (handle: IntPtr) =
     member val cmdRun = Unchecked.defaultof<WKInterfaceButton> with get, set
 
     member this.LoadTests () =
+        let excludeCategories =
+            [|
+                "MobileNotWorking"
+                "NotOnMac"
+                "NotWorking"
+                "ValueAdd"
+                "CAS"
+                "InetAccess"
+                "NotWorkingLinqInterpreter"
+                "RequiresBSDSockets"
+                "BitcodeNotSupported"
+            |]
         runner <- new WatchOSRunner ()
-        let ce = new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,BitcodeNotSupported")
-        runner.Filter <- new NotFilter (ce.Filter)
+        runner.ExcludedCategories <- new HashSet<string> (excludeCategories :> IEnumerable<string>)
         let tp = this.GetType ()
         runner.Add (tp.Assembly)
         ThreadPool.QueueUserWorkItem (fun v ->

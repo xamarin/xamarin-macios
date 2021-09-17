@@ -112,17 +112,20 @@ namespace ScriptingBridge {
 		[Export ("initWithBundleIdentifier:")]
 		IntPtr Constructor (string ident);
 
+		[Internal]
 		[Static]
 		[Export ("applicationWithBundleIdentifier:")]
-		SBApplication FromBundleIdentifier (string ident );
+		IntPtr _FromBundleIdentifier (string ident );
 
+		[Internal]
 		[Static]
 		[Export ("applicationWithURL:")]
-		SBApplication FromURL (NSUrl url );
+		IntPtr _FromURL (NSUrl url );
 
+		[Internal]
 		[Static]
 		[Export ("applicationWithProcessIdentifier:")]
-		SBApplication FromProcessIdentifier (int /* pid_t = int */ pid );
+		IntPtr _FromProcessIdentifier (int /* pid_t = int */ pid );
 
 		[Export ("classForScriptingClass:")]
 		Class ClassForScripting (string className );

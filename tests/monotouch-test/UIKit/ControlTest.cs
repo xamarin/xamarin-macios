@@ -67,16 +67,9 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (var ctrl = new UIControl ()) {
 				ctrl.AddTarget ((a, b) => { }, UIControlEvent.EditingDidBegin);
-				Assert.IsTrue ((GetFlags (ctrl) & 0x8) /* RegisteredToggleRef */ == 0x8, "RegisteredToggleRef");
+				Assert.IsTrue ((TestRuntime.GetFlags (ctrl) & 0x8) /* RegisteredToggleRef */ == 0x8, "RegisteredToggleRef");
 			}
 		}
-
-
-		byte GetFlags (NSObject obj)
-		{
-			return (byte) typeof (NSObject).GetField ("flags", BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
-		}
-
 	}
 }
 

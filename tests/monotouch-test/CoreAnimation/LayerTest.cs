@@ -113,24 +113,29 @@ namespace MonoTouchFixtures.CoreAnimation {
 			Generation++;
 
 			const int layerCount = 50;
+			Exception ex = null;
 			var thread = new Thread (() => {
-				var frame = new CGRect (0, 0, 200, 200);
-				using (var layer = new CALayer ()) {
-					for (int i = 0; i < layerCount; i++) {
-						TextCALayer textLayer = new TextCALayer () {
-							Secret = "42",
-						};
-						layer.AddSublayer (textLayer);
+				try {
+					var frame = new CGRect (0, 0, 200, 200);
+					using (var layer = new CALayer ()) {
+						for (int i = 0; i < layerCount; i++) {
+							TextCALayer textLayer = new TextCALayer () {
+								Secret = "42",
+							};
+							layer.AddSublayer (textLayer);
+						}
+
+						GC.Collect ();
+
+						foreach (var slayer in layer.Sublayers.OfType<TextCALayer> ()) {
+							Assert.AreEqual ("42", slayer.Secret);
+						}
+
+						foreach (var slayer in layer.Sublayers.OfType<TextCALayer> ())
+							slayer.RemoveFromSuperLayer ();
 					}
-
-					GC.Collect ();
-
-					foreach (var slayer in layer.Sublayers.OfType<TextCALayer> ()) {
-						Assert.AreEqual ("42", slayer.Secret);
-					}
-
-					foreach (var slayer in layer.Sublayers.OfType<TextCALayer> ())
-						slayer.RemoveFromSuperLayer ();
+				} catch (Exception e) {
+					ex = e;
 				}
 			});
 			thread.Start ();
@@ -143,6 +148,7 @@ namespace MonoTouchFixtures.CoreAnimation {
 				NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.05));
 			}
 
+			Assert.IsNull (ex, "Exceptions");
 			Assert.That (TextLayersDisposed, Is.AtLeast (layerCount / 2), "disposed text layers");
 		}
 

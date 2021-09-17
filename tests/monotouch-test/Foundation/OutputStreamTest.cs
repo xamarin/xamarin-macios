@@ -17,6 +17,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class OutputStreamTest {
 
 		[Test]

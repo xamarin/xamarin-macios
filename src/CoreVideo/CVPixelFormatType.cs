@@ -5,6 +5,7 @@
 //     
 // Copyright 2011 Novell, Inc
 // Copyright 2011-2014, 2016 Xamarin Inc
+// Copyright 2020 Microsoft Corporation
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,7 +27,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.InteropServices;
 using ObjCRuntime;
+#if NET
+using System.Runtime.Versioning;
+#endif
+
+#nullable enable
 
 namespace CoreVideo {
 
@@ -34,7 +41,9 @@ namespace CoreVideo {
 	// for which ObjC API uses `int` instead of the enum
 	
 	// untyped enum, some are 4CC -> CVPixelBuffer.h
+#if !NET
 	[Watch (3,0)]
+#endif
 	public enum CVPixelFormatType : uint {
 		// FIXME: These all start with integers; what should we do here?
 		CV1Monochrome    = 0x00000001,
@@ -106,5 +115,46 @@ namespace CoreVideo {
 		CV420YpCbCr10BiPlanarFullRange = 0x78663230, // xf20
 		CV422YpCbCr10BiPlanarFullRange = 0x78663232, // xf22
 		CV444YpCbCr10BiPlanarFullRange = 0x78663434, // xf44
+		// iOS 14.0
+		CV422YpCbCr8BiPlanarVideoRange = 0x34323276, // '422v'
+		CV422YpCbCr8BiPlanarFullRange  = 0x34323266, // '422f'
+		CV444YpCbCr8BiPlanarVideoRange = 0x34343476, // '444v'
+		CV444YpCbCr8BiPlanarFullRange  = 0x34343466, // '444f'
+		OneComponent10 = 0x4c303130, // 'L010'
+		OneComponent12 = 0x4c303132, // 'L012'
+		OneComponent16 = 0x4c303136, // 'L016'
+		TwoComponent16 = 0x32433136, // '2C16'
+		CV16VersatileBayer = 0x62703136, // 'bp16'
+		CV64Rgba_DownscaledProResRaw = 0x62703634, // 'bp64'
+		// iOS 14.2
+		CV64RgbaLE = 0x6C363472,
 	}
+
+#if !COREBUILD
+	public static class CVPixelFormatTypeExtensions {
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool CVIsCompressedPixelFormatAvailable (uint pixelFormatType);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
+#endif
+		public static bool IsCompressedPixelFormatAvailable (this CVPixelFormatType type)
+			=> CVIsCompressedPixelFormatAvailable ((uint) type); 
+	}
+#endif
 }
