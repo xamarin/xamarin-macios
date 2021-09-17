@@ -463,7 +463,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileEntitlements>
 	</Target>
 
-	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileInterfaceDefinitions;_ReadCoreCompileInterfaceDefinitions;_CoreCompileInterfaceDefinitions" />
+	<!-- Compilation of InterfaceDefinition assets (*.xib, *.storyboard) -->
+
+	<PropertyGroup>
+		<_CompileInterfaceDefinitionsDependsOn>
+			$(_CompileInterfaceDefinitionsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_BeforeCoreCompileInterfaceDefinitions;
+			_ReadCoreCompileInterfaceDefinitions;
+			_CoreCompileInterfaceDefinitions;
+		</_CompileInterfaceDefinitionsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="$(_CompileInterfaceDefinitionsDependsOn)" />
 
 	<Target Name="_BeforeCoreCompileInterfaceDefinitions"
 		Inputs="@(InterfaceDefinition)"
@@ -538,7 +552,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
+	<!-- Compilation of ImageAsset items -->
+
+	<PropertyGroup>
+		<_CompileImageAssetsDependsOn>
+			$(_CompileImageAssetsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_BeforeCoreCompileImageAssets;
+			_ReadCompileImageAssets;
+			_CoreCompileImageAssets;
+		</_CompileImageAssetsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileImageAssets" DependsOnTargets="$(_CompileImageAssetsDependsOn)" />
 
 	<Target Name="_BeforeCoreCompileImageAssets"
 		Inputs="@(ImageAsset);$(_TemporaryAppManifest)"
@@ -628,7 +656,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileSceneKitAssets;_ReadCoreCompileSceneKitAssets;_CoreCompileSceneKitAssets" />
+	<!-- Compilation of SceneKit assets -->
+
+	<PropertyGroup>
+		<_CompileSceneKitAssetsDependsOn>
+			$(_CompileSceneKitAssetsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_BeforeCoreCompileSceneKitAssets;
+			_ReadCoreCompileSceneKitAssets;
+			_CoreCompileSceneKitAssets;
+		</_CompileSceneKitAssetsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileSceneKitAssets" DependsOnTargets="$(_CompileSceneKitAssetsDependsOn)" />
 
 	<Target Name="_BeforeCoreCompileSceneKitAssets"
 		Inputs="@(SceneKitAsset)"
@@ -887,7 +929,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileCoreMLModels" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCompileCoreMLModels;_ReadCompileCoreMLModels;_CoreCompileCoreMLModels" />
+	<!-- Compilation of CoreML models -->
+
+	<PropertyGroup>
+		<_CompileCoreMLModelsDependsOn>
+			$(_CompileCoreMLModelsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_BeforeCompileCoreMLModels;
+			_ReadCompileCoreMLModels;
+			_CoreCompileCoreMLModels;
+		</_CompileCoreMLModelsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileCoreMLModels" DependsOnTargets="$(_CompileCoreMLModelsDependsOn)" />
 
 	<Target Name="_BeforeCompileCoreMLModels"
 		Inputs="@(CoreMLModel);$(_TemporaryAppManifest)"
