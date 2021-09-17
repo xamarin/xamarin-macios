@@ -52,10 +52,7 @@ namespace Xharness {
 				return null;
 			if (extensions.Count () != 1)
 				throw new NotImplementedException ();
-			return new TestProject
-			{
-				Path = Path.GetFullPath (Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "today-extension", extensions.First ().Replace ('\\', '/'))),
-			};
+			return new TestProject (Path.GetFullPath (Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "today-extension", extensions.First ().Replace ('\\', '/'))));
 		}
 	}
 }
