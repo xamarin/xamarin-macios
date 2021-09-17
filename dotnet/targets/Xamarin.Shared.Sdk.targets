@@ -192,11 +192,13 @@
 
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_CompileEntitlements;
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
+			_CopyResourcesToBundle;
 			_CreateMergedAppBundle;
 			Codesign;
 			CreateIpa;
@@ -293,7 +295,14 @@
 			<_RidSpecificProperties>
 				_IsMultiRidBuild=true;
 				RuntimeIdentifiers=;
+				_ProcessedBundleResourcesPath=$(_ProcessedBundleResourcesPath);
 				_ProcessedContentPath=$(_ProcessedContentPath);
+				_ProcessedImageAssetsPath=$(_ProcessedImageAssetsPath);
+				_ProcessedInterfaceDefinitionsPath=$(_ProcessedInterfaceDefinitionsPath);
+				_ProcessedSceneKitAssetsPath=$(_ProcessedSceneKitAssetsPath);
+				_ProcessedColladaAssetsPath=$(_ProcessedColladaAssetsPath);
+				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
+				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
 			</_RidSpecificProperties>
 		</PropertyGroup>
 
