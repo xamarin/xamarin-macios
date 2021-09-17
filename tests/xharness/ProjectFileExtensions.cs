@@ -94,6 +94,27 @@ namespace Xharness {
 			}
 		}
 
+		public static bool TryGetApplicationId (this XmlDocument csproj, out string? applicationId)
+		{
+			var node = csproj.SelectSingleNode ("/*/*/*[local-name() = 'ApplicationId']");
+			if (node == null) {
+				applicationId = null;
+				return false;
+			}
+			applicationId = node.InnerText;
+			return true;
+		}
+
+		public static void SetApplicationId (this XmlDocument csproj, string applicationId)
+		{
+			var node = csproj.SelectSingleNode ("/*/*/*[local-name() = 'ApplicationId']");
+			if (node == null) {
+				csproj.SetTopLevelPropertyGroupValue ("ApplicationId", applicationId);
+			} else {
+				node.InnerText = applicationId;
+			}
+		}
+
 		// This is an evolved version of https://github.com/dotnet/xharness/blob/b2297d610df1ae15fc7ba8bd8c9bc0a7192aaefa/src/Microsoft.DotNet.XHarness.iOS.Shared/Utilities/ProjectFileExtensions.cs#L1168
 		public static void ResolveAllPaths (this XmlDocument csproj, string project_path, Dictionary<string, string>? variableSubstitution = null)
 		{

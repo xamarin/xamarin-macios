@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
@@ -86,6 +87,8 @@ namespace Xharness {
 			return CreateCopyAsync (log, processManager, test, rootDirectory, pr);
 		}
 
+		static int counter;
+
 		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
 			var directory = Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
@@ -165,6 +168,10 @@ namespace Xharness {
 						break;
 					}
 				}
+
+				// Set a unique bundle identifier, to try to work around https://github.com/xamarin/maccore/issues/2414.
+				if (doc.TryGetApplicationId (out var applicationId))
+					doc.SetApplicationId (applicationId + ".dotnet.unique_" + Interlocked.Increment (ref counter));
 
 				if (doc.GetEnableDefaultItems () != false) {
 					// Many types of files below the csproj directory are included by default,
