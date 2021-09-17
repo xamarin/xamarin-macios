@@ -634,6 +634,52 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void AppWithResources (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "AppWithResources";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			string fontDirectory = GetResourcesDirectory (platform, appPath);
+			var fontAFile = Path.Combine (fontDirectory, "A.ttc");
+			var fontBFile = Path.Combine (fontDirectory, "B.otf");
+			var fontCFile = Path.Combine (fontDirectory, "C.ttf");
+
+			Assert.That (fontAFile, Does.Exist, "A.ttc existence");
+			Assert.That (fontBFile, Does.Exist, "B.otf existence");
+			Assert.That (fontCFile, Does.Exist, "C.ttf existence");
+
+			var plist = PDictionary.FromFile (GetInfoPListPath (platform, appPath));
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.MacCatalyst:
+				var uiAppFonts = plist.GetArray ("UIAppFonts");
+				Assert.IsNotNull (uiAppFonts, "UIAppFonts");
+				Assert.AreEqual (1, uiAppFonts.Count, "UIAppFonts.Count");
+				Assert.AreEqual ("B.otf", ((PString) uiAppFonts [0]).Value, "UIAppFonts [0]");
+				break;
+			case ApplePlatform.MacOSX:
+				var applicationFontsPath = plist.GetString ("ATSApplicationFontsPath")?.Value;
+				Assert.AreEqual (".", applicationFontsPath, "ATSApplicationFontsPath");
+				break;
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
