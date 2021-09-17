@@ -3750,7 +3750,7 @@ namespace Intents {
 		CGSize GetImageSize (INIntentResponse response);
 
 		[NoMac, NoWatch, iOS (11,0), NoTV]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("fetchUIImageWithCompletion:")]
 		void FetchImage (Action<UIImage> completion);
