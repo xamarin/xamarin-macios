@@ -27,3 +27,8 @@
 !missing-selector! NSFetchedResultsController::sections not bound
 !missing-selector! NSFetchedResultsController::setDelegate: not bound
 !missing-type! NSFetchedResultsController not bound
+
+#added and deprecated
+!missing-selector! +NSPersistentStoreCoordinator::elementsDerivedFromExternalRecordURL: not bound
+!missing-selector! +NSPersistentStoreCoordinator::metadataForPersistentStoreWithURL:error: not bound
+!missing-selector! NSPersistentStoreCoordinator::importStoreWithIdentifier:fromExternalRecordsDirectory:toURL:options:withType:error: not bound

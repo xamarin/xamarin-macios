@@ -1,4 +1,7 @@
 # NSInternalInconsistencyException Reason: -init results in undefined behavior for NSBatchInsertRequest
 !missing-selector! NSBatchInsertRequest::init not bound
 
-# ignored as well in macOS
+#added and deprecated
+!missing-selector! +NSPersistentStoreCoordinator::elementsDerivedFromExternalRecordURL: not bound
+!missing-selector! +NSPersistentStoreCoordinator::metadataForPersistentStoreWithURL:error: not bound
+!missing-selector! NSPersistentStoreCoordinator::importStoreWithIdentifier:fromExternalRecordsDirectory:toURL:options:withType:error: not bound

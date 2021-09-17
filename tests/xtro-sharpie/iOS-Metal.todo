@@ -161,3 +161,8 @@
 !missing-type! MTLMotionKeyframeData not bound
 !missing-type! MTLRenderPipelineFunctionsDescriptor not bound
 !missing-type! MTLStitchedLibraryDescriptor not bound
+!missing-enum! MTLTextureCompressionType not bound
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple8 = 1008 not bound
+!missing-protocol-member! MTLTexture::compressionType not found
+!missing-selector! MTLTextureDescriptor::compressionType not bound
+!missing-selector! MTLTextureDescriptor::setCompressionType: not bound
