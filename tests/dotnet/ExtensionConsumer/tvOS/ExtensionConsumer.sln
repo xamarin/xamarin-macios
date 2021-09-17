@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySimpleApp", "MySimpleApp.csproj", "{D8448FDC-1002-432B-A3A7-CCFCB833F292}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTVServicesExtension", "..\..\ExtensionProject\tvOS\MyTVServicesExtension.csproj", "{CD69BE1D-FF1B-4B6A-AB6E-5259E65B515E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionProject", "..\..\ExtensionProject\tvOS\ExtensionProject.csproj", "{CD69BE1D-FF1B-4B6A-AB6E-5259E65B515E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

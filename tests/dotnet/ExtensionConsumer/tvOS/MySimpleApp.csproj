@@ -4,10 +4,4 @@
     <TargetFramework>net6.0-tvos</TargetFramework>
   </PropertyGroup>
   <Import Project="..\shared.csproj" />
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\ExtensionProject\tvOS\MyTVServicesExtension.csproj">
-      <IsAppExtension>true</IsAppExtension>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

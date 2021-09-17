@@ -749,11 +749,11 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS, "MyShareExtension.csproj", "bin/Debug/net6.0-ios/iossimulator-x64/MySimpleApp.app/PlugIns/MyShareExtension.appex")]
-		[TestCase (ApplePlatform.TVOS, "MyTVServicesExtension.csproj", "bin/Debug/net6.0-tvos/tvossimulator-x64/MySimpleApp.app/PlugIns/MyTVServicesExtension.appex")]		
-		[TestCase (ApplePlatform.MacOSX, "ShareExtensionTest.csproj", "bin/Debug/net6.0-macos/osx-x64/MySimpleApp.app/Contents/PlugIns/ShareExtensionTest.appex")]
+		[TestCase (ApplePlatform.iOS, "bin/Debug/net6.0-ios/iossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
+		[TestCase (ApplePlatform.TVOS, "bin/Debug/net6.0-tvos/tvossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]		
+		[TestCase (ApplePlatform.MacOSX, "bin/Debug/net6.0-macos/osx-x64/MySimpleApp.app/Contents/PlugIns/ExtensionProject.appex")]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
-		public void BuildProjectsWithExtensions (ApplePlatform platform, string extensionProjectName, string appPath)
+		public void BuildProjectsWithExtensions (ApplePlatform platform, string appPath)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", platform: platform);

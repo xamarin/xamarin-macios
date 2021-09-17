@@ -13,4 +13,10 @@
 	<ItemGroup>
 		<Compile Include="../*.cs" />
 	</ItemGroup>
+
+	<ItemGroup>
+	    <ProjectReference Include="..\..\ExtensionProject\$(_PlatformName)\ExtensionProject.csproj">
+    	  <IsAppExtension>true</IsAppExtension>
+    	</ProjectReference>
+  	</ItemGroup>
 </Project>
