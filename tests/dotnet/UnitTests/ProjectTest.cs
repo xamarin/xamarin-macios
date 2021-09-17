@@ -765,7 +765,6 @@ namespace Xamarin.Tests {
 			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (extensionProjectDir));
 			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (consumingProjectDir));
 
-			DotNet.AssertBuild (extensionProjectDir, verbosity);
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
 			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir), appPath);
