@@ -34,6 +34,10 @@ run-unit-tests:
 
 all-local:: $(TARGETS)
 
+reload: $(TARGETS)
+	$(Q) $(MAKE) -C $(TOP) -j8 all
+	$(Q) $(MAKE) -C $(TOP) -j8 install
+
 compare compare-size: $(TARGETS)
 	rm -rf packages
 	cd size-comparison && git clean -xfdq

@@ -285,7 +285,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
 		Condition = "'$(IsAppDistribution)' != 'true' And '$(UsingAppleNETSdk)' != 'true'"
-		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
 
 		<MTouch
