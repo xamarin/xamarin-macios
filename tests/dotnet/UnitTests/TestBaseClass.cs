@@ -117,5 +117,36 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
+		{
+			var executableName = Path.GetFileNameWithoutExtension (app_directory);
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return Path.Combine (app_directory, executableName);
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (app_directory, "Contents", "MacOS", executableName);
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetResourcesDirectory (ApplePlatform platform, string app_directory)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return app_directory;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (app_directory, "Contents", "Resources");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
 	}
 }

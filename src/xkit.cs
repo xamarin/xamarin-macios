@@ -1912,6 +1912,12 @@ namespace UIKit {
 		[Static]
 		[Export ("sectionWithListConfiguration:layoutEnvironment:")]
 		NSCollectionLayoutSection GetSection (UICollectionLayoutListConfiguration listConfiguration, INSCollectionLayoutEnvironment layoutEnvironment);
+
+		// NSCollectionLayoutSection (TVMediaItemContentConfiguration) category
+		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
+		[Static]
+		[Export ("orthogonalLayoutSectionForMediaItems")]
+		NSCollectionLayoutSection GetOrthogonalLayoutSectionForMediaItems ();
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
