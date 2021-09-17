@@ -848,8 +848,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ScnTool
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			IsWatchApp="$(IsWatchApp)"
 			ToolExe="$(ScnToolExe)"
 			ToolPath="$(ScnToolPath)"
+			SdkPlatform="$(_SdkPlatform)"
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(_SdkVersion)"
