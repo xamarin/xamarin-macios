@@ -119,7 +119,7 @@ namespace Xamarin.Tests {
 
 		protected void AssertBundleAssembliesStripStatus (string appPath, bool shouldStrip)
 		{
-			var assemblies = Directory.GetFiles (appPath, "*.dll");
+			var assemblies = Directory.GetFiles (appPath, "*.dll", SearchOption.AllDirectories);
 			var assembliesWithOnlyEmptyMethods = new List<String> ();
 			foreach (var assembly in assemblies) {
 				ModuleDefinition definition = ModuleDefinition.ReadModule (assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
