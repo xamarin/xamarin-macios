@@ -289,11 +289,19 @@
 		<!-- Show an error if we're mixing simulator + device RIDs in a single build -->
 		<Error Condition="@(_RuntimeIdentifierDistinctPlatforms->Count()) > 1" Text="Building for all the runtime identifiers '$(RuntimeIdentifiers)' at the same time isn't possible, because they represent different platform variations." />
 
+		<PropertyGroup>
+			<_RidSpecificProperties>
+				_IsMultiRidBuild=true;
+				RuntimeIdentifiers=;
+				_ProcessedContentPath=$(_ProcessedContentPath);
+			</_RidSpecificProperties>
+		</PropertyGroup>
+
 		<!-- Execute the inner builds -->
 		<MSBuild
 			Projects="$(MSBuildProjectFile)"
 			Targets="_BuildRidSpecificAppBundle"
-			Properties="RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);RuntimeIdentifiers=;_IsMultiRidBuild=true">
+			Properties="RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);$(_RidSpecificProperties)">
 			<Output TaskParameter="TargetOutputs" ItemName="_AssemblyPublishDirectories" />
 		</MSBuild>
 
