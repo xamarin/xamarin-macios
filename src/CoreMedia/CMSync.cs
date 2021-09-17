@@ -468,20 +468,30 @@ namespace CoreMedia {
 
 #if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)] 
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos10.10")]
 #endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
 
 #if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)] 
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos10.10")]
 #endif
 		public CMTimebaseError SetMasterTimebase (CMTimebase newMasterTimebase)
 		{
@@ -493,20 +503,30 @@ namespace CoreMedia {
 
 #if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)] 
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos10.10")]
 #endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
 
 #if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)] 
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos10.10")]
 #endif
 		public CMTimebaseError SetMasterClock (CMClock newMasterClock)
 		{
