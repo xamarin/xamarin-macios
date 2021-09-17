@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -121,7 +122,9 @@ namespace AppKit {
 		}
 #endif
 
+#if !NET
 		[Mac (10,13)]
+#endif
 		public unsafe void Append (uint[] glyphs, NSFont font)
 		{
 			if (glyphs == null)

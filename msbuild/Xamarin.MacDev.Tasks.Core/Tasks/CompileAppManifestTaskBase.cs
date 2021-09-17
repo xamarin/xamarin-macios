@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -46,6 +47,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string DefaultSdkVersion { get; set; }
 
+		public ITaskItem [] FontFilesToRegister { get; set; }
+
 		// Single-project property that determines whether other single-project properties should have any effect
 		public bool GenerateApplicationManifest { get; set; }
 
@@ -59,6 +62,12 @@ namespace Xamarin.MacDev.Tasks
 		public bool IsWatchExtension { get; set; }
 
 		public ITaskItem[] PartialAppManifests { get; set; }
+
+		[Required]
+		public string ProjectDir { get; set; }
+
+		[Required]
+		public string ResourcePrefix { get; set; }
 
 		public string ResourceRules { get; set; }
 
@@ -127,6 +136,8 @@ namespace Xamarin.MacDev.Tasks
 				defaultBundleShortVersion = plist.GetCFBundleVersion ();
 			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, defaultBundleShortVersion);
 
+			RegisterFonts (plist);
+
 			if (!SetMinimumOSVersion (plist))
 				return false;
 
@@ -141,6 +152,54 @@ namespace Xamarin.MacDev.Tasks
 				Log.LogMessage (MessageImportance.Low, "The file {0} is up-to-date.", CompiledAppManifest.ItemSpec);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		void RegisterFonts (PDictionary plist)
+		{
+			if (FontFilesToRegister == null || FontFilesToRegister.Length == 0)
+				return;
+
+			// https://developer.apple.com/documentation/swiftui/applying-custom-fonts-to-text
+
+			// Compute the relative location in the app bundle for each font file
+			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
+			const string logicalNameKey = "_ComputedLogicalName_";
+			foreach (var item in FontFilesToRegister) {
+				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+				item.SetMetadata (logicalNameKey, logicalName);
+			}
+
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
+				// Fonts are listed in the Info.plist in a UIAppFonts entry for iOS, tvOS, watchOS and Mac Catalyst.
+				var uiAppFonts = plist.GetArray ("UIAppFonts");
+				if (uiAppFonts == null) {
+					uiAppFonts = new PArray ();
+					plist ["UIAppFonts"] = uiAppFonts;
+				}
+				foreach (var item in FontFilesToRegister)
+					uiAppFonts.Add (new PString (item.GetMetadata (logicalNameKey)));
+				break;
+			case ApplePlatform.MacOSX:
+				// The directory where the fonts are located is in the Info.plist in the ATSApplicationFontsPath entry for macOS.
+				// It's relative to the Resources directory.
+				// Make sure that all the fonts are in the same directory in the app bundle
+				var allSubdirectories = FontFilesToRegister.Select (v => Path.GetDirectoryName (v.GetMetadata (logicalNameKey)));
+				var distinctSubdirectories = allSubdirectories.Distinct ().ToArray ();
+				if (distinctSubdirectories.Length > 1) {
+					Log.LogError (MSBStrings.E7083 /* "All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:" */, CompiledAppManifest.ItemSpec);
+					foreach (var fonts in FontFilesToRegister)
+						Log.LogError (null, null, null, fonts.ItemSpec, 0, 0, 0, 0, MSBStrings.E7084 /* "The target directory is {0}" */, fonts.GetMetadata (logicalNameKey));
+				} else {
+					plist.SetIfNotPresent ("ATSApplicationFontsPath", string.IsNullOrEmpty (distinctSubdirectories [0]) ? "." : distinctSubdirectories [0]);
+				}
+				break;
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+			}
 		}
 
 		bool SetMinimumOSVersion (PDictionary plist)

@@ -59,6 +59,8 @@ namespace Introspection {
 		protected virtual bool Skip (string nativeName)
 		{
 			switch (nativeName) {
+			case "CIRawFilter":
+				return true;
 			// Both reported in radar #21548819
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":

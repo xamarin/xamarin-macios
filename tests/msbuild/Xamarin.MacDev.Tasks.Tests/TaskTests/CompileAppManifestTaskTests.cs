@@ -100,7 +100,7 @@ namespace Xamarin.iOS.Tasks {
 			task.SupportedOSPlatformVersion = "11.0";
 
 			ExecuteTask (task, expectedErrorCount: 1);
-			Assert.AreEqual ("The MinimumOSVersion value in the Info.plist (10.0) does not match the SupportedOSPlatformVersion value in the project file (11.0).", Engine.Logger.ErrorEvents [0].Message);
+			Assert.AreEqual ("The MinimumOSVersion value in the Info.plist (10.0) does not match the SupportedOSPlatformVersion value (11.0) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).", Engine.Logger.ErrorEvents [0].Message);
 		}
 
 		[Test]

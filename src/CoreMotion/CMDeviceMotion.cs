@@ -5,11 +5,16 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace CoreMotion {
 
 	// CMDeviceMotion.h
+#if !NET
 	[Mac (10,15)]
+#else
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMCalibratedMagneticField {
 		public CMMagneticField Field;

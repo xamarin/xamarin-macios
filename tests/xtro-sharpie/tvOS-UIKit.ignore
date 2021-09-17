@@ -403,3 +403,4 @@
 ## Enums not needed on tvOS
 !missing-enum! UIListSeparatorVisibility not bound
 !missing-enum! UIPrintRenderingQuality not bound
+!missing-enum! UIBehavioralStyle not bound
