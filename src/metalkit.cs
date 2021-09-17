@@ -31,17 +31,12 @@ namespace MetalKit {
 	}
 
 	[iOS (9,0)][Mac (10,11)]
-	[DisableDefaultCtor]
 #if MONOMAC
 	[BaseType (typeof (AppKit.NSView))]
 #else
 	[BaseType (typeof (UIKit.UIView))]
 #endif
 	interface MTKView : NSCoding, CALayerDelegate {
-
-		[Export ("init")]
-		IntPtr Constructor ();
-
 		[Export ("initWithFrame:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (CGRect frameRect, [NullAllowed] IMTLDevice device);
