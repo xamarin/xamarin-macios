@@ -4,8 +4,6 @@
   <dict>
     <key>CFBundleDisplayName</key>
     <string>DontLinkTest</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.xamarin.dontlink</string>
     <key>UIDeviceFamily</key>
     <array>
       <integer>3</integer>

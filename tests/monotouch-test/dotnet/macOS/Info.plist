@@ -4,8 +4,6 @@
 <dict>
 	<key>CFBundleDisplayName</key>
 	<string>MonoTouchTest</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.xamarin.monotouch-test</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSPrincipalClass</key>

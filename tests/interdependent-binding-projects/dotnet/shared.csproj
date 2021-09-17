@@ -5,6 +5,7 @@
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
     <LangVersion>latest</LangVersion>
     <RootNamespace>interdependentbindingprojects</RootNamespace>
+    <ApplicationId>com.xamarin.interdependentbindingprojects</ApplicationId>
 
     <SignAssembly>true</SignAssembly>
 

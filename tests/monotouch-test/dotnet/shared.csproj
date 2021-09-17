@@ -9,6 +9,7 @@
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AssemblyName>monotouchtest</AssemblyName>
+    <ApplicationId>com.xamarin.monotouch-test</ApplicationId>
 
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>

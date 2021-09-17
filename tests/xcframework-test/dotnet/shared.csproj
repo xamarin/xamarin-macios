@@ -5,6 +5,7 @@
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
     <LangVersion>latest</LangVersion>
     <RootNamespace>xcframeworktest</RootNamespace>
+    <ApplicationId>com.xamarin.xcframework-test</ApplicationId>
 
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>

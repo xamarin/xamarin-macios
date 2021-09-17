@@ -4,7 +4,5 @@
 	<dict>
 		<key>CFBundleDisplayName</key>
 		<string>LinkAll</string>
-		<key>CFBundleIdentifier</key>
-		<string>com.xamarin.linkall</string>
 	</dict>
 </plist>

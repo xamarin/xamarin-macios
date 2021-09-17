@@ -4,8 +4,6 @@
 	<dict>
 		<key>CFBundleDisplayName</key>
 		<string>InterdependentBindingProject</string>
-		<key>CFBundleIdentifier</key>
-		<string>com.xamarin.dotnet.interdependentbindingprojects</string>
 		<key>CFBundleName</key>
 		<string>InterdependentBindingProject</string>
 	</dict>

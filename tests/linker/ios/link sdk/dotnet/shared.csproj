@@ -6,6 +6,7 @@
     <LangVersion>latest</LangVersion>
     <RootNamespace>linksdk</RootNamespace>
     <AssemblyName>link sdk</AssemblyName>
+    <ApplicationId>com.xamarin.linksdk</ApplicationId>
     <MtouchLink>SdkOnly</MtouchLink>
     <LinkMode>$(MtouchLink)</LinkMode>
     <MtouchExtraArgs>-disable-thread-check "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>

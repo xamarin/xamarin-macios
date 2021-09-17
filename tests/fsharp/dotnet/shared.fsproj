@@ -8,6 +8,7 @@
     <AssemblyName>fsharp</AssemblyName>
 
     <ApplicationTitle>FSharp</ApplicationTitle>
+    <ApplicationId>com.xamarin.fsharp</ApplicationId>
 
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>

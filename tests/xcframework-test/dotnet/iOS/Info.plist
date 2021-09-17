@@ -4,8 +4,6 @@
 	<dict>
 		<key>CFBundleDisplayName</key>
 		<string>xcframework-test</string>
-		<key>CFBundleIdentifier</key>
-		<string>com.xamarin.xcframework-test</string>
 		<key>CFBundleName</key>
 		<string>xcframework-test</string>
 	</dict>
