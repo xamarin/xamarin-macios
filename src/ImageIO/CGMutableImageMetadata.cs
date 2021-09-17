@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
@@ -16,7 +17,9 @@ using ObjCRuntime;
 
 namespace ImageIO {
 
+#if !NET
 	[iOS (7,0)]
+#endif
 	public class CGMutableImageMetadata : CGImageMetadata {
 
 		[DllImport (Constants.ImageIOLibrary)]

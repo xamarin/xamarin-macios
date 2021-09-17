@@ -8,6 +8,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -15,12 +16,25 @@ using Foundation;
 namespace GameController {
 	// GCGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
+#if !NET
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	[iOS (7,0)]
 	[Mac (10,9)]
+#else
+	[UnsupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("macos10.15")]
+#if IOS
+	[Obsolete ("Starting with ios13.0 Use 'GCExtendedGamepad' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos13.0 Use 'GCExtendedGamepad' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+	[Obsolete ("Starting with macos10.15 Use 'GCExtendedGamepad' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
+	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	public struct GCGamepadSnapShotDataV100 {
 
 		// Standard information

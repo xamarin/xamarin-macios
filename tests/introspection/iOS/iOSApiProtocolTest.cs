@@ -40,6 +40,7 @@ namespace Introspection {
 			case "MLCompute":
 			case "MediaSetup":
 			case "Phase":
+			case "ThreadNetwork":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -449,8 +450,8 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
-				case "QLPreviewReply": // conformance not in headers
-				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "UISheetPresentationControllerDetent": // Conformance not in headers
+				case "UIWindowSceneActivationConfiguration": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -697,8 +698,7 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
-				case "QLPreviewReply": // conformance not in headers
-				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "UISheetPresentationControllerDetent": // conformance not in headers
 					return true;
 				}
 				break;
@@ -783,6 +783,7 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
+				case "UIWindowSceneActivationConfiguration":
 					return true;
 				}
 				break;
@@ -816,6 +817,7 @@ namespace Introspection {
 				// Xcode 13
 				case "NSMergePolicy":
 				case "UNNotificationSettings":
+				case "UIWindowSceneActivationConfiguration":
 					return true;
 				}
 				break;

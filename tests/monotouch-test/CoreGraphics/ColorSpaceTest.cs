@@ -445,5 +445,28 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
 			}
 		}
+		
+		[Test]
+		public void IsHlgBasedTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
+				Assert.DoesNotThrow (() => {
+					var result = cs.IsHlgBased;
+				});
+			}
+		}
+		
+		[Test]
+		public void IsPQBasedTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
+				Assert.DoesNotThrow (() => {
+					var result = cs.IsPQBased;
+				});
+			}
+		}
 	}
+	
 }

@@ -8,6 +8,8 @@
 		<ApplicationVersion>1.0</ApplicationVersion>
 	</PropertyGroup>
 
+	<Import Project="../../common/shared-dotnet.csproj" />
+
 	<ItemGroup>
 		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\libtest.a" Kind="Static" />
 		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\libtest2.a" Kind="Static" />
@@ -15,8 +17,5 @@
 
 	<ItemGroup>
 		<Compile Include="../*.cs" />
-		<None Include="../Info.plist">
-			<Link>Info.plist</Link>
-		</None>
 	</ItemGroup>
 </Project>

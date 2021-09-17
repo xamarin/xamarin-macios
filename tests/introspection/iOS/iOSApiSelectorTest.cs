@@ -54,6 +54,7 @@ namespace Introspection {
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
 			case "Phase":
+			case "ThreadNetwork":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -431,6 +432,10 @@ namespace Introspection {
 			case "delete:":
 			case "select:":
 			case "selectAll:":
+			case "pasteAndGo:":
+			case "pasteAndMatchStyle:":
+			case "pasteAndSearch:":
+			case "print:":
 			// A subclass of UIResponder typically implements this method...
 			case "toggleBoldface:":
 			case "toggleItalics:":

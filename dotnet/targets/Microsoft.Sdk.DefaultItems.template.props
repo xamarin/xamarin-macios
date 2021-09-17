@@ -78,4 +78,12 @@
 			<IsDefaultItem>true</IsDefaultItem>
 		</SceneKitAsset>
 	</ItemGroup>
+
+	<!-- Default font files inclusion -->
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
+		<BundleResource Include="$(_ResourcePrefix)\**\*.ttf;$(_ResourcePrefix)\**\*.otf;$(_ResourcePrefix)\**\*.ttc" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</BundleResource>
+	</ItemGroup>
 </Project>

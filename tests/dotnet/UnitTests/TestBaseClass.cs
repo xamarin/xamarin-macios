@@ -17,8 +17,7 @@ namespace Xamarin.Tests {
 	[TestFixture]
 	public abstract class TestBaseClass {
 		protected Dictionary<string, string> verbosity = new Dictionary<string, string> {
-			{ "MtouchExtraArgs", "-v" },
-			{ "MonoBundlingExtraArgs", "-v" },
+			{ "_BundlerVerbosity", "1" },
 		};
 
 		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers)
@@ -134,6 +133,37 @@ namespace Xamarin.Tests {
 
 			// Some assemblies, such as Facades, will be completely empty even when not stripped
 			Assert.That (assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo (shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
+		}
+
+		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
+		{
+			var executableName = Path.GetFileNameWithoutExtension (app_directory);
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return Path.Combine (app_directory, executableName);
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (app_directory, "Contents", "MacOS", executableName);
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetResourcesDirectory (ApplePlatform platform, string app_directory)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return app_directory;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (app_directory, "Contents", "Resources");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
 		}
 	}
 }

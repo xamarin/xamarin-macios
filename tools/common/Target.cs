@@ -224,6 +224,7 @@ namespace Xamarin.Bundler {
 						case "MetalPerformanceShaders":
 						case "CHIP":
 						case "PHASE":
+						case "ThreadNetwork":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
 								continue;

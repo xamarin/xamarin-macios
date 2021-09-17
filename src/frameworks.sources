@@ -1975,6 +1975,7 @@ MAC_FRAMEWORKS =            \
 	JavaScriptCore          \
 	LinkPresentation        \
 	LocalAuthentication     \
+	LocalAuthenticationEmbeddedUI	\
 	MailKit                 \
 	MapKit                  \
 	MediaAccessibility      \
@@ -2119,6 +2120,7 @@ IOS_FRAMEWORKS =         \
 	Social \
 	Speech \
 	SystemConfiguration \
+	ThreadNetwork \
 	Twitter \
 	UIKit XKit \
 	UserNotifications \

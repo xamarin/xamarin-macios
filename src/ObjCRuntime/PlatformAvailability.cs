@@ -20,6 +20,7 @@ using System.Text;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if !COREBUILD
 #if MONOMAC
@@ -288,7 +289,11 @@ namespace ObjCRuntime
 		const int sys2 = 1937339186;
 
 		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
+#else
+		[UnsupportedOSPlatform ("macos10.8")]
+#endif
 		[DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
 		static extern int Gestalt (int selector, out int result);
 

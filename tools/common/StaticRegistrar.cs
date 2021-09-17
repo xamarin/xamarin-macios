@@ -2230,6 +2230,9 @@ namespace Registrar {
 					return;
 				}
 				goto default;
+			case "ThreadNetwork":
+				h = "<ThreadNetwork/THClient.h>";
+				break;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;

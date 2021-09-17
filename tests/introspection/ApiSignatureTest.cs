@@ -963,6 +963,8 @@ namespace Introspection {
 			case "Register":
 			case "SignalEnumerator":
 				return m.DeclaringType.Name == "NSFileProviderManager";
+			case "Synchronize": // comes from a protocol implementation
+				return m.DeclaringType.Name == "NSTextContentManager";
 			}
 			return false;
 		}

@@ -26,11 +26,6 @@ stages:
       yamlResourceName: templates
       dependsOn: signing
       artifactName: nuget-signed
-      artifactPatterns: |
-        Microsoft.NET.Sdk.iOS.Manifest*.nupkg
-        Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg
-        Microsoft.iOS*.nupkg
-        Microsoft.MacCatalyst*.nupkg
       propsArtifactName: package
       signType: Real
 
@@ -78,4 +73,9 @@ stages:
 - template: vs-insertion/stage/v1.yml@templates
   parameters:
     dependsOn: prepare_release
+    symbolArtifactName: nuget-signed
+    symbolConversionFilters: '*mlaunch.app*'
+    pushToShippingFeed: true
+    nupkgArtifactName: nuget-signed
+    msiNupkgArtifactName: vs-msi-nugets
     condition: eq(variables.IsPRBuild, 'False')

@@ -23,6 +23,7 @@ namespace Extrospection {
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
 			{ "AudioChannelBitmap", "AudioChannelBit" },
+			{ "CIRAWDecoderVersion", "CIRawDecoderVersion" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
 			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
 			{ "GKErrorCode", "GKError" },
@@ -176,9 +177,9 @@ namespace Extrospection {
 				}
 			}
 				
-			// but right now most frameworks consider tvOS and watchOS like iOS unless 
+			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS)))
+			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
 				result = decl.IsAvailable (Platforms.iOS);
 			return !result.HasValue ? true : result.Value;
 		}
@@ -194,14 +195,15 @@ namespace Extrospection {
 				var avail = (attr as AvailabilityAttr);
 				if (avail == null)
 					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
 				// if the headers says it's not available then we won't report it as missing
-				if (avail.Unavailable && (avail.Platform.Name == platform))
+				if (avail.Unavailable && (availName == platform))
 					return false;
 				// for iOS we won't report missing members that were deprecated before 5.0
-				if (!avail.Deprecated.IsEmpty && avail.Platform.Name == "ios" && avail.Deprecated.Major < 5)
+				if (!avail.Deprecated.IsEmpty && availName == "ios" && avail.Deprecated.Major < 5)
 					return false;
 				// can't return true right away as it can be deprecated too
-				if (!avail.Introduced.IsEmpty && (avail.Platform.Name == platform))
+				if (!avail.Introduced.IsEmpty && (availName == platform))
 					result = true;
 			}
 			return result;

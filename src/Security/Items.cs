@@ -36,6 +36,7 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -55,13 +56,33 @@ namespace Security {
 		Invalid = -1,
 		WhenUnlocked,
 		AfterFirstUnlock,
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
+#else
+		[UnsupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("macos10.14")]
+#if IOS
+		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		Always,
 		WhenUnlockedThisDeviceOnly,
 		AfterFirstUnlockThisDeviceOnly,
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
+#else
+		[UnsupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("macos10.14")]
+#if IOS
+		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		AlwaysThisDeviceOnly,
 		WhenPasscodeSetThisDeviceOnly
 	}
@@ -805,7 +826,9 @@ namespace Security {
 		}
 
 #if !MONOMAC
+#if !NET
 		[iOS (9,0)]
+#endif
 		public string SyncViewHint {
 			get {
 				return FetchString (SecAttributeKey.SyncViewHint);
@@ -815,7 +838,9 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[iOS (9,0)]
+#endif
 		public SecTokenID TokenID {
 			get {
 				return SecTokenIDExtensions.GetValue (Fetch<NSString> (SecKeyGenerationAttributeKeys.TokenIDKey.GetHandle ()));
@@ -951,8 +976,17 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[iOS (8, 0)]
+#endif
+#if !NET
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'AuthenticationUI' property instead.")]
+#else
+		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0 use 'AuthenticationUI' property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public bool UseNoAuthenticationUI {
 			get {
 				return Fetch (SecItem.UseNoAuthenticationUI) == CFBoolean.TrueHandle;
@@ -962,7 +996,9 @@ namespace Security {
 			}
 		}
 #endif
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public SecAuthenticationUI AuthenticationUI {
 			get {
 				var s = Fetch<NSString> (SecItem.UseAuthenticationUI);
@@ -974,7 +1010,9 @@ namespace Security {
 		}
 
 #if !WATCH && !TVOS
+#if !NET
 		[iOS (9, 0), Mac (10, 11)]
+#endif
 		public LocalAuthentication.LAContext AuthenticationContext {
 			get {
 				return Fetch<LocalAuthentication.LAContext> (SecItem.UseAuthenticationContext);
@@ -1312,7 +1350,12 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public bool PersistentReference {
 			get {
 				return Fetch (SecAttributeKey.PersistentReference) == CFBoolean.TrueHandle;
@@ -1714,7 +1757,9 @@ namespace Security {
 		// For caching, as we can't reverse it easily.
 		SecAccessControl _secAccessControl;
 
+#if !NET
 		[iOS (8, 0), Mac (10, 10)]
+#endif
 		public SecAccessControl AccessControl {
 			get {
 				return _secAccessControl;
@@ -1748,7 +1793,9 @@ namespace Security {
 		// For caching, as we can't reverse it easily.
 		SecAccessControl _secAccessControl;
 
+#if !NET
 		[iOS (8, 0), Mac (10, 10)]
+#endif
 		public SecAccessControl AccessControl {
 			get {
 				return _secAccessControl;
@@ -1762,7 +1809,9 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[iOS (9, 0), Mac (10, 12)]
+#endif
 		public SecTokenID TokenID {
 			get {
 				return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));

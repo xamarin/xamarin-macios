@@ -42,6 +42,7 @@ using CFAllocatorRef = System.IntPtr;
 
 namespace CoreFoundation {
 	
+	// interesting bits: https://github.com/opensource-apple/CF/blob/master/CFArray.c
 	public partial class CFArray : NativeObject {
 
 		internal CFArray (IntPtr handle)
@@ -80,7 +81,7 @@ namespace CoreFoundation {
 		}
 
 		public nint Count {
-			get { return CFArrayGetCount (GetCheckedHandle ()); }
+			get { return GetCount (GetCheckedHandle ()); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -106,53 +107,47 @@ namespace CoreFoundation {
 			}
 		}
 
-		internal static IntPtr Create (params INativeObject[] values)
+		public static unsafe IntPtr Create (params INativeObject[] values)
 		{
 			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
-			IntPtr[] _values = new IntPtr [values.Length];
-			for (int i = 0; i < _values.Length; ++i)
+			int c = values.Length;
+			var _values = c <= 256 ? stackalloc IntPtr [c] : new IntPtr [c];
+			for (int i = 0; i < c; ++i)
 				_values [i] = values [i].Handle;
-			return Create (_values);
+			fixed (IntPtr* pv = _values)
+				return CFArrayCreate (IntPtr.Zero, (IntPtr) pv, c, kCFTypeArrayCallbacks_ptr);
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFIndex */ nint CFArrayGetCount (/* CFArrayRef */ IntPtr theArray);
-
-		internal static nint GetCount (IntPtr array)
-		{
-			return CFArrayGetCount (array);
-		}
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFArrayGetCount")]
+		internal extern static /* CFIndex */ nint GetCount (/* CFArrayRef */ IntPtr theArray);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFArrayRef CFArrayCreateCopy (CFAllocatorRef allocator, CFArrayRef theArray);
 
 		internal CFArray Clone () => new CFArray (CFArrayCreateCopy (IntPtr.Zero, GetCheckedHandle ()), true);
 
+		[DllImport (Constants.CoreFoundationLibrary)]
+		internal extern static void CFArrayGetValues (/* CFArrayRef */ IntPtr theArray, CFRange range, /* const void ** */ IntPtr values);
+
 		// identical signature to NSArray API
-		static public string?[]? StringArrayFromHandle (IntPtr handle)
+		static unsafe public string?[]? StringArrayFromHandle (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
 
-			var c = CFArrayGetCount (handle);
+			var c = (int) GetCount (handle);
+			if (c == 0)
+				return Array.Empty<string> ();
+
+			var buffer = c <= 256 ? stackalloc IntPtr [c] : new IntPtr [c];
+			fixed (void* ptr = buffer)
+				CFArrayGetValues (handle, new CFRange (0, c), (IntPtr) ptr);
+
 			string?[] ret = new string [c];
-
-			for (nint i = 0; i < c; i++)
-				ret [i] = CFString.FromHandle (CFArrayGetValueAtIndex (handle, i));
+			for (var i = 0; i < c; i++)
+				ret [i] = CFString.FromHandle (buffer [i]);
 			return ret;
-		}
-
-		static T? UnsafeGetItem<T> (IntPtr handle, nint index) where T : class, INativeObject
-		{
-			var val = CFArrayGetValueAtIndex (handle, index);
-			// Native code could return a CFArray with kCFNull inside its elements
-			// and they should be valid for things like T : NSDate so we handle
-			// them as just null values inside the array
-			if (val == CFNullHandle)
-				return null;
-
-			return Runtime.GetINativeObject<T> (val, false);
 		}
 
 		// identical signature to NSArray API
@@ -161,11 +156,22 @@ namespace CoreFoundation {
 			if (handle == IntPtr.Zero)
 				return null;
 
-			var c = CFArrayGetCount (handle);
-			T?[] ret = new T [c];
+			var c = (int) GetCount (handle);
+			if (c == 0)
+				return Array.Empty<T> ();
 
-			for (nint i = 0; i < c; i++)
-				ret [i] = UnsafeGetItem<T> (handle, i);
+			var buffer = c <= 256 ? stackalloc IntPtr [c] : new IntPtr [c];
+			unsafe {
+				fixed (void* ptr = buffer)
+					CFArrayGetValues (handle, new CFRange (0, c), (IntPtr) ptr);
+			}
+
+			T?[] ret = new T [c];
+			for (var i = 0; i < c; i++) {
+				var val = buffer [i];
+				if (val != CFNullHandle)
+					ret [i] = Runtime.GetINativeObject<T> (val, false);
+			}
 			return ret;
 		}
 	}

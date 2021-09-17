@@ -3,6 +3,7 @@ using System;
 
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -22,9 +23,11 @@ namespace Metal {
 			return NSArray.ArrayFromHandle<IMTLCounterSet>(global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (This.Handle, Selector.GetHandle ("counterSets")));
 		}
 
-		[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-		[Unavailable (PlatformName.TvOS, PlatformArchitecture.All)]
+#if !NET
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLCounterSampleBuffer CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError error)
 		{
@@ -40,9 +43,12 @@ namespace Metal {
 	}
 
 	public static partial class MTLComputeCommandEncoder_Extensions {
-		[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-		[Unavailable (PlatformName.TvOS, PlatformArchitecture.All)]
+#if !NET
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void SampleCounters (this IMTLComputeCommandEncoder This, IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier)
 		{

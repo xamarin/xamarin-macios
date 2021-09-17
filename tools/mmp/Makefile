@@ -114,8 +114,10 @@ Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.x86_64.a Xamarin.Mac.registra
 
 dotnet: $(MMP_TARGETS_DOTNET)
 ifdef ENABLE_DOTNET
+ifdef INCLUDE_MAC
 install-local:: $(MMP_TARGETS_DOTNET)
 all-local:: $(MMP_TARGETS_DOTNET)
+endif
 endif
 
 ifdef INCLUDE_XAMARIN_LEGACY

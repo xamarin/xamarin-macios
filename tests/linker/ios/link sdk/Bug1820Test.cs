@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Foundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace LinkSdk.Serialization {
@@ -153,6 +154,10 @@ namespace LinkSdk.Serialization {
 		// note: this also test the linker (5.1+) ability not to remove 'unused' XML setters and .ctors used for serialization
 		public void Bug1820_GenericList ()
 		{
+#if NET && (__IOS__ || __TVOS__)
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/mono/linker/issues/2266");
+#endif
 			string input = @"
 				<?xml version=""1.0"" encoding=""UTF-8""?>
 				<Response>
