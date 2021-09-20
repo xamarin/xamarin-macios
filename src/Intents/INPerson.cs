@@ -20,11 +20,11 @@ namespace Intents
 #else
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("macos12.0")]
-#endif //!NET
-        public enum INPersonType {
-            Me = 0, 
-            ContactSuggestion = 1,
-        }
+	#endif //!NET
+		public enum INPersonType {
+			Me = 0, 
+			ContactSuggestion = 1,
+		}
 
 #if !NET
 	[Introduced (PlatformName.iOS, 15,0)]
@@ -34,10 +34,10 @@ namespace Intents
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("macos12.0")]
 #endif //!NET
-        public INPerson (INPersonHandle personHandle, NSPersonNameComponents? nameComponents, string? displayName, INImage? image, string? contactIdentifier, string? customIdentifier, bool isMe, INPersonSuggestionType suggestionType) :
-            this (personHandle, nameComponents, displayName, image, contactIdentifier, customIdentifier, isMe, suggestionType, INPersonType.Me)
-        {
-        }
+		public INPerson (INPersonHandle personHandle, NSPersonNameComponents? nameComponents, string? displayName, INImage? image, string? contactIdentifier, string? customIdentifier, bool isMe, INPersonSuggestionType suggestionType) :
+			this (personHandle, nameComponents, displayName, image, contactIdentifier, customIdentifier, isMe, suggestionType, INPersonType.Me)
+		{
+		}
 
 #if !NET
 	[Introduced (PlatformName.iOS, 15,0)]
@@ -48,20 +48,20 @@ namespace Intents
 	[SupportedOSPlatform ("macos12.0")]
 #endif //!NET
 		public INPerson (INPersonHandle personHandle, NSPersonNameComponents? nameComponents, string? displayName, INImage? image, string? contactIdentifier, string? customIdentifier, bool isMe, INPersonSuggestionType suggestionType, INPersonType personType) : base (NSObjectFlag.Empty)
-        {
-            switch (personType) {
-            case INPersonType.Me:
-                InitializeHandle (InitWithMe (personHandle, nameComponents, displayName, image, contactIdentifier, customIdentifier, isMe, suggestionType),
-                    "initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:suggestionType:");
-                break;
-            case INPersonType.ContactSuggestion:
-                InitializeHandle (InitWithContactSuggestion (personHandle, nameComponents, displayName, image, contactIdentifier, customIdentifier, isMe, suggestionType),
-                    "initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isContactSuggestion:suggestionType:");
-                break;
-            default:
-                throw new ArgumentException (nameof (personType));
-            }
-        }
+		{
+			switch (personType) {
+			case INPersonType.Me:
+				InitializeHandle (InitWithMe (personHandle, nameComponents, displayName, image, contactIdentifier, customIdentifier, isMe, suggestionType),
+					"initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:suggestionType:");
+				break;
+			case INPersonType.ContactSuggestion:
+				InitializeHandle (InitWithContactSuggestion (personHandle, nameComponents, displayName, image, contactIdentifier, customIdentifier, isMe, suggestionType),
+					"initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isContactSuggestion:suggestionType:");
+				break;
+			default:
+				throw new ArgumentException (nameof (personType));
+			}
+		}
 	}
 #endif // !TVOS
 }

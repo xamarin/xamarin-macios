@@ -7516,9 +7516,9 @@ namespace Intents {
 
  	[Deprecated (PlatformName.iOS, 15, 0)]
  	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
+ 	[Deprecated (PlatformName.MacOSX, 12, 0)]
+ 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[iOS (10, 0)]
-	[NoWatch] // it says it's now NoWatch, but not deprecated? (there was previous watch availability)
-	[NoMac] // it says it's now NoMac, but not deprecated? (there was previous mac availability)
 	[NoTV]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
