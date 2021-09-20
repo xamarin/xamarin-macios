@@ -9,12 +9,19 @@ using NUnit.Framework;
 
 using Xamarin;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
 	public partial class MMPTests
 	{
+		[SetUp]
+		public void SetUp ()
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+		}
+
 		void RunMSBuildTest (Action <string> test, string directory_name = null)
 		{
 			test (Cache.CreateTemporaryDirectory (directory_name ?? "msbuild-tests"));
