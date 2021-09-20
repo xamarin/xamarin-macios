@@ -46,6 +46,7 @@ endif
 	@echo "    Xamarin.tvOS $(TVOS_NUGET_VERSION_FULL)"
 	@echo "    Xamarin.watchOS $(WATCHOS_NUGET_VERSION_FULL)"
 	@echo "    Xamarin.macOS $(MACOS_NUGET_VERSION_FULL)"
+	@echo "    Xamarin.MacCatalyst $(MACCATALYST_NUGET_VERSION_FULL)"
 
 check-permissions:
 ifdef INCLUDE_MAC

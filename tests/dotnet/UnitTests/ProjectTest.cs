@@ -89,17 +89,6 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[Ignore ("watchOS not supported on net6")]
-		public void BuildMyWatchApp ()
-		{
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
-			var project_path = GetProjectPath ("MyWatchApp");
-			Clean (project_path);
-			var result = DotNet.AssertBuildFailure (project_path, verbosity);
-			Assert.That (result.StandardOutput.ToString (), Does.Contain ("The specified RuntimeIdentifier 'watchos-x86' is not recognized."), "Missing runtime pack for watchOS");
-		}
-
-		[Test]
 		[TestCase (null)]
 		[TestCase ("maccatalyst-x64")]
 		[TestCase ("maccatalyst-arm64")]
@@ -129,7 +118,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildMyClassLibrary (string platform)
@@ -143,7 +131,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildEmbeddedResourcesTest (string platform)
@@ -177,7 +164,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildFSharpLibraryTest (string platform)
@@ -205,7 +191,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest (string platform)
@@ -237,7 +222,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest2 (string platform)
@@ -268,7 +252,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS", "monotouch")]
 		[TestCase ("tvOS", "monotouch")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS", "xammac")]
 		[TestCase ("MacCatalyst", "monotouch")]
 		public void BuildBundledResources (string platform, string prefix)
@@ -302,7 +285,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		// [TestCase ("macOS")] // No macOS Touch.Client project for .NET yet
 		[TestCase ("MacCatalyst")]
 		public void BuildInterdependentBindingProjects (string platform)
@@ -663,6 +645,51 @@ namespace Xamarin.Tests {
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
 		}
 
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void AppWithResources (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "AppWithResources";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			string fontDirectory = GetResourcesDirectory (platform, appPath);
+			var fontAFile = Path.Combine (fontDirectory, "A.ttc");
+			var fontBFile = Path.Combine (fontDirectory, "B.otf");
+			var fontCFile = Path.Combine (fontDirectory, "C.ttf");
+
+			Assert.That (fontAFile, Does.Exist, "A.ttc existence");
+			Assert.That (fontBFile, Does.Exist, "B.otf existence");
+			Assert.That (fontCFile, Does.Exist, "C.ttf existence");
+
+			var plist = PDictionary.FromFile (GetInfoPListPath (platform, appPath));
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.MacCatalyst:
+				var uiAppFonts = plist.GetArray ("UIAppFonts");
+				Assert.IsNotNull (uiAppFonts, "UIAppFonts");
+				Assert.AreEqual (1, uiAppFonts.Count, "UIAppFonts.Count");
+				Assert.AreEqual ("B.otf", ((PString) uiAppFonts [0]).Value, "UIAppFonts [0]");
+				break;
+			case ApplePlatform.MacOSX:
+				var applicationFontsPath = plist.GetString ("ATSApplicationFontsPath")?.Value;
+				Assert.AreEqual (".", applicationFontsPath, "ATSApplicationFontsPath");
+				break;
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
@@ -711,8 +738,6 @@ namespace Xamarin.Tests {
 			case ApplePlatform.TVOS:
 				assets_path = Path.Combine (app_directory, "Assets.car");
 				break;
-			case ApplePlatform.WatchOS:
-				break; // sample project doesn't have assets
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
 				assets_path = Path.Combine (app_directory, "Contents", "Resources", "Assets.car");
