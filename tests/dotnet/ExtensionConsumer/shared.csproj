@@ -16,7 +16,7 @@
 
 	<ItemGroup>
 	    <ProjectReference Include="..\..\ExtensionProject\$(_PlatformName)\ExtensionProject.csproj">
-    	  <IsAppExtension>true</IsAppExtension>
+    		<IsAppExtension>true</IsAppExtension>
     	</ProjectReference>
   	</ItemGroup>
 </Project>
