@@ -185,8 +185,6 @@ namespace CoreMedia {
 			var error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, out handle);
 			if (error != CMTimebaseError.None)
 				throw new ArgumentException (error.ToString ());
-
-			CFObject.CFRetain (Handle);
 		}
 
 		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
@@ -202,8 +200,6 @@ namespace CoreMedia {
 			var error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, out handle);
 			if (error != CMTimebaseError.None)
 				throw new ArgumentException (error.ToString ());
-
-			CFObject.CFRetain (Handle);
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -825,7 +821,7 @@ namespace CoreMedia {
 		public CMTimebase? SourceTimebase  {
 			get {
 				var source = CMTimebaseCopySourceTimebase  (Handle);
-				return source == IntPtr.Zero ? null : Runtime.GetINativeObject<CMTimebase> (source, true); 
+				return Runtime.GetINativeObject<CMTimebase> (source, true); 
 			}
 			set {
 				CMTimebaseSetSourceTimebase (Handle, value?.GetHandle () ?? IntPtr.Zero);
@@ -844,7 +840,7 @@ namespace CoreMedia {
 		public CMClock? SourceClock {
 			get {
 				var clock = CMTimebaseCopySourceClock (Handle);
-				return clock == IntPtr.Zero ? null : Runtime.GetINativeObject<CMClock> (clock, true);
+				return Runtime.GetINativeObject<CMClock> (clock, true);
 			}
 			set {
 				CMTimebaseSetSourceClock (Handle, value?.GetHandle() ?? IntPtr.Zero);
@@ -859,7 +855,7 @@ namespace CoreMedia {
 		public CMClock? UltimateSourceClock  {
 			get {
 				var clock = CMTimebaseCopyUltimateSourceClock (Handle);
-				return clock == IntPtr.Zero ? null : Runtime.GetINativeObject<CMClock> (clock, true);
+				return Runtime.GetINativeObject<CMClock> (clock, true);
 			}
 		}
 
