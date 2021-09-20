@@ -630,7 +630,7 @@ namespace CoreMedia {
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos12.0")]
 #endif
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -810,7 +810,7 @@ namespace CoreMedia {
 		}
 
 		[Watch (6,0), TV (9,0), Mac (10,11), iOS (9,0)]
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* CMTimebase */ IntPtr CMTimebaseCopySourceTimebase (/* CMTimebase */ IntPtr timebase);
 
 		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
