@@ -801,5 +801,28 @@ namespace Xamarin.Tests {
 			// https://github.com/xamarin/xamarin-macios/issues/10012
 			ExecutionHelper.Execute ("xcrun", new [] { "simctl", "list" });
 		}
+
+
+		[TestCase (ApplePlatform.iOS, "bin/Debug/net6.0-ios/iossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
+		[TestCase (ApplePlatform.TVOS, "bin/Debug/net6.0-tvos/tvossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]		
+		[TestCase (ApplePlatform.MacOSX, "bin/Debug/net6.0-macos/osx-x64/MySimpleApp.app/Contents/PlugIns/ExtensionProject.appex")]
+		// [TestCase ("MacCatalyst", "")] - No extension support yet
+		public void BuildProjectsWithExtensions (ApplePlatform platform, string appPath)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", platform: platform);
+			var extensionProjectDir = GetProjectPath ("ExtensionProject", platform: platform);
+
+			Clean (extensionProjectDir);
+			Clean (consumingProjectDir);
+
+			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (extensionProjectDir));
+			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (consumingProjectDir));
+
+			DotNet.AssertBuild (consumingProjectDir, verbosity);
+			
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir), appPath);
+			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+		}
 	}
 }
