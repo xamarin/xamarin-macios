@@ -15,6 +15,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void PartialAppManifest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+
 			var csproj = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
