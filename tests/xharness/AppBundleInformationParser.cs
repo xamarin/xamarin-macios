@@ -32,21 +32,23 @@ namespace Xharness {
 			var projectDirectory = Path.GetDirectoryName (projectFilePath) ?? throw new DirectoryNotFoundException ($"Cannot find directory of project '{projectFilePath}'");
 
 			var appName = csproj.GetAssemblyName ();
-			var infoPlistPath = csproj.GetInfoPListInclude () ?? throw new InvalidOperationException ("Couldn't locate PList include tag");
-
-			var infoPlist = new XmlDocument ();
-			var plistPath = Path.Combine (projectDirectory, infoPlistPath.Replace ('\\', Path.DirectorySeparatorChar));
-			infoPlist.LoadWithoutNetworkAccess (plistPath);
+			var infoPlistPath = csproj.GetInfoPListInclude ();
+			XmlDocument? infoPlist = null;
+			if (infoPlistPath != null) {
+				var plistPath = Path.Combine (projectDirectory, infoPlistPath.Replace ('\\', Path.DirectorySeparatorChar));
+				infoPlist = new XmlDocument ();
+				infoPlist.LoadWithoutNetworkAccess (plistPath);
+			}
 
 			if (!csproj.TryGetApplicationId (out var bundleIdentifier)) {
-				if (!infoPlist.TryGetCFBundleIdentifier (out bundleIdentifier))
+				if (!(infoPlist?.TryGetCFBundleIdentifier (out bundleIdentifier) == true))
 					throw new InvalidOperationException ($"No bundle identifier found, neither in the Info.plist, nor the project file.");
 			}
 
 			Extension? extension = null;
-			var extensionPointIdentifier = infoPlist.GetNSExtensionPointIdentifier ();
+			var extensionPointIdentifier = infoPlist?.GetNSExtensionPointIdentifier ();
 			if (!string.IsNullOrEmpty (extensionPointIdentifier)) {
-				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
+				extension = extensionPointIdentifier!.ParseFromNSExtensionPointIdentifier ();
 			}
 
 			var platform = target.IsSimulator () ? "iPhoneSimulator" : "iPhone";
