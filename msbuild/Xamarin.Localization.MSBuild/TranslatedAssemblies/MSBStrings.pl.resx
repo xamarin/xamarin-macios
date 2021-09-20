@@ -714,7 +714,7 @@
         <value>Nie można zmapować wersji systemu MacOS {0} na odpowiadającą jej wersję systemu iOS</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>Nie można zmapować systemu iOS w wersji {0} na odpowiadającą jej wersję systemu macOS</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Nie można rozpoznać adresów IP hosta dla ustawień debugera WiFi.
@@ -1047,7 +1047,7 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>Kompilator AOT "{0}" nie istnieje.</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
@@ -1059,6 +1059,16 @@
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
             {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
 </root>
