@@ -89,17 +89,6 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[Ignore ("watchOS not supported on net6")]
-		public void BuildMyWatchApp ()
-		{
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
-			var project_path = GetProjectPath ("MyWatchApp");
-			Clean (project_path);
-			var result = DotNet.AssertBuildFailure (project_path, verbosity);
-			Assert.That (result.StandardOutput.ToString (), Does.Contain ("The specified RuntimeIdentifier 'watchos-x86' is not recognized."), "Missing runtime pack for watchOS");
-		}
-
-		[Test]
 		[TestCase (null)]
 		[TestCase ("maccatalyst-x64")]
 		[TestCase ("maccatalyst-arm64")]
@@ -129,7 +118,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildMyClassLibrary (string platform)
@@ -143,7 +131,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildEmbeddedResourcesTest (string platform)
@@ -177,7 +164,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildFSharpLibraryTest (string platform)
@@ -205,7 +191,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest (string platform)
@@ -237,7 +222,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest2 (string platform)
@@ -268,7 +252,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS", "monotouch")]
 		[TestCase ("tvOS", "monotouch")]
-		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS", "xammac")]
 		[TestCase ("MacCatalyst", "monotouch")]
 		public void BuildBundledResources (string platform, string prefix)
@@ -302,7 +285,6 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// not supported on net6 [TestCase ("watchOS")]
 		// [TestCase ("macOS")] // No macOS Touch.Client project for .NET yet
 		[TestCase ("MacCatalyst")]
 		public void BuildInterdependentBindingProjects (string platform)
@@ -728,8 +710,6 @@ namespace Xamarin.Tests {
 			case ApplePlatform.TVOS:
 				assets_path = Path.Combine (app_directory, "Assets.car");
 				break;
-			case ApplePlatform.WatchOS:
-				break; // sample project doesn't have assets
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
 				assets_path = Path.Combine (app_directory, "Contents", "Resources", "Assets.car");
