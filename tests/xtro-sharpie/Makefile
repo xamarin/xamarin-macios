@@ -57,6 +57,7 @@ XCAT_GL ?=
 XCAT_ARCH = x86_64
 XCAT_PCH = ios$(MACCATALYST_SDK_VERSION)-macabi-$(XCAT_ARCH).pch
 
+ifdef INCLUDE_MACCATALYST
 $(XCAT_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XCAT_ARCH) \
 	-exclude AGL \
@@ -80,6 +81,7 @@ $(XCAT_PCH): .stamp-check-sharpie
 	-exclude Virtualization \
 	-i HomeKit/HomeKit.h \
 
+endif
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
 

@@ -83,6 +83,5 @@
 ## appended from unclassified file
 !deprecated-attribute-missing! INRelativeReferenceResolutionResult missing a [Deprecated] attribute
 !deprecated-attribute-missing! INRelativeSettingResolutionResult missing a [Deprecated] attribute
-!deprecated-attribute-missing! INTemperatureResolutionResult missing a [Deprecated] attribute
 !missing-selector! INPerson::initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isContactSuggestion:suggestionType: not bound
 !missing-selector! INPerson::isContactSuggestion not bound

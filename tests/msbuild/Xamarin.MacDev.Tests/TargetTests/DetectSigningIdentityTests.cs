@@ -18,6 +18,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void BundleIdentifierInPartialAppManifest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+
 			// https://github.com/xamarin/xamarin-macios/issues/12051
 			var csproj = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">

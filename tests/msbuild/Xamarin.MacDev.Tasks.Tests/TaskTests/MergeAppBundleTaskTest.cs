@@ -93,6 +93,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestLipoExecutable ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+
 			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.arm64.dylib");
 			var fileB = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.x86_64.dylib");
 			var bundles = CreateAppBundles (fileA, fileB, "libtest.dylib");
@@ -256,6 +258,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestSingleInput ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+
 			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.arm64.dylib");
 			var bundle = CreateAppBundle (Path.GetDirectoryName (fileA), Path.GetFileName (fileA));
 			var outputBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "Merged.app");

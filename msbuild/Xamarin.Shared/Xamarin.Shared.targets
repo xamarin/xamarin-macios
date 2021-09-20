@@ -317,6 +317,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Outputs="$(_TemporaryAppManifest)"
 		>
 
+		<ItemGroup>
+			<_FontFilesToRegister Include="@(BundleResource)" Condition="'%(BundleResource.RegisterFont)' == 'true'" />
+		</ItemGroup>
+
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -330,12 +334,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			CompiledAppManifest="$(_TemporaryAppManifest)"
 			Debug="$(_BundlerDebug)"
 			DefaultSdkVersion="$(_SdkVersion)"
+			FontFilesToRegister="@(_FontFilesToRegister)"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			IsAppExtension="$(IsAppExtension)"
 			IsWatchApp="$(IsWatchApp)"
 			IsWatchExtension="$(IsWatchExtension)"
 			IsXPCService="$(IsXPCService)"
 			PartialAppManifests="@(PartialAppManifest)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			ResourceRules="$(_PreparedResourceRules)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -1010,6 +1017,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			References="@(ReferencePath);@(BTouchReferencePath)"
+			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			BTouchToolPath="$(BTouchToolPath)"
 			BTouchToolExe="$(BTouchToolExe)"

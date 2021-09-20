@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
 {
@@ -14,6 +15,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void AssemblyRegistration ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+
 			var projectName = "AssemblyRegistration";
 			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, projectName, $"{projectName}.csproj");
 
