@@ -637,7 +637,7 @@
 			<_StrippedAssemblies Include="@(_AssembliesToBeStripped->'%(OutputPath)')" >
 			</_StrippedAssemblies>
 		</ItemGroup>
-		<ILStrip Assemblies="@(_AssembliesToBeStripped)" />
+		<ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)" />
 		<ItemGroup>
 			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />
 			<ResolvedFileToPublish Include="@(_StrippedAssemblies)" />
