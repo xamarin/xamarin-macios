@@ -4803,7 +4803,7 @@ namespace AVFoundation {
 	}
 
 	[Mac (10,10), NoiOS, NoTV, NoWatch]
-	[MacCatalyst (14,0)]
+	[NoMacCatalyst]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVSampleCursor : NSCopying {

@@ -226,6 +226,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[Static]
 	interface NSFileProviderItemIdentifier {
 
@@ -269,6 +270,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[Static]
 	interface NSFileProviderPage {
 
@@ -345,6 +347,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderEnumerationObserver {
 
@@ -370,6 +373,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderChangeObserver {
 
@@ -399,6 +403,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderEnumerator {
 
@@ -421,6 +426,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderItem {
 
