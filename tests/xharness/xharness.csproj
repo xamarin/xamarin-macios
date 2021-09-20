@@ -177,6 +177,7 @@
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
     </Compile>
+    <Compile Include="AppBundleInformationParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">

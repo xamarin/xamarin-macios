@@ -115,6 +115,23 @@ namespace Xharness {
 			}
 		}
 
+		public static bool TryGetCFBundleIdentifier (this XmlDocument plist, out string? value)
+		{
+			return plist.TryGetPListStringValue ("CFBundleIdentifier", out value);
+		}
+
+		public static bool TryGetPListStringValue (this XmlDocument plist, string nodeName, out string? value)
+		{
+			var node = plist.SelectSingleNode ("//dict/key[text()='" + nodeName + "']")?.NextSibling;
+			if (node == null) {
+				value = null;
+				return false;
+			}
+
+			value = node.InnerText;
+			return true;
+		}
+
 		// This is an evolved version of https://github.com/dotnet/xharness/blob/b2297d610df1ae15fc7ba8bd8c9bc0a7192aaefa/src/Microsoft.DotNet.XHarness.iOS.Shared/Utilities/ProjectFileExtensions.cs#L1168
 		public static void ResolveAllPaths (this XmlDocument csproj, string project_path, Dictionary<string, string>? variableSubstitution = null)
 		{
