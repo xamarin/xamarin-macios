@@ -172,11 +172,11 @@ steps:
 
     [System.Collections.Generic.List[string]]$failures = @()
 
-    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests")
+    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests", "monotouch-test")
     foreach ($t in $macTest) {
-      $testName = "exec-mac-$t"
+      $testName = "exec-$t"
       Write-Host "Execution test $testName"
-      make -d -C $testsPath $testName
+      make -d -C $testsPath $testName -f packaged-macos-tests.mk
       if ($LastExitCode -eq 0) {
         Write-Host "$t succeeded"
       } else {
