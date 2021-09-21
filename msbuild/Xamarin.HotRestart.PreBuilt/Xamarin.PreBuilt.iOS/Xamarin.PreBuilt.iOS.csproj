@@ -2,8 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-    <OutputType>Exe</OutputType>
     <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
   <PropertyGroup>
     <ProvisioningType>automatic</ProvisioningType>
@@ -12,7 +14,7 @@
     <UseInterpreter>true</UseInterpreter>
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup>   
     <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.2" />
   </ItemGroup>
   <ItemGroup>
@@ -22,12 +24,12 @@
   </ItemGroup>
 
   <!-- For debug only, copies files from a AdditionalFiles directory into the bundle (i.e. an app to be interpreted) -->
-  <!-- <Target Name="ResolveAdditionalReferences">
+  <!--<Target Name="ResolveAdditionalReferences">
     <ItemGroup>
       <AdditionalFiles Include="AdditionalReferences\**\*.*" Exclude="AdditionalReferences\Xamarin.Forms.Core.dll" />
     </ItemGroup>
   </Target>
   <Target Name="CopyAdditionalReferences" DependsOnTargets="ResolveAdditionalReferences" AfterTargets="_CalculateCodesignAppBundleInputs" Inputs="@(AdditionalFiles)" Outputs="@(AdditionalFiles -> '$(_AppBundlePath)$(_AppBundleName).content\%(RecursiveDir)%(Filename)%(Extension)')">
     <Copy SourceFiles="@(AdditionalFiles)" DestinationFiles="@(AdditionalFiles -> '$(_AppBundlePath)$(_AppBundleName).content\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target> -->
+  </Target>-->
 </Project>
