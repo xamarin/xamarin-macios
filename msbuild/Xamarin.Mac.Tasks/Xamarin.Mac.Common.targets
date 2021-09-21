@@ -140,7 +140,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
 		Condition = "'$(UsingAppleNETSdk)' != 'true'"
-		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName);$(DeviceSpecificOutputPath)bundler.stamp">
 
 		<Mmp

@@ -714,7 +714,7 @@
         <value>Não foi possível mapear a versão {0} do macOS para uma versão correspondente do iOS</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>Não foi possível mapear a versão iOS {0} para uma versão macOS correspondente</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Não foi possível resolver os IPs do host para as configurações do depurador de WiFi.
@@ -1047,18 +1047,28 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>O compilador AOT '{0}' não existe.</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>O valor {0} em Info.plist ({1}) não corresponde ao valor de SupportedOSPlatformVersion ({2}) no arquivo de projeto (se não houver nenhum valor de SupportedOSPlatformVersion no arquivo de projeto, então um valor padrão foi assumido). Altere o valor em Info.plist para corresponder ao valor de SupportedOSPlatformVersion ou remova o valor em Info.plist (e adicione um valor de SupportedOSPlatformVersion ao arquivo de projeto se ele ainda não existir).</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
             {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
 </root>

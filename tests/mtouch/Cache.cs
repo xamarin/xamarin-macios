@@ -30,7 +30,7 @@ namespace Xamarin
 						ThreadPool.QueueUserWorkItem ((v) => {
 							Directory.Delete (movedRoot, true);
 						});
-					} catch (Exception e) {
+					} catch {
 						// Just delete the root if we can't move the temporary directory.
 						Directory.Delete (root, true);
 					}
