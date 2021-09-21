@@ -6957,6 +6957,7 @@ namespace Intents {
 
 	[Watch (8,0), NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(INIntent))]
+	[DisableDefaultCtor]
 	interface INShareFocusStatusIntent
 	{
 		[Export ("initWithFocusStatus:")]
@@ -12026,9 +12027,10 @@ namespace Intents {
 	{
 		[Export ("initWithIsFocused:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSNumber isFocused);
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber isFocused);
 
 		[Export ("isFocused", ArgumentSemantic.Copy)]
+		[BindAs (typeof (bool?))]
 		[NullAllowed]
 		NSNumber IsFocused { get; }
 	}
