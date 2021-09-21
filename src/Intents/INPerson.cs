@@ -14,25 +14,25 @@ namespace Intents
 	{
 
 #if !NET
-	[Introduced (PlatformName.iOS, 15,0)]
-	[Introduced (PlatformName.MacOSX, 12,0)]
-	[Introduced (PlatformName.WatchOS, 8,0)]
+		[Introduced (PlatformName.iOS, 15,0)]
+		[Introduced (PlatformName.MacOSX, 12,0)]
+		[Introduced (PlatformName.WatchOS, 8,0)]
 #else
-	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	#endif //!NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#endif //!NET
 		public enum INPersonType {
 			Me = 0, 
 			ContactSuggestion = 1,
 		}
 
 #if !NET
-	[Introduced (PlatformName.iOS, 15,0)]
-	[Introduced (PlatformName.MacOSX, 12,0)]
-	[Introduced (PlatformName.WatchOS, 8,0)]
+		[Introduced (PlatformName.iOS, 15,0)]
+		[Introduced (PlatformName.MacOSX, 12,0)]
+		[Introduced (PlatformName.WatchOS, 8,0)]
 #else
-	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("macos12.0")]
 #endif //!NET
 		public INPerson (INPersonHandle personHandle, NSPersonNameComponents? nameComponents, string? displayName, INImage? image, string? contactIdentifier, string? customIdentifier, bool isMe, INPersonSuggestionType suggestionType) :
 			this (personHandle, nameComponents, displayName, image, contactIdentifier, customIdentifier, isMe, suggestionType, INPersonType.Me)
@@ -40,12 +40,12 @@ namespace Intents
 		}
 
 #if !NET
-	[Introduced (PlatformName.iOS, 15,0)]
-	[Introduced (PlatformName.MacOSX, 12,0)]
-	[Introduced (PlatformName.WatchOS, 8,0)]
+		[Introduced (PlatformName.iOS, 15,0)]
+		[Introduced (PlatformName.MacOSX, 12,0)]
+		[Introduced (PlatformName.WatchOS, 8,0)]
 #else
-	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("macos12.0")]
 #endif //!NET
 		public INPerson (INPersonHandle personHandle, NSPersonNameComponents? nameComponents, string? displayName, INImage? image, string? contactIdentifier, string? customIdentifier, bool isMe, INPersonSuggestionType suggestionType, INPersonType personType) : base (NSObjectFlag.Empty)
 		{

@@ -6086,67 +6086,64 @@ namespace Intents {
 		NSNumber SearchResultsCount { get; set; }
 	}
 
+	[Mac (12,0)]
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntent))]
 	interface INSendMessageIntent : UNNotificationContentProviding {
 
-		[Watch (7,0), Mac (12,0), iOS (14,0)]
+		[Watch (7,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithRecipients:outgoingMessageType:content:speakableGroupName:conversationIdentifier:serviceName:sender:attachments:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INPerson[] recipients, INOutgoingMessageType outgoingMessageType, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender, [NullAllowed] INSendMessageAttachment[] attachments);
 
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender:")]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Export ("initWithRecipients:content:groupName:serviceName:sender:")]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] string groupName, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
 
-		[Mac (12,0)]
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
 		INPerson [] Recipients { get; }
 
-		[Watch (7,0), Mac (12,0), iOS (14,0)]
+		[Watch (7,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("outgoingMessageType", ArgumentSemantic.Assign)]
 		INOutgoingMessageType OutgoingMessageType { get; }
 
-		[Mac (12,0)]
 		[NullAllowed, Export ("content")]
 		string Content { get; }
 
-		[Watch (4,0), Mac (12,0), iOS (11,0)]
+		[Watch (4,0),  iOS (11,0)]
 		[NullAllowed, Export ("speakableGroupName", ArgumentSemantic.Copy)]
 		INSpeakableString SpeakableGroupName { get; }
 
-		[Watch (4,0), Mac (12,0), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("conversationIdentifier")]
 		string ConversationIdentifier { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'SpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[NullAllowed, Export ("groupName")]
 		string GroupName { get; }
 
-		[Mac (12,0)]
 		[NullAllowed, Export ("serviceName")]
 		string ServiceName { get; }
 
-		[Mac (12,0)]
 		[NullAllowed, Export ("sender", ArgumentSemantic.Copy)]
 		INPerson Sender { get; }
 
-		[Watch (7,0), Mac (12,0), iOS (14,0)]
+		[Watch (7,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("attachments", ArgumentSemantic.Copy)]
@@ -13230,7 +13227,7 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INStartCallIntent : UNNotificationContentProviding {
- 
+
 		[Watch (7,0), NoTV, iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithCallRecordFilter:callRecordToCallBack:audioRoute:destinationType:contacts:callCapability:")]

@@ -72,3 +72,7 @@
 
 ## Headers say Mac (12,0) but types used in properties are still NoMac
 !missing-protocol! INStartCallIntentHandling not bound
+
+## Headers say NoMac but interface had preexisting Mac availability in Xamarin.iOS
+## Adding NoMac would be a breaking change
+!unknown-type! INTemperatureResolutionResult bound
