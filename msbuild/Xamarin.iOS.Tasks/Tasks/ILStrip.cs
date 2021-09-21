@@ -1,7 +1,7 @@
 using Microsoft.Build.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks 
+namespace Xamarin.MacDev.Tasks 
 {
 	public class ILStrip : ILStripTasks.ILStripBase
 	{
