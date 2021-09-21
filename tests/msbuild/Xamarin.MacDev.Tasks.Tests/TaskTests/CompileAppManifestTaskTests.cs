@@ -135,7 +135,7 @@ namespace Xamarin.iOS.Tasks {
 			task.SupportedOSPlatformVersion = "10.0";
 
 			ExecuteTask (task, expectedErrorCount: 1);
-			Assert.AreEqual ("Could not map the iOS version 10.0 to a corresponding macOS version", Engine.Logger.ErrorEvents [0].Message);
+			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.StartWith ("Could not map the Mac Catalyst version 10.0 to a corresponding macOS version. Valid Mac Catalyst versions are:"));
 		}
 	}
 }
