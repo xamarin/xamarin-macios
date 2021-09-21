@@ -8,7 +8,6 @@ if df -t apfs / >/dev/null 2>&1; then
 	CP="cp -c"
 fi
 
-export V=1
 #git clean -xfdq
 
 DIR=$(pwd)/mac-test-package/mac-test-package
