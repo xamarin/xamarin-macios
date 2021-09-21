@@ -172,11 +172,19 @@ namespace CoreMedia {
 			CFObject.CFRetain (Handle);
 		}
 		
-		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern CMTimebaseError CMTimebaseCreateWithSourceClock (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMClock */ IntPtr sourceClock, /* CMTimebase */ out IntPtr  timebaseOut);
 
-		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		public CMTimebase (CFAllocator? allocator, CMClock sourceClock)
 		{
 			if (sourceClock == null)
@@ -187,11 +195,19 @@ namespace CoreMedia {
 				throw new ArgumentException (error.ToString ());
 		}
 
-		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern CMTimebaseError CMTimebaseCreateWithSourceTimebase (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMTimebase */ IntPtr sourceTimebase, /* CMTimebase */ out IntPtr timebaseOut);
 
-		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		public CMTimebase (CFAllocator? allocator, CMTimebase sourceTimebase)
 		{
 			if (sourceTimebase == null)
@@ -809,15 +825,27 @@ namespace CoreMedia {
 			return CMSyncMightDrift (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}
 
-		[Watch (6,0), TV (9,0), Mac (10,11), iOS (9,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* CMTimebase */ IntPtr CMTimebaseCopySourceTimebase (/* CMTimebase */ IntPtr timebase);
 
-		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern int CMTimebaseSetSourceTimebase (/* CMTimebase */ IntPtr timebase, /* CMTimebase */ IntPtr newSourceTimebase);
 
-		[Watch (6,0), TV (9,0), Mac (10,11), iOS (9,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		public CMTimebase? SourceTimebase  {
 			get {
 				var source = CMTimebaseCopySourceTimebase  (Handle);
@@ -828,15 +856,27 @@ namespace CoreMedia {
 			}
 		}
 
-		[Watch (6,0), TV (9,0), Mac (10,11), iOS (9,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern /* CMClock */ IntPtr CMTimebaseCopySourceClock (/* CMTimebase */ IntPtr timebase);
 
-		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern int CMTimebaseSetSourceClock (/* CMTimebase */ IntPtr timebase, /* CMClock */ IntPtr newSourceClock);
 
-		[Watch (6,0), TV (9,0), Mac (10,11), iOS (9,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		public CMClock? SourceClock {
 			get {
 				var clock = CMTimebaseCopySourceClock (Handle);
@@ -847,11 +887,19 @@ namespace CoreMedia {
 			}
 		}
 
-		[Watch (6,0), TV (9,0), Mac (10,11), iOS (9,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern /* CMClock */ IntPtr CMTimebaseCopyUltimateSourceClock (/* CMTimebase */ IntPtr timebase);
 
-		[Watch (6,0), TV (9,0), Mac (10,11), iOS (9,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0")]
+#endif
 		public CMClock? UltimateSourceClock  {
 			get {
 				var clock = CMTimebaseCopyUltimateSourceClock (Handle);
