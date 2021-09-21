@@ -4249,7 +4249,7 @@ public partial class Generator : IMemberGatherer {
 					var nullable = TypeManager.GetUnderlyingNullableType (et);
 					if (nullable != null) {
 						convs.Append ("var converted = IntPtr.Zero;\n");
-						convs.Append ($"var v = default ({FormatType (mi.DeclaringType, nullable)});\n");
+						convs.AppendFormat ("var v = default ({0});\n", FormatType (mi.DeclaringType, nullable));
 						convs.Append ("if (value.HasValue) {\n");
 						convs.Append ("\tv = value.Value;\n");
 						convs.Append ("\tconverted = new IntPtr (&v);\n");
