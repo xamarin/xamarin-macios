@@ -4802,7 +4802,8 @@ namespace AVFoundation {
 		void LoadSegment (CMTime trackTime, Action<AVAssetTrackSegment, NSError> completionHandler);
 	}
 
-	[Mac (10,10), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[Mac (10,10), NoiOS, NoTV, NoWatch]
+	[NoMacCatalyst]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVSampleCursor : NSCopying {
@@ -8905,6 +8906,7 @@ namespace AVFoundation {
 		NSString InterruptionReasonKey { get; }
 
 		[iOS (7,0)]
+		[MacCatalyst (14,0)]
 		[Export ("usesApplicationAudioSession")]
 		bool UsesApplicationAudioSession { get; set; }
 
