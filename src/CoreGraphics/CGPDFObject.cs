@@ -55,7 +55,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out nint value);
+		extern static bool CGPDFObjectGetNIntValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out nint value);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -87,7 +87,7 @@ namespace CoreGraphics {
 
 		public bool TryGetValue (out nint value)
 		{
-			return CGPDFObjectGetValue (Handle, CGPDFObjectType.Integer, out value);
+			return CGPDFObjectGetNIntValue (Handle, CGPDFObjectType.Integer, out value);
 		}
 
 		public bool TryGetValue (out nfloat value)
@@ -171,8 +171,7 @@ namespace CoreGraphics {
 				return null;
 
 			case CGPDFObjectType.Integer:
-				nint i;
-				if (CGPDFObjectGetValue (handle, type, out i))
+				if (CGPDFObjectGetNIntValue (handle, type, out var i))
 					return i;
 				return null;
 
