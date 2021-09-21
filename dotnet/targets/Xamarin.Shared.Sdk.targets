@@ -12,6 +12,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -634,10 +635,10 @@
 			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll'">
 				<OutputPath>$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
 			</_AssembliesToBeStripped>
-			<_StrippedAssemblies Include="@(_AssembliesToBeStripped->'%(OutputPath)')" >
-			</_StrippedAssemblies>
 		</ItemGroup>
-		<ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)" />
+		<ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)">
+			<Output TaskParameter="StrippedAssemblies" PropertyName="_StrippedAssemblies" />
+		</ILStrip>
 		<ItemGroup>
 			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />
 			<ResolvedFileToPublish Include="@(_StrippedAssemblies)" />
