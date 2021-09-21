@@ -148,7 +148,7 @@ namespace CoreMidi {
 				if (totalObjs == 0)
 					return null;
 
-				var basePtr = data.Bytes.ToInt32 ();
+				var basePtr = (int) data.Bytes;
 				var connections = new MidiThruConnection[totalObjs];
 				for (int i = 0; i < totalObjs; i++)
 					connections[i] = new MidiThruConnection ((uint)(basePtr + i * typeSize));

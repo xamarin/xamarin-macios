@@ -209,8 +209,9 @@ namespace CoreText {
 			GCHandle c = GCHandle.FromIntPtr (context);
 			var comparer = c.Target as Comparison<CTFontDescriptor>;
 			if (comparer == null)
-				return 0;
-			return comparer (new CTFontDescriptor (first, false), new CTFontDescriptor (second, false));
+				return default (CFIndex);
+			var rv = comparer (new CTFontDescriptor (first, false), new CTFontDescriptor (second, false));
+			return (CFIndex) rv;
 		}
 
 		public CTFontDescriptor[] GetMatchingFontDescriptors (Comparison<CTFontDescriptor> comparer)

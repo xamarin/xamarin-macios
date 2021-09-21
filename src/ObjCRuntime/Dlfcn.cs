@@ -291,12 +291,12 @@ namespace ObjCRuntime {
 
 		public static nuint GetNUInt (IntPtr handle, string symbol)
 		{
-			return (nuint)GetIntPtr (handle, symbol);
+			return (nuint) (ulong) GetUIntPtr (handle, symbol);
 		}
 
 		public static void SetNUInt (IntPtr handle, string symbol, nuint value)
 		{
-			SetIntPtr (handle, symbol, (IntPtr) value);
+			SetUIntPtr (handle, symbol, (UIntPtr) (ulong) value);
 		}
 
 		public static nfloat GetNFloat (IntPtr handle, string symbol)
@@ -331,6 +331,22 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return IntPtr.Zero;
 			return Marshal.ReadIntPtr (indirect);
+		}
+
+		public static UIntPtr GetUIntPtr (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return UIntPtr.Zero;
+			return (UIntPtr) (long) Marshal.ReadIntPtr (indirect);
+		}
+
+		public static void SetUIntPtr (IntPtr handle, string symbol, UIntPtr value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+			Marshal.WriteIntPtr (indirect, (IntPtr) (ulong) value);
 		}
 
 		public static void SetIntPtr (IntPtr handle, string symbol, IntPtr value)
