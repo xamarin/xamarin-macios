@@ -5,8 +5,6 @@
 !missing-enum! NSCollectionViewScrollPosition not bound
 !missing-selector! +NSToolbarItemGroup::groupWithItemIdentifier:images:selectionMode:labels:target:action: not bound
 !missing-selector! +NSToolbarItemGroup::groupWithItemIdentifier:titles:selectionMode:labels:target:action: not bound
-!missing-selector! NSMenuToolbarItem::setShowsIndicator: not bound
-!missing-selector! NSMenuToolbarItem::showsIndicator not bound
 !missing-selector! NSToolbarItemGroup::controlRepresentation not bound
 !missing-selector! NSToolbarItemGroup::isSelectedAtIndex: not bound
 !missing-selector! NSToolbarItemGroup::selectedIndex not bound
@@ -17,7 +15,6 @@
 !missing-selector! NSToolbarItemGroup::setSelectionMode: not bound
 !missing-selector! NSToolbarItemGroup::setSubitems: not bound
 !missing-selector! NSToolbarItemGroup::subitems not bound
-!missing-type! NSMenuToolbarItem not bound
 !missing-type! NSToolbarItemGroup not bound
 ## appended from unclassified file
 !unknown-field! NSImageNameApplicationIcon bound

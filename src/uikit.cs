@@ -10397,6 +10397,11 @@ namespace UIKit {
 		IntPtr Constructor (string term);
 	}
 
+#if __MACCATALYST__
+	interface NSTouchBarProvider { }
+	interface NSTouchBar { }
+#endif
+
 	[BaseType (typeof (NSObject))]
 	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring
 #if !TVOS
@@ -10405,6 +10410,9 @@ namespace UIKit {
 #if IOS
 	, UIPasteConfigurationSupporting
 #endif // IOS
+#if __MACCATALYST__
+	, NSTouchBarProvider
+#endif
 	{
 
 		[Export ("nextResponder")]
@@ -10614,6 +10622,29 @@ namespace UIKit {
 		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("captureTextFromCamera:")]
 		void CaptureTextFromCamera ([NullAllowed] NSObject sender);
+
+		[NoWatch, NoTV, NoiOS]
+		[MacCatalyst (13, 0)]
+		[Export ("childViewControllerForTouchBar")]
+		[NullAllowed]
+		UIViewController ChildViewControllerForTouchBar { get; }
+
+		[NoWatch, NoTV, NoiOS]
+		[MacCatalyst (13,0)]
+		[Export ("setNeedsTouchBarUpdate")]
+		void SetNeedsTouchBarUpdate ();
+
+#if __MACCATALYST__
+		[MacCatalyst (13, 0)]
+		[Export ("makeTouchBar")]
+		[return: NullAllowed]
+		NSTouchBar CreateTouchBar ();
+
+		[MacCatalyst (13, 0)]
+		[Export ("touchBar", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		NSTouchBar TouchBar { get; set; }
+#endif
 	}
 	
 	[Category, BaseType (typeof (UIResponder))]
@@ -15355,6 +15386,17 @@ namespace UIKit {
 		[NoWatch, NoTV, iOS (14,0)]
 		[Export ("setNeedsUpdateOfPrefersPointerLocked")]
 		void SetNeedsUpdateOfPrefersPointerLocked ();
+
+		[NoiOS][NoTV][NoWatch]
+		[MacCatalyst (13,0)]
+		[Export ("setNeedsTouchBarUpdate")]
+		void SetNeedsTouchBarUpdate ();
+
+		[NoiOS][NoTV][NoWatch]
+		[MacCatalyst (13, 0)]
+		[NullAllowed]
+		[Export ("childViewControllerForTouchBar")]
+		UIViewController ChildViewControllerForTouchBar { get; }
 	}
 
 	[iOS (7,0)]
@@ -20994,6 +21036,14 @@ namespace UIKit {
 		[NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("focusSystem")]
 		UIFocusSystem FocusSystem { get; }
+
+#if __MACCATALYST__
+		[NoWatch][NoTV][NoiOS]
+		[MacCatalyst (13, 0)]
+		[Export ("titlebar")]
+		[NullAllowed]
+		UITitlebar Titlebar { get; }
+#endif
 	}
 
 	interface IUIWindowSceneDelegate { }
@@ -23146,4 +23196,53 @@ namespace UIKit {
 		UIPointerAccessory CreateArrow (UIPointerAccessoryPosition position);
 	}
 
+	[MacCatalyst (13,0)][NoiOS][NoTV][NoWatch]
+	[Native]
+	public enum UITitlebarTitleVisibility : long
+	{
+		Visible,
+		Hidden
+	}
+
+	[MacCatalyst (14,0)][NoiOS][NoTV][NoWatch]
+	[Native]
+	public enum UITitlebarToolbarStyle : long
+	{
+		Automatic,
+		Expanded,
+		Preference,
+		Unified,
+		UnifiedCompact
+	}
+
+#if __MACCATALYST__
+	interface NSToolbar {}
+#endif
+
+	[MacCatalyst (13,0)][NoiOS][NoTV][NoWatch]
+	[BaseType (typeof(NSObject))]
+	interface UITitlebar
+	{
+		[Export ("titleVisibility", ArgumentSemantic.Assign)]
+		UITitlebarTitleVisibility TitleVisibility { get; set; }
+
+		[MacCatalyst (14, 0)]
+		[Export ("toolbarStyle", ArgumentSemantic.Assign)]
+		UITitlebarToolbarStyle ToolbarStyle { get; set; }
+
+		[MacCatalyst (14, 0)]
+		[Export ("separatorStyle", ArgumentSemantic.Assign)]
+		UITitlebarSeparatorStyle SeparatorStyle { get; set; }
+
+#if __MACCATALYST__
+		[NullAllowed, Export ("toolbar", ArgumentSemantic.Strong)]
+		NSToolbar Toolbar { get; set; }
+#endif
+
+		[Export ("autoHidesToolbarInFullScreen")]
+		bool AutoHidesToolbarInFullScreen { get; set; }
+
+		[NullAllowed, Export ("representedURL", ArgumentSemantic.Copy)]
+		NSUrl RepresentedUrl { get; set; }
+	}
 }

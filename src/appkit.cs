@@ -19455,6 +19455,14 @@ namespace AppKit {
 		[Mac (11, 0)]
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
+
+		[MacCatalyst (14,0)][NoMac]
+		[Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier")]
+		NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
+
+		[MacCatalyst (14,0)][NoMac]
+		[Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
+		NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
 	}
 
 	[MacCatalyst (13, 0)]
@@ -19500,6 +19508,10 @@ namespace AppKit {
 		[Export ("validateToolbarItem:")]
 		bool ValidateToolbarItem (NSToolbarItem item);
 	}
+
+#if __MACCATALYST__
+	interface UIMenuElement {}
+#endif
 
 	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
@@ -19583,6 +19595,14 @@ namespace AppKit {
 		[Mac (11, 0), iOS (14, 0)]
 		[Export ("navigational")]
 		bool Navigational { [Bind ("isNavigational")] get; set; }
+
+#if __MACCATALYST__
+		[NoMac]
+		[MacCatalyst (13, 0)]
+		[Export ("itemMenuFormRepresentation", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		UIMenuElement ItemMenuFormRepresentation { get; set; }
+#endif
 	}
 
 	[NoMacCatalyst]
@@ -26982,10 +27002,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[NoMacCatalyst]
+	[MacCatalyst(13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem
 	{
+		[NoMacCatalyst]
 		[Export ("menu", ArgumentSemantic.Strong)]
 		NSMenu Menu { get; set; }
 

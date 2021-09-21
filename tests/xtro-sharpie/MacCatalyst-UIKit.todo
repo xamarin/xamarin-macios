@@ -49,10 +49,6 @@
 !incorrect-protocol-member! UITextDocumentProxy::setMarkedText:selectedRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::unmarkText is REQUIRED and should be abstract
 !missing-enum! UIDirectionalRectEdge not bound
-!missing-enum! UITitlebarTitleVisibility not bound
-!missing-enum! UITitlebarToolbarStyle not bound
-!missing-field! NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier not bound
-!missing-field! NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier not bound
 !missing-field! UIApplicationInvalidInterfaceOrientationException not bound
 !missing-field! UIKeyInputF1 not bound
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
@@ -448,8 +444,6 @@
 !missing-selector! NSSharingServicePickerToolbarItem::setActivityItemsConfiguration: not bound
 !missing-selector! NSSharingServicePickerTouchBarItem::activityItemsConfiguration not bound
 !missing-selector! NSSharingServicePickerTouchBarItem::setActivityItemsConfiguration: not bound
-!missing-selector! NSToolbarItem::itemMenuFormRepresentation not bound
-!missing-selector! NSToolbarItem::setItemMenuFormRepresentation: not bound
 !missing-selector! UIAlertView::initWithTitle:message:delegate:cancelButtonTitle:otherButtonTitles: not bound
 !missing-selector! UIBarAppearance::copy not bound
 !missing-selector! UIBarButtonItemAppearance::copy not bound
@@ -474,26 +468,7 @@
 !missing-selector! UIPrintPaper::printRect not bound
 !missing-selector! UIRefreshControl::setTintColor: not bound
 !missing-selector! UIRefreshControl::tintColor not bound
-!missing-selector! UIResponder::makeTouchBar not bound
-!missing-selector! UIResponder::setTouchBar: not bound
-!missing-selector! UIResponder::touchBar not bound
 !missing-selector! UITabBarItemAppearance::copy not bound
-!missing-selector! UITitlebar::autoHidesToolbarInFullScreen not bound
-!missing-selector! UITitlebar::representedURL not bound
-!missing-selector! UITitlebar::separatorStyle not bound
-!missing-selector! UITitlebar::setAutoHidesToolbarInFullScreen: not bound
-!missing-selector! UITitlebar::setRepresentedURL: not bound
-!missing-selector! UITitlebar::setSeparatorStyle: not bound
-!missing-selector! UITitlebar::setTitleVisibility: not bound
-!missing-selector! UITitlebar::setToolbar: not bound
-!missing-selector! UITitlebar::setToolbarStyle: not bound
-!missing-selector! UITitlebar::titleVisibility not bound
-!missing-selector! UITitlebar::toolbar not bound
-!missing-selector! UITitlebar::toolbarStyle not bound
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
-!missing-selector! UIViewController::childViewControllerForTouchBar not bound
-!missing-selector! UIViewController::setNeedsTouchBarUpdate not bound
-!missing-selector! UIWindowScene::titlebar not bound
-!missing-type! UITitlebar not bound
 ## appended from unclassified file
