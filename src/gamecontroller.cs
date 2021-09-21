@@ -2090,4 +2090,43 @@ namespace GameController {
 		[Export ("actsAsTouchpad")]
 		bool ActsAsTouchpad { get; set; }
 	}
+
+	[TV (15,0), iOS (15,0), Mac (12,0), NoWatch, MacCatalyst (15,0)]
+	public enum GCProductCategory 
+	{
+
+		[Field ("GCProductCategoryDualSense")]
+		DualSense,
+
+		[Field ("GCProductCategoryDualShock4")]
+		DualShock4,
+
+		[Field ("GCProductCategoryMFi")]
+		MFi,
+
+		[Field ("GCProductCategoryXboxOne")]
+		XboxOne,
+
+		[Field ("GCProductCategorySiriRemote1stGen")]
+		SiriRemote1stGen,
+
+		[Field ("GCProductCategorySiriRemote2ndGen")]
+		SiriRemote2ndGen,
+
+		[Field ("GCProductCategoryControlCenterRemote")]
+		ControlCenterRemote,
+
+		[Field ("GCProductCategoryUniversalElectronicsRemote")]
+		UniversalElectronicsRemote,
+
+		[Field ("GCProductCategoryCoalescedRemote")]
+		CoalescedRemote,
+
+		[Field ("GCProductCategoryMouse")]
+		Mouse,
+
+		[Field ("GCProductCategoryKeyboard")]
+		Keyboard, 
+	}
+
 }

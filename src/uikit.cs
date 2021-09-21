@@ -10398,7 +10398,7 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring
+	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring, UIActivityItemsConfigurationProviding
 #if !TVOS
 	, UIAccessibilityDragging
 #endif // !TVOS
@@ -22784,6 +22784,7 @@ namespace UIKit {
 	[Protocol]
 	interface UIActivityItemsConfigurationProviding {
 
+		[NullAllowed]
 		[Abstract]
 		[Export ("activityItemsConfiguration", ArgumentSemantic.Strong)]
 		IUIActivityItemsConfigurationReading ActivityItemsConfiguration { get; }

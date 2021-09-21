@@ -20,3 +20,6 @@
 !missing-pinvoke! CATransform3DMakeScale is not bound
 !missing-pinvoke! CATransform3DMakeTranslation is not bound
 !missing-selector! CALayer::shouldArchiveValueForKey: not bound
+
+# make no sense in c#
+!missing-pinvoke! CAFrameRateRangeMake is not bound

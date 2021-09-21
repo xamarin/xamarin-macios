@@ -395,6 +395,7 @@ COREANIMATION_API_SOURCES = \
 
 COREANIMATION_CORE_SOURCES = \
 	CoreAnimation/CATransform3D.cs \
+	CoreAnimation/CAStructs.cs \
 
 COREANIMATION_SOURCES = \
 	CoreAnimation/CABasicAnimation.cs \
