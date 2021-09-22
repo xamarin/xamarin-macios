@@ -749,7 +749,7 @@ namespace Xamarin.Bundler {
 			if (app.MonoNativeMode != MonoNativeMode.None) {
 				sw.WriteLine ("static const char *xamarin_runtime_libraries_array[] = {");
 				foreach (var lib in app.MonoLibraries)
-					sw.WriteLine ($"\t\"{Path.GetFileName (lib)}\",");
+					sw.WriteLine ($"\t\"{Path.GetFileNameWithoutExtension (lib)}\",");
 				sw.WriteLine ($"\tNULL");
 				sw.WriteLine ("};");
 			}
