@@ -52,7 +52,7 @@ namespace Xamarin.iOS.Tasks {
 			main.SetMinimumOSVersion ("14.0");
 			main.Save (mainPath);
 
-			task.AppManifest = mainPath;
+			task.AppManifest = new TaskItem (mainPath);
 
 			ExecuteTask (task);
 
@@ -77,7 +77,7 @@ namespace Xamarin.iOS.Tasks {
 			partial.SetMinimumOSVersion ("13.0");
 			partial.Save (partialPath);
 
-			task.AppManifest = mainPath;
+			task.AppManifest = new TaskItem (mainPath);
 			task.PartialAppManifests = new [] { new TaskItem (partialPath) };
 
 			ExecuteTask (task);
@@ -96,7 +96,7 @@ namespace Xamarin.iOS.Tasks {
 			plist.SetMinimumOSVersion ("10.0");
 			var manifest = Path.Combine (dir, "Info.plist");
 			plist.Save (manifest);
-			task.AppManifest = manifest;
+			task.AppManifest = new TaskItem (manifest);
 			task.SupportedOSPlatformVersion = "11.0";
 
 			ExecuteTask (task, expectedErrorCount: 1);
