@@ -24,16 +24,16 @@ namespace CoreAnimation {
 		public float Maximum;
 		public float Preferred;
 
-    public CAFrameRateRange (float min, float max, float preferred) {
-        Minimum = min;
-        Maximum = max;
-        Preferred = preferred;
-    }
+		public CAFrameRateRange (float min, float max, float preferred) {
+			Minimum = min;
+			Maximum = max;
+			Preferred = preferred;
+		}
 
 #if !COREBUILD
-    [Field ("CAFrameRateRangeDefault", "CoreAnimation")]
-    public static CAFrameRateRange Default
-        => (CAFrameRateRange) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreAnimation.Handle, "CAFrameRateRangeDefault"), typeof (CAFrameRateRange))!;
+		[Field ("CAFrameRateRangeDefault", "CoreAnimation")]
+		public static CAFrameRateRange Default
+			=> (CAFrameRateRange) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreAnimation.Handle, "CAFrameRateRangeDefault"), typeof (CAFrameRateRange))!;
 #endif
 
 		[DllImport (Constants.CoreAnimationLibrary)]

@@ -9251,32 +9251,36 @@ namespace AVFoundation {
 	[iOS (15,0), MacCatalyst (15,0), NoTV, NoWatch]
 	[Static]
 	interface AVAssetExportPresetApple {
-#if MONOMAC
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4VCellular")]
 		NSString M4VCellular { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4ViPod")]
 		NSString M4ViPod { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4V480pSD")]
 		NSString M4V480pSD { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4VAppleTV")]
 		NSString M4VAppleTV { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4VWiFi")]
 		NSString M4VWiFi { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4V720pHD")]
 		NSString M4V720pHD { get; }
-#else 
-		[NoiOS]
+
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4V1080pHD")]
 		NSString M4V1080pHD { get; }
 
 		[Field ("AVAssetExportPresetAppleProRes422LPCM")]
 		NSString ProRes422Lpcm { get; }
-#endif
 	}
 
 
@@ -11097,20 +11101,12 @@ namespace AVFoundation {
 		AVCaptureDevice[] FallbackPrimaryConstituentDevices { get; set; }
 
 		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
-		[Export ("primaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording")]
-		AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording { get; }
-
-		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("setPrimaryConstituentDeviceSwitchingBehavior:restrictedSwitchingBehaviorConditions:")]
 		void SetPrimaryConstituentDeviceSwitchingBehavior (AVCapturePrimaryConstituentDeviceSwitchingBehavior switchingBehavior, AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions restrictedSwitchingBehaviorConditions);
 
 		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("primaryConstituentDeviceRestrictedSwitchingBehaviorConditions")]
 		AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions { get; }
-
-		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
-		[Export ("primaryConstituentDeviceSwitchingBehaviorForRecordingEnabled")]
-		bool PrimaryConstituentDeviceSwitchingBehaviorForRecordingEnabled { [Bind ("isPrimaryConstituentDeviceSwitchingBehaviorForRecordingEnabled")] get; set; }
 
 		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("supportedFallbackPrimaryConstituentDevices")]
