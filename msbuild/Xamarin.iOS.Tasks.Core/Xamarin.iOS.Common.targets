@@ -233,7 +233,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CompileITunesMetadata" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="$(_CompileITunesMetadataDependsOn)"
 		Inputs="@(ITunesMetadata)"
-		Outputs="$(DeviceSPecificOutputPath)iTunesMetadata.plist" >
+		Outputs="$(DeviceSpecificOutputPath)iTunesMetadata.plist" >
 		<CompileITunesMetadata
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
