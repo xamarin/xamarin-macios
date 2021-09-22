@@ -30,7 +30,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppBundleName { get; set; }
 
-		public string AppManifest { get; set; }
+		// This must be an ITaskItem to copy the file to Windows for remote builds.
+		public ITaskItem AppManifest { get; set; }
 
 		[Required]
 		public string AssemblyName { get; set; }
@@ -93,11 +94,12 @@ namespace Xamarin.MacDev.Tasks
 		{
 			PDictionary plist = null;
 
-			if (File.Exists (AppManifest)) {
+			var appManifest = AppManifest.ItemSpec;
+			if (File.Exists (appManifest)) {
 				try {
-					plist = PDictionary.FromFile (AppManifest);
+					plist = PDictionary.FromFile (appManifest);
 				} catch (Exception ex) {
-					LogAppManifestError (MSBStrings.E0010, AppManifest, ex.Message);
+					LogAppManifestError (MSBStrings.E0010, appManifest, ex.Message);
 					return false;
 				}
 			} else {
