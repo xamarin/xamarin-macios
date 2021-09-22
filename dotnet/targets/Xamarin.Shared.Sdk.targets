@@ -992,6 +992,7 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			FrameworkRPath="$(_EmbeddedFrameworksRPath)"
