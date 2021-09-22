@@ -1,3 +1,4 @@
+# CAInterAppAudioSwitcherView and CAInterAppAudioTransportView are both deprecated on iOS and macOS
 !missing-selector! CAInterAppAudioSwitcherView::contentWidth not bound
 !missing-selector! CAInterAppAudioSwitcherView::isShowingAppNames not bound
 !missing-selector! CAInterAppAudioSwitcherView::setOutputAudioUnit: not bound
