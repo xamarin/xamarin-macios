@@ -709,7 +709,7 @@ namespace ObjCRuntime {
 
 		static bool HasNSObject (IntPtr ptr)
 		{
-			return TryGetNSObject (ptr) != null;
+			return TryGetNSObject (ptr, evenInFinalizerQueue: false) != null;
 		}
 
 		static IntPtr GetHandleForINativeObject (IntPtr ptr)
@@ -1254,10 +1254,10 @@ namespace ObjCRuntime {
 
 		public static NSObject TryGetNSObject (IntPtr ptr)
 		{
-			return TryGetNSObject (ptr, false);
+			return TryGetNSObject (ptr, evenInFinalizerQueue: false);
 		}
 
-		internal static NSObject TryGetNSObject (IntPtr ptr, bool evenInFinalizerQueue = false)
+		internal static NSObject TryGetNSObject (IntPtr ptr, bool evenInFinalizerQueue)
 		{
 			lock (lock_obj) {
 				if (object_map.TryGetValue (ptr, out var reference)) {
@@ -1311,7 +1311,7 @@ namespace ObjCRuntime {
 			if (ptr == IntPtr.Zero)
 				return null;
 
-			object obj = TryGetNSObject (ptr);
+			object obj = TryGetNSObject (ptr, evenInFinalizerQueue: false);
 			T o;
 
 			if (obj == null) {
@@ -1461,7 +1461,7 @@ namespace ObjCRuntime {
 			if (ptr == IntPtr.Zero)
 				return null;
 
-			NSObject o = TryGetNSObject (ptr);
+			NSObject o = TryGetNSObject (ptr, evenInFinalizerQueue: false);
 			if (o != null && target_type.IsAssignableFrom (o.GetType ())) {
 				// found an existing object with the right type.
 				return o;
@@ -1510,7 +1510,7 @@ namespace ObjCRuntime {
 			if (ptr == IntPtr.Zero)
 				return null;
 
-			var o = TryGetNSObject (ptr);
+			var o = TryGetNSObject (ptr, evenInFinalizerQueue: false);
 			var t = o as T;
 			if (t != null) {
 				// found an existing object with the right type.

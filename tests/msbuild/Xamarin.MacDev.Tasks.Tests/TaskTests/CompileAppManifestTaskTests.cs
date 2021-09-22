@@ -85,5 +85,57 @@ namespace Xamarin.iOS.Tasks {
 			var plist = PDictionary.FromFile (task.CompiledAppManifest.ItemSpec);
 			Assert.AreEqual ("13.0", plist.GetMinimumOSVersion (), "MinimumOSVersion");
 		}
+
+		[Test]
+		public void ErrorWithMismatchedInfoPlistMinimumOSVersion ()
+		{
+			var dir = Cache.CreateTemporaryDirectory ();
+			var task = CreateTask (dir);
+
+			var plist = new PDictionary ();
+			plist.SetMinimumOSVersion ("10.0");
+			var manifest = Path.Combine (dir, "Info.plist");
+			plist.Save (manifest);
+			task.AppManifest = manifest;
+			task.SupportedOSPlatformVersion = "11.0";
+
+			ExecuteTask (task, expectedErrorCount: 1);
+			Assert.AreEqual ("The MinimumOSVersion value in the Info.plist (10.0) does not match the SupportedOSPlatformVersion value (11.0) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).", Engine.Logger.ErrorEvents [0].Message);
+		}
+
+		[Test]
+		public void SupportedOSPlatformVersion ()
+		{
+			var dir = Cache.CreateTemporaryDirectory ();
+			var task = CreateTask (dir);
+
+			task.SupportedOSPlatformVersion = "11.0";
+
+			ExecuteTask (task);
+
+			var plist = PDictionary.FromFile (task.CompiledAppManifest.ItemSpec);
+			Assert.AreEqual ("11.0", plist.GetMinimumOSVersion (), "MinimumOSVersion");
+		}
+
+		[Test]
+		public void MacCatalystVersionCheck ()
+		{
+			var task = CreateTask (platform: ApplePlatform.MacCatalyst);
+			task.SupportedOSPlatformVersion = "14.2";
+			ExecuteTask (task);
+
+			var plist = PDictionary.FromFile (task.CompiledAppManifest.ItemSpec);
+			Assert.AreEqual ("11.0", plist.GetMinimumSystemVersion (), "MinimumOSVersion");
+		}
+
+		[Test]
+		public void MacCatalystVersionCheckUnmappedError ()
+		{
+			var task = CreateTask (platform: ApplePlatform.MacCatalyst);
+			task.SupportedOSPlatformVersion = "10.0";
+
+			ExecuteTask (task, expectedErrorCount: 1);
+			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.StartWith ("Could not map the Mac Catalyst version 10.0 to a corresponding macOS version. Valid Mac Catalyst versions are:"));
+		}
 	}
 }

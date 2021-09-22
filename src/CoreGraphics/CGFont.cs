@@ -292,7 +292,7 @@ namespace CoreGraphics {
 		ToCTFont() overloads where attributes is CTFontDescriptorRef
 #endif // TODO
 
-		[DllImport (Constants.CoreTextLibrary, EntryPoint="CGFontGetTypeID")]
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint="CGFontGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 #endif // !COREBUILD
 	}

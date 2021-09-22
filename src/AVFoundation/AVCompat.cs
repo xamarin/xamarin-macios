@@ -6,6 +6,7 @@ using OpenTK;
 using CoreMedia;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 #if !XAMCORE_4_0
@@ -213,8 +214,13 @@ namespace AVFoundation {
 
 #if TVOS
 	// tvOS removed some types - we need to keep stubs of them for binary compatibility
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public class AVAssetDownloadDelegate : NSObject, IAVAssetDownloadDelegate {
 		public AVAssetDownloadDelegate ()
 		{
@@ -279,13 +285,23 @@ namespace AVFoundation {
 		}
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public interface IAVAssetDownloadDelegate : INativeObject, IDisposable, INSUrlSessionTaskDelegate, INSUrlSessionDelegate {
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public static class AVAssetDownloadDelegate_Extensions {
 
 		public static void DidFinishDownloadingToUrl (this IAVAssetDownloadDelegate This, NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location)
@@ -304,8 +320,13 @@ namespace AVFoundation {
 		}
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public class AVAssetDownloadTask : NSUrlSessionTask {
 
 		public override IntPtr ClassHandle {
@@ -369,8 +390,13 @@ namespace AVFoundation {
 		}
 	}
 
+#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
+#else
+	[UnsupportedOSPlatform ("tvos10.0")]
+	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public class AVAssetDownloadUrlSession : NSUrlSession {
 
 		public new static NSUrlSession SharedSession {
@@ -562,12 +588,20 @@ namespace AVFoundation {
 	}
 
 	#nullable enable
+#if !NET
 	[Obsolete ("Removed in Xcode 13.")]
 	[Deprecated (PlatformName.TvOS, 15,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.MacOSX, 12,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.iOS, 15,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.MacCatalyst, 15,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.WatchOS, 8,0, PlatformArchitecture.All)]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+		[Obsolete ("Removed in Xcode 13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 	public partial class AVPlayerInterstitialEventObserver : NSObject {
 		
 		public virtual AVPlayerInterstitialEvent[] InterstitialEvents => throw new NotImplementedException ();

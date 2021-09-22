@@ -23,8 +23,6 @@
 !missing-selector! +MPSCNNGroupNormalizationGradientNode::nodeWithSourceGradient:sourceImage:gradientState: not bound
 !missing-selector! +MPSCNNGroupNormalizationNode::nodeWithSource:dataSource: not bound
 !missing-selector! +MPSCNNNeuronGeLUNode::nodeWithSource: not bound
-!missing-selector! +MPSMatrixDescriptor::matrixDescriptorWithDimensions:columns:rowBytes:dataType: not bound
-!missing-selector! +MPSMatrixDescriptor::rowBytesFromColumns:dataType: not bound
 !missing-selector! +MPSMatrixRandomDistributionDescriptor::normalDistributionDescriptorWithMean:standardDeviation: not bound
 !missing-selector! +MPSMatrixRandomDistributionDescriptor::normalDistributionDescriptorWithMean:standardDeviation:minimum:maximum: not bound
 !missing-selector! +MPSNDArrayDescriptor::descriptorWithDataType:dimensionSizes: not bound
@@ -402,7 +400,6 @@
 !missing-selector! MPSRayIntersector::setRayIndexDataType: not bound
 !missing-selector! MPSRayIntersector::setRayMask: not bound
 !missing-selector! MPSRayIntersector::setRayMaskOperator: not bound
-!missing-selector! MPSState::resource not bound
 !missing-selector! MPSSVGF::bilateralFilterRadius not bound
 !missing-selector! MPSSVGF::bilateralFilterSigma not bound
 !missing-selector! MPSSVGF::channelCount not bound
@@ -521,9 +518,3 @@
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexCoordinates = 6 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndex = 7 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndexCoordinates = 8 not bound
-!missing-selector! MPSNNReduceBinary::primaryOffset not bound
-!missing-selector! MPSNNReduceBinary::secondaryOffset not bound
-!missing-selector! MPSNNReduceBinary::setPrimaryOffset: not bound
-!missing-selector! MPSNNReduceBinary::setSecondaryOffset: not bound
-!missing-selector! MPSNNReduceUnary::offset not bound
-!missing-selector! MPSNNReduceUnary::setOffset: not bound

@@ -116,7 +116,12 @@ namespace Linker.Shared
 				//Console.WriteLine ("Speedup: {0}x", unoptimizedWatch.ElapsedTicks / (double) optimizedWatch.ElapsedTicks);
 				// My testing found a 12-16x speedup on device and a 15-20x speedup in the simulator/desktop.
 				// Setting to 6 to have a margin for random stuff happening, but this may still have to be adjusted.
+#if NET && __TVOS__
+				// Our optimization is correct, but the test case runs into https://github.com/dotnet/runtime/issues/58939 which overpowers most of our optimization gains.
+				var speedup = 1.2; // Seems to be around 1.4/1.5, so let's see if 1.2 is consistently passing.
+#else
 				var speedup = 6;
+#endif
 				Assert.That (unoptimizedWatch.ElapsedTicks / (double) optimizedWatch.ElapsedTicks, Is.GreaterThan (speedup), $"At least {speedup}x speedup");
 			} finally {
 				Environment.SetEnvironmentVariable ("XAMARIN_IOS_SKIP_BLOCK_CHECK", skipBlockCheck);

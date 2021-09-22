@@ -1693,6 +1693,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7082" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[O valor {0} em Info.plist ({1}) não corresponde ao valor de SupportedOSPlatformVersion ({2}) no arquivo de projeto (se não houver nenhum valor de SupportedOSPlatformVersion no arquivo de projeto, então um valor padrão foi assumido). Altere o valor em Info.plist para corresponder ao valor de SupportedOSPlatformVersion ou remova o valor em Info.plist (e adicione um valor de SupportedOSPlatformVersion ao arquivo de projeto se ele ainda não existir).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>

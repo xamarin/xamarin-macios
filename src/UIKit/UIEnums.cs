@@ -2336,6 +2336,8 @@ namespace UIKit {
 	public enum UIMenuOptions : ulong {
 		DisplayInline = 1uL << 0,
 		Destructive = 1uL << 1,
+		[iOS (15,0), TV (15,0), NoWatch, MacCatalyst (15,0)]
+		SingleSelection = 1uL << 5,
 	}
 
 	[NoWatch, NoTV, iOS (13, 0)]
@@ -2443,6 +2445,9 @@ namespace UIKit {
 		Alignment,
 		[Field ("UIMenuToolbar")]
 		Toolbar,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIMenuSidebar")]
+		Sidebar,
 		[Field ("UIMenuFullscreen")]
 		Fullscreen,
 		[Field ("UIMenuMinimizeAndZoom")]
@@ -2947,6 +2952,30 @@ namespace UIKit {
 		ProbableWebSearch,
 		[Field ("UIPasteboardDetectionPatternNumber")]
 		Number,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternLink")]
+		Link,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternPhoneNumber")]
+		PhoneNumber,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternEmailAddress")]
+		EmailAddress,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternPostalAddress")]
+		PostalAddress,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternCalendarEvent")]
+		CalendarEvent,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternShipmentTrackingNumber")]
+		ShipmentTrackingNumber,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternFlightNumber")]
+		FlightNumber,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternMoneyAmount")]
+		MoneyAmount,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -3025,5 +3054,117 @@ namespace UIKit {
 	public enum UIGuidedAccessRestrictionState : long {
 		Allow,
 		Deny,
+	}
+
+	[TV (15,0), iOS (15,0), NoWatch, MacCatalyst (15,0)]
+	public enum UIActionIdentifier {
+		[DefaultEnumValue]
+		[Field (null)]
+		None = -1,
+
+		[Field ("UIActionPaste")]
+		Paste,
+
+		[Field ("UIActionPasteAndMatchStyle")]
+		PasteAndMatchStyle,
+
+		[Field ("UIActionPasteAndGo")]
+		PasteAndGo,
+
+		[Field ("UIActionPasteAndSearch")]
+		PasteAndSearch,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIBandSelectionInteractionState : long {
+		Possible = 0,
+		Began,
+		Selecting,
+		Ended,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIBehavioralStyle : ulong {
+		Automatic = 0,
+		Pad,
+		Mac,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationSize : long {
+		Medium,
+		Small,
+		Mini,
+		Large,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationTitleAlignment : long {
+		Automatic,
+		Leading,
+		Center,
+		Trailing,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationCornerStyle : long {
+		Fixed = -1,
+		Dynamic,
+		Small,
+		Medium,
+		Large,
+		Capsule,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationMacIdiomStyle : long {
+		Automatic,
+		Bordered,
+		Borderless,
+		BorderlessTinted,
+	}
+
+	[NoTV, NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIFocusGroupPriority : long {
+		Ignored = 0,
+		PreviouslyFocused = 1000,
+		Prioritized = 2000,
+		CurrentlyFocused = Int64.MaxValue,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIFocusHaloEffectPosition : long {
+		Automatic = 0,
+		Outside,
+		Inside,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	public enum UISheetPresentationControllerDetentIdentifier {
+		[DefaultEnumValue]
+		[Field (null)]
+		Unknown = -1,
+
+		[Field ("UISheetPresentationControllerDetentIdentifierMedium")]
+		Medium,
+
+		[Field ("UISheetPresentationControllerDetentIdentifierLarge")]
+		Large,
+	}
+
+	[NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIWindowScenePresentationStyle : ulong {
+		Automatic,
+		Standard,
+		Prominent,
 	}
 }

@@ -52,13 +52,9 @@
       <Variable name="MONO_ENV_OPTIONS" value="--trace=E:all" />
     </EnvironmentVariables>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile.inc' ">
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Configure' ">
     <StartAction>Project</StartAction>
     <StartArguments>--configure --autoconf --rootdir ..</StartArguments>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile-mac.inc' ">
-    <StartAction>Project</StartAction>
-    <StartArguments>--configure --autoconf --rootdir .. --mac </StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -141,7 +137,6 @@
     <Compile Include="Jenkins\TestVariationsFactory.cs" />
     <Compile Include="MacFlavorsExtensions.cs" />
     <Compile Include="MacTestProject.cs" />
-    <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Nullable.cs" />
     <Compile Include="Program.cs" />
@@ -175,7 +170,6 @@
     <Compile Include="TestProjectExtensions.cs" />
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="XmlDocumentExtensions.cs" />
-    <Compile Include="Targets\MacCatalystTarget.cs" />
     <Compile Include="ProjectFileExtensions.cs" />
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>

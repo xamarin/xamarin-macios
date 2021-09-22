@@ -439,16 +439,16 @@ namespace Xamarin.Bundler {
 
 		public Version GetMacCatalystmacOSVersion (Version iOSVersion)
 		{
-			if (!MacCatalystSupport.TryGetMacOSVersion (Driver.GetFrameworkDirectory (this), iOSVersion, out var value))
-				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the iOS version {0} to a macOS version for Mac Catalyst */, iOSVersion.ToString ());
+			if (!MacCatalystSupport.TryGetMacOSVersion (Driver.GetFrameworkDirectory (this), iOSVersion, out var value, out var knowniOSVersions))
+				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1} */, iOSVersion.ToString (), string.Join (", ", knowniOSVersions));
 
 			return value;
 		}
 
 		public Version GetMacCatalystiOSVersion (Version macOSVersion)
 		{
-			if (!MacCatalystSupport.TryGetiOSVersion (Driver.GetFrameworkDirectory (this), macOSVersion, out var value))
-				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst */, macOSVersion.ToString ());
+			if (!MacCatalystSupport.TryGetiOSVersion (Driver.GetFrameworkDirectory (this), macOSVersion, out var value, out var knownMacOSVersions))
+				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1} */, macOSVersion.ToString (), string.Join (", ", knownMacOSVersions));
 
 			return value;
 		}
@@ -1640,10 +1640,8 @@ namespace Xamarin.Bundler {
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-				return false;
 			case ApplePlatform.MacCatalyst:
-				// We can't emit a direct call to the P/Invoke with the AOT compiler: https://github.com/dotnet/runtime/issues/55733
-				return IsAOTCompiled (assembly);
+				return false;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}

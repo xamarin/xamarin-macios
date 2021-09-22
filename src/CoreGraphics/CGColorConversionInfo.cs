@@ -6,6 +6,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -122,17 +123,29 @@ namespace CoreGraphics {
 				throw new Exception ("Failed to create CGColorConversionInfo");
 		}
 
+#if !NET
 		[Mac (10,14,6)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.14.6")]
+#endif
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorConversionInfoRef* */ IntPtr CGColorConversionInfoCreateWithOptions (/* CGColorSpaceRef* */ IntPtr src, /* CGColorSpaceRef* */ IntPtr dst, /* CFDictionaryRef _Nullable */ IntPtr options);
 
+#if !NET
 		[Mac (10,14,6)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.14.6")]
+#endif
 		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination, NSDictionary options)
 		{
 			if (source == null)
@@ -146,10 +159,16 @@ namespace CoreGraphics {
 				throw new Exception ("Failed to create CGColorConversionInfo");
 		}
 
+#if !NET
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination, CGColorConversionOptions options) :
 			this (source, destination, options?.Dictionary)
 		{

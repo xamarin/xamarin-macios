@@ -46,7 +46,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CompileITunesMetadata" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CompileSceneKitAssets" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CreateAssetPack" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CreateBindingResourcePackage" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CreateDebugConfiguration" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CreateDebugSettings" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CreateEmbeddedResources" AssemblyFile="$(_TaskAssemblyName)" />
@@ -77,7 +76,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileEntitlements" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileSceneKitAssets" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CreateBindingResourcePackage" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CreateEmbeddedResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSdkLocations" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
@@ -99,6 +97,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateBindingResourcePackage" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateInstallerPackage" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreatePkgInfo" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileProductDefinition" AssemblyFile="$(_TaskAssemblyName)" />
@@ -277,7 +276,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		1. The user can specify values in multiple ways:
 
 		    * An Info.plist in their project file (by using a `None` item with filename "Info.plist" or with a `Link` metadata with filename "Info.plist"). We figure this out in the DetectAppManifest target.
-		    * A partial plist in their project (using the `PartialAppManifest` item group)
+		    * A partial plist in their project (using the `PartialAppManifest` item group). Developers can add targets to the public CollectAppManifestsDependsOn
+		      property to run targets that add to the `PartialAppManifest` item group before we process them.
 		    * Some MSBuild properties can also add values.
 
 		    The precedence is: MSBuild properties can be overridden by the Info.plist, which can be overridden by a partial plist.
@@ -296,6 +296,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<_CompileAppManifestDependsOn>
+			CollectAppManifests;
 			$(_CompileAppManifestDependsOn);
 			_DetectAppManifest;
 			_DetectSdkLocations;
@@ -305,37 +306,50 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_CompileAppManifestDependsOn>
 	</PropertyGroup>
 
+	<!-- This is a public target that collects all the (partial) app manifests. The recommended way to make sure all
+		 the desired entries are added to PartialAppManifest is to add the target that adds to PartialAppManifest
+		 to the CollectAppManifestsDependsOn property. -->
+	<Target Name="CollectAppManifests" DependsOnTargets="$(CollectAppManifestsDependsOn)" />
+
 	<!-- This target has no inputs, because it must still be run if there are no input app manifests, to set default values -->
 	<Target Name="_CompileAppManifest"
 		DependsOnTargets="$(_CompileAppManifestDependsOn)"
 		Outputs="$(_TemporaryAppManifest)"
 		>
 
+		<ItemGroup>
+			<_FontFilesToRegister Include="@(BundleResource)" Condition="'%(BundleResource.RegisterFont)' == 'true'" />
+		</ItemGroup>
+
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppleShortVersion="$(AppleShortVersion)"
 			ApplicationId="$(ApplicationId)"
 			ApplicationTitle="$(ApplicationTitle)"
 			ApplicationVersion="$(ApplicationVersion)"
+			ApplicationDisplayVersion="$(ApplicationDisplayVersion)"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
 			AssemblyName="$(AssemblyName)"
 			CompiledAppManifest="$(_TemporaryAppManifest)"
 			Debug="$(_BundlerDebug)"
 			DefaultSdkVersion="$(_SdkVersion)"
+			FontFilesToRegister="@(_FontFilesToRegister)"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			IsAppExtension="$(IsAppExtension)"
 			IsWatchApp="$(IsWatchApp)"
 			IsWatchExtension="$(IsWatchExtension)"
 			IsXPCService="$(IsXPCService)"
 			PartialAppManifests="@(PartialAppManifest)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			ResourceRules="$(_PreparedResourceRules)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkVersion="$(_SdkVersion)"
+			SupportedOSPlatformVersion="$(SupportedOSPlatformVersion)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			Validate="$(_CreateAppManifest)"
 			>
@@ -893,27 +907,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Metal>
 	</Target>
 
-	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
-		Inputs="@(_SmeltedMetal)" Outputs="$(DeviceSpeficicIntermediateOutputPath)metal\default.metal-ar">
-		<ArTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' and '$(_IsXcode8)' == 'false'"
-			Items="@(_SmeltedMetal)"
-			Archive="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar">
-		</ArTool>
-
-		<ItemGroup>
-			<_ForgedMetal Condition="'$(_IsXcode8)' == 'false'" Include="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar" />
-			<_ForgedMetal Condition="'$(_IsXcode8)' == 'true'" Include="@(_SmeltedMetal)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_ForgedMetal)' != ''" DependsOnTargets="_ForgeMetal;_GenerateBundleName"
-		Inputs="@(_ForgedMetal)" Outputs="$(_AppResourcesPath)default.metallib">
+	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_GenerateBundleName"
+		Inputs="@(_SmeltedMetal)" Outputs="$(_AppResourcesPath)default.metallib">
 		<MetalLib
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_ForgedMetal)"
+			Items="@(_SmeltedMetal)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
 			OutputLibrary="$(_AppResourcesPath)default.metallib">
@@ -952,7 +951,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Items="@(Content)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
 		</FindItemWithLogicalName>
-		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
+		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
 		<PropertyGroup>
 			<_AppBundleManifest>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifest>
 			<!-- We should only write out a compiled app manifest if we're creating an app bundle -->
@@ -1018,6 +1017,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			References="@(ReferencePath);@(BTouchReferencePath)"
+			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			BTouchToolPath="$(BTouchToolPath)"
 			BTouchToolExe="$(BTouchToolExe)"
@@ -1099,7 +1099,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
 			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
 			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
-			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
 			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
 		</DetectSdkLocations>
 	</Target>
@@ -1145,6 +1144,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ExtraArgs="$(_BundlerArguments)"
 			NoSymbolStrip="$(_NoSymbolStrip)"
 			NoDSymUtil="$(_NoDSymUtil)"
+			Verbosity="$(_BundlerVerbosity)"
 			>
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
 			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
