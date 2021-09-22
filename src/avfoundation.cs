@@ -8211,7 +8211,7 @@ namespace AVFoundation {
 		[Field ("AVAssetExportPresetPassthrough")]
 		NSString PresetPassthrough { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+		[NoWatch, NoTV, iOS (15,0), Mac (10,15)]
 		[Field ("AVAssetExportPresetAppleProRes4444LPCM")]
 		NSString PresetAppleProRes4444Lpcm { get; }
 
@@ -9248,28 +9248,34 @@ namespace AVFoundation {
 		float Volume { get; set; } /* float, not CGFloat */
 	}
 
-#if MONOMAC
+	[iOS (15,0), MacCatalyst (15,0), NoTV, NoWatch]
 	[Static]
 	interface AVAssetExportPresetApple {
-
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4VCellular")]
 		NSString M4VCellular { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4ViPod")]
 		NSString M4ViPod { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4V480pSD")]
 		NSString M4V480pSD { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4VAppleTV")]
 		NSString M4VAppleTV { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4VWiFi")]
 		NSString M4VWiFi { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4V720pHD")]
 		NSString M4V720pHD { get; }
 
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVAssetExportPresetAppleM4V1080pHD")]
 		NSString M4V1080pHD { get; }
 
@@ -9277,7 +9283,6 @@ namespace AVFoundation {
 		NSString ProRes422Lpcm { get; }
 	}
 
-#endif
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
@@ -10364,6 +10369,22 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (12,0)]
 		[Export ("supportedOutputSettingsKeysForConnection:")]
 		string[] GetSupportedOutputSettingsKeys (AVCaptureConnection connection);
+
+		[NoWatch, NoTV, MacCatalyst (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Export ("primaryConstituentDeviceSwitchingBehaviorForRecordingEnabled")]
+		bool PrimaryConstituentDeviceSwitchingBehaviorForRecordingEnabled { [Bind ("isPrimaryConstituentDeviceSwitchingBehaviorForRecordingEnabled")] get; set; }
+
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("setPrimaryConstituentDeviceSwitchingBehaviorForRecording:restrictedSwitchingBehaviorConditions:")]
+		void SetPrimaryConstituentDeviceSwitchingBehavior (AVCapturePrimaryConstituentDeviceSwitchingBehavior switchingBehavior, AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions restrictedSwitchingBehaviorConditions);
+
+		[NoWatch, NoTV, MacCatalyst (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Export ("primaryConstituentDeviceSwitchingBehaviorForRecording")]
+		AVCapturePrimaryConstituentDeviceSwitchingBehavior PrimaryConstituentDeviceSwitchingBehaviorForRecording { get; }
+
+		[NoWatch, NoTV, MacCatalyst (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Export ("primaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording")]
+		AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording { get; }
 	}
 
 	[NoTV]
@@ -11062,7 +11083,39 @@ namespace AVFoundation {
 		[Export ("constituentDevices")]
 		AVCaptureDevice[] ConstituentDevices { get; }
 
-		// from AVCaptureDevice_AVCaptureDeviceCalibration
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("activePrimaryConstituentDeviceSwitchingBehavior")]
+		AVCapturePrimaryConstituentDeviceSwitchingBehavior ActivePrimaryConstituentDeviceSwitchingBehavior { get; }
+
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("activePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions")]
+		AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions ActivePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions { get; }
+
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[NullAllowed]
+		[Export ("activePrimaryConstituentDevice")]
+		AVCaptureDevice ActivePrimaryConstituentDevice { get; }
+
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("fallbackPrimaryConstituentDevices", ArgumentSemantic.Assign)]
+		AVCaptureDevice[] FallbackPrimaryConstituentDevices { get; set; }
+
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("setPrimaryConstituentDeviceSwitchingBehavior:restrictedSwitchingBehaviorConditions:")]
+		void SetPrimaryConstituentDeviceSwitchingBehavior (AVCapturePrimaryConstituentDeviceSwitchingBehavior switchingBehavior, AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions restrictedSwitchingBehaviorConditions);
+
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("primaryConstituentDeviceRestrictedSwitchingBehaviorConditions")]
+		AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions { get; }
+
+		[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("supportedFallbackPrimaryConstituentDevices")]
+		AVCaptureDevice[] SupportedFallbackPrimaryConstituentDevices { get; }
+
+		[NoWatch, NoTV, MacCatalyst (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Export ("primaryConstituentDeviceSwitchingBehavior")]
+		AVCapturePrimaryConstituentDeviceSwitchingBehavior PrimaryConstituentDeviceSwitchingBehavior { get; }
+
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Static]
 		[Export ("extrinsicMatrixFromDevice:toDevice:")]

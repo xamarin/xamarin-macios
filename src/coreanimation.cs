@@ -170,8 +170,15 @@ namespace CoreAnimation {
 		double TargetTimestamp { get; }
 
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFrameRateRange' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'PreferredFrameRateRange' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'PreferredFrameRateRange' instead.")]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 #endif
 
@@ -1122,6 +1129,10 @@ namespace CoreAnimation {
 		SCNAnimationEvent [] AnimationEvents { get; set; }
 
 		#endregion
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 
 	interface ICAAnimationDelegate {}
