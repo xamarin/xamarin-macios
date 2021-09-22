@@ -127,19 +127,19 @@ namespace Xamarin.Linker.Steps
 				}
 
 #if NET
-				// Create a list of all the dynamic libraries from Mono that we'll link with
+				// Create a list of all the libraries from Mono that we'll link with
 				// We add 4 different variations for each library:
 				// * with and without a "lib" prefix
 				// * with and without the ".dylib" extension
 				var app = LinkerConfiguration.GetInstance (Context).Application;
-				var dynamicMonoLibraries = app.MonoLibraries.
-					Where (v => v.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)).
+				var monoLibraryVariations = app.MonoLibraries.
+					Where (v => v.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase) || v.EndsWith (".a", StringComparison.OrdinalIgnoreCase)).
 					Select (v => Path.GetFileNameWithoutExtension (v)).
 					Select (v => v.StartsWith ("lib", StringComparison.OrdinalIgnoreCase) ? v.Substring (3) : v).ToHashSet ();
-				dynamicMonoLibraries.UnionWith (dynamicMonoLibraries.Select (v => "lib" + v).ToArray ());
-				dynamicMonoLibraries.UnionWith (dynamicMonoLibraries.Select (v => v + ".dylib").ToArray ());
+				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => "lib" + v).ToArray ());
+				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => v + ".dylib").ToArray ());
 				// If the P/Invoke points to any of those libraries, then we add it as a P/Invoke symbol.
-				if (dynamicMonoLibraries.Contains (pinfo.Module.Name))
+				if (monoLibraryVariations.Contains (pinfo.Module.Name))
 					addPInvokeSymbol = true;
 #endif
 
