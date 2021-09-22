@@ -961,7 +961,7 @@
 	</PropertyGroup>
 
 	<Target Name="_ComputeLinkNativeExecutableInputs">
-		<ItemGroup>
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
@@ -992,7 +992,6 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
 			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			FrameworkRPath="$(_EmbeddedFrameworksRPath)"
