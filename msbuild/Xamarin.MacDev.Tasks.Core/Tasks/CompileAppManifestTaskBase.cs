@@ -212,8 +212,8 @@ namespace Xamarin.MacDev.Tasks
 			if (Platform == ApplePlatform.MacCatalyst && !string.IsNullOrEmpty (SupportedOSPlatformVersion)) {
 				// SupportedOSPlatformVersion is the iOS version for Mac Catalyst.
 				// But we need to store the macOS version in the app manifest, so convert it to the macOS version here.
-				if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), SupportedOSPlatformVersion, out var convertedVersion))
-					Log.LogError (MSBStrings.E0188, SupportedOSPlatformVersion);
+				if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), SupportedOSPlatformVersion, out var convertedVersion, out var knowniOSVersions))
+					Log.LogError (MSBStrings.E0188, SupportedOSPlatformVersion, string.Join (", ", knowniOSVersions));
 				convertedSupportedOSPlatformVersion = convertedVersion;
 			} else {
 				convertedSupportedOSPlatformVersion = SupportedOSPlatformVersion;
@@ -224,8 +224,8 @@ namespace Xamarin.MacDev.Tasks
 				var minimumiOSVersionInManifest = plist?.Get<PString> (ManifestKeys.MinimumOSVersion)?.Value;
 				if (!string.IsNullOrEmpty (minimumiOSVersionInManifest)) {
 					// Convert to the macOS version
-					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest, out var convertedVersion))
-						Log.LogError (MSBStrings.E0188, minimumiOSVersionInManifest);
+					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest, out var convertedVersion, out var knowniOSVersions))
+						Log.LogError (MSBStrings.E0188, minimumiOSVersionInManifest, string.Join (", ", knowniOSVersions));
 					minimumOSVersionInManifest = convertedVersion;
 				}
 			}

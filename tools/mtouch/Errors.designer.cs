@@ -3749,7 +3749,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the iOS version {0} to a macOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}.
         /// </summary>
         public static string MX0183 {
             get {
@@ -3758,7 +3758,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}.
         /// </summary>
         public static string MX0184 {
             get {
