@@ -112,6 +112,14 @@ steps:
         $apiGeneratorComment = ""
       }
 
+      if (-not (Test-Path "$Env:TESTS_SUMMARY" -PathType Leaf)) {
+        if ("$Env:ESRP_RESULT" -eq "success") {
+          Add-Content -Path "$Env:TESTS_SUMMARY" -Value "No test summary was found (something probably failed before the tests could execute)"
+        } else {
+          Add-Content -Path "$Env:TESTS_SUMMARY" -Value "ESRP failed"
+        }
+      }
+
       if ($buildReason -ne "PullRequest" -or $Env:BUILD_PACKAGE -eq "True") {
         Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
         $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -Artifacts "$Env:ARTIFACTS_JSON_PATH" -APIDiff "$Env:APIDIFF_JSON_PATH" -APIGeneratorDiff $apiGeneratorComment

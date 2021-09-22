@@ -171,5 +171,6 @@ steps:
        Write-Host "pkgutil --check-signature $($_.FullName)"
        pkgutil --check-signature "$($_.FullName)"
     }
+    Write-Host "##vso[task.setvariable variable=ESRP_RESULT]success"
   displayName: 'Verify ESRP notarization'
   condition: ${{ parameters.condition }}
