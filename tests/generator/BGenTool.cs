@@ -440,9 +440,11 @@ namespace Xamarin.Tests
 
 		public TextWriter CurrentWriter {
 			get {
-				if (current_writer == null)
-					return original_stdout;
-				return current_writer;
+				lock (lock_obj) {
+					if (current_writer == null)
+						return original_stdout;
+					return current_writer;
+				}
 			}
 		}
 

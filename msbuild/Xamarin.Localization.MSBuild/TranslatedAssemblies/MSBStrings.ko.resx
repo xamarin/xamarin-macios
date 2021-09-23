@@ -1061,4 +1061,14 @@
             {2}: the value from the project file.
         </comment>
     </data>
+  <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
 </root>

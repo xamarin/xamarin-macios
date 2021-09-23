@@ -714,7 +714,7 @@
         <value>無法將 macOS 版本 {0}　對應至相應的 iOS 版本</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>無法將 iOS 版本 {0}　對應至相應的 macOS 版本</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>無法解析 WiFi 偵錯工具設定的主機 IP。
@@ -1047,18 +1047,28 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>AOT 編譯器 '{0}' 不存在。</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>Info.plist ({1}) 中的 {0} 值與專案檔中的 SupportedOSPlatformVersion 值 ({2}) 不符 (如果專案檔中沒有 SupportedOSPlatformVersion 值，則假設為預設值)。請變更 Info.plist 中的值以符合 SupportedOSPlatformVersion 值，或移除 Info.plist 中的值 (如果該值不存在，則將 SupportedOSPlatformVersion 值新增至專案檔)。</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
             {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
 </root>

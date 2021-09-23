@@ -999,6 +999,7 @@ INTENTS_SOURCES = \
 	Intents/INMessageAttributeOptionsResolutionResult.cs \
 	Intents/INMessageAttributeResolutionResult.cs \
 	Intents/INPaymentStatusResolutionResult.cs \
+	Intents/INPerson.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRadioTypeResolutionResult.cs \
 	Intents/INRelativeReferenceResolutionResult.cs \

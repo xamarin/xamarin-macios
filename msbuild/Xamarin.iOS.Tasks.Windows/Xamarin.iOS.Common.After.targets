@@ -164,11 +164,10 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				<DsymFileName>%(_DSYMDir.Filename)%(_DSYMDir.Extension)</DsymFileName>
 			</_DSYMDir>
 		</ItemGroup>
-		<MakeDir Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" Directories="$(DeviceSpecificIntermediateOutputPath)dsym" />
 		<!--Zip Dsym folders-->
-		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)dsym" />
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)" />
 		<CopyFileFromBuildServer Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
-		<LocalUnzip Condition="Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" ExtractionPath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName)" />
+		<LocalUnzip Condition="Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" ExtractionPath="$(DeviceSpecificOutputPath)" />
 		<Delete Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" SessionId="$(BuildSessionId)" Files="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
 	</Target>
 

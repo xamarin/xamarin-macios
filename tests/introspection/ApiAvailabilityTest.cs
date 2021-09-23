@@ -393,7 +393,6 @@ namespace Introspection {
 		}
 
 		[Test]
-		[Ignore ("work in progress")]
 		public void LegacyAttributes ()
 		{
 			//LogProgress = true;

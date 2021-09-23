@@ -5420,7 +5420,7 @@ namespace Foundation
 
 		// From NSUserActivity (IntentsAdditions)
 
-		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Watch (5,0), NoTV, Mac (12,0), iOS (12,0)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
 		string SuggestedInvocationPhrase {
 			// This _simply_ ensure that the Intents namespace (via the enum) will be present which,
