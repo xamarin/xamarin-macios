@@ -476,68 +476,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<PropertyGroup>
-		<_CompileTextureAtlasesDependsOn>
-			$(_CompileTextureAtlasesDependsOn);
-			_DetectSdkLocations;
-			_BeforeCompileTextureAtlases;
-			_ReadCoreCompileTextureAtlases;
-			_CoreCompileTextureAtlases;
-		</_CompileTextureAtlasesDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
-
-	<Target Name="_BeforeCompileTextureAtlases"
-		Inputs="@(AtlasTexture)"
-		Outputs="$(_TextureAtlasCache)">
-
-		<!-- If any AtlasTexture is newer than the generated items list, we delete them so that the _CoreCompileTextureAtlases 
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_TextureAtlasCache)" />
-	</Target>
-
-	<Target Name="_ReadCoreCompileTextureAtlases"
-					DependsOnTargets="_BeforeCompileTextureAtlases">
-
-		<!-- If _BeforeCompileTextureAtlases did not delete the generated items lists from _CoreCompileTextureAtlases, then we read them
-		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
-		<ReadItemsFromFile File="$(_TextureAtlasCache)" Condition="Exists('$(_TextureAtlasCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileTextureAtlases"
-		Inputs="@(AtlasTexture)"
-		Outputs="$(_TextureAtlasCache)"
-		DependsOnTargets="_BeforeCompileTextureAtlases">
-
-		<TextureAtlas
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(TextureAtlasExe)"
-			ToolPath="$(TextureAtlasPath)"
-			AtlasTextures="@(AtlasTexture)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)">
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="BundleResources" ItemName="_TextureAtlas_BundleResources" />
-		</TextureAtlas>
-
-		<!-- Cached the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_TextureAtlas_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_TextureAtlasCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_TextureAtlasCache)" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">
 		<DetectDebugNetworkConfiguration
 			SessionId="$(BuildSessionId)"
