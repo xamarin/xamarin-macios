@@ -15,7 +15,7 @@
 # ignored in mac os too
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
 
-# not present in catalyst
+# AVSampleCursor catagories lack API_AVAILABLE markings https://github.com/xamarin/maccore/issues/2518
 !missing-selector! AVSampleCursor::comparePositionInDecodeOrderWithPositionOfCursor: not bound
 !missing-selector! AVSampleCursor::copyCurrentSampleFormatDescription not bound
 !missing-selector! AVSampleCursor::currentChunkInfo not bound

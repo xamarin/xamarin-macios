@@ -102,25 +102,20 @@ namespace PencilKit {
 		[Export ("drawing", ArgumentSemantic.Copy)]
 		PKDrawing Drawing { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("tool", ArgumentSemantic.Copy)]
 		PKTool Tool { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("rulerActive")]
 		bool RulerActive { [Bind ("isRulerActive")] get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("drawingGestureRecognizer")]
 		UIGestureRecognizer DrawingGestureRecognizer { get; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'DrawingPolicy' property instead.")]
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("allowsFingerDrawing")]
 		bool AllowsFingerDrawing { get; set; }
 
 		[iOS (14, 0)]
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("drawingPolicy", ArgumentSemantic.Assign)]
 		PKCanvasViewDrawingPolicy DrawingPolicy { get; set; }
 	}
@@ -299,7 +294,6 @@ namespace PencilKit {
 		UIUserInterfaceStyle ColorUserInterfaceStyle { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Create individual instances instead.")]
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Static]
 		[return: NullAllowed]
 		[Export ("sharedToolPickerForWindow:")]

@@ -285,7 +285,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// [TestCase ("macOS")] // No macOS Touch.Client project for .NET yet
+		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildInterdependentBindingProjects (string platform)
 		{
