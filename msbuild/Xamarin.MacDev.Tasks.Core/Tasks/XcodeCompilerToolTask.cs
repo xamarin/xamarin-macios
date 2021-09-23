@@ -22,7 +22,6 @@ namespace Xamarin.MacDev.Tasks
 		protected bool Link { get; set; }
 		IList<string> prefixes;
 		string toolExe;
-		PDictionary plist;
 
 		#region Inputs
 
