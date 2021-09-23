@@ -26999,10 +26999,6 @@ namespace AppKit {
 		nint State { get; set; }
 	}
 
-#if __MACCATALYST__
-	interface UIMenu {}
-#endif
-
 	[Mac (10,15)]
 	[MacCatalyst(13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
