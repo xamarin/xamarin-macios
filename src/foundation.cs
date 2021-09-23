@@ -10695,8 +10695,9 @@ namespace Foundation
 		NSObject AddObserver ([NullAllowed] string name, [NullAllowed] NSObject obj, [NullAllowed] NSOperationQueue queue, Action<NSNotification> handler);
 	}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	[Mac (10, 10)]
+	[MacCatalyst(15, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistributedLock
@@ -10723,6 +10724,7 @@ namespace Foundation
 		NSDate LockDate { get; }
 	}
 
+	[MacCatalyst(15, 0)]
 	[BaseType (typeof (NSNotificationCenter))]
 	interface NSDistributedNotificationCenter {
 		[Static]
@@ -11719,9 +11721,9 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	[NoMacCatalyst]
+	[MacCatalyst(15, 0)]
 	interface NSPortMessage {
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[DesignatedInitializer]
 		[Export ("initWithSendPort:receivePort:components:")]
 		IntPtr Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
@@ -13763,6 +13765,7 @@ namespace Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
+	[NoMacCatalyst]
 	partial interface NSHost {
 
 		[Static, Internal, Export ("currentHost")]
@@ -13810,9 +13813,12 @@ namespace Foundation
 		void FlushHostCache ();
 		*/
 	}
+#endif
 
+#if MONOMAC || __MACCATALYST__
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
+	[MacCatalyst(15,0)]
 	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
@@ -13835,6 +13841,7 @@ namespace Foundation
 		NSObject EvaluatedReceivers { get; }
 	}
 
+	[MacCatalyst(15,0)]
 	[StrongDictionary ("NSScriptCommandArgumentDescriptionKeys")]
 	partial interface NSScriptCommandArgumentDescription {
 		string AppleEventCode { get; set; }
@@ -13842,6 +13849,7 @@ namespace Foundation
 		string Optional { get; set; }
 	}
 
+	[MacCatalyst(15,0)]
 	[StrongDictionary ("NSScriptCommandDescriptionDictionaryKeys")]
 	partial interface NSScriptCommandDescriptionDictionary {
 		string CommandClass { get; set; } 
@@ -13852,6 +13860,7 @@ namespace Foundation
 		NSMutableDictionary Arguments { get; set; }
 	}
 
+	[MacCatalyst(15,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSScriptCommandDescription : NSCoding {

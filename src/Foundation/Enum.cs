@@ -498,7 +498,7 @@ namespace Foundation  {
 		Reverse = 2
 	}
 	
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	[Native]
 	public enum NSNotificationSuspensionBehavior : ulong {
 		Drop = 1,
@@ -506,7 +506,8 @@ namespace Foundation  {
 		Hold = 3,
 		DeliverImmediately = 4,
 	}
-    
+
+	[MacCatalyst(15, 0)]
 	[Flags]
 	[Native]
 	public enum NSNotificationFlags : ulong {
