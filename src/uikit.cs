@@ -87,6 +87,14 @@ using UIFocusSystem = Foundation.NSObject;
 using UIPointerAccessoryPosition = Foundation.NSObject;
 #endif // !IOS
 
+#if __MACCATALYST__
+using AppKit;
+#else
+using NSTouchBarProvider = Foundation.NSObject;
+using NSTouchBar = Foundation.NSObject;
+using NSToolbar =  Foundation.NSObject;
+#endif
+
 using System;
 using System.ComponentModel;
 
@@ -10397,11 +10405,6 @@ namespace UIKit {
 		IntPtr Constructor (string term);
 	}
 
-#if __MACCATALYST__
-	interface NSTouchBarProvider { }
-	interface NSTouchBar { }
-#endif
-
 	[BaseType (typeof (NSObject))]
 	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring
 #if !TVOS
@@ -10409,10 +10412,10 @@ namespace UIKit {
 #endif // !TVOS
 #if IOS
 	, UIPasteConfigurationSupporting
-#endif // IOS
 #if __MACCATALYST__
 	, NSTouchBarProvider
-#endif
+#endif // __MACCATALYST__
+#endif // IOS
 	{
 
 		[Export ("nextResponder")]
@@ -10629,22 +10632,22 @@ namespace UIKit {
 		[NullAllowed]
 		UIViewController ChildViewControllerForTouchBar { get; }
 
+		[MacCatalyst (13, 0)]
 		[NoWatch, NoTV, NoiOS]
-		[MacCatalyst (13,0)]
 		[Export ("setNeedsTouchBarUpdate")]
 		void SetNeedsTouchBarUpdate ();
 
-#if __MACCATALYST__
 		[MacCatalyst (13, 0)]
+		[NoWatch, NoTV, NoiOS]
 		[Export ("makeTouchBar")]
 		[return: NullAllowed]
 		NSTouchBar CreateTouchBar ();
 
 		[MacCatalyst (13, 0)]
+		[NoWatch, NoTV, NoiOS]
 		[Export ("touchBar", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		NSTouchBar TouchBar { get; set; }
-#endif
 	}
 	
 	[Category, BaseType (typeof (UIResponder))]
@@ -21037,13 +21040,11 @@ namespace UIKit {
 		[NullAllowed, Export ("focusSystem")]
 		UIFocusSystem FocusSystem { get; }
 
-#if __MACCATALYST__
 		[NoWatch][NoTV][NoiOS]
 		[MacCatalyst (13, 0)]
 		[Export ("titlebar")]
 		[NullAllowed]
 		UITitlebar Titlebar { get; }
-#endif
 	}
 
 	interface IUIWindowSceneDelegate { }
@@ -23196,12 +23197,12 @@ namespace UIKit {
 		UIPointerAccessory CreateArrow (UIPointerAccessoryPosition position);
 	}
 
-	[MacCatalyst (13,0)][NoiOS][NoTV][NoWatch]
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13,0)]
 	[Native]
 	public enum UITitlebarTitleVisibility : long
 	{
 		Visible,
-		Hidden
+		Hidden,
 	}
 
 	[MacCatalyst (14,0)][NoiOS][NoTV][NoWatch]
@@ -23212,14 +23213,10 @@ namespace UIKit {
 		Expanded,
 		Preference,
 		Unified,
-		UnifiedCompact
+		UnifiedCompact,
 	}
 
-#if __MACCATALYST__
-	interface NSToolbar {}
-#endif
-
-	[MacCatalyst (13,0)][NoiOS][NoTV][NoWatch]
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface UITitlebar
 	{
@@ -23234,10 +23231,8 @@ namespace UIKit {
 		[Export ("separatorStyle", ArgumentSemantic.Assign)]
 		UITitlebarSeparatorStyle SeparatorStyle { get; set; }
 
-#if __MACCATALYST__
 		[NullAllowed, Export ("toolbar", ArgumentSemantic.Strong)]
 		NSToolbar Toolbar { get; set; }
-#endif
 
 		[Export ("autoHidesToolbarInFullScreen")]
 		bool AutoHidesToolbarInFullScreen { get; set; }

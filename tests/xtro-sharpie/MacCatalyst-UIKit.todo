@@ -421,7 +421,6 @@
 !missing-pinvoke! UIFontWeightForImageSymbolWeight is not bound
 !missing-pinvoke! UIImageSymbolWeightForFontWeight is not bound
 !missing-protocol-conformance! UIDocumentInteractionController should conform to UIActionSheetDelegate
-!missing-protocol-conformance! UIResponder should conform to NSTouchBarProvider (defined in 'NSTouchBarProvider' category)
 !missing-protocol-conformance! UIResponder should conform to UIActivityItemsConfigurationProviding (defined in 'UIActivityItemsConfiguration' category)
 !missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
 !missing-protocol-member! NSCollectionLayoutVisibleItem::bounds not found
@@ -434,8 +433,6 @@
 !missing-selector! +NSToolbarItem::itemWithItemIdentifier:barButtonItem: not bound
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
-!missing-selector! NSMenuToolbarItem::itemMenu not bound
-!missing-selector! NSMenuToolbarItem::setItemMenu: not bound
 !missing-selector! NSObject::accessibilityDragSourceDescriptors not bound
 !missing-selector! NSObject::accessibilityDropPointDescriptors not bound
 !missing-selector! NSObject::setAccessibilityDragSourceDescriptors: not bound

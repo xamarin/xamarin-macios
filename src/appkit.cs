@@ -45,8 +45,12 @@ using OpenGL;
 using CoreVideo;
 using CloudKit;
 using UniformTypeIdentifiers;
+
 #if __MACCATALYST__
 using UIKit;
+#else
+using UIMenu = Foundation.NSObject;
+using UIMenuElement = Foundation.NSObject;
 #endif
 
 using CGGlyph = System.UInt16;
@@ -19509,10 +19513,6 @@ namespace AppKit {
 		bool ValidateToolbarItem (NSToolbarItem item);
 	}
 
-#if __MACCATALYST__
-	interface UIMenuElement {}
-#endif
-
 	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSToolbarItem : NSCopying, NSMenuItemValidation, NSValidatedUserInterfaceItem {
@@ -19596,13 +19596,11 @@ namespace AppKit {
 		[Export ("navigational")]
 		bool Navigational { [Bind ("isNavigational")] get; set; }
 
-#if __MACCATALYST__
 		[NoMac]
 		[MacCatalyst (13, 0)]
 		[Export ("itemMenuFormRepresentation", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		UIMenuElement ItemMenuFormRepresentation { get; set; }
-#endif
 	}
 
 	[NoMacCatalyst]
@@ -27001,6 +26999,10 @@ namespace AppKit {
 		nint State { get; set; }
 	}
 
+#if __MACCATALYST__
+	interface UIMenu {}
+#endif
+
 	[Mac (10,15)]
 	[MacCatalyst(13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
@@ -27012,6 +27014,10 @@ namespace AppKit {
 
 		[Export ("showsIndicator")]
 		bool ShowsIndicator { get; set; }
+
+		[MacCatalyst (13, 0)]
+		[Export ("itemMenu", ArgumentSemantic.Copy)]
+		UIMenu ItemMenu { get; set; }
 	}
 
 	[NoMacCatalyst]
