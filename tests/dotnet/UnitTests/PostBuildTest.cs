@@ -28,10 +28,7 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
-			if (!string.IsNullOrEmpty (runtimeIdentifiers))
-				properties [multiRid] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["ArchiveOnBuild"] = "true";
 
 			var result = DotNet.AssertBuild (project_path, properties);
@@ -53,17 +50,13 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
-			if (!string.IsNullOrEmpty (runtimeIdentifiers))
-				properties [multiRid] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["BuildIpa"] = "true";
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
 			var pkgPath = Path.Combine (appPath, "..", $"{project}.ipa");
 			Assert.That (pkgPath, Does.Exist, "pkg creation");
 		}

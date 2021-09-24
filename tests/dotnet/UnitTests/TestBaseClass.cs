@@ -44,9 +44,27 @@ namespace Xamarin.Tests {
 		protected string GetProjectPath (string project, string subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath)
 		{
 			var rv = GetProjectPath (project, subdir, platform);
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			appPath = Path.Combine (Path.GetDirectoryName (rv), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
 			return rv;
+		}
+
+		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return "iossimulator-x64";
+			case ApplePlatform.TVOS:
+				return "tvossimulator-x64";
+			case ApplePlatform.MacOSX:
+				return "osx-x64";
+			case ApplePlatform.MacCatalyst:
+				return "maccatalyst-x64";
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
 		}
 
 		protected string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
@@ -55,10 +73,14 @@ namespace Xamarin.Tests {
 			if (!string.IsNullOrEmpty (subdir))
 				project_dir = Path.Combine (project_dir, subdir);
 
+			var project_path = Path.Combine (project_dir, project + ".csproj");
+			if (File.Exists (project_path))
+				return project_path;
+
 			if (platform.HasValue)
 				project_dir = Path.Combine (project_dir, platform.Value.AsString ());
 
-			var project_path = Path.Combine (project_dir, project + ".csproj");
+			project_path = Path.Combine (project_dir, project + ".csproj");
 			if (!File.Exists (project_path))
 				project_path = Path.ChangeExtension (project_path, "sln");
 
