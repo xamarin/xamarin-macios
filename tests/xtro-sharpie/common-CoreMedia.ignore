@@ -46,6 +46,9 @@
 !missing-field! kCMFormatDescriptionExtension_AuxiliaryTypeInfo not bound
 !missing-field! kCMFormatDescriptionExtension_ContainsAlphaChannel not bound
 !missing-field! kCMFormatDescriptionExtension_ProtectedContentOriginalFormat not bound
+!missing-field! kCMFormatDescriptionExtension_AmbientViewingEnvironment not bound
+!missing-field! kCMFormatDescriptionExtension_BitsPerComponent not bound
+!missing-field! kCMFormatDescriptionExtension_HorizontalFieldOfView not bound
 !missing-field! kCMFormatDescriptionExtensionKey_MetadataKeyTable not bound
 !missing-field! kCMFormatDescriptionFieldDetail_SpatialFirstLineEarly not bound
 !missing-field! kCMFormatDescriptionFieldDetail_SpatialFirstLineLate not bound
@@ -378,6 +381,7 @@
 !missing-pinvoke! CMVideoFormatDescriptionCopyAsBigEndianImageDescriptionBlockBuffer is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionBlockBuffer is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionData is not bound
+!missing-field! kCMSampleAttachmentKey_CryptorSubsampleAuxiliaryData not bound
 
 ## block based version of CMBufferQueueCreate (which use callbacks and is already bound)
 !missing-pinvoke! CMBufferQueueCreateWithHandlers is not bound
@@ -387,3 +391,17 @@
 
 ## block based version of CMSampleBufferCreateForImageBuffer (which use callbacks and is already bound)
 !missing-pinvoke! CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler is not bound
+
+# they are added because we need to be back compatible yet we do have code to choose the correct one
+!unknown-pinvoke! CMTimebaseCopyMaster bound
+!unknown-pinvoke! CMTimebaseCopyMasterClock bound
+!unknown-pinvoke! CMTimebaseCopyMasterTimebase bound
+!unknown-pinvoke! CMTimebaseCopyUltimateMasterClock bound
+!unknown-pinvoke! CMTimebaseCreateWithMasterClock bound
+!unknown-pinvoke! CMTimebaseCreateWithMasterTimebase bound
+!unknown-pinvoke! CMTimebaseSetMasterClock bound
+!unknown-pinvoke! CMTimebaseSetMasterTimebase bound
+
+# it can return a Clock or a Timebase but the API already has a way to access the clock source (CMTimebaseCopySourceClock)
+# and the Timebase (CMTimebaseCopySourceTimebase) so there is no reason atm to add this method
+!missing-pinvoke! CMTimebaseCopySource is not bound
