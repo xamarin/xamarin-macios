@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.100-rtm.21472.4">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.100-rtm.21472.96">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>06123d8e7494c1944ca9707fbd1bd17dad99ff26</Sha>
+      <Sha>114e28d2e963e5e73c79d4598a6ae5df97e6522e</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.100-1.21459.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/mono/linker</Uri>
