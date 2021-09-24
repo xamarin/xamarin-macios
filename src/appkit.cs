@@ -27012,6 +27012,7 @@ namespace AppKit {
 		bool ShowsIndicator { get; set; }
 
 		[MacCatalyst (13, 0)]
+		[NoMac]
 		[Export ("itemMenu", ArgumentSemantic.Copy)]
 		UIMenu ItemMenu { get; set; }
 	}
