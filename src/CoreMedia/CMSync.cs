@@ -187,8 +187,8 @@ namespace CoreMedia {
 #endif
 		public CMTimebase (CFAllocator? allocator, CMClock sourceClock)
 		{
-			if (sourceClock == null)
-				throw new ArgumentNullException (nameof(sourceClock));
+			if (sourceClock is null)
+				throw new ArgumentNullException (nameof (sourceClock));
 
 			var error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, out handle);
 			if (error != CMTimebaseError.None)
@@ -210,8 +210,8 @@ namespace CoreMedia {
 #endif
 		public CMTimebase (CFAllocator? allocator, CMTimebase sourceTimebase)
 		{
-			if (sourceTimebase == null)
-				throw new ArgumentNullException (nameof(sourceTimebase));
+			if (sourceTimebase is null)
+				throw new ArgumentNullException (nameof (sourceTimebase));
 
 			var error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, out handle);
 			if (error != CMTimebaseError.None)
@@ -852,7 +852,7 @@ namespace CoreMedia {
 				return Runtime.GetINativeObject<CMTimebase> (source, true); 
 			}
 			set {
-				CMTimebaseSetSourceTimebase (Handle, value?.GetHandle () ?? IntPtr.Zero);
+				CMTimebaseSetSourceTimebase (Handle, value.GetHandle ());
 			}
 		}
 
@@ -883,7 +883,7 @@ namespace CoreMedia {
 				return Runtime.GetINativeObject<CMClock> (clock, true);
 			}
 			set {
-				CMTimebaseSetSourceClock (Handle, value?.GetHandle() ?? IntPtr.Zero);
+				CMTimebaseSetSourceClock (Handle, value.GetHandle());
 			}
 		}
 
