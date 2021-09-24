@@ -116,7 +116,7 @@ steps:
         if ("$Env:ESRP_RESULT" -eq "success") {
           Add-Content -Path "$Env:TESTS_SUMMARY" -Value "No test summary was found (something probably failed before the tests could execute)"
         } else {
-          Add-Content -Path "$Env:TESTS_SUMMARY" -Value "ESRP failed"
+          Add-Content -Path "$Env:TESTS_SUMMARY" -Value ":x: ESRP failed :x:"
         }
       }
 
@@ -147,7 +147,12 @@ steps:
       Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\VSTS.psm1 
       $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
-      $response = New-GitHubComment -Header "Tests were not ran ($Env:CONTEXT)." -Emoji ":warning:" -Description "Results were skipped for this run [Azure Devops]($targetUrl)."
+      $description = "Results were skipped for this run [Azure Devops]($targetUrl)."
+      if ("$Env:ESRP_RESULT" -ne "success") {
+        $description = "$description`n:x: ESRP failed :x:"
+      }
+
+      $response = New-GitHubComment -Header "Tests were not ran ($Env:CONTEXT)." -Emoji ":warning:" -Description "$description"
     env:
       BUILD_REVISION: $(Build.SourceVersion)
       CONTEXT: ${{ parameters.statusContext }}
