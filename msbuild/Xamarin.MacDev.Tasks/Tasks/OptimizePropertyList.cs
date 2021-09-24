@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
-using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class OptimizePropertyList : OptimizePropertyListTaskBase, ITaskCallback
 	{

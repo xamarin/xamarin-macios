@@ -41,13 +41,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
 
-	<ItemDefinitionGroup>
-		<!-- MSBuild will honor this default metadata, but xbuild will not, so we still need to use CreateItem -->
-		<_BundleResourceWithLogicalName>
-			<Optimize />
-		</_BundleResourceWithLogicalName>
-	</ItemDefinitionGroup>
-
 	<!-- Insert our app bundle generation step -->
 	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<BuildDependsOn>
@@ -74,36 +67,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CleanUploaded;
 		</CleanDependsOn>
 	</PropertyGroup>
-
-	<PropertyGroup>
-		<OptimizePngImagesDependsOn>
-			_CollectPngImages;
-			_CoreOptimizePngImages;
-			_AfterCoreOptimizePngImages
-		</OptimizePngImagesDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_OptimizePngImages" DependsOnTargets="$(OptimizePngImagesDependsOn)" />
-
-	<PropertyGroup>
-		<OptimizePropertyListsDependsOn>
-			_CollectPropertyLists;
-			_CoreOptimizePropertyLists;
-			_AfterCoreOptimizePropertyLists
-		</OptimizePropertyListsDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_OptimizePropertyLists" DependsOnTargets="$(OptimizePropertyListsDependsOn)" />
-
-	<PropertyGroup>
-		<OptimizeLocalizationFilesDependsOn>
-			_CollectLocalizationFiles;
-			_CoreOptimizeLocalizationFiles;
-			_AfterCoreOptimizeLocalizationFiles
-		</OptimizeLocalizationFilesDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_OptimizeLocalizationFiles" DependsOnTargets="$(OptimizeLocalizationFilesDependsOn)" />
 
 	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<CreateAppBundleDependsOn>
@@ -371,109 +334,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			>
 		</CreateDebugConfiguration>
-	</Target>
-
-	<Target Name="_CollectPngImages" DependsOnTargets="_CollectBundleResources">
-		<CreateItem Include="@(_BundleResourceWithLogicalName)" Condition="'%(_BundleResourceWithLogicalName.Extension)' == '.png' And '%(_BundleResourceWithLogicalName.Optimize)' == 'true'">
-			<Output TaskParameter="Include" ItemName="_PngImage" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_CoreOptimizePngImages"
-		DependsOnTargets="_CollectPngImages;_DetectSdkLocations"
-		Inputs="@(_PngImage)"
-		Outputs="@(_PngImage -> '$(DeviceSpecificIntermediateOutputPath)optimized\%(LogicalName)')">
-
-		<OptimizeImage
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(PngCrushExe)"
-			ToolPath="$(PngCrushPath)"
-			SdkDevPath="$(_SdkDevPath)"
-			InputImages="@(_PngImage)"
-			OutputImages="@(_PngImage -> '$(DeviceSpecificIntermediateOutputPath)optimized\%(LogicalName)')">
-			<Output TaskParameter="OutputImages" ItemName="FileWrites" />
-		</OptimizeImage>
-	</Target>
-
-	<Target Name="_AfterCoreOptimizePngImages" Condition="'@(_PngImage)' != ''">
-		<ItemGroup>
-			<_BundleResourceWithLogicalName Remove="@(_PngImage)" />
-		</ItemGroup>
-
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)optimized\%(_PngImage.LogicalName)" AdditionalMetadata="LogicalName=%(_PngImage.LogicalName);Optimize='false';ResourceTags=%(_PngImage.ResourceTags)">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_CollectPropertyLists" DependsOnTargets="_CollectBundleResources">
-		<CreateItem Include="@(_BundleResourceWithLogicalName)" Condition="'%(_BundleResourceWithLogicalName.Extension)' == '.plist' And '%(_BundleResourceWithLogicalName.Optimize)' == 'true'">
-			<Output TaskParameter="Include" ItemName="_PropertyList" />
-		</CreateItem>
-		<ItemGroup>
-			<FileWrites Include="$(DeviceSpecificIntermediateOutputPath)optimized\%(_PropertyList.LogicalName)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CoreOptimizePropertyLists"
-		DependsOnTargets="_CollectPropertyLists;_DetectSdkLocations"
-		Inputs="@(_PropertyList)"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)optimized\%(_PropertyList.LogicalName)"
-		>
-
-		<OptimizePropertyList
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(PlUtilExe)"
-			ToolPath="$(PlUtilPath)"
-			Input="%(_PropertyList.Identity)"
-			Output="$(DeviceSpecificIntermediateOutputPath)optimized\%(_PropertyList.LogicalName)">
-		</OptimizePropertyList>
-	</Target>
-
-	<Target Name="_AfterCoreOptimizePropertyLists" Condition="'@(_PropertyList)' != ''">
-		<ItemGroup>
-			<_BundleResourceWithLogicalName Remove="@(_PropertyList)" />
-		</ItemGroup>
-
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)optimized\%(_PropertyList.LogicalName)" AdditionalMetadata="LogicalName=%(_PropertyList.LogicalName);Optimize='false'">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_CollectLocalizationFiles" DependsOnTargets="_CollectBundleResources">    
-		<CreateItem Include="@(_BundleResourceWithLogicalName)" Condition="'%(_BundleResourceWithLogicalName.Extension)' == '.strings' And '%(_BundleResourceWithLogicalName.Optimize)' == 'true'">
-			<Output TaskParameter="Include" ItemName="_LocalizationFile" />
-		</CreateItem>
-		<ItemGroup>
-			<FileWrites Include="$(DeviceSpecificIntermediateOutputPath)optimized\%(_LocalizationFile.LogicalName)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CoreOptimizeLocalizationFiles"
-		DependsOnTargets="_CollectLocalizationFiles;_DetectSdkLocations"
-		Inputs="@(_LocalizationFile)"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)optimized\%(_LocalizationFile.LogicalName)"
-		>
-
-		<OptimizePropertyList
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(PlUtilExe)"
-			ToolPath="$(PlUtilPath)"
-			Input="%(_LocalizationFile.Identity)"
-			Output="$(DeviceSpecificIntermediateOutputPath)optimized\%(_LocalizationFile.LogicalName)">
-		</OptimizePropertyList>
-	</Target>
-
-	<Target Name="_AfterCoreOptimizeLocalizationFiles" Condition="'@(_LocalizationFile)' != ''">
-		<ItemGroup>
-			<_BundleResourceWithLogicalName Remove="@(_LocalizationFile)" />
-		</ItemGroup>
-
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)optimized\%(_LocalizationFile.LogicalName)" AdditionalMetadata="LogicalName=%(_LocalizationFile.LogicalName);Optimize='false'">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
 	</Target>
 
 	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">
