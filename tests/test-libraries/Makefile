@@ -256,7 +256,7 @@ endif
 .libs/$(1)/libtest.dylib: .libs/$(2)/libtest.dylib .libs/$(3)/libtest.dylib | .libs/$(1)
 	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
-$(3)_TARGETS += \
+$(4)_TARGETS += \
 	.libs/$(1)/XTest.framework$($(4)_BINARY_INFIX)/XTest \
 	.libs/$(1)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist \
 	.libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest \
@@ -265,7 +265,7 @@ $(3)_TARGETS += \
 	.libs/$(1)/libtest.a \
 	.libs/$(1)/libtest2.a \
 
-all-local:: $$($(3)_TARGETS)
+all-local:: $$($(4)_TARGETS)
 endef
 
 $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator,IPHONESIMULATOR))
@@ -295,12 +295,12 @@ define FatFrameworkSymlinksTemplate
 	$(Q) mkdir -p $$(dir $$@)
 	$(Q) ln -fs A $$@
 
-$(3)_TARGETS += \
+$(4)_TARGETS += \
 	.libs/$(1)/XTest.framework/XTest \
 	.libs/$(1)/XTest.framework/Resources \
 	.libs/$(1)/XTest.framework/Versions/Current \
 
-all-local:: $$($(3)_TARGETS)
+all-local:: $$($(4)_TARGETS)
 endef
 
 ifdef INCLUDE_MACCATALYST
