@@ -19460,11 +19460,11 @@ namespace AppKit {
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
 
-		[MacCatalyst (14,0)][NoMac]
+		[MacCatalyst (15,0)][NoMac]
 		[Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier")]
 		NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
 
-		[MacCatalyst (14,0)][NoMac]
+		[MacCatalyst (15,0)][NoMac]
 		[Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
 		NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
 	}

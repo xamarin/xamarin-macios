@@ -10626,17 +10626,6 @@ namespace UIKit {
 		[Export ("captureTextFromCamera:")]
 		void CaptureTextFromCamera ([NullAllowed] NSObject sender);
 
-		[NoWatch, NoTV, NoiOS]
-		[MacCatalyst (13, 0)]
-		[Export ("childViewControllerForTouchBar")]
-		[NullAllowed]
-		UIViewController ChildViewControllerForTouchBar { get; }
-
-		[MacCatalyst (13, 0)]
-		[NoWatch, NoTV, NoiOS]
-		[Export ("setNeedsTouchBarUpdate")]
-		void SetNeedsTouchBarUpdate ();
-
 		[MacCatalyst (13, 0)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("makeTouchBar")]
