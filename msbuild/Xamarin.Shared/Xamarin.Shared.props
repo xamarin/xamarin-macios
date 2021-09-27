@@ -284,7 +284,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<_AppBundleManifestRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents/</_AppBundleManifestRelativePath>
 
-		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true' And '$(IsXpcService)' == 'true'">.xpc</AppBundleExtension>
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true' And '$(IsXPCService)' == 'true'">.xpc</AppBundleExtension>
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true'">.appex</AppBundleExtension>
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 
