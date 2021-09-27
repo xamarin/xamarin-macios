@@ -51,7 +51,7 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: "Release");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["BuildIpa"] = "true";
