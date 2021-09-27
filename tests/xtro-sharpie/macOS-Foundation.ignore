@@ -834,3 +834,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSUserNotification::set_Subtitle(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUserNotification::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUserNotification::set_UserInfo(Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
+
+# added because the method does the right thing yet it was not marked by apple, there is a test for it
+!extra-null-allowed! 'System.Boolean Foundation.NSHost::Equals(Foundation.NSHost)' has a extraneous [NullAllowed] on parameter #0
