@@ -255,8 +255,10 @@
 	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
 	<Target Name="_ComputePublishTrimmed">
 		<PropertyGroup>
-			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(RuntimeIdentifier)' != '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+			<_MustTrim Condition="'$(_MustTrim)' == '' And '$(RuntimeIdentifier)' != '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</_MustTrim>
+			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_MustTrim)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
+		<Error Condition="'$(_MustTrim)' == 'true' And '$(PublishTrimmed)' != 'true'" Text="$(_PlatformName) projects must build with PublishTrimmed=true. Current value: $(PublishTrimmed)." />
 	</Target>
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
@@ -994,15 +996,12 @@
 			_ReadAppManifest;
 			_WriteAppManifest;
 			_CompileNativeExecutable;
+			_ComputeLinkNativeExecutableInputs;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
-			Inputs="@(_NativeExecutableObjectFiles)"
-			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-		>
-		<ItemGroup>
+	<Target Name="_ComputeLinkNativeExecutableInputs">
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
@@ -1018,7 +1017,18 @@
 			<!-- Mono requires zlib and iconv -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
+
+			<!-- Here we must add all the files that should make us (re-)link the executable -->
+			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
+			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_LinkNativeExecutable"
+			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
+			Inputs="@(_LinkNativeExecutableInputs)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+		>
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
