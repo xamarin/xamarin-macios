@@ -711,10 +711,10 @@
         <value>Podana ścieżka archiwum nie pochodzi z prawidłowego pliku archiwum (.xcarchive). Ścieżka archiwum: „{0}”</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Nie można zmapować wersji systemu MacOS {0} na odpowiadającą jej wersję systemu iOS</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Nie można zmapować systemu iOS w wersji {0} na odpowiadającą jej wersję systemu macOS</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Nie można rozpoznać adresów IP hosta dla ustawień debugera WiFi.
