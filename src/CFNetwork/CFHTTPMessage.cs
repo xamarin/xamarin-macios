@@ -149,9 +149,9 @@ namespace CoreServices {
 
 			// the method is obsolete, but EscapeDataString does not work the same way. We could get the components
 			// of the Uri and then EscapeDataString, but this might introduce bugs, so for now we will ignore the warning
-#pragma warning disable SYSLIB0001
+#pragma warning disable SYSLIB0013
 			var escaped = Uri.EscapeUriString (uri.ToString ());
-#pragma warning restore SYSLIB0001
+#pragma warning restore SYSLIB0013
 
 			try {
 				urlRef = CFUrl.FromUrlString (escaped, null);
