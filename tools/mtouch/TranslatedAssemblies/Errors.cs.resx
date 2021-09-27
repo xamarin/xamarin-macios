@@ -742,10 +742,10 @@
 		<value>Nepropojuje se s architekturou {0} (odkazovanou modulovým odkazem v {1}), protože na aktuální platformě ({2}) není k dispozici.</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Nepovedlo se namapovat verzi iOS {0} na verzi macOS pro Mac Catalyst</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Nepovedlo se namapovat verzi macOS {0} na odpovídající verzi iOS pro Mac Catalyst</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>Možnost {0} nemůže při použití CoreCLR přebírat hodnotu {1}.</value>

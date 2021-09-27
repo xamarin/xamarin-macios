@@ -711,10 +711,10 @@
         <value>O Caminho do Arquivo Morto fornecido não é de um arquivo morto válido (.xcarchive). Caminho do Arquivo Morto: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Não foi possível mapear a versão {0} do macOS para uma versão correspondente do iOS</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Não foi possível mapear a versão iOS {0} para uma versão macOS correspondente</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Não foi possível resolver os IPs do host para as configurações do depurador de WiFi.
