@@ -27000,7 +27000,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[MacCatalyst(13, 0)]
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem
 	{
