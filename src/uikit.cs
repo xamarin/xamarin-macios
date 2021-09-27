@@ -23206,7 +23206,7 @@ namespace UIKit {
 	}
 
 	[NoiOS][NoTV][NoWatch][MacCatalyst (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface UITitlebar
 	{
 		[Export ("titleVisibility", ArgumentSemantic.Assign)]
