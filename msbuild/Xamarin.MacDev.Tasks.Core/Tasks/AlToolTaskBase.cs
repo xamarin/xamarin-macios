@@ -40,6 +40,8 @@ namespace Xamarin.MacDev.Tasks
 			get { return Path.Combine (SdkDevPath, "usr", "bin"); }
 		}
 
+		protected abstract string ALToolAction { get; }
+
 		public override bool Execute ()
 		{
 			toolOutput = new StringBuilder ();
@@ -65,6 +67,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var args = new CommandLineArgumentBuilder ();
 
+			args.Add (ALToolAction);
 			args.Add ("--file");
 			args.AddQuoted (FilePath);
 			args.Add ("--type");

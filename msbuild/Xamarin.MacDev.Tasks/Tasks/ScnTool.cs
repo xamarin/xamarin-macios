@@ -1,10 +1,8 @@
-using Microsoft.Build.Framework;
-using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
-	public class TextureAtlas : TextureAtlasTaskBase, ICancelableTask
+	public class ScnTool : ScnToolTaskBase
 	{
 		public override bool Execute ()
 		{
@@ -14,10 +12,12 @@ namespace Xamarin.iOS.Tasks
 			return base.Execute ();
 		}
 
-		public void Cancel ()
+		public override void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+
+			base.Execute ();
 		}
 	}
 }

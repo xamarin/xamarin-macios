@@ -548,6 +548,23 @@ clean-local::
 	git clean -xfdq
 	cd $(XAMARIN_MACDEV_PATH) && git clean -xfdq
 
+# We use the legacy Xamarin versions for the .NET assemblies as well.
+Versions.mac.g.cs: Makefile $(TOP)/Make.config.inc
+	$(Q) printf "static class VersionConstants {\\n" > $@.tmp
+	$(Q) printf "\\tpublic const string XamarinMacVersion = \"$(MAC_PACKAGE_VERSION)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string NuGetPrereleaseIdentifier = \"$(NUGET_PRERELEASE_IDENTIFIER)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string NuGetBuildMetadata = \"$(NUGET_BUILD_METADATA)\";\\n" >> $@.tmp
+	$(Q) printf "}\\n" >> $@.tmp
+	$(Q) mv $@.tmp $@
+
+Versions.ios.g.cs: Makefile $(TOP)/Make.config.inc
+	$(Q) printf "static class VersionConstants {\\n" > $@.tmp
+	$(Q) printf "\\tpublic const string XamarinIOSVersion = \"$(IOS_PACKAGE_VERSION)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string NuGetPrereleaseIdentifier = \"$(NUGET_PRERELEASE_IDENTIFIER)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string NuGetBuildMetadata = \"$(NUGET_BUILD_METADATA)\";\\n" >> $@.tmp
+	$(Q) printf "}\\n" >> $@.tmp
+	$(Q) mv $@.tmp $@
+
 dotnet:: $(DOTNET_TARGETS)
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards

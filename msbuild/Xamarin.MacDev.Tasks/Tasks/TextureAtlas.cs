@@ -1,8 +1,9 @@
+using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
-	public class ALToolValidate : ALToolValidateTaskBase
+	public class TextureAtlas : TextureAtlasTaskBase, ICancelableTask
 	{
 		public override bool Execute ()
 		{
@@ -12,12 +13,10 @@ namespace Xamarin.iOS.Tasks
 			return base.Execute ();
 		}
 
-		public override void Cancel ()
+		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
-
-			base.Cancel ();
 		}
 	}
 }

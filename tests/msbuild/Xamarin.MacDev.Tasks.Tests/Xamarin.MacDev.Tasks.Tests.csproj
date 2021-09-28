@@ -6,6 +6,8 @@
     <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
     <LangVersion>latest</LangVersion>
     <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../../product.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <!--
