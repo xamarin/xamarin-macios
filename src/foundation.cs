@@ -13775,7 +13775,7 @@ namespace Foundation
 		NSHost _FromAddress (string address);
 
 		[Export ("isEqualToHost:")]
-		bool Equals (NSHost host);
+		bool Equals ([NullAllowed] NSHost host);
 
 		[Export ("name")]
 		string Name { get; }
