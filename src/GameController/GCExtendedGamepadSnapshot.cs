@@ -154,6 +154,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 #endif
+		[MarshalAs (UnmanagedType.I1)]
 		public bool SupportsClickableThumbsticks;
 
 #if !NET
@@ -163,6 +164,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 #endif
+		[MarshalAs (UnmanagedType.I1)]
 		bool LeftThumbstickButton;
 		
 #if !NET
@@ -172,6 +174,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 #endif
+		[MarshalAs (UnmanagedType.I1)]
 		bool RightThumbstickButton;
 
 		[DllImport (Constants.GameControllerLibrary)]

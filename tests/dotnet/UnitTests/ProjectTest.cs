@@ -25,18 +25,12 @@ namespace Xamarin.Tests {
 		public void BuildMySingleView (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.iOS;
-			var project_path = GetProjectPath ("MySingleView");
+			var project_path = GetProjectPath ("MySingleView", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
-				properties ["RuntimeIdentifier"] = runtimeIdentifier;
-			} else {
-				runtimeIdentifier = "iossimulator-x64"; // default RID for iOS projects. We set it here to make the rest of the test know where to expect files to be.
-			}
+			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", runtimeIdentifier, "MySingleView.app");
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -53,18 +47,13 @@ namespace Xamarin.Tests {
 		public void BuildMyCocoaApp (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.MacOSX;
-			var project_path = GetProjectPath ("MyCocoaApp");
+			var project_path = GetProjectPath ("MyCocoaApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
-				properties ["RuntimeIdentifier"] = runtimeIdentifier;
-			} else {
-				runtimeIdentifier = "osx-x64"; // default RID for macOS projects. We set it here to make the rest of the test know where to expect files to be.
-			}
+			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-macos", runtimeIdentifier, "MyCocoaApp.app"));
+			AssertAppContents (platform, appPath);
 		}
 
 		[Test]
@@ -74,18 +63,13 @@ namespace Xamarin.Tests {
 		public void BuildMyTVApp (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.TVOS;
-			var project_path = GetProjectPath ("MyTVApp");
+			var project_path = GetProjectPath ("MyTVApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
-				properties ["RuntimeIdentifier"] = runtimeIdentifier;
-			} else {
-				runtimeIdentifier = "tvossimulator-x64"; // default RID for tvOS projects. We set it here to make the rest of the test know where to expect files to be.
-			}
+			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-tvos", runtimeIdentifier, "MyTVApp.app"));
+			AssertAppContents (platform, appPath);
 		}
 
 		[Test]
@@ -95,18 +79,12 @@ namespace Xamarin.Tests {
 		public void BuildMyCatalystApp (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.MacCatalyst;
-			var project_path = GetProjectPath ("MyCatalystApp");
+			var project_path = GetProjectPath ("MyCatalystApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
-				properties ["RuntimeIdentifier"] = runtimeIdentifier;
-			} else {
-				runtimeIdentifier = "maccatalyst-x64"; // default RID for Mac Catalyst projects. We set it here to make the rest of the test know where to expect files to be.
-			}
+			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-maccatalyst", runtimeIdentifier, "MyCatalystApp.app");
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Contents", "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -354,13 +332,11 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), $"{project}.app");
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -387,8 +363,7 @@ namespace Xamarin.Tests {
 			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "fsharplibrary", "dotnet"));
 			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client", "dotnet"));
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			if (additionalProperties != null) {
 				foreach (var prop in additionalProperties) {
 					var eq = prop.IndexOf ('=');
@@ -419,10 +394,9 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
-			var errors = BinLog.GetBuildMessages (rv.BinLogPath).Where (v => v.Type == BuildLogEventType.Error).ToArray ();
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"Building for all the runtime identifiers '{runtimeIdentifiers}' at the same time isn't possible, because they represent different platform variations.", errors [0].Message, "Error message");
 		}
@@ -436,15 +410,13 @@ namespace Xamarin.Tests {
 				Configuration.AssertDeviceAvailable ();
 
 			var platform = ApplePlatform.iOS;
-			var project_path = GetProjectPath ("MySingleView");
+			var project_path = GetProjectPath ("MySingleView", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			var properties = GetDefaultProperties (runtimeIdentifier);
 			properties ["IsMacEnabled"] = "false";
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerDidNotExecute (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", runtimeIdentifier, "MySingleView.app");
 			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
 			Assert.That (appPath, Does.Exist, "There is an .app");
 			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
@@ -464,14 +436,12 @@ namespace Xamarin.Tests {
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			var properties = GetDefaultProperties (runtimeIdentifier);
 			DotNet.AssertBuild (project_path, properties);
 
 			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst) {
-				var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifier, project + ".app");
 				var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
 				Assert.That (appExecutable, Does.Exist, "There is an executable");
 				ExecuteWithMagicWordAndAssert (appExecutable);
@@ -503,10 +473,9 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			var properties = GetDefaultProperties (runtimeIdentifier);
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
-			var errors = BinLog.GetBuildMessages (rv.BinLogPath).Where (v => v.Type == BuildLogEventType.Error).ToArray ();
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", errors [0].Message, "Error message");
 		}
@@ -521,8 +490,7 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 
-			var properties = new Dictionary<string, string> (verbosity);
-			SetRuntimeIdentifiers (properties, runtimeIdentifiers);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 
 			// Build
 			DotNet.AssertBuild (project_path, properties);
@@ -544,17 +512,13 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
-			properties [multiRid] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["UseMonoRuntime"] = "false";
 			var rv = DotNet.AssertBuild (project_path, properties);
 
 			AssertThatLinkerExecuted (rv);
-			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -563,10 +527,8 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 
-			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
-			Assert.That (appExecutable, Does.Exist, "There is an executable");
-			if (!(runtimeIdentifiers == "osx-arm64" && RuntimeInformation.ProcessArchitecture == Architecture.X64))
-				ExecuteWithMagicWordAndAssert (appExecutable);
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
 			var createdump = Path.Combine (appPath, "Contents", "MonoBundle", "createdump");
 			Assert.That (createdump, Does.Exist, "createdump existence");
@@ -582,20 +544,15 @@ namespace Xamarin.Tests {
 			var outputPath = Cache.CreateTemporaryDirectory ();
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
-			properties [multiRid] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["OutputPath"] = outputPath + "/";
 			var rv = DotNet.AssertBuild (project_path, properties);
 
 			AssertThatLinkerExecuted (rv);
 
-			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			var appPath = Path.Combine (outputPath, project + ".app");
-			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
-			Assert.That (appExecutable, Does.Exist, "There is an executable");
-			if (!(runtimeIdentifiers == "osx-arm64" && RuntimeInformation.ProcessArchitecture == Architecture.X64))
-				ExecuteWithMagicWordAndAssert (appExecutable);
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
 		[Test]
@@ -611,7 +568,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
 
-			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			var appExecutable = GetNativeExecutable (platform, appPath);
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
@@ -700,6 +657,9 @@ namespace Xamarin.Tests {
 
 		void ExecuteWithMagicWordAndAssert (string executable)
 		{
+			if (!File.Exists (executable))
+				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
+
 			var magicWord = Guid.NewGuid ().ToString ();
 			var env = new Dictionary<string, string> {
 				{ "MAGIC_WORD", magicWord },
