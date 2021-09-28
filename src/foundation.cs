@@ -119,6 +119,11 @@ using NSBezierPath = Foundation.NSObject;
 using NSImage = Foundation.NSObject;
 #endif
 
+#if IOS || WATCH || TVOS
+using NSNotificationSuspensionBehavior = Foundation.NSObject;
+using NSNotificationFlags = Foundation.NSObject;
+#endif
+
 namespace Foundation {
 	delegate void NSFilePresenterReacquirer ([BlockCallback] Action reacquirer);
 }
@@ -10695,9 +10700,8 @@ namespace Foundation
 		NSObject AddObserver ([NullAllowed] string name, [NullAllowed] NSObject obj, [NullAllowed] NSOperationQueue queue, Action<NSNotification> handler);
 	}
 
-#if MONOMAC || __MACCATALYST__
-	[Mac (10, 10)]
-	[MacCatalyst(15, 0)]
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10, 10)][MacCatalyst(15, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistributedLock
@@ -10724,6 +10728,7 @@ namespace Foundation
 		NSDate LockDate { get; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[MacCatalyst(15, 0)]
 	[BaseType (typeof (NSNotificationCenter))]
 	interface NSDistributedNotificationCenter {
@@ -10768,7 +10773,6 @@ namespace Foundation
 		[Field ("NSLocalNotificationCenterType")]
 		NSString NSLocalNotificationCenterType {get;}
 	}
-#endif
 	
 	[BaseType (typeof (NSObject))]
 	interface NSNotificationQueue {
@@ -13815,10 +13819,10 @@ namespace Foundation
 	}
 #endif
 
-#if MONOMAC || __MACCATALYST__
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	[MacCatalyst(15,0)]
+	[NoiOS][NoTV][NoWatch]
 	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
@@ -13841,6 +13845,7 @@ namespace Foundation
 		NSObject EvaluatedReceivers { get; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[MacCatalyst(15,0)]
 	[StrongDictionary ("NSScriptCommandArgumentDescriptionKeys")]
 	partial interface NSScriptCommandArgumentDescription {
@@ -13849,6 +13854,7 @@ namespace Foundation
 		string Optional { get; set; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[MacCatalyst(15,0)]
 	[StrongDictionary ("NSScriptCommandDescriptionDictionaryKeys")]
 	partial interface NSScriptCommandDescriptionDictionary {
@@ -13860,6 +13866,7 @@ namespace Foundation
 		NSMutableDictionary Arguments { get; set; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[MacCatalyst(15,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -13913,7 +13920,6 @@ namespace Foundation
 		[Export ("createCommandInstance")]
 		IntPtr CreateCommandInstancePtr ();
 	}
-#endif // MONOMAC
 
 	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
