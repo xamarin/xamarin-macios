@@ -62,7 +62,6 @@ $(MONO_API_INFO) $(MONO_API_HTML): $(APIDIFF_DIR)/.download-$(MONO_HASH).stamp
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
 
-#1 TJ Steps) we create an xml file describing the current version of our platform assembly (say Xamarin.iOS.dll)
 $(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
@@ -103,7 +102,6 @@ $(APIDIFF_DIR)/temp/dotnet/MacCatalyst/Xamarin.iOS.xml: $(DOTNET_DESTDIR)/Micros
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
 
-#4 TJ Steps) 4. we compare the two xml files (using the mono-api-html tool), which produces an html file with the difference between the two assemblies
 # create diff from api info and reference info
 # note that we create an empty file (the 'touch' command)
 # so that we get a file in all cases (so that we don't have 
@@ -331,7 +329,6 @@ endif
 
 all-local:: $(APIDIFF_DIR)/api-diff.html
 
-#2 TJ Steps) we download the stable version of our platform assemblies
 # Rules to re-create the reference infos from the current stable 'bundle.zip. assemblies
 
 # split the URL in words based on the path separator, and then chose the 6th word (the hash) in the bundle zip filename
@@ -365,7 +362,6 @@ TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-referenc
 MACCATALYST_REFS = $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 DOTNET_REFS = $(foreach file,$(DOTNET_DLL_PATHS),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml)
 
-#3 TJ Steps) we create an xml file describing the stable version of our platform assembly:
 $(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
@@ -524,7 +520,6 @@ endif
 dotnet-markdown: dotnet-ios-markdown dotnet-macos-markdown dotnet-maccatalyst-markdown dotnet-tv-markdown
 dotnet-legacy-markdown: dotnet-legacy-ios-markdown dotnet-legacy-macos-markdown dotnet-legacy-maccatalyst-markdown dotnet-legacy-tv-markdown
 
-#5 TJ Steps) we repeat 4. but ask the mono-api-html tool to produce markdown (.md) instead
 $(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) --md $@
 
@@ -601,21 +596,3 @@ jenkins-api-diff:
 	$(Q) $(CP) -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) $(CP) -R legacy-diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) $(CP) -R iOS-MacCatalyst-diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
-
-test-TJ:
-	-$(MAKE) wrench-api-diff
-	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) -R legacy-diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) -R iOS-MacCatalyst-diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
-
-debug:
-	$(warning   MONO_BUILD is $(MONO_BUILD))
-	$(warning   MONO_API_INFO is $(MONO_API_INFO))
-	$(warning   MONO_API_HTML is $(MONO_API_HTML))
-	$(warning   NEW_REGEX is $(NEW_REGEX))
-	$(warning   ADD_REGEX is $(ADD_REGEX))
-	$(warning   APIDIFF_IGNORE is $(APIDIFF_IGNORE))
-	$(warning   TJDebugA is $(TJDebugA))
