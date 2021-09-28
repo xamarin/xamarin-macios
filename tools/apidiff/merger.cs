@@ -13,7 +13,7 @@ class Merger {
 		return line.Substring (start, end - start);
 	}
 
-	public static void Process (string platform, string path, string os)
+	public static void Process (string platform, string path, string os, string filenameOverride = null)
 	{
 		if (!Directory.Exists (path))
 			throw new DirectoryNotFoundException (path);
@@ -52,7 +52,8 @@ class Merger {
 		}
 
 		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#file-name
-		var filename = $"{os}-{from}-{to}".Replace ('.', '-').ToLowerInvariant () + ".md";
+		var filenameContent = filenameOverride is null ? $"{os}-{from}-{to}" : $"{os}-{filenameOverride}";
+		var filename = filenameContent.Replace ('.', '-').ToLowerInvariant () + ".md";
 		byte[] digest = null;
 		using (var md = SHA256.Create ())
 			digest = md.ComputeHash (Encoding.UTF8.GetBytes (filename));
@@ -91,7 +92,10 @@ class Merger {
 	public static int Main (string [] args)
 	{
 		try {
-			Process (args [0], args [1], args [2]);
+			if (args.Length == 4)
+				Process (args [0], args [1], args [2], args[3]);
+			else
+				Process (args [0], args [1], args [2]);
 			return 0;
 		} catch (Exception e) {
 			Console.WriteLine (e);

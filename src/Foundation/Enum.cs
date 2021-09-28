@@ -25,6 +25,7 @@
 //
 using System;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Foundation  {
 
@@ -1360,5 +1361,31 @@ namespace Foundation  {
 	[Native]
 	public enum NSXpcConnectionOptions : ulong {
 		Privileged = (1 << 12),
+	}
+
+#if !NET
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	public enum FakeTJEnum {
+		FakeNone = 0,
+		FakeOne = 1,
+	}
+
+#if !NET
+	[NoiOS, NoTV, NoMacCatalyst, NoMac, NoWatch]
+#else
+	[SupportedOSPlatform ("ios15.0")]
+	[UnsupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+	public enum FakeTJEnum2 {
+		FakeNone2 = 0,
+		FakeOne2 = 1,
 	}
 }
