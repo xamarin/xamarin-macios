@@ -499,6 +499,7 @@ namespace Foundation  {
 	}
 	
 #if MONOMAC || __MACCATALYST__
+	[MacCatalyst(15, 0)]
 	[Native]
 	public enum NSNotificationSuspensionBehavior : ulong {
 		Drop = 1,
