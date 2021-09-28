@@ -255,7 +255,7 @@ namespace Foundation {
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_release_managed_ref (IntPtr handle, bool user_type);
+		static extern void xamarin_release_managed_ref (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool user_type);
 
 #if NET
 		static void RegisterToggleRefMonoVM (NSObject obj, IntPtr handle, bool isCustomType)
@@ -338,6 +338,7 @@ namespace Foundation {
 		}
 
 		[DllImport ("__Internal")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool xamarin_set_gchandle_with_flags_safe (IntPtr handle, IntPtr gchandle, XamarinGCHandleFlags flags);
 
 		void CreateManagedRef (bool retain)
