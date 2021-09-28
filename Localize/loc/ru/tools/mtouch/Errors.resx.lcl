@@ -3306,19 +3306,25 @@
       </Item>
       <Item ItemId=";MX0183" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Не удалось сопоставить версию iOS {0} с версией macOS для Mac Catalyst]]></Val>
+            <Val><![CDATA[Не удалось сопоставить версию Mac Catalyst {0} с соответствующей версией macOS. Допустимые версии Mac Catalyst: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0184" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Не удалось сопоставить версию macOS {0} с соответствующей версией iOS для Mac Catalyst]]></Val>
+            <Val><![CDATA[Не удалось сопоставить версию macOS {0} с соответствующей версией Mac Catalyst. Допустимые версии macOS: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

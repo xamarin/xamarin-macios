@@ -1693,6 +1693,33 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7082" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Der {0}-Wert in der Datei „Info.plist“ ({1}) stimmt nicht mit dem SupportedOSPlatformVersion-Wert ({2}) in der Projektdatei überein (wenn kein SupportedOSPlatformVersion-Wert in der Projektdatei vorhanden ist, wurde ein Standardwert angenommen). Ändern Sie entweder den Wert in der Datei „Info. plist“, damit er mit dem SupportedOSPlatformVersion-Wert übereinstimmt, oder entfernen Sie den Wert in „Info. plist“ (und fügen Sie der Projektdatei einen SupportedOSPlatformVersion-Wert hinzu, wenn keiner vorhanden ist).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7083" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Alle Schriftartdateien müssen sich im gleichen Verzeichnis im App-Bundle befinden. Die folgenden Schriftartdateien weisen unterschiedliche Zielverzeichnisse im App-Bundle auf:]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7084" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The target directory is {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Das Zielverzeichnis ist {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
