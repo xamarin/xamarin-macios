@@ -12,48 +12,18 @@ namespace AppleSdkSettings {
 
 namespace Xamarin.MacDev.Tasks {
 
-	public abstract class MetalTaskBase {
-
-		protected virtual string OperatingSystem {
-			get {
-				throw new NotImplementedException ();
-			}
-		}
-
-		protected abstract string DevicePlatformBinDir {
-			get;
-		}
-
-		protected string SdkDevPath {
-			get { return ""; }
-		}
-	}
-
-	public abstract class MetalLibTaskBase {
-
-		protected abstract string DevicePlatformBinDir {
-			get;
-		}
-
-		protected string SdkDevPath {
-			get { return ""; }
-		}
-	}
-}
-
-namespace Xamarin.Mac.Tasks {
-
 	public class MetalPoker : Metal {
-
-		public new string DevicePlatformBinDir {
-			get { return base.DevicePlatformBinDir; }
+		public new string GenerateFullPathToTool ()
+		{
+			return base.GenerateFullPathToTool ();
 		}
 	}
 
 	public class MetalLibPoker : MetalLib {
 
-		public new string DevicePlatformBinDir {
-			get { return base.DevicePlatformBinDir; }
+		public new string GenerateFullPathToTool ()
+		{
+			return base.GenerateFullPathToTool ();
 		}
 	}
 
@@ -64,14 +34,16 @@ namespace Xamarin.Mac.Tasks {
 		public void MetalBinPathTest ()
 		{
 			var metalTask = new MetalPoker ();
-			CheckToolBinDir ("metal", metalTask.DevicePlatformBinDir);
+			metalTask.SdkDevPath = string.Empty;
+			CheckToolBinDir ("metal", metalTask.GenerateFullPathToTool ());
 		}
 
 		[Test]
 		public void MetalLibBinPathTest ()
 		{
 			var metalLibTask = new MetalLibPoker ();
-			CheckToolBinDir ("metallib", metalLibTask.DevicePlatformBinDir);
+			metalLibTask.SdkDevPath = string.Empty;
+			CheckToolBinDir ("metallib", metalLibTask.GenerateFullPathToTool ());
 		}
 
 		public void CheckToolBinDir (string taskName, string binDirToCheck)
