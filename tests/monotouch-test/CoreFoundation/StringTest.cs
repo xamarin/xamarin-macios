@@ -35,8 +35,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void Index ()
 		{
-			var str = "Ab";
-			using var nativeStr = new CFString ("Ab");
+			var str = "Ab🤔日ㅁ名";
+			using var nativeStr = new CFString (str);
 			var array = str.ToCharArray ();
 			for (int i = 0; i < array.Length; i++) {
 				Assert.AreEqual (str[i], nativeStr[i], $"{str[i]} != {nativeStr[i]}");
