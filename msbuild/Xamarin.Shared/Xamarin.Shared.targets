@@ -194,6 +194,68 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Touch>
 	</Target>
 
+	<!--
+		Binding projects may include NativeReference items, which makes the 'pack' target want to include a Native.$(AssemblyName).manifest into the NuGet,
+		which obviously fails because we don't create such a file. So let's remove that file.
+
+		Ref: https://github.com/dotnet/msbuild/blob/3a1e456fe227f3e2b190b434578844c31e8bcb4a/src/Tasks/Microsoft.Common.CurrentVersion.targets#L6111-L6118
+		Ref: https://github.com/dotnet/msbuild/issues/4584
+	-->
+	<PropertyGroup>
+		<GenerateNuspecDependsOn>
+			$(GenerateNuspecDependsOn);
+			_RemoveNativeManifestFromPack;
+		</GenerateNuspecDependsOn>
+	</PropertyGroup>
+	<Target Name="_RemoveNativeManifestFromPack">
+		<ItemGroup>
+			<_BuildOutputInPackage Remove="@(_BuildOutputInPackage)" Condition="'%(Filename)%(Extension)' == '$(_DeploymentTargetApplicationManifestFileName)'" />
+		</ItemGroup>
+	</Target>
+
+	<!--
+		Add any binding resource packages to the nupkg
+
+		Ref: https://github.com/dotnet/sdk/issues/14042#issuecomment-716868311
+		Ref: https://github.com/NuGet/Home/issues/10063#issuecomment-713083004
+		Ref: https://github.com/xamarin/xamarin-android/blob/681887ebdbd192ce7ce1cd02221d4939599ba762/src/Xamarin.Android.Build.Tasks/Microsoft.Android.Sdk/targets/Microsoft.Android.Sdk.AndroidLibraries.targets#L86-L99
+	-->
+	<PropertyGroup>
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeBindingResourcesInNuGetPackage</TargetsForTfmSpecificContentInPackage>
+	</PropertyGroup>
+	<Target Name="_IncludeBindingResourcesInNuGetPackage"
+		Condition="'$(IsMacEnabled)' == 'true' And '$(IncludeBuildOutput)' != 'false'"
+	>
+		<PropertyGroup>
+			<_HasOldStyleBindingItems Condition="@(ObjcBindingNativeLibrary->Count()) > 0">true</_HasOldStyleBindingItems>
+		</PropertyGroup>
+		<Error Condition="'$(_HasOldStyleBindingItems)' == 'true'" Text="Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead." />
+
+		<!-- Figure out where to place the binding resources (see references above for more info) -->
+		<GetNuGetShortFolderName
+			TargetFrameworkMoniker="$(TargetFrameworkMoniker)"
+			TargetPlatformMoniker="$(TargetPlatformMoniker)">
+			<Output TaskParameter="NuGetShortFolderName" PropertyName="_NuGetShortFolderName" />
+		</GetNuGetShortFolderName>
+
+		<!-- The binding project may either produce a 'MyBindingProject.resources' directory, or a compressed 'MyBindingProject.resources.zip' version -->
+		<PropertyGroup>
+			<_AppleBindingResourceBasePath>$(TargetDir)$(TargetName).resources</_AppleBindingResourceBasePath>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- Add all the files that might exist in any binding resource packages -->
+			<_AppleBindingResource Include="$(_AppleBindingResourceBasePath)\**\*" PackagePath="lib\$(_NuGetShortFolderName)\$(TargetName).resources" />
+			<!-- Add any compressed files that might exist as well -->
+			<_AppleBindingResource Include="$(_AppleBindingResourceBasePath).zip" PackagePath="lib\$(_NuGetShortFolderName)" Condition="Exists('$(_AppleBindingResourceBasePath).zip')" />
+		</ItemGroup>
+
+		<!-- Add what we found to the NuGet -->
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="@(_AppleBindingResource)" />
+		</ItemGroup>
+	</Target>
+
 	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so nuke via RemoveDir -->
 	<PropertyGroup>
 		<CleanDependsOn>
