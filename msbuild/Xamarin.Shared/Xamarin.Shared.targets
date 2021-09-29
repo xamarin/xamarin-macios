@@ -156,7 +156,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 	
 	<PropertyGroup>
-		<BindingResourcePath>$(ProjectDir)$(OutputPath)$(AssemblyName).resources</BindingResourcePath>
+		<BindingResourcePath>$(OutputPath)$(AssemblyName).resources</BindingResourcePath>
 	</PropertyGroup>
 
 	<Target Name="_CreateBindingResourcePackage" Condition="'$(DesignTimeBuild)' != 'true'"
