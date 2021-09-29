@@ -41,9 +41,9 @@ namespace Xamarin.MacDev.Tasks {
 			} else if (string.Equals (Compress, "auto", StringComparison.OrdinalIgnoreCase)) {
 				compress = ContainsSymlinks (NativeReferences);
 				if (compress)
-					Log.LogMessage (MessageImportance.Low, "Creating a compressed binding resource package because there are symlinks in the input."); // FIXME: localize
+					Log.LogMessage (MessageImportance.Low, MSBStrings.W7085 /* "Creating a compressed binding resource package because there are symlinks in the input." */);
 			} else {
-				Log.LogError ("The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.", Compress); // FIXME: localize
+				Log.LogError (MSBStrings.E7086 /* "The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'." */, Compress);
 			}
 
 			Directory.CreateDirectory (compress ? IntermediateOutputPath : BindingResourcePath);
