@@ -17,8 +17,7 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			SetRuntimeIdentifiers (properties, runtimeIdentifiers);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 
 			DotNet.AssertBuild (project_path, properties);
 

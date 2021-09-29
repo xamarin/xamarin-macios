@@ -2575,12 +2575,26 @@ xamarin_is_native_library (const char *libraryName)
 	if (xamarin_runtime_libraries == NULL)
 		return false;
 
+	size_t libraryNameLength = strlen (libraryName);
+	// The libraries in xamarin_runtime_libraries are extension-less, so we need to
+	// remove any .dylib extension for the library name we're comparing with too.
+	if (libraryNameLength > 6 && strcmp (libraryName + libraryNameLength - 6, ".dylib") == 0)
+		libraryNameLength -= 6;
+
+	bool rv = false;
 	for (int i = 0; xamarin_runtime_libraries [i] != NULL; i++) {
-		if (!strcmp (xamarin_runtime_libraries [i], libraryName))
-			return true;
+		// Check if the start of the current xamarin_runtime_libraries entry matches libraryName
+		if (!strncmp (xamarin_runtime_libraries [i], libraryName, libraryNameLength)) {
+			// The start matches, now check if that's all there is
+			if (xamarin_runtime_libraries [i] [libraryNameLength] == 0) {
+				// If so, we've got a match
+				rv = true;
+				break;
+			}
+		}
 	}
 
-	return false;
+	return rv;
 }
 
 void*

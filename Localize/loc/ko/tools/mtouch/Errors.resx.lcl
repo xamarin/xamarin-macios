@@ -3306,19 +3306,25 @@
       </Item>
       <Item ItemId=";MX0183" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Mac Catalyst용 MacOS 버전에 iOS 버전 {0}을(를) 매핑할 수 없습니다.]]></Val>
+            <Val><![CDATA[Mac Catalyst 버전 {0}을(를) 해당 macOS 버전에 매핑할 수 없습니다. 유효한 Mac Catalyst 버전은 다음과 같습니다. {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0184" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Mac Catalyst의 해당 iOS 버전에 macOS 버전 {0}을(를) 매핑할 수 없습니다.]]></Val>
+            <Val><![CDATA[macOS 버전 {0}을(를) 해당 Mac Catalyst 버전에 매핑할 수 없습니다. 유효한 macOS 버전은 다음과 같습니다. {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

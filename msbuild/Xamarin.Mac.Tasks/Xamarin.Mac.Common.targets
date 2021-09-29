@@ -95,34 +95,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<PropertyGroup>
-		<_CompileTextureAtlasesDependsOn>
-			$(_CompileTextureAtlasesDependsOn);
-			_DetectSdkLocations;
-			_CoreCompileTextureAtlases;
-		</_CompileTextureAtlasesDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
-
-	<Target Name="_CoreCompileTextureAtlases">
-		<TextureAtlas
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(TextureAtlasExe)"
-			ToolPath="$(TextureAtlasPath)"
-			AtlasTextures="@(AtlasTexture)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)">
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-		</TextureAtlas>
-	</Target>
-
-	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;
 			_ComputeTargetFrameworkMoniker;

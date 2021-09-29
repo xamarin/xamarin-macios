@@ -999,6 +999,7 @@ INTENTS_SOURCES = \
 	Intents/INMessageAttributeOptionsResolutionResult.cs \
 	Intents/INMessageAttributeResolutionResult.cs \
 	Intents/INPaymentStatusResolutionResult.cs \
+	Intents/INPerson.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRadioTypeResolutionResult.cs \
 	Intents/INRelativeReferenceResolutionResult.cs \
@@ -2303,27 +2304,27 @@ MACCATALYST_FRAMEWORKS = \
 # Compute the SOURCES variables.
 #
 
-IOS_CORE_SOURCES      := $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))     $(SHARED_CORE_SOURCES)
-IOS_API_SOURCES       := $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))      $(SHARED_API_SOURCES)
-IOS_APIS              := $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                  $(IOS_API_SOURCES)
-IOS_SOURCES           := $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))          $(SHARED_SOURCES) $(IOS_CORE_SOURCES)
+IOS_CORE_SOURCES      := $(sort $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))     $(SHARED_CORE_SOURCES))
+IOS_API_SOURCES       := $(sort $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))      $(SHARED_API_SOURCES))
+IOS_APIS              := $(sort $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                  $(IOS_API_SOURCES))
+IOS_SOURCES           := $(sort $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))          $(SHARED_SOURCES) $(IOS_CORE_SOURCES))
 
-MAC_CORE_SOURCES      := $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))     $(SHARED_CORE_SOURCES)
-MAC_API_SOURCES       := $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))      $(SHARED_API_SOURCES)
-MAC_APIS              := $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                  $(MAC_API_SOURCES)
-MAC_SOURCES           := $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))          $(SHARED_SOURCES) $(MAC_CORE_SOURCES)
+MAC_CORE_SOURCES      := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))     $(SHARED_CORE_SOURCES))
+MAC_API_SOURCES       := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))      $(SHARED_API_SOURCES))
+MAC_APIS              := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                  $(MAC_API_SOURCES))
+MAC_SOURCES           := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))          $(SHARED_SOURCES) $(MAC_CORE_SOURCES))
 
-WATCHOS_CORE_SOURCES  := $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES)) $(SHARED_CORE_SOURCES)
-WATCHOS_API_SOURCES   := $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))  $(SHARED_API_SOURCES)
-WATCHOS_APIS          := $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)              $(WATCHOS_API_SOURCES)
-WATCHOS_SOURCES       := $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))      $(SHARED_SOURCES) $(WATCHOS_CORE_SOURCES)
+WATCHOS_CORE_SOURCES  := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES)) $(SHARED_CORE_SOURCES))
+WATCHOS_API_SOURCES   := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))  $(SHARED_API_SOURCES))
+WATCHOS_APIS          := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)              $(WATCHOS_API_SOURCES))
+WATCHOS_SOURCES       := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))      $(SHARED_SOURCES) $(WATCHOS_CORE_SOURCES))
 
-TVOS_CORE_SOURCES     := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))    $(SHARED_CORE_SOURCES)
-TVOS_API_SOURCES      := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))     $(SHARED_API_SOURCES)
-TVOS_APIS             := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                 $(TVOS_API_SOURCES)
-TVOS_SOURCES          := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))         $(SHARED_SOURCES) $(TVOS_CORE_SOURCES)
+TVOS_CORE_SOURCES     := $(sort $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))    $(SHARED_CORE_SOURCES))
+TVOS_API_SOURCES      := $(sort $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))     $(SHARED_API_SOURCES))
+TVOS_APIS             := $(sort $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                 $(TVOS_API_SOURCES))
+TVOS_SOURCES          := $(sort $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))         $(SHARED_SOURCES) $(TVOS_CORE_SOURCES))
 
-MACCATALYST_CORE_SOURCES := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES)) $(SHARED_CORE_SOURCES)
-MACCATALYST_API_SOURCES  := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))  $(SHARED_API_SOURCES)
-MACCATALYST_APIS         := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)              $(MACCATALYST_API_SOURCES)
-MACCATALYST_SOURCES      := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))      $(SHARED_SOURCES) $(MACCATALYST_CORE_SOURCES)
+MACCATALYST_CORE_SOURCES := $(sort $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES)) $(SHARED_CORE_SOURCES))
+MACCATALYST_API_SOURCES  := $(sort $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))  $(SHARED_API_SOURCES))
+MACCATALYST_APIS         := $(sort $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)              $(MACCATALYST_API_SOURCES))
+MACCATALYST_SOURCES      := $(sort $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))      $(SHARED_SOURCES) $(MACCATALYST_CORE_SOURCES))
