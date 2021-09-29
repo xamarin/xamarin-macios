@@ -220,8 +220,10 @@ namespace Xamarin.Utils
 			if (!Directory.Exists (directoryOrFile))
 				return false;
 
-			foreach (var entry in Directory.EnumerateFileSystemEntries (directoryOrFile))
-				return IsSymlinkOrContainsSymlinks (entry);
+			foreach (var entry in Directory.EnumerateFileSystemEntries (directoryOrFile)) {
+				if (IsSymlinkOrContainsSymlinks (entry))
+					return true;
+			}
 
 			return false;
 		}
