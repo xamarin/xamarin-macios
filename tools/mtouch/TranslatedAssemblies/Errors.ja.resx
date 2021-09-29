@@ -742,10 +742,10 @@
 		<value>現在のプラットフォーム ({2}) では使用できないため、({1} のモジュール参照で参照されている) フレームワーク {0} とリンクしていません。</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>iOS バージョン {0} を Mac Catalyst の macOS バージョンにマップできません</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>macOS バージョン {0} を Mac Catalyst の対応する iOS バージョンにマップできません</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>CoreCLR を使用している場合、オプション '{0}' は値 '{1}' を取得できません。</value>

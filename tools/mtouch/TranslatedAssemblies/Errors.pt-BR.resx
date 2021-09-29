@@ -742,10 +742,10 @@
 		<value>Sem vinculação com a estrutura {0} (referenciado por uma referência de módulo em {1}) porque não está disponível na plataforma atual ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Não foi possível mapear a versão {0} do iOS para uma versão macOS para Mac Catalyst</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Não foi possível mapear a versão {0} do macOS para uma versão correspondente do iOS para Mac Catalyst</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>A opção '{0}' não pode assumir o valor '{1}' ao usar CoreCLR.</value>

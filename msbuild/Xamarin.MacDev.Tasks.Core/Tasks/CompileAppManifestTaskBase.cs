@@ -30,7 +30,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppBundleName { get; set; }
 
-		public string AppManifest { get; set; }
+		// This must be an ITaskItem to copy the file to Windows for remote builds.
+		public ITaskItem AppManifest { get; set; }
 
 		[Required]
 		public string AssemblyName { get; set; }
@@ -93,11 +94,12 @@ namespace Xamarin.MacDev.Tasks
 		{
 			PDictionary plist = null;
 
-			if (File.Exists (AppManifest)) {
+			var appManifest = AppManifest?.ItemSpec;
+			if (File.Exists (appManifest)) {
 				try {
-					plist = PDictionary.FromFile (AppManifest);
+					plist = PDictionary.FromFile (appManifest);
 				} catch (Exception ex) {
-					LogAppManifestError (MSBStrings.E0010, AppManifest, ex.Message);
+					LogAppManifestError (MSBStrings.E0010, appManifest, ex.Message);
 					return false;
 				}
 			} else {
@@ -238,11 +240,11 @@ namespace Xamarin.MacDev.Tasks
 					minimumOSVersion = SdkVersion;
 				}
 			} else if (!IAppleSdkVersion_Extensions.TryParse (minimumOSVersionInManifest, out var _)) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0011, minimumOSVersionInManifest);
+				LogAppManifestError (MSBStrings.E0011, minimumOSVersionInManifest);
 				return false;
 			} else if (!string.IsNullOrEmpty (convertedSupportedOSPlatformVersion) && convertedSupportedOSPlatformVersion != minimumOSVersionInManifest) {
 				// SupportedOSPlatformVersion and the value in the Info.plist are not the same. This is an error.
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E7082, minimumVersionKey, minimumOSVersionInManifest, SupportedOSPlatformVersion);
+				LogAppManifestError (MSBStrings.E7082, minimumVersionKey, minimumOSVersionInManifest, SupportedOSPlatformVersion);
 				return false;
 			} else {
 				minimumOSVersion = minimumOSVersionInManifest;
@@ -259,13 +261,22 @@ namespace Xamarin.MacDev.Tasks
 		protected void LogAppManifestError (string format, params object[] args)
 		{
 			// Log an error linking to the Info.plist file
-			Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, format, args);
+			if (AppManifest != null) {
+				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, format, args);
+			} else {
+				Log.LogError (format, args);
+			}
+
 		}
 
 		protected void LogAppManifestWarning (string format, params object[] args)
 		{
 			// Log a warning linking to the Info.plist file
-			Log.LogWarning (null, null, null, AppManifest, 0, 0, 0, 0, format, args);
+			if (AppManifest != null) {
+				Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, format, args);
+			} else {
+				Log.LogWarning (format, args);
+			}
 		}
 
 		protected void SetValue (PDictionary dict, string key, string value)

@@ -4,9 +4,7 @@ using System.IO;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
-using Xamarin.MacDev.Tasks;
-
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public abstract class OptimizeImageTaskBase : XamarinToolTask
 	{

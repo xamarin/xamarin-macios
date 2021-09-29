@@ -711,10 +711,10 @@
         <value>Le chemin d'archive fourni ne provient pas d'un fichier d'archive valide (.xcarchive). Chemin d'archive : « {0} »</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Impossible de mapper la version iOS {0} à une version correspondante</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Impossible de faire correspondre la version iOS{0} à la version macOS correspondante</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Impossible de résoudre les adresses IP des hôtes pour les paramètres du débogueur Wi-Fi.

@@ -742,10 +742,10 @@
 		<value>현재 플랫폼({2})에서 사용할 수 없기 때문에 {1}의 모듈 참조에서 {0} 프레임워크와 연결할 수 없습니다.</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Mac Catalyst용 MacOS 버전에 iOS 버전 {0}을(를) 매핑할 수 없습니다.</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Mac Catalyst의 해당 iOS 버전에 macOS 버전 {0}을(를) 매핑할 수 없습니다.</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>'{0}' 옵션은 CoreCLR을 사용할 때 '{1}' 값을 가져올 수 없습니다.</value>

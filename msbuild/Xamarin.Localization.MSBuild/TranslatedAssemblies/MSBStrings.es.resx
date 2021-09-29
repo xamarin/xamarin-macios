@@ -711,10 +711,10 @@
         <value>La ruta de acceso de archivo proporcionada no pertenece a un archivo de almacenamiento (.xcarchive) válido. Ruta de acceso de archivo: "{0}"</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>No se pudo asignar la versión de macOS {0} a una versión de iOS correspondiente</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>No se pudo asignar la versión de iOS {0} a una versión de macOS correspondiente</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>No se pudieron resolver las direcciones IP del host para la configuración del depurador Wi-Fi.
