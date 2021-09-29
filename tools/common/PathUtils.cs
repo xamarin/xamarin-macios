@@ -211,5 +211,19 @@ namespace Xamarin.Utils
 			const int S_IFLNK = 40960;
 			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
+
+		public static bool IsSymlinkOrContainsSymlinks (string directoryOrFile)
+		{
+			if (IsSymlink (directoryOrFile))
+				return true;
+
+			if (!Directory.Exists (directoryOrFile))
+				return false;
+
+			foreach (var entry in Directory.EnumerateFileSystemEntries (directoryOrFile))
+				return IsSymlinkOrContainsSymlinks (entry);
+
+			return false;
+		}
 	}
 }
