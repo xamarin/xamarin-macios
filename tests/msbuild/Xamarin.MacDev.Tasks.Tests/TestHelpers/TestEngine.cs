@@ -27,7 +27,7 @@ namespace Xamarin.iOS.Tasks
 			throw new NotImplementedException ();
 		}
 
-		bool Verbose => true; // change to true while debugging output
+		bool Verbose => false; // change to true while debugging output
 
 		public void LogCustomEvent (CustomBuildEventArgs e)
 		{
