@@ -1931,6 +1931,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The value &apos;{0}&apos; is invalid for the Compress property. Valid values: &apos;true&apos;, &apos;false&apos; or &apos;auto&apos;..
+        /// </summary>
+        public static string E7086 {
+            get {
+                return ResourceManager.GetString("E7086", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {
@@ -2526,6 +2535,15 @@ namespace Xamarin.Localization.MSBuild {
         public static string W0176 {
             get {
                 return ResourceManager.GetString("W0176", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating a compressed binding resource package because there are symlinks in the input..
+        /// </summary>
+        public static string W7085 {
+            get {
+                return ResourceManager.GetString("W7085", resourceCulture);
             }
         }
     }
