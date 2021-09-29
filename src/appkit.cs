@@ -19460,13 +19460,15 @@ namespace AppKit {
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
 
-		[MacCatalyst (15,0)][NoMac]
-		[Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier")]
-		NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
+		// https://github.com/xamarin/xamarin-macios/issues/12871
+		// [MacCatalyst (14,0)][NoMac]
+		// [Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier")]
+		// NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
 
-		[MacCatalyst (15,0)][NoMac]
-		[Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
-		NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
+		// https://github.com/xamarin/xamarin-macios/issues/12871
+		// [MacCatalyst (14,0)][NoMac]
+		// [Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
+		// NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
 	}
 
 	[MacCatalyst (13, 0)]
