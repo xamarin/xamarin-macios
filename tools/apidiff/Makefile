@@ -491,10 +491,13 @@ dotnet-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/MacCatalyst/X
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Dotnet $(CURDIR)/diff/dotnet/MacCatalyst/ Dotnet-MacCatalyst stable-new
 dotnet-legacy-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/legacy-diff/MacCatalyst/Xamarin.MacCatalyst.md
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Stable.Legacy $(CURDIR)/legacy-diff/MacCatalyst/ MacCatalyst stable-legacy
+dotnet-iOS-MacCatalyst-markdown: merger.exe $(APIDIFF_DIR)/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(CURDIR)/iOS-MacCatalyst-diff/ iOS MacCatalyst
 else
 maccat-markdown: ; @true
 dotnet-maccatalyst-markdown: ; @true
 dotnet-legacy-maccatalyst-markdown: ; @true
+dotnet-iOS-MacCatalyst-markdown: ; @true
 endif
 
 ifdef INCLUDE_MAC
@@ -510,12 +513,6 @@ dotnet-macos-markdown: ; @true
 dotnet-legacy-macos-markdown: ; @true
 endif
 
-ifdef INCLUDE_MACCATALYST
-dotnet-iOS-MacCatalyst-markdown: merger.exe $(APIDIFF_DIR)/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(CURDIR)/iOS-MacCatalyst-diff/ iOS MacCatalyst
-else
-dotnet-iOS-MacCatalyst-markdown: ; @true
-endif
 
 dotnet-markdown: dotnet-ios-markdown dotnet-macos-markdown dotnet-maccatalyst-markdown dotnet-tv-markdown
 dotnet-legacy-markdown: dotnet-legacy-ios-markdown dotnet-legacy-macos-markdown dotnet-legacy-maccatalyst-markdown dotnet-legacy-tv-markdown
