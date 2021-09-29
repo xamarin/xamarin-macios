@@ -2277,7 +2277,7 @@ namespace AppKit {
 	}
 
 	// FileType 4cc values to use with NSFileTypeForHFSTypeCode.
-	[NoMacCatalyst]
+	[MacCatalyst(15, 0)]
 	public enum HfsTypeCode : uint
 	{
 		/* Generic Finder icons */
