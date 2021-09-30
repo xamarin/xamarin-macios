@@ -1,3 +1,4 @@
+#if __IOS__ || __MACOS__
 using Foundation;
 using Metal;
 
@@ -7,7 +8,7 @@ namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MtlRasterizationRateMapDescriptorTest {
+	public class MTLRasterizationRateMapDescriptorTest {
 		MTLSize size;
 		MTLRasterizationRateMapDescriptor descriptor = null;
 
@@ -62,3 +63,4 @@ namespace MonoTouchFixtures.Metal {
 			});
 	}
 }
+#endif

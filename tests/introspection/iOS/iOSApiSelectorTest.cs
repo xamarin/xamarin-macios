@@ -111,7 +111,6 @@ namespace Introspection {
 			case "MTLTileRenderPipelineDescriptor":
 			case "MTLRasterizationRateLayerDescriptor":
 			case "MTLRasterizationRateMapDescriptor":
-			case "MTLHeapDescriptor":
 				return Runtime.Arch == Arch.SIMULATOR;
 #if __WATCHOS__
 				// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
