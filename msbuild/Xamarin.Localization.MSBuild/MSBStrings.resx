@@ -1338,4 +1338,9 @@
         <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
         <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
     </data>
+
+    <data name="W7087" xml:space="preserve">
+        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
 </root>

@@ -2546,5 +2546,14 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("W7085", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected a &apos;manifest&apos; file in the directory {0}..
+        /// </summary>
+        public static string W7087 {
+            get {
+                return ResourceManager.GetString("W7087", resourceCulture);
+            }
+        }
     }
 }
