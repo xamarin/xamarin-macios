@@ -164,7 +164,7 @@ namespace Xamarin.Bundler {
 			if (!Directory.Exists (resourceBundlePath)) {
 				var zipPath = resourceBundlePath + ".zip";
 				if (File.Exists (zipPath)) {
-					string path = Path.Combine (App.Cache.Location, Path.GetFileName (resourceBundlePath));
+					var path = Path.Combine (App.Cache.Location, Path.GetFileName (resourceBundlePath));
 					if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
 						throw ErrorHelper.CreateError (1306, Errors.MX1306 /* Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command. */, zipPath);
 					resourceBundlePath = path;
