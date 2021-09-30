@@ -87,6 +87,7 @@ steps:
   env:
     BUILD_REVISION: 'jenkins'
   continueOnError: true
+  timeoutInMinutes: 60
 
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain

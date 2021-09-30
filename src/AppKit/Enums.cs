@@ -1990,13 +1990,13 @@ namespace AppKit {
 		ApplicationOnlyMask = 1
 	}
 
-	[NoMacCatalyst]
+	[MacCatalyst (13,1)]
 	[Native]
 	public enum NSCollectionViewDropOperation : long {
 		On = 0, Before = 1
 	}
 
-	[NoMacCatalyst]
+	[MacCatalyst (13,1)]
 	[Mac (10,11)]
 	[Native]
 	public enum NSCollectionViewItemHighlightState : long
@@ -2007,7 +2007,7 @@ namespace AppKit {
 		AsDropTarget = 3
 	}
 
-	[NoMacCatalyst]
+	[MacCatalyst (13,0)]
 	[Mac (10,11)] // Not marked 10.11 in the headers, but doesn't exist in the 10.10 headers
 	[Native]
 	[Flags]
@@ -2026,7 +2026,7 @@ namespace AppKit {
 		NearestVerticalEdge = 1 << 8
 	}
 
-	[NoMacCatalyst]
+	[MacCatalyst (13,1)]
 	[Mac (10,11)]
 	[Native]
 	public enum NSCollectionElementCategory : long
@@ -2049,7 +2049,7 @@ namespace AppKit {
 		None
 	}
 
-	[NoMacCatalyst]
+	[MacCatalyst (13,1)]
 	[Mac (10,11)]
 	[Native]
 	public enum NSCollectionViewScrollDirection : long

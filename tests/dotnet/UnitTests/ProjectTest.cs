@@ -603,9 +603,12 @@ namespace Xamarin.Tests {
 		}
 
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")] // https://github.com/xamarin/xamarin-macios/issues/12410
 		public void AppWithResources (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "AppWithResources";
@@ -619,7 +622,9 @@ namespace Xamarin.Tests {
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
-			string fontDirectory = GetResourcesDirectory (platform, appPath);
+			var resourcesDirectory = GetResourcesDirectory (platform, appPath);
+
+			var fontDirectory = resourcesDirectory;
 			var fontAFile = Path.Combine (fontDirectory, "A.ttc");
 			var fontBFile = Path.Combine (fontDirectory, "B.otf");
 			var fontCFile = Path.Combine (fontDirectory, "C.ttf");
@@ -645,6 +650,32 @@ namespace Xamarin.Tests {
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
+
+			var assetsCar = Path.Combine (resourcesDirectory, "Assets.car");
+			Assert.That (assetsCar, Does.Exist, "Assets.car");
+
+			var mainStoryboard = Path.Combine (resourcesDirectory, "Main.storyboardc");
+			Assert.That (mainStoryboard, Does.Exist, "Main.storyboardc");
+
+			var scnAssetsDir = Path.Combine (resourcesDirectory, "art.scnassets");
+			Assert.That (Path.Combine (scnAssetsDir, "scene.scn"), Does.Exist, "scene.scn");
+			Assert.That (Path.Combine (scnAssetsDir, "texture.png"), Does.Exist, "texture.png");
+
+			var colladaScene = Path.Combine (resourcesDirectory, "scene.dae");
+			Assert.That (colladaScene, Does.Exist, "Collada - scene.dae");
+
+			var atlasTexture = Path.Combine (resourcesDirectory, "Archer_Attack.atlasc", "Archer_Attack.plist");
+			Assert.That (atlasTexture, Does.Exist, "AtlasTexture - Archer_Attack");
+
+			var mlModel = Path.Combine (resourcesDirectory, "SqueezeNet.mlmodelc");
+			Assert.That (mlModel, Does.Exist, "CoreMLModel");
+
+			var arm64txt = Path.Combine (resourcesDirectory, "arm64.txt");
+			var armtxt = Path.Combine (resourcesDirectory, "arm.txt");
+			var x64txt = Path.Combine (resourcesDirectory, "x64.txt");
+			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm64")), File.Exists (arm64txt), "arm64.txt");
+			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm")), File.Exists (armtxt), "arm.txt");
+			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
