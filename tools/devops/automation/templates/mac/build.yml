@@ -112,7 +112,7 @@ steps:
     Dir $(Build.SourcesDirectory)/artifacts
     $json = Get-Content '$(Build.SourcesDirectory)/artifacts/pkg-info/artifacts.json' | Out-String | ConvertFrom-Json
     foreach ($i in $json) {
-      if ($i.tag -like "xamarin-mac*" -and -not ($i.url -like "*notarized*")) {
+      if ($i.url -match ".*/xamarin.mac-[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*[.]pkg$" -and -not ($i.url -like "*notarized*")) {
         $url = $i.url
         Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$url"
         break
