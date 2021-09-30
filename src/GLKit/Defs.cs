@@ -147,6 +147,7 @@ namespace GLKit {
 	public struct GLKVertexAttributeParameters {
 		public uint Type;
 		public uint Size;
+		[MarshalAs (UnmanagedType.I1)]
 		public bool Normalized;
 
 #if !COREBUILD

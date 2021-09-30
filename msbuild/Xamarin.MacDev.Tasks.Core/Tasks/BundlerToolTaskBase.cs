@@ -121,40 +121,5 @@ namespace Xamarin.MacDev.Tasks {
 
 			return args;
 		}
-
-		// Creates a response file for the given arguments, and returns the command line
-		// with the response file and any arguments that can't go into the response file.
-		protected string CreateResponseFile (CommandLineArgumentBuilder arguments, IList<string> nonResponseArguments)
-		{
-			// Generate a response file
-			var responseFile = Path.GetFullPath (ResponseFilePath);
-
-			if (File.Exists (responseFile))
-				File.Delete (responseFile);
-
-			try {
-				using (var fs = File.Create (responseFile)) {
-					using (var writer = new StreamWriter (fs))
-						writer.Write (arguments);
-				}
-			} catch (Exception ex) {
-				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
-			}
-
-			// Some arguments can not safely go in the response file and are 
-			// added separately. They must go _after_ the response file
-			// as they may override options passed in the response file
-			var actualArgs = new CommandLineArgumentBuilder ();
-
-			actualArgs.AddQuoted ($"@{responseFile}");
-
-			if (nonResponseArguments != null) {
-				foreach (var arg in nonResponseArguments)
-					actualArgs.AddQuoted (arg);
-			}
-
-			// Generate the command line
-			return actualArgs.ToString ();
-		}
 	}
 }

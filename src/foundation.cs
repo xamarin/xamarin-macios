@@ -119,6 +119,11 @@ using NSBezierPath = Foundation.NSObject;
 using NSImage = Foundation.NSObject;
 #endif
 
+#if IOS || WATCH || TVOS
+using NSNotificationSuspensionBehavior = Foundation.NSObject;
+using NSNotificationFlags = Foundation.NSObject;
+#endif
+
 namespace Foundation {
 	delegate void NSFilePresenterReacquirer ([BlockCallback] Action reacquirer);
 }
@@ -5420,7 +5425,7 @@ namespace Foundation
 
 		// From NSUserActivity (IntentsAdditions)
 
-		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Watch (5,0), NoTV, Mac (12,0), iOS (12,0)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
 		string SuggestedInvocationPhrase {
 			// This _simply_ ensure that the Intents namespace (via the enum) will be present which,
@@ -10695,8 +10700,8 @@ namespace Foundation
 		NSObject AddObserver ([NullAllowed] string name, [NullAllowed] NSObject obj, [NullAllowed] NSOperationQueue queue, Action<NSNotification> handler);
 	}
 
-#if MONOMAC
-	[Mac (10, 10)]
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10, 10)][MacCatalyst(15, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistributedLock
@@ -10723,6 +10728,8 @@ namespace Foundation
 		NSDate LockDate { get; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
+	[MacCatalyst(15, 0)]
 	[BaseType (typeof (NSNotificationCenter))]
 	interface NSDistributedNotificationCenter {
 		[Static]
@@ -10766,7 +10773,6 @@ namespace Foundation
 		[Field ("NSLocalNotificationCenterType")]
 		NSString NSLocalNotificationCenterType {get;}
 	}
-#endif
 	
 	[BaseType (typeof (NSObject))]
 	interface NSNotificationQueue {
@@ -11719,9 +11725,9 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	[NoMacCatalyst]
+	[MacCatalyst(15, 0)]
 	interface NSPortMessage {
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[DesignatedInitializer]
 		[Export ("initWithSendPort:receivePort:components:")]
 		IntPtr Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
@@ -13763,6 +13769,7 @@ namespace Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
+	[NoMacCatalyst]
 	partial interface NSHost {
 
 		[Static, Internal, Export ("currentHost")]
@@ -13775,7 +13782,7 @@ namespace Foundation
 		NSHost _FromAddress (string address);
 
 		[Export ("isEqualToHost:")]
-		bool Equals (NSHost host);
+		bool Equals ([NullAllowed] NSHost host);
 
 		[Export ("name")]
 		string Name { get; }
@@ -13810,9 +13817,12 @@ namespace Foundation
 		void FlushHostCache ();
 		*/
 	}
+#endif
 
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
+	[MacCatalyst(15,0)]
+	[NoiOS][NoTV][NoWatch]
 	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
@@ -13835,6 +13845,8 @@ namespace Foundation
 		NSObject EvaluatedReceivers { get; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
+	[MacCatalyst(15,0)]
 	[StrongDictionary ("NSScriptCommandArgumentDescriptionKeys")]
 	partial interface NSScriptCommandArgumentDescription {
 		string AppleEventCode { get; set; }
@@ -13842,6 +13854,8 @@ namespace Foundation
 		string Optional { get; set; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
+	[MacCatalyst(15,0)]
 	[StrongDictionary ("NSScriptCommandDescriptionDictionaryKeys")]
 	partial interface NSScriptCommandDescriptionDictionary {
 		string CommandClass { get; set; } 
@@ -13852,6 +13866,8 @@ namespace Foundation
 		NSMutableDictionary Arguments { get; set; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
+	[MacCatalyst(15,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSScriptCommandDescription : NSCoding {
@@ -13904,7 +13920,6 @@ namespace Foundation
 		[Export ("createCommandInstance")]
 		IntPtr CreateCommandInstancePtr ();
 	}
-#endif // MONOMAC
 
 	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]

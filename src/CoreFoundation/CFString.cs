@@ -219,6 +219,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.U2)]
 		extern static char CFStringGetCharacterAtIndex (IntPtr handle, nint p);
 		
 		public char this [nint p] {

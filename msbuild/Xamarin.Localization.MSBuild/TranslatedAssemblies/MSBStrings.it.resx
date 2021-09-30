@@ -711,10 +711,10 @@
         <value>Il percorso dell'archivio specificato non è un file di archivio valido (estensione xcarchive). Percorso dell'archivio: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Non è stato possibile eseguire il mapping della versione macOS {0} a una versione di iOS corrispondente</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.
@@ -1047,7 +1047,7 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>Il compilatore AOT '{0}' non esiste.</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
@@ -1059,6 +1059,16 @@
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
             {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
 </root>
