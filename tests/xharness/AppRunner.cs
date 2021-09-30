@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.CLI;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.Common.Utilities;
@@ -366,8 +367,8 @@ namespace Xharness {
 
 				MainLog.WriteLine ("Starting test run");
 
-				await testReporter.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
+				var testRunResult = await processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken);
+				await testReporter.CollectSimulatorResult (testRunResult);
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -406,13 +407,13 @@ namespace Xharness {
 
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
 					var aggregatedLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
-					Task<ProcessExecutionResult> runTestTask = processManager.ExecuteCommandAsync (
+					ProcessExecutionResult runTestResults = await processManager.ExecuteCommandAsync (
 						args,
 						aggregatedLog,
 						testReporterTimeout,
 						cancellationToken: testReporter.CancellationToken);
 
-					await testReporter.CollectDeviceResult (runTestTask);
+					await testReporter.CollectDeviceResult (runTestResults);
 				} finally {
 					deviceLogCapturer.StopCapture ();
 					deviceSystemLog.Dispose ();
