@@ -4,8 +4,7 @@ include $(TOP)/mk/colors.mk
 
 unexport MSBUILD_EXE_PATH
 
-BINLOG_TIMESTAMP:=unstamped
-#$(shell date +%Y-%m-%d--%H:%M:%S)
+BINLOG_TIMESTAMP:=$(shell date +%Y-%m-%d-%H%M%S)
 
 TESTNAME:=$(notdir $(shell dirname "$(shell dirname "$(CURDIR)")"))
 
