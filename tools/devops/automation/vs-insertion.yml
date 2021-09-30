@@ -1,0 +1,35 @@
+# YAML pipeline use to create the vs inseuse to create the vs insertionn
+
+trigger: none
+pr: none
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: false  # no need
+
+variables:
+- group: xamops-azdev-secrets
+- group: Xamarin-Secrets
+- group: Xamarin Release
+- name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
+  value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
+- name: AzDoBuildAccess.Token
+  value: $(pat--xamarinc--build-access)
+- name: system.debug
+  value: true
+
+
+jobs:
+- job: publish_results
+  displayName: Create VS Insertion
+  pool:
+    vmImage: windows-latest
+  workspace:
+    clean: all
+
+
+  steps:
+  - checkout: self
+    persistCredentials: true
