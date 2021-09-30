@@ -5594,11 +5594,12 @@ namespace Metal {
 		[NullAllowed, Export ("buffer", ArgumentSemantic.Retain)]
 		IMTLBuffer Buffer { get; set; }
 
-		[Export ("offset")] nuint Offset { get; set; }
+		[Export ("offset")]
+		nuint Offset { get; set; }
 
 		[Static]
 		[Export ("data")]
-		MTLMotionKeyframeData Data ();
+		MTLMotionKeyframeData Create ();
 	}
 
 	[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch]
@@ -5690,7 +5691,7 @@ namespace Metal {
 
 		[Static]
 		[Export ("descriptor")]
-		MTLAccelerationStructureMotionTriangleGeometryDescriptor Descriptor ();
+		MTLAccelerationStructureMotionTriangleGeometryDescriptor Create ();
 	}
 
 	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15, 0), NoWatch]
@@ -5708,6 +5709,6 @@ namespace Metal {
 
 		[Static]
 		[Export ("descriptor")]
-		MTLAccelerationStructureMotionBoundingBoxGeometryDescriptor Descriptor ();
+		MTLAccelerationStructureMotionBoundingBoxGeometryDescriptor Create ();
 	}
 }
