@@ -21,10 +21,13 @@ namespace MonoTouchFixtures.Metal {
 			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 		[Test]
 		public void GetAllDevicesTest ()
 		{
+#if __MACCATALYST__
+			TestRuntime.AssertXcodeVersion (13, 0);
+#endif 
 			NSObject refObj = new NSObject();
 			var devices = MTLDevice.GetAllDevices(ref refObj, (IMTLDevice device, NSString notifyName) => { });
 
