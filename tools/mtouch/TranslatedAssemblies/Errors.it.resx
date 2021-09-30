@@ -742,10 +742,10 @@
 		<value>Non collegato con il framework {0} (riferimento del modulo in {1}) poiché non è disponibile nella piattaforma corrente ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Non è stato possibile eseguire il mapping della versione iOS {0} alla versione di macOS per Mac Catalyst</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Non è stato possibile eseguire il mapping della versione di macOS {0} a una versione di iOS corrispondente per Mac Catalyst</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>Quando si usa CoreCLR, l'opzione '{0}' non può accettare il valore '{1}'.</value>

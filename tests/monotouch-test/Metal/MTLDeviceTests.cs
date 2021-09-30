@@ -36,6 +36,18 @@ namespace MonoTouchFixtures.Metal {
 				MTLDevice.RemoveObserver (refObj);
 			});
 		}
+
+		[Test]
+		public void GetAllDevicesTestOutObserver ()
+		{
+			var devices = MTLDevice.GetAllDevices ((IMTLDevice device, NSString notifyName) => { }, out var observer);
+
+			// It's possible to run on a system that does not support metal,
+			// in which case we'll get an empty array of devices.
+			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
+
+			MTLDevice.RemoveObserver (observer);
+		}
 #endif
 
 		[Test]

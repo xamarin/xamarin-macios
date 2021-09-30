@@ -711,10 +711,10 @@
         <value>提供的存档路径并非来自有效的存档文件(.xcarchive)。存档路径:“{0}”</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>无法将 macOS 版本 {0} 映射到相应 iOS 版本</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>无法将 iOS 版本的 {0} 映射到相应的 macOS 版本</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>无法解析 WiFi 调试程序设置的主机 IP。

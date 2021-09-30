@@ -711,10 +711,10 @@
         <value>Il percorso dell'archivio specificato non è un file di archivio valido (estensione xcarchive). Percorso dell'archivio: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Non è stato possibile eseguire il mapping della versione macOS {0} a una versione di iOS corrispondente</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Non è stato possibile eseguire il mapping della versione iOS {0} a una versione di macOS corrispondente</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.

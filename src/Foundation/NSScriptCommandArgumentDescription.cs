@@ -5,7 +5,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 	// The kyes are not found in any of the public headers from apple. That is the reason
 	// to use this technique.

@@ -192,11 +192,13 @@
 
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_CompileEntitlements;
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
+			_CopyResourcesToBundle;
 			_CreateMergedAppBundle;
 			Codesign;
 			CreateIpa;
@@ -251,8 +253,10 @@
 	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
 	<Target Name="_ComputePublishTrimmed">
 		<PropertyGroup>
-			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(RuntimeIdentifier)' != '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+			<_MustTrim Condition="'$(_MustTrim)' == '' And '$(RuntimeIdentifier)' != '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</_MustTrim>
+			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_MustTrim)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
+		<Error Condition="'$(_MustTrim)' == 'true' And '$(PublishTrimmed)' != 'true'" Text="$(_PlatformName) projects must build with PublishTrimmed=true. Current value: $(PublishTrimmed)." />
 	</Target>
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
@@ -289,11 +293,26 @@
 		<!-- Show an error if we're mixing simulator + device RIDs in a single build -->
 		<Error Condition="@(_RuntimeIdentifierDistinctPlatforms->Count()) > 1" Text="Building for all the runtime identifiers '$(RuntimeIdentifiers)' at the same time isn't possible, because they represent different platform variations." />
 
+		<PropertyGroup>
+			<_RidSpecificProperties>
+				_IsMultiRidBuild=true;
+				RuntimeIdentifiers=;
+				_ProcessedBundleResourcesPath=$(_ProcessedBundleResourcesPath);
+				_ProcessedContentPath=$(_ProcessedContentPath);
+				_ProcessedImageAssetsPath=$(_ProcessedImageAssetsPath);
+				_ProcessedInterfaceDefinitionsPath=$(_ProcessedInterfaceDefinitionsPath);
+				_ProcessedSceneKitAssetsPath=$(_ProcessedSceneKitAssetsPath);
+				_ProcessedColladaAssetsPath=$(_ProcessedColladaAssetsPath);
+				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
+				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
+			</_RidSpecificProperties>
+		</PropertyGroup>
+
 		<!-- Execute the inner builds -->
 		<MSBuild
 			Projects="$(MSBuildProjectFile)"
 			Targets="_BuildRidSpecificAppBundle"
-			Properties="RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);RuntimeIdentifiers=;_IsMultiRidBuild=true">
+			Properties="RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);$(_RidSpecificProperties)">
 			<Output TaskParameter="TargetOutputs" ItemName="_AssemblyPublishDirectories" />
 		</MSBuild>
 
@@ -956,15 +975,12 @@
 			_ReadAppManifest;
 			_WriteAppManifest;
 			_CompileNativeExecutable;
+			_ComputeLinkNativeExecutableInputs;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
-			Inputs="@(_NativeExecutableObjectFiles)"
-			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-		>
-		<ItemGroup>
+	<Target Name="_ComputeLinkNativeExecutableInputs">
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
@@ -980,7 +996,18 @@
 			<!-- Mono requires zlib and iconv -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
+
+			<!-- Here we must add all the files that should make us (re-)link the executable -->
+			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
+			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_LinkNativeExecutable"
+			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
+			Inputs="@(_LinkNativeExecutableInputs)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+		>
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
