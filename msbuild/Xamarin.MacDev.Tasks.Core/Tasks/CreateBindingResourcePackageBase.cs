@@ -53,6 +53,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (compress) {
 				var zipFile = Path.GetFullPath (BindingResourcePath + ".zip");
+				Log.LogMessage (MSBStrings.M0121, zipFile);
 				if (File.Exists (zipFile))
 					File.Delete (zipFile);
 				Directory.CreateDirectory (Path.GetDirectoryName (zipFile));
@@ -74,6 +75,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			} else {
 				var bindingResourcePath = BindingResourcePath;
+				Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
 				Directory.CreateDirectory (bindingResourcePath);
 				foreach (var nativeRef in NativeReferences)
 					Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath);
