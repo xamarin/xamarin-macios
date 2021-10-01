@@ -17,7 +17,7 @@ jobs:
       - name: 'Ping remote repository'
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.SERVICEACCOUNT_PAT }}
           event-type: ping-mirror
           repository: ${{ secrets.ORG }}/${{ secrets.REPO }}
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
