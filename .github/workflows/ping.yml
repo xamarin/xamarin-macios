@@ -31,6 +31,6 @@ jobs:
           Push-RepositoryDispatch -Org $Env:ORG -Repo $Env:REPO -Branch $branch
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ secrets.access-token }}
+          GITHUB_TOKEN: ${{ github.token }}
           ORG: ${{ secrets.org}}
           REPO: ${{ secrets.repo}}
