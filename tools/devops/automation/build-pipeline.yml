@@ -235,6 +235,10 @@ stages:
 
 - stage: build_packages
   displayName: 'Build'
+  variables:
+  - ${{ if contains(variables['Build.Repository.ID'], 'private') }}:
+    - group: AzureDevOps-Artifact-Feeds-Pats
+    - group: DotNet-MSRC-Storage
   dependsOn: []
   jobs:
     - template: templates/build/stage.yml
