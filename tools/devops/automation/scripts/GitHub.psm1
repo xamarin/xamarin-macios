@@ -866,6 +866,7 @@ function Push-RepositoryDispatch {
     }
 
     $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
+    Write-Host $url
     $payloadJson = $payload | ConvertTo-Json
 
     $headers = @{
