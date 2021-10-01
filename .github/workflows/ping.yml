@@ -16,7 +16,7 @@ jobs:
 
       - name: Get branch name (merge)
         shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $BRANCH
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_BRANCH
 
       - name: 'Ping remote repository'
         run: |
@@ -30,8 +30,8 @@ jobs:
           }
 
           Import-Module $Env:GITHUB_WORKSPACE/tools/devops/automation/scripts/GitHub.psm1
-          Write-Host "Ping from branch $Env:BRANCH"
-          Push-RepositoryDispatch -Org $Env:ORG -Repo $Env:REPO -Branch $Env:BRANCH
+          Write-Host "Ping from branch $Env:GITHUB_BRANCH"
+          Push-RepositoryDispatch -Org $Env:ORG -Repo $Env:REPO -Branch $Env:GITHUB_BRANCH
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.access-token }}
