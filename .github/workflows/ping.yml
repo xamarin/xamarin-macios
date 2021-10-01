@@ -26,8 +26,8 @@ jobs:
           }
 
           Import-Module $Env:GITHUB_WORKSPACE/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1
-        shell: powershell
-        with:
+        shell: pwsh
+        env:
           GITHUB_TOKEN: ${{ secrets.access-token }}
           ORG: ${{ secrets.org}}
           REPO: ${{ secrets.repo}}
