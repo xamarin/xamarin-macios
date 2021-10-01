@@ -876,6 +876,7 @@ function Push-RepositoryDispatch {
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
     Write-Host $request
+    Write-Host $request.Content
 }
 
 # module exports, any other functions are private and should not be used outside the module.
