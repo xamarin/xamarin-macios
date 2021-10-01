@@ -1,0 +1,33 @@
+name: Notify release branch change
+
+on:
+  # trigger for main and release branches.
+  push:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  pingRemote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      
+      - name: 'Ping remote repository'
+        run: |
+          if (-not $Env:ORG) {
+            Write-Host "Org is missing."
+            exit 1
+          }
+          if (-not $Env:REPO) {
+            Write-Host "Repository is missing."
+            exit 1
+          }
+
+          Import-Module $Env:GITHUB_WORKSPACE/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1
+        shell: powershell
+        with:
+          GITHUB_TOKEN: ${{ secrets.access-token }}
+          ORG: ${{ secrets.org}}
+          REPO: ${{ secrets.repo}}
