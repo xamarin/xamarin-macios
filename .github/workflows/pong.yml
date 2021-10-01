@@ -1,7 +1,6 @@
-name: Notify release branch change
+name: Update local copy
 
 on: repository_dispatch
-
 
 jobs:
   updateRemote:
@@ -12,10 +11,12 @@ jobs:
 
       - name: 'Debug context'
         run: echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
 
       - name: 'Add remotes'
         run: |
-          git add remote public "http://$Env:GITHUB_TOKEN@github.com/xamarin/xamarin-macios.git"
+          git remote add public "http://$Env:GITHUB_TOKEN@github.com/xamarin/xamarin-macios.git"
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.access-token }}
@@ -23,3 +24,20 @@ jobs:
       - name: 'Fetch remote'
         run: git fetch public
 
+      - name: 'Update local branch'
+        run: |
+          git checkout $Env:BRANCH
+          git pull public $Env:BRANCH
+          git push origin $Env:BRANCH
+        shell: pwsh
+        env:
+          BRANCH: ${{ github.event.branch }}
+
+      - name: 'Update local branch'
+        run: |
+          git checkout -b $Env:BRANCH-private
+          git merge $Env:BRANCH
+          git push origin $Env:BRANCH-private
+        shell: pwsh
+        env:
+          BRANCH: ${{ github.event.branch }}
