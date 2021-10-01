@@ -15,22 +15,9 @@ jobs:
       - uses: actions/checkout@master
 
       - name: 'Ping remote repository'
-        run: |
-          if (-not $Env:ORG) {
-            Write-Host "Org is missing."
-            exit 1
-          }
-          if (-not $Env:REPO) {
-            Write-Host "Repository is missing."
-            exit 1
-          }
-
-          Import-Module $Env:GITHUB_WORKSPACE/tools/devops/automation/scripts/GitHub.psm1
-          $branch = "$Env:GITHUB_REF".Replace("refs/heads/", "")
-          Write-Host "Ping from branch $branch"
-          Push-RepositoryDispatch -Org $Env:ORG -Repo $Env:REPO -Branch $branch
-        shell: pwsh
-        env:
-          GITHUB_TOKEN: ${{ secrets.access-token }}
-          ORG: ${{ secrets.org}}
-          REPO: ${{ secrets.repo}}
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.access-token }}
+          event-type: ping-mirror
+          repository: ${{ secrets.ORG }}/${{ secrets.REPO }}
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
