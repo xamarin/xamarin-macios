@@ -278,7 +278,7 @@ steps:
   env:
     RUN_DEVICE_TESTS: '${{ parameters.runDeviceTests }}'
 
-- ${{ if contains(variables['Build.Repository.ID'], 'private') }}:
+- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - bash: |
       set -x
       set -e
