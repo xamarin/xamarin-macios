@@ -13,9 +13,9 @@ steps:
   displayName: 'Retrieve nuget feed'
   name: ConfigureNuget
   env:
-    ${{ if not(contains (variables['Build.Repository.ID'], 'private')) }}:
+    ${{ if not(contains (variables['Build.DefinitionName'], 'private')) }}:
       VAR_NAME=NUGET_PUBLIC_FEED
-    ${{ if contains (variables['Build.Repository.ID'], 'private') }}:
+    ${{ if contains (variables['Build.DefinitionName'], 'private') }}:
       VAR_NAME=NUGET_PRIVATE_FEED
 
 - task: NuGetAuthenticate@0
