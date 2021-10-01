@@ -10,9 +10,16 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: 'Fetch remote'
+      - name: 'Debug context'
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: 'Add remotes'
         run: |
-          Write-Host "Pong from branch $branch"
+          git add remote public "http://$Env:GITHUB_TOKEN@github.com/xamarin/xamarin-macios.git"
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.access-token }}
+
+      - name: 'Fetch remote'
+        run: git fetch public
+
