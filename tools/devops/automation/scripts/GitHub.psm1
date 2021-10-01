@@ -862,7 +862,7 @@ function Push-RepositoryDispatch {
 
     # create the hashtable that will contain all the information of all types
     $payload = @{
-        branch = $Branch;
+        event_type = $Branch;
     }
 
     $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
