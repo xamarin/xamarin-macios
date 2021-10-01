@@ -862,10 +862,11 @@ function Push-RepositoryDispatch {
 
     # create the hashtable that will contain all the information of all types
     $payload = @{
-        branch = $Branch;
+        event_type = $Branch;
     }
 
     $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
+    Write-Host $url
     $payloadJson = $payload | ConvertTo-Json
 
     $headers = @{
@@ -875,6 +876,7 @@ function Push-RepositoryDispatch {
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
     Write-Host $request
+    Write-Host $request.Content
 }
 
 # module exports, any other functions are private and should not be used outside the module.

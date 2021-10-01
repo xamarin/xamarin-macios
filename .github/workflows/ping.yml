@@ -21,3 +21,4 @@ jobs:
           event-type: ping-mirror
           repository: ${{ secrets.ORG }}/${{ secrets.REPO }}
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+
