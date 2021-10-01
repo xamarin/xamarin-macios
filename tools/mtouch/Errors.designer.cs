@@ -3786,6 +3786,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not decompress the file &apos;{0}&apos;. Please review the build log for more information from the native &apos;unzip&apos; command..
+        /// </summary>
+        public static string MX1306 {
+            get {
+                return ResourceManager.GetString("MX1306", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One or more reference(s) to type &apos;{0}&apos; already exists inside &apos;{1}&apos; before linking
         ///		.
         /// </summary>
