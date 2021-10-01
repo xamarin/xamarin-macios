@@ -1,7 +1,7 @@
 $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
 try {
     # Notarize
-    & "$Env:BUILD_SOURCESDIRECTORY/release-scripts/notarize-make-this-fail.ps1" -FolderForApps $Env:BUILD_SOURCESDIRECTORY/package/notarized
+    & "$Env:BUILD_SOURCESDIRECTORY/release-scripts/notarize.ps1" -FolderForApps $Env:BUILD_SOURCESDIRECTORY/package/notarized
 
     # Verify that the notarized output is valid
     $notarizedRoot = Join-Path $Env:BUILD_SOURCESDIRECTORY package notarized
