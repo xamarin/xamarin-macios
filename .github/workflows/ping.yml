@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      
+
       - name: 'Ping remote repository'
         run: |
           if (-not $Env:ORG) {
@@ -25,7 +25,10 @@ jobs:
             exit 1
           }
 
-          Import-Module $Env:GITHUB_WORKSPACE/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1
+          Import-Module $Env:GITHUB_WORKSPACE/tools/devops/automation/scripts/GitHub.psm1
+          $branch = ${GITHUB_REF##*/}
+          Write-Host "Ping from branch $branch"
+          Push-RepositoryDispatch -Org $Env:ORG -Repo $Env:REPO -Branch $branch
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.access-token }}
