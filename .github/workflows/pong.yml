@@ -1,0 +1,18 @@
+name: Notify release branch change
+
+on: repository_dispatch
+
+
+jobs:
+  updateRemote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: 'Fetch remote'
+        run: |
+          Write-Host "Pong from branch $branch"
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.access-token }}
