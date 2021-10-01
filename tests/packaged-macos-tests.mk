@@ -17,6 +17,11 @@ IS_ROSETTA=1
 IS_APPLE_SILICON=1
 endif
 
+MACOS_VERSION:=$(shell sw_vers -productVersion)
+MACOS_MAJOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $1}')
+MACOS_MINOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $2}')
+SUPPORTS_MACCATALYST:=$(shell echo '$(MACOS_MAJOR_VERSION).$(MACOS_MINOR_VERSION) >= 10.15' | bc)
+
 CONFIG?=Debug
 LAUNCH_ARGUMENTS=--autostart --autoexit
 
@@ -133,8 +138,12 @@ build-maccatalyst-dotnet-x64-$(1):
 	$$(Q_BUILD) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
 exec-maccatalyst-dotnet-x64-$(1):
+ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (x64) ℹ️"
 	$$(Q) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+else
+	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
+endif
 
 # MacCatalyst/.NET/arm64
 build-maccatalyst-dotnet-arm64-$(1):
@@ -198,8 +207,12 @@ build-maccatalyst-dotnet-x64-$(1):
 	$$(Q_BUILD) $$(MAKE) -C "linker/ios/$(2)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
 exec-maccatalyst-dotnet-x64-$(1):
+ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(2)' test for Mac Catalyst/.NET (x64) ℹ️"
 	$$(Q) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+else
+	@echo "⚠️  Not executing the '$(2)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
+endif
 
 # MacCatalyst/.NET/arm64
 build-maccatalyst-dotnet-arm64-$(1):
