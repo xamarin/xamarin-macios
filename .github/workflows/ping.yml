@@ -14,10 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Get branch name (merge)
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_BRANCH
-
       - name: 'Ping remote repository'
         run: |
           if (-not $Env:ORG) {
