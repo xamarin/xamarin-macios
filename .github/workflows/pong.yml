@@ -2,6 +2,12 @@ name: Update local copy
 
 on: repository_dispatch
 
+# lock to ensure we do not step on each other
+concurrency: 
+  group: 'pong-mirror'
+  cancel-in-progress: false
+
+
 jobs:
   updateRemote:
     runs-on: ubuntu-latest
@@ -26,18 +32,18 @@ jobs:
 
       - name: 'Update local branch'
         run: |
-          git checkout $Env:BRANCH
-          git pull public $Env:BRANCH
-          git push origin $Env:BRANCH
+          $branch = "$Env:BRANCH".Replace("refs/heads/","")
+          git checkout $branch
+          git pull public $branch
+          git push origin $branch
         shell: pwsh
         env:
-          BRANCH: ${{ github.event.branch }}
-
-      - name: 'Update local branch'
-        run: |
-          git checkout -b $Env:BRANCH-private
-          git merge $Env:BRANCH
-          git push origin $Env:BRANCH-private
-        shell: pwsh
-        env:
-          BRANCH: ${{ github.event.branch }}
+          BRANCH: ${{ github.event.client_payload.ref }}
+          
+      - name: Merge public with private
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          from_branch: ${{ github.event.client_payload.ref }}
+          target_branch: ${{ github.event.client_payload.ref }}-private
+          github_token: ${{ github.token }}
