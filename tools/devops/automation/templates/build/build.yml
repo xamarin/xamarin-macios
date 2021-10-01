@@ -278,6 +278,15 @@ steps:
   env:
     RUN_DEVICE_TESTS: '${{ parameters.runDeviceTests }}'
 
+- ${{ if contains(variables['Build.Repository.ID'], 'private') }}:
+ - task: PowerShell@2
+   displayName: Setup Private Feeds Credentials
+   inputs:
+     filePath: $(System.DefaultWorkingDirectory)/eng/common/SetupNugetSources.ps1
+     arguments: -ConfigFile $(System.DefaultWorkingDirectory)/NuGet.config -Password $Env:Token
+   env:
+     Token: $(dn-bot-dnceng-artifact-feeds-rw)
+
 - bash: |
     set -x
     set -e
