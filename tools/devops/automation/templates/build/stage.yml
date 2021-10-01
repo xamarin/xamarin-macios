@@ -112,7 +112,7 @@ jobs:
   dependsOn:
   - configure
   - build # can start as soon as the packages are available
-  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True'), not(contains (variables['Build.Repository.ID'], 'private'))) # only run when we do have pkgs and on public builds
+  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True'), not(contains (variables['Build.DefinitionName'], 'private'))) # only run when we do have pkgs and on public builds
 
   variables:
     Parameters.outputStorageUri: ''
