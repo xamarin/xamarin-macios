@@ -133,7 +133,7 @@ resources:
     endpoint: xamarin
 
 variables:
-- ${{ if contains(variables['Build.Repository.ID'], 'private') }}:
+- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - template: templates/variables.yml
 - group: xamops-azdev-secrets
 - group: Xamarin-Secrets
