@@ -30,8 +30,9 @@ jobs:
           }
 
           Import-Module $Env:GITHUB_WORKSPACE/tools/devops/automation/scripts/GitHub.psm1
-          Write-Host "Ping from branch $Env:GITHUB_BRANCH"
-          Push-RepositoryDispatch -Org $Env:ORG -Repo $Env:REPO -Branch $Env:GITHUB_BRANCH
+          $branch = $Env:GITHUB_REF".Replace("refs/heads/", "")
+          Write-Host "Ping from branch $branch"
+          Push-RepositoryDispatch -Org $Env:ORG -Repo $Env:REPO -Branch $branch
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.access-token }}
