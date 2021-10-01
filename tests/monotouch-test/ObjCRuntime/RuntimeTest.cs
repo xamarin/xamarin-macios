@@ -857,5 +857,11 @@ Additional information:
 #endif
 			Assert.AreEqual (expectedDirectory, actualDirectory, "Current directory at launch");
 		}
+
+		[Test]
+		public void CurrentDomain_BaseDirectory_Test ()
+		{
+			Assert.That (AppDomain.CurrentDomain.BaseDirectory, Is.Not.Null.And.Not.Empty, "AppDomain.CurrentDomain.BaseDirectory");
+		}
 	}
 }
