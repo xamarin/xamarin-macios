@@ -831,6 +831,52 @@ function New-GistWithFiles {
     return $request.html_url
 }
 
+<#
+    .SYNOPSIS
+        Puse a repository dispatch stating which branch did trigger it.
+
+    .PARAMETER Org
+        The org of the repository to ping.
+
+    .PARAMETER Repository 
+        The repository to ping.
+
+    .PARAMETER Branch
+        The branch that triggered the event.
+#>
+function Push-RepositoryDispatch {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org, 
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repository,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Branch
+    )
+
+    # create the hashtable that will contain all the information of all types
+    $payload = @{
+        branch = $Branch;
+    }
+
+    $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
+    $payloadJson = $payload | ConvertTo-Json
+
+    $headers = @{
+        Accept = "application/vnd.github.v3+json";
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    } 
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
+    Write-Host $request
+}
+
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function Set-GitHubStatus
 Export-ModuleMember -Function New-GitHubComment
@@ -841,3 +887,4 @@ Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
+Export-ModuleMember -Function Push-RepositoryDispatch 
