@@ -14,11 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-      
       - name: 'Ping remote repository'
         run: |
           if (-not $Env:ORG) {
