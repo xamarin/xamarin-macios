@@ -287,6 +287,16 @@ steps:
     env:
       Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
+  - bash: |
+      set -x
+      set -e
+      ARGS="--azure-feed \"https://dotnetclimsrc.blob.core.windows.net/dotnet\" -FeedCredential $CREDENTIALS"
+      echo "##vso[task.setvariable variable=DOTNET_INSTALL_EXTRA_ARGS]$ARGS"
+    env:
+      CREDENTIALS: $(dotnetclimsrc-read-sas-token)
+    displayName: "Configure install extra args"
+    timeoutInMinutes: 5
+
 - bash: |
     set -x
     set -e
