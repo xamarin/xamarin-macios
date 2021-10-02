@@ -22,7 +22,7 @@ steps:
   displayName: 'Authenticate dotnet-tool feed'
   inputs:
     nuGetServiceConnections: $(ConfigureNuget.Credential)
-  condition: contains (variables['Build.Repository.ID'], 'private')
+  condition: contains (variables['Build.DefinitionName'], 'private')
 
 - task: DownloadPipelineArtifact@2
   inputs:
