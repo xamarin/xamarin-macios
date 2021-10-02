@@ -74,7 +74,7 @@ downloads/%: downloads/%.nupkg
 
 downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))): dotnet-install.sh
 	$(Q) echo "Downloading and installing .NET $(DOTNET6_VERSION) into $@..."
-	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET6_VERSION)" --architecture x64 --no-path
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET6_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET6_VERSION) into $@."
