@@ -742,10 +742,10 @@
 		<value>Impossible d’établir une liaison avec le Framework {0} (référencé par une référence de module dans {1}), car il n’est pas disponible sur la plateforme actuelle ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Impossible de faire correspondre la version {0} de Mac Catalyst à une version correspondante de macOS. Les versions valides de Mac Catalyst sont : {1}.</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Impossible de mapper la version de macOS {0} à une version Mac Catalyst correspondante. Les versions de macOS valides sont : {1}.</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>L’option « {0} » ne peut pas prendre la valeur « {1} » lorsque CoreCLR est utilisé.</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>La bibliothèque de liaison '{0}' contient un framework utilisateur ({0}), mais les frameworks utilisateur intégrés nécessitent iOS 8.0 (la version de la cible de déploiement est {1}). Définissez la cible de déploiement dans le fichier Info.plist à la version 8.0 au moins.
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>L'assembly 'Xamarin.Mac.dll' nécessaire est manquant dans les références
