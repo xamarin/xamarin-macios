@@ -711,10 +711,10 @@
         <value>Указанный путь к архиву ведет к недопустимому файлу архива (XCARCHIVE). Путь к архиву: "{0}".</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Не удалось сопоставить версию macOS {0} с соответствующей версией iOS</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Не удалось сопоставить версию iOS {0} с соответствующей версией macOS</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Не удалось разрешить IP-адреса узлов для параметров отладчика Wi-Fi.

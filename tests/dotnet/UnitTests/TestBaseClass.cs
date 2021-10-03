@@ -36,29 +36,51 @@ namespace Xamarin.Tests {
 			properties [multiRid] = runtimeIdentifiers;
 		}
 
-		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string subdir = null)
+		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null)
 		{
 			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath);
 		}
 
-		protected string GetProjectPath (string project, string subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath)
+		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath)
 		{
 			var rv = GetProjectPath (project, subdir, platform);
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			appPath = Path.Combine (Path.GetDirectoryName (rv), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
 			return rv;
 		}
 
-		protected string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
+		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return "iossimulator-x64";
+			case ApplePlatform.TVOS:
+				return "tvossimulator-x64";
+			case ApplePlatform.MacOSX:
+				return "osx-x64";
+			case ApplePlatform.MacCatalyst:
+				return "maccatalyst-x64";
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetProjectPath (string project, string? subdir = null, ApplePlatform? platform = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
 			if (!string.IsNullOrEmpty (subdir))
 				project_dir = Path.Combine (project_dir, subdir);
 
+			var project_path = Path.Combine (project_dir, project + ".csproj");
+			if (File.Exists (project_path))
+				return project_path;
+
 			if (platform.HasValue)
 				project_dir = Path.Combine (project_dir, platform.Value.AsString ());
 
-			var project_path = Path.Combine (project_dir, project + ".csproj");
+			project_path = Path.Combine (project_dir, project + ".csproj");
 			if (!File.Exists (project_path))
 				project_path = Path.ChangeExtension (project_path, "sln");
 
@@ -70,7 +92,7 @@ namespace Xamarin.Tests {
 
 		protected void Clean (string project_path)
 		{
-			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path), "*", SearchOption.AllDirectories);
+			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path)!, "*", SearchOption.AllDirectories);
 			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
 			foreach (var dir in dirs) {
 				var name = Path.GetFileName (dir);

@@ -56,7 +56,7 @@ class MainClass {
 			File.WriteAllText (Path.Combine (tmpdir, "Info.plist"), EmptyAppManifest);
 			File.WriteAllText (Path.Combine (tmpdir, "Main.cs"), EmptyMainFile);
 
-			var properties = new Dictionary<string, string> (verbosity);
+			var properties = GetDefaultProperties ();
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
 			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (v => v.Message.Contains (magic)), "Expected error");

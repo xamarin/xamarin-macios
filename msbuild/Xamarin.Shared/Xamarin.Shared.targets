@@ -34,8 +34,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Microsoft.Build.Tasks.WriteLinesToFile" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.iOS-specific tasks. Some of these are duplicated with the Xamarin.Mac ones below, and should eventually be re-namespaced to be in Xamarin.MacDev -->
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ALToolUpload" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ALToolValidate" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectAssetPacks" AssemblyFile="$(_TaskAssemblyName)" />
@@ -55,15 +53,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetFiles" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetMlaunchArguments" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.Metal" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.MetalLib" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.MTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ParseDeviceSpecificBuildInformation" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.PrepareNativeReferences" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ResolveNativeWatchApp" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ScnTool" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ValidateAppBundleTask" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.VerifyXcodeVersion" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.WriteAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
@@ -77,15 +71,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CreateEmbeddedResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSdkLocations" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.Metal" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.MetalLib" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.Mmp" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.PrepareNativeReferences" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.ScnTool" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Tasks shared between Xamarin.iOS and Xamarin.Mac -->
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ALToolUpload" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ALToolValidate" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.AOTCompile" AssemblyFile="$(_TaskAssemblyName)" />
@@ -109,6 +101,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFullPath" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.IBTool" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Metal" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.MetalLib" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.OptimizeImage" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.OptimizePropertyList" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="$(_TaskAssemblyName)" />
@@ -118,9 +112,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ReadAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ReadItemsFromFile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ResolveNativeReferences" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ScnTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SpotlightIndexer" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(_TaskAssemblyName)" />
@@ -149,6 +145,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(IsBindingProject)' != 'true'"
 			Architectures="$(TargetArchitectures)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			NativeReferences="@(_XCFrameworkNativeReference);@(_FrameworkNativeReference)"
 			References="@(ReferencePath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -165,15 +162,36 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CreateBindingResourcePackage" Condition="'$(DesignTimeBuild)' != 'true'"
 		DependsOnTargets="_ExpandNativeReferences"
 		Inputs="$(MSBuildAllProjects);$(MSBuildProjectFullPath);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary);@(_FrameworkNativeReference);@(_FileNativeReference)"
-		Outputs="$(BindingResourcePath)/manifest">
+		Outputs="$(BindingResourcePath).stamp">
+
+		<!-- CompressBindingResourcePackage specifies whether the package should be compressed (zipped) or not
+			true: compressed (we produce an Assembly.resources directory)
+			false: not compressed (we produce an Assembly.resources.zip file)
+			auto: compressed if there are any symlinks
+			The default is 'false' for legacy Xamarin projects (for compatibility) and 'auto' for .NET projects (NuGet doesn't handle symlinks properly, so this way it's not necessary to set this property to create NuGets that work)
+		-->
+		<PropertyGroup Condition="'$(CompressBindingResourcePackage)' == ''">
+			<CompressBindingResourcePackage Condition="'$(UsingAppleNETSdk)' == 'true'">auto</CompressBindingResourcePackage>
+			<CompressBindingResourcePackage Condition="'$(UsingAppleNETSdk)' != 'true'">false</CompressBindingResourcePackage>
+		</PropertyGroup>
+
 		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true' And '$(NoBindingEmbedding)' == 'true' And '$(SkipBindingResourcePackage)' != 'true'"
 			SessionId="$(BuildSessionId)"
-			OutputPath="$(OutputPath)"
 			NativeReferences="@(NativeReference)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			BindingAssembly="@(IntermediateAssembly)">
-			<Output TaskParameter="Manifest" ItemName="_BundleResourceManifest" />
+			BindingResourcePath="$(BindingResourcePath)"
+			Compress="$(CompressBindingResourcePackage)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			>
 		</CreateBindingResourcePackage>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="$(BindingResourcePath).stamp"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
 	</Target>
 
 	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so nuke via RemoveDir -->
@@ -249,19 +267,37 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<PropertyGroup Condition="'$(IsBindingProject)' != 'true'">
+	<PropertyGroup>
 		<_CollectBundleResourcesDependsOn>
+			$(_CollectBundleResourcesDependsOn);
+			_ComputeTargetArchitectures;
+		</_CollectBundleResourcesDependsOn>
+		<_CollectBundleResourcesDependsOn Condition="'$(IsBindingProject)' != 'true'">
+			$(_CollectBundleResourcesDependsOn);
 			_CompileImageAssets;
 			_CompileInterfaceDefinitions;
 			_CompileSceneKitAssets;
 			_CompileColladaAssets;
 			_CompileTextureAtlases;
 			_CompileCoreMLModels;
-			$(_CollectBundleResourcesDependsOn);
 		</_CollectBundleResourcesDependsOn>
 	</PropertyGroup>
 
 	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
+		<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
+		     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
+		     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
+		<ReadItemsFromFile File="$(_ProcessedBundleResourcesPath)" Condition="Exists('$(_ProcessedBundleResourcesPath)')">
+			<Output TaskParameter="Items" ItemName="_ProcessedBundleResources" />
+		</ReadItemsFromFile>
+		<ReadItemsFromFile File="$(_ProcessedContentPath)" Condition="Exists('$(_ProcessedContentPath)')">
+			<Output TaskParameter="Items" ItemName="_ProcessedContent" />
+		</ReadItemsFromFile>
+		<ItemGroup>
+			<BundleResource Remove="@(_ProcessedBundleResources)" />
+			<Content Remove="@(_ProcessedContent)" />
+		</ItemGroup>
+
 		<CollectBundleResources
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -273,6 +309,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</CollectBundleResources>
+
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<WriteItemsToFile Items="@(BundleResource)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="BundleResource" File="$(_ProcessedBundleResourcesPath)" Overwrite="true" IncludeMetadata="false" />
+		<WriteItemsToFile Items="@(Content)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="Content" File="$(_ProcessedContentPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
+			<FileWrites Include="$(_ProcessedBundleResourcesPath)" />
+			<FileWrites Include="$(_ProcessedContentPath)" />
+		</ItemGroup>
 	</Target>
 
 	<!--
@@ -463,7 +507,35 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileEntitlements>
 	</Target>
 
-	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileInterfaceDefinitions;_ReadCoreCompileInterfaceDefinitions;_CoreCompileInterfaceDefinitions" />
+	<!-- Compilation of InterfaceDefinition assets (*.xib, *.storyboard) -->
+
+	<PropertyGroup>
+		<_CompileInterfaceDefinitionsDependsOn>
+			$(_CompileInterfaceDefinitionsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_RemoveProcessedInterfaceDefinitions;
+			_BeforeCoreCompileInterfaceDefinitions;
+			_ReadCoreCompileInterfaceDefinitions;
+			_CoreCompileInterfaceDefinitions;
+		</_CompileInterfaceDefinitionsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="$(_CompileInterfaceDefinitionsDependsOn)" />
+
+	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
+	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
+	     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
+	<Target Name="_RemoveProcessedInterfaceDefinitions" Condition="Exists('$(_ProcessedInterfaceDefinitionsPath)')">
+		<ReadItemsFromFile File="$(_ProcessedInterfaceDefinitionsPath)">
+			<Output TaskParameter="Items" ItemName="_ProcessedInterfaceDefinitions" />
+		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<InterfaceDefinition Remove="@(_ProcessedInterfaceDefinitions)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_BeforeCoreCompileInterfaceDefinitions"
 		Inputs="@(InterfaceDefinition)"
@@ -533,12 +605,44 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_IBTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_IBToolCache)" Overwrite="true" IncludeMetadata="true" />
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<WriteItemsToFile Items="@(InterfaceDefinition)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="InterfaceDefinition" File="$(_ProcessedInterfaceDefinitionsPath)" Overwrite="true" IncludeMetadata="false" />
+
 		<ItemGroup>
 			<FileWrites Include="$(_IBToolCache)" />
+			<FileWrites Include="$(_ProcessedInterfaceDefinitionsPath)" />
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
+	<!-- Compilation of ImageAsset items -->
+
+	<PropertyGroup>
+		<_CompileImageAssetsDependsOn>
+			$(_CompileImageAssetsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_RemoveProcessedImageAssets;
+			_BeforeCoreCompileImageAssets;
+			_ReadCompileImageAssets;
+			_CoreCompileImageAssets;
+		</_CompileImageAssetsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileImageAssets" DependsOnTargets="$(_CompileImageAssetsDependsOn)" />
+
+	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
+	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
+	     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
+	<Target Name="_RemoveProcessedImageAssets" Condition="Exists('$(_ProcessedImageAssetsPath)')">
+		<ReadItemsFromFile File="$(_ProcessedImageAssetsPath)">
+			<Output TaskParameter="Items" ItemName="_ProcessedImageAssets" />
+		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<ImageAsset Remove="@(_ProcessedImageAssets)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_BeforeCoreCompileImageAssets"
 		Inputs="@(ImageAsset);$(_TemporaryAppManifest)"
@@ -623,12 +727,43 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- Cache the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PostCompilePartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<WriteItemsToFile Items="@(ImageAsset)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="ImageAsset" File="$(_ProcessedImageAssetsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+			<FileWrites Include="$(_ProcessedImageAssetsPath)" />
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileSceneKitAssets;_ReadCoreCompileSceneKitAssets;_CoreCompileSceneKitAssets" />
+	<!-- Compilation of SceneKit assets -->
+
+	<PropertyGroup>
+		<_CompileSceneKitAssetsDependsOn>
+			$(_CompileSceneKitAssetsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_RemoveProcessedSceneKitAssets;
+			_BeforeCoreCompileSceneKitAssets;
+			_ReadCoreCompileSceneKitAssets;
+			_CoreCompileSceneKitAssets;
+		</_CompileSceneKitAssetsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileSceneKitAssets" DependsOnTargets="$(_CompileSceneKitAssetsDependsOn)" />
+
+	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
+	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
+	     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
+	<Target Name="_RemoveProcessedSceneKitAssets" Condition="Exists('$(_ProcessedSceneKitAssetsPath)')">
+		<ReadItemsFromFile File="$(_ProcessedSceneKitAssetsPath)">
+			<Output TaskParameter="Items" ItemName="_ProcessedSceneKitAssets" />
+		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<SceneKitAsset Remove="@(_ProcessedSceneKitAssets)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_BeforeCoreCompileSceneKitAssets"
 		Inputs="@(SceneKitAsset)"
@@ -678,8 +813,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileSceneKitAssets>
 
 		<WriteItemsToFile Items="@(_SceneKitAssets_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_SceneKitCache)" Overwrite="true" IncludeMetadata="true" />
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<WriteItemsToFile Items="@(SceneKitAsset)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="SceneKitAsset" File="$(_ProcessedSceneKitAssetsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_SceneKitCache)" />
+			<FileWrites Include="$(_ProcessedSceneKitAssetsPath)" />
 		</ItemGroup>
 	</Target>
 
@@ -687,12 +825,26 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<CompileColladaAssetsDependsOn>
+			_RemoveProcessedColladaAssets;
 			_CollectColladaAssets;
 			_CoreCompileColladaAssets
 		</CompileColladaAssetsDependsOn>
 	</PropertyGroup>
 
 	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
+
+	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
+	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
+	     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
+	<Target Name="_RemoveProcessedColladaAssets" Condition="Exists('$(_ProcessedColladaAssetsPath)')">
+		<ReadItemsFromFile File="$(_ProcessedColladaAssetsPath)">
+			<Output TaskParameter="Items" ItemName="_ProcessedColladaAssets" />
+		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<Collada Remove="@(_ProcessedColladaAssets)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_CollectColladaAssets">
 		<CollectBundleResources
@@ -714,8 +866,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ScnTool
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			IsWatchApp="$(IsWatchApp)"
 			ToolExe="$(ScnToolExe)"
 			ToolPath="$(ScnToolPath)"
+			SdkPlatform="$(_SdkPlatform)"
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(_SdkVersion)"
@@ -728,6 +882,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName);Optimize='False'">
 			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
 		</CreateItem>
+
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<WriteItemsToFile Items="@(_ColladaAssetWithLogicalName)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="_ColladaAssetWithLogicalName" File="$(_ProcessedColladaAssetsPath)" Overwrite="true" IncludeMetadata="false" />
+		<ItemGroup>
+			<FileWrites Include="$(_ProcessedColladaAssetsPath)" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
@@ -780,6 +940,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			<!-- TextureAtlas output caches -->
 			<_TextureAtlasCache>$(DeviceSpecificIntermediateOutputPath)atlas\_BundleResourceWithLogicalName.items</_TextureAtlasCache>
+
+			<!-- processed items -->
+			<_ProcessedBundleResourcesPath Condition="'$(_ProcessedBundleResourcesPath)' == ''">$(DeviceSpecificIntermediateOutputPath)\_ProcessedBundleResourcesPath.items</_ProcessedBundleResourcesPath>
+			<_ProcessedContentPath Condition="'$(_ProcessedContentPath)' == ''">$(DeviceSpecificIntermediateOutputPath)\_ProcessedContentPath.items</_ProcessedContentPath>
+			<_ProcessedImageAssetsPath Condition="'$(_ProcessedImageAssetsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)actool\_ProcessedImageAssetsPath.items</_ProcessedImageAssetsPath>
+			<_ProcessedInterfaceDefinitionsPath Condition="'$(_ProcessedInterfaceDefinitionsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)ibtool\_ProcessedInterfaceDefinitionsPath.items</_ProcessedInterfaceDefinitionsPath>
+			<_ProcessedSceneKitAssetsPath Condition="'$(_ProcessedSceneKitAssetsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)copySceneKitAssets\_ProcessedSceneKitAssetsPath.items</_ProcessedSceneKitAssetsPath>
+			<_ProcessedColladaAssetsPath Condition="'$(_ProcessedColladaAssetsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)collada\_ProcessedColladaAssetsPath.items</_ProcessedColladaAssetsPath>
+			<_ProcessedTextureAtlasesPath Condition="'$(_ProcessedTextureAtlasesPath)' == ''">$(DeviceSpecificIntermediateOutputPath)atlas\_ProcessedTextureAtlasesPath.items</_ProcessedTextureAtlasesPath>
+			<_ProcessedCoreMLModelsPath Condition="'$(_ProcessedCoreMLModelsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)coremlc\_ProcessedCoreMLModelsPath.items</_ProcessedCoreMLModelsPath>
+			<_SaveProcessedItems Condition="'$(RuntimeIdentifiers)' != '' And '$(UsingAppleNETSdk)' == 'true'">true</_SaveProcessedItems>
 		</PropertyGroup>
 	</Target>
 
@@ -829,6 +1000,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<_CompileTextureAtlasesDependsOn>
 			$(_CompileTextureAtlasesDependsOn);
 			_DetectSdkLocations;
+			_RemoveProcessedTextureAtlases;
 			_BeforeCompileTextureAtlases;
 			_ReadCoreCompileTextureAtlases;
 			_CoreCompileTextureAtlases;
@@ -836,6 +1008,19 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
+
+	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
+	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
+	     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
+	<Target Name="_RemoveProcessedTextureAtlases" Condition="Exists('$(_ProcessedTextureAtlasesPath)')">
+		<ReadItemsFromFile File="$(_ProcessedTextureAtlasesPath)">
+			<Output TaskParameter="Items" ItemName="_ProcessedTextureAtlases" />
+		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<AtlasTexture Remove="@(_ProcessedTextureAtlases)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_BeforeCompileTextureAtlases"
 		Inputs="@(AtlasTexture)"
@@ -882,12 +1067,43 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_TextureAtlas_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_TextureAtlasCache)" Overwrite="true" IncludeMetadata="true" />
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<WriteItemsToFile Items="@(TextureAtlas)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="TextureAtlas" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_TextureAtlasCache)" />
+			<FileWrites Include="$(_ProcessedTextureAtlasesPath)" />
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileCoreMLModels" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCompileCoreMLModels;_ReadCompileCoreMLModels;_CoreCompileCoreMLModels" />
+	<!-- Compilation of CoreML models -->
+
+	<PropertyGroup>
+		<_CompileCoreMLModelsDependsOn>
+			$(_CompileCoreMLModelsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_RemoveProcessedCoreMLModels;
+			_BeforeCompileCoreMLModels;
+			_ReadCompileCoreMLModels;
+			_CoreCompileCoreMLModels;
+		</_CompileCoreMLModelsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileCoreMLModels" DependsOnTargets="$(_CompileCoreMLModelsDependsOn)" />
+
+	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
+	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
+	     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
+	<Target Name="_RemoveProcessedCoreMLModels" Condition="Exists('$(_ProcessedCoreMLModelsPath)')">
+		<ReadItemsFromFile File="$(_ProcessedCoreMLModelsPath)">
+			<Output TaskParameter="Items" ItemName="_ProcessedCoreMLModels" />
+		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<CoreMLModel Remove="@(_ProcessedCoreMLModels)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_BeforeCompileCoreMLModels"
 		Inputs="@(CoreMLModel);$(_TemporaryAppManifest)"
@@ -946,8 +1162,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- Cache the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PostCompilePartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
+		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
+		<WriteItemsToFile Items="@(CoreMLModel)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="CoreMLModel" File="$(_ProcessedCoreMLModelsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
+			<FileWrites Include="$(_ProcessedCoreMLModelsPath)" />
 		</ItemGroup>
 	</Target>
 

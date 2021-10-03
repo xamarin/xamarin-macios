@@ -12,6 +12,7 @@ steps:
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
   submodules: false
   persistCredentials: true
+  path: s/xamarin-macios
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1

@@ -25,7 +25,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchProfiling Condition="'$(MtouchProfiling)' == ''">False</MtouchProfiling>
 		<MtouchLinkerDumpDependencies Condition="'$(MtouchLinkerDumpDependencies)' == ''">False</MtouchLinkerDumpDependencies>
 		<MtouchUseLlvm Condition="'$(MtouchUseLlvm)' == ''">False</MtouchUseLlvm>
-		<MtouchFloat32 Condition="'$(MtouchFloat32)' == ''">False</MtouchFloat32>
+		<MtouchFloat32 Condition="'$(MtouchFloat32)' == '' And '$(UsingAppleNETSdk)' != 'true'">False</MtouchFloat32>
 		<MtouchEnableBitcode Condition="'$(MtouchEnableBitcode)' == ''">False</MtouchEnableBitcode>
 		<MtouchUseThumb Condition="'$(MtouchUseThumb)' == ''">False</MtouchUseThumb>
 		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>

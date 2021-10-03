@@ -46,6 +46,7 @@ parameters:
 steps:
 
 - checkout: self
+  path: s/xamarin-macios
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
@@ -54,6 +55,7 @@ steps:
   env:
     BUILD_REVISION: 'jenkins'
   continueOnError: true
+  timeoutInMinutes: 60
 
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'

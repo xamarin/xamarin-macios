@@ -742,10 +742,10 @@
 		<value>未連結到架構 {0} (被 {1} 的參考模組引用) ，因為目前的平臺 ({2}) 無法使用它。</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>無法將 iOS 版本 {0}　對應至 Mac Catalyst 的 macOS 版本</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>無法將 macOS 版本 {0}　對應至 Mac Catalyst 的 iOS 版本</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>使用 CoreCLR 時，選項 '{0}' 不能採用值 '{1}'。</value>

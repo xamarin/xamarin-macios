@@ -9527,6 +9527,7 @@ namespace AppKit {
 		[Field ("NSImageNameBluetoothTemplate")]
 		BluetoothTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameIChatTheaterTemplate")]
 		IChatTheaterTemplate,
 
@@ -9536,12 +9537,14 @@ namespace AppKit {
 		[Field ("NSImageNameActionTemplate")]
 		ActionTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameSmartBadgeTemplate")]
 		SmartBadgeTemplate,
 
 		[Field ("NSImageNamePathTemplate")]
 		PathTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameInvalidDataFreestandingTemplate")]
 		InvalidDataFreestandingTemplate,
 
@@ -9557,9 +9560,11 @@ namespace AppKit {
 		[Field ("NSImageNameGoLeftTemplate")]
 		GoLeftTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameRightFacingTriangleTemplate")]
 		RightFacingTriangleTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameLeftFacingTriangleTemplate")]
 		LeftFacingTriangleTemplate,
 
@@ -9569,36 +9574,45 @@ namespace AppKit {
 		[Field ("NSImageNameRemoveTemplate")]
 		RemoveTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameRevealFreestandingTemplate")]
 		RevealFreestandingTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameFollowLinkFreestandingTemplate")]
 		FollowLinkFreestandingTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameEnterFullScreenTemplate")]
 		EnterFullScreenTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameExitFullScreenTemplate")]
 		ExitFullScreenTemplate,
 
 		[Field ("NSImageNameStopProgressTemplate")]
 		StopProgressTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStopProgressFreestandingTemplate")]
 		StopProgressFreestandingTemplate,
 
 		[Field ("NSImageNameRefreshTemplate")]
 		RefreshTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameRefreshFreestandingTemplate")]
 		RefreshFreestandingTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameFolder")]
 		Folder,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameTrashEmpty")]
 		TrashEmpty,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameTrashFull")]
 		TrashFull,
 
@@ -9608,33 +9622,43 @@ namespace AppKit {
 		[Field ("NSImageNameBookmarksTemplate")]
 		BookmarksTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameCaution")]
 		Caution,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusAvailable")]
 		StatusAvailable,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusPartiallyAvailable")]
 		StatusPartiallyAvailable,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusUnavailable")]
 		StatusUnavailable,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusNone")]
 		StatusNone,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameApplicationIcon")]
 		ApplicationIcon,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameMenuOnStateTemplate")]
 		MenuOnStateTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameMenuMixedStateTemplate")]
 		MenuMixedStateTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameUserGuest")]
 		UserGuest,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameMobileMe")]
 		MobileMe,
 
@@ -9794,6 +9818,7 @@ namespace AppKit {
 		TouchBarPauseTemplate,
 
 		[Mac (10, 12, 2)]
+		[NoMacCatalyst]
 		[Field ("NSImageNameTouchBarPlayheadTemplate")]
 		TouchBarPlayheadTemplate,
 
@@ -19413,6 +19438,7 @@ namespace AppKit {
 		[Export ("autosavesConfiguration")]
 		bool AutosavesConfiguration { get; set; }
 
+		[NoMacCatalyst]
 		[Field ("NSToolbarSeparatorItemIdentifier")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Ignored by system.")]
 		NSString NSToolbarSeparatorItemIdentifier { get; }
@@ -19429,6 +19455,7 @@ namespace AppKit {
 		[Field ("NSToolbarShowFontsItemIdentifier")]
 		NSString NSToolbarShowFontsItemIdentifier { get; }
 		
+		[NoMacCatalyst]
 		[Field ("NSToolbarCustomizeToolbarItemIdentifier")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Ignored by system.")]
 		NSString NSToolbarCustomizeToolbarItemIdentifier { get; }
@@ -19452,6 +19479,7 @@ namespace AppKit {
 		[NullAllowed, Export ("centeredItemIdentifier")]
 		string CenteredItemIdentifier { get; set; }
 
+		[NoMacCatalyst]
 		[Mac (11, 0)]
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
@@ -19585,7 +19613,7 @@ namespace AppKit {
 		bool Navigational { [Bind ("isNavigational")] get; set; }
 	}
 
-	[NoMacCatalyst]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSToolbarItemGroup
 	{
@@ -19756,39 +19784,49 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
-	[MacCatalyst (13, 0)]
 	public enum NSTouchBarItemIdentifier
 	{
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierFixedSpaceSmall")]
 		FixedSpaceSmall,
 
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierFixedSpaceLarge")]
 		FixedSpaceLarge,
 
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierFlexibleSpace")]
 		FlexibleSpace,
 
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierOtherItemsProxy")]
 		OtherItemsProxy,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierCharacterPicker")]
 		CharacterPicker,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextColorPicker")]
 		TextColorPicker,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextStyle")]
 		TextStyle,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextAlignment")]
 		TextAlignment,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextList")]
 		TextList,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextFormat")]
 		TextFormat,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierCandidateList")]
 		CandidateList
 	}
@@ -26982,10 +27020,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[NoMacCatalyst]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem
 	{
+		[NoMacCatalyst]
 		[Export ("menu", ArgumentSemantic.Strong)]
 		NSMenu Menu { get; set; }
 

@@ -711,10 +711,10 @@
         <value>指定されたアーカイブ パスは、有効なアーカイブ ファイル (.xcarchive) からのものではありません。アーカイブ パス: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>macOS バージョン {0} を対応する iOS バージョンにマップできません</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi デバッガー設定のホスト IP を解決できませんでした。
@@ -1047,7 +1047,7 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>AOT コンパイラ '{0}' が存在しません。</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
