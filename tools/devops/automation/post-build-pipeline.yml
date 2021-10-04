@@ -26,6 +26,7 @@ jobs:
   - group: Publish-Build-Assets
   steps:
   - checkout: self
+    path: s/xamarin-macios
     clean: true
 
   - task: UseDotNet@2

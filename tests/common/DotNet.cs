@@ -24,6 +24,18 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public static ExecutionResult AssertPack (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("pack", project, properties, true);
+		}
+
+		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string> properties = null)
+		{
+			var rv = Execute ("pack", project, properties, false);
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			return rv;
+		}
+
 		public static ExecutionResult AssertPublish (string project, Dictionary<string, string> properties = null)
 		{
 			return Execute ("publish", project, properties, true);
@@ -75,6 +87,7 @@ namespace Xamarin.Tests {
 			switch (verb) {
 			case "clean":
 			case "build":
+			case "pack":
 			case "publish":
 				var args = new List<string> ();
 				args.Add (verb);

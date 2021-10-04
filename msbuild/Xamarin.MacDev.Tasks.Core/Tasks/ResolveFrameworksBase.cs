@@ -22,6 +22,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string? Architectures { get; set; }
 
+		[Required]
+		public string? IntermediateOutputPath { get; set; }
+
 		public ITaskItem []? NativeReferences { get; set; }
 
 		public ITaskItem []? References { get; set; }
@@ -77,9 +80,29 @@ namespace Xamarin.MacDev.Tasks {
 				foreach (var r in References) {
 					// look for sidecar's manifest
 					var resources = Path.ChangeExtension (r.ItemSpec, ".resources");
+					if (!Directory.Exists (resources)) {
+						// if we don't have a sidecar, we might have a zipped sidecar
+						var zipPath = resources + ".zip";
+						if (!File.Exists (zipPath))
+							continue;
+
+						// Yes! we have a zipped sidecar
+						var path = Path.Combine (IntermediateOutputPath, Path.GetFileName (resources));
+						var arguments = new [] {
+							"-u",
+							"-o",
+							"-d",
+							path,
+							zipPath,
+						};
+						ExecuteAsync ("/usr/bin/unzip", arguments).Wait ();
+						resources = path;
+					}
 					var manifest = Path.Combine (resources, "manifest");
-					if (!File.Exists (manifest))
+					if (!File.Exists (manifest)) {
+						Log.LogWarning (MSBStrings.W7087 /* Expected a 'manifest' file in the directory {0} */, resources);
 						continue;
+					}
 
 					XmlDocument document = new XmlDocument ();
 					document.LoadWithoutNetworkAccess (manifest);

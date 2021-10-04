@@ -12,6 +12,7 @@ parameters:
 steps:
 
 - checkout: self
+  path: s/xamarin-macios
   persistCredentials: true
 
 - checkout: macios.ci 

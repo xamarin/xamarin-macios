@@ -184,6 +184,10 @@ namespace Xamarin.Linker {
 				case "MonoLibrary":
 					Application.MonoLibraries.Add (value);
 					break;
+				case "MtouchFloat32":
+					if (!TryParseOptionalBoolean (value, out Application.AotFloat32))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					break;
 				case "Optimize":
 					user_optimize_flags = value;
 					break;
@@ -319,6 +323,26 @@ namespace Xamarin.Linker {
 
 			Application.InitializeCommon ();
 			Application.Initialize ();
+		}
+
+		bool TryParseOptionalBoolean (string input, out bool? value)
+		{
+			value = null;
+
+			if (string.IsNullOrEmpty (input))
+				return true;
+
+			if (string.Equals (input, "true", StringComparison.OrdinalIgnoreCase)) {
+				value = true;
+				return true;
+			}
+
+			if (string.Equals (input, "false", StringComparison.OrdinalIgnoreCase)) {
+				value = false;
+				return true;
+			}
+
+			return false;
 		}
 
 		AssemblyBuildTarget ParseLinkMode (string value, string variableName)
