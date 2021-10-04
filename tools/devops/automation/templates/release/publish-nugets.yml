@@ -37,7 +37,7 @@ steps:
     command: push
     packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
     nuGetFeedType: external
-    publishFeedCredentials: $(ConfigureNuget.Credential)
+    publishFeedCredentials: $(nuget-feed)
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -52,4 +52,4 @@ steps:
     command: push
     packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
     nuGetFeedType: external
-    publishFeedCredentials: $(ConfigureNuget.Credential)
+    publishFeedCredentials: $(nuget-feed)
