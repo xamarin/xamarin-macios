@@ -8,7 +8,9 @@ using System.IO;
 using Microsoft.Build.Utilities;
 using Xamarin.Messaging;
 
-namespace Xamarin.iOS.Tasks
+using Xamarin.iOS.Tasks;
+
+namespace Xamarin.MacDev.Tasks
 {
 	public class BTouch : BTouchTaskBase, ITaskCallback
 	{
