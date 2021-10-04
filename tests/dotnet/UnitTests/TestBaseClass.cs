@@ -36,18 +36,18 @@ namespace Xamarin.Tests {
 			properties [multiRid] = runtimeIdentifiers;
 		}
 
-		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string subdir = null, string configuration = "Debug")
+		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug")
 		{
 			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath, configuration);
 		}
 
-		protected string GetProjectPath (string project, string subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug")
+		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug")
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			if (string.IsNullOrEmpty (runtimeIdentifiers))
 				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			appPath = Path.Combine (Path.GetDirectoryName (rv), "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
 			return rv;
 		}
 
@@ -67,7 +67,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		protected string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
+		protected string GetProjectPath (string project, string? subdir = null, ApplePlatform? platform = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
 			if (!string.IsNullOrEmpty (subdir))
@@ -92,7 +92,7 @@ namespace Xamarin.Tests {
 
 		protected void Clean (string project_path)
 		{
-			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path), "*", SearchOption.AllDirectories);
+			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path)!, "*", SearchOption.AllDirectories);
 			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
 			foreach (var dir in dirs) {
 				var name = Path.GetFileName (dir);

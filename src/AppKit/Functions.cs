@@ -31,10 +31,12 @@ using CoreAnimation;
 
 namespace AppKit {
 
+#if MONOMAC
 	// Class to access C functions
 	public partial class AppKitFramework {
     
 		[DllImport (Constants.AppKitLibrary)]
 		public static extern void NSBeep();
 	}
+#endif
 }

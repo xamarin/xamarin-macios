@@ -74,6 +74,7 @@ namespace Xamarin.Bundler {
 		// The AOT arguments are currently not used for macOS, but they could eventually be used there as well (there's no mmp option to set these yet).
 		public List<string> AotArguments = new List<string> ();
 		public List<string> AotOtherArguments = null;
+		public bool? AotFloat32 = null;
 
 		public DlsymOptions DlsymOptions;
 		public List<Tuple<string, bool>> DlsymAssemblies;
@@ -1482,6 +1483,8 @@ namespace Xamarin.Bundler {
 				processArguments.Add ("-O=gsharedvt");
 			if (app.AotOtherArguments != null)
 				processArguments.AddRange (app.AotOtherArguments);
+			if (app.AotFloat32.HasValue)
+				processArguments.Add (app.AotFloat32.Value ? "-O=float32" : "-O=-float32");
 			aotArguments = new List<string> ();
 			if (Platform == ApplePlatform.MacCatalyst) {
 				aotArguments.Add ($"--aot=mtriple={arch}-apple-ios{DeploymentTarget}-macabi");

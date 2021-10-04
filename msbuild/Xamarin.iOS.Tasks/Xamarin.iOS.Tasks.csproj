@@ -6,6 +6,7 @@
     <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../product.snk</AssemblyOriginatorKeyFile>
+    <NoWarn>$(NoWarn);8002</NoWarn> <!-- Referenced projects aren't signed: this doesn't matter, because we use ILMerge to merge into a single assembly which we sign -->
   </PropertyGroup>
 
   <Import Project="..\..\eng\Versions.props" />
