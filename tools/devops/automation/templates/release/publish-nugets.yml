@@ -18,7 +18,7 @@ steps:
     ${{ else }}:
       VAR_NAME: 'NUGET_PRIVATE_FEED'
 
-- ${{ if not(contains(variables['Build.DefinitionName'], 'private')) }}:
+- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - task: NuGetAuthenticate@0
     displayName: 'Authenticate dotnet-tool feed'
     inputs:
