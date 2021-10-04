@@ -19,10 +19,9 @@ steps:
       VAR_NAME: 'NUGET_PRIVATE_FEED'
 
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-  - task: NuGetAuthenticate@0
-    displayName: 'Authenticate dotnet-tool feed'
-    inputs:
-      nuGetServiceConnections: variables['nuget-feed']
+  - template: auth-feed.yml
+    parameters:
+      serviceConnection: variables['nuget-feed']
 
 - task: DownloadPipelineArtifact@2
   inputs:
