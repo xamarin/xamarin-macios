@@ -1,4 +1,4 @@
-#if !__WATCHOS__
+#if __IOS__ || __MACOS__
 using Foundation;
 using Metal;
 

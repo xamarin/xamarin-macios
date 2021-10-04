@@ -29,17 +29,15 @@ namespace MonoTouchFixtures.Metal {
 			TestRuntime.AssertXcodeVersion (13, 0);
 #endif 
 			NSObject refObj = new NSObject();
-			var devices = MTLDevice.GetAllDevices(ref refObj, (IMTLDevice device, NSString notifyName) => { });
+			var devices = MTLDevice.GetAllDevices();
 
 			// It's possible to run on a system that does not support metal,
 			// in which case we'll get an empty array of devices.
 			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
-
-			Assert.DoesNotThrow (() => {
-				MTLDevice.RemoveObserver (refObj);
-			});
 		}
-
+#endif
+		
+#if __MACOS__
 		[Test]
 		public void GetAllDevicesTestOutObserver ()
 		{
