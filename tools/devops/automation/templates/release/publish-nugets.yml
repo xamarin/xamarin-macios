@@ -15,7 +15,7 @@ steps:
   env:
     ${{ if not(contains (variables['Build.DefinitionName'], 'private')) }}:
       VAR_NAME=NUGET_PUBLIC_FEED
-    ${{ if contains (variables['Build.DefinitionName'], 'private') }}:
+    ${{ else }}: 
       VAR_NAME=NUGET_PRIVATE_FEED
 
 - task: NuGetAuthenticate@0
