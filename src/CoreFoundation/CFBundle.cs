@@ -604,12 +604,12 @@ namespace CoreFoundation {
 			}
 		}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 #if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15,0)]
 #else
-		[SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -617,9 +617,9 @@ namespace CoreFoundation {
 
 #if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15,0)]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		public static bool IsExecutableLoadable (CFBundle bundle)
 		{
@@ -633,9 +633,9 @@ namespace CoreFoundation {
 
 #if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15,0)]
 #else
-		[SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -643,9 +643,9 @@ namespace CoreFoundation {
 
 #if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15,0)]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		public static bool IsExecutableLoadable (NSUrl url)
 		{
@@ -657,9 +657,9 @@ namespace CoreFoundation {
 
 #if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15,0)]
 #else
-		[SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -667,9 +667,9 @@ namespace CoreFoundation {
 
 #if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15,0)]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
 
