@@ -129,7 +129,7 @@ resources:
   - repository: release-scripts
     type: github
     name: xamarin/release-scripts
-    ref: refs/heads/sign-and-notarized
+    ref: refs/heads/only_codesign
     endpoint: xamarin
 
 variables:
