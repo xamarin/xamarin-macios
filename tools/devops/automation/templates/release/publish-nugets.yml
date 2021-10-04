@@ -14,9 +14,9 @@ steps:
   name: ConfigureNuget
   env:
     ${{ if not(contains (variables['Build.DefinitionName'], 'private')) }}:
-      VAR_NAME=NUGET_PUBLIC_FEED
+      VAR_NAME:NUGET_PUBLIC_FEED
     ${{ else }}: 
-      VAR_NAME=NUGET_PRIVATE_FEED
+      VAR_NAME:NUGET_PRIVATE_FEED
 
 - task: NuGetAuthenticate@0
   displayName: 'Authenticate dotnet-tool feed'
