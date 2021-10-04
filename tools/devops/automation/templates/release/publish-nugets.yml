@@ -22,7 +22,7 @@ steps:
   - task: NuGetAuthenticate@0
     displayName: 'Authenticate dotnet-tool feed'
     inputs:
-      nuGetServiceConnections: $(nuget-feed)
+      nuGetServiceConnections: variables['nuget-feed']
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -37,7 +37,7 @@ steps:
     command: push
     packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
     nuGetFeedType: external
-    publishFeedCredentials: $(nuget-feed)
+    publishFeedCredentials: variables['nuget-feed']
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -52,4 +52,4 @@ steps:
     command: push
     packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
     nuGetFeedType: external
-    publishFeedCredentials: $(nuget-feed)
+    publishFeedCredentials: variables['nuget-feed']
