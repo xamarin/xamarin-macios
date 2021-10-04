@@ -9,7 +9,7 @@ steps:
     make
     var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=$VAR_NAME)
     var=${var#*=}
-    echo "##vso[task.setvariable variable=Credential]$var"
+    echo "##vso[task.setvariable variable=nuget-feed;issecret=true]$var"
   displayName: 'Retrieve nuget feed'
   name: ConfigureNuget
   env:
@@ -22,7 +22,7 @@ steps:
   - task: NuGetAuthenticate@0
     displayName: 'Authenticate dotnet-tool feed'
     inputs:
-      nuGetServiceConnections: $(ConfigureNuget.Credential)
+      nuGetServiceConnections: $(nuget-feed)
 
 - task: DownloadPipelineArtifact@2
   inputs:
