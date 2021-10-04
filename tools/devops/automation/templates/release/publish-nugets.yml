@@ -18,11 +18,6 @@ steps:
     ${{ else }}:
       VAR_NAME: 'NUGET_PRIVATE_FEED'
 
-- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-  - template: auth-feed.yml
-    parameters:
-      serviceConnection: variables['nuget-feed']
-
 - task: DownloadPipelineArtifact@2
   inputs:
     artifactName: nuget-signed
