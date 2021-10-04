@@ -18,11 +18,11 @@ steps:
     ${{ else }}:
       VAR_NAME: 'NUGET_PRIVATE_FEED'
 
-- task: NuGetAuthenticate@0
-  displayName: 'Authenticate dotnet-tool feed'
-  inputs:
-    nuGetServiceConnections: $(ConfigureNuget.Credential)
-  condition: contains (variables['Build.DefinitionName'], 'private')
+- ${{ if not(contains(variables['Build.DefinitionName'], 'private')) }}:
+  - task: NuGetAuthenticate@0
+    displayName: 'Authenticate dotnet-tool feed'
+    inputs:
+      nuGetServiceConnections: $(ConfigureNuget.Credential)
 
 - task: DownloadPipelineArtifact@2
   inputs:
