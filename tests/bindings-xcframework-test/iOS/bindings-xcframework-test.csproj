@@ -15,7 +15,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>bindings-xcframework-test</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
@@ -49,32 +49,32 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
   <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+    <TestLibrariesDirectory>..\..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libframework.m">
+    <None Include="..\..\..\tests\test-libraries\libframework.m">
       <Link>libframework.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libframework.h">
+    <None Include="..\..\..\tests\test-libraries\libframework.h">
       <Link>libframework.h</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingApiDefinition Include="..\bindings-framework-test\ApiDefinition.cs">
+    <ObjcBindingApiDefinition Include="..\..\bindings-framework-test\ApiDefinition.cs">
       <Link>ApiDefinition.cs</Link>
     </ObjcBindingApiDefinition>
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingCoreSource Include="..\bindings-framework-test\StructsAndEnums.cs">
+    <ObjcBindingCoreSource Include="..\..\bindings-framework-test\StructsAndEnums.cs">
       <Link>StructsAndEnums.cs</Link>
     </ObjcBindingCoreSource>
   </ItemGroup>
   <ItemGroup>
-    <TestLibrariesInput Include="..\..\tests\test-libraries\libframework.m" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\XTest.xcframework" />
+    <TestLibrariesInput Include="..\..\..\tests\test-libraries\libframework.m" />
+    <TestLibrariesOutput Include="..\..\..\tests\test-libraries\.libs\XTest.xcframework" />
   </ItemGroup>
   <ItemGroup>
-    <NativeReference Include="..\test-libraries\.libs\XTest.xcframework">
+    <NativeReference Include="..\..\test-libraries\.libs\XTest.xcframework">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
 	  <Frameworks Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'">CoreLocation ModelIO</Frameworks>

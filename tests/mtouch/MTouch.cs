@@ -2027,11 +2027,11 @@ public class TestApp {
 
 		static string GetFrameworksBindingLibrary (Profile profile)
 		{
-			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
+			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/iOS/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
+			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
 
 			if (!File.Exists (fn)) {
-				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bindings-framework-test" + GetProjectSuffix (profile) + ".csproj");
+				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bindings-framework-test.csproj");
 				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
