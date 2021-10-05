@@ -100,7 +100,7 @@ namespace Xharness.Jenkins {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
-			Simulators = new SimulatorLoader (processManager);
+			Simulators = new SimulatorLoader (processManager, new SimulatorSelector ());
 			Devices = new HardwareDeviceLoader (processManager);
 			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);

@@ -117,7 +117,7 @@ namespace Xharness.Jenkins {
 						yield return new TestData {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
 							Debug = true,
-							Candidates = jenkins.Simulators.SelectDevices (target, jenkins.SimulatorLoadLog, true),
+							Candidates = jenkins.Simulators.SelectDevices (target.GetTargetOs (true), jenkins.SimulatorLoadLog, true),
 							Ignored = ignore ?? !jenkins.IncludeOldSimulatorTests, 
 						};
 					break;

@@ -129,7 +129,7 @@ namespace Xharness {
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
 			await sims.LoadDevices (Logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", "Simulator list"), false, false);
-			(simulator, companionSimulator) = await sims.FindSimulators (target, MainLog);
+			(simulator, companionSimulator) = await sims.FindSimulators (target.GetTargetOs (false), MainLog);
 
 			return simulator != null;
 		}
