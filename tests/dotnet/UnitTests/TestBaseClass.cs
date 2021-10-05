@@ -36,18 +36,18 @@ namespace Xamarin.Tests {
 			properties [multiRid] = runtimeIdentifiers;
 		}
 
-		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null)
+		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug")
 		{
-			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath);
+			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath, configuration);
 		}
 
-		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath)
+		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug")
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			if (string.IsNullOrEmpty (runtimeIdentifiers))
 				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
 			return rv;
 		}
 
@@ -139,6 +139,24 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
+		}
+
+		protected void AssertBundleAssembliesStripStatus (string appPath, bool shouldStrip)
+		{
+			var assemblies = Directory.GetFiles (appPath, "*.dll", SearchOption.AllDirectories);
+			var assembliesWithOnlyEmptyMethods = new List<String> ();
+			foreach (var assembly in assemblies) {
+				ModuleDefinition definition = ModuleDefinition.ReadModule (assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+
+				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All (t => 
+					t.Methods.Where (m => m.HasBody).All (m => m.Body.Instructions.Count == 1));
+				if (onlyHasEmptyMethods) {
+					assembliesWithOnlyEmptyMethods.Add (assembly);
+				}
+			}
+
+			// Some assemblies, such as Facades, will be completely empty even when not stripped
+			Assert.That (assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo (shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
 		}
 
 		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
