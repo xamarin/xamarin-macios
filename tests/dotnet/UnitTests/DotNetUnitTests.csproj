@@ -48,6 +48,9 @@
     <Compile Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\PListObject.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>external\SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="external\" />
