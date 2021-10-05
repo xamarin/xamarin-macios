@@ -83,6 +83,61 @@ namespace MonoTouchFixtures.Metal {
 			hd.StorageMode = MTLStorageMode.Private;
 			Assert.AreEqual (MTLStorageMode.Private, hd.StorageMode);
 		}
+
+		[Test]
+		public void SizeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var s = hd.Size;
+			});
+		}
+
+		[Test]
+		public void StorageModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var m = hd.StorageMode;
+			});
+		}
+
+		[Test]
+		public void CpuCacheModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var m = hd.CpuCacheMode;
+			});
+		}
+
+
+		[Test]
+		public void HazardTrackingModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var mode = hd.HazardTrackingMode;
+			});
+		}
+
+		[Test]
+		public void ResourceOptionsTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var optiosn = hd.ResourceOptions;
+			});
+		}
+
+		[Test]
+		public void TypeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var t = hd.Type;
+			});
+		}
 	}
 }
 
