@@ -458,10 +458,10 @@ namespace Xharness {
 			foreach (var p in fsharp_library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-framework-test", "iOS", "bindings-framework-test.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-framework-test", "iOS", "bindings-framework-test.csproj")), false) {
 				Name = "bindings-framework-test",
 			});
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-xcframework-test", "iOS", "bindings-xcframework-test.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-xcframework-test", "iOS", "bindings-xcframework-test.csproj")), false) {
 				Name = "bindings-xcframework-test",
 			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) {
