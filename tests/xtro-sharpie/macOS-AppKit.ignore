@@ -198,7 +198,6 @@
 !missing-protocol-conformance! NSTableView should conform to NSTextViewDelegate
 !missing-protocol-conformance! NSText should conform to NSChangeSpelling
 !missing-protocol-conformance! NSText should conform to NSIgnoreMisspelledWords
-!missing-protocol-conformance! NSTextAttachmentCell should conform to NSTextAttachmentCell
 !missing-protocol-conformance! NSTitlebarAccessoryViewController should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSView should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSWindow should conform to NSAnimatablePropertyContainer
@@ -1414,8 +1413,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSSpellChecker::ShowCorrectionIndicatorOfType(AppKit.NSCorrectionIndicatorType,System.String,System.String[],CoreGraphics.CGRect,AppKit.NSRulerView,AppKit.NSSpellCheckerShowCorrectionIndicatorOfTypeHandler)' is missing an [NullAllowed] on parameter #5
 !missing-null-allowed! 'System.Void AppKit.NSStringDrawing_NSString::DrawAtPoint(Foundation.NSString,CoreGraphics.CGPoint,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSStringDrawing_NSString::DrawInRect(Foundation.NSString,CoreGraphics.CGRect,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void AppKit.NSTextAttachmentCell::DrawWithFrame(CoreGraphics.CGRect,AppKit.NSView,System.nuint)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AppKit.NSTextAttachmentCell::DrawWithFrame(CoreGraphics.CGRect,AppKit.NSView,System.nuint,AppKit.NSLayoutManager)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSTextAttachmentCell::Highlight(System.Boolean,CoreGraphics.CGRect,AppKit.NSView)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSTextView::.ctor(CoreGraphics.CGRect,AppKit.NSTextContainer)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSTrackingArea::.ctor(CoreGraphics.CGRect,AppKit.NSTrackingAreaOptions,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
