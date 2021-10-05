@@ -1057,26 +1057,26 @@ namespace AppKit {
 		[Mac (12,0)]
 		[IgnoredInDelegate]
 		[Export ("applicationSupportsSecureRestorableState:")]
-		bool ApplicationSupportsSecureRestorableState (NSApplication application);
+		bool SupportsSecureRestorableState (NSApplication application);
 
 		[Mac (12,0)]
 		[IgnoredInDelegate]
 		[Export ("application:handlerForIntent:")]
 		[return: NullAllowed]
-		NSObject GetApplication (NSApplication application, INIntent intent);
+		NSObject GetHandler (NSApplication application, INIntent intent);
 
 		[Mac (12,0)]
 		[IgnoredInDelegate]
 		[Export ("applicationShouldAutomaticallyLocalizeKeyEquivalents:")]
-		bool ApplicationShouldAutomaticallyLocalizeKeyEquivalents (NSApplication application);
+		bool ShouldAutomaticallyLocalizeKeyEquivalents (NSApplication application);
 
 		[Mac (12,0)]
 		[Export ("applicationProtectedDataWillBecomeUnavailable:")]
-		void ApplicationProtectedDataWillBecomeUnavailable (NSNotification notification);
+		void ProtectedDataWillBecomeUnavailable (NSNotification notification);
 
 		[Mac (12,0)]
 		[Export ("applicationProtectedDataDidBecomeAvailable:")]
-		void ApplicationProtectedDataDidBecomeAvailable (NSNotification notification);
+		void ProtectedDataDidBecomeAvailable (NSNotification notification);
 	}
 
 	[NoMacCatalyst]
@@ -1604,7 +1604,7 @@ namespace AppKit {
 
 		[Mac (12,0)]
 		[Field ("NSImageIPTCData")]
-		NSString IPTCData { get; }
+		NSString IptcData { get; }
 
 		[Field ("NSImageFallbackBackgroundColor")]
 		NSString FallbackBackgroundColor { get; }
@@ -5802,7 +5802,7 @@ namespace AppKit {
 		[Mac (12,0)]
 		[Static]
 		[Export ("allowedClassesForRestorableStateKeyPath:")]
-		Class[] AllowedClassesForRestorableStateKeyPath (string keyPath);
+		Class[] GetAllowedClassesForRestorableStateKeyPath (string keyPath);
 
 		[Mac (10,10)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -12695,7 +12695,7 @@ namespace AppKit {
 		[Mac (12,0)]
 		[Static]
 		[Export ("allowedClassesForRestorableStateKeyPath:")]
-		Class[] AllowedClassesForRestorableStateKeyPath (string keyPath);
+		Class[] GetAllowedClassesForRestorableStateKeyPath (string keyPath);
 
 		[Export ("wantsForwardedScrollEventsForAxis:")]
 		bool WantsForwardedScrollEventsForAxis (NSEventGestureAxis axis);
@@ -13141,11 +13141,7 @@ namespace AppKit {
 		[Mac (10, 15)]
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get; }
-	}
 
-	[NoMacCatalyst]
-	partial interface NSScreen
-	{
 		[Mac (12,0)]
 		[Export ("maximumFramesPerSecond")]
 		nint MaximumFramesPerSecond { get; }
@@ -21546,40 +21542,40 @@ namespace AppKit {
 
 		[Mac (12,0)]
 		[Export ("URLsForApplicationsWithBundleIdentifier:")]
-		NSUrl[] URLsForApplications (string bundleIdentifier);
+		NSUrl[] GetUrlsForApplications (string bundleIdentifier);
 
 		[Mac (12,0)]
 		[Export ("URLsForApplicationsToOpenURL:")]
-		NSUrl[] URLsForApplications (NSUrl url);
+		NSUrl[] GetUrlsForApplications (NSUrl url);
 
 		[Async]
 		[Mac (12,0)]
 		[Export ("setDefaultApplicationAtURL:toOpenContentTypeOfFileAtURL:completionHandler:")]
-		void SetDefaultApplicationToOpenContentType (NSUrl applicationURL, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
+		void SetDefaultApplicationToOpenContentType (NSUrl applicationUrl, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
 		[Mac (12,0)]
 		[Export ("setDefaultApplicationAtURL:toOpenURLsWithScheme:completionHandler:")]
-		void SetDefaultApplication (NSUrl applicationURL, string urlScheme, [NullAllowed] Action<NSError> completionHandler);
+		void SetDefaultApplicationToOpenUrls (NSUrl applicationUrl, string urlScheme, [NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
 		[Mac (12,0)]
 		[Export ("setDefaultApplicationAtURL:toOpenFileAtURL:completionHandler:")]
-		void SetDefaultApplicationToOpenFile (NSUrl applicationURL, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
+		void SetDefaultApplicationToOpenFile (NSUrl applicationUrl, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[Mac (12,0)]
 		[Export ("URLForApplicationToOpenContentType:")]
 		[return: NullAllowed]
-		NSUrl URLForApplication (UTType contentType);
+		NSUrl GetUrlForApplicationToOpenContentType (UTType contentType);
 
 		[Mac (12,0)]
 		[Export ("URLsForApplicationsToOpenContentType:")]
-		NSUrl[] URLsForApplications (UTType contentType);
+		NSUrl[] GetUrlsForApplicationsToOpenContentType (UTType contentType);
 
 		[Async]
 		[Mac (12,0)]
 		[Export ("setDefaultApplicationAtURL:toOpenContentType:completionHandler:")]
-		void SetDefaultApplication (NSUrl applicationURL, UTType contentType, [NullAllowed] Action<NSError> completionHandler);
+		void SetDefaultApplicationToOpenContentType (NSUrl applicationUrl, UTType contentType, [NullAllowed] Action<NSError> completionHandler);
 		
 		[Export ("absolutePathForAppBundleWithIdentifier:"), ThreadSafe]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'UrlForApplication' method instead.")]
