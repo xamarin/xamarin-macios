@@ -698,6 +698,11 @@ namespace Introspection {
 			case "Metal":
 				switch (type.Name) {
 				case "MTLCounterSampleBufferDescriptor":
+				case "MTLRasterizationRateMapDescriptor":
+				case "MTLTileRenderPipelineDescriptor":
+				case "MTLHeapDescriptor":
+				case "MTLRasterizationRateLayerDescriptor":
+				case "MTLLinkedFunctions":
 					// This whole type is implemented using a different (internal) type,
 					// and it's the internal type who knows how to respond to the selectors.
 					return true;

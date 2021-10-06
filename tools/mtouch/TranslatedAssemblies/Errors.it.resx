@@ -814,6 +814,9 @@
 		<value>La libreria di binding '{0}' contiene un framework utente ({0}), ma i framework utente incorporati richiedono iOS 8.0 (la destinazione di distribuzione è {1}). Impostare la destinazione di distribuzione su almeno 8.0 nel file Info.plist.
 		</value>
 	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>L'assembly obbligatorio 'Xamarin.Mac.dll' non è presente nei riferimenti
 		</value>

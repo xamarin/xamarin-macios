@@ -106,7 +106,12 @@ namespace Introspection {
 			// iOS 10 - this type can only be instantiated on devices, but the selectors are forwarded
 			//  to a MTLHeapDescriptorInternal and don't respond - so we'll add unit tests for them
 			case "MTLHeapDescriptor":
-				return Runtime.Arch == Arch.DEVICE;
+			case "MTLLinkedFunctions":
+			case "MTLRenderPipelineDescriptor":
+			case "MTLTileRenderPipelineDescriptor":
+			case "MTLRasterizationRateLayerDescriptor":
+			case "MTLRasterizationRateMapDescriptor":
+				return Runtime.Arch == Arch.SIMULATOR;
 #if __WATCHOS__
 				// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
 			case "INPersonResolutionResult":

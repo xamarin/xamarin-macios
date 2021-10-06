@@ -13,9 +13,9 @@
    <OutputType>Library</OutputType>
     <RootNamespace>bindingstest</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>bindings-xcframework-test</AssemblyName>
+    <AssemblyName>bindings-framework-test</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;FRAMEWORK_TEST;XCFRAMEWORK;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;FRAMEWORK_TEST;;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -35,7 +35,7 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DO_NOT_REMOVE;FRAMEWORK_TEST;XCFRAMEWORK;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DO_NOT_REMOVE;FRAMEWORK_TEST;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -48,33 +48,29 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingApiDefinition Include="..\bindings-framework-test\ApiDefinition.cs">
-      <Link>ApiDefinition.cs</Link>
-    </ObjcBindingApiDefinition>
+    <ObjcBindingApiDefinition Include="..\ApiDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingCoreSource Include="..\bindings-framework-test\StructsAndEnums.cs">
-      <Link>StructsAndEnums.cs</Link>
-    </ObjcBindingCoreSource>
+    <ObjcBindingCoreSource Include="..\StructsAndEnums.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.ObjCBinding.CSharp.targets" />
   <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+    <TestLibrariesDirectory>..\..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libframework.m">
+    <None Include="..\..\..\tests\test-libraries\libframework.m">
       <Link>libframework.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libframework.h">
+    <None Include="..\..\..\tests\test-libraries\libframework.h">
       <Link>libframework.h</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TestLibrariesInput Include="..\..\tests\test-libraries\libframework.m" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\XTest.xcframework" />
+    <TestLibrariesInput Include="..\..\..\tests\test-libraries\libframework.m" />
+    <TestLibrariesOutput Include="..\..\..\tests\test-libraries\.libs\macos\XTest.framework" />
   </ItemGroup>
   <ItemGroup>
-    <NativeReference Include="..\test-libraries\.libs\XTest.xcframework">
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\macos\XTest.framework">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
       <Frameworks>CoreLocation ModelIO</Frameworks>
