@@ -84,6 +84,14 @@ namespace Network {
 		internal static extern bool nw_protocol_metadata_is_tcp (OS_nw_protocol_metadata metadata);
 
 		public bool IsTcp => nw_protocol_metadata_is_tcp (GetCheckedHandle ());
+		
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_protocol_metadata_is_quic (OS_nw_protocol_metadata metadata);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		public bool IsQuic => nw_protocol_metadata_is_quic (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern IntPtr nw_tls_copy_sec_protocol_metadata (IntPtr handle);

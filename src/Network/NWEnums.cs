@@ -234,4 +234,13 @@ namespace Network {
 		Accept = 1,
 		Reject = 2,
 	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
+	public enum NWReportResolutionProtocol {
+		unknown = 0,
+		udp = 1,
+		tcp = 2,
+		tls = 3,
+		https = 4,
+	}
 }

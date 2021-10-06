@@ -64,6 +64,18 @@ namespace Network {
 			return new NWProtocolUdpOptions (nw_udp_create_options (), owns: true);
 		}
 
+		// added to have a consistent API, but obsolete it
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst(15,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		internal static extern IntPtr nw_quic_create_options ();
+
+		[Obsolete ("Use the 'NWProtocolQuicOptions' class methods and constructors instead.")]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst(15,0)]
+		public static NWProtocolOptions CreateQuic ()
+		{
+			return new NWProtocolUdpOptions (nw_quic_create_options (), owns: true);
+		}
+
 //
 // IP Options
 //

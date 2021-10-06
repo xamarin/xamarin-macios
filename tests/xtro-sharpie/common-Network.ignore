@@ -27,6 +27,9 @@
 !missing-protocol! OS_nw_ws_response not bound
 !missing-protocol! OS_nw_connection_group not bound
 !missing-protocol! OS_nw_group_descriptor not bound
+!missing-protocol! OS_nw_privacy_context not bound
+!missing-protocol! OS_nw_resolution_report not bound
+!missing-protocol! OS_nw_resolver_config not bound
 
 # no need, please see comment: https://github.com/xamarin/xamarin-macios/pull/4251#issuecomment-410815837
 !missing-pinvoke! nw_release is not bound
@@ -37,3 +40,6 @@
 
 ## no documentation from apple. So we do nothing, specially with the _ prefix. Leak?
 !missing-field! _nw_data_transfer_report_all_paths not bound
+
+## manuel remove!
+!unknown-pinvoke! nw_quic_get_stream_type bound
