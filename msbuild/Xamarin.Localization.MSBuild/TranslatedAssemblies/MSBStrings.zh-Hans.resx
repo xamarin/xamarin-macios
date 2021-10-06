@@ -1054,7 +1054,7 @@
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>{0}info.plist 中的值({1})与项目文件中的 SupportedOSPlatformVersion 值({2})不匹配(如果项目文件中没有 SupportedOSPlatformVersion 值，则已假定默认值)。请更改 Info.plist 中的值以匹配 SupportedOSPlatformVersion 值，或删除 Info.plist 中的值(如果尚不存在，则将 SupportedOSPlatformVersion 值添加到项目文件)。</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>所有字体文件都必须位于应用捆绑包中的同一目录中。以下字体文件在应用捆绑包中具有不同的目标目录:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>目标目录是 {0}</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>
