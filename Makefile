@@ -14,14 +14,11 @@ endif
 all-local:: check-system
 install-local::
 
-.PHONY: world help
+.PHONY: world
 world: check-system
 	@$(MAKE) reset-versions
 	@$(MAKE) all -j8
 	@$(MAKE) install -j8
-
-help:
-	sh -c "$(MAKE) -p no_targets__ | awk -F':' '/^[a-zA-Z0-9][^\$$#\/\\t=]*:([^=]|$$)/ {split(\$$1,A,/ /);for(i in A)print A[i]}' | grep -v '__\$$' | sort"
 
 .PHONY: check-system
 check-system:
