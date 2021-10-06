@@ -814,6 +814,9 @@
 		<value>绑定库 "{0}" 包含用户框架({0})，但嵌入式用户框架需要 iOS 8.0 (部署目标是 {1})。请将 Info.plist 文件中的部署目标至少设为 8.0。
 		</value>
 	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>引用中缺少必需的 "Xamarin.Mac.dll" 程序集
 		</value>

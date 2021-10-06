@@ -199,7 +199,7 @@ steps:
           $msg.AppendLine("* $test")
       }
       $request = New-GitHubComment -Header "Tests failed on macOS $Env:CONTEXT" -Description "Tests failed on $Env:CONTEXT." -Message $msg.ToString() -Emoji ":x:"
-
+      exit 1
     } else {
       Set-GitHubStatus -Status "success" -Description "Tests passed Xamarin.Mac tests on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
       $request = New-GitHubComment -Header "Tests passed on macOS $Env:CONTEXT" -Description "Tests passed" -Message "**All** tests on macOS X $Env:CONTEXT passed." -Emoji ":white_check_mark:"
@@ -211,3 +211,4 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
+    continueOnError: true
