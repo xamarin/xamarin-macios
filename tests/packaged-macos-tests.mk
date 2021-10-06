@@ -167,13 +167,13 @@ build-$(1): .stamp-nuget-restore-mac
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 
 exec-$(1):
-	$$(Q) rm -f ".$@-failure.stamp"
+	$$(Q) rm -f ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || cat .$$@-legacy-failure.stamp                    >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
-	$$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
+	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 
 $(eval $(call DotNetNormalTest,monotouch-test,monotouchtest))
@@ -236,13 +236,13 @@ build-$(1): .stamp-nuget-restore-mac
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 
 exec-$(1):
-	$$(Q) rm -f ".$@-failure.stamp"
+	$$(Q) rm -f ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || cat .$$@-legacy-failure.stamp                    >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
-	$$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
+	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 
 $(eval $(call DotNetLinkerTest,dontlink,dont link))
