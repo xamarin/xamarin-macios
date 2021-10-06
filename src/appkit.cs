@@ -5802,7 +5802,7 @@ namespace AppKit {
 		[Mac (12,0)]
 		[Static]
 		[Export ("allowedClassesForRestorableStateKeyPath:")]
-		Class[] GetAllowedClassesForRestorableStateKeyPath (string keyPath);
+		Class[] GetAllowedClasses (string keyPath);
 
 		[Mac (10,10)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -18051,7 +18051,7 @@ namespace AppKit {
 	[BaseType (typeof (NSCell))]
 	interface NSTextAttachmentCell : NSTextAttachmentCellProtocol {
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		IntPtr Constructor (NSImage image);
 
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
