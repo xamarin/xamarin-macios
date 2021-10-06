@@ -59,10 +59,6 @@ namespace Introspection {
 			case "CVPixelBufferGetIOSurface":
 			case "CVPixelBufferCreateWithIOSurface":
 				return simulator && !TestRuntime.CheckXcodeVersion (11, 0);
-			// it's not needed for ARM64/ARM64_32 and Apple does not have stubs for them in libobjc.dylib
-			case "objc_msgSend_stret":
-			case "objc_msgSendSuper_stret":
-				return !simulator;
 
 			default:
 				// MLCompute not available in simulator as of Xcode 12 beta 3
