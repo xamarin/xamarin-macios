@@ -415,6 +415,7 @@ steps:
   displayName: 'Package Xamarin.mac tests'
   condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true # not a terrible blocking issue
+  timeoutInMinutes: 60
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Xamarin.Mac tests'
