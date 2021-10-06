@@ -91,7 +91,7 @@ namespace CoreAnimation {
 
 	interface ICAMediaTiming {}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	[BaseType (typeof (NSObject))]
 	interface CAConstraintLayoutManager : NSCoding {
 		[Static]
@@ -128,8 +128,9 @@ namespace CoreAnimation {
 		[Export ("initWithAttribute:relativeTo:attribute:scale:offset:")]
 		IntPtr Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
-	
-#else
+#endif
+
+#if !MONOMAC
 	[BaseType (typeof (NSObject))]
 	interface CADisplayLink {
 		[Export ("displayLinkWithTarget:selector:")][Static]
@@ -184,6 +185,7 @@ namespace CoreAnimation {
 		[Field ("kCAContentsFormatRGBA16Float")]
 		Rgba16Float,
 	}
+
 
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();", Optimizable = true)]
@@ -310,7 +312,7 @@ namespace CoreAnimation {
 		[Export ("contents", ArgumentSemantic.Strong)][Internal][Sealed]
 		IntPtr _Contents { get; set; }
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[Export ("layoutManager", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSObject LayoutManager { get; set; }
@@ -533,7 +535,7 @@ namespace CoreAnimation {
 		[Export ("minificationFilterBias")]
 		float MinificationFilterBias { get; set; } /* float, not CGFloat */
 
-#if MONOMAC
+#if MONOMAC  || __MACCATALYST__
 		[Export ("autoresizingMask")]
 		CAAutoresizingMask AutoresizingMask { get; set; }
 
@@ -618,7 +620,7 @@ namespace CoreAnimation {
 		CAMetalLayer Layer { get; }
 	}
 
-	[iOS (8,0)][Mac (10,11)]
+	[iOS (8,0)][Mac (10,11)][MacCatalyst (13,0)]
 	[BaseType (typeof (CALayer))]
 	interface CAMetalLayer {
 		[NullAllowed] // by default this property is null
@@ -643,6 +645,7 @@ namespace CoreAnimation {
 
 		[NoWatch][NoTV][NoiOS]
 		[Mac (10,13)]
+		[MacCatalyst (13,0)]
 		[Export ("displaySyncEnabled")]
 		bool DisplaySyncEnabled { get; set; }
 
@@ -668,6 +671,7 @@ namespace CoreAnimation {
 
 		[NoWatch][NoiOS][NoTV]
 		[Mac (10,15)]
+		[MacCatalyst (13,0)]
 		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
 		CAEdrMetadata EdrMetadata { get; set; }
 	}
@@ -1887,8 +1891,10 @@ namespace CoreAnimation {
 		[Export ("setDestination:")]
 		void SetDestination (IMTLTexture tex);
 	}
+#endif
 
 	[NoWatch][NoiOS][NoTV]
+	[MacCatalyst (13,1)]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
 	[DisableDefaultCtor]
@@ -1906,5 +1912,4 @@ namespace CoreAnimation {
 		[Export ("HLGMetadata", ArgumentSemantic.Retain)]
 		CAEdrMetadata HlgMetadata { get; }
 	}
-#endif
 }

@@ -5,7 +5,9 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks
+using Xamarin.iOS.Tasks;
+
+namespace Xamarin.MacDev.Tasks
 {
 	class CustomBTouchTask : BTouch
 	{

@@ -287,7 +287,6 @@ namespace Xharness {
 					SkipwatchOSVariation = true,
 					SkipTodayExtensionVariation = true,
 					SkipDeviceVariations = false,
-					SkipiOS32Variation = true,
 					TestPlatform = TestPlatform.iOS_Unified,
 					Ignore = dotnetIgnored,
 					Configurations = projectInfo.Configurations,
@@ -301,7 +300,6 @@ namespace Xharness {
 					SkipwatchOSVariation = true,
 					SkipTodayExtensionVariation = true,
 					SkipDeviceVariations = false,
-					SkipiOS32Variation = true,
 					GenerateVariations = false,
 					TestPlatform = TestPlatform.tvOS,
 					Ignore = dotnetIgnored,
@@ -445,7 +443,7 @@ namespace Xharness {
 
 		void AutoConfigureIOS ()
 		{
-			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2", "bindings-framework-test", "bindings-xcframework-test" };
+			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
@@ -460,6 +458,12 @@ namespace Xharness {
 			foreach (var p in fsharp_library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-framework-test", "iOS", "bindings-framework-test.csproj")), false) {
+				Name = "bindings-framework-test",
+			});
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-xcframework-test", "iOS", "bindings-xcframework-test.csproj")), false) {
+				Name = "bindings-xcframework-test",
+			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) {
 				Name = "framework-test",
 			});

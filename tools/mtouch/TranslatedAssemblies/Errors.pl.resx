@@ -814,6 +814,9 @@
 		<value>Biblioteka powiązań „{0}” zawiera strukturę użytkownika ({0}), ale osadzone struktury użytkownika wymagają systemu iOS 8.0 (wersja platformy docelowej wdrożenia to {1}). W pliku Info.plist ustaw wersję platformy docelowej wdrożenia co najmniej 8.0.
 		</value>
 	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>W odwołaniach brakuje wymaganego zestawu „Xamarin.Mac.dll”
 		</value>

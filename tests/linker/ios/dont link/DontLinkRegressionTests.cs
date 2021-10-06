@@ -170,7 +170,7 @@ namespace DontLink {
 #endif // __TVOS__ || __WATCHOS__
 
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 		// Test that we allow P/Invokes to functions that don't exist
 		// for functions in platform libraries.
 		[DllImport ("/usr/lib/libsqlite3.dylib")]

@@ -12,6 +12,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -209,6 +210,7 @@
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
 		<!-- ComputeFilesToPublish will run ILLink -->
 		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
+		<!-- Note - _ComputeStripAssemblyIL must be before _StripAssemblyIL as msbuild DependsOn do not execute before Conditions are evaluated -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' == ''">
 			$(CreateAppBundleDependsOn);
 			_CopyResourcesToBundle;
@@ -226,6 +228,8 @@
 			_ComputeFrameworkFilesToPublish;
 			_ComputeDynamicLibrariesToPublish;
 			ComputeFilesToPublish;
+			_ComputeStripAssemblyIL;
+			_StripAssemblyIL;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
 			_LinkNativeExecutable;
@@ -441,6 +445,7 @@
 				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
 				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
 				@(_MonoLibrary -> 'MonoLibrary=%(Identity)')
+				MtouchFloat32=$(MtouchFloat32)
 				Optimize=$(_BundlerOptimize)
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
@@ -626,6 +631,40 @@
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
+
+	<Target Name="_ComputeStripAssemblyIL" Condition=" '$(EnableAssemblyILStripping)' == '' " DependsOnTargets="_ComputeVariables;ComputeFilesToPublish">
+		<PropertyGroup>
+			<!-- Don't strip IL by default -->
+			<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+
+			<!-- Strip if we are AOT and Release  -->
+			<EnableAssemblyILStripping Condition="'$(_RunAotCompiler)' == 'true' And '$(Configuration)' == 'Release'">true</EnableAssemblyILStripping>
+
+			<!-- Don't strip if we are running the interpreter  -->
+			<EnableAssemblyILStripping Condition="'$(MtouchInterpreter)' != ''">false</EnableAssemblyILStripping>
+		</PropertyGroup>
+	</Target>
+
+	<!-- The DependsOnTargets here will not force EnableAssemblyILStripping to be calculated before the condition is evaulated. The order in CreateAppBundleDependsOn matters. -->
+	<Target Name="_StripAssemblyIL" Condition="'$(EnableAssemblyILStripping)' == 'true'" DependsOnTargets="_ComputeStripAssemblyIL">
+		<PropertyGroup>
+			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
+		</PropertyGroup>
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StrippedAssemblyDirectory)" />
+		<ItemGroup>
+			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll'">
+				<OutputPath>$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
+			</_AssembliesToBeStripped>
+		</ItemGroup>
+		<Xamarin.MacDev.Tasks.ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)">
+			<Output TaskParameter="StrippedAssemblies" PropertyName="_StrippedAssemblies" />
+		</Xamarin.MacDev.Tasks.ILStrip>
+		<ItemGroup>
+			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />
+			<ResolvedFileToPublish Include="@(_StrippedAssemblies)" />
+		</ItemGroup>
+	</Target>
+
 
 	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
 		<!-- Load _MainFile -->

@@ -742,10 +742,10 @@
 		<value>未連結到架構 {0} (被 {1} 的參考模組引用) ，因為目前的平臺 ({2}) 無法使用它。</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>無法將 Mac Catalyst 版本 {0} 對應至 macOS 版本。有效的 Mac Catalyst 版本為: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>無法將 macOS 版本 {0} 對應至 Mac Catalyst 版本。有效的 macOS 版本為: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>使用 CoreCLR 時，選項 '{0}' 不能採用值 '{1}'。</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>繫結程式庫 '{0}' 包含使用者架構 ({0})，但內嵌的使用者架構需要 iOS 8.0 (部署目標為 {1})。請將 info.plist 檔案中的部署目標設定為 8.0 以上的版本。
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>參考中缺少必要的 'Xamarin.Mac.dll' 組件

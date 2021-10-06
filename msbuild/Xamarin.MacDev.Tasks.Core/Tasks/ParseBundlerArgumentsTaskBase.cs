@@ -36,6 +36,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		// This is input too
 		[Output]
+		public string NoStrip { get; set; }
+
+		[Output]
 		public int Verbosity { get; set; }
 
 		[Output]
@@ -141,6 +144,10 @@ namespace Xamarin.MacDev.Tasks {
 							xml = new List<string> ();
 						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						xml.Add (value);
+						break;
+					case "nostrip":
+						// Output is EnableAssemblyILStripping so we enable if --nostrip=false and disable if true
+						NoStrip = ParseBool (value) ? "false" : "true";
 						break;
 					default:
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);

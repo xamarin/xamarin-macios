@@ -15,7 +15,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>bindings-framework-test</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
@@ -48,43 +48,43 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="..\ApiDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+    <ObjcBindingCoreSource Include="..\StructsAndEnums.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
   <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+    <TestLibrariesDirectory>..\..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libframework.m">
+    <None Include="..\..\..\tests\test-libraries\libframework.m">
       <Link>libframework.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libframework.h">
+    <None Include="..\..\..\tests\test-libraries\libframework.h">
       <Link>libframework.h</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TestLibrariesInput Include="..\..\tests\test-libraries\libframework.m" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios-fat\XTest.framework" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios-fat\XSharedObjectTest.framework" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios-fat\XSharedARTest.framework" />
+    <TestLibrariesInput Include="..\..\..\tests\test-libraries\libframework.m" />
+    <TestLibrariesOutput Include="..\..\..\tests\test-libraries\.libs\ios-fat\XTest.framework" />
+    <TestLibrariesOutput Include="..\..\..\tests\test-libraries\.libs\ios-fat\XSharedObjectTest.framework" />
+    <TestLibrariesOutput Include="..\..\..\tests\test-libraries\.libs\ios-fat\XSharedARTest.framework" />
   </ItemGroup>
   <ItemGroup>
-    <NativeReference Include="..\..\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
       <Frameworks Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'">CoreLocation ModelIO</Frameworks>
       <Frameworks Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">CoreLocation</Frameworks>
     </NativeReference>
-    <NativeReference Include="..\..\tests\test-libraries\.libs\ios-fat\XStaticObjectTest.framework">
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios-fat\XStaticObjectTest.framework">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
       <Frameworks Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'">CoreLocation ModelIO</Frameworks>
       <Frameworks Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">CoreLocation</Frameworks>
     </NativeReference>
-    <NativeReference Include="..\..\tests\test-libraries\.libs\ios-fat\XTest.framework">
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios-fat\XTest.framework">
       <Kind>Framework</Kind>
       <SmartLink>False</SmartLink>
       <Frameworks Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'">CoreLocation ModelIO</Frameworks>

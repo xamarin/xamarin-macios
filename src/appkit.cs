@@ -45,8 +45,12 @@ using OpenGL;
 using CoreVideo;
 using CloudKit;
 using UniformTypeIdentifiers;
+
 #if __MACCATALYST__
 using UIKit;
+#else
+using UIMenu = Foundation.NSObject;
+using UIMenuElement = Foundation.NSObject;
 #endif
 
 using CGGlyph = System.UInt16;
@@ -19483,6 +19487,16 @@ namespace AppKit {
 		[Mac (11, 0)]
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
+
+		// https://github.com/xamarin/xamarin-macios/issues/12871
+		// [MacCatalyst (14,0)][NoMac]
+		// [Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier")]
+		// NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
+
+		// https://github.com/xamarin/xamarin-macios/issues/12871
+		// [MacCatalyst (14,0)][NoMac]
+		// [Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
+		// NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
 	}
 
 	[MacCatalyst (13, 0)]
@@ -19611,6 +19625,12 @@ namespace AppKit {
 		[Mac (11, 0), iOS (14, 0)]
 		[Export ("navigational")]
 		bool Navigational { [Bind ("isNavigational")] get; set; }
+
+		[NoMac]
+		[MacCatalyst (13, 0)]
+		[Export ("itemMenuFormRepresentation", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		UIMenuElement ItemMenuFormRepresentation { get; set; }
 	}
 
 	[MacCatalyst (13,0)]
@@ -27020,7 +27040,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[MacCatalyst (13,0)]
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem
 	{
@@ -27030,6 +27050,11 @@ namespace AppKit {
 
 		[Export ("showsIndicator")]
 		bool ShowsIndicator { get; set; }
+
+		[MacCatalyst (13, 0)]
+		[NoMac]
+		[Export ("itemMenu", ArgumentSemantic.Copy)]
+		UIMenu ItemMenu { get; set; }
 	}
 
 	[NoMacCatalyst]
