@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.IO;
 
@@ -10,11 +12,11 @@ namespace Xamarin.MacDev.Tasks
 		#region Inputs
 
 		[Required]
-		public ITaskItem Source { get; set; }
+		public ITaskItem? Source { get; set; }
 
 		[Required]
 		[Output]
-		public ITaskItem Destination { get; set; }
+		public ITaskItem? Destination { get; set; }
 
 		#endregion
 
@@ -36,8 +38,8 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var args = new CommandLineArgumentBuilder ();
 
-			args.AddQuoted (Source.ItemSpec);
-			args.AddQuoted (Destination.ItemSpec);
+			args.AddQuoted (Source!.ItemSpec);
+			args.AddQuoted (Destination!.ItemSpec);
 
 			return args.ToString ();
 		}
