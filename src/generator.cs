@@ -84,7 +84,7 @@ public static class ReflectionExtensions {
 	//
 	// Returs true if the specified method info or property info is not
 	// available in the current platform (because it has the attribute
-	// [Unavailable (ThisPlatform) or becasue the shorthand versions
+	// [Unavailable (ThisPlatform) or because the shorthand versions
 	// of [NoiOS] or [NoMac] are applied.
 	//
 	// This needs to merge, because we might have multiple attributes in
@@ -3330,6 +3330,11 @@ public partial class Generator : IMemberGatherer {
 	// more important since dotnet and legacy have different minimums (so this can't be done in binding files)
 	bool FilterMinimumVersion (AvailabilityBaseAttribute aa)
 	{
+#if NET
+		// dotnet can never filter minimum versions, as they are semantically important in some cases
+		// See for details: https://github.com/xamarin/xamarin-macios/issues/10170
+		return true;
+#else
 		if (aa.AvailabilityKind != AvailabilityKind.Introduced)
 			return true;
 
@@ -3354,6 +3359,126 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1047, aa.Platform.ToString ());
 		}
 		return aa.Version > min;
+#endif
+	}
+
+
+	AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
+	{
+		if (attr.Version is null) {
+			switch (attr.AvailabilityKind) {
+				case AvailabilityKind.Introduced:
+					return new IntroducedAttribute(platform, attr.Architecture, attr.Message);
+				case AvailabilityKind.Deprecated:
+					return new DeprecatedAttribute(platform, attr.Architecture, attr.Message);
+				case AvailabilityKind.Obsoleted:
+					return new ObsoletedAttribute(platform, attr.Architecture, attr.Message);
+				case AvailabilityKind.Unavailable:
+					return new UnavailableAttribute(platform, attr.Architecture, attr.Message);
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+		else {
+			// Revision is optional, and is returned as -1 if not yet. However the Version ctor called inside the attributes throws if you pass -1 so coerse to 0
+			int revision = attr.Version.Revision == -1 ? 0 : attr.Version.Revision;
+			switch (attr.AvailabilityKind) {
+				case AvailabilityKind.Introduced:
+					return new IntroducedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, attr.Architecture, attr.Message);
+				case AvailabilityKind.Deprecated:
+					return new DeprecatedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, attr.Architecture, attr.Message);
+				case AvailabilityKind.Obsoleted:
+					return new ObsoletedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, attr.Architecture, attr.Message);
+				case AvailabilityKind.Unavailable:
+					return new UnavailableAttribute(platform, attr.Architecture, attr.Message);
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+	}
+
+	static AvailabilityBaseAttribute GetMinSupportedAttribute (PlatformName platform)
+	{
+		switch (platform) {
+		case PlatformName.iOS:
+			return new IntroducedAttribute(platform, Xamarin.SdkVersions.MiniOSVersion.Major, Xamarin.SdkVersions.MiniOSVersion.Minor);
+		case PlatformName.TvOS:
+			return new IntroducedAttribute(platform, Xamarin.SdkVersions.MinTVOSVersion.Major, Xamarin.SdkVersions.MinTVOSVersion.Minor);
+		case PlatformName.WatchOS:
+			return new IntroducedAttribute(platform, Xamarin.SdkVersions.MinWatchOSVersion.Major, Xamarin.SdkVersions.MinWatchOSVersion.Minor);
+		case PlatformName.MacOSX:
+			return new IntroducedAttribute(platform, Xamarin.SdkVersions.MinOSXVersion.Major, Xamarin.SdkVersions.MinOSXVersion.Minor);
+		case PlatformName.MacCatalyst:
+			throw new InvalidOperationException ("GetMinSupportedAttribute for Catalyst never makes sense");
+		default:
+			throw new NotImplementedException ();
+		}
+	}
+
+	static void AddUnlistedAvailability (List<AvailabilityBaseAttribute> availability, PlatformName [] platforms)
+	{
+		var syntheticAttributes = new List<AvailabilityBaseAttribute>();
+		foreach (PlatformName platform in platforms) {
+			if (!availability.Any (v => v.Platform == platform && v.AvailabilityKind == AvailabilityKind.Introduced)) {
+				syntheticAttributes.Add(GetMinSupportedAttribute (platform));
+			}
+		}
+		availability.AddRange (syntheticAttributes);
+	}
+
+	static ICustomAttributeProvider FindContainingClass (MemberInfo mi)
+	{
+		if (mi is null) {
+			throw new InvalidOperationException ("FindContainingClass could not find parent class?");
+		}
+		if (mi is TypeInfo) {
+			return mi;
+		}
+		return FindContainingClass (mi.DeclaringType);
+	}
+
+	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi)
+	{
+		List<AvailabilityBaseAttribute> memberAvailability = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi).ToList();
+
+		// Due to differences between Xamarin and NET6 availability attributes, we have to synthesize many duplicates for NET6
+		// See https://github.com/xamarin/xamarin-macios/issues/10170 for details
+#if NET
+		var syntheticAttributes = new List<AvailabilityBaseAttribute>();
+
+		// If we have any availability attributes on our member, then first clone any not defined onto the member
+		if (memberAvailability.Any ()) {
+			List<AvailabilityBaseAttribute> parentAvailability = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (FindContainingClass(mi)).ToList();
+
+			// XXX - I originally thought we didn't instance macOS attributes in iOS platform assemblies but that seems wrong
+			AddUnlistedAvailability (parentAvailability, new [] { PlatformName.iOS, PlatformName.TvOS, PlatformName.WatchOS, PlatformName.MacOSX });
+
+			foreach (var attr in parentAvailability.Where (v => v is not ObsoletedAttribute).ToList()) {
+				if (!memberAvailability.Any (v => v.Platform == attr.Platform && v.AvailabilityKind == attr.AvailabilityKind)) {
+					syntheticAttributes.Add (CloneFromOtherPlatform (attr, attr.Platform));
+				}
+			}
+		}
+		// Add these now before processing Catalyst, so we duplicate any implied Catalyst from iOS/Mac
+		memberAvailability.AddRange (syntheticAttributes);
+		syntheticAttributes.Clear ();
+
+		// Then for each iOS/mac attribute (that is not Obsolete) if there is not a matching Catalyst one duplicate it
+		foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS && v is not ObsoletedAttribute).ToList()) {
+			if (!memberAvailability.Any (v => v.Platform == PlatformName.MacCatalyst && v.AvailabilityKind == attr.AvailabilityKind)) {
+				syntheticAttributes.Add (CloneFromOtherPlatform (attr, PlatformName.MacCatalyst));
+			}
+		}
+		foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.MacOSX && v is not ObsoletedAttribute).ToList())	{
+			if (!memberAvailability.Union(syntheticAttributes).Any (v => v.Platform == PlatformName.MacCatalyst && v.AvailabilityKind == attr.AvailabilityKind)) {
+				syntheticAttributes.Add (CloneFromOtherPlatform (attr, PlatformName.MacCatalyst));
+			}
+		}
+		memberAvailability.AddRange(syntheticAttributes);
+
+#endif
+
+		return memberAvailability.ToArray ();
 	}
 
 	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null)
@@ -3364,7 +3489,7 @@ public partial class Generator : IMemberGatherer {
 
 		AvailabilityBaseAttribute [] type_ca = null;
 
-		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi)) {
+		foreach (var availability in GetPlatformAttributesToPrint (mi)) {
 			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
 				if (t != null)
@@ -3372,9 +3497,12 @@ public partial class Generator : IMemberGatherer {
 				else
 					type_ca = Array.Empty<AvailabilityBaseAttribute> ();
 			}
+#if !NET
 			// if we're comparing to something else (than ourself) then don't generate duplicate attributes
+			// but only in Legacy, NET requires all this duplication 
 			if ((mi != t) && Duplicated (availability, type_ca))
 				continue;
+#endif
 			switch (availability.AvailabilityKind) {
 			case AvailabilityKind.Unavailable:
 				// an unavailable member can override type-level attribute

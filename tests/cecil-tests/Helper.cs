@@ -65,6 +65,34 @@ namespace Cecil.Tests {
 			yield break;
 		}
 
+		public static IEnumerable<PropertyDefinition> FilterProperties (AssemblyDefinition assembly, Func<PropertyDefinition, bool>? filter)
+		{
+			foreach (var module in assembly.Modules) {
+				foreach (var type in module.Types) {
+					foreach (var property in FilterProperties (type, filter))
+						yield return property;
+				}
+			}
+			yield break;
+		}
+
+		static IEnumerable<PropertyDefinition> FilterProperties (TypeDefinition type, Func<PropertyDefinition, bool>? filter)
+		{
+			if (type.HasProperties) {
+				foreach (var property in type.Properties) {
+					if ((filter == null) || filter (property))
+						yield return property;
+				}
+			}
+			if (type.HasNestedTypes) {
+				foreach (var nested in type.NestedTypes) {
+					foreach (var property in FilterProperties (nested, filter))
+						yield return property;
+				}
+			}
+			yield break;
+		}
+
 		public static string GetBCLDirectory (string assembly)
 		{
 			var rv = string.Empty;
@@ -80,6 +108,7 @@ namespace Cecil.Tests {
 				rv = Path.GetDirectoryName (Configuration.XamarinTVOSDll);
 				break;
 			case "Xamarin.Mac.dll":
+			case "Xamarin.MacCatalyst.dll":
 				rv = Path.GetDirectoryName (assembly);
 				break;
 			default:
@@ -102,6 +131,15 @@ namespace Cecil.Tests {
 
 				yield return new TestCaseData (Configuration.XamarinMacMobileDll);
 				yield return new TestCaseData (Configuration.XamarinMacFullDll);
+			}
+		}
+
+		public static IEnumerable Net6PlatformAssemblies {
+			get {
+				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot(), "Microsoft.iOS.Ref", "ref", "net6.0", "Xamarin.iOS.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot(), "Microsoft.tvOS.Ref", "ref", "net6.0", "Xamarin.TVOS.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot(), "Microsoft.macOS.Ref", "ref", "net6.0", "Xamarin.Mac.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot(), "Microsoft.MacCatalyst.Ref", "ref", "net6.0", "Xamarin.MacCatalyst.dll"));
 			}
 		}
 

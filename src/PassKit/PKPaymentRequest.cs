@@ -42,8 +42,13 @@ namespace PassKit {
 
 	public partial class PKPaymentRequest {
 
+	// XXX - This is a single set of examples of what would need to be done for every manual code with availability attributes
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("watchos4.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)][iOS (11,0)]
 #endif
@@ -54,6 +59,10 @@ namespace PassKit {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("watchos4.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)][iOS (11,0)]
 #endif
