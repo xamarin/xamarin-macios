@@ -699,6 +699,7 @@ namespace Introspection {
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
 				case "UISheetPresentationControllerDetent": // conformance not in headers
+				case "CAConstraintLayoutManager": // Not declared in header file
 					return true;
 				}
 				break;

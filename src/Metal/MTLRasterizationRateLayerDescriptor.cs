@@ -12,8 +12,11 @@ using ObjCRuntime;
 namespace Metal {
 	public partial class MTLRasterizationRateLayerDescriptor
 	{
-/*  Selectors reported as not working by introspection: https://github.com/xamarin/maccore/issues/1976
-		[NoMac]
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public double[] HorizontalSampleStorage { 
 			get {
 				var width = (int)SampleCount.Width;
@@ -23,7 +26,11 @@ namespace Metal {
 			}
 		}
 
-		[NoMac]
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public double[] VerticalSampleStorage {
 			get {
 				var height = (int)SampleCount.Height;
@@ -32,11 +39,11 @@ namespace Metal {
 				return floatArray;
 			}
 		}
-*/
-#if NET
-		[UnsupportedOSPlatform ("macos")]
+
+#if !NET
+		[MacCatalyst (15,0)]
 #else
-		[NoMac]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{

@@ -29,7 +29,7 @@
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-macos'))">
 		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
 		<NativeLibName>macos-fat</NativeLibName>
-		<SupportedOSPlatformVersion>10.15</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<!-- Logic for Mac Catalyst -->
