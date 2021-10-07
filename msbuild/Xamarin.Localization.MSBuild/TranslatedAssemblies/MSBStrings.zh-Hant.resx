@@ -711,10 +711,10 @@
         <value>提供的封存路徑不是來自有效的封存檔案 (.xcarchive)。封存路徑: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>無法將 macOS 版本 {0} 對應至 Mac Catalyst 版本。有效的 macOS 版本為: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>無法將 Mac Catalyst 版本 {0} 對應至 macOS 版本。有效的 Mac Catalyst 版本為: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>無法解析 WiFi 偵錯工具設定的主機 IP。
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>所有字型檔案必須位於應用程式套件組合中的同一目錄。以下字型檔案在應用程式套件組合中具有不同的目標目錄:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>目標目錄為 {0}</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>
