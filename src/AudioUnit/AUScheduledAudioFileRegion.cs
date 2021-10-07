@@ -25,7 +25,7 @@ namespace AudioUnit {
 		{
 			public AudioTimeStamp TimeStamp;
 #if NET
-			public unsafe delegate* unmanaged<IntPtr, ref ScheduledAudioFileRegion, AudioUnitStatus, void> CompletionHandler;
+			public unsafe delegate* unmanaged<IntPtr, IntPtr, AudioUnitStatus, void> CompletionHandler;
 #else
 			public ScheduledAudioFileRegionCompletionHandler CompletionHandler;
 #endif
@@ -58,7 +58,7 @@ namespace AudioUnit {
 #if !NET
 		internal delegate void ScheduledAudioFileRegionCompletionHandler (
 			/* void * */IntPtr userData, 
-			/* ScheduledAudioFileRegion * */ref ScheduledAudioFileRegion fileRegion, 
+			/* ScheduledAudioFileRegion * */ IntPtr fileRegion,
 			/* OSStatus */ AudioUnitStatus result);
 
 		static readonly ScheduledAudioFileRegionCompletionHandler static_ScheduledAudioFileRegionCompletionHandler = new ScheduledAudioFileRegionCompletionHandler (ScheduledAudioFileRegionCallback);
@@ -69,7 +69,7 @@ namespace AudioUnit {
 #else
 		[UnmanagedCallersOnly]
 #endif
-		static void ScheduledAudioFileRegionCallback (IntPtr userData, ref ScheduledAudioFileRegion fileRegion, AudioUnitStatus status)
+		static void ScheduledAudioFileRegionCallback (IntPtr userData, IntPtr fileRegion, AudioUnitStatus status)
 		{
 			if (userData == IntPtr.Zero)
 				return;
