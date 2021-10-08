@@ -482,14 +482,16 @@ steps:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
     artifactName: TestSummary-sim
   continueOnError: true
-  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+  condition: always () # any task can write to TestSummary.md, so always try to upload it
 
 - pwsh: |
     $summaryName = "TestSummary.md"
     $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+    if (Test-Path "$summaryPath" -PathType Leaf) {
+      Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+    }
   displayName: Set TestSummary
-  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+  condition: always () # any task can write to TestSummary.md, so always try to upload it
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
