@@ -3134,6 +3134,7 @@ namespace AppKit {
 		TextField,
 		UnderlinedText,
 		VisitedLink,
+		Audiograph,
 	}
 
 	[NoMacCatalyst]

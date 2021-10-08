@@ -548,7 +548,6 @@
 !missing-protocol! NSIgnoreMisspelledWords not bound
 !missing-protocol! NSInputServerMouseTracker not bound
 !missing-protocol! NSInputServiceProvider not bound
-!missing-protocol! NSTextAttachmentCell not bound
 !missing-protocol! NSUserInterfaceItemSearching not bound
 !missing-selector! +NSBitmapImageRep::getTIFFCompressionTypes:count: not bound
 !missing-selector! +NSBitmapImageRep::representationOfImageRepsInArray:usingType:properties: not bound

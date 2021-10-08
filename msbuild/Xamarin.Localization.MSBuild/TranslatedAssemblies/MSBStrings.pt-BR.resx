@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>Todos os arquivos de fontes devem estar localizados no mesmo diretório no pacote de aplicativos. Os seguintes arquivos de fonte têm diretórios de destino diferentes no pacote de aplicativos:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>O diretório de destino é {0}</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

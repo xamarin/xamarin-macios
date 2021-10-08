@@ -37,6 +37,7 @@ class MainClass {
 		[TestCase (ApplePlatform.MacOSX)]
 		public void CreateAppBundleDependsOnTest (ApplePlatform platform)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var magic = Guid.NewGuid ().ToString ();
 			var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
 <PropertyGroup>

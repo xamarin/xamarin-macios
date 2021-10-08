@@ -814,6 +814,9 @@
 		<value>La biblioteca de enlace "{0}" contiene un marco de usuario ({0}), pero los marcos de usuario insertados requieren iOS 8.0 (el destino de implementación es {1}). Establezca el destino de implementación en el archivo Info.plist en al menos 8.0.
 		</value>
 	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>Falta el ensamblado "Xamarin.Mac.dll" necesario en las referencias.
 		</value>
