@@ -1,10 +1,10 @@
 {
     "$schema": "http://json.schemastore.org/template",
     "author": "Microsoft",
-    "classifications": [ "iOS" ],
+    "classifications": [ "iOS", "Mobile" ],
     "identity": "Microsoft.iOS.iOSApp",
-    "name": "iOS Application",
-    "description": "A project for creating an iOS application",
+    "name": "iOS Application (Preview)",
+    "description": "A project for creating a .NET 6 iOS application",
     "shortName": "ios",
     "tags": {
       "language": "C#",
