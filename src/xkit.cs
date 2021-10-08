@@ -1807,7 +1807,7 @@ namespace UIKit {
 	[NoWatch, TV (13,0), iOS (13,0)]
 	delegate NSCollectionLayoutGroupCustomItem [] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layoutEnvironment);
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+	[NoWatch, TV (13,0), iOS (13,0), Mac (10,15)]
 	[BaseType (typeof (NSCollectionLayoutItem))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutGroup : NSCopying {

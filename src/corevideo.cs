@@ -506,7 +506,7 @@ namespace CoreVideo {
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }
 
-		[TV (13,0), NoWatch, iOS (13,0)]
+		[TV (13,0), NoWatch, iOS (13,0), Mac (10,15)]
 		[Field ("kCVMetalTextureStorageMode")]
 		NSString StorageMode { get; }
 	}
