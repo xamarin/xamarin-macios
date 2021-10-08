@@ -184,10 +184,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="xharness.js">
+    <Content Include="xharness.js" Condition="'$(OutputPath)' != '.'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="xharness.css">
+    <Content Include="xharness.css" Condition="'$(OutputPath)' != '.'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
