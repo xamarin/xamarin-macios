@@ -742,10 +742,10 @@
 		<value>Nie można połączyć ze strukturą {0} (przywoływaną przez odwołanie modułu w {1}), ponieważ nie jest ona dostępna na bieżącej platformie ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Nie można zmapować wersji aplikacji Mac Catalyst {0} na odpowiadającą jej wersję systemu macOS. Prawidłowe wersje systemu Mac Catalyst: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Nie można zmapować wersji systemu macOS {0} na odpowiadającą jej wersję aplikacji Mac Catalyst. Prawidłowe wersje systemu macOS: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>Opcja "{0}" nie może przyjmować wartości "{1}" podczas korzystania z repozytorium CoreCLR.</value>

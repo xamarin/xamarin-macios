@@ -711,10 +711,10 @@
         <value>Poskytnutá cesta k archivu nepochází z platného souboru archivu (.xcarchive). Cesta k archivu: {0}</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Nepovedlo se namapovat verzi macOS {0} na odpovídající verzi Mac Catalystu. Platné verze macOS jsou: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Nepovedlo se namapovat verzi Mac Catalystu {0} na odpovídající verzi macOS. Platné verze Mac Catalystu jsou: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Nepovedlo se přeložit IP adresy hostitele pro nastavení ladicího programu Wi-Fi.

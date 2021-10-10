@@ -711,10 +711,10 @@
         <value>提供的存档路径并非来自有效的存档文件(.xcarchive)。存档路径:“{0}”</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>无法将 macOS 版本 {0} 映射到相应的 Mac Catalyst 版本。有效的 macOS 版本为: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>无法将 Mac Catalyst 版本 {0} 映射到相应的 macOS 版本。有效的 Mac Catalyst 版本为: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>无法解析 WiFi 调试程序设置的主机 IP。
@@ -1072,14 +1072,14 @@
         </comment>
     </data>
   <data name="W7085" xml:space="preserve">
-        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+        <value>正在创建压缩绑定资源包，因为输入中存在符号链接。</value>
     </data>
   <data name="E7086" xml:space="preserve">
-        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <value>值“{0}”对于 Compress 属性无效。有效值: “true”、“false” 或 “auto”。</value>
         <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
     </data>
   <data name="W7087" xml:space="preserve">
-        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <value>目录中 {0} 应有一个 “manifest” 文件。</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

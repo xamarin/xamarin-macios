@@ -742,10 +742,10 @@
 		<value>Non collegato con il framework {0} (riferimento del modulo in {1}) poiché non è disponibile nella piattaforma corrente ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Non è stato possibile eseguire il mapping della versione Mac Catalyst{0} sulla versione macOS corrispondente. Le versioni di Mac Catalyst valide sono: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Non è stato possibile eseguire il mapping della versione macOS {0} sulla versione Mac Catalyst corrispondente. Le versioni di macOS valide sono: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>Quando si usa CoreCLR, l'opzione '{0}' non può accettare il valore '{1}'.</value>
@@ -815,7 +815,7 @@
 		</value>
 	</data>
   <data name="MX1306" xml:space="preserve">
-		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
+		<value>Non è stato possibile decomprimere il framework '{0}'. Per altre informazioni restituite dal comando 'unzip' nativo, esaminare il log di compilazione.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>L'assembly obbligatorio 'Xamarin.Mac.dll' non è presente nei riferimenti
