@@ -730,8 +730,8 @@ namespace AVKit {
 		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
 		UIColor ActiveTintColor { get; set; }
 
-		[NoiOS]
-		[NoMac, NoWatch, MacCatalyst (15,0)]
+		[NoiOS, NoMac, NoWatch, NoMacCatalyst]
+		[TV (11,0)]
 		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
 		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
 
@@ -757,8 +757,8 @@ namespace AVKit {
 		AVPlayer Player { get; set; }
 	}
 
-	[NoMac]
-	[TV (11,0), NoiOS, MacCatalyst (15,0)]
+	[NoiOS, NoMac, NoWatch, NoMacCatalyst]
+	[TV (11,0)]
 	[Native]
 	public enum AVRoutePickerViewButtonStyle : long {
 		System,

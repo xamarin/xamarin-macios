@@ -26,7 +26,8 @@ steps:
 
   # Unzip report.
   - task: ExtractFiles@1
-    displayName: 'Extract HmlReport'
+    displayName: 'Extract HtmlReport'
+    continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
     inputs:
       archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.devicePrefix }}/HtmlReport.zip'
       destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.devicePrefix }}'

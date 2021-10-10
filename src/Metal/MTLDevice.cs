@@ -50,13 +50,21 @@ namespace Metal {
 				return system_default;
 			}
 		}
+		
+#if MONOMAC || __MACCATALYST__
 
-#if MONOMAC
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
 #if !NET
-		[NoiOS, NoWatch, NoTV]
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		public static IMTLDevice [] GetAllDevices ()
 		{
@@ -65,6 +73,10 @@ namespace Metal {
 			NSObject.DangerousRelease (rv);
 			return devices;
 		}
+
+#endif
+		
+#if MONOMAC
 
 #if !NET
 		[Mac (10, 13)]

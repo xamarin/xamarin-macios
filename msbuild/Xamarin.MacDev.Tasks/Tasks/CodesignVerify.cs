@@ -1,6 +1,6 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class CodesignVerify : CodesignVerifyTaskBase
 	{
