@@ -24,6 +24,10 @@ namespace CoreVideo {
 
 #if !NET
 	[iOS (8,0), Mac (10,15), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	public partial class CVMetalTextureCache : INativeObject, IDisposable {
 		internal IntPtr handle;
