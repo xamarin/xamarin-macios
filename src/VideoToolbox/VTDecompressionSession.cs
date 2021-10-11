@@ -63,15 +63,22 @@ namespace VideoToolbox {
 		[StructLayout(LayoutKind.Sequential)]
 		struct VTDecompressionOutputCallbackRecord
 		{
+#if NET
+			public unsafe delegate* unmanaged</* void* */ IntPtr, /* void* */ IntPtr, /* OSStatus */ VTStatus, VTDecodeInfoFlags, /* CVImageBuffer */ IntPtr, CMTime, CMTime, void> Proc;
+#else
 			public DecompressionOutputCallback Proc;
+#endif
 			public IntPtr DecompressionOutputRefCon; 
 		}
 
 		// sourceFrame: It seems it's only used as a parameter to be passed into DecodeFrame so no need to strong type it
 		public delegate void VTDecompressionOutputCallback (/* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTDecodeInfoFlags flags, CVImageBuffer buffer, CMTime presentationTimeStamp, CMTime presentationDuration);
+#if !NET
 		delegate void DecompressionOutputCallback (/* void* */ IntPtr outputCallbackClosure, /* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, 
 			VTDecodeInfoFlags infoFlags, /* CVImageBuffer */ IntPtr cmSampleBufferPtr, CMTime presentationTimeStamp, CMTime presentationDuration);
+#endif
 
+#if !NET
 		//
 		// Here for legacy code, which would only work under duress (user had to manually ref the CMSampleBuffer on the callback)
 		//
@@ -83,9 +90,14 @@ namespace VideoToolbox {
 				return _static_decompressionCallback;
 			}
 		}
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (DecompressionOutputCallback))]
+#endif
 #endif
 		static void DecompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, 
 			VTDecodeInfoFlags infoFlags, IntPtr imageBufferPtr, CMTime presentationTimeStamp, CMTime presentationDuration)
@@ -103,6 +115,7 @@ namespace VideoToolbox {
 			}
 		}
 
+#if !NET
 		static DecompressionOutputCallback _static_newDecompressionCallback;
 		static DecompressionOutputCallback static_newDecompressionOutputCallback {
 			get {
@@ -111,9 +124,14 @@ namespace VideoToolbox {
 				return _static_newDecompressionCallback;
 			}
 		}
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (DecompressionOutputCallback))]
+#endif
 #endif
 		static void NewDecompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, 
 			VTDecodeInfoFlags infoFlags, IntPtr imageBufferPtr, CMTime presentationTimeStamp, CMTime presentationDuration)
@@ -171,7 +189,13 @@ namespace VideoToolbox {
 							     VTVideoDecoderSpecification decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 							     NSDictionary destinationImageBufferAttributes = null)
 		{
+#if NET
+			unsafe {
+				return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes, &DecompressionCallback);
+			}
+#else
 			return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes, static_DecompressionOutputCallback);
+#endif
 		}
 	
 		public static VTDecompressionSession Create (VTDecompressionOutputCallback outputCallback,
@@ -179,14 +203,24 @@ namespace VideoToolbox {
 							     VTVideoDecoderSpecification decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
 							     CVPixelBufferAttributes destinationImageBufferAttributes)
 		{
+#if NET
+			unsafe {
+				return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes == null ? null : destinationImageBufferAttributes.Dictionary, &NewDecompressionCallback);
+			}
+#else
 			return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes == null ? null : destinationImageBufferAttributes.Dictionary, static_newDecompressionOutputCallback);
+#endif
 		}
 	
-		static VTDecompressionSession Create (VTDecompressionOutputCallback outputCallback,
+		unsafe static VTDecompressionSession Create (VTDecompressionOutputCallback outputCallback,
 						      CMVideoFormatDescription formatDescription,
 						      VTVideoDecoderSpecification decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
 						      NSDictionary destinationImageBufferAttributes,
+#if NET
+						      delegate* unmanaged</* void* */ IntPtr, /* void* */ IntPtr, /* OSStatus */ VTStatus, VTDecodeInfoFlags, /* CVImageBuffer */ IntPtr, CMTime, CMTime, void> cback)
+#else
 						      DecompressionOutputCallback cback)
+#endif
 		{	
 			if (formatDescription == null)
 				throw new ArgumentNullException ("formatDescription");

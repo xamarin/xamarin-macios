@@ -61,9 +61,9 @@ namespace VideoToolbox {
 
 		// sourceFrame: It seems it's only used as a parameter to be passed into EncodeFrame so no need to strong type it
 		public delegate void VTCompressionOutputCallback (/* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags flags, CMSampleBuffer buffer);
+#if !NET
 		delegate void CompressionOutputCallback (/* void* CM_NULLABLE */ IntPtr outputCallbackClosure, /* void* CM_NULLABLE */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags infoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr cmSampleBufferPtr);
 
-		#region Legacy code start
 		//
 		// Here for legacy code, which would only work under duress (user had to manually ref the CMSampleBuffer on the callback)
 		//
@@ -75,6 +75,7 @@ namespace VideoToolbox {
 				return _static_CompressionOutputCallback;
 			}
 		}
+#endif
 
 		static void CompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr, bool owns)
 		{
@@ -88,8 +89,12 @@ namespace VideoToolbox {
 			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CompressionOutputCallback))]
+#endif
 #endif
 		static void CompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr)
 		{
@@ -102,10 +107,17 @@ namespace VideoToolbox {
 			VTVideoEncoderSpecification encoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 			NSDictionary sourceImageBufferAttributes = null)
 		{
+#if NET
+			unsafe {
+				return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes, &NewCompressionCallback);
+			}
+#else
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes, static_newCompressionOutputCallback);
+#endif
 		}
+
+#if !NET
 		// End region of legacy code
-		#endregion
 
 		static CompressionOutputCallback _static_newCompressionOutputCallback;
 		static CompressionOutputCallback static_newCompressionOutputCallback {
@@ -115,9 +127,14 @@ namespace VideoToolbox {
 				return _static_newCompressionOutputCallback;
 			}
 		}
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CompressionOutputCallback))]
+#endif
 #endif
 		static void NewCompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr)
 		{
@@ -125,7 +142,7 @@ namespace VideoToolbox {
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static VTStatus VTCompressionSessionCreate (
+		unsafe extern static VTStatus VTCompressionSessionCreate (
 			/* CFAllocatorRef */ IntPtr allocator, /* can be null */
 			/* int32_t */ int width,
 			/* int32_t */ int height,
@@ -133,7 +150,11 @@ namespace VideoToolbox {
 			/* CFDictionaryRef */ IntPtr dictionaryEncoderSpecification, /* can be null */
 			/* CFDictionaryRef */ IntPtr dictionarySourceImageBufferAttributes, /* can be null */
 			/* CFDictionaryRef */ IntPtr compressedDataAllocator, /* can be null */
+#if NET
+			/* VTCompressionOutputCallback */ delegate* unmanaged</* void* CM_NULLABLE */ IntPtr, /* void* CM_NULLABLE */ IntPtr, /* OSStatus */ VTStatus, VTEncodeInfoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr, void> outputCallback,
+#else
 			/* VTCompressionOutputCallback */ CompressionOutputCallback outputCallback,
+#endif
 			/* void* */ IntPtr outputCallbackClosure,
 			/* VTCompressionSessionRef* */ out IntPtr compressionSessionOut);
 
@@ -152,13 +173,24 @@ namespace VideoToolbox {
 			VTVideoEncoderSpecification encoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
 			CVPixelBufferAttributes sourceImageBufferAttributes)
 		{
+#if NET
+			unsafe {
+				return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, &CompressionCallback);
+			}
+#else
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, static_CompressionOutputCallback);
+#endif
 		}
 
-		static VTCompressionSession Create (int width, int height, CMVideoCodecType codecType,
+		unsafe static VTCompressionSession Create (int width, int height, CMVideoCodecType codecType,
 			VTCompressionOutputCallback compressionOutputCallback,
 			VTVideoEncoderSpecification encoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
-		        NSDictionary sourceImageBufferAttributes, CompressionOutputCallback staticCback) // Undocumented options, probably always null
+		        NSDictionary sourceImageBufferAttributes, // Undocumented options, probably always null
+#if NET
+		        delegate* unmanaged</* void* CM_NULLABLE */ IntPtr, /* void* CM_NULLABLE */ IntPtr, /* OSStatus */ VTStatus, VTEncodeInfoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr, void> staticCback)
+#else
+		        CompressionOutputCallback staticCback)
+#endif
 		{
 			var callbackHandle = default (GCHandle);
 			if (compressionOutputCallback != null)
