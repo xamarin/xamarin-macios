@@ -37,6 +37,7 @@ class MainClass {
 		[TestCase (ApplePlatform.MacOSX)]
 		public void CreateAppBundleDependsOnTest (ApplePlatform platform)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var magic = Guid.NewGuid ().ToString ();
 			var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
 <PropertyGroup>
@@ -56,7 +57,7 @@ class MainClass {
 			File.WriteAllText (Path.Combine (tmpdir, "Info.plist"), EmptyAppManifest);
 			File.WriteAllText (Path.Combine (tmpdir, "Main.cs"), EmptyMainFile);
 
-			var properties = new Dictionary<string, string> (verbosity);
+			var properties = GetDefaultProperties ();
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
 			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (v => v.Message.Contains (magic)), "Expected error");

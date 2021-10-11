@@ -36,6 +36,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		// This is input too
 		[Output]
+		public string NoStrip { get; set; }
+
+		[Output]
 		public int Verbosity { get; set; }
 
 		[Output]
@@ -76,9 +79,14 @@ namespace Xamarin.MacDev.Tasks {
 					var eq = arg.IndexOfAny (separators);
 					var value = string.Empty;
 					var name = arg;
+					var nextValue = string.Empty;
+					var hasValue = false;
 					if (eq >= 0) {
 						name = arg.Substring (0, eq);
 						value = arg.Substring (eq + 1);
+						hasValue = true;
+					} else if (i < args.Length - 1) {
+						nextValue = args [i + 1];
 					}
 
 					switch (name) {
@@ -104,12 +112,15 @@ namespace Xamarin.MacDev.Tasks {
 						Verbosity--;
 						break;
 					case "marshal-managed-exceptions":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						MarshalManagedExceptionMode = value;
 						break;
 					case "marshal-objectivec-exceptions":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						MarshalObjectiveCExceptionMode = value;
 						break;
 					case "custom_bundle_name":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						CustomBundleName = value;
 						break;
 					case "optimize":
@@ -118,9 +129,11 @@ namespace Xamarin.MacDev.Tasks {
 						Optimize += value;
 						break;
 					case "registrar":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						Registrar = value;
 						break;
 					case "setenv":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						var colon = value.IndexOfAny (separators);
 						var item = new TaskItem (value.Substring (0, colon));
 						item.SetMetadata ("Value", value.Substring (colon + 1));
@@ -129,7 +142,12 @@ namespace Xamarin.MacDev.Tasks {
 					case "xml":
 						if (xml == null)
 							xml = new List<string> ();
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						xml.Add (value);
+						break;
+					case "nostrip":
+						// Output is EnableAssemblyILStripping so we enable if --nostrip=false and disable if true
+						NoStrip = ParseBool (value) ? "false" : "true";
 						break;
 					default:
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);

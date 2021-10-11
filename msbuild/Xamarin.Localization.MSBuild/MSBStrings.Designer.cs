@@ -1089,7 +1089,7 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding iOS version.
+        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}.
         /// </summary>
         public static string E0187 {
             get {
@@ -1098,7 +1098,7 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the iOS version {0} to a corresponding macOS version.
+        ///   Looks up a localized string similar to Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}.
         /// </summary>
         public static string E0188 {
             get {
@@ -1904,11 +1904,38 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value in the project file ({2})..
+        ///   Looks up a localized string similar to The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn&apos;t already exist)..
         /// </summary>
         public static string E7082 {
             get {
                 return ResourceManager.GetString("E7082", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:.
+        /// </summary>
+        public static string E7083 {
+            get {
+                return ResourceManager.GetString("E7083", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target directory is {0}.
+        /// </summary>
+        public static string E7084 {
+            get {
+                return ResourceManager.GetString("E7084", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value &apos;{0}&apos; is invalid for the Compress property. Valid values: &apos;true&apos;, &apos;false&apos; or &apos;auto&apos;..
+        /// </summary>
+        public static string E7086 {
+            get {
+                return ResourceManager.GetString("E7086", resourceCulture);
             }
         }
         
@@ -2508,6 +2535,24 @@ namespace Xamarin.Localization.MSBuild {
         public static string W0176 {
             get {
                 return ResourceManager.GetString("W0176", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating a compressed binding resource package because there are symlinks in the input..
+        /// </summary>
+        public static string W7085 {
+            get {
+                return ResourceManager.GetString("W7085", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected a &apos;manifest&apos; file in the directory {0}..
+        /// </summary>
+        public static string W7087 {
+            get {
+                return ResourceManager.GetString("W7087", resourceCulture);
             }
         }
     }

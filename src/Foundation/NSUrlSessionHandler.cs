@@ -32,6 +32,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -585,6 +586,11 @@ namespace Foundation {
 		}
 
 		public SslProtocols SslProtocols {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback {
 			get => throw new PlatformNotSupportedException ();
 			set => throw new PlatformNotSupportedException ();
 		}

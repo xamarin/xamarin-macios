@@ -33,6 +33,7 @@ steps:
 
 - checkout: self
   persistCredentials: true
+  path: s/xamarin-macios
 
 - template: download-artifacts.yml 
   parameters:
@@ -93,6 +94,7 @@ steps:
       # write to a file to be used by the comment to parse
       $path = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff.json"
       $apiDiffData | ConvertTo-Json | Out-File $path
+      $apiDiffData | ConvertTo-Json | Write-Host
       Write-Host "##vso[task.setvariable variable=APIDIFF_JSON_PATH]$path"
     displayName: 'Create API from stable diff gists'
     timeoutInMinutes: 1
@@ -110,6 +112,12 @@ steps:
         $apiGeneratorComment= Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
       } else {
         $apiGeneratorComment = ""
+      }
+
+      if (-not (Test-Path "$Env:TESTS_SUMMARY" -PathType Leaf)) {
+        $summaryDirectory = Split-Path -Path "$Env:TESTS_SUMMARY"
+        New-Item -Path $summaryDirectory -ItemType directory
+        Add-Content -Path "$Env:TESTS_SUMMARY" -Value "No test summary was found (something probably failed before the tests could execute)"
       }
 
       if ($buildReason -ne "PullRequest" -or $Env:BUILD_PACKAGE -eq "True") {

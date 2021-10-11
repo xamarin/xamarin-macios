@@ -53,7 +53,10 @@ namespace AudioToolbox {
 
 		Action completionRoutine;
 		GCHandle gc_handle;
+
+#if !NET
 		static readonly AddSystemSoundCompletionCallback SoundCompletionCallback = SoundCompletionShared;
+#endif
 
 		internal SystemSound (uint soundId, bool ownsHandle)
 		{
@@ -310,12 +313,22 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		delegate void AddSystemSoundCompletionCallback (SystemSoundId id, IntPtr clientData);
+#endif
 
 		[DllImport (Constants.AudioToolboxLibrary)]
+#if NET
+		unsafe static extern AudioServicesError AudioServicesAddSystemSoundCompletion (uint soundId, IntPtr runLoop, IntPtr runLoopMode, delegate* unmanaged<SystemSoundId, IntPtr, void> completionRoutine, IntPtr clientData);
+#else
 		static extern AudioServicesError AudioServicesAddSystemSoundCompletion (uint soundId, IntPtr runLoop, IntPtr runLoopMode, AddSystemSoundCompletionCallback completionRoutine, IntPtr clientData);
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (Action<SystemSoundId, IntPtr>))]
+#endif
 		static void SoundCompletionShared (SystemSoundId id, IntPtr clientData)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
@@ -332,10 +345,17 @@ namespace AudioToolbox {
 			gc_handle = GCHandle.Alloc (this);
 			completionRoutine = routine;
 
-			return AudioServicesAddSystemSoundCompletion (soundId,
+			unsafe {
+				return AudioServicesAddSystemSoundCompletion (soundId,
 			                                              runLoop == null ? IntPtr.Zero : runLoop.Handle,
 			                                              IntPtr.Zero, // runLoopMode should be enum runLoopMode == null ? IntPtr.Zero : runLoopMode.Handle,
-			                                              SoundCompletionCallback, GCHandle.ToIntPtr (gc_handle));
+#if NET
+			                                              &SoundCompletionShared,
+#else
+			                                              SoundCompletionCallback,
+#endif
+			                                              GCHandle.ToIntPtr (gc_handle));
+			}
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]

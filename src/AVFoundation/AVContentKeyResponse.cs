@@ -10,6 +10,7 @@ using ObjCRuntime;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
@@ -18,7 +19,9 @@ namespace AVFoundation {
 
 		public static AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData) => Create (fairPlayStreamingKeyResponseData, AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData);
 			
+#if !NET
 		[NoWatch]
+#endif
 		public static AVContentKeyResponse Create (NSData data, AVContentKeyResponseDataType dataType = AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData) {
 			switch (dataType) {
 			case AVContentKeyResponseDataType.AuthorizationTokenData:

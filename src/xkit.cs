@@ -1492,6 +1492,18 @@ namespace UIKit {
 		[Export ("sectionIdentifiers")]
 		SectionIdentifierType [] SectionIdentifiers { get; }
 
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("reloadedSectionIdentifiers")]
+		SectionIdentifierType [] ReloadedSectionIdentifiers { get; }
+
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("reloadedItemIdentifiers")]
+		ItemIdentifierType [] ReloadedItemIdentifiers { get; }
+
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("reconfiguredItemIdentifiers")]
+		ItemIdentifierType [] ReconfiguredItemIdentifiers { get; }
+
 		[Export ("itemIdentifiers")]
 		ItemIdentifierType [] ItemIdentifiers { get; }
 
@@ -1537,6 +1549,10 @@ namespace UIKit {
 
 		[Export ("reloadItemsWithIdentifiers:")]
 		void ReloadItems (ItemIdentifierType [] identifiers);
+
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("reconfigureItemsWithIdentifiers:")]
+		void ReconfigureItems (ItemIdentifierType [] identifiers);
 
 		[Export ("appendSectionsWithIdentifiers:")]
 		void AppendSections (SectionIdentifierType [] sectionIdentifiers);
@@ -1601,6 +1617,10 @@ namespace UIKit {
 
 		[Export ("hyphenationFactor")]
 		float HyphenationFactor { get; [NotImplemented] set; } // Returns a float, not nfloat.
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("usesDefaultHyphenation")]
+		bool UsesDefaultHyphenation { get; }
 
 		[Static]
 		[Export ("defaultWritingDirectionForLanguage:")]
@@ -1718,6 +1738,10 @@ namespace UIKit {
 		[Override]
 		float HyphenationFactor { get; set; } // Returns a float, not nfloat.
 
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("usesDefaultHyphenation")]
+		bool UsesDefaultHyphenation { get; set; }
+
 		[iOS (7,0)]
 		[Export ("defaultTabInterval")]
 		[Override]
@@ -1783,7 +1807,7 @@ namespace UIKit {
 	[NoWatch, TV (13,0), iOS (13,0)]
 	delegate NSCollectionLayoutGroupCustomItem [] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layoutEnvironment);
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+	[NoWatch, TV (13,0), iOS (13,0), Mac (10,15)]
 	[BaseType (typeof (NSCollectionLayoutItem))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutGroup : NSCopying {
@@ -1888,6 +1912,12 @@ namespace UIKit {
 		[Static]
 		[Export ("sectionWithListConfiguration:layoutEnvironment:")]
 		NSCollectionLayoutSection GetSection (UICollectionLayoutListConfiguration listConfiguration, INSCollectionLayoutEnvironment layoutEnvironment);
+
+		// NSCollectionLayoutSection (TVMediaItemContentConfiguration) category
+		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
+		[Static]
+		[Export ("orthogonalLayoutSectionForMediaItems")]
+		NSCollectionLayoutSection GetOrthogonalLayoutSectionForMediaItems ();
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
@@ -2338,7 +2368,7 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
-	partial interface NSTextAttachment : NSTextAttachmentContainer, NSSecureCoding
+	partial interface NSTextAttachment : NSTextAttachmentContainer, NSSecureCoding, NSTextAttachmentLayout
 #if !WATCH && !MONOMAC
 	, UIAccessibilityContentSizeCategoryImageAdjusting
 #endif // !WATCH
@@ -2385,6 +2415,48 @@ namespace UIKit {
 		[Static]
 		[Export ("textAttachmentWithImage:")]
 		NSTextAttachment Create (Image image);
+
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("lineLayoutPadding")]
+		nfloat LineLayoutPadding { get; set; }
+
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15, 0)]
+		[Static]
+		[Export ("textAttachmentViewProviderClassForFileType:")]
+		[return: NullAllowed]
+		Class GetTextAttachmentViewProviderClass (string fileType);
+
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("registerTextAttachmentViewProviderClass:forFileType:")]
+		void RegisterViewProviderClass (Class textAttachmentViewProviderClass, string fileType);
+
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("allowsTextAttachmentView")]
+		bool AllowsTextAttachmentView { get; set; }
+
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("usesTextAttachmentView")]
+		bool UsesTextAttachmentView { get; }
+	}
+
+	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0)]
+	[Protocol]
+	interface NSTextAttachmentLayout {
+
+		[Abstract]
+		[Export ("imageForBounds:attributes:location:textContainer:")]
+		[return: NullAllowed]
+		Image GetImageForBounds (CGRect bounds, NSDictionary<NSString, NSObject> attributes, INSTextLocation location, [NullAllowed] NSTextContainer textContainer);
+
+		[Abstract]
+		[Export ("attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:")]
+		CGRect GetAttachmentBounds (NSDictionary<NSString, NSObject> attributes, INSTextLocation location, [NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint position);
+
+		[Abstract]
+		[Export ("viewProviderForParentView:location:textContainer:")]
+		[return: NullAllowed]
+		NSTextAttachmentViewProvider GetViewProvider ([NullAllowed] View parentView, INSTextLocation location, [NullAllowed] NSTextContainer textContainer);
 	}
 
 	[NoWatch]
@@ -2479,6 +2551,11 @@ namespace UIKit {
 		[Internal]
 #endif
 		NSString DidProcessEditingNotification { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed]
+		[Export ("textStorageObserver", ArgumentSemantic.Weak)]
+		INSTextStorageObserving TextStorageObserver { get; set; }
 	}
 
 	interface INSTextStorageDelegate {}
@@ -2953,6 +3030,10 @@ namespace UIKit {
 		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
 		[Export ("containerSize")]
 		CGSize ContainerSize { get; set; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("textLayoutManager", ArgumentSemantic.Weak)]
+		NSTextLayoutManager TextLayoutManager { get; }
 	}
 
 	[ThreadSafe]
@@ -3197,6 +3278,10 @@ namespace UIKit {
 	[DisableDefaultCtor]
 	interface NSTextContentManager : NSTextElementProvider, NSSecureCoding
 	{
+		[Notification]
+		[Field ("NSTextContentStorageUnsupportedAttributeAddedNotification")]
+		NSString StorageUnsupportedAttributeAddedNotification { get; }
+
 		[DesignatedInitializer]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -3749,6 +3834,8 @@ namespace UIKit {
 	}
 
 	interface INSTextContentStorageDelegate  {}
+
+	interface INSTextStorageObserving {}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Protocol]

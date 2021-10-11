@@ -12,6 +12,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -96,9 +97,6 @@
 	</ItemGroup>
 	
 	<PropertyGroup>
-		<!-- App extensions are self-contained, even though their OutputType=Library -->
-		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith('AppExtensionProject'))">true</SelfContained>
-
 		<!-- Add a property that specifies the name of the platform assembly for each platform -->
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
@@ -195,11 +193,13 @@
 
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_CompileEntitlements;
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
+			_CopyResourcesToBundle;
 			_CreateMergedAppBundle;
 			Codesign;
 			CreateIpa;
@@ -210,6 +210,7 @@
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
 		<!-- ComputeFilesToPublish will run ILLink -->
 		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
+		<!-- Note - _ComputeStripAssemblyIL must be before _StripAssemblyIL as msbuild DependsOn do not execute before Conditions are evaluated -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' == ''">
 			$(CreateAppBundleDependsOn);
 			_CopyResourcesToBundle;
@@ -227,6 +228,8 @@
 			_ComputeFrameworkFilesToPublish;
 			_ComputeDynamicLibrariesToPublish;
 			ComputeFilesToPublish;
+			_ComputeStripAssemblyIL;
+			_StripAssemblyIL;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
 			_LinkNativeExecutable;
@@ -254,8 +257,10 @@
 	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
 	<Target Name="_ComputePublishTrimmed">
 		<PropertyGroup>
-			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(RuntimeIdentifier)' != '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+			<_MustTrim Condition="'$(_MustTrim)' == '' And '$(RuntimeIdentifier)' != '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</_MustTrim>
+			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_MustTrim)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
+		<Error Condition="'$(_MustTrim)' == 'true' And '$(PublishTrimmed)' != 'true'" Text="$(_PlatformName) projects must build with PublishTrimmed=true. Current value: $(PublishTrimmed)." />
 	</Target>
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
@@ -292,11 +297,26 @@
 		<!-- Show an error if we're mixing simulator + device RIDs in a single build -->
 		<Error Condition="@(_RuntimeIdentifierDistinctPlatforms->Count()) > 1" Text="Building for all the runtime identifiers '$(RuntimeIdentifiers)' at the same time isn't possible, because they represent different platform variations." />
 
+		<PropertyGroup>
+			<_RidSpecificProperties>
+				_IsMultiRidBuild=true;
+				RuntimeIdentifiers=;
+				_ProcessedBundleResourcesPath=$(_ProcessedBundleResourcesPath);
+				_ProcessedContentPath=$(_ProcessedContentPath);
+				_ProcessedImageAssetsPath=$(_ProcessedImageAssetsPath);
+				_ProcessedInterfaceDefinitionsPath=$(_ProcessedInterfaceDefinitionsPath);
+				_ProcessedSceneKitAssetsPath=$(_ProcessedSceneKitAssetsPath);
+				_ProcessedColladaAssetsPath=$(_ProcessedColladaAssetsPath);
+				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
+				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
+			</_RidSpecificProperties>
+		</PropertyGroup>
+
 		<!-- Execute the inner builds -->
 		<MSBuild
 			Projects="$(MSBuildProjectFile)"
 			Targets="_BuildRidSpecificAppBundle"
-			Properties="RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);RuntimeIdentifiers=;_IsMultiRidBuild=true">
+			Properties="RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);$(_RidSpecificProperties)">
 			<Output TaskParameter="TargetOutputs" ItemName="_AssemblyPublishDirectories" />
 		</MSBuild>
 
@@ -425,6 +445,7 @@
 				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
 				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
 				@(_MonoLibrary -> 'MonoLibrary=%(Identity)')
+				MtouchFloat32=$(MtouchFloat32)
 				Optimize=$(_BundlerOptimize)
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
@@ -522,6 +543,7 @@
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveBlockCodeHandler" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.OptimizeGeneratedCodeHandler" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.BackingFieldDelayHandler" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.MarkIProtocolHandler" />
 			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.MarkDispatcher" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveSmartEnumConversionsHandler" />
@@ -609,6 +631,40 @@
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
+
+	<Target Name="_ComputeStripAssemblyIL" Condition=" '$(EnableAssemblyILStripping)' == '' " DependsOnTargets="_ComputeVariables;ComputeFilesToPublish">
+		<PropertyGroup>
+			<!-- Don't strip IL by default -->
+			<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+
+			<!-- Strip if we are AOT and Release  -->
+			<EnableAssemblyILStripping Condition="'$(_RunAotCompiler)' == 'true' And '$(Configuration)' == 'Release'">true</EnableAssemblyILStripping>
+
+			<!-- Don't strip if we are running the interpreter  -->
+			<EnableAssemblyILStripping Condition="'$(MtouchInterpreter)' != ''">false</EnableAssemblyILStripping>
+		</PropertyGroup>
+	</Target>
+
+	<!-- The DependsOnTargets here will not force EnableAssemblyILStripping to be calculated before the condition is evaulated. The order in CreateAppBundleDependsOn matters. -->
+	<Target Name="_StripAssemblyIL" Condition="'$(EnableAssemblyILStripping)' == 'true'" DependsOnTargets="_ComputeStripAssemblyIL">
+		<PropertyGroup>
+			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
+		</PropertyGroup>
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StrippedAssemblyDirectory)" />
+		<ItemGroup>
+			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll'">
+				<OutputPath>$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
+			</_AssembliesToBeStripped>
+		</ItemGroup>
+		<Xamarin.MacDev.Tasks.ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)">
+			<Output TaskParameter="StrippedAssemblies" PropertyName="_StrippedAssemblies" />
+		</Xamarin.MacDev.Tasks.ILStrip>
+		<ItemGroup>
+			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />
+			<ResolvedFileToPublish Include="@(_StrippedAssemblies)" />
+		</ItemGroup>
+	</Target>
+
 
 	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
 		<!-- Load _MainFile -->
@@ -958,15 +1014,12 @@
 			_ReadAppManifest;
 			_WriteAppManifest;
 			_CompileNativeExecutable;
+			_ComputeLinkNativeExecutableInputs;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
-			Inputs="@(_NativeExecutableObjectFiles)"
-			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-		>
-		<ItemGroup>
+	<Target Name="_ComputeLinkNativeExecutableInputs">
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
@@ -982,7 +1035,18 @@
 			<!-- Mono requires zlib and iconv -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
+
+			<!-- Here we must add all the files that should make us (re-)link the executable -->
+			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
+			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_LinkNativeExecutable"
+			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
+			Inputs="@(_LinkNativeExecutableInputs)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+		>
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
@@ -1025,7 +1089,9 @@
 
 	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
 		<PropertyGroup>
-			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS and Mac Catalyst apps -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
 			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
 			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
 		</PropertyGroup>

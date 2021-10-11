@@ -52,7 +52,7 @@ namespace Xamarin.iOS.Tasks {
 			main.SetMinimumOSVersion ("14.0");
 			main.Save (mainPath);
 
-			task.AppManifest = mainPath;
+			task.AppManifest = new TaskItem (mainPath);
 
 			ExecuteTask (task);
 
@@ -77,7 +77,7 @@ namespace Xamarin.iOS.Tasks {
 			partial.SetMinimumOSVersion ("13.0");
 			partial.Save (partialPath);
 
-			task.AppManifest = mainPath;
+			task.AppManifest = new TaskItem (mainPath);
 			task.PartialAppManifests = new [] { new TaskItem (partialPath) };
 
 			ExecuteTask (task);
@@ -96,11 +96,11 @@ namespace Xamarin.iOS.Tasks {
 			plist.SetMinimumOSVersion ("10.0");
 			var manifest = Path.Combine (dir, "Info.plist");
 			plist.Save (manifest);
-			task.AppManifest = manifest;
+			task.AppManifest = new TaskItem (manifest);
 			task.SupportedOSPlatformVersion = "11.0";
 
 			ExecuteTask (task, expectedErrorCount: 1);
-			Assert.AreEqual ("The MinimumOSVersion value in the Info.plist (10.0) does not match the SupportedOSPlatformVersion value in the project file (11.0).", Engine.Logger.ErrorEvents [0].Message);
+			Assert.AreEqual ("The MinimumOSVersion value in the Info.plist (10.0) does not match the SupportedOSPlatformVersion value (11.0) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).", Engine.Logger.ErrorEvents [0].Message);
 		}
 
 		[Test]
@@ -135,7 +135,7 @@ namespace Xamarin.iOS.Tasks {
 			task.SupportedOSPlatformVersion = "10.0";
 
 			ExecuteTask (task, expectedErrorCount: 1);
-			Assert.AreEqual ("Could not map the iOS version 10.0 to a corresponding macOS version", Engine.Logger.ErrorEvents [0].Message);
+			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.StartWith ("Could not map the Mac Catalyst version 10.0 to a corresponding macOS version. Valid Mac Catalyst versions are:"));
 		}
 	}
 }

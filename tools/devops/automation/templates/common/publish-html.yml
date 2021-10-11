@@ -32,6 +32,7 @@ steps:
 
 - checkout: self
   persistCredentials: true
+  path: s/xamarin-macios
 
 - ${{ if eq(parameters.provisioningFailed, 'False') }}:
   - template: download-artifacts.yml 

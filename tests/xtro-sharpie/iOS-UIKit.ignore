@@ -318,7 +318,6 @@
 !missing-null-allowed! 'System.Void UIKit.UITextInputDelegate::TextWillChange(UIKit.IUITextInput)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UITextView::set_AttributedText(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UITextView::set_WeakLinkTextAttributes(Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void UIKit.UIToolbar::SetItems(UIKit.UIBarButtonItem[],System.Boolean)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIView::SetAnimationDelegate(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIView::SetAnimationDidStopSelector(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIView::SetAnimationWillStartSelector(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
@@ -503,3 +502,6 @@
 ## These are inlined by protocol adoption so you can't really add such decoration
 !missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute
 !missing-requires-super! UIControl::contextMenuInteraction:willEndForConfiguration:animator: is missing an [RequiresSuper] attribute
+
+## Grouped nint constants
+!unknown-native-enum! UIFocusGroupPriority bound

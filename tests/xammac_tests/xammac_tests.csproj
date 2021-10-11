@@ -143,7 +143,7 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\obj\**">
+    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\**\obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />

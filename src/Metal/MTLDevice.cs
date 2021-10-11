@@ -50,48 +50,71 @@ namespace Metal {
 				return system_default;
 			}
 		}
+		
+#if MONOMAC || __MACCATALYST__
 
-#if MONOMAC
-		[NoiOS, NoWatch, NoTV]
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
-		[NoiOS, NoWatch, NoTV]
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static IMTLDevice [] GetAllDevices ()
 		{
 			var rv = MTLCopyAllDevices ();
-			return NSArray.ArrayFromHandle<IMTLDevice> (rv);
+			var devices = NSArray.ArrayFromHandle<IMTLDevice> (rv);
+			NSObject.DangerousRelease (rv);
+			return devices;
 		}
 
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
-		[DllImport (Constants.MetalLibrary)]
-		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, void* handler);
+#endif
+		
+#if MONOMAC
 
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
+#if !NET
+		[Mac (10, 13)]
+#endif
+		[DllImport (Constants.MetalLibrary)]
+		static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, ref BlockLiteral handler);
+
+#if !NET
+		[Mac (10, 13)]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject observer)
+		{
+			var block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_notificationHandler, handler);
+
+			var rv = MTLCopyAllDevicesWithObserver (out var observer_handle, ref block_handler);
+			var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);
+			NSObject.DangerousRelease (rv);
+
+			block_handler.CleanupBlock ();
+
+			observer = Runtime.GetNSObject (observer_handle);
+			NSObject.DangerousRelease (observer_handle); // Apple's documentation says "The observer out parameter is returned with a +1 retain count [...]."
+
+			return obj;
+		}
+
+#if !NET
+		[Mac (10, 13)]
+#endif
+		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
 		{
-			if (observer == null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (observer));
-
-			IntPtr handle = observer.Handle;
-
-			unsafe
-			{
-				BlockLiteral* block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_notificationHandler, handler);
-
-				var rv = MTLCopyAllDevicesWithObserver (ref handle, (void*) block_ptr_handler);
-				var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);
-
-				if (handle != observer.Handle)
-					observer = Runtime.GetNSObject (handle);
-
-				return obj;
-			}
+			var rv = GetAllDevices (handler, out var obs);
+			observer = obs;
+			return rv;
 		}
 
 		internal delegate void InnerNotification (IntPtr block, IntPtr device, IntPtr notifyName);
@@ -105,11 +128,15 @@ namespace Metal {
 				del ((IMTLDevice) Runtime.GetNSObject (device), (Foundation.NSString) Runtime.GetNSObject (notifyName));
 		}
 
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
+#if !NET
+		[Mac (10, 13)]
+#endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
+#if !NET
 		[Mac (10, 13), NoiOS, NoWatch, NoTV]
+#endif
 		public static void RemoveObserver (NSObject observer)
 		{
 			if (observer == null)

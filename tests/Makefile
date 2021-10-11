@@ -86,7 +86,7 @@ endif
 package-tests:
 	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
-test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
+test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
@@ -106,7 +106,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@echo "DOTNET6_BCL_DIR=$(DOTNET6_BCL_DIR)" >> $@
 	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
 
-test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
+test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@
@@ -191,15 +191,11 @@ $(UNIT_SERVER): $(wildcard $(UNIT_SERVER_DIR)/*.cs)
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-Makefile.inc: xharness/xharness.exe
+.stamp-xharness-configure: xharness/xharness.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
+	$(Q) touch $@
 
--include Makefile.inc
-
-Makefile-mac.inc: xharness/xharness.exe
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure  --autoconf --mac --rootdir $(CURDIR)
-
--include Makefile-mac.inc
+all-local:: .stamp-xharness-configure
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs

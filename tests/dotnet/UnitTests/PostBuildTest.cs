@@ -9,6 +9,7 @@ using Xamarin.Utils;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
+using Mono.Cecil;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -28,10 +29,7 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
-			if (!string.IsNullOrEmpty (runtimeIdentifiers))
-				properties [multiRid] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["ArchiveOnBuild"] = "true";
 
 			var result = DotNet.AssertBuild (project_path, properties);
@@ -53,19 +51,38 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: "Release");
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
-			if (!string.IsNullOrEmpty (runtimeIdentifiers))
-				properties [multiRid] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["BuildIpa"] = "true";
+			properties ["Configuration"] = "Release";
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
 			var pkgPath = Path.Combine (appPath, "..", $"{project}.ipa");
 			Assert.That (pkgPath, Does.Exist, "pkg creation");
+
+			AssertBundleAssembliesStripStatus (appPath, true);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		public void AssemblyStripping (ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			// Force EnableAssemblyILStripping since we are building debug which never will by default
+			properties ["EnableAssemblyILStripping"] = shouldStrip ? "true" : "false";
+
+			DotNet.AssertBuild (project_path, properties);
+
+			AssertBundleAssembliesStripStatus (appPath, shouldStrip);
 		}
 
 		[Test]

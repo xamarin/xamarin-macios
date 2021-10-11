@@ -711,10 +711,10 @@
         <value>Le chemin d'archive fourni ne provient pas d'un fichier d'archive valide (.xcarchive). Chemin d'archive : « {0} »</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Impossible de mapper la version iOS {0} à une version correspondante</value>
+        <value>Impossible de mapper la version de macOS {0} à une version Mac Catalyst correspondante. Les versions de macOS valides sont : {1}.</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>Impossible de faire correspondre la version {0} de Mac Catalyst à une version correspondante de macOS. Les versions valides de Mac Catalyst sont : {1}.</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Impossible de résoudre les adresses IP des hôtes pour les paramètres du débogueur Wi-Fi.
@@ -1047,10 +1047,39 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>Le compilateur AOA' {0} 'n’existe pas.</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
         </comment>
+    </data>
+  <data name="E7082" xml:space="preserve">
+        <value>La {0} valeur dans info. plist ({1}) ne correspond pas à la valeur SupportedOSPlatformVersion ({2}) dans le fichier projet (s’il n’existe aucune valeur SupportedOSPlatformVersion dans le fichier projet, une valeur par défaut est utilisée). Modifiez la valeur dans info. plist pour qu’elle corresponde à la valeur SupportedOSPlatformVersion ou supprimez la valeur dans info.plist (et ajoutez une valeur SupportedOSPlatformVersion au fichier projet s’il n’existe pas déjà).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>Tous les fichiers de police doivent se trouver dans le même répertoire de l’ensemble d’applications. Les fichiers de police suivants ont des répertoires cibles différents dans l’ensemble d’applications :</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>Le répertoire cible est {0}.</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Création d’un package de ressources de liaison compressé, car il y a symlinks dans l’entrée.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>La valeur « {0} » n’est pas valide pour la propriété Compress. Valeurs valides : 'true', 'false’ ou ’auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>Fichier ’manifest’ attendu dans le répertoire {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

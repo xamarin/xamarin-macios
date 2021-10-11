@@ -742,10 +742,10 @@
 		<value>{0} çerçevesi ({1} içindeki bir modül tarafından başvuruluyor) geçerli platformda ({2}) kullanılamadığından bu çerçeveyle bağlantı kurulamıyor.</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>{0} iOS sürümü Mac Catalyst için macOS sürümüne eşlenemedi</value>
+        <value>Mac Catalyst {0} sürümü karşılık gelen bir macOS sürümüne eşlenemedi. Geçerli Mac Catalyst sürümleri şunlardır: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>{0} macOS sürümü Mac Catalyst için karşılık gelen iOS sürümüne eşlenemedi</value>
+        <value>macOS {0} sürümü karşılık gelen bir Mac Catalyst sürümüne eşlenemedi. Geçerli macOS sürümleri şunlardır: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>CoreCLR kullanılırken '{0}' seçeneği '{1}' değerini alamaz.</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>'{0}' bağlama kitaplığı bir kullanıcı çerçevesi ({0}) içeriyor ancak ekli kullanıcı çerçeveleri iOS 8.0 (dağıtım hedefi {1}) gerektirir. Lütfen Info.plist dosyasındaki dağıtım hedefini en az 8.0 olarak ayarlayın.
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>Gerekli 'Xamarin.Mac.dll' bütünleştirilmiş kodu başvurularda eksik

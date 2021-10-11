@@ -711,10 +711,10 @@
         <value>Указанный путь к архиву ведет к недопустимому файлу архива (XCARCHIVE). Путь к архиву: "{0}".</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Не удалось сопоставить версию macOS {0} с соответствующей версией iOS</value>
+        <value>Не удалось сопоставить версию macOS {0} с соответствующей версией Mac Catalyst. Допустимые версии macOS: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>Не удалось сопоставить версию Mac Catalyst {0} с соответствующей версией macOS. Допустимые версии Mac Catalyst: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Не удалось разрешить IP-адреса узлов для параметров отладчика Wi-Fi.
@@ -1047,10 +1047,39 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>Компилятор AOT "{0}" не существует.</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
         </comment>
+    </data>
+  <data name="E7082" xml:space="preserve">
+        <value>Значение {0} в Info.plist ({1}) не соответствует значению SupportedOSPlatformVersion ({2}) в файле проекта (если в файле проекта отсутствует значение SupportedOSPlatformVersion, предполагается значение по умолчанию). Измените значение в Info.plist, чтобы оно соответствовало значению SupportedOSPlatformVersion, или удалите значение из Info.plist (и добавьте значение SupportedOSPlatformVersion в файл проекта, если оно не существует).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>Все файлы шрифтов должны находиться в одном каталоге с пакетом приложений. Следующие файлы шрифтов имеют разные целевые каталоги в пакете приложений:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>Целевой каталог: {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Создается сжатый пакет ресурсов привязки, так как во входных данных присутствуют символические ссылки.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>Значение "{0}" недопустимо для свойства Compress. Допустимые значения: true, false или auto.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>Ожидался файл manifest в каталоге {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

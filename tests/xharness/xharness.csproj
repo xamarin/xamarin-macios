@@ -52,13 +52,9 @@
       <Variable name="MONO_ENV_OPTIONS" value="--trace=E:all" />
     </EnvironmentVariables>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile.inc' ">
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Configure' ">
     <StartAction>Project</StartAction>
     <StartArguments>--configure --autoconf --rootdir ..</StartArguments>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile-mac.inc' ">
-    <StartAction>Project</StartAction>
-    <StartArguments>--configure --autoconf --rootdir .. --mac </StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -141,7 +137,6 @@
     <Compile Include="Jenkins\TestVariationsFactory.cs" />
     <Compile Include="MacFlavorsExtensions.cs" />
     <Compile Include="MacTestProject.cs" />
-    <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Nullable.cs" />
     <Compile Include="Program.cs" />
@@ -189,10 +184,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="xharness.js">
+    <Content Include="xharness.js" Condition="'$(OutputPath)' != '.'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="xharness.css">
+    <Content Include="xharness.css" Condition="'$(OutputPath)' != '.'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

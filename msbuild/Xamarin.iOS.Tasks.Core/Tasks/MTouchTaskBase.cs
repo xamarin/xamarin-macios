@@ -333,7 +333,7 @@ namespace Xamarin.iOS.Tasks
 			if (!string.IsNullOrWhiteSpace (License))
 				args.AddLine ($"--license={License}");
 
-			return CreateResponseFile (args, unescapedArgs);
+			return args.CreateResponseFile (this, ResponseFilePath, unescapedArgs);
 		}
 
 		static bool IsFrameworkItem (ITaskItem item)

@@ -591,7 +591,10 @@ function New-GitHubSummaryComment {
         Set-GitHubStatus -Status "failure" -Description "$prefix Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
-        if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
+        if ($Env:TESTS_JOBSTATUS -eq "") {
+            Set-GitHubStatus -Status "error" -Description "Tests didn't execute on $Context." -Context $statusContext
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests didn't execute on $Context." -Description "Tests didn't execute on $Context. $headerLinks"  -Emoji ":x:" -Path $TestSummaryPath
+        } elseif (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
             Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "$prefix Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
@@ -831,6 +834,54 @@ function New-GistWithFiles {
     return $request.html_url
 }
 
+<#
+    .SYNOPSIS
+        Puse a repository dispatch stating which branch did trigger it.
+
+    .PARAMETER Org
+        The org of the repository to ping.
+
+    .PARAMETER Repository 
+        The repository to ping.
+
+    .PARAMETER Branch
+        The branch that triggered the event.
+#>
+function Push-RepositoryDispatch {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org, 
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repository,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Branch
+    )
+
+    # create the hashtable that will contain all the information of all types
+    $payload = @{
+        event_type = $Branch;
+    }
+
+    $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
+    Write-Host $url
+    $payloadJson = $payload | ConvertTo-Json
+
+    $headers = @{
+        Accept = "application/vnd.github.v3+json";
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    } 
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
+    Write-Host $request
+    Write-Host $request.Content
+}
+
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function Set-GitHubStatus
 Export-ModuleMember -Function New-GitHubComment
@@ -841,3 +892,4 @@ Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
+Export-ModuleMember -Function Push-RepositoryDispatch 

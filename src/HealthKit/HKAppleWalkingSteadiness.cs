@@ -19,6 +19,7 @@ namespace HealthKit {
 	{
 
 		[DllImport (Constants.HealthKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool HKAppleWalkingSteadinessClassificationForQuantity (HKQuantityRef value, out nint classificationOut, out NSErrorRef errorOut);
 
 		public static bool TryGetClassification (HKQuantity value, out HKAppleWalkingSteadinessClassification? classification, out NSError? error)

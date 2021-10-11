@@ -238,6 +238,8 @@ namespace AVFoundation {
 		IncorrectlyConfigured = -11875,
 		SegmentStartedWithNonSyncSample = -11876,
 		RosettaNotInstalled = -11877,
+		OperationCancelled = -11878,
+		RequestCancelled = -11879,
 	}
 
 	[Watch (6,0)]
@@ -319,7 +321,7 @@ namespace AVFoundation {
 	public enum AVVideoFieldMode : long {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
-#endif
+#endif // !XAMCORE_3_0 || MONOMAC 
 
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
@@ -714,8 +716,7 @@ namespace AVFoundation {
 		NotPossible,
 	}
 
-	[NoiOS][NoTV][NoWatch]
-	[Mac (10,10)]
+	[iOS (15,0), TV (15,0), Watch (8,0), Mac (10,10), MacCatalyst (15,0)]
 	[Native]
 	public enum AVSampleBufferRequestDirection : long {
 		Forward = 1,
@@ -723,8 +724,7 @@ namespace AVFoundation {
 		Reverse = -1,
 	}
 
-	[NoiOS][NoTV][NoWatch]
-	[Mac (10,10)]
+	[iOS (15,0), TV (15,0), Watch (8,0), Mac (10,10), MacCatalyst (15,0)]
 	[Native]
 	public enum AVSampleBufferRequestMode : long {
 		Immediate,
@@ -1000,7 +1000,7 @@ namespace AVFoundation {
 		EncodedPixels = 2,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (11,0)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
 		Default = 0,
@@ -1018,7 +1018,7 @@ namespace AVFoundation {
 		BeforeMainMediaDataNotInterleaved = 1,
 	}
 
-	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0), MacCatalyst (15,0)]
 	public enum AVVideoCodecType {
 		[Field ("AVVideoCodecTypeH264")]
 		H264 = 0,
@@ -1177,7 +1177,7 @@ namespace AVFoundation {
 	}
 
 	[Native]
-	[NoTV, NoWatch, Mac (11, 0), NoiOS]
+	[TV (15,0), Watch (8,0), Mac (11,0), iOS (15,0), MacCatalyst (15,0)]
 	public enum AVAudioRoutingArbitrationCategory : long {
 		Playback = 0,
 		PlayAndRecord = 1,
@@ -1192,4 +1192,170 @@ namespace AVFoundation {
 		AuthorizationTokenData,
 	}
 #endif
+
+	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
+	[Flags]
+	[Native]
+	public enum AVDelegatingPlaybackCoordinatorRateChangeOptions : ulong {
+		None = 0,
+		PlayImmediately = (1uL << 0),
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
+	[Flags]
+	[Native]
+	public enum AVDelegatingPlaybackCoordinatorSeekOptions : ulong {
+		None = 0,
+		ResumeImmediately = (1uL << 0),
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum AVCaptureMicrophoneMode : long {
+		Standard = 0,
+		WideSpectrum = 1,
+		VoiceIsolation = 2,
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum AVCaptureSystemUserInterface : long {
+		VideoEffects = 1,
+		MicrophoneModes = 2,
+	}
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum AVPlayerAudiovisualBackgroundPlaybackPolicy : long {
+		Automatic = 1,
+		Pauses = 2,
+		ContinuesIfPossible = 3,
+	}
+
+	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	public enum AVCoordinatedPlaybackSuspensionReason {
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonAudioSessionInterrupted")]
+		AudioSessionInterrupted,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonStallRecovery")]
+		StallRecovery,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonPlayingInterstitial")]
+		PlayingInterstitial,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonCoordinatedPlaybackNotPossible")]
+		CoordinatedPlaybackNotPossible,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonUserActionRequired")]
+		UserActionRequired,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonUserIsChangingCurrentTime")]
+		UserIsChangingCurrentTime,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionAnimation : long	{
+		None = 0,
+		CharacterReveal = 1,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionFontWeight : long {
+		Unknown = 0,
+		Normal = 1,
+		Bold = 2,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst] 
+	[Native]
+	public enum AVCaptionFontStyle : long {
+		Unknown = 0,
+		Normal = 1,
+		Italic = 2,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Flags]
+	[Native]
+	public enum AVCaptionDecoration : ulong {
+		None = 0x0,
+		Underline = 1uL << 0,
+		LineThrough = 1uL << 1,
+		Overline = 1uL << 2,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionTextCombine : long {
+		All = -1,
+		None = 0,
+		OneDigit = 1,
+		TwoDigits = 2,
+		ThreeDigits = 3,
+		FourDigits = 4,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionTextAlignment : long {
+		Start = 0,
+		End = 1,
+		Center = 2,
+		Left = 3,
+		Right = 4,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionRegionWritingMode : long
+	{
+		LeftToRightAndTopToBottom = 0,
+		TopToBottomAndRightToLeft = 2,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionRegionScroll : long {
+		None = 0,
+		RollUp = 1,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionRegionDisplayAlignment : long {
+		Before = 0,
+		Center = 1,
+		After = 2,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionRubyPosition : long
+	{
+		Before = 0,
+		After = 1,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionRubyAlignment : long {
+		Start = 0,
+		Center = 1,
+		DistributeSpaceBetween = 2,
+		DistributeSpaceAround = 3,
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native]
+	public enum AVCaptionConversionValidatorStatus : long
+	{
+		Unknown = 0,
+		Validating = 1,
+		Completed = 2,
+		Stopped = 3,
+	}
+
 }

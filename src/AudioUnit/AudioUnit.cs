@@ -298,7 +298,7 @@ namespace AudioUnit
 	public class AudioUnit : IDisposable, ObjCRuntime.INativeObject
 	{
 #pragma warning disable 649 // Field 'AudioUnit.handle' is never assigned to, and will always have its default value
-		internal IntPtr handle;
+		IntPtr handle;
 #pragma warning restore 649
 		public IntPtr Handle {
 			get {
@@ -314,14 +314,21 @@ namespace AudioUnit
 
 		GCHandle gcHandle;
 		bool _isPlaying;
+		bool owns;
 
 		Dictionary<uint, RenderDelegate> renderer;
 		Dictionary<uint, InputDelegate> inputs;
 
 		internal AudioUnit (IntPtr ptr)
+			: this (ptr, false)
+		{
+		}
+
+		internal AudioUnit (IntPtr ptr, bool owns)
 		{
 			handle = ptr;
 			gcHandle = GCHandle.Alloc(this);
+			this.owns = owns;
 		}
 		
 		public AudioUnit (AudioComponent component)
@@ -336,6 +343,7 @@ namespace AudioUnit
 				throw new AudioUnitException (err);
 			
 			gcHandle = GCHandle.Alloc(this);
+			owns = true;
 		}
 
 		public AudioComponent Component {
@@ -795,9 +803,11 @@ namespace AudioUnit
 		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != IntPtr.Zero){
-				Stop ();
-				AudioUnitUninitialize (handle);
-				AudioComponentInstanceDispose (handle);
+				if (owns) {
+					Stop ();
+					AudioUnitUninitialize (handle);
+					AudioComponentInstanceDispose (handle);
+				}
 				gcHandle.Free();
 				handle = IntPtr.Zero;
 			}
@@ -906,7 +916,7 @@ namespace AudioUnit
 #else
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
-		[DllImport (Constants.AudioUnitLibrary)]
+		[DllImport (Constants.CoreAudioLibrary)]
 		static extern int AudioObjectGetPropertyData (
 			uint inObjectID,
 			ref AudioObjectPropertyAddress inAddress,
