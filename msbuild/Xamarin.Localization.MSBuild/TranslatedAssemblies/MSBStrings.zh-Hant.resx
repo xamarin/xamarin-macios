@@ -1072,14 +1072,14 @@
         </comment>
     </data>
   <data name="W7085" xml:space="preserve">
-        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+        <value>正在建立壓縮的繫結資源套件，因為輸入中具有符號連結。</value>
     </data>
   <data name="E7086" xml:space="preserve">
-        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <value>「壓縮」屬性的值 '{0}' 無效。有效值: 'true', 'false' 或 'auto'。</value>
         <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
     </data>
   <data name="W7087" xml:space="preserve">
-        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <value>目錄 {0} 中必須有「資訊清單檔」。</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>
