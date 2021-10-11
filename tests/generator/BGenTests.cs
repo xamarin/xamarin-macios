@@ -751,6 +751,19 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 		}
 
+		[Test]
+		public void DelegateWithINativeObjectReturnType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/delegate-with-inativeobject-return-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("ObjCRuntime", "Trampolines").NestedTypes.First (v => v.Name == "DMyHandler");
+			Assert.NotNull (type, "DMyHandler");
+			var method = type.Methods.First (v => v.Name == "Invoke");
+			Assert.AreEqual ("System.IntPtr", method.ReturnType.FullName, "Return type");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

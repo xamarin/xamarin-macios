@@ -926,7 +926,6 @@ public partial class Generator : IMemberGatherer {
 		public string Encoding;
 		public string ParameterMarshal;
 		public string CreateFromRet;
-		public bool HasCustomCreate;
 		public string ClosingCreate;
 
 		public MarshalType (Type t, string encode = null, string fetch = null, string create = null, string closingCreate = ")")
@@ -934,9 +933,13 @@ public partial class Generator : IMemberGatherer {
 			Type = t;
 			Encoding = encode ?? "IntPtr";
 			ParameterMarshal = fetch ?? "{0}.Handle";
-			CreateFromRet = create ?? String.Format ("new global::{0} (", t.FullName);
-			HasCustomCreate = create != null;
-			ClosingCreate = closingCreate;
+			if (create == null) {
+				CreateFromRet = $"Runtime.GetINativeObject<global::{t.FullName}> (";
+				ClosingCreate = ", false)";
+			} else {
+				CreateFromRet = create;
+				ClosingCreate = closingCreate;
+			}
 		}
 
 		//
@@ -1621,6 +1624,9 @@ public partial class Generator : IMemberGatherer {
 		} else if (GetNativeEnumToNativeExpression (mi.ReturnType, out var preExpression, out var postExpression, out var nativeType)) {
 			returntype = nativeType;
 			returnformat = "return " + preExpression+ "{0}" + postExpression + ";";
+		} else if (TypeManager.INativeObject.IsAssignableFrom (mi.ReturnType)) {
+			returntype = "IntPtr";
+			returnformat = "return {0}.GetHandle ();";
 		} else {
 			returntype = FormatType (mi.DeclaringType, mi.ReturnType);
 		}
@@ -3838,13 +3844,8 @@ public partial class Generator : IMemberGatherer {
 			cast_a = "(" + FormatType (mi.DeclaringType, mi.ReturnType) + ") ";
 			cast_b = "";
 		} else if (LookupMarshal (mai.Type, out mt)){
-			if (mt.HasCustomCreate) {
-				cast_a = mt.CreateFromRet;
-				cast_b = mt.ClosingCreate;
-			} else { // we need to gather the ptr and store it inside IntPtr ret;
-				cast_a = string.Empty;
-				cast_b = string.Empty;
-			}
+			cast_a = mt.CreateFromRet;
+			cast_b = mt.ClosingCreate;
 		} else if (IsWrappedType (mi.ReturnType)){
 			// protocol support means we can return interfaces and, as far as .NET knows, they might not be NSObject
 			if (IsProtocolInterface (mi.ReturnType)) {
@@ -4549,10 +4550,6 @@ public partial class Generator : IMemberGatherer {
 				postget = null;
 		}
 
-		// Types inside marshal_types that does not have a custom create: needs a IntPtr zero check before they return see Bug 28271
-		MarshalType marshalType;
-		bool needsPtrZeroCheck = LookupMarshal (mi.ReturnType, out marshalType) && !marshalType.HasCustomCreate;
-
 		var shouldMarshalNativeExceptions = ShouldMarshalNativeExceptions (mi);
 		if (shouldMarshalNativeExceptions)
 			print ("IntPtr exception_gchandle = IntPtr.Zero;");
@@ -4566,8 +4563,7 @@ public partial class Generator : IMemberGatherer {
 			(mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) ||
 			(AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi))) ||
 			(IsNativeEnum (mi.ReturnType)) ||
-			(mi.Name != "Constructor" && by_ref_processing.Length > 0 && mi.ReturnType != TypeManager.System_Void) ||
-			needsPtrZeroCheck;
+			(mi.Name != "Constructor" && by_ref_processing.Length > 0 && mi.ReturnType != TypeManager.System_Void);
 
 		if (use_temp_return) {
 			// for properties we (most often) put the attribute on the property itself, not the getter/setter methods
@@ -4581,8 +4577,6 @@ public partial class Generator : IMemberGatherer {
 				print ("bool aligned_assigned = false;");
 			} else if (minfo.protocolize) {
 				print ("{0} ret;", FormatType (mi.DeclaringType, mi.ReturnType.Namespace, FindProtocolInterface (mi.ReturnType, mi)));
-			} else if (needsPtrZeroCheck) {
-				print ("IntPtr ret;");
 			} else if (minfo.is_bindAs) {
 				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 				// tricky, e.g. when an nullable `NSNumber[]` is bound as a `float[]`, since FormatType and bindAsAttrib have not clue about the original nullability 
@@ -4638,23 +4632,10 @@ public partial class Generator : IMemberGatherer {
 				RegisterMethodName ("void_objc_msgSend");
 			}
 
-			if (!needsPtrZeroCheck) {
-				print ("if (ret != null)");
-				indent++;
-				print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", ns.Messaging);
-				indent--;
-			} else {
-				// We must create the managed wrapper before calling Release on it
-				// FIXME: https://trello.com/c/1ukS9TbL/43-introduce-common-object-type-for-all-unmanaged-types-which-will-correctly-implement-idisposable-and-inativeobject
-				// We should consider using return INativeObject<T> (ptr, bool); here at some point
-				print ("global::{0}? relObj = null;", mi.ReturnType.FullName);
-				print ("if (ret != IntPtr.Zero) {");
-				indent++;
-				print ("relObj = new global::{0} (ret);", mi.ReturnType.FullName);
-				print ("global::{0}.void_objc_msgSend (ret, Selector.GetHandle (\"release\"));", ns.Messaging);
-				indent--;
-				print ("}");
-			}
+			print ("if (ret != null)");
+			indent++;
+			print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", ns.Messaging);
+			indent--;
 		}
 		
 		Inject<PostSnippetAttribute> (mi);
@@ -4719,14 +4700,6 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("Marshal.FreeHGlobal (ret_alloced);");
 				print ("return ret;");
-			} else if (needsPtrZeroCheck) {
-				if (minfo.is_return_release)
-					print ("return relObj!;");
-				else {
-					// FIXME: https://trello.com/c/1ukS9TbL/43-introduce-common-object-type-for-all-unmanaged-types-which-will-correctly-implement-idisposable-and-inativeobject
-					// We should consider using return INativeObject<T> (ptr, bool); here at some point
-					print ("return ret == IntPtr.Zero ? null! : new global::{0} (ret);", mi.ReturnType.FullName);
-				}
 			} else {
 				// we can't be 100% confident that the ObjC API annotations are correct so we always null check inside generated code
 				print ("return ret!;");
