@@ -1072,14 +1072,14 @@
         </comment>
     </data>
   <data name="W7085" xml:space="preserve">
-        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+        <value>Создается сжатый пакет ресурсов привязки, так как во входных данных присутствуют символические ссылки.</value>
     </data>
   <data name="E7086" xml:space="preserve">
-        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <value>Значение "{0}" недопустимо для свойства Compress. Допустимые значения: true, false или auto.</value>
         <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
     </data>
   <data name="W7087" xml:space="preserve">
-        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <value>Ожидался файл manifest в каталоге {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

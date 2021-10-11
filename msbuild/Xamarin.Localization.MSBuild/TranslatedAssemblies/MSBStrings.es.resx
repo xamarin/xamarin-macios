@@ -711,10 +711,10 @@
         <value>La ruta de acceso de archivo proporcionada no pertenece a un archivo de almacenamiento (.xcarchive) válido. Ruta de acceso de archivo: "{0}"</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>No se pudo asignar la versión de macOS {0} a la versión correspondiente de Mac Catalyst. Las versiones válidas de macOS son: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>No se pudo asignar la versión Mac Catalyst {0} a la versión de macOS correspondiente. Las versiones de Mac Catalyst son: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>No se pudieron resolver las direcciones IP del host para la configuración del depurador Wi-Fi.
@@ -1072,14 +1072,14 @@
         </comment>
     </data>
   <data name="W7085" xml:space="preserve">
-        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+        <value>Creando un paquete de recursos de enlace comprimido porque hay vínculos simbólicos en la entrada.</value>
     </data>
   <data name="E7086" xml:space="preserve">
-        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <value>El valor '{0}' no es válido para la propiedad Compress. Valores válidos: "true", "false" o "auto".</value>
         <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
     </data>
   <data name="W7087" xml:space="preserve">
-        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <value>Se esperaba un archivo "manifest" en el directorio {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>
