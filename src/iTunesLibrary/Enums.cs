@@ -317,6 +317,7 @@ namespace iTunesLibrary {
 		Kind,
 	}
 
+	[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 	[MacCatalyst (14,0)]
 	[Mac (10,14)]
 	public enum ITLibMediaEntityProperty {
