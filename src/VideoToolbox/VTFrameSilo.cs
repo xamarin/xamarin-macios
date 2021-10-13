@@ -25,7 +25,6 @@ namespace VideoToolbox {
 #endif
 	public class VTFrameSilo : INativeObject, IDisposable {
 		IntPtr handle;
-		GCHandle callbackHandle;
 
 		/* invoked by marshallers */
 		protected internal VTFrameSilo (IntPtr handle)
@@ -59,9 +58,6 @@ namespace VideoToolbox {
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (callbackHandle.IsAllocated)
-				callbackHandle.Free();
-
 			if (handle != IntPtr.Zero){
 				CFObject.CFRelease (handle);
 				handle = IntPtr.Zero;
@@ -169,7 +165,7 @@ namespace VideoToolbox {
 
 		public unsafe VTStatus ForEach (Func<CMSampleBuffer, VTStatus> callback, CMTimeRange? range = null)
 		{
-			callbackHandle = GCHandle.Alloc (callback);
+			var callbackHandle = GCHandle.Alloc (callback);
 #if NET
 			var foreachResult = VTFrameSiloCallFunctionForEachSampleBuffer (handle, range ?? CMTimeRange.InvalidRange, GCHandle.ToIntPtr (callbackHandle), &BufferCallback);
 #else
