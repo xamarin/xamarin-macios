@@ -40,7 +40,7 @@ namespace CoreGraphics {
 
 	// CGPDFObject.h
 	public class CGPDFObject : INativeObject {
-		public IntPtr Handle { get; private set; }
+		public NativeHandle Handle { get; private set; }
 
 		// The lifetime management of CGPDFObject (and CGPDFArray, CGPDFDictionary and CGPDFStream) are tied to
 		// the containing CGPDFDocument, and not possible to handle independently, which is why this class
