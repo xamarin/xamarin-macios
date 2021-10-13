@@ -39,7 +39,7 @@ namespace Foundation {
 			this.Handle = handle;
 		}
 
-		public IntPtr Handle { get; private set; }
+		public NativeHandle Handle { get; private set; }
 
 #if !COREBUILD
 		public string? Name {
