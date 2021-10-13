@@ -19,6 +19,10 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreMedia {
 
 #if !NET
@@ -240,7 +244,7 @@ namespace CoreMedia {
 
 		public static CMBlockBuffer? FromMemoryBlock (IntPtr memoryBlock, nuint blockLength, CMCustomBlockAllocator? customBlockSource, nuint offsetToData, nuint dataLength, CMBlockBufferFlags flags, out CMBlockBufferError error)
 		{
-			var blockAllocator = memoryBlock == IntPtr.Zero ? IntPtr.Zero : CFAllocator.Null.Handle;
+			var blockAllocator = memoryBlock == IntPtr.Zero ? NativeHandle.Zero : CFAllocator.Null.Handle;
 			IntPtr buffer;
 			if (customBlockSource is null)
 				error = CMBlockBufferCreateWithMemoryBlock (IntPtr.Zero, memoryBlock, blockLength, blockAllocator, IntPtr.Zero, offsetToData, dataLength, flags, out buffer);
@@ -329,7 +333,7 @@ namespace CoreMedia {
 		
 		public CMBlockBufferError AppendMemoryBlock (IntPtr memoryBlock, nuint blockLength, CMCustomBlockAllocator customBlockSource, nuint offsetToData, nuint dataLength, CMBlockBufferFlags flags)
 		{
-			var blockAllocator = memoryBlock == IntPtr.Zero ? IntPtr.Zero : CFAllocator.Null.Handle;
+			var blockAllocator = memoryBlock == IntPtr.Zero ? NativeHandle.Zero : CFAllocator.Null.Handle;
 			if (customBlockSource is null)
 				return CMBlockBufferAppendMemoryBlock (GetCheckedHandle (), memoryBlock, blockLength, blockAllocator, IntPtr.Zero, offsetToData, dataLength, flags);
 			else
