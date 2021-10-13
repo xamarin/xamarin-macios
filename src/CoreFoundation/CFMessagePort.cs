@@ -65,7 +65,6 @@ namespace CoreFoundation {
 
 		static CFMessagePortInvalidationCallBackProxy messageInvalidationCallback = new CFMessagePortInvalidationCallBackProxy (MessagePortInvalidationCallback);
 
-		GCHandle gch;
 		IntPtr handle;
 		IntPtr contextHandle = IntPtr.Zero;
 
@@ -152,7 +151,6 @@ namespace CoreFoundation {
 		internal CFMessagePort (IntPtr handle, bool owns)
 		{
 			this.handle = handle;
-			gch = GCHandle.Alloc (this);
 			if (!owns)
 				CFObject.CFRetain (handle);
 		}
@@ -170,11 +168,6 @@ namespace CoreFoundation {
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (disposing) {
-				if (gch.IsAllocated)
-					gch.Free ();
-			}
-
 			if (handle != IntPtr.Zero) {
 
 				lock (outputHandles)
