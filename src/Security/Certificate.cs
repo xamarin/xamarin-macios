@@ -43,18 +43,22 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
 	public partial class SecCertificate : NativeObject {
 #if !NET
-		public SecCertificate (IntPtr handle)
+		public SecCertificate (NativeHandle handle)
 			: base (handle, false, verify: true)
 		{
 		}
 #endif // !NET
 
 		[Preserve (Conditional = true)]
-		internal SecCertificate (IntPtr handle, bool owns)
+		internal SecCertificate (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}
@@ -528,14 +532,14 @@ namespace Security {
 
 	public partial class SecIdentity : NativeObject {
 #if !NET
-		public SecIdentity (IntPtr handle)
+		public SecIdentity (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional = true)]
-		internal SecIdentity (IntPtr handle, bool owns)
+		internal SecIdentity (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -601,9 +605,9 @@ namespace Security {
 
 		[Preserve (Conditional = true)]
 #if NET
-		internal SecKey (IntPtr handle, bool owns)
+		internal SecKey (NativeHandle handle, bool owns)
 #else
-		public SecKey (IntPtr handle, bool owns)
+		public SecKey (NativeHandle handle, bool owns)
 #endif
 			: base (handle, owns)
 		{

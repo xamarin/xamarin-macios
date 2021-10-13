@@ -19,6 +19,10 @@ using CoreFoundation;
 
 using OS_nw_endpoint=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -31,9 +35,9 @@ namespace Network {
 #endif
 	public class NWEndpoint : NativeObject {
 #if NET
-		internal NWEndpoint (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWEndpoint (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

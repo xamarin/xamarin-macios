@@ -36,6 +36,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ImageIO {
 
 	public partial class CGImageDestinationOptions
@@ -133,14 +137,14 @@ namespace ImageIO {
 
 	public class CGImageDestination : NativeObject {
 #if !NET
-		internal CGImageDestination (IntPtr handle)
+		internal CGImageDestination (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGImageDestination (IntPtr handle, bool owns)
+		internal CGImageDestination (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

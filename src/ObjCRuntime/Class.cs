@@ -105,7 +105,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		public static IntPtr GetHandle (string name)
+		public static NativeHandle GetHandle (string name)
 		{
 			return objc_getClass (name);
 		}
@@ -133,11 +133,11 @@ namespace ObjCRuntime {
 		// class (it will be faster than GetHandle, but it will
 		// not compile unless the class in question actually exists
 		// as an ObjectiveC class in the binary).
-		public static IntPtr GetHandleIntrinsic (string name) {
+		public static NativeHandle GetHandleIntrinsic (string name) {
 			return objc_getClass (name);
 		}
 
-		public static IntPtr GetHandle (Type type) {
+		public static NativeHandle GetHandle (Type type) {
 			return GetClassHandle (type);
 		}
 

@@ -35,6 +35,10 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// uint32_t -> CGGradient.h
@@ -49,7 +53,7 @@ namespace CoreGraphics {
 	{
 #if !COREBUILD
 		[Preserve (Conditional=true)]
-		internal CGGradient (IntPtr handle, bool owns)
+		internal CGGradient (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

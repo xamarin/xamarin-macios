@@ -14,6 +14,10 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 #if !COREBUILD
 
@@ -22,7 +26,7 @@ namespace CoreFoundation {
 	[Mac (10, 10)]
 #endif
 	public sealed class DispatchBlock : NativeObject {
-		internal DispatchBlock (IntPtr handle, bool owns)
+		internal DispatchBlock (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

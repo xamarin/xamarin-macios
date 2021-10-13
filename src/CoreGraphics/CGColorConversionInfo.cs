@@ -17,6 +17,10 @@ using CoreFoundation;
 using Foundation;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 #if !NET
@@ -35,7 +39,7 @@ namespace CoreGraphics {
 #endif
 	public partial class CGColorConversionInfo : NativeObject {
 		[Preserve (Conditional=true)]
-		internal CGColorConversionInfo (IntPtr handle, bool owns)
+		internal CGColorConversionInfo (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

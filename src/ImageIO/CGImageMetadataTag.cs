@@ -17,6 +17,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ImageIO {
 
 	// CGImageMetadata.h
@@ -32,14 +36,14 @@ namespace ImageIO {
 			/* CFStringRef __nonnull */ IntPtr name, CGImageMetadataType type, /* CFTypeRef __nonnull */ IntPtr value);
 
 #if !NET
-		public CGImageMetadataTag (IntPtr handle)
+		public CGImageMetadataTag (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGImageMetadataTag (IntPtr handle, bool owns)
+		internal CGImageMetadataTag (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

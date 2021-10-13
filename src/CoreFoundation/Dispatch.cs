@@ -38,6 +38,10 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// The native constants are defined in usr/include/dispatch/queue.h, but since they're
@@ -67,7 +71,7 @@ namespace CoreFoundation {
 		// Constructors and lifecycle
 		//
 		[Preserve (Conditional = true)]
-		internal DispatchObject (IntPtr handle, bool owns)
+		internal DispatchObject (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}
@@ -176,12 +180,12 @@ namespace CoreFoundation {
 	public sealed class DispatchQueue : DispatchObject  {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
-		internal DispatchQueue (IntPtr handle, bool owns) : base (handle, owns)
+		internal DispatchQueue (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
 #if !NET
-		public DispatchQueue (IntPtr handle) : base (handle, false)
+		public DispatchQueue (NativeHandle handle) : base (handle, false)
 		{
 		}
 #endif
@@ -756,7 +760,7 @@ namespace CoreFoundation {
 	public class DispatchGroup : DispatchObject
 	{
 #if !COREBUILD
-		private DispatchGroup (IntPtr handle, bool owns)
+		private DispatchGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

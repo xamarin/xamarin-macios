@@ -18,6 +18,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreMedia;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoToolbox {
 
 #if NET
@@ -27,14 +31,14 @@ namespace VideoToolbox {
 #endif
 	public class VTFrameSilo : NativeObject {
 #if !NET
-		protected internal VTFrameSilo (IntPtr handle)
+		protected internal VTFrameSilo (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal VTFrameSilo (IntPtr handle, bool owns)
+		internal VTFrameSilo (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

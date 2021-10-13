@@ -42,6 +42,10 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioUnit
 {
 #if !COREBUILD
@@ -309,7 +313,7 @@ namespace AudioUnit
 		Dictionary<uint, RenderDelegate>? renderer;
 		Dictionary<uint, InputDelegate>? inputs;
 
-		internal AudioUnit (IntPtr handle, bool owns)
+		internal AudioUnit (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -1014,12 +1018,12 @@ namespace AudioUnit
 		public bool IsEmpty { get { return Handle == IntPtr.Zero; } }
 		public bool IsAtEnd { get { return current is null; }}
 
-		public AURenderEventEnumerator (IntPtr ptr)
+		public AURenderEventEnumerator (NativeHandle ptr)
 			: this (ptr, false)
 		{
 		}
 
-		internal AURenderEventEnumerator (IntPtr handle, bool owns)
+		internal AURenderEventEnumerator (NativeHandle handle, bool owns)
 		{
 			Handle = handle;
 			current = (AURenderEvent *) (IntPtr) handle;

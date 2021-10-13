@@ -18,6 +18,10 @@ using ObjCRuntime;
 
 using dispatch_queue_t = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// untyped enum from CFMessagePort.h
@@ -132,7 +136,7 @@ namespace CoreFoundation {
 		}
 
 		[Preserve (Conditional = true)]
-		internal CFMessagePort (IntPtr handle, bool owns)
+		internal CFMessagePort (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

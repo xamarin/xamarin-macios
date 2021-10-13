@@ -44,6 +44,10 @@ using System.Runtime.Versioning;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
 	public enum SecKind {
@@ -112,7 +116,7 @@ namespace Security {
 
 	public class SecKeyChain : INativeObject {
 
-		internal SecKeyChain (IntPtr handle)
+		internal SecKeyChain (NativeHandle handle)
 		{
 			Handle = handle;
 		}

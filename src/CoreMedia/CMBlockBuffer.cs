@@ -32,7 +32,7 @@ namespace CoreMedia {
 		CMCustomBlockAllocator? customAllocator;
 
 		[Preserve (Conditional=true)]
-		internal CMBlockBuffer (IntPtr handle, bool owns)
+		internal CMBlockBuffer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

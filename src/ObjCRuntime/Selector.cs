@@ -48,7 +48,7 @@ namespace ObjCRuntime {
 		NativeHandle handle;
 		string? name;
 
-		public Selector (IntPtr sel)
+		public Selector (NativeHandle sel)
 		{
 			if (!sel_isMapped (sel))
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
@@ -59,7 +59,7 @@ namespace ObjCRuntime {
 		// this .ctor is required, like for any INativeObject implementation
 		// even if selectors are not disposable
 		[Preserve (Conditional = true)]
-		internal Selector (IntPtr handle, bool /* unused */ owns)
+		internal Selector (NativeHandle handle, bool /* unused */ owns)
 		{
 			this.handle = handle;
 		}

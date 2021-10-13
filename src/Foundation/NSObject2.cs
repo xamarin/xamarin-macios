@@ -185,18 +185,18 @@ namespace Foundation {
 		}
 		
 #if NET
-		protected internal NSObject (IntPtr handle)
+		protected internal NSObject (NativeHandle handle)
 #else
-		public NSObject (IntPtr handle)
+		public NSObject (NativeHandle handle)
 #endif
 			: this (handle, false)
 		{
 		}
 		
 #if NET
-		protected NSObject (IntPtr handle, bool alloced)
+		protected NSObject (NativeHandle handle, bool alloced)
 #else
-		public NSObject (IntPtr handle, bool alloced)
+		public NSObject (NativeHandle handle, bool alloced)
 #endif
 		{
 			this.handle = handle;

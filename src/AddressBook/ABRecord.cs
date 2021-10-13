@@ -39,6 +39,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
 #if !NET
@@ -61,7 +65,7 @@ namespace AddressBook {
 		public const int InvalidPropertyId = -1;
 
 		[Preserve (Conditional = true)]
-		internal ABRecord (IntPtr handle, bool owns)
+		internal ABRecord (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

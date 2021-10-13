@@ -43,6 +43,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioUnit
 {
 	public enum AUGraphError // Implictly cast to OSType
@@ -76,7 +80,7 @@ namespace AudioUnit
 		readonly GCHandle gcHandle;
 
 		[Preserve (Conditional = true)]
-		internal AUGraph (IntPtr handle, bool owns)
+		internal AUGraph (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 			gcHandle = GCHandle.Alloc (this);

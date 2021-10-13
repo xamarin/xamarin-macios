@@ -19,6 +19,10 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 // CFHTTPMessage is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
 namespace CFNetwork {
@@ -27,7 +31,7 @@ namespace CoreServices {
 #endif
 
 	public partial class CFHTTPMessage : CFType {
-		internal CFHTTPMessage (IntPtr handle, bool owns)
+		internal CFHTTPMessage (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

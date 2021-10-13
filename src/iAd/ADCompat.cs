@@ -244,7 +244,7 @@ namespace iAd {
 		{
 		}
 
-		protected internal ADBannerViewDelegate (IntPtr handle)
+		protected internal ADBannerViewDelegate (NativeHandle handle)
 			: base (handle)
 		{
 		}
@@ -446,7 +446,7 @@ namespace iAd {
 		{
 		}
 
-		protected internal ADInterstitialAdDelegate (IntPtr handle)
+		protected internal ADInterstitialAdDelegate (NativeHandle handle)
 			: base (handle)
 		{
 		}

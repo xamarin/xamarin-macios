@@ -35,6 +35,8 @@ using System;
 using System.Runtime.InteropServices;
 #if NET
 using System.Runtime.Versioning;
+#else
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
@@ -152,7 +154,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationFree (IntPtr handle, AuthorizationFlags flags);
 		
-		internal Authorization (IntPtr handle, bool owns)
+		internal Authorization (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

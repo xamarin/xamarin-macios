@@ -13,6 +13,10 @@ using CloudKit;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CloudKit {
 
 #if !XAMCORE_4_0
@@ -119,7 +123,7 @@ namespace CloudKit {
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
-		protected CKDiscoverUserInfosOperation (IntPtr handle)
+		protected CKDiscoverUserInfosOperation (NativeHandle handle)
 			=> throw new NotSupportedException ();
 
 #if !NET
