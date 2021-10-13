@@ -138,12 +138,21 @@ steps:
     echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
     ls -R $(Build.SourcesDirectory)/package
   env:
+    ESRP_TEMP: $(System.DefaultWorkingDirectory)/esrp
     PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
   name: notarize
   displayName: 'Signing Release Build'
   timeoutInMinutes: 180
   condition: ${{ parameters.condition }}
+
+# Upload the esrp temp dir
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: ESRP temp'
+  inputs:
+    targetPath: '$(System.DefaultWorkingDirectory)/esrp'
+    artifactName: ESRP-tmp
+  continueOnError: true
 
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
   displayName: 'Install Notarizing Plugin'
