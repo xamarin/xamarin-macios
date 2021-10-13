@@ -544,7 +544,7 @@ namespace AudioToolbox {
 			} else if (val == InputRoute_USBAudio) {
 				return AudioSessionInputRouteKind.USBAudio;
 			} else {
-				return (AudioSessionInputRouteKind) val.Handle;
+				return (AudioSessionInputRouteKind) (int) (IntPtr) val.Handle;
 			}
 		}
 
@@ -586,7 +586,7 @@ namespace AudioToolbox {
 				} else if (val == OutputRoute_AirPlay) {
 					result [i] = AudioSessionOutputRouteKind.AirPlay;
 				} else
-					result [i] = (AudioSessionOutputRouteKind) val.Handle;
+					result [i] = (AudioSessionOutputRouteKind) (int) (IntPtr) val.Handle;
 			}
 			return result;
 		}
