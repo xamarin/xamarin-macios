@@ -117,7 +117,7 @@ namespace Security {
 			Handle = handle;
 		}
 
-		public IntPtr Handle { get; internal set; }
+		public NativeHandle Handle { get; internal set; }
 
 		static NSNumber? SetLimit (NSMutableDictionary dict, int max)
 		{
