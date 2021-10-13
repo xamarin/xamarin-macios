@@ -15,6 +15,10 @@ using Foundation;
 
 #nullable enable
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 	//
 	// The NativeObject class is intended to be a base class for many CoreFoundation
@@ -33,21 +37,21 @@ namespace CoreFoundation {
 		{
 		}
 
-		protected NativeObject (IntPtr handle, bool owns)
+		protected NativeObject (NativeHandle handle, bool owns)
 			: this (handle, owns, true)
 		{
 		}
 
-		protected NativeObject (IntPtr handle, bool owns, bool verify)
+		protected NativeObject (NativeHandle handle, bool owns, bool verify)
 			: base (handle, owns, verify)
 		{
-			if (!owns && handle != IntPtr.Zero)
+			if (!owns && handle != NativeHandle.Zero)
 				Retain ();
 		}
 
 		protected override void Dispose (bool disposing)
 		{
-			if (Handle != IntPtr.Zero)
+			if (Handle != NativeHandle.Zero)
 				Release ();
 			base.Dispose (disposing);
 		}
