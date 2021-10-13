@@ -3,11 +3,15 @@
 using System;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 
 	public interface INativeObject {
 #if !COREBUILD
-		IntPtr Handle { 
+		NativeHandle Handle {
 			get;
 		}
 #endif
@@ -18,12 +22,12 @@ namespace ObjCRuntime {
 
 		// help to avoid the (too common pattern)
 		// 	var p = x == null ? IntPtr.Zero : x.Handle;
-		static public IntPtr GetHandle (this INativeObject? self)
+		static public NativeHandle GetHandle (this INativeObject? self)
 		{
-			return self is null ? IntPtr.Zero : self.Handle;
+			return self is null ? NativeHandle.Zero : self.Handle;
 		}
 
-		static public IntPtr GetNonNullHandle (this INativeObject self, string argumentName)
+		static public NativeHandle GetNonNullHandle (this INativeObject self, string argumentName)
 		{
 			if (self is null)
 				ThrowHelper.ThrowArgumentNullException (argumentName);
