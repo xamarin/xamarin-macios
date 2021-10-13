@@ -123,7 +123,7 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
 
 #if !XAMCORE_4_0
@@ -599,7 +599,7 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
 		
 #if MONOMAC
