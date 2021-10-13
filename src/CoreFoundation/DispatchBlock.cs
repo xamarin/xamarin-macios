@@ -181,9 +181,9 @@ namespace CoreFoundation {
 				return null;
 
 			unsafe {
-				BlockLiteral *handle = (BlockLiteral *) block.GetCheckedHandle ();
+				var handle = (BlockLiteral *) (IntPtr) block.GetCheckedHandle ();
 				var del = handle->GetDelegateForBlock<DispatchBlockCallback> ();
-				return new Action (() => del (block.GetCheckedHandle ()));
+				return new Action (() => del ((IntPtr) block.GetCheckedHandle ()));
 			}
 		}
 
