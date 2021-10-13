@@ -241,6 +241,7 @@ namespace iAd {
 		}
 
 		protected internal ADBannerViewDelegate (IntPtr handle)
+			: base (handle)
 		{
 		}
 
@@ -313,6 +314,7 @@ namespace iAd {
 	public class ADInterstitialAd : NSObject {
 
 		protected internal ADInterstitialAd (IntPtr handle)
+			: base (handle)
 		{
 		}
 
@@ -441,6 +443,7 @@ namespace iAd {
 		}
 
 		protected internal ADInterstitialAdDelegate (IntPtr handle)
+			: base (handle)
 		{
 		}
 
