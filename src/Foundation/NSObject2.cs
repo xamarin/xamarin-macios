@@ -46,6 +46,10 @@ using CoreAnimation;
 using CoreGraphics;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	public class NSObjectFlag {
 		public static readonly NSObjectFlag Empty;
@@ -74,7 +78,7 @@ namespace Foundation {
 		// replace older Mono[Touch|Mac]Assembly field (ease code sharing across platforms)
 		public static readonly Assembly PlatformAssembly = typeof (NSObject).Assembly;
 
-		IntPtr handle;
+		NativeHandle handle;
 		IntPtr super; /* objc_super* */
 
 #if !NET
@@ -555,7 +559,7 @@ namespace Foundation {
 			}
 		}
 		
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return handle; }
 			set {
 				if (handle == value)
