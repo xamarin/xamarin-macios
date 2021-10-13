@@ -140,7 +140,7 @@ namespace CloudKit {
 
 #pragma warning disable CS0809
 		[Obsolete ("Empty stub (not a public API).")]
-		public override IntPtr ClassHandle { get; }
+		public override NativeHandle ClassHandle { get; }
 #pragma warning restore CS0809
 	}
 #endif

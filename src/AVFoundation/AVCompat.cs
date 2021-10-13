@@ -35,7 +35,7 @@ namespace AVFoundation {
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
 	{
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (); } }
+		public override NativeHandle ClassHandle { get { throw new PlatformNotSupportedException (); } }
 
 		protected AVCaptureDataOutputSynchronizer (NSObjectFlag t) : base (t)
 		{
@@ -330,7 +330,7 @@ namespace AVFoundation {
 #endif
 	public class AVAssetDownloadTask : NSUrlSessionTask {
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
@@ -406,7 +406,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
@@ -607,7 +607,7 @@ namespace AVFoundation {
 		
 		public virtual AVPlayerInterstitialEvent[] InterstitialEvents => throw new NotImplementedException ();
 
-		public override IntPtr ClassHandle => throw new NotImplementedException ();
+		public override NativeHandle ClassHandle => throw new NotImplementedException ();
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
