@@ -19,6 +19,10 @@ using Foundation;
 using Registrar;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 	public partial class Class : INativeObject
 #if !COREBUILD
@@ -26,7 +30,7 @@ namespace ObjCRuntime {
 #endif
 	{
 #if !COREBUILD
-		IntPtr handle;
+		NativeHandle handle;
 
 		public static bool ThrowOnInitFailure = true;
 
@@ -77,16 +81,16 @@ namespace ObjCRuntime {
 
 		[Preserve (Conditional = true)]
 #if NET
-		internal Class (IntPtr handle, bool owns)
+		internal Class (NativeHandle handle, bool owns)
 #else
-		public Class (IntPtr handle, bool owns)
+		public Class (NativeHandle handle, bool owns)
 #endif
 		{
 			// Class(es) can't be freed, so we ignore the 'owns' parameter.
 			this.handle = handle;
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return this.handle; }
 		}
 
