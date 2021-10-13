@@ -114,14 +114,13 @@ namespace VideoToolbox {
 		public bool SupportsFrameReordering { get; private set; }
 
 #if !NET
-		[NoiOS, NoTV, MacCatalyst (15,0), NoMac, NoWatch]
+		[NoiOS, NoTV, NoMacCatalyst, NoMac, NoWatch]
 #else
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos")]
 #endif
-		public bool SupportsMultiPass { get; private set; }
 
 #if !NET
 		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
@@ -191,15 +190,6 @@ namespace VideoToolbox {
 				var includeDef = dict [constant] as NSNumber;
 				IncludeStandardDefinitionDVEncoders = includeDef == null ? false : includeDef.BoolValue; // optional, default false 
 			}
-
-#if __MACCATALYST__
-			constant = VTVideoEncoderList.SupportsMultiPass;
-			if (constant != null) {
-				var multiPass = dict [constant] as NSNumber;
-				SupportsMultiPass = multiPass == null ? false : multiPass.BoolValue; // optional, default false 
-			}
-#endif
-
 		}
 
 #if NET
