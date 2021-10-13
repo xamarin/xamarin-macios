@@ -235,6 +235,7 @@ namespace AVFoundation {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		protected internal AVAssetDownloadDelegate (IntPtr handle)
+			: base (handle)
 		{
 			throw new NotImplementedException ();
 		}
