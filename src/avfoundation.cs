@@ -60,6 +60,10 @@ using UIImage = AppKit.NSImage;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #if WATCH
 using AVCaptureWhiteBalanceGains = Foundation.NSString;
 // stubs to ease compilation using [NoWatch]
@@ -237,7 +241,7 @@ namespace AVFoundation {
 	interface AVDateRangeMetadataGroup : NSCopying, NSMutableCopying
 	{
 		[Export ("initWithItems:startDate:endDate:")]
-		IntPtr Constructor (AVMetadataItem[] items, NSDate startDate, [NullAllowed] NSDate endDate);
+		NativeHandle Constructor (AVMetadataItem[] items, NSDate startDate, [NullAllowed] NSDate endDate);
 	
 		[Export ("startDate", ArgumentSemantic.Copy)]
 		NSDate StartDate { get; [NotImplemented] set; }
@@ -850,11 +854,11 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // fails (nil handle on iOS 10)
 	interface AVAudioChannelLayout : NSSecureCoding {
 		[Export ("initWithLayoutTag:")]
-		IntPtr Constructor (/* UInt32 */ uint layoutTag);
+		NativeHandle Constructor (/* UInt32 */ uint layoutTag);
 
 		[DesignatedInitializer]
 		[Export ("initWithLayout:"), Internal]
-		IntPtr Constructor (nint /* This is really an IntPtr, but it conflicts with the default (Handle) ctor. */ layout);
+		NativeHandle Constructor (nint /* This is really an IntPtr, but it conflicts with the default (Handle) ctor. */ layout);
 
 		[Export ("layoutTag")]
 		uint /* AudioChannelLayoutTag = UInt32 */ LayoutTag { get; }
@@ -876,10 +880,10 @@ namespace AVFoundation {
 	interface AVAudioCompressedBuffer
 	{
 		[Export ("initWithFormat:packetCapacity:maximumPacketSize:")]
-		IntPtr Constructor (AVAudioFormat format, uint packetCapacity, nint maximumPacketSize);
+		NativeHandle Constructor (AVAudioFormat format, uint packetCapacity, nint maximumPacketSize);
 	
 		[Export ("initWithFormat:packetCapacity:")]
-		IntPtr Constructor (AVAudioFormat format, uint packetCapacity);
+		NativeHandle Constructor (AVAudioFormat format, uint packetCapacity);
 	
 		[Export ("packetCapacity")]
 		uint PacketCapacity { get; }
@@ -913,7 +917,7 @@ namespace AVFoundation {
 	{
 		[Export ("initWithNode:bus:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioNode node, nuint bus);
+		NativeHandle Constructor (AVAudioNode node, nuint bus);
 	
 		[NullAllowed, Export ("node", ArgumentSemantic.Weak)]
 		AVAudioNode Node { get; }
@@ -1083,7 +1087,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("nextAvailableInputBus")]
 		nuint NextAvailableInputBus { get; }
@@ -1159,22 +1163,22 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	interface AVAudioFile {
 		[Export ("initForReading:error:")]
-		IntPtr Constructor (NSUrl fileUrl, out NSError outError);
+		NativeHandle Constructor (NSUrl fileUrl, out NSError outError);
 
 		[Export ("initForReading:commonFormat:interleaved:error:")]
-		IntPtr Constructor (NSUrl fileUrl, AVAudioCommonFormat format, bool interleaved, out NSError outError);
+		NativeHandle Constructor (NSUrl fileUrl, AVAudioCommonFormat format, bool interleaved, out NSError outError);
 
 		[Export ("initForWriting:settings:error:"), Internal]
-		IntPtr Constructor (NSUrl fileUrl, NSDictionary settings, out NSError outError);
+		NativeHandle Constructor (NSUrl fileUrl, NSDictionary settings, out NSError outError);
 
 		[Wrap ("this (fileUrl, settings.GetDictionary ()!, out outError)")]
-		IntPtr Constructor (NSUrl fileUrl, AudioSettings settings, out NSError outError);
+		NativeHandle Constructor (NSUrl fileUrl, AudioSettings settings, out NSError outError);
 
 		[Export ("initForWriting:settings:commonFormat:interleaved:error:"), Internal]
-		IntPtr Constructor (NSUrl fileUrl, NSDictionary settings, AVAudioCommonFormat format, bool interleaved, out NSError outError);
+		NativeHandle Constructor (NSUrl fileUrl, NSDictionary settings, AVAudioCommonFormat format, bool interleaved, out NSError outError);
 		
 		[Wrap ("this (fileUrl, settings.GetDictionary ()!, format, interleaved, out outError)")]
-		IntPtr Constructor (NSUrl fileUrl, AudioSettings settings, AVAudioCommonFormat format, bool interleaved, out NSError outError);
+		NativeHandle Constructor (NSUrl fileUrl, AudioSettings settings, AVAudioCommonFormat format, bool interleaved, out NSError outError);
 
 		[Export ("url")]
 		NSUrl Url { get; }
@@ -1206,32 +1210,32 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	interface AVAudioFormat : NSSecureCoding {
 		[Export ("initWithStreamDescription:")]
-		IntPtr Constructor (ref AudioStreamBasicDescription description);
+		NativeHandle Constructor (ref AudioStreamBasicDescription description);
 
 		[Export ("initWithStreamDescription:channelLayout:")]
-		IntPtr Constructor (ref AudioStreamBasicDescription description, [NullAllowed] AVAudioChannelLayout layout);
+		NativeHandle Constructor (ref AudioStreamBasicDescription description, [NullAllowed] AVAudioChannelLayout layout);
 
 		[Export ("initStandardFormatWithSampleRate:channels:")]
-		IntPtr Constructor (double sampleRate, uint /* AVAudioChannelCount = uint32_t */ channels);
+		NativeHandle Constructor (double sampleRate, uint /* AVAudioChannelCount = uint32_t */ channels);
 
 		[Export ("initStandardFormatWithSampleRate:channelLayout:")]
-		IntPtr Constructor (double sampleRate, AVAudioChannelLayout layout);
+		NativeHandle Constructor (double sampleRate, AVAudioChannelLayout layout);
 
 		[Export ("initWithCommonFormat:sampleRate:channels:interleaved:")]
-		IntPtr Constructor (AVAudioCommonFormat format, double sampleRate, uint /* AVAudioChannelCount = uint32_t */ channels, bool interleaved);
+		NativeHandle Constructor (AVAudioCommonFormat format, double sampleRate, uint /* AVAudioChannelCount = uint32_t */ channels, bool interleaved);
 
 		[Export ("initWithCommonFormat:sampleRate:interleaved:channelLayout:")]
-		IntPtr Constructor (AVAudioCommonFormat format, double sampleRate, bool interleaved, AVAudioChannelLayout layout);
+		NativeHandle Constructor (AVAudioCommonFormat format, double sampleRate, bool interleaved, AVAudioChannelLayout layout);
 
 		[Export ("initWithSettings:")]
-		IntPtr Constructor (NSDictionary settings);
+		NativeHandle Constructor (NSDictionary settings);
 
 		[Wrap ("this (settings.GetDictionary ()!)")]
-		IntPtr Constructor (AudioSettings settings);
+		NativeHandle Constructor (AudioSettings settings);
 
 		[iOS (9,0)][Mac (10,11)][Watch (6,0)]
 		[Export ("initWithCMAudioFormatDescription:")]
-		IntPtr Constructor (CMAudioFormatDescription formatDescription);
+		NativeHandle Constructor (CMAudioFormatDescription formatDescription);
 
 		[Export ("standard")]
 		bool Standard { [Bind ("isStandard")] get; }
@@ -1457,7 +1461,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("outputVolume")]
 		float OutputVolume { get; set; } /* float, not CGFloat */
@@ -1511,12 +1515,12 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithPCMFormat:frameCapacity:")]
-		IntPtr Constructor (AVAudioFormat format, uint /* AVAudioFrameCount = uint32_t */ frameCapacity);
+		NativeHandle Constructor (AVAudioFormat format, uint /* AVAudioFrameCount = uint32_t */ frameCapacity);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithPCMFormat:bufferListNoCopy:deallocator:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioFormat format, AudioBuffers bufferList, [NullAllowed] Action<AudioBuffers> deallocator);
+		NativeHandle Constructor (AVAudioFormat format, AudioBuffers bufferList, [NullAllowed] Action<AudioBuffers> deallocator);
 
 		[Export ("frameCapacity")]
 		uint FrameCapacity { get; } /* AVAudioFrameCount = uint32_t */ 
@@ -1542,10 +1546,10 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	interface AVAudioPlayer {
 		[Export ("initWithContentsOfURL:error:")][Internal]
-		IntPtr Constructor (NSUrl url, IntPtr outError);
+		NativeHandle Constructor (NSUrl url, IntPtr outError);
 	
 		[Export ("initWithData:error:")][Internal]
-		IntPtr Constructor (NSData  data, IntPtr outError);
+		NativeHandle Constructor (NSData  data, IntPtr outError);
 
 		[Export ("prepareToPlay")]
 		bool PrepareToPlay ();
@@ -1631,10 +1635,10 @@ namespace AVFoundation {
 		AVAudioSessionChannelDescription [] ChannelAssignments { get; set; }
 #endif
 		[iOS (7,0), Mac (10,9), Export ("initWithData:fileTypeHint:error:")]
-		IntPtr Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
+		NativeHandle Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
 
 		[iOS (7,0), Mac (10,9), Export ("initWithContentsOfURL:fileTypeHint:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] string fileTypeHint, out NSError outError);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] string fileTypeHint, out NSError outError);
 
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Watch (4,0)]
@@ -1680,7 +1684,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("playing")]
 		bool Playing { [Bind ("isPlaying")] get; }
@@ -2667,7 +2671,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitEffect {
 		[Export ("initWithAudioComponentDescription:")]
-		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
+		NativeHandle Constructor (AudioComponentDescription audioComponentDescription);
 
 		[Export ("bypass")]
 		bool Bypass { get; set; }
@@ -2678,7 +2682,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVAudioUnitEffect))]
 	interface AVAudioUnitEQ {
 		[Export ("initWithNumberOfBands:")]
-		IntPtr Constructor (nuint numberOfBands);
+		NativeHandle Constructor (nuint numberOfBands);
 
 		[Export ("bands")]
 		AVAudioUnitEQFilterParameters [] Bands { get; }
@@ -2713,7 +2717,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitGenerator : AVAudioMixing {
 		[Export ("initWithAudioComponentDescription:")]
-		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
+		NativeHandle Constructor (AudioComponentDescription audioComponentDescription);
 
 		[Export ("bypass")]
 		bool Bypass { get; set; }
@@ -2724,7 +2728,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitMidiInstrument : AVAudioMixing { 
 		[Export ("initWithAudioComponentDescription:")]
-		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
+		NativeHandle Constructor (AudioComponentDescription audioComponentDescription);
 
 		[Export ("startNote:withVelocity:onChannel:")]
 		void StartNote (byte note, byte velocity, byte channel);
@@ -2808,7 +2812,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitTimeEffect {
 		[Export ("initWithAudioComponentDescription:")]
-		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
+		NativeHandle Constructor (AudioComponentDescription audioComponentDescription);
 
 		[Export ("bypass")]
 		bool Bypass { get; set; }
@@ -2818,7 +2822,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitTimePitch {
 		[Export ("initWithAudioComponentDescription:")]
-		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
+		NativeHandle Constructor (AudioComponentDescription audioComponentDescription);
 
 
 		[Export ("rate")]
@@ -2835,7 +2839,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitVarispeed {
 		[Export ("initWithAudioComponentDescription:")]
-		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
+		NativeHandle Constructor (AudioComponentDescription audioComponentDescription);
 
 		[Export ("rate")]
 		float Rate { get; set; } /* float, not CGFloat */
@@ -2846,16 +2850,16 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	interface AVAudioTime {
 		[Export ("initWithAudioTimeStamp:sampleRate:")]
-		IntPtr Constructor (ref AudioTimeStamp timestamp, double sampleRate);
+		NativeHandle Constructor (ref AudioTimeStamp timestamp, double sampleRate);
 
 		[Export ("initWithHostTime:")]
-		IntPtr Constructor (ulong hostTime);
+		NativeHandle Constructor (ulong hostTime);
 
 		[Export ("initWithSampleTime:atRate:")]
-		IntPtr Constructor (long sampleTime, double sampleRate);
+		NativeHandle Constructor (long sampleTime, double sampleRate);
 
 		[Export ("initWithHostTime:sampleTime:atRate:")]
-		IntPtr Constructor (ulong hostTime, long sampleTime, double sampleRate);
+		NativeHandle Constructor (ulong hostTime, long sampleTime, double sampleRate);
 
 		[Export ("hostTimeValid")]
 		bool HostTimeValid { [Bind ("isHostTimeValid")] get; }
@@ -2906,7 +2910,7 @@ namespace AVFoundation {
 	interface AVAudioConverter {
 
 		[Export ("initFromFormat:toFormat:")]
-		IntPtr Constructor (AVAudioFormat fromFormat, AVAudioFormat toFormat);
+		NativeHandle Constructor (AVAudioFormat fromFormat, AVAudioFormat toFormat);
 
 		[Export ("reset")]
 		void Reset ();
@@ -3240,7 +3244,7 @@ namespace AVFoundation {
 	interface AVFragmentedAsset : AVFragmentMinding {
 
 		[Export ("initWithURL:options:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Static]
 		[Export ("fragmentedAssetWithURL:options:")]
@@ -3300,7 +3304,7 @@ namespace AVFoundation {
 
 		[Mac (10,14)]
 		[Export ("initWithAsset:mindingInterval:")]
-		IntPtr Constructor (IAVFragmentMinding asset, double mindingInterval);
+		NativeHandle Constructor (IAVFragmentMinding asset, double mindingInterval);
 
 		[Export ("mindingInterval")]
 		double MindingInterval { get; set; }
@@ -3403,7 +3407,7 @@ namespace AVFoundation {
 	interface AVCaptureDataOutputSynchronizer
 	{
 		[Export ("initWithDataOutputs:")]
-		IntPtr Constructor (AVCaptureOutput[] dataOutputs);
+		NativeHandle Constructor (AVCaptureOutput[] dataOutputs);
 
 		[Export ("dataOutputs", ArgumentSemantic.Retain)]
 		AVCaptureOutput[] DataOutputs { get; }
@@ -3621,7 +3625,7 @@ namespace AVFoundation {
 
 		[Export ("initWithAsset:timebase:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAsset asset, [NullAllowed] CMTimebase timebase);
+		NativeHandle Constructor (AVAsset asset, [NullAllowed] CMTimebase timebase);
 
 		[Export ("createSampleBufferForRequest:")]
 		[return: Release]
@@ -3641,7 +3645,7 @@ namespace AVFoundation {
 
 		[Export ("initWithStartCursor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVSampleCursor startCursor);
+		NativeHandle Constructor (AVSampleCursor startCursor);
 
 		[Export ("startCursor", ArgumentSemantic.Retain)]
 		AVSampleCursor StartCursor { get; }
@@ -3689,7 +3693,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithAsset:")]
-		IntPtr Constructor (AVAsset asset);
+		NativeHandle Constructor (AVAsset asset);
 
 		[Export ("copyCGImageAtTime:actualTime:error:")]
 		[return: NullAllowed]
@@ -3756,7 +3760,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithAsset:error:")]
-		IntPtr Constructor (AVAsset asset, out NSError error);
+		NativeHandle Constructor (AVAsset asset, out NSError error);
 
 		[Export ("canAddOutput:")]
 		bool CanAddOutput (AVAssetReaderOutput output);
@@ -3807,7 +3811,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithAssetReaderTrackOutput:")]
-		IntPtr Constructor (AVAssetReaderTrackOutput trackOutput);
+		NativeHandle Constructor (AVAssetReaderTrackOutput trackOutput);
 
 		[Export ("assetReaderTrackOutput")]
 		AVAssetReaderTrackOutput AssetReaderTrackOutput { get; }
@@ -3828,7 +3832,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithTrack:")]
-		IntPtr Constructor (AVAssetTrack track);
+		NativeHandle Constructor (AVAssetTrack track);
 
 		[Export ("track")]
 		AVAssetTrack Track { get; }
@@ -3858,13 +3862,13 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithTrack:outputSettings:")]
-		IntPtr Constructor (AVAssetTrack track, [NullAllowed] NSDictionary outputSettings);
+		NativeHandle Constructor (AVAssetTrack track, [NullAllowed] NSDictionary outputSettings);
 
 		[Wrap ("this (track, settings.GetDictionary ())")]		
-		IntPtr Constructor (AVAssetTrack track, [NullAllowed] AudioSettings settings);
+		NativeHandle Constructor (AVAssetTrack track, [NullAllowed] AudioSettings settings);
 
 		[Wrap ("this (track, settings.GetDictionary ())")]		
-		IntPtr Constructor (AVAssetTrack track, [NullAllowed] AVVideoSettingsUncompressed settings);
+		NativeHandle Constructor (AVAssetTrack track, [NullAllowed] AVVideoSettingsUncompressed settings);
 
 		[Export ("outputSettings"), NullAllowed]
 		NSDictionary OutputSettings { get; }
@@ -3897,10 +3901,10 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithAudioTracks:audioSettings:")]
-		IntPtr Constructor (AVAssetTrack [] audioTracks, [NullAllowed] NSDictionary audioSettings);
+		NativeHandle Constructor (AVAssetTrack [] audioTracks, [NullAllowed] NSDictionary audioSettings);
 
 		[Wrap ("this (audioTracks, settings.GetDictionary ())")]
-		IntPtr Constructor (AVAssetTrack [] audioTracks, [NullAllowed] AudioSettings settings);
+		NativeHandle Constructor (AVAssetTrack [] audioTracks, [NullAllowed] AudioSettings settings);
 
 		[Internal]
 		[Advice ("Use 'Settings' property.")]
@@ -3940,10 +3944,10 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithVideoTracks:videoSettings:")]
-		IntPtr Constructor (AVAssetTrack [] videoTracks, [NullAllowed] NSDictionary videoSettings);
+		NativeHandle Constructor (AVAssetTrack [] videoTracks, [NullAllowed] NSDictionary videoSettings);
 
 		[Wrap ("this (videoTracks, settings.GetDictionary ())")]
-		IntPtr Constructor (AVAssetTrack [] videoTracks, [NullAllowed] CVPixelBufferAttributes settings);		
+		NativeHandle Constructor (AVAssetTrack [] videoTracks, [NullAllowed] CVPixelBufferAttributes settings);		
 
 		[Export ("videoSettings"), NullAllowed]
 		NSDictionary WeakVideoSettings { get; }
@@ -4189,12 +4193,12 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:fileType:error:")]
-		IntPtr Constructor (NSUrl outputUrl, string outputFileType, out NSError error);
+		NativeHandle Constructor (NSUrl outputUrl, string outputFileType, out NSError error);
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
 		[Export ("initWithContentType:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (UTType outputContentType);
+		NativeHandle Constructor (UTType outputContentType);
 
 		[Export ("canApplyOutputSettings:forMediaType:")]
 		bool CanApplyOutputSettings ([NullAllowed] NSDictionary outputSettings, string mediaType);
@@ -4300,13 +4304,13 @@ namespace AVFoundation {
 		[DesignatedInitializer]
 		[Protected]
 		[Export ("initWithMediaType:outputSettings:sourceFormatHint:")]
-		IntPtr Constructor (string mediaType, [NullAllowed] NSDictionary outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
+		NativeHandle Constructor (string mediaType, [NullAllowed] NSDictionary outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
 		[Wrap ("this (mediaType, outputSettings.GetDictionary (), sourceFormatHint)")]
-		IntPtr Constructor (string mediaType, [NullAllowed] AudioSettings outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
+		NativeHandle Constructor (string mediaType, [NullAllowed] AudioSettings outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
 		[Wrap ("this (mediaType, outputSettings.GetDictionary (), sourceFormatHint)")]
-		IntPtr Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
+		NativeHandle Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
 		[Static, Internal]
 		[Export ("assetWriterInputWithMediaType:outputSettings:sourceFormatHint:")]
@@ -4351,13 +4355,13 @@ namespace AVFoundation {
 
 		[Protected]
 		[Export ("initWithMediaType:outputSettings:")]
-		IntPtr Constructor (string mediaType, [NullAllowed] NSDictionary outputSettings);
+		NativeHandle Constructor (string mediaType, [NullAllowed] NSDictionary outputSettings);
 
 		[Wrap ("this (mediaType, outputSettings.GetDictionary ())")]		
-		IntPtr Constructor (string mediaType, [NullAllowed] AudioSettings outputSettings);
+		NativeHandle Constructor (string mediaType, [NullAllowed] AudioSettings outputSettings);
 
 		[Wrap ("this (mediaType, outputSettings.GetDictionary ())")]		
-		IntPtr Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings);
+		NativeHandle Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings);
 
 		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
 		void RequestMediaData (DispatchQueue queue, Action action);
@@ -4462,7 +4466,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithAssetWriterInput:")]
-		IntPtr Constructor (AVAssetWriterInput assetWriterInput);
+		NativeHandle Constructor (AVAssetWriterInput assetWriterInput);
 
 		[Export ("assetWriterInput")]
 		AVAssetWriterInput AssetWriterInput { get; }
@@ -4484,7 +4488,7 @@ namespace AVFoundation {
 	
 		[DesignatedInitializer]
 		[Export ("initWithInputs:defaultInput:")]
-		IntPtr Constructor (AVAssetWriterInput [] inputs, [NullAllowed] AVAssetWriterInput defaultInput);
+		NativeHandle Constructor (AVAssetWriterInput [] inputs, [NullAllowed] AVAssetWriterInput defaultInput);
 	
 		[Export ("inputs")]
 		AVAssetWriterInput [] Inputs { get; }
@@ -4519,10 +4523,10 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithAssetWriterInput:sourcePixelBufferAttributes:")]
-		IntPtr Constructor (AVAssetWriterInput input, [NullAllowed] NSDictionary sourcePixelBufferAttributes);
+		NativeHandle Constructor (AVAssetWriterInput input, [NullAllowed] NSDictionary sourcePixelBufferAttributes);
 
 		[Wrap ("this (input, attributes.GetDictionary ())")]
-		IntPtr Constructor (AVAssetWriterInput input, [NullAllowed] CVPixelBufferAttributes attributes);		
+		NativeHandle Constructor (AVAssetWriterInput input, [NullAllowed] CVPixelBufferAttributes attributes);		
 
 		[Export ("appendPixelBuffer:withPresentationTime:")]
 		bool AppendPixelBufferWithPresentationTime (CVPixelBuffer pixelBuffer, CMTime presentationTime);
@@ -4568,13 +4572,13 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:options:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Wrap ("this (url, options.GetDictionary ())")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] AVUrlAssetOptions options);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] AVUrlAssetOptions options);
 
 		[Wrap ("this (url, (NSDictionary) null!)")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[return: NullAllowed]
 		[Export ("compatibleTrackForCompositionTrack:")]
@@ -7182,10 +7186,10 @@ namespace AVFoundation {
 	interface AVMidiPlayer {
 
 		[Export ("initWithContentsOfURL:soundBankURL:error:")]
-		IntPtr Constructor (NSUrl contentsUrl, [NullAllowed] NSUrl soundBankUrl, out NSError outError);
+		NativeHandle Constructor (NSUrl contentsUrl, [NullAllowed] NSUrl soundBankUrl, out NSError outError);
 
 		[Export ("initWithData:soundBankURL:error:")]
-		IntPtr Constructor (NSData data, [NullAllowed] NSUrl sounddBankUrl, out NSError outError);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSUrl sounddBankUrl, out NSError outError);
 
 		[Export ("duration")]
 		double Duration { get; }
@@ -7232,7 +7236,7 @@ namespace AVFoundation {
 
 		[Export ("initWithURL:options:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
 		[Mac (10,11)]
 		[Static]
@@ -7242,7 +7246,7 @@ namespace AVFoundation {
 		[Mac (10,11)]
 		[Export ("initWithData:options:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
 		[NullAllowed, Export ("URL")]
 		NSUrl URL { get; }
@@ -7333,7 +7337,7 @@ namespace AVFoundation {
 
 		[Export ("initWithURL:options:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError outError);
 
 		[Static]
 		[Export ("movieWithData:options:error:")]
@@ -7342,7 +7346,7 @@ namespace AVFoundation {
 
 		[Export ("initWithData:options:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError outError);
 
 		[Static]
 		[Export ("movieWithSettingsFromMovie:options:error:")]
@@ -7351,7 +7355,7 @@ namespace AVFoundation {
 
 		[Export ("initWithSettingsFromMovie:options:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] AVMovie movie, [NullAllowed] NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError outError);
+		NativeHandle Constructor ([NullAllowed] AVMovie movie, [NullAllowed] NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError outError);
 
 		[Export ("preferredRate")]
 		float PreferredRate { get; set; }
@@ -7465,7 +7469,7 @@ namespace AVFoundation {
 	{
 		[Export ("initWithURL:options:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
 		[NullAllowed, Export ("URL")]
 		NSUrl URL { get; }
@@ -7478,12 +7482,12 @@ namespace AVFoundation {
 	{
 		[Export ("initWithURL:options:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
 		[Mac (10,11)]
 		[Export ("initWithData:options:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
 		[Export ("tracks")]
 		AVFragmentedMovieTrack[] Tracks { get; }
@@ -7548,7 +7552,7 @@ namespace AVFoundation {
 
 		[Export ("initWithMovie:mindingInterval:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVFragmentedMovie movie, double mindingInterval);
+		NativeHandle Constructor (AVFragmentedMovie movie, double mindingInterval);
 
 		[Export ("mindingInterval")]
 		double MindingInterval { get; set; }
@@ -8072,11 +8076,11 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:trackID:sourceTimeRange:targetTimeRange:")]
-		IntPtr Constructor (NSUrl URL, int trackID /* CMPersistentTrackID = int32_t */, CMTimeRange sourceTimeRange, CMTimeRange targetTimeRange);
+		NativeHandle Constructor (NSUrl URL, int trackID /* CMPersistentTrackID = int32_t */, CMTimeRange sourceTimeRange, CMTimeRange targetTimeRange);
 
 		[DesignatedInitializer]
 		[Export ("initWithTimeRange:")]
-		IntPtr Constructor (CMTimeRange timeRange);
+		NativeHandle Constructor (CMTimeRange timeRange);
 
 		[Export ("empty")]
 		bool Empty { [Bind ("isEmpty")] get;  }
@@ -8149,10 +8153,10 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithAsset:presetName:")]
-		IntPtr Constructor (AVAsset asset, string presetName);
+		NativeHandle Constructor (AVAsset asset, string presetName);
 
 		[Wrap ("this (asset, preset.GetConstant ())")]
-		IntPtr Constructor (AVAsset asset, AVAssetExportSessionPreset preset);
+		NativeHandle Constructor (AVAsset asset, AVAssetExportSessionPreset preset);
 
 		[Export ("exportAsynchronouslyWithCompletionHandler:")]
 		[Async ("ExportTaskAsync")]
@@ -8975,11 +8979,11 @@ namespace AVFoundation {
 		
 		[iOS (8,0)]
 		[Export ("initWithInputPorts:output:")]
-		IntPtr Constructor (AVCaptureInputPort [] inputPorts, AVCaptureOutput output);
+		NativeHandle Constructor (AVCaptureInputPort [] inputPorts, AVCaptureOutput output);
 
 		[iOS (8,0)]
 		[Export ("initWithInputPort:videoPreviewLayer:")]
-		IntPtr Constructor (AVCaptureInputPort inputPort, AVCaptureVideoPreviewLayer layer);
+		NativeHandle Constructor (AVCaptureInputPort inputPort, AVCaptureVideoPreviewLayer layer);
 
 		[NullAllowed]
 		[Export ("output")]
@@ -9197,7 +9201,7 @@ namespace AVFoundation {
 		AVCaptureDeviceInput FromDevice (AVCaptureDevice device, out NSError error);
 
 		[Export ("initWithDevice:error:")]
-		IntPtr Constructor (AVCaptureDevice device, out NSError error);
+		NativeHandle Constructor (AVCaptureDevice device, out NSError error);
 
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("unifiedAutoExposureDefaultsEnabled")]
@@ -9324,7 +9328,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVCaptureInput))]
 	interface AVCaptureScreenInput {
 		[Export ("initWithDisplayID:")]
-		IntPtr Constructor (uint /* CGDirectDisplayID = uint32_t */ displayID);
+		NativeHandle Constructor (uint /* CGDirectDisplayID = uint32_t */ displayID);
 
 		[Export ("minFrameDuration")]
 		CMTime MinFrameDuration { get; set; }
@@ -11501,10 +11505,10 @@ namespace AVFoundation {
 		AVPlayer FromPlayerItem ([NullAllowed] AVPlayerItem item);
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl URL);
+		NativeHandle Constructor (NSUrl URL);
 
 		[Export ("initWithPlayerItem:")]
-		IntPtr Constructor ([NullAllowed] AVPlayerItem item);
+		NativeHandle Constructor ([NullAllowed] AVPlayerItem item);
 
 		[Export ("play")]
 		void Play ();
@@ -11735,11 +11739,11 @@ namespace AVFoundation {
 		NSString [] PreferredMediaCharacteristics { get; }
 
 		[Export ("initWithPreferredLanguages:preferredMediaCharacteristics:")]
-		IntPtr Constructor ([NullAllowed] string [] preferredLanguages, [NullAllowed] NSString [] preferredMediaCharacteristics);
+		NativeHandle Constructor ([NullAllowed] string [] preferredLanguages, [NullAllowed] NSString [] preferredMediaCharacteristics);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithPrincipalMediaCharacteristics:preferredLanguages:preferredMediaCharacteristics:")]
-		IntPtr Constructor ([NullAllowed] [BindAs (typeof (AVMediaCharacteristics []))]NSString[] principalMediaCharacteristics, [NullAllowed] [BindAs (typeof (AVMediaCharacteristics []))] NSString[] preferredLanguages, [NullAllowed] string[] preferredMediaCharacteristics);
+		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (AVMediaCharacteristics []))]NSString[] principalMediaCharacteristics, [NullAllowed] [BindAs (typeof (AVMediaCharacteristics []))] NSString[] preferredLanguages, [NullAllowed] string[] preferredMediaCharacteristics);
 
 		[BindAs (typeof (AVMediaCharacteristics []))]
 		[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -11792,18 +11796,18 @@ namespace AVFoundation {
 
 		[Export ("initWithTextMarkupAttributes:")]
 		[Protected]
-		IntPtr Constructor (NSDictionary textMarkupAttributes);
+		NativeHandle Constructor (NSDictionary textMarkupAttributes);
 
 		[Wrap ("this (attributes.GetDictionary ()!)")]
-		IntPtr Constructor (CMTextMarkupAttributes attributes);
+		NativeHandle Constructor (CMTextMarkupAttributes attributes);
 
 		[DesignatedInitializer]
 		[Export ("initWithTextMarkupAttributes:textSelector:")]
 		[Protected]
-		IntPtr Constructor (NSDictionary textMarkupAttributes, [NullAllowed] string textSelector);
+		NativeHandle Constructor (NSDictionary textMarkupAttributes, [NullAllowed] string textSelector);
 	
 		[Wrap ("this (attributes.GetDictionary ()!, textSelector)")]
-		IntPtr Constructor (CMTextMarkupAttributes attributes, string textSelector);
+		NativeHandle Constructor (CMTextMarkupAttributes attributes, string textSelector);
 	}
 
 	[iOS (9,0)][Mac (10,11)][Watch (6,0)]
@@ -11835,7 +11839,7 @@ namespace AVFoundation {
 		AVMetadataItem [] Items { get; [NotImplemented] set; }
 
 		[Export ("initWithItems:timeRange:")]
-		IntPtr Constructor (AVMetadataItem [] items, CMTimeRange timeRange);
+		NativeHandle Constructor (AVMetadataItem [] items, CMTimeRange timeRange);
 
 		[return: NullAllowed]
 		[iOS (8,0)][Mac (10,10)]
@@ -11844,7 +11848,7 @@ namespace AVFoundation {
 
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("initWithSampleBuffer:")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer);
 	}
 
 	[Watch (6,0)]
@@ -11942,10 +11946,10 @@ namespace AVFoundation {
 		AVPlayerItem FromAsset ([NullAllowed] AVAsset asset);
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl URL);
+		NativeHandle Constructor (NSUrl URL);
 
 		[Export ("initWithAsset:")]
-		IntPtr Constructor (AVAsset asset);
+		NativeHandle Constructor (AVAsset asset);
 
 		[Export ("stepByCount:")]
 		void StepByCount (nint stepCount);
@@ -12093,7 +12097,7 @@ namespace AVFoundation {
 		[iOS (7,0), Mac (10, 9)]
 		[DesignatedInitializer]
 		[Export ("initWithAsset:automaticallyLoadedAssetKeys:")]
-		IntPtr Constructor (AVAsset asset, [NullAllowed] params NSString [] automaticallyLoadedAssetKeys);
+		NativeHandle Constructor (AVAsset asset, [NullAllowed] params NSString [] automaticallyLoadedAssetKeys);
 
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("automaticallyLoadedAssetKeys", ArgumentSemantic.Copy)]
@@ -12328,7 +12332,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Export ("initWithIdentifiers:")]
-		IntPtr Constructor ([NullAllowed] NSString [] metadataIdentifiers);
+		NativeHandle Constructor ([NullAllowed] NSString [] metadataIdentifiers);
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; }
@@ -12577,12 +12581,12 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Wrap ("this (attributes.GetDictionary (), AVPlayerItemVideoOutput.InitMode.PixelAttributes)")]
-		IntPtr Constructor (CVPixelBufferAttributes attributes);
+		NativeHandle Constructor (CVPixelBufferAttributes attributes);
 		
 		[DesignatedInitializer]
 		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Wrap ("this (settings.GetDictionary (), AVPlayerItemVideoOutput.InitMode.OutputSettings)")]
-		IntPtr Constructor (AVPlayerItemVideoOutputSettings settings);
+		NativeHandle Constructor (AVPlayerItemVideoOutputSettings settings);
 
 		[Export ("hasNewPixelBufferForItemTime:")]
 		bool HasNewPixelBufferForItemTime (CMTime itemTime);
@@ -12634,7 +12638,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVPlayerItemOutput))]
 	interface AVPlayerItemLegibleOutput {
 		[Export ("initWithMediaSubtypesForNativeRepresentation:")]
-		IntPtr Constructor (NSNumber [] subtypesFourCCcodes);
+		NativeHandle Constructor (NSNumber [] subtypesFourCCcodes);
 		
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([Protocolize][NullAllowed] AVPlayerItemLegibleOutputPushDelegate delegateObject, [NullAllowed] DispatchQueue delegateQueue);
@@ -12845,7 +12849,7 @@ namespace AVFoundation {
 	interface AVPlayerItemMetadataCollector
 	{
 		[Export ("initWithIdentifiers:classifyingLabels:")]
-		IntPtr Constructor ([NullAllowed] string[] identifiers, [NullAllowed] string[] classifyingLabels);
+		NativeHandle Constructor ([NullAllowed] string[] identifiers, [NullAllowed] string[] classifyingLabels);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] IAVPlayerItemMetadataCollectorPushDelegate pushDelegate, [NullAllowed] DispatchQueue delegateQueue);
@@ -12911,7 +12915,7 @@ namespace AVFoundation {
 
 		[Export ("initWithPlayer:templateItem:timeRange:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
+		NativeHandle Constructor (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
 
 #if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
 		[PostSnippet ("loopingEnabled = false;", Optimizable = true)]
@@ -13059,7 +13063,7 @@ namespace AVFoundation {
 
 		[Export ("initWithPrimaryPlayer:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVPlayer primaryPlayer);
+		NativeHandle Constructor (AVPlayer primaryPlayer);
 
 		[NullAllowed, Export ("primaryPlayer", ArgumentSemantic.Weak)]
 		AVPlayer PrimaryPlayer { get; }
@@ -13086,7 +13090,7 @@ namespace AVFoundation {
 		AVPlayerInterstitialEventController GetInterstitialEventController (AVPlayer primaryPlayer);
 
 		[Export ("initWithPrimaryPlayer:")]
-		IntPtr Constructor (AVPlayer primaryPlayer);
+		NativeHandle Constructor (AVPlayer primaryPlayer);
 
 		[NullAllowed, Export ("events", ArgumentSemantic.Copy)]
 		AVPlayerInterstitialEvent[] Events { get; set; }
@@ -13120,7 +13124,7 @@ namespace AVFoundation {
 		AVQueuePlayer FromItems (AVPlayerItem [] items);
 
 		[Export ("initWithItems:")]
-		IntPtr Constructor (AVPlayerItem [] items);
+		NativeHandle Constructor (AVPlayerItem [] items);
 
 		[Export ("items")]
 		AVPlayerItem [] Items { get; }
@@ -13404,12 +13408,12 @@ namespace AVFoundation {
 		AVSpeechUtterance FromString (NSAttributedString speechString);
 
 		[Export ("initWithString:")]
-		IntPtr Constructor (string speechString);
+		NativeHandle Constructor (string speechString);
 		
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Export ("initWithAttributedString:")]
-		IntPtr Constructor (NSAttributedString speechString);
+		NativeHandle Constructor (NSAttributedString speechString);
 
 		[NullAllowed] // by default this property is null
 		[Export ("voice", ArgumentSemantic.Retain)]
@@ -13826,7 +13830,7 @@ namespace AVFoundation {
 	interface AVAudioSequencer {
 
 		[Export ("initWithAudioEngine:")]
-		IntPtr Constructor (AVAudioEngine engine);
+		NativeHandle Constructor (AVAudioEngine engine);
 
 		[Export ("loadFromURL:options:error:")]
 		bool Load (NSUrl fileUrl, AVMusicSequenceLoadOptions options, out NSError outError);
@@ -14099,7 +14103,7 @@ namespace AVFoundation {
 
 		[Internal]
 		[Export ("initWithFormatDescription:clock:")] // FIXME: Add CMMetadataFormatDescription
-		IntPtr Constructor (IntPtr /*CMMetadataFormatDescription*/ desc, CMClock clock);
+		NativeHandle Constructor (IntPtr /*CMMetadataFormatDescription*/ desc, CMClock clock);
 
 		[Export ("appendTimedMetadataGroup:error:")]
 		bool AppendTimedMetadataGroup (AVTimedMetadataGroup metadata, out NSError outError);
@@ -14153,7 +14157,7 @@ namespace AVFoundation {
 
 		[Export ("initWithContentTimeForTransition:title:previewImage:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CMTime contentTimeForTransition, string title, [NullAllowed] UIImage previewImage);
+		NativeHandle Constructor (CMTime contentTimeForTransition, string title, [NullAllowed] UIImage previewImage);
 	}
 #endif
 
@@ -14452,7 +14456,7 @@ namespace AVFoundation {
 		AVContentKeySpecifier GetContentKeySpecifier (AVContentKeySystem keySystem, NSObject contentKeyIdentifier, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initForKeySystem:identifier:options:")]
-		IntPtr Constructor (AVContentKeySystem keySystem, NSObject contentKeyIdentifier, NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (AVContentKeySystem keySystem, NSObject contentKeyIdentifier, NSDictionary<NSString, NSObject> options);
 
 		[Export ("keySystem")]
 		AVContentKeySystem KeySystem { get; }
@@ -14737,17 +14741,17 @@ namespace AVFoundation {
 		[Export ("initWithRenderBlock:")]
 		[DesignatedInitializer]
 #if XAMCORE_4_0
-		IntPtr Constructor (AVAudioSourceNodeRenderHandler renderHandler);
+		NativeHandle Constructor (AVAudioSourceNodeRenderHandler renderHandler);
 #else
-		IntPtr Constructor (AVAudioSourceNodeRenderHandler2 renderHandler);
+		NativeHandle Constructor (AVAudioSourceNodeRenderHandler2 renderHandler);
 #endif
 
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
 #if XAMCORE_4_0
-		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
+		NativeHandle Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
 #else
-		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler2 renderHandler);
+		NativeHandle Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler2 renderHandler);
 #endif
 	}
 
@@ -14759,7 +14763,7 @@ namespace AVFoundation {
 	interface AVAudioSinkNode {
 		[Export ("initWithReceiverBlock:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioSinkNodeReceiverHandler receiverHandler);
+		NativeHandle Constructor (AVAudioSinkNodeReceiverHandler receiverHandler);
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
@@ -15085,7 +15089,7 @@ namespace AVFoundation {
 	interface AVDelegatingPlaybackCoordinator
 	{
 		[Export ("initWithPlaybackControlDelegate:")]
-		IntPtr Constructor (IAVPlaybackCoordinatorPlaybackControlDelegate playbackControlDelegate);
+		NativeHandle Constructor (IAVPlaybackCoordinatorPlaybackControlDelegate playbackControlDelegate);
 
 		[Wrap ("WeakPlaybackControlDelegate")]
 		[NullAllowed]
@@ -15266,7 +15270,7 @@ namespace AVFoundation {
 		AVAssetReaderOutputCaptionAdaptor Create (AVAssetReaderTrackOutput trackOutput);
 
 		[Export ("initWithAssetReaderTrackOutput:")]
-		IntPtr Constructor (AVAssetReaderTrackOutput trackOutput);
+		NativeHandle Constructor (AVAssetReaderTrackOutput trackOutput);
 
 		[Export ("assetReaderTrackOutput")]
 		AVAssetReaderTrackOutput AssetReaderTrackOutput { get; }
@@ -15299,7 +15303,7 @@ namespace AVFoundation {
 		AVAssetWriterInputCaptionAdaptor Create (AVAssetWriterInput input);
 
 		[Export ("initWithAssetWriterInput:")]
-		IntPtr Constructor (AVAssetWriterInput input);
+		NativeHandle Constructor (AVAssetWriterInput input);
 
 		[Export ("assetWriterInput")]
 		AVAssetWriterInput AssetWriterInput { get; }
@@ -15319,10 +15323,10 @@ namespace AVFoundation {
 	interface AVCaptionGroup
 	{
 		[Export ("initWithCaptions:timeRange:")]
-		IntPtr Constructor (AVCaption[] captions, CMTimeRange timeRange);
+		NativeHandle Constructor (AVCaption[] captions, CMTimeRange timeRange);
 
 		[Export ("initWithTimeRange:")]
-		IntPtr Constructor (CMTimeRange timeRange);
+		NativeHandle Constructor (CMTimeRange timeRange);
 
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
@@ -15338,7 +15342,7 @@ namespace AVFoundation {
 	{
 		[Export ("initWithText:timeRange:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string text, CMTimeRange timeRange);
+		NativeHandle Constructor (string text, CMTimeRange timeRange);
 
 		[Export ("text")]
 		string Text { get; }
@@ -15391,7 +15395,7 @@ namespace AVFoundation {
 	{
 		[Export ("initWithText:timeRange:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string text, CMTimeRange timeRange);
+		NativeHandle Constructor (string text, CMTimeRange timeRange);
 
 		[Export ("text")]
 		string Text { get; set; }
@@ -15506,7 +15510,7 @@ namespace AVFoundation {
 	interface AVMutableCaptionRegion
 	{
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 #if MONOMAC // needed structs are inside a #if
 		[Export ("origin", ArgumentSemantic.Assign)]
@@ -15533,10 +15537,10 @@ namespace AVFoundation {
 	{
 		[Export ("initWithText:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string text);
+		NativeHandle Constructor (string text);
 
 		[Export ("initWithText:position:alignment:")]
-		IntPtr Constructor (string text, AVCaptionRubyPosition position, AVCaptionRubyAlignment alignment);
+		NativeHandle Constructor (string text, AVCaptionRubyPosition position, AVCaptionRubyAlignment alignment);
 
 		[Export ("text")]
 		string Text { get; }
@@ -15635,10 +15639,10 @@ namespace AVFoundation {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithConversionSettings:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDictionary conversionSettings);
+		NativeHandle Constructor (NSDictionary conversionSettings);
 
 		[Wrap ("this (conversionSettings.GetDictionary ()!)")]
-		IntPtr Constructor (AVCaptionSettings conversionSettings);
+		NativeHandle Constructor (AVCaptionSettings conversionSettings);
 
 		[Export ("conformsCaptionsToTimeRange")]
 		bool ConformsCaptionsToTimeRange { get; set; }
@@ -15679,7 +15683,7 @@ namespace AVFoundation {
 		AVCaptionConversionValidator Create (AVCaption[] captions, CMTimeRange timeRange, NSDictionary<NSString, NSObject> conversionSettings);
 
 		[Export ("initWithCaptions:timeRange:conversionSettings:")]
-		IntPtr Constructor (AVCaption[] captions, CMTimeRange timeRange, NSDictionary<NSString, NSObject> conversionSettings);
+		NativeHandle Constructor (AVCaption[] captions, CMTimeRange timeRange, NSDictionary<NSString, NSObject> conversionSettings);
 
 		[Export ("status")]
 		AVCaptionConversionValidatorStatus Status { get; }

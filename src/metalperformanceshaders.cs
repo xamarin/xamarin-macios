@@ -5,6 +5,10 @@ using Metal;
 using ObjCRuntime;
 using Vector4 = global::OpenTK.Vector4;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MetalPerformanceShaders {
 	// MPSImageConvolution.h
 
@@ -24,17 +28,17 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
 		[DesignatedInitializer]
 		[Internal]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, IntPtr kernelWeights);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, IntPtr kernelWeights);
 
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -48,13 +52,13 @@ namespace MetalPerformanceShaders {
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -64,7 +68,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("kernelHeight")]
 		nuint KernelHeight { get; }
@@ -74,7 +78,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - You must use initWithDevice:kernelWidth:kernelHeight: instead.
 	}
@@ -88,7 +92,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -98,11 +102,11 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithDevice:sigma:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, float sigma);
+		NativeHandle Constructor (IMTLDevice device, float sigma);
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - You must use initWithDevice:sigma: instead.
 
@@ -118,10 +122,10 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:linearGrayColorTransform:")]
 		[Internal]
@@ -139,13 +143,13 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:centerWeight:")]
-		IntPtr Constructor (IMTLDevice device, float centerWeight);
+		NativeHandle Constructor (IMTLDevice device, float centerWeight);
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
 		[Internal]
@@ -173,7 +177,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSImageHistogram.h
@@ -185,7 +189,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("clipRectSource", ArgumentSemantic.Assign)]
 		MTLRegion ClipRectSource { get; set; }
@@ -200,12 +204,12 @@ namespace MetalPerformanceShaders {
 
 		// Could not initialize an instance of the type 'MetalPerformanceShaders.MPSImageHistogram': the native 'initWithDevice:' method returned nil.
 //		[Export ("initWithDevice:")]
-//		IntPtr Constructor (IMTLDevice device);
+//		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:histogramInfo:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
+		NativeHandle Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
 
 		[Export ("encodeToCommandBuffer:sourceTexture:histogram:histogramOffset:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, IMTLTexture source, IMTLBuffer histogram, nuint histogramOffset);
@@ -228,7 +232,7 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithDevice:histogramInfo:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
+		NativeHandle Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
 
 		[Export ("histogramInfo")]
 		MPSImageHistogramInfo HistogramInfo {
@@ -241,7 +245,7 @@ namespace MetalPerformanceShaders {
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -251,7 +255,7 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithDevice:histogramInfo:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
+		NativeHandle Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
 
 		[Export ("histogramInfo")]
 		MPSImageHistogramInfo HistogramInfo {
@@ -264,7 +268,7 @@ namespace MetalPerformanceShaders {
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSImageIntegral.h
@@ -276,13 +280,13 @@ namespace MetalPerformanceShaders {
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -292,13 +296,13 @@ namespace MetalPerformanceShaders {
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSImageKernel.h
@@ -334,12 +338,12 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -349,7 +353,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 		
 		[Export ("primaryOffset", ArgumentSemantic.Assign)]
 		MPSOffset PrimaryOffset { get; set; }
@@ -391,7 +395,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	// MPSImageMedian.h
@@ -405,7 +409,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelDiameter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelDiameter);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelDiameter);
 
 		// [Export ("initWithDevice:")] is NS_UNAVAILABLE - You must use initWithDevice:kernelDiameter: instead.
 
@@ -420,7 +424,7 @@ namespace MetalPerformanceShaders {
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSImageMorphology.h
@@ -437,12 +441,12 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		// [Export ("initWithDevice:")] is NS_UNAVAILABLE - You must use initWithDevice:kernelWidth:kernelHeight: instead.
 	}
@@ -455,7 +459,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -478,7 +482,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -492,7 +496,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSImageResampling.h
@@ -505,13 +509,13 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSImageThreshold.h
@@ -540,7 +544,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -567,7 +571,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -591,7 +595,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -615,7 +619,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (9,0)][Mac (10, 13)]
@@ -639,7 +643,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSKernel.h
@@ -651,7 +655,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("options", ArgumentSemantic.Assign)]
 		MPSKernelOptions Options { get; set; }
@@ -664,7 +668,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release ()]
@@ -681,13 +685,13 @@ namespace MetalPerformanceShaders {
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSCNN.h
@@ -701,7 +705,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("offset", ArgumentSemantic.Assign)]
 		MPSOffset Offset { get; set; }
@@ -745,7 +749,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("isBackwards")]
@@ -844,13 +848,13 @@ namespace MetalPerformanceShaders {
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
 		[TV (11,0), iOS (11,0)]
 		[DesignatedInitializer]
 		[Export ("initWithCoder:device:")]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11,0), Mac (10,13,4), iOS (11,3)]
 		[Export ("neuronType")]
@@ -875,7 +879,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -893,12 +897,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:")]
-		IntPtr Constructor (IMTLDevice device, float a, float b);
+		NativeHandle Constructor (IMTLDevice device, float a, float b);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -913,12 +917,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:")]
-		IntPtr Constructor (IMTLDevice device, float a);
+		NativeHandle Constructor (IMTLDevice device, float a);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -930,12 +934,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -953,14 +957,14 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:")]
-		IntPtr Constructor (IMTLDevice device, float a, float b);
+		NativeHandle Constructor (IMTLDevice device, float a, float b);
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - Use initWithDevice:a:b: instead
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -973,12 +977,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1134,12 +1138,12 @@ namespace MetalPerformanceShaders {
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithDevice:weights:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("dilationRateX")]
@@ -1248,12 +1252,12 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithDevice:weights:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1278,18 +1282,18 @@ namespace MetalPerformanceShaders {
 		nuint StrideInPixelsY { get; }
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - Use initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY: instead
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1301,12 +1305,12 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1318,12 +1322,12 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("zeroPadSizeX")]
@@ -1358,14 +1362,14 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - Use initWithDevice:kernelWidth:kernelHeight instead
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -1384,11 +1388,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1424,14 +1428,14 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - Use initWithDevice:kernelWidth:kernelHeight instead
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -1459,11 +1463,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1485,14 +1489,14 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelSize);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelSize);
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - Use initWithDevice:kernelSize: instead
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -1514,11 +1518,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelSize);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelSize);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1530,7 +1534,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -1540,11 +1544,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
@@ -1556,7 +1560,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -1566,11 +1570,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	// MPSImage.h
@@ -1681,15 +1685,15 @@ namespace MetalPerformanceShaders {
 		MPSImage Parent { get; }
 
 		[Export ("initWithDevice:imageDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, MPSImageDescriptor imageDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSImageDescriptor imageDescriptor);
 
 		[DesignatedInitializer]
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithParentImage:sliceRange:featureChannels:")]
-		IntPtr Constructor (MPSImage parent, NSRange sliceRange, nuint featureChannels);
+		NativeHandle Constructor (MPSImage parent, NSRange sliceRange, nuint featureChannels);
 
 		[Export ("initWithTexture:featureChannels:")]
-		IntPtr Constructor (IMTLTexture texture, nuint featureChannels);
+		NativeHandle Constructor (IMTLTexture texture, nuint featureChannels);
 
 		[Export ("batchRepresentation")]
 		NSArray<MPSImage> BatchRepresentation { get; }
@@ -1755,7 +1759,7 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithParentImage:sliceRange:featureChannels:")]
-		IntPtr Constructor (MPSImage parent, NSRange sliceRange, nuint featureChannels);
+		NativeHandle Constructor (MPSImage parent, NSRange sliceRange, nuint featureChannels);
 
 		[Static]
 		[Export ("temporaryImageWithCommandBuffer:imageDescriptor:")]
@@ -1794,11 +1798,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithBuffer:offset:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLBuffer buffer, nuint offset);
+		NativeHandle Constructor (IMTLBuffer buffer, nuint offset);
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	interface IMPSHeapProvider {}
@@ -1843,7 +1847,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCommandBuffer:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLCommandBuffer commandBuffer);
+		NativeHandle Constructor (IMTLCommandBuffer commandBuffer);
 
 		[Export ("commitAndContinue")]
 		void CommitAndContinue ();
@@ -1874,7 +1878,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	// MPSMatrix.h
@@ -1958,15 +1962,15 @@ namespace MetalPerformanceShaders {
 		IMTLBuffer Data { get; }
 
 		[Export ("initWithBuffer:descriptor:")]
-		IntPtr Constructor (IMTLBuffer buffer, MPSMatrixDescriptor descriptor);
+		NativeHandle Constructor (IMTLBuffer buffer, MPSMatrixDescriptor descriptor);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithBuffer:offset:descriptor:")]
-		IntPtr Constructor (IMTLBuffer buffer, nuint offset, MPSMatrixDescriptor descriptor);
+		NativeHandle Constructor (IMTLBuffer buffer, nuint offset, MPSMatrixDescriptor descriptor);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithDevice:descriptor:")]
-		IntPtr Constructor (IMTLDevice device, MPSMatrixDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSMatrixDescriptor descriptor);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("synchronizeOnCommandBuffer:")]
@@ -1997,7 +2001,7 @@ namespace MetalPerformanceShaders {
 	interface MPSMatrixMultiplication {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithDevice:resultRows:resultColumns:interiorColumns:")]
-		IntPtr Constructor (IMTLDevice device, nuint resultRows, nuint resultColumns, nuint interiorColumns);
+		NativeHandle Constructor (IMTLDevice device, nuint resultRows, nuint resultColumns, nuint interiorColumns);
 
 		[Export ("resultMatrixOrigin", ArgumentSemantic.Assign)]
 		MTLOrigin ResultMatrixOrigin { get; set; }
@@ -2009,7 +2013,7 @@ namespace MetalPerformanceShaders {
 		MTLOrigin RightMatrixOrigin { get; set; }
 
 		[Export ("initWithDevice:transposeLeft:transposeRight:resultRows:resultColumns:interiorColumns:alpha:beta:")]
-		IntPtr Constructor (IMTLDevice device, bool transposeLeft, bool transposeRight, nuint resultRows, nuint resultColumns, nuint interiorColumns, double alpha, double beta);
+		NativeHandle Constructor (IMTLDevice device, bool transposeLeft, bool transposeRight, nuint resultRows, nuint resultColumns, nuint interiorColumns, double alpha, double beta);
 
 		[Export ("encodeToCommandBuffer:leftMatrix:rightMatrix:resultMatrix:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix leftMatrix, MPSMatrix rightMatrix, MPSMatrix resultMatrix);
@@ -2020,7 +2024,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11,0), iOS (11,0)]
 		[Export ("batchStart")]
@@ -2053,19 +2057,19 @@ namespace MetalPerformanceShaders {
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithDevice:bufferSize:")]
-		IntPtr Constructor (IMTLDevice device, nuint bufferSize);
+		NativeHandle Constructor (IMTLDevice device, nuint bufferSize);
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithDevice:textureDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithResource:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource resource);
+		NativeHandle Constructor ([NullAllowed] IMTLResource resource);
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithDevice:resourceList:")]
-		IntPtr Constructor (IMTLDevice device, MPSStateResourceList resourceList);
+		NativeHandle Constructor (IMTLDevice device, MPSStateResourceList resourceList);
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Static]
@@ -2074,7 +2078,7 @@ namespace MetalPerformanceShaders {
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithResources:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource [] resources);
+		NativeHandle Constructor ([NullAllowed] IMTLResource [] resources);
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("resourceCount")]
@@ -2165,15 +2169,15 @@ namespace MetalPerformanceShaders {
 		IMTLBuffer Data { get; }
 
 		[Export ("initWithBuffer:descriptor:")]
-		IntPtr Constructor (IMTLBuffer buffer, MPSVectorDescriptor descriptor);
+		NativeHandle Constructor (IMTLBuffer buffer, MPSVectorDescriptor descriptor);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithBuffer:offset:descriptor:")]
-		IntPtr Constructor (IMTLBuffer buffer, nuint offset, MPSVectorDescriptor descriptor);
+		NativeHandle Constructor (IMTLBuffer buffer, nuint offset, MPSVectorDescriptor descriptor);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithDevice:descriptor:")]
-		IntPtr Constructor (IMTLDevice device, MPSVectorDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSVectorDescriptor descriptor);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("synchronizeOnCommandBuffer:")]
@@ -2236,11 +2240,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2265,11 +2269,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 	
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2277,10 +2281,10 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixVectorMultiplication {
 		[Export ("initWithDevice:transpose:rows:columns:alpha:beta:")]
-		IntPtr Constructor (IMTLDevice device, bool transpose, nuint rows, nuint columns, double alpha, double beta);
+		NativeHandle Constructor (IMTLDevice device, bool transpose, nuint rows, nuint columns, double alpha, double beta);
 
 		[Export ("initWithDevice:rows:columns:")]
-		IntPtr Constructor (IMTLDevice device, nuint rows, nuint columns);
+		NativeHandle Constructor (IMTLDevice device, nuint rows, nuint columns);
 
 		[Export ("encodeToCommandBuffer:inputMatrix:inputVector:resultVector:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSVector inputVector, MPSVector resultVector);
@@ -2288,11 +2292,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2300,7 +2304,7 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixSolveTriangular {
 		[Export ("initWithDevice:right:upper:transpose:unit:order:numberOfRightHandSides:alpha:")]
-		IntPtr Constructor (IMTLDevice device, bool right, bool upper, bool transpose, bool unit, nuint order, nuint numberOfRightHandSides, double alpha);
+		NativeHandle Constructor (IMTLDevice device, bool right, bool upper, bool transpose, bool unit, nuint order, nuint numberOfRightHandSides, double alpha);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:rightHandSideMatrix:solutionMatrix:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
@@ -2308,11 +2312,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2320,7 +2324,7 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixSolveLU {
 		[Export ("initWithDevice:transpose:order:numberOfRightHandSides:")]
-		IntPtr Constructor (IMTLDevice device, bool transpose, nuint order, nuint numberOfRightHandSides);
+		NativeHandle Constructor (IMTLDevice device, bool transpose, nuint order, nuint numberOfRightHandSides);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:rightHandSideMatrix:pivotIndices:solutionMatrix:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix pivotIndices, MPSMatrix solutionMatrix);
@@ -2328,11 +2332,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2340,7 +2344,7 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixSolveCholesky {
 		[Export ("initWithDevice:upper:order:numberOfRightHandSides:")]
-		IntPtr Constructor (IMTLDevice device, bool upper, nuint order, nuint numberOfRightHandSides);
+		NativeHandle Constructor (IMTLDevice device, bool upper, nuint order, nuint numberOfRightHandSides);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:rightHandSideMatrix:solutionMatrix:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
@@ -2348,11 +2352,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2360,7 +2364,7 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixDecompositionLU {
 		[Export ("initWithDevice:rows:columns:")]
-		IntPtr Constructor (IMTLDevice device, nuint rows, nuint columns);
+		NativeHandle Constructor (IMTLDevice device, nuint rows, nuint columns);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:resultMatrix:pivotIndices:status:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, MPSMatrix pivotIndices, [NullAllowed] IMTLBuffer status);
@@ -2368,11 +2372,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2380,7 +2384,7 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixDecompositionCholesky {
 		[Export ("initWithDevice:lower:order:")]
-		IntPtr Constructor (IMTLDevice device, bool lower, nuint order);
+		NativeHandle Constructor (IMTLDevice device, bool lower, nuint order);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:resultMatrix:status:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, [NullAllowed] IMTLBuffer status);
@@ -2388,11 +2392,11 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2405,14 +2409,14 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:count:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint count);
+		NativeHandle Constructor (IMTLDevice device, nuint count);
 
 		[Export ("setCopyOperationAtIndex:sourceMatrix:destinationMatrix:offsets:")]
 		void SetCopyOperation (nuint index, MPSMatrix sourceMatrix, MPSMatrix destinationMatrix, MPSMatrixCopyOffsets offsets);
 
 		[Export ("initWithSourceMatrices:destinationMatrices:offsetVector:offset:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSMatrix[] sourceMatrices, MPSMatrix[] destinationMatrices, [NullAllowed] MPSVector offsets, nuint byteOffset);
+		NativeHandle Constructor (MPSMatrix[] sourceMatrices, MPSMatrix[] destinationMatrices, [NullAllowed] MPSVector offsets, nuint byteOffset);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2421,7 +2425,7 @@ namespace MetalPerformanceShaders {
 	interface MPSMatrixCopy {
 		[Export ("initWithDevice:copyRows:copyColumns:sourcesAreTransposed:destinationsAreTransposed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint copyRows, nuint copyColumns, bool areSourcesTransposed, bool areDestinationsTransposed);
+		NativeHandle Constructor (IMTLDevice device, nuint copyRows, nuint copyColumns, bool areSourcesTransposed, bool areDestinationsTransposed);
 
 		[Export ("copyRows")]
 		nuint CopyRows { get; }
@@ -2444,7 +2448,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -2505,21 +2509,21 @@ namespace MetalPerformanceShaders {
 	interface MPSMatrixRandomMtgp32
 	{
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:destinationDataType:seed:distributionDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed, MPSMatrixRandomDistributionDescriptor distributionDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed, MPSMatrixRandomDistributionDescriptor distributionDescriptor);
 
 		[Export ("synchronizeStateOnCommandBuffer:")]
 		void Synchronize (IMTLCommandBuffer commandBuffer);
 
 		[Export ("initWithDevice:destinationDataType:seed:")]
-		IntPtr Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed);
+		NativeHandle Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[DisableDefaultCtor]
@@ -2528,18 +2532,18 @@ namespace MetalPerformanceShaders {
 	interface MPSMatrixRandomPhilox
 	{
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:destinationDataType:seed:distributionDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed, MPSMatrixRandomDistributionDescriptor distributionDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed, MPSMatrixRandomDistributionDescriptor distributionDescriptor);
 
 		[Export ("initWithDevice:destinationDataType:seed:")]
-		IntPtr Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed);
+		NativeHandle Constructor (IMTLDevice device, MPSDataType destinationDataType, nuint seed);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 
@@ -2558,11 +2562,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:dataLayout:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSDataLayout dataLayout);
+		NativeHandle Constructor (IMTLDevice device, MPSDataLayout dataLayout);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceImage:destinationMatrix:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSMatrix destinationMatrix);
@@ -2581,11 +2585,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:info:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSImageKeypointRangeInfo info);
+		NativeHandle Constructor (IMTLDevice device, MPSImageKeypointRangeInfo info);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceTexture:regions:numberOfRegions:keypointCountBuffer:keypointCountBufferOffset:keypointDataBuffer:keypointDataBufferOffset:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, IMTLTexture source, MTLRegion regions, nuint numberOfRegions, IMTLBuffer keypointCountBuffer, nuint keypointCountBufferOffset, IMTLBuffer keypointDataBuffer, nuint keypointDataBufferOffset);
@@ -2623,7 +2627,7 @@ namespace MetalPerformanceShaders {
 		//inlining ctor from base class
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2632,7 +2636,7 @@ namespace MetalPerformanceShaders {
 	interface MPSImageAdd {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2641,7 +2645,7 @@ namespace MetalPerformanceShaders {
 	interface MPSImageSubtract {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2650,7 +2654,7 @@ namespace MetalPerformanceShaders {
 	interface MPSImageMultiply {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2659,7 +2663,7 @@ namespace MetalPerformanceShaders {
 	interface MPSImageDivide {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2668,7 +2672,7 @@ namespace MetalPerformanceShaders {
 	interface MPSImageScale {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// scaleTransform property should be like:
 		// unsafe MPSScaleTransform* ScaleTransform { get; set; }
@@ -2683,7 +2687,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2692,11 +2696,11 @@ namespace MetalPerformanceShaders {
 	interface MPSImageBilinearScale {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2708,11 +2712,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2724,11 +2728,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2740,11 +2744,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2772,7 +2776,7 @@ namespace MetalPerformanceShaders {
 	interface MPSCnnBinaryKernel {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("primaryOffset", ArgumentSemantic.Assign)]
 		MPSOffset PrimaryOffset { get; set; }
@@ -2885,7 +2889,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:primaryImage:secondaryImage:destinationImage:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage primaryImage, MPSImage secondaryImage, MPSImage destinationImage);
@@ -2953,12 +2957,12 @@ namespace MetalPerformanceShaders {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 
 		// inlining ctor from base class
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2976,12 +2980,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, float a, float b);
+		NativeHandle Constructor (IMTLDevice device, float a, float b);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -2998,12 +3002,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:")]
-		IntPtr Constructor (IMTLDevice device, float a, float b);
+		NativeHandle Constructor (IMTLDevice device, float a, float b);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3015,12 +3019,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3034,12 +3038,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:")]
-		IntPtr Constructor (IMTLDevice device, float a);
+		NativeHandle Constructor (IMTLDevice device, float a);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3056,12 +3060,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:")]
-		IntPtr Constructor (IMTLDevice device, float a, float b);
+		NativeHandle Constructor (IMTLDevice device, float a, float b);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3073,12 +3077,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:c:")]
-		IntPtr Constructor (IMTLDevice device, float a, float b, float c);
+		NativeHandle Constructor (IMTLDevice device, float a, float b, float c);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3090,12 +3094,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:c:")]
-		IntPtr Constructor (IMTLDevice device, float a, float b, float c);
+		NativeHandle Constructor (IMTLDevice device, float a, float b, float c);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3107,12 +3111,12 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.")]
 		[Export ("initWithDevice:a:b:c:")]
-		IntPtr Constructor (IMTLDevice device, float a, float b, float c);
+		NativeHandle Constructor (IMTLDevice device, float a, float b, float c);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3156,11 +3160,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:weights:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("encodeToCommandBuffer:sourceImage:convolutionGradientState:")]
@@ -3190,14 +3194,14 @@ namespace MetalPerformanceShaders {
 		nuint OutputFeatureChannels { get; }
 
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Internal, Sealed, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
 		IntPtr InitWithDevice (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms,MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3205,14 +3209,14 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnBinaryFullyConnected {
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Internal, Sealed, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
 		IntPtr InitWithDevice (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3221,11 +3225,11 @@ namespace MetalPerformanceShaders {
 	interface MPSCnnPoolingL2Norm {
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3240,11 +3244,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:dilationRateX:dilationRateY:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint dilationRateX, nuint dilationRateY, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint dilationRateX, nuint dilationRateY, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3256,15 +3260,15 @@ namespace MetalPerformanceShaders {
 		MTLSize SourceSize { get; set; }
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3280,11 +3284,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3294,11 +3298,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3308,11 +3312,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3322,11 +3326,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:dilationRateX:dilationRateY:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint dilationRateX, nuint dilationRateY, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, nuint dilationRateX, nuint dilationRateY, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3346,7 +3350,7 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3355,7 +3359,7 @@ namespace MetalPerformanceShaders {
 	interface MPSCnnUpsamplingNearest {
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		NativeHandle Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3363,12 +3367,12 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // failed assertion.
 	interface MPSCnnUpsamplingBilinear {
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:")]
-		IntPtr Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		NativeHandle Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:alignCorners:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
+		NativeHandle Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3384,11 +3388,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3398,7 +3402,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		NativeHandle Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3408,7 +3412,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		NativeHandle Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3576,11 +3580,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:rnnDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSRnnDescriptor rnnDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSRnnDescriptor rnnDescriptor);
 
 		[Export ("initWithDevice:rnnDescriptors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSRnnDescriptor[] rnnDescriptors);
+		NativeHandle Constructor (IMTLDevice device, MPSRnnDescriptor[] rnnDescriptors);
 
 		[Export ("encodeSequenceToCommandBuffer:sourceImages:destinationImages:recurrentInputState:recurrentOutputStates:")]
 		void EncodeSequence (IMTLCommandBuffer commandBuffer, MPSImage[] sourceImages, MPSImage[] destinationImages, [NullAllowed] MPSRnnRecurrentImageState recurrentInputState, [NullAllowed] NSMutableArray<MPSRnnRecurrentImageState> recurrentOutputStates);
@@ -3590,7 +3594,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release ()]
@@ -3634,11 +3638,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:rnnDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSRnnDescriptor rnnDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSRnnDescriptor rnnDescriptor);
 
 		[Export ("initWithDevice:rnnDescriptors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSRnnDescriptor[] rnnDescriptors);
+		NativeHandle Constructor (IMTLDevice device, MPSRnnDescriptor[] rnnDescriptors);
 
 		[Export ("encodeSequenceToCommandBuffer:sourceMatrices:destinationMatrices:recurrentInputState:recurrentOutputStates:")]
 		void EncodeSequence (IMTLCommandBuffer commandBuffer, MPSMatrix[] sourceMatrices, MPSMatrix[] destinationMatrices, [NullAllowed] MPSRnnRecurrentMatrixState recurrentInputState, [NullAllowed] NSMutableArray<MPSRnnRecurrentMatrixState> recurrentOutputStates);
@@ -3652,7 +3656,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release ()]
@@ -3665,7 +3669,7 @@ namespace MetalPerformanceShaders {
 	interface MPSNNImageNode {
 		[Export ("initWithHandle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] IMPSHandle handle);
+		NativeHandle Constructor ([NullAllowed] IMPSHandle handle);
 
 		[Static]
 		[Export ("nodeWithHandle:")]
@@ -3775,7 +3779,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:weights:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[NullAllowed, Export ("convolutionGradientState")]
@@ -3791,7 +3795,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:weights:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3803,7 +3807,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnBinaryConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithSource:weights:scaleValue:type:flags:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Internal]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3826,7 +3830,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithSource:weights:scaleValue:type:flags:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Internal]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3851,7 +3855,7 @@ namespace MetalPerformanceShaders {
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithSource:convolutionGradientState:weights:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] MPSCnnConvolutionGradientStateNode convolutionGradientState, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, [NullAllowed] MPSCnnConvolutionGradientStateNode convolutionGradientState, IMPSCnnConvolutionDataSource weights);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3864,7 +3868,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnConvolutionGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSCnnConvolutionGradientStateNode gradientState, [NullAllowed] IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSourceGradient:sourceImage:convolutionGradientState:weights:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSCnnConvolutionGradientStateNode gradientState, [NullAllowed] IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSCnnConvolutionGradientStateNode gradientState, [NullAllowed] IMPSCnnConvolutionDataSource weights);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3898,14 +3902,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronPowerNode Create (MPSNNImageNode sourceNode, float a, float b, float c);
 
 		[Export ("initWithSource:a:b:c:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b, float c);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b, float c);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronPowerNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3918,14 +3922,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronExponentialNode Create (MPSNNImageNode sourceNode, float a, float b, float c);
 
 		[Export ("initWithSource:a:b:c:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b, float c);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b, float c);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronExponentialNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3938,14 +3942,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronLogarithmNode Create (MPSNNImageNode sourceNode, float a, float b, float c);
 
 		[Export ("initWithSource:a:b:c:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b, float c);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b, float c);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronLogarithmNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -3958,7 +3962,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, MPSNNNeuronDescriptor descriptor);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:descriptor:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, MPSNNNeuronDescriptor descriptor);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, MPSNNNeuronDescriptor descriptor);
 
 		[Export ("descriptor")]
 		MPSNNNeuronDescriptor Descriptor { get; }
@@ -3977,7 +3981,7 @@ namespace MetalPerformanceShaders {
 		MPSNNUnaryReductionNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -3990,7 +3994,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionRowMinNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4003,7 +4007,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionColumnMinNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4016,7 +4020,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionFeatureChannelsMinNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4029,7 +4033,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionFeatureChannelsArgumentMinNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4042,7 +4046,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionRowMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4055,7 +4059,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionColumnMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4068,7 +4072,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionFeatureChannelsMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4081,7 +4085,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionFeatureChannelsArgumentMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4094,7 +4098,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionRowMeanNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4107,7 +4111,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionColumnMeanNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4120,7 +4124,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionFeatureChannelsMeanNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4133,7 +4137,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionSpatialMeanNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4146,7 +4150,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionRowSumNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4159,7 +4163,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionColumnSumNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -4172,7 +4176,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionFeatureChannelsSumNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 
 		[Export ("weight")]
 		float Weight { get; set; }
@@ -4187,7 +4191,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronAbsoluteNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4203,10 +4207,10 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronEluNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:a:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4218,14 +4222,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronReLunNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronReLunNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4240,14 +4244,14 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronLinearNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4263,10 +4267,10 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronReLUNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:a:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4278,7 +4282,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronSigmoidNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4290,14 +4294,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronHardSigmoidNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronHardSigmoidNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4309,14 +4313,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronSoftPlusNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronSoftPlusNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4328,7 +4332,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronSoftSignNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4340,14 +4344,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronTanHNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
 		MPSCnnNeuronTanHNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4359,7 +4363,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnNeuronPReLUNode Create (MPSNNImageNode sourceNode, NSData aData);
 
 		[Export ("initWithSource:aData:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, NSData aData);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, NSData aData);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4392,13 +4396,13 @@ namespace MetalPerformanceShaders {
 		MPSCnnPoolingNode Create (MPSNNImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithSource:filterSize:stride:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:filterSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4411,7 +4415,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnPoolingGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; }
@@ -4436,7 +4440,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnPoolingMaxGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4449,7 +4453,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnPoolingAverageGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4462,7 +4466,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnPoolingL2NormGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4475,7 +4479,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnDilatedPoolingMaxGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
 
 		[Export ("dilationRateX")]
 		nuint DilationRateX { get; }
@@ -4500,7 +4504,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnSpatialNormalizationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelSize);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelSize);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelSize);
 
 		[Export ("alpha")]
 		float Alpha { get; set; }
@@ -4522,7 +4526,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnLocalContrastNormalizationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight);
 
 		[Export ("alpha")]
 		float Alpha { get; set; }
@@ -4559,7 +4563,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnCrossChannelNormalizationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelSize);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelSize);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelSize);
 
 		[Export ("kernelSize")]
 		nuint KernelSize { get; }
@@ -4575,7 +4579,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnInstanceNormalizationNode Create (MPSNNImageNode source, IMPSCnnInstanceNormalizationDataSource dataSource);
 
 		[Export ("initWithSource:dataSource:")]
-		IntPtr Constructor (MPSNNImageNode source, IMPSCnnInstanceNormalizationDataSource dataSource);
+		NativeHandle Constructor (MPSNNImageNode source, IMPSCnnInstanceNormalizationDataSource dataSource);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4588,7 +4592,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnInstanceNormalizationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4604,7 +4608,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnBatchNormalizationNode Create (MPSNNImageNode source, IMPSCnnBatchNormalizationDataSource dataSource);
 
 		[Export ("initWithSource:dataSource:")]
-		IntPtr Constructor (MPSNNImageNode source, IMPSCnnBatchNormalizationDataSource dataSource);
+		NativeHandle Constructor (MPSNNImageNode source, IMPSCnnBatchNormalizationDataSource dataSource);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4617,7 +4621,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnBatchNormalizationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4639,13 +4643,13 @@ namespace MetalPerformanceShaders {
 		MPSCnnDilatedPoolingMaxNode Create (MPSNNImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
 
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
 
 		[Export ("initWithSource:filterSize:stride:dilationRate:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
 
 		[Export ("initWithSource:filterSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4667,7 +4671,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4686,11 +4690,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4718,11 +4722,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4738,11 +4742,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4758,10 +4762,10 @@ namespace MetalPerformanceShaders {
 		MPSNNScaleNode Create (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 
 		[Export ("initWithSource:outputSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, MTLSize size);
 
 		[Export ("initWithSource:transformProvider:outputSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -4777,10 +4781,10 @@ namespace MetalPerformanceShaders {
 		MPSNNBinaryArithmeticNode Create (MPSNNImageNode left, MPSNNImageNode right);
 
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithLeftSource:rightSource:")]
-		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
+		NativeHandle Constructor (MPSNNImageNode left, MPSNNImageNode right);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("gradientClass")]
@@ -4843,10 +4847,10 @@ namespace MetalPerformanceShaders {
 		MPSNNArithmeticGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithGradientImages:forwardFilter:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
 
 		[Export ("primaryScale")]
 		float PrimaryScale { get; set; }
@@ -4886,10 +4890,10 @@ namespace MetalPerformanceShaders {
 		MPSNNAdditionGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithGradientImages:forwardFilter:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4902,10 +4906,10 @@ namespace MetalPerformanceShaders {
 		MPSNNSubtractionGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithGradientImages:forwardFilter:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4918,10 +4922,10 @@ namespace MetalPerformanceShaders {
 		MPSNNMultiplicationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNBinaryGradientStateNode gradientState, bool isSecondarySourceFilter);
 
 		[Export ("initWithGradientImages:forwardFilter:isSecondarySourceFilter:")]
-		IntPtr Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
+		NativeHandle Constructor (MPSNNImageNode[] gradientImages, MPSNNFilterNode filter, bool isSecondarySourceFilter);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -4934,14 +4938,14 @@ namespace MetalPerformanceShaders {
 		MPSCnnDropoutNode Create (MPSNNImageNode source);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode source);
+		NativeHandle Constructor (MPSNNImageNode source);
 
 		[Static]
 		[Export ("nodeWithSource:keepProbability:")]
 		MPSCnnDropoutNode Create (MPSNNImageNode source, float keepProbability);
 
 		[Export ("initWithSource:keepProbability:")]
-		IntPtr Constructor (MPSNNImageNode source, float keepProbability);
+		NativeHandle Constructor (MPSNNImageNode source, float keepProbability);
 
 		[Static]
 		[Export ("nodeWithSource:keepProbability:seed:maskStrideInPixels:")]
@@ -4949,7 +4953,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithSource:keepProbability:seed:maskStrideInPixels:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNNImageNode source, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
+		NativeHandle Constructor (MPSNNImageNode source, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
 
 		[Export ("keepProbability")]
 		float KeepProbability { get; }
@@ -4971,7 +4975,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnDropoutGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:keepProbability:seed:maskStrideInPixels:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
 
 		[Export ("keepProbability")]
 		float KeepProbability { get; }
@@ -5000,7 +5004,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnLossNode Create (MPSNNImageNode source, MPSCnnLossDescriptor descriptor);
 
 		[Export ("initWithSource:lossDescriptor:")]
-		IntPtr Constructor (MPSNNImageNode source, MPSCnnLossDescriptor descriptor);
+		NativeHandle Constructor (MPSNNImageNode source, MPSCnnLossDescriptor descriptor);
 
 		[Export ("inputLabels", ArgumentSemantic.Retain)]
 		MPSNNLabelsNode InputLabels { get; }
@@ -5017,7 +5021,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnYoloLossNode Create (MPSNNImageNode source, MPSCnnYoloLossDescriptor descriptor);
 
 		[Export ("initWithSource:lossDescriptor:")]
-		IntPtr Constructor (MPSNNImageNode source, MPSCnnYoloLossDescriptor descriptor);
+		NativeHandle Constructor (MPSNNImageNode source, MPSCnnYoloLossDescriptor descriptor);
 
 		[Export ("inputLabels", ArgumentSemantic.Retain)]
 		MPSNNLabelsNode InputLabels { get; }
@@ -5032,7 +5036,7 @@ namespace MetalPerformanceShaders {
 		MPSNNConcatenationNode Create (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -5045,7 +5049,7 @@ namespace MetalPerformanceShaders {
 		MPSNNConcatenationGradientNode Create (MPSNNImageNode gradientSourceNode, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode gradientSourceNode, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode gradientSourceNode, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -5058,7 +5062,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReshapeNode Create (MPSNNImageNode source, nuint resultWidth, nuint resultHeight, nuint resultFeatureChannels);
 
 		[Export ("initWithSource:resultWidth:resultHeight:resultFeatureChannels:")]
-		IntPtr Constructor (MPSNNImageNode source, nuint resultWidth, nuint resultHeight, nuint resultFeatureChannels);
+		NativeHandle Constructor (MPSNNImageNode source, nuint resultWidth, nuint resultHeight, nuint resultFeatureChannels);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -5071,7 +5075,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReshapeGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -5084,7 +5088,7 @@ namespace MetalPerformanceShaders {
 		MPSNNReductionSpatialMeanGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -5100,7 +5104,7 @@ namespace MetalPerformanceShaders {
 		MPSNNPadNode Create (MPSNNImageNode source, MPSImageCoordinate paddingSizeBefore, MPSImageCoordinate paddingSizeAfter, MPSImageEdgeMode edgeMode);
 
 		[Export ("initWithSource:paddingSizeBefore:paddingSizeAfter:edgeMode:")]
-		IntPtr Constructor (MPSNNImageNode source, MPSImageCoordinate paddingSizeBefore, MPSImageCoordinate paddingSizeAfter, MPSImageEdgeMode edgeMode);
+		NativeHandle Constructor (MPSNNImageNode source, MPSImageCoordinate paddingSizeBefore, MPSImageCoordinate paddingSizeAfter, MPSImageEdgeMode edgeMode);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -5113,7 +5117,7 @@ namespace MetalPerformanceShaders {
 		MPSNNPadGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -5126,7 +5130,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnSoftMaxGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -5139,7 +5143,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnLogSoftMaxGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -5151,7 +5155,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnSoftMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -5163,7 +5167,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnLogSoftMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode);
+		NativeHandle Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -5175,7 +5179,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnUpsamplingNearestNode Create (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("scaleFactorX")]
 		double ScaleFactorX { get; }
@@ -5198,11 +5202,11 @@ namespace MetalPerformanceShaders {
 		MPSCnnUpsamplingBilinearNode Create (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
 
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:alignCorners:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
 
 		[Export ("scaleFactorX")]
 		double ScaleFactorX { get; }
@@ -5225,7 +5229,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnUpsamplingNearestGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, double scaleFactorX, double scaleFactorY);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:scaleFactorX:scaleFactorY:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, double scaleFactorX, double scaleFactorY);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, double scaleFactorX, double scaleFactorY);
 
 		[Export ("scaleFactorX")]
 		double ScaleFactorX { get; }
@@ -5244,7 +5248,7 @@ namespace MetalPerformanceShaders {
 		MPSCnnUpsamplingBilinearGradientNode NodeWithSourceGradient (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, double scaleFactorX, double scaleFactorY);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:scaleFactorX:scaleFactorY:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, double scaleFactorX, double scaleFactorY);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, double scaleFactorX, double scaleFactorY);
 
 		[Export ("scaleFactorX")]
 		double ScaleFactorX { get; }
@@ -5305,13 +5309,13 @@ namespace MetalPerformanceShaders {
 		MPSNNForwardLossNode Create (MPSNNImageNode[] sourceNodes, MPSCnnLossDescriptor descriptor);
 
 		[Export ("initWithSource:labels:weights:lossDescriptor:")]
-		IntPtr Constructor (MPSNNImageNode source, MPSNNImageNode labels, [NullAllowed] MPSNNImageNode weights, MPSCnnLossDescriptor descriptor);
+		NativeHandle Constructor (MPSNNImageNode source, MPSNNImageNode labels, [NullAllowed] MPSNNImageNode weights, MPSCnnLossDescriptor descriptor);
 
 		[Export ("initWithSource:labels:lossDescriptor:")]
-		IntPtr Constructor (MPSNNImageNode source, MPSNNImageNode labels, MPSCnnLossDescriptor descriptor);
+		NativeHandle Constructor (MPSNNImageNode source, MPSNNImageNode labels, MPSCnnLossDescriptor descriptor);
 
 		[Export ("initWithSources:lossDescriptor:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes, MPSCnnLossDescriptor descriptor);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes, MPSCnnLossDescriptor descriptor);
 
 		[Export ("gradientFilterWithSources:")]
 		MPSNNLossGradientNode GetFilter (MPSNNImageNode[] sourceGradient);
@@ -5371,13 +5375,13 @@ namespace MetalPerformanceShaders {
 		MPSNNLossGradientNode Create (MPSNNImageNode[] sourceNodes, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
 
 		[Export ("initWithSourceGradient:sourceImage:labels:weights:gradientState:lossDescriptor:isLabelsGradientFilter:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNImageNode labels, [NullAllowed] MPSNNImageNode weights, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNImageNode labels, [NullAllowed] MPSNNImageNode weights, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
 
 		[Export ("initWithSourceGradient:sourceImage:labels:gradientState:lossDescriptor:isLabelsGradientFilter:")]
-		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNImageNode labels, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
+		NativeHandle Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNImageNode labels, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
 
 		[Export ("initWithSources:gradientState:lossDescriptor:isLabelsGradientFilter:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
 	}
 
 	[DisableDefaultCtor]
@@ -5390,7 +5394,7 @@ namespace MetalPerformanceShaders {
 		MPSNNInitialGradientNode Create (MPSNNImageNode source);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNNImageNode source);
+		NativeHandle Constructor (MPSNNImageNode source);
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -5401,7 +5405,7 @@ namespace MetalPerformanceShaders {
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithDevice:resultImage:resultImageIsNeeded:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNImageNode resultImage, bool resultIsNeeded);
+		NativeHandle Constructor (IMTLDevice device, MPSNNImageNode resultImage, bool resultIsNeeded);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Static]
@@ -5413,7 +5417,7 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use '.ctor (IMTLDevice, MPSNNImageNode, bool)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, 4, message: "Use '.ctor (IMTLDevice, MPSNNImageNode, bool)' instead.")]
 		[Export ("initWithDevice:resultImage:")]
-		IntPtr Constructor (IMTLDevice device, MPSNNImageNode resultImage);
+		NativeHandle Constructor (IMTLDevice device, MPSNNImageNode resultImage);
 
 		// Not added because the generated constructor is too hard to use
 		// and there is an alternative Create method that accomplishes the same
@@ -5421,7 +5425,7 @@ namespace MetalPerformanceShaders {
 		// [TV (13,0), Mac (10,15), iOS (13,0)]
 		// [Export ("initWithDevice:resultImages:resultsAreNeeded:")]
 		// [DesignatedInitializer]
-		// IntPtr Constructor (IMTLDevice device, MPSNNImageNode[] resultImages, IntPtr resultsAreNeeded);
+		// NativeHandle Constructor (IMTLDevice device, MPSNNImageNode[] resultImages, IntPtr resultsAreNeeded);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
@@ -5440,7 +5444,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("sourceImageHandles", ArgumentSemantic.Copy)]
 		IMPSHandle[] SourceImageHandles { get; }
@@ -5673,13 +5677,13 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnPoolingAverageNode {
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithSource:filterSize:stride:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:filterSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5687,13 +5691,13 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnPoolingL2NormNode {
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithSource:filterSize:stride:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:filterSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5701,13 +5705,13 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnPoolingMaxNode {
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithSource:filterSize:stride:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:filterSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5715,10 +5719,10 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNAdditionNode {
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithLeftSource:rightSource:")]
-		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
+		NativeHandle Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5726,10 +5730,10 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNBilinearScaleNode {
 		[Export ("initWithSource:outputSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, MTLSize size);
 
 		[Export ("initWithSource:transformProvider:outputSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5737,10 +5741,10 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNDivisionNode {
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithLeftSource:rightSource:")]
-		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
+		NativeHandle Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5748,10 +5752,10 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNLanczosScaleNode {
 		[Export ("initWithSource:outputSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, MTLSize size);
 
 		[Export ("initWithSource:transformProvider:outputSize:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
+		NativeHandle Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5759,10 +5763,10 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNMultiplicationNode {
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithLeftSource:rightSource:")]
-		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
+		NativeHandle Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -5770,10 +5774,10 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNSubtractionNode {
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+		NativeHandle Constructor (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithLeftSource:rightSource:")]
-		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
+		NativeHandle Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,2), Mac (10,13,2), iOS (11,2)]
@@ -5800,7 +5804,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:count:rows:columns:transpose:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint count, nuint rows, nuint columns, bool transpose);
+		NativeHandle Constructor (IMTLDevice device, nuint count, nuint rows, nuint columns, bool transpose);
 
 		[Export ("rows")]
 		nuint Rows { get; }
@@ -5835,7 +5839,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,2), Mac (10,13,2), iOS (11,2)]
@@ -5851,7 +5855,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// Keeping the same name as in the parent class so it ends up in an overload
 		[Export ("encodeToCommandBuffer:inputMatrix:resultMatrix:")]
@@ -5859,7 +5863,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release ()]
@@ -5900,7 +5904,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// Keeping the same name as in the parent class so it ends up in an overload
 		[Export ("encodeToCommandBuffer:inputMatrix:biasVector:resultMatrix:")]
@@ -5908,7 +5912,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release ()]
@@ -5949,14 +5953,14 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:gradientMatrix:inputMatrix:biasVector:resultGradientForDataMatrix:resultGradientForBiasVector:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix gradientMatrix, MPSMatrix inputMatrix, [NullAllowed] MPSVector biasVector, MPSMatrix resultGradientForDataMatrix, [NullAllowed] MPSVector resultGradientForBiasVector);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release]
@@ -5982,7 +5986,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("encodeGradientForDataToCommandBuffer:gradientMatrix:weightMatrix:resultGradientForDataMatrix:")]
 		void EncodeGradientForData (IMTLCommandBuffer commandBuffer, MPSMatrix gradientMatrix, MPSMatrix weightMatrix, MPSMatrix resultGradientForDataMatrix);
@@ -5992,7 +5996,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release]
@@ -6006,11 +6010,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,2), Mac (10,13,2), iOS (11,2)]
@@ -6047,7 +6051,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// Keeping the same name as in the parent class so it ends up in an overload
 		[Export ("encodeToCommandBuffer:inputMatrix:weightMatrix:biasVector:resultMatrix:")]
@@ -6055,7 +6059,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release ()]
@@ -6081,7 +6085,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:numberOfTopKValues:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint numberOfTopKValues);
+		NativeHandle Constructor (IMTLDevice device, nuint numberOfTopKValues);
 
 		// Keeping the same name as in the parent class so it ends up in an overload
 		[Export ("encodeToCommandBuffer:inputMatrix:resultIndexMatrix:resultValueMatrix:")]
@@ -6089,7 +6093,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release ()]
@@ -6139,7 +6143,7 @@ namespace MetalPerformanceShaders {
 
 		[TV (12,0), iOS (12,0), Mac (10,14)]
 		[Export ("initForReadingFromData:device:error:")]
-		IntPtr Constructor (NSData data, IMTLDevice device, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSData data, IMTLDevice device, [NullAllowed] out NSError error);
 
 		// Comes from MPSDeviceProvider
 		//[Export ("mpsMTLDevice")]
@@ -6181,14 +6185,14 @@ namespace MetalPerformanceShaders {
 		//[Deprecated (PlatformName.iOS, 12, 0)]
 		//[Deprecated (PlatformName.MacOSX, 10, 14)]
 		//[Export ("initWithDevice:")]
-		//IntPtr Constructor (IMTLDevice device);
+		//NativeHandle Constructor (IMTLDevice device);
 
 		//[TV (11,3), iOS (11,3), Mac (10,13,4)]
 		//[Deprecated (PlatformName.TvOS, 12, 0)]
 		//[Deprecated (PlatformName.iOS, 12, 0)]
 		//[Deprecated (PlatformName.MacOSX, 10, 14)]
 		//[Export ("initForReadingWithData:device:")]
-		//IntPtr Constructor (NSData data, IMTLDevice device);
+		//NativeHandle Constructor (NSData data, IMTLDevice device);
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -6281,10 +6285,10 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:descriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNDArrayDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNDArrayDescriptor descriptor);
 
 		[Export ("initWithDevice:scalar:")]
-		IntPtr Constructor (IMTLDevice device, double value);
+		NativeHandle Constructor (IMTLDevice device, double value);
 
 		[Export ("resourceSize")]
 		nuint ResourceSize { get; }
@@ -6343,13 +6347,13 @@ namespace MetalPerformanceShaders {
 		// .ctors inlined from parent class
 
 		[Export ("initWithCoder:device:")]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:centerWeight:")]
-		IntPtr Constructor (IMTLDevice device, float centerWeight);
+		NativeHandle Constructor (IMTLDevice device, float centerWeight);
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
 		[Internal]
@@ -6369,13 +6373,13 @@ namespace MetalPerformanceShaders {
 		// .ctors inlined from parent class
 
 		[Export ("initWithCoder:device:")]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:centerWeight:")]
-		IntPtr Constructor (IMTLDevice device, float centerWeight);
+		NativeHandle Constructor (IMTLDevice device, float centerWeight);
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
 		[Internal]
@@ -6390,13 +6394,13 @@ namespace MetalPerformanceShaders {
 		// .ctors inlined from parent class
 
 		[Export ("initWithCoder:device:")]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:centerWeight:")]
-		IntPtr Constructor (IMTLDevice device, float centerWeight);
+		NativeHandle Constructor (IMTLDevice device, float centerWeight);
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
 		[Internal]
@@ -6419,11 +6423,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:dataLayout:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSDataLayout dataLayout);
+		NativeHandle Constructor (IMTLDevice device, MPSDataLayout dataLayout);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:destinationImage:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSImage destinationImage);
@@ -6439,11 +6443,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6465,11 +6469,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelDiameter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint kernelDiameter);
+		NativeHandle Constructor (IMTLDevice device, nuint kernelDiameter);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeRegressionToCommandBuffer:sourceTexture:guidanceTexture:weightsTexture:destinationCoefficientsTexture:")]
 		void EncodeRegression (IMTLCommandBuffer commandBuffer, IMTLTexture sourceTexture, IMTLTexture guidanceTexture, [NullAllowed] IMTLTexture weightsTexture, IMTLTexture destinationCoefficientsTexture);
@@ -6498,11 +6502,11 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithDevice:histogramInfo:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
+		NativeHandle Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceTexture:minmaxTexture:histogram:histogramOffset:")]
 		void Encode (IMTLCommandBuffer commandBuffer, IMTLTexture source, IMTLTexture minmaxTexture, IMTLBuffer histogram, nuint histogramOffset);
@@ -6527,7 +6531,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6537,7 +6541,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6547,7 +6551,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6557,7 +6561,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6567,7 +6571,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6577,7 +6581,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6587,7 +6591,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6597,7 +6601,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -6613,7 +6617,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		// Keeping the same name as in the parent class so it ends up in an overload
 		[Export ("encodeToCommandBuffer:gradientMatrix:forwardOutputMatrix:resultMatrix:")]
@@ -6621,7 +6625,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release]
@@ -6635,11 +6639,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -6676,11 +6680,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release]
@@ -6708,7 +6712,7 @@ namespace MetalPerformanceShaders {
 		IMTLDevice Device { get; }
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -6745,19 +6749,19 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithGroup:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSAccelerationStructureGroup group);
+		NativeHandle Constructor (MPSAccelerationStructureGroup group);
 
 		[Export ("initWithCoder:group:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, MPSAccelerationStructureGroup group);
+		NativeHandle Constructor (NSCoder aDecoder, MPSAccelerationStructureGroup group);
 	}
 
 	delegate void MPSAccelerationStructureCompletionHandler ([NullAllowed] MPSAccelerationStructure structure);
@@ -6784,19 +6788,19 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithGroup:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSAccelerationStructureGroup group);
+		NativeHandle Constructor (MPSAccelerationStructureGroup group);
 
 		[Export ("initWithCoder:group:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, MPSAccelerationStructureGroup group);
+		NativeHandle Constructor (NSCoder aDecoder, MPSAccelerationStructureGroup group);
 
 		[Export ("rebuild")]
 		void Rebuild ();
@@ -6854,19 +6858,19 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("initWithGroup:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSAccelerationStructureGroup group);
+		NativeHandle Constructor (MPSAccelerationStructureGroup group);
 
 		[Export ("initWithCoder:group:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, MPSAccelerationStructureGroup group);
+		NativeHandle Constructor (NSCoder aDecoder, MPSAccelerationStructureGroup group);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -6911,7 +6915,7 @@ namespace MetalPerformanceShaders {
 		IMTLBuffer Variance { get; }
 
 		[Export ("initWithMean:variance:")]
-		IntPtr Constructor (IMTLBuffer mean, IMTLBuffer variance);
+		NativeHandle Constructor (IMTLBuffer mean, IMTLBuffer variance);
 
 		[Static]
 		[Export ("temporaryStateWithCommandBuffer:numberOfFeatureChannels:")]
@@ -6980,7 +6984,7 @@ namespace MetalPerformanceShaders {
 		void Encode (NSCoder coder);
 
 		[Export ("initWithCoder:")]
-		IntPtr Constructor (NSCoder decoder);
+		NativeHandle Constructor (NSCoder decoder);
 
 		[Static]
 		[Export ("supportsSecureCoding")]
@@ -7007,16 +7011,16 @@ namespace MetalPerformanceShaders {
 		IMPSCnnBatchNormalizationDataSource DataSource { get; }
 
 		[Export ("initWithDevice:dataSource:")]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnBatchNormalizationDataSource dataSource);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnBatchNormalizationDataSource dataSource);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:dataSource:fusedNeuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnBatchNormalizationDataSource dataSource, [NullAllowed] MPSNNNeuronDescriptor fusedNeuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnBatchNormalizationDataSource dataSource, [NullAllowed] MPSNNNeuronDescriptor fusedNeuronDescriptor);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceImage:batchNormalizationState:destinationImage:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSCnnBatchNormalizationState batchNormalizationState, MPSImage destinationImage);
@@ -7061,11 +7065,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("encodeBatchToCommandBuffer:sourceImages:batchNormalizationState:")]
 		void EncodeBatch (IMTLCommandBuffer commandBuffer, NSArray<MPSImage> sourceImages, MPSCnnBatchNormalizationState batchNormalizationState);
@@ -7079,11 +7083,11 @@ namespace MetalPerformanceShaders {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:fusedNeuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, [NullAllowed] MPSNNNeuronDescriptor fusedNeuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, [NullAllowed] MPSNNNeuronDescriptor fusedNeuronDescriptor);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceGradient:sourceImage:batchNormalizationState:destinationGradient:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceGradient, MPSImage sourceImage, MPSCnnBatchNormalizationState batchNormalizationState, MPSImage destinationGradient);
@@ -7106,11 +7110,11 @@ namespace MetalPerformanceShaders {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithDevice:fusedNeuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, [NullAllowed] MPSNNNeuronDescriptor fusedNeuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, [NullAllowed] MPSNNNeuronDescriptor fusedNeuronDescriptor);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeBatchToCommandBuffer:sourceGradients:sourceImages:batchNormalizationState:")]
 		void EncodeBatch (IMTLCommandBuffer commandBuffer, NSArray<MPSImage> sourceGradients, NSArray<MPSImage> sourceImages, MPSCnnBatchNormalizationState batchNormalizationState);
@@ -7143,10 +7147,10 @@ namespace MetalPerformanceShaders {
 		IMTLBuffer Biases { get; }
 
 		[Export ("initWithWeights:biases:")]
-		IntPtr Constructor (IMTLBuffer weights, [NullAllowed] IMTLBuffer biases);
+		NativeHandle Constructor (IMTLBuffer weights, [NullAllowed] IMTLBuffer biases);
 
 		[Export ("initWithDevice:cnnConvolutionDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, MPSCnnConvolutionDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSCnnConvolutionDescriptor descriptor);
 
 		[Static]
 		[Export ("temporaryCNNConvolutionWeightsAndBiasesStateWithCommandBuffer:cnnConvolutionDescriptor:")]
@@ -7185,11 +7189,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:weights:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("reloadWeightsAndBiasesFromDataSource")]
@@ -7206,11 +7210,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:weights:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7238,11 +7242,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("initWithDevice:keepProbability:seed:maskStrideInPixels:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
+		NativeHandle Constructor (IMTLDevice device, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7261,11 +7265,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("initWithDevice:keepProbability:seed:maskStrideInPixels:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
+		NativeHandle Constructor (IMTLDevice device, float keepProbability, nuint seed, MTLSize maskStrideInPixels);
 	}
 
 	[TV (11, 3), Mac (10, 13, 4), iOS (11, 3)]
@@ -7326,7 +7330,7 @@ namespace MetalPerformanceShaders {
 		void Encode (NSCoder coder);
 
 		[Export ("initWithCoder:")]
-		IntPtr Constructor (NSCoder decoder);
+		NativeHandle Constructor (NSCoder decoder);
 
 		// This needs to be inlined in classes that implement 'IMPSCnnInstanceNormalizationDataSource'.
 		//[Static]
@@ -7352,11 +7356,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:dataSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnInstanceNormalizationDataSource dataSource);
+		NativeHandle Constructor (IMTLDevice device, IMPSCnnInstanceNormalizationDataSource dataSource);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use 'ReloadGammaAndBetaFromDataSource' instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use 'ReloadGammaAndBetaFromDataSource' instead.")]
@@ -7387,11 +7391,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7401,11 +7405,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("kernelOffsetX")]
 		nint KernelOffsetX { get; set; }
@@ -7455,11 +7459,11 @@ namespace MetalPerformanceShaders {
 	interface MPSCnnLossLabels {
 
 		[Export ("initWithDevice:labelsDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, MPSCnnLossDataDescriptor labelsDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSCnnLossDataDescriptor labelsDescriptor);
 
 		[Export ("initWithDevice:lossImageSize:labelsDescriptor:weightsDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MTLSize lossImageSize, MPSCnnLossDataDescriptor labelsDescriptor, [NullAllowed] MPSCnnLossDataDescriptor weightsDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MTLSize lossImageSize, MPSCnnLossDataDescriptor labelsDescriptor, [NullAllowed] MPSCnnLossDataDescriptor weightsDescriptor);
 
 		[Export ("lossImage")]
 		MPSImage LossImage { get; }
@@ -7532,11 +7536,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:lossDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSCnnLossDescriptor lossDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSCnnLossDescriptor lossDescriptor);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceImage:labels:destinationImage:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSCnnLossLabels labels, MPSImage destinationImage);
@@ -7655,11 +7659,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:lossDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSCnnYoloLossDescriptor lossDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSCnnYoloLossDescriptor lossDescriptor);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceImage:labels:destinationImage:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSCnnLossLabels labels, MPSImage destinationImage);
@@ -7689,11 +7693,11 @@ namespace MetalPerformanceShaders {
 		// Inlined but you are not supposed to use this class, only its subclasses
 		//[Export ("initWithDevice:")]
 		//[DesignatedInitializer]
-		//IntPtr Constructor (IMTLDevice device);
+		//NativeHandle Constructor (IMTLDevice device);
 
 		//[Export ("initWithCoder:device:")]
 		//[DesignatedInitializer]
-		//IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		//NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("primaryScale")]
 		float PrimaryScale { get; set; }
@@ -7730,7 +7734,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7740,7 +7744,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7750,7 +7754,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7760,7 +7764,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -7776,7 +7780,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7787,11 +7791,11 @@ namespace MetalPerformanceShaders {
 		// Inlined but you are not supposed to use this class, only its subclasses
 		//[Export ("initWithDevice:")]
 		//[DesignatedInitializer]
-		//IntPtr Constructor (IMTLDevice device);
+		//NativeHandle Constructor (IMTLDevice device);
 
 		//[Export ("initWithCoder:device:")]
 		//[DesignatedInitializer]
-		//IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		//NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("primaryScale")]
 		float PrimaryScale { get; set; }
@@ -7822,7 +7826,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:isSecondarySourceFilter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, bool isSecondarySourceFilter);
+		NativeHandle Constructor (IMTLDevice device, bool isSecondarySourceFilter);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7832,7 +7836,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:isSecondarySourceFilter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, bool isSecondarySourceFilter);
+		NativeHandle Constructor (IMTLDevice device, bool isSecondarySourceFilter);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7842,7 +7846,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:isSecondarySourceFilter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, bool isSecondarySourceFilter);
+		NativeHandle Constructor (IMTLDevice device, bool isSecondarySourceFilter);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7908,11 +7912,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
+		NativeHandle Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -7927,7 +7931,7 @@ namespace MetalPerformanceShaders {
 		IMTLBuffer Beta { get; }
 
 		[Export ("initWithGamma:beta:")]
-		IntPtr Constructor (IMTLBuffer gamma, IMTLBuffer beta);
+		NativeHandle Constructor (IMTLBuffer gamma, IMTLBuffer beta);
 
 		[Static]
 		[Export ("temporaryStateWithCommandBuffer:numberOfFeatureChannels:")]
@@ -7968,14 +7972,14 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:inputMatrix:meanVector:varianceVector:gammaVector:betaVector:resultMatrix:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSVector meanVector, MPSVector varianceVector, [NullAllowed] MPSVector gammaVector, [NullAllowed] MPSVector betaVector, MPSMatrix resultMatrix);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release]
@@ -8013,14 +8017,14 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:gradientMatrix:inputMatrix:meanVector:varianceVector:gammaVector:betaVector:resultGradientForDataMatrix:resultGradientForGammaVector:resultGradientForBetaVector:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix gradientMatrix, MPSMatrix inputMatrix, MPSVector meanVector, MPSVector varianceVector, [NullAllowed] MPSVector gammaVector, [NullAllowed] MPSVector betaVector, MPSMatrix resultGradientForDataMatrix, [NullAllowed] MPSVector resultGradientForGammaVector, [NullAllowed] MPSVector resultGradientForBetaVector);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release]
@@ -8048,16 +8052,16 @@ namespace MetalPerformanceShaders {
 		MPSNNGradientState CreateTemporaryState (IMTLCommandBuffer commandBuffer);
 
 		[Export ("initWithDevice:bufferSize:")]
-		IntPtr Constructor (IMTLDevice device, nuint bufferSize);
+		NativeHandle Constructor (IMTLDevice device, nuint bufferSize);
 
 		[Export ("initWithDevice:textureDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
 
 		[Export ("initWithResource:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource resource);
+		NativeHandle Constructor ([NullAllowed] IMTLResource resource);
 
 		[Export ("initWithDevice:resourceList:")]
-		IntPtr Constructor (IMTLDevice device, MPSStateResourceList resourceList);
+		NativeHandle Constructor (IMTLDevice device, MPSStateResourceList resourceList);
 
 		[New]
 		[Static]
@@ -8065,7 +8069,7 @@ namespace MetalPerformanceShaders {
 		MPSNNGradientState CreateTemporaryState (IMTLCommandBuffer commandBuffer, MPSStateResourceList resourceList);
 
 		[Export ("initWithResources:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource [] resources);
+		NativeHandle Constructor ([NullAllowed] IMTLResource [] resources);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8089,16 +8093,16 @@ namespace MetalPerformanceShaders {
 		MPSNNBinaryGradientState CreateTemporaryState (IMTLCommandBuffer commandBuffer);
 
 		[Export ("initWithDevice:bufferSize:")]
-		IntPtr Constructor (IMTLDevice device, nuint bufferSize);
+		NativeHandle Constructor (IMTLDevice device, nuint bufferSize);
 
 		[Export ("initWithDevice:textureDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
 
 		[Export ("initWithResource:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource resource);
+		NativeHandle Constructor ([NullAllowed] IMTLResource resource);
 
 		[Export ("initWithDevice:resourceList:")]
-		IntPtr Constructor (IMTLDevice device, MPSStateResourceList resourceList);
+		NativeHandle Constructor (IMTLDevice device, MPSStateResourceList resourceList);
 
 		[New]
 		[Static]
@@ -8106,7 +8110,7 @@ namespace MetalPerformanceShaders {
 		MPSNNBinaryGradientState CreateTemporaryState (IMTLCommandBuffer commandBuffer, MPSStateResourceList resourceList);
 
 		[Export ("initWithResources:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource [] resources);
+		NativeHandle Constructor ([NullAllowed] IMTLResource [] resources);
 	}
 
 	interface IMPSNNTrainableNode { }
@@ -8146,10 +8150,10 @@ namespace MetalPerformanceShaders {
 		MPSNNRegularizationType RegularizationType { get; set; }
 
 		[Export ("initWithLearningRate:gradientRescale:regularizationType:regularizationScale:")]
-		IntPtr Constructor (float learningRate, float gradientRescale, MPSNNRegularizationType regularizationType, float regularizationScale);
+		NativeHandle Constructor (float learningRate, float gradientRescale, MPSNNRegularizationType regularizationType, float regularizationScale);
 
 		[Export ("initWithLearningRate:gradientRescale:applyGradientClipping:gradientClipMax:gradientClipMin:regularizationType:regularizationScale:")]
-		IntPtr Constructor (float learningRate, float gradientRescale, bool applyGradientClipping, float gradientClipMax, float gradientClipMin, MPSNNRegularizationType regularizationType, float regularizationScale);
+		NativeHandle Constructor (float learningRate, float gradientRescale, bool applyGradientClipping, float gradientClipMax, float gradientClipMin, MPSNNRegularizationType regularizationType, float regularizationScale);
 
 		[Static]
 		[Export ("optimizerDescriptorWithLearningRate:gradientRescale:regularizationType:regularizationScale:")]
@@ -8202,10 +8206,10 @@ namespace MetalPerformanceShaders {
 		bool UseNestrovMomentum { get; }
 
 		[Export ("initWithDevice:learningRate:")]
-		IntPtr Constructor (IMTLDevice device, float learningRate);
+		NativeHandle Constructor (IMTLDevice device, float learningRate);
 
 		[Export ("initWithDevice:momentumScale:useNestrovMomentum:optimizerDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, float momentumScale, bool useNestrovMomentum, MPSNNOptimizerDescriptor optimizerDescriptor);
+		NativeHandle Constructor (IMTLDevice device, float momentumScale, bool useNestrovMomentum, MPSNNOptimizerDescriptor optimizerDescriptor);
 
 		[Export ("encodeToCommandBuffer:inputGradientVector:inputValuesVector:inputMomentumVector:resultValuesVector:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSVector inputGradientVector, MPSVector inputValuesVector, [NullAllowed] MPSVector inputMomentumVector, MPSVector resultValuesVector);
@@ -8232,10 +8236,10 @@ namespace MetalPerformanceShaders {
 		float Epsilon { get; }
 
 		[Export ("initWithDevice:learningRate:")]
-		IntPtr Constructor (IMTLDevice device, float learningRate);
+		NativeHandle Constructor (IMTLDevice device, float learningRate);
 
 		[Export ("initWithDevice:decay:epsilon:optimizerDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, double decay, float epsilon, MPSNNOptimizerDescriptor optimizerDescriptor);
+		NativeHandle Constructor (IMTLDevice device, double decay, float epsilon, MPSNNOptimizerDescriptor optimizerDescriptor);
 
 		[Export ("encodeToCommandBuffer:inputGradientVector:inputValuesVector:inputSumOfSquaresVector:resultValuesVector:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSVector inputGradientVector, MPSVector inputValuesVector, MPSVector inputSumOfSquaresVector, MPSVector resultValuesVector);
@@ -8268,10 +8272,10 @@ namespace MetalPerformanceShaders {
 		nuint TimeStep { get; set; }
 
 		[Export ("initWithDevice:learningRate:")]
-		IntPtr Constructor (IMTLDevice device, float learningRate);
+		NativeHandle Constructor (IMTLDevice device, float learningRate);
 
 		[Export ("initWithDevice:beta1:beta2:epsilon:timeStep:optimizerDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, double beta1, double beta2, float epsilon, nuint timeStep, MPSNNOptimizerDescriptor optimizerDescriptor);
+		NativeHandle Constructor (IMTLDevice device, double beta1, double beta2, float epsilon, nuint timeStep, MPSNNOptimizerDescriptor optimizerDescriptor);
 
 		[Export ("encodeToCommandBuffer:inputGradientVector:inputValuesVector:inputMomentumVector:inputVelocityVector:resultValuesVector:")]
 		void Encode (IMTLCommandBuffer commandBuffer, MPSVector inputGradientVector, MPSVector inputValuesVector, MPSVector inputMomentumVector, MPSVector inputVelocityVector, MPSVector resultValuesVector);
@@ -8302,7 +8306,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8312,7 +8316,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8322,7 +8326,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -8332,7 +8336,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8342,7 +8346,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8352,7 +8356,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8362,7 +8366,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -8372,7 +8376,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8382,7 +8386,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8392,7 +8396,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8402,7 +8406,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8412,7 +8416,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8422,7 +8426,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8435,7 +8439,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8457,7 +8461,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8469,11 +8473,11 @@ namespace MetalPerformanceShaders {
 		bool DoWeightedSumByNonZeroWeights { get; }
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:doWeightedSumByNonZeroWeights:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, bool doWeightedSumByNonZeroWeights);
+		NativeHandle Constructor (IMTLDevice device, bool doWeightedSumByNonZeroWeights);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8483,11 +8487,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -8497,11 +8501,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -8519,18 +8523,18 @@ namespace MetalPerformanceShaders {
 		float FillValue { get; set; }
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:paddingSizeBefore:paddingSizeAfter:")]
-		IntPtr Constructor (IMTLDevice device, MPSImageCoordinate paddingSizeBefore, MPSImageCoordinate paddingSizeAfter);
+		NativeHandle Constructor (IMTLDevice device, MPSImageCoordinate paddingSizeBefore, MPSImageCoordinate paddingSizeAfter);
 
 		[Export ("initWithDevice:paddingSizeBefore:paddingSizeAfter:fillValueArray:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSImageCoordinate paddingSizeBefore, MPSImageCoordinate paddingSizeAfter, [NullAllowed] NSData fillValueArray);
+		NativeHandle Constructor (IMTLDevice device, MPSImageCoordinate paddingSizeBefore, MPSImageCoordinate paddingSizeAfter, [NullAllowed] NSData fillValueArray);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (12,1), Mac (10,14,1), iOS (12,1)]
@@ -8540,11 +8544,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -8563,11 +8567,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:resizeWidth:resizeHeight:alignCorners:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint resizeWidth, nuint resizeHeight, bool alignCorners);
+		NativeHandle Constructor (IMTLDevice device, nuint resizeWidth, nuint resizeHeight, bool alignCorners);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -8589,11 +8593,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:resizeWidth:resizeHeight:numberOfRegions:regions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint resizeWidth, nuint resizeHeight, nuint numberOfRegions, IntPtr regions);
+		NativeHandle Constructor (IMTLDevice device, nuint resizeWidth, nuint resizeHeight, nuint numberOfRegions, IntPtr regions);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder aDecoder, IMTLDevice device);
 	}
 
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -8603,11 +8607,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -8628,23 +8632,23 @@ namespace MetalPerformanceShaders {
 		MPSRnnMatrixTrainingState CreateTemporaryState (IMTLCommandBuffer commandBuffer);
 
 		[Export ("initWithDevice:bufferSize:")]
-		IntPtr Constructor (IMTLDevice device, nuint bufferSize);
+		NativeHandle Constructor (IMTLDevice device, nuint bufferSize);
 
 		[Export ("initWithDevice:textureDescriptor:")]
-		IntPtr Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
+		NativeHandle Constructor (IMTLDevice device, MTLTextureDescriptor descriptor);
 
 		[Export ("initWithResource:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource resource);
+		NativeHandle Constructor ([NullAllowed] IMTLResource resource);
 
 		[Export ("initWithDevice:resourceList:")]
-		IntPtr Constructor (IMTLDevice device, MPSStateResourceList resourceList);
+		NativeHandle Constructor (IMTLDevice device, MPSStateResourceList resourceList);
 
 		[Static][New]
 		[Export ("temporaryStateWithCommandBuffer:resourceList:")]
 		MPSRnnMatrixTrainingState CreateTemporaryState (IMTLCommandBuffer commandBuffer, MPSStateResourceList resourceList);
 
 		[Export ("initWithResources:")]
-		IntPtr Constructor ([NullAllowed] IMTLResource [] resources);
+		NativeHandle Constructor ([NullAllowed] IMTLResource [] resources);
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -8672,7 +8676,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithDevice:rnnDescriptor:trainableWeights:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSRnnDescriptor rnnDescriptor, NSMutableArray<MPSMatrix> trainableWeights);
+		NativeHandle Constructor (IMTLDevice device, MPSRnnDescriptor rnnDescriptor, NSMutableArray<MPSMatrix> trainableWeights);
 
 		[Export ("createWeightGradientMatrices:dataType:")]
 		void CreateWeightGradientMatrices (NSMutableArray<MPSMatrix> matrices, MPSDataType dataType);
@@ -8700,7 +8704,7 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
+		NativeHandle Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
 		[return: Release]

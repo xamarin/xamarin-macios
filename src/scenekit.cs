@@ -87,6 +87,10 @@ using NSImage = global::UIKit.UIImage;
 using NSBezierPath = global::UIKit.UIBezierPath;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace SceneKit {
 
 #if WATCH
@@ -253,11 +257,11 @@ namespace SceneKit {
 	{
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (SCNAudioSource source);
+		NativeHandle Constructor (SCNAudioSource source);
 	
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioNode audioNode);
+		NativeHandle Constructor (AVAudioNode audioNode);
 	
 		[Static]
 		[Export ("audioPlayerWithSource:")]
@@ -289,11 +293,11 @@ namespace SceneKit {
 	interface SCNAudioSource : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithFileNamed:")]
-		IntPtr Constructor (string filename);
+		NativeHandle Constructor (string filename);
 	
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 	
 		[Static]
 		[Export ("audioSourceNamed:")]
@@ -2838,17 +2842,17 @@ namespace SceneKit {
 
 		[Export ("initWithURL:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Wrap ("this (url, options.GetDictionary ())")]
-		IntPtr Constructor (NSUrl url, SCNSceneLoadingOptions options);
+		NativeHandle Constructor (NSUrl url, SCNSceneLoadingOptions options);
 
 		[Export ("initWithData:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options);
 
 		[Wrap ("this (data, options.GetDictionary ())")]
-		IntPtr Constructor (NSData data, SCNSceneLoadingOptions options);
+		NativeHandle Constructor (NSData data, SCNSceneLoadingOptions options);
 		
 		[Export ("sceneWithOptions:statusHandler:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -3503,14 +3507,14 @@ namespace SceneKit {
 #if !WATCH
 		[iOS (9,0)][Mac (10,11)]
 		[Wrap ("this (frame, options.GetDictionary ())")]
-		IntPtr Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
+		NativeHandle Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
 #endif
 
 		[Export ("initWithFrame:options:")]
-		IntPtr Constructor (CGRect frame, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (CGRect frame, [NullAllowed] NSDictionary options);
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("play:")]
 		void Play ([NullAllowed] NSObject sender);
@@ -3714,7 +3718,7 @@ namespace SceneKit {
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("initWithChainRootNode:")]
-		IntPtr Constructor (SCNNode chainRootNode);
+		NativeHandle Constructor (SCNNode chainRootNode);
 		
 	}
 
@@ -5039,7 +5043,7 @@ namespace SceneKit {
 	interface SCNReferenceNode : NSCoding {
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl referenceUrl);
+		NativeHandle Constructor (NSUrl referenceUrl);
 
 		[Static]
 		[Export ("referenceNodeWithURL:")]

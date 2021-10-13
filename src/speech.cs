@@ -15,6 +15,10 @@ using CoreMedia;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Speech {
 
 	[Native]
@@ -76,7 +80,7 @@ namespace Speech {
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }
@@ -196,7 +200,7 @@ namespace Speech {
 
 		[Export ("initWithLocale:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSLocale locale);
+		NativeHandle Constructor (NSLocale locale);
 
 		[Export ("available")]
 		bool Available { [Bind ("isAvailable")] get; }
