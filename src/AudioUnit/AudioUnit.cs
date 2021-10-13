@@ -1010,7 +1010,7 @@ namespace AudioUnit
 	{
 		AURenderEvent *current;
 
-		public IntPtr Handle { get; private set; }
+		public NativeHandle Handle { get; private set; }
 		public bool IsEmpty { get { return Handle == IntPtr.Zero; } }
 		public bool IsAtEnd { get { return current is null; }}
 
@@ -1022,18 +1022,18 @@ namespace AudioUnit
 		internal AURenderEventEnumerator (IntPtr handle, bool owns)
 		{
 			Handle = handle;
-			current = (AURenderEvent *) handle;
+			current = (AURenderEvent *) (IntPtr) handle;
 		}
 
 		public void Dispose ()
 		{
-			Handle = IntPtr.Zero;
+			Handle = NativeHandle.Zero;
 			current = null;
 		}
 
 		public AURenderEvent * UnsafeFirst {
 			get {
-				return (AURenderEvent*) Handle;
+				return (AURenderEvent*) (IntPtr) Handle;
 			}
 		}
 
@@ -1041,7 +1041,7 @@ namespace AudioUnit
 			get {
 				if (IsEmpty)
 					throw new InvalidOperationException ("Can not get First on AURenderEventEnumerator when empty");
-				return *(AURenderEvent *) Handle;
+				return *(AURenderEvent *) (IntPtr) Handle;
 			}
 		}
 
@@ -1083,7 +1083,7 @@ namespace AudioUnit
 
 		public void /*IEnumerator<AURenderEvent>.*/Reset ()
 		{
-			current = (AURenderEvent *) Handle;
+			current = (AURenderEvent *) (IntPtr) Handle;
 		}
 	}
 #endif // !COREBUILD
