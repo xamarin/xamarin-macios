@@ -254,7 +254,7 @@ namespace Foundation {
 			return super;
 		}
 
-		internal static IntPtr Initialize ()
+		internal static NativeHandle Initialize ()
 		{
 			return class_ptr;
 		}
@@ -425,7 +425,7 @@ namespace Foundation {
 		}
 
 		[Preserve]
-		bool InvokeConformsToProtocol (IntPtr protocol)
+		bool InvokeConformsToProtocol (NativeHandle protocol)
 		{
 			return ConformsToProtocol (protocol);
 		}
@@ -433,7 +433,7 @@ namespace Foundation {
 		[Export ("conformsToProtocol:")]
 		[Preserve ()]
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public virtual bool ConformsToProtocol (IntPtr protocol)
+		public virtual bool ConformsToProtocol (NativeHandle protocol)
 		{
 			bool does;
 			bool is_wrapper = IsDirectBinding;
@@ -497,7 +497,7 @@ namespace Foundation {
 			DangerousRelease (handle);
 		}
 
-		internal static void DangerousRelease (IntPtr handle)
+		internal static void DangerousRelease (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
 				return;
@@ -508,7 +508,7 @@ namespace Foundation {
 #endif
 		}
 
-		internal static void DangerousRetain (IntPtr handle)
+		internal static void DangerousRetain (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
 				return;
@@ -519,7 +519,7 @@ namespace Foundation {
 #endif
 		}
 			
-		internal static void DangerousAutorelease (IntPtr handle)
+		internal static void DangerousAutorelease (NativeHandle handle)
 		{
 #if MONOMAC
 			Messaging.void_objc_msgSend (handle, Selector.AutoreleaseHandle);
@@ -583,13 +583,13 @@ namespace Foundation {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		protected void InitializeHandle (IntPtr handle)
+		protected void InitializeHandle (NativeHandle handle)
 		{
 			InitializeHandle (handle, "init*");
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		protected void InitializeHandle (IntPtr handle, string initSelector)
+		protected void InitializeHandle (NativeHandle handle, string initSelector)
 		{
 			if (this.handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
 				if (ClassHandle == IntPtr.Zero)
