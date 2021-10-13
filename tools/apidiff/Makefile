@@ -342,95 +342,33 @@ $(UNZIP_STAMP): $(BUNDLE_ZIP)
 # the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
 $(UNZIP_DIR)/%.dll: $(UNZIP_STAMP) ;
 
-# The dotnet bundles can come from different urls, so unzip them separately.
-# However, if the hash the urls contain are the same, reuse that hash's zip file
-APIDIFF_HASH_DOTNET_IOS ?= $(word 6,$(subst /, ,$(APIDIFF_REFERENCES_DOTNET_IOS)))
-BUNDLE_ZIP_DOTNET_IOS ?= $(APIDIFF_DIR)/bundle-$(APIDIFF_HASH_DOTNET_IOS).zip
-$(BUNDLE_ZIP_DOTNET_IOS):
+# # The dotnet bundles can come from different urls, so unzip them separately.
+# # However, if the hash the urls contain are the same, reuse that hash's zip file
+define DotNetUnzipBundle
+APIDIFF_HASH_DOTNET_$(1) ?= $$(word 6,$$(subst /, ,$$(APIDIFF_REFERENCES_DOTNET_$(1))))
+BUNDLE_ZIP_DOTNET_$(1) ?= $$(APIDIFF_DIR)/bundle-$$(APIDIFF_HASH_DOTNET_$(1)).zip
+$$(BUNDLE_ZIP_DOTNET_$(1)):
 	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
-	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
-		echo "Found a cached version of $(APIDIFF_REFERENCES_DOTNET_IOS)) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
-		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
+	$$(Q) if test -f ~/Library/Caches/xamarin-macios/$$(notdir $$@); then \
+		echo "Found a cached version of $$(APIDIFF_REFERENCES_DOTNET_$(1))) in ~/Library/Caches/xamarin-macios/$$(notdir $$@)."; \
+		$$(CP) ~/Library/Caches/xamarin-macios/$$(notdir $$@) $$@.tmp; \
 	else \
-		curl -L $(APIDIFF_REFERENCES_DOTNET_IOS) > $@.tmp; \
+		curl -L $$(APIDIFF_REFERENCES_DOTNET_$(1)) > $$@.tmp; \
 	fi
-	$(Q) mv $@.tmp $@
+	$$(Q) mv $$@.tmp $$@
 
-UNZIP_STAMP_DOTNET_IOS=$(APIDIFF_DIR)/.unzip.dotnet-iOS-$(APIDIFF_HASH_DOTNET_IOS).stamp
-UNZIP_DIR_DOTNET_IOS=temp/downloads/dotnet-iOS-$(APIDIFF_HASH_DOTNET_IOS)
-$(UNZIP_STAMP_DOTNET_IOS): $(BUNDLE_ZIP_DOTNET_IOS)
-	$(Q) rm -Rf $(UNZIP_DIR_DOTNET_IOS)
-	$(Q) mkdir -p $(dir $(UNZIP_DIR_DOTNET_IOS))
-	$(Q_GEN) unzip -q -d $(UNZIP_DIR_DOTNET_IOS) $(BUNDLE_ZIP_DOTNET_IOS)
-	$(Q) touch $@
+UNZIP_STAMP_DOTNET_$(1)=$$(APIDIFF_DIR)/.unzip.dotnet-$(1)-$$(APIDIFF_HASH_DOTNET_$(1)).stamp
+UNZIP_DIR_DOTNET_$(1)=temp/downloads/dotnet-$(1)-$$(APIDIFF_HASH_DOTNET_$(1))
+$$(UNZIP_STAMP_DOTNET_$(1)): $$(BUNDLE_ZIP_DOTNET_$(1))
+	$$(Q) rm -Rf $$(UNZIP_DIR_DOTNET_$(1))
+	$$(Q) mkdir -p $$(dir $$(UNZIP_DIR_DOTNET_$(1)))
+	$$(Q_GEN) unzip -q -d $$(UNZIP_DIR_DOTNET_$(1)) $$(BUNDLE_ZIP_DOTNET_$(1))
+	$$(Q) touch $$@
 
-$(UNZIP_DIR_DOTNET_IOS)/%.dll: $(UNZIP_STAMP_DOTNET_IOS) ;
+$$(UNZIP_DIR_DOTNET_$(1))/%.dll: $$(UNZIP_STAMP_DOTNET_$(1))
+endef
 
-APIDIFF_HASH_DOTNET_TVOS ?= $(word 6,$(subst /, ,$(APIDIFF_REFERENCES_DOTNET_TVOS)))
-BUNDLE_ZIP_DOTNET_TVOS ?= $(APIDIFF_DIR)/bundle-$(APIDIFF_HASH_DOTNET_TVOS).zip
-$(BUNDLE_ZIP_DOTNET_TVOS):
-	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
-	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
-		echo "Found a cached version of $(APIDIFF_REFERENCES_DOTNET_TVOS)) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
-		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
-	else \
-		curl -L $(APIDIFF_REFERENCES_DOTNET_TVOS) > $@.tmp; \
-	fi
-	$(Q) mv $@.tmp $@
-
-UNZIP_STAMP_DOTNET_TVOS=$(APIDIFF_DIR)/.unzip.dotnet-tvOS-$(APIDIFF_HASH_DOTNET_TVOS).stamp
-UNZIP_DIR_DOTNET_TVOS=temp/downloads/dotnet-tvOS-$(APIDIFF_HASH_DOTNET_TVOS)
-$(UNZIP_STAMP_DOTNET_TVOS): $(BUNDLE_ZIP_DOTNET_TVOS)
-	$(Q) rm -Rf $(UNZIP_DIR_DOTNET_TVOS)
-	$(Q) mkdir -p $(dir $(UNZIP_DIR_DOTNET_TVOS))
-	$(Q_GEN) unzip -q -d $(UNZIP_DIR_DOTNET_TVOS) $(BUNDLE_ZIP_DOTNET_TVOS)
-	$(Q) touch $@
-
-$(UNZIP_DIR_DOTNET_TVOS)/%.dll: $(UNZIP_STAMP_DOTNET_TVOS) ;
-
-APIDIFF_HASH_DOTNET_MACOS ?= $(word 6,$(subst /, ,$(APIDIFF_REFERENCES_DOTNET_MACOS)))
-BUNDLE_ZIP_DOTNET_MACOS ?= $(APIDIFF_DIR)/bundle-$(APIDIFF_HASH_DOTNET_MACOS).zip
-$(BUNDLE_ZIP_DOTNET_MACOS):
-	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
-	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
-		echo "Found a cached version of $(APIDIFF_REFERENCES_DOTNET_MACOS)) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
-		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
-	else \
-		curl -L $(APIDIFF_REFERENCES_DOTNET_MACOS) > $@.tmp; \
-	fi
-	$(Q) mv $@.tmp $@
-
-UNZIP_STAMP_DOTNET_MACOS=$(APIDIFF_DIR)/.unzip.dotnet-macOS-$(APIDIFF_HASH_DOTNET_MACOS).stamp
-UNZIP_DIR_DOTNET_MACOS=temp/downloads/dotnet-macOS-$(APIDIFF_HASH_DOTNET_MACOS)
-$(UNZIP_STAMP_DOTNET_MACOS): $(BUNDLE_ZIP_DOTNET_MACOS)
-	$(Q) rm -Rf $(UNZIP_DIR_DOTNET_MACOS)
-	$(Q) mkdir -p $(dir $(UNZIP_DIR_DOTNET_MACOS))
-	$(Q_GEN) unzip -q -d $(UNZIP_DIR_DOTNET_MACOS) $(BUNDLE_ZIP_DOTNET_MACOS)
-	$(Q) touch $@
-
-$(UNZIP_DIR_DOTNET_MACOS)/%.dll: $(UNZIP_STAMP_DOTNET_MACOS) ;
-
-APIDIFF_HASH_DOTNET_MACCATALYST ?= $(word 6,$(subst /, ,$(APIDIFF_REFERENCES_DOTNET_MACCATALYST)))
-BUNDLE_ZIP_DOTNET_MACCATALYST ?= $(APIDIFF_DIR)/bundle-$(APIDIFF_HASH_DOTNET_MACCATALYST).zip
-$(BUNDLE_ZIP_DOTNET_MACCATALYST):
-	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
-	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
-		echo "Found a cached version of $(APIDIFF_REFERENCES_DOTNET_MACCATALYST)) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
-		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
-	else \
-		curl -L $(APIDIFF_REFERENCES_DOTNET_MACCATALYST) > $@.tmp; \
-	fi
-	$(Q) mv $@.tmp $@
-
-UNZIP_STAMP_DOTNET_MACCATALYST=$(APIDIFF_DIR)/.unzip.dotnet-MacCatalyst-$(APIDIFF_HASH_DOTNET_MACCATALYST).stamp
-UNZIP_DIR_DOTNET_MACCATALYST=temp/downloads/dotnet-MacCatalyst-$(APIDIFF_HASH_DOTNET_MACCATALYST)
-$(UNZIP_STAMP_DOTNET_MACCATALYST): $(BUNDLE_ZIP_DOTNET_MACCATALYST)
-	$(Q) rm -Rf $(UNZIP_DIR_DOTNET_MACCATALYST)
-	$(Q) mkdir -p $(dir $(UNZIP_DIR_DOTNET_MACCATALYST))
-	$(Q_GEN) unzip -q -d $(UNZIP_DIR_DOTNET_MACCATALYST) $(BUNDLE_ZIP_DOTNET_MACCATALYST)
-	$(Q) touch $@
-
-$(UNZIP_DIR_DOTNET_MACCATALYST)/%.dll: $(UNZIP_STAMP_DOTNET_MACCATALYST) ;
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetUnzipBundle,$(platform))))
 
 IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
@@ -456,43 +394,43 @@ $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURREN
 	$(QF_GEN) mono --debug $(MONO_API_INFO) -d $(dir $<) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
 # The dotnet references xmls may come from different hashes, so we need to have separate rules for all of them
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_IOS)/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.xml: $(UNZIP_DIR_DOTNET_MACOS)/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MACCATALYST)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_MACCATALYST)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.xml: $(UNZIP_DIR_DOTNET_TVOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_IOS)/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.xml: $(UNZIP_DIR_DOTNET_MACOS)/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MACCATALYST)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_MACCATALYST)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.xml: $(UNZIP_DIR_DOTNET_TVOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
@@ -522,7 +460,7 @@ verify-reference-assemblies-ios: $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $
 
 clean-local::
 	rm -rf temp references updated-references diff dotnet *.exe* api-diff.html
-	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMP) $(UNZIP_STAMP_DOTNET_IOS) $(UNZIP_STAMP_DOTNET_TVOS) $(UNZIP_STAMP_DOTNET_MACOS) $(UNZIP_STAMP_DOTNET_MACCATALYST)
+	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMP) $(UNZIP_STAMP_DOTNET_iOS) $(UNZIP_STAMP_DOTNET_tvOS) $(UNZIP_STAMP_DOTNET_macOS) $(UNZIP_STAMP_DOTNET_MacCatalyst)
 	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md dotnet-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
@@ -648,7 +586,7 @@ ifdef INCLUDE_MACCATALYST
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/maccat-to-ios.md"
 endif
 endif
-	$(Q) $(MAKE) $(UNZIP_STAMP) $(UNZIP_STAMP_DOTNET_IOS) $(UNZIP_STAMP_DOTNET_TVOS) $(UNZIP_STAMP_DOTNET_MACOS) $(UNZIP_STAMP_DOTNET_MACCATALYST)
+	$(Q) $(MAKE) $(UNZIP_STAMP) $(UNZIP_STAMP_DOTNET_iOS) $(UNZIP_STAMP_DOTNET_tvOS) $(UNZIP_STAMP_DOTNET_macOS) $(UNZIP_STAMP_DOTNET_MacCatalyst)
 	$(Q) $(MAKE) all -j8
 	$(Q) $(MAKE) ios-markdown tvos-markdown watchos-markdown macos-markdown maccat-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
 	$(Q) $(CP) api-diff.html index.html
