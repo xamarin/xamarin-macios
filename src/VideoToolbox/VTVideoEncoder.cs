@@ -114,15 +114,6 @@ namespace VideoToolbox {
 		public bool SupportsFrameReordering { get; private set; }
 
 #if !NET
-		[NoiOS, NoTV, NoMacCatalyst, NoMac, NoWatch]
-#else
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos")]
-#endif
-
-#if !NET
 		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
 #else
 		[SupportedOSPlatform ("ios15.0")]
