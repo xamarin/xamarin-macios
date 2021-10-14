@@ -134,7 +134,8 @@ steps:
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
     PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
     echo "Packages found at $PACKAGES"
-    mkdir -p $ESRP_TEMP
+    echo "Temp dir is $ESRP_TEMP"
+    mkdir -p "$ESRP_TEMP"
 
     echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
     ls -R $(Build.SourcesDirectory)/package
