@@ -456,39 +456,45 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("# API diff")
                 Write-Host "Message is '$($json.message)'"
                 $sb.AppendLine($json.message)
-                $sb.AppendLine("<details><summary>View API diff</summary>")
-                $sb.AppendLine("") # no new line results in a bad rendering in the links
+                $legacy = "API diff", "iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS"
+                $dotnet = "dotnet API diff", "dotnet-iOS", "dotnet-tvOS", "dotnet-MacCatalyst", "dotnet-macOS"
+                $dotnet_legacy = "dotnet legacy API diff", "dotnet-legacy-iOS", "dotnet-legacy-tvOS", "dotnet-legacy-MacCatalyst", "dotnet-legacy-macOS"
+                $dotnet_iOS_MacCatalyst = "dotnet iOS-MacCatalayst API diff", "dotnet-iOS-MacCatalyst"
 
-                foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
+                foreach ($linkGroup in @($legacy, $dotnet, $dotnet_legacy, $dotnet_iOS_MacCatalyst)) {
+                    $sb.AppendLine("<details><summary>View $($linkGroup[0])</summary>")
+                    $sb.AppendLine("") # no new line results in a bad rendering in the links
                     $htmlLink = ""
                     $gistLink = ""
 
-                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
-                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
-                    
-                    # some do not have md, some do not have html
-                    if ($platformHasHtmlLinks) {
-                        Write-Host "Found html link for $linkPlatform"
-                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform 
-                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
-                    }
+                    foreach ($linkPlatform in $linkGroup[1..$($linkGroup.Count-1)]) {
+                        $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
+                        $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
 
-                    if ($platformHasMDlinks) {
-                        Write-Host "Found gist link for $linkPlatform"
-                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform 
-                        $gistLink = "[gist]($gistLinkUrl)"
-                    }
+                        # some do not have md, some do not have html
+                        if ($platformHasHtmlLinks) {
+                            Write-Host "Found html link for $linkPlatform"
+                            $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
+                            $htmlLink = "[vsdrops]($htmlLinkUrl)"
+                        }
 
-                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
-                        $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
-                    } else {
-                        # I don't like extra ' ' when we are missing vars, use join
-                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
-                        $sb.AppendLine($line)
+                        if ($platformHasMDlinks) {
+                            Write-Host "Found gist link for $linkPlatform"
+                            $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
+                            $gistLink = "[gist]($gistLinkUrl)"
+                        }
+
+                        if (($htmlLink -eq "") -and ($gistLink -eq "")) {
+                            $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
+                        } else {
+                            # I don't like extra ' ' when we are missing vars, use join
+                            $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
+                            $sb.AppendLine($line)
+                        }
                     }
+                    $sb.AppendLine("</details>")
+                    $sb.AppendLine("")
                 }
-
-                $sb.AppendLine("</details>")
                 $sb.AppendLine("")
             } else {
                 $sb.AppendLine("# API diff")
@@ -612,7 +618,8 @@ function Test-Add-New-ApiDiffs {
         $APIDiff=""
     )
 
-
+    $sb = [System.Text.StringBuilder]::new()
+    $sb.AppendLine(); # new line to start the list
     if (-not [string]::IsNullOrEmpty($APIDiff)) {
         Write-Host "Parsing API diff in path $APIDiff"
         if (-not (Test-Path $APIDiff -PathType Leaf)) {
@@ -628,40 +635,48 @@ function Test-Add-New-ApiDiffs {
                 $sb.AppendLine("# API diff")
                 Write-Host "Message is '$($json.message)'"
                 $sb.AppendLine($json.message)
-                $sb.AppendLine("<details><summary>View API diff</summary>")
-                $sb.AppendLine("") # no new line results in a bad rendering in the links
 
-                foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
+                $legacy = "API diff", "iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS"
+                $dotnet = "dotnet API diff", "dotnet-iOS", "dotnet-tvOS", "dotnet-MacCatalyst", "dotnet-macOS"
+                $dotnet_legacy = "dotnet legacy API diff", "dotnet-legacy-iOS", "dotnet-legacy-tvOS", "dotnet-legacy-MacCatalyst", "dotnet-legacy-macOS"
+                $dotnet_iOS_MacCatalyst = "dotnet iOS-MacCatalayst API diff", "dotnet-iOS-MacCatalyst"
+
+                foreach ($linkGroup in @($legacy, $dotnet, $dotnet_legacy, $dotnet_iOS_MacCatalyst)) {
+                    $sb.AppendLine("<details><summary>View $($linkGroup[0])</summary>")
+                    $sb.AppendLine("") # no new line results in a bad rendering in the links
                     $htmlLink = ""
                     $gistLink = ""
 
-                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
-                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
+                    foreach ($linkPlatform in $linkGroup[1..$($linkGroup.Count-1)]) {
+                        $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
+                        $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
 
-                    # some do not have md, some do not have html
-                    if ($platformHasHtmlLinks) {
-                        Write-Host "Found html link for $linkPlatform"
-                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
-                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
-                    }
+                        # some do not have md, some do not have html
+                        if ($platformHasHtmlLinks) {
+                            Write-Host "Found html link for $linkPlatform"
+                            $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
+                            $htmlLink = "[vsdrops]($htmlLinkUrl)"
+                        }
 
-                    if ($platformHasMDlinks) {
-                        Write-Host "Found gist link for $linkPlatform"
-                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
-                        $gistLink = "[gist]($gistLinkUrl)"
-                    }
+                        if ($platformHasMDlinks) {
+                            Write-Host "Found gist link for $linkPlatform"
+                            $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
+                            $gistLink = "[gist]($gistLinkUrl)"
+                        }
 
-                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
-                        $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
-                    } else {
-                        # I don't like extra ' ' when we are missing vars, use join
-                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
-                        $sb.AppendLine($line)
+                        if (($htmlLink -eq "") -and ($gistLink -eq "")) {
+                            $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
+                        } else {
+                            # I don't like extra ' ' when we are missing vars, use join
+                            $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
+                            $sb.AppendLine($line)
+                        }
                     }
+                    $sb.AppendLine("</details>")
+                    $sb.AppendLine("")
                 }
-
-                $sb.AppendLine("</details>")
                 $sb.AppendLine("")
+                # Write-Host $sb.ToString()
             } else {
                 $sb.AppendLine("# API diff")
                 $sb.AppendLine("")
