@@ -609,7 +609,7 @@ function Test-Add-New-ApiDiffs {
     param (
         [Parameter(Mandatory)]
         [string]
-        $APIDiff="",
+        $APIDiff=""
     )
 
 
