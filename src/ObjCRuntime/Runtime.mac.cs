@@ -105,14 +105,17 @@ namespace ObjCRuntime {
 			if (initialized)
 				return;
 
+#if !NET
 			if (GC.MaxGeneration <= 0)
 				throw ErrorHelper.CreateError (8017, "The Boehm garbage collector is not supported. Please use SGen instead.");
 
 			VerifyMonoVersion ();
+#endif
 
 			LookupInternalFunction<initialize_func> ("xamarin_initialize") ();
 		}
 
+#if !NET
 		static void VerifyMonoVersion ()
 		{
 			// Verify that the system mono we're running against is of a supported version.
@@ -145,6 +148,7 @@ namespace ObjCRuntime {
 
 			throw new NotSupportedException ($"This version of Xamarin.Mac requires Mono {required_version}, but found Mono {actual_version}.");
 		}
+#endif
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
