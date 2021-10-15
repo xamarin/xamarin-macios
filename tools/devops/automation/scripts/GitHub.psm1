@@ -605,6 +605,72 @@ function New-GitHubSummaryComment {
     return $request
 }
 
+function Test-Add-New-ApiDiffs {
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $APIDiff="",
+    )
+
+
+    if (-not [string]::IsNullOrEmpty($APIDiff)) {
+        Write-Host "Parsing API diff in path $APIDiff"
+        if (-not (Test-Path $APIDiff -PathType Leaf)) {
+            $sb.AppendLine("Path $APIDiff was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $APIDiff | ConvertFrom-Json
+            # we are dealing with an object, not a dictionary
+            $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
+            $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
+            if ($hasHtmlLinks -or $hasMDlinks) {
+                # build the required list
+                $sb.AppendLine("# API diff")
+                Write-Host "Message is '$($json.message)'"
+                $sb.AppendLine($json.message)
+                $sb.AppendLine("<details><summary>View API diff</summary>")
+                $sb.AppendLine("") # no new line results in a bad rendering in the links
+
+                foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
+                    $htmlLink = ""
+                    $gistLink = ""
+
+                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
+                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
+
+                    # some do not have md, some do not have html
+                    if ($platformHasHtmlLinks) {
+                        Write-Host "Found html link for $linkPlatform"
+                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
+                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
+                    }
+
+                    if ($platformHasMDlinks) {
+                        Write-Host "Found gist link for $linkPlatform"
+                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
+                        $gistLink = "[gist]($gistLinkUrl)"
+                    }
+
+                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
+                        $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
+                    } else {
+                        # I don't like extra ' ' when we are missing vars, use join
+                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
+                        $sb.AppendLine($line)
+                    }
+                }
+
+                $sb.AppendLine("</details>")
+                $sb.AppendLine("")
+            } else {
+                $sb.AppendLine("# API diff")
+                $sb.AppendLine("")
+                $sb.AppendLine("**No api diff data found.**")
+            }
+        }
+    }
+}
+
 <# 
     .SYNOPSIS
         Get the information of a PR in GitHub.
@@ -893,3 +959,4 @@ Export-ModuleMember -Function New-GistWithFiles
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
 Export-ModuleMember -Function Push-RepositoryDispatch 
+Export-ModuleMember -Function Test-Add-New-ApiDiffs
