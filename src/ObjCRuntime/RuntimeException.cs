@@ -7,22 +7,22 @@ using System.Collections.Generic;
 
 namespace ObjCRuntime {
 	public class RuntimeException : Exception {
-		public RuntimeException (string message, params object[] args)
+		public RuntimeException (string message, params object?[] args)
 			: base (string.Format (message, args))
 		{
 		}
 
-		public RuntimeException (int code, string message, params object[] args) : 
+		public RuntimeException (int code, string message, params object?[] args) : 
 			this (code, false, null, message, args)
 		{
 		}
 		
-		public RuntimeException (int code, bool error, string message, params object[] args) : 
+		public RuntimeException (int code, bool error, string message, params object?[] args) : 
 			this (code, error, null, message, args)
 		{
 		}
 		
-		public RuntimeException (int code, bool error, Exception? innerException, string message, params object[] args) :
+		public RuntimeException (int code, bool error, Exception? innerException, string message, params object?[] args) :
 			base (String.Format (message, args), innerException)
 		{
 			Code = code;

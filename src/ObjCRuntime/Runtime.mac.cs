@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -40,11 +42,11 @@ namespace ObjCRuntime {
 		internal const string ProductName = "Xamarin.Mac";
 		internal const string AssemblyName = "Xamarin.Mac.dll";
 
-		public static string FrameworksPath {
+		public static string? FrameworksPath {
 			get; set;
 		}
 
-		public static string ResourcesPath {
+		public static string? ResourcesPath {
 			get; set;
 		}
 			
@@ -52,9 +54,9 @@ namespace ObjCRuntime {
 		unsafe delegate sbyte *get_sbyteptr_func ();
 
 		static volatile bool originalWorkingDirectoryIsSet;
-		static string originalWorkingDirectory;
+		static string? originalWorkingDirectory;
 
-		public unsafe static string OriginalWorkingDirectory {
+		public unsafe static string? OriginalWorkingDirectory {
 			get {
 				if (originalWorkingDirectoryIsSet)
 					return originalWorkingDirectory;
@@ -72,7 +74,7 @@ namespace ObjCRuntime {
 
 		public static void ChangeToOriginalWorkingDirectory ()
 		{
-			Directory.SetCurrentDirectory (OriginalWorkingDirectory);
+			Directory.SetCurrentDirectory (OriginalWorkingDirectory!);
 		}
 
 		static IntPtr runtime_library;
@@ -81,13 +83,16 @@ namespace ObjCRuntime {
 		{
 			IntPtr rv;
 
+			if (name is null)
+				throw new ArgumentNullException (nameof (name));
+
 			if (runtime_library == IntPtr.Zero) {
 				runtime_library = new IntPtr (-2 /* RTLD_DEFAULT */);
 				rv = Dlfcn.dlsym (runtime_library, name);
 				if (rv == IntPtr.Zero) {
 					runtime_library = Dlfcn.dlopen ("libxammac.dylib", 0, false);
 					if (runtime_library == IntPtr.Zero)
-						runtime_library = Dlfcn.dlopen (Path.Combine (Path.GetDirectoryName (typeof (NSApplication).Assembly.Location), "libxammac.dylib"), 0, false);
+						runtime_library = Dlfcn.dlopen (Path.Combine (Path.GetDirectoryName (typeof (NSApplication).Assembly.Location)!, "libxammac.dylib"), 0, false);
 					if (runtime_library == IntPtr.Zero)
 						throw new DllNotFoundException ("Could not find the runtime library libxammac.dylib");
 					rv = Dlfcn.dlsym (runtime_library, name);
@@ -118,11 +123,11 @@ namespace ObjCRuntime {
 			// Verify that the system mono we're running against is of a supported version.
 			// Only verify if we're able to get the mono version (we don't want to fail if the Mono.Runtime type was linked away for instance).
 			var type = Type.GetType ("Mono.Runtime");
-			if (type == null)
+			if (type is null)
 				return;
 
 			var displayName = type.GetMethod ("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
-			if (displayName == null)
+			if (displayName is null)
 				return;
 
 			var actual = displayName.Invoke (null, null) as string;
@@ -131,7 +136,7 @@ namespace ObjCRuntime {
 			// The version string looks something like this:
 			// "5.16.0.209 (2018-06/709b46e3338 Wed Oct 31 09:14:07 EDT 2018)"
 			// We only want the first part up until the first space.
-			var spaceIndex = actual.IndexOf (' ');
+			var spaceIndex = actual!.IndexOf (' ');
 			if (spaceIndex > 0)
 				actual = actual.Substring (0, spaceIndex);
 			if (!Version.TryParse (actual, out var actual_version))
@@ -156,7 +161,7 @@ namespace ObjCRuntime {
 			else {
 				basePath = Assembly.GetExecutingAssembly().Location;
 				if(!string.IsNullOrEmpty(basePath)) {
-					basePath = Path.Combine (Path.GetDirectoryName(basePath), "..");
+					basePath = Path.Combine (Path.GetDirectoryName(basePath)!, "..");
 				}
 				else {
 					// The executing assembly location may be null if loaded from
@@ -172,7 +177,7 @@ namespace ObjCRuntime {
 		[Preserve]
 		static IntPtr GetNullableType (IntPtr type)
 		{
-			return AllocGCHandle (Registrar.GetNullableType ((Type) GetGCHandleTarget (type)));
+			return AllocGCHandle (Registrar.GetNullableType ((Type) GetGCHandleTarget (type)!));
 		}
 #endif // !COREBUILD
 	}

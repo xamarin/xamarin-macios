@@ -548,9 +548,9 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		public T GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
+		public T? GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
 		{
-			if (definition == null)
+			if (definition is null)
 				throw new ArgumentNullException (nameof (definition));
 
 			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);

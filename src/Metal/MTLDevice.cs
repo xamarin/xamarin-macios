@@ -88,7 +88,7 @@ namespace Metal {
 		[Mac (10, 13)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject observer)
+		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject? observer)
 		{
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_notificationHandler, handler);
@@ -110,7 +110,7 @@ namespace Metal {
 #endif
 		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
+		public static IMTLDevice [] GetAllDevices (ref NSObject? observer, MTLDeviceNotificationHandler handler)
 		{
 			var rv = GetAllDevices (handler, out var obs);
 			observer = obs;
@@ -125,7 +125,7 @@ namespace Metal {
 			var descriptor = (BlockLiteral*) block;
 			var del = (MTLDeviceNotificationHandler) (descriptor->Target);
 			if (del != null)
-				del ((IMTLDevice) Runtime.GetNSObject (device), (Foundation.NSString) Runtime.GetNSObject (notifyName));
+				del ((IMTLDevice) Runtime.GetNSObject (device)!, (Foundation.NSString) Runtime.GetNSObject (notifyName)!);
 		}
 
 #if !NET
@@ -246,14 +246,13 @@ namespace Metal {
 #if !XAMCORE_4_0
 		[return: Release]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError error)
+		public static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError? error)
 		{
-			if (data == null)
+			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			IntPtr errorValue = IntPtr.Zero;
 
-			IMTLLibrary ret;
-			ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+			var ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
 			error = Runtime.GetNSObject<NSError> (errorValue);
 
 			return ret;

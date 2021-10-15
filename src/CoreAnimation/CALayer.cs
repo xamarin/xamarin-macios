@@ -114,7 +114,7 @@ namespace CoreAnimation {
 			}
 		}
 
-		public T GetContentsAs <T> () where T : NSObject
+		public T? GetContentsAs <T> () where T : NSObject
 		{
 			return Runtime.GetNSObject<T> (_Contents);
 		}
