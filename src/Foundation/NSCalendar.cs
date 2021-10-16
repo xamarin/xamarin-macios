@@ -100,4 +100,52 @@ namespace Foundation {
 		
 		public NSCalendar (NSCalendarType calendarType) : this (GetCalendarIdentifier (calendarType)) {}
 	}
+
+#if !NET
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+#else
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
+	[Flags]
+	[Native]
+	public enum TJFakeOnlyOnLegacy : ulong
+	{
+		None = 0,
+		One = 1,
+	}
+
+#if !NET
+	[NoMac, NoMacCatalyst, NoiOS, NoTV, NoWatch]
+#else
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	[Flags]
+	[Native]
+	public enum TJFakeOnlyOnDotnet : ulong
+	{
+		None = 0,
+		One = 1,
+	}
+
+#if !NET
+	[NoMac, NoMacCatalyst, NoiOS, NoTV, NoWatch]
+#else
+	[SupportedOSPlatform ("ios15.0")]
+	[UnsupportedOSPlatform ("tvos15.0")]
+	[UnsupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	[Flags]
+	[Native]
+	public enum TJFakeOnlyOnDotnetiOS : ulong
+	{
+		None = 0,
+		One = 1,
+	}
 }

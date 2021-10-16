@@ -604,3 +604,4 @@ jenkins-api-diff:
 	$(Q) $(CP) *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) $(CP) *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) $(CP) -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) $(CP) -R dotnet $(JENKINS_RESULTS_DIRECTORY)/api-diff
