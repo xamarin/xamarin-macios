@@ -1,10 +1,10 @@
 ﻿{
   "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
-  "classifications": [ "tvOS" ],
+  "classifications": [ "tvOS", "Mobile" ],
   "identity": "Microsoft.tvOS.tvOSApp",
-  "name": "tvOS Application",
-  "description": "A project for creating an tvOS application",
+  "name": "tvOS Application (Preview)",
+  "description": "A project for creating a .NET 6 tvOS application",
   "shortName": "tvos",
   "tags": {
     "language": "C#",

@@ -1,10 +1,10 @@
 ﻿{
   "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
-  "classifications": [ "iOS" ],
+  "classifications": [ "iOS", "Mobile" ],
   "identity": "Microsoft.iOS.iOSLib",
-  "name": "iOS Class library",
-  "description": "A project for creating an iOS class library",
+  "name": "iOS Class Library (Preview)",
+  "description": "A project for creating a .NET 6 iOS class library",
   "shortName": "ioslib",
   "tags": {
     "language": "C#",
