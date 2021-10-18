@@ -774,6 +774,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[Watch (3, 0)]
 	[NoMac]
+	[NoMacCatalyst]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)
