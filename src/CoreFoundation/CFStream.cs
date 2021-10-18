@@ -685,6 +685,9 @@ namespace CoreFoundation {
 			loop = runLoop;
 			loopMode = runLoopMode;
 
+			if (!gch.IsAllocated)
+				gch = GCHandle.Alloc (this);
+
 			var ctx = new CFStreamClientContext ();
 			ctx.Info = GCHandle.ToIntPtr (gch);
 
@@ -711,7 +714,6 @@ namespace CoreFoundation {
 		protected CFStream (IntPtr handle)
 		{
 			this.handle = handle;
-			gch = GCHandle.Alloc (this);
 		}
 
 		protected void CheckHandle ()
