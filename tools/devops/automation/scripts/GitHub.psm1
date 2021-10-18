@@ -459,7 +459,7 @@ function New-GitHubSummaryComment {
                 $legacy = "API diff", "iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS"
                 $dotnet = "dotnet API diff", "dotnet-iOS", "dotnet-tvOS", "dotnet-MacCatalyst", "dotnet-macOS"
                 $dotnet_legacy = "dotnet legacy API diff", "dotnet-legacy-iOS", "dotnet-legacy-tvOS", "dotnet-legacy-MacCatalyst", "dotnet-legacy-macOS"
-                $dotnet_iOS_MacCatalyst = "dotnet iOS-MacCatalayst API diff", "dotnet-iOS-MacCatalyst"
+                $dotnet_iOS_MacCatalyst = "dotnet iOS-MacCatalayst API diff", "dotnet-macCatiOS"
 
                 foreach ($linkGroup in @($legacy, $dotnet, $dotnet_legacy, $dotnet_iOS_MacCatalyst)) {
                     $sb.AppendLine("<details><summary>View $($linkGroup[0])</summary>")

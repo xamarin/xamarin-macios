@@ -58,7 +58,7 @@ steps:
       "dotnet-legacy-tvOS" = "^dotnet-legacy-tvos-[a-zA-Z0-9\-]*\.md$";
       "dotnet-legacy-MacCatalyst" = "^dotnet-legacy-maccatalyst-[a-zA-Z0-9\-]*\.md$";
       "dotnet-legacy-macOS" = "^dotnet-legacy-macos-[a-zA-Z0-9\-]*\.md$";
-      "dotnet-macCatiOS" = "^dotnet-ios-maccat-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-macCatiOS" = "^dotnet-maccatios-[a-zA-Z0-9\-]*\.md$";
     }
 
     [System.Collections.Generic.List[System.Object]]$gistsObj = @()
@@ -98,7 +98,7 @@ steps:
       "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
       "dotnet-legacy-MacCatalyst" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html";
       "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
-      "dotnet-iOS-MacCatalyst" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst-api-diff.html";
+      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst-api-diff.html";
     }
 
     # build a json object that will be used by the comment to write the data for users
