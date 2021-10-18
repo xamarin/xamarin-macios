@@ -500,7 +500,6 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGColorConverter.cs \
 	CoreGraphics/CGColorConversionInfo.cs \
 	CoreGraphics/CGDataConsumer.cs \
-	CoreGraphics/CGDataProvider-2.cs \
 	CoreGraphics/CGDataProvider.cs \
 	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGEventSource.cs \
