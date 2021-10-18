@@ -1864,7 +1864,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/BlockProxyAttribute.cs \
 	ObjCRuntime/BindingImplAttribute.cs \
 	ObjCRuntime/CategoryAttribute.cs \
-	ObjCRuntime/Class.mac.cs \
 	ObjCRuntime/DelayedRegistrationAttribute.cs \
 	ObjCRuntime/DesignatedInitializerAttribute.cs \
 	ObjCRuntime/Dlfcn.cs \
