@@ -518,7 +518,7 @@ dotnet-legacy-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Stable.Legacy $(CURDIR)/diff/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/ dotnet-legacy-maccatalyst
 ifdef ENABLE_DOTNET
 dotnet-iOS-MacCatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(CURDIR)/diff/dotnet/iOS-MacCatalyst-diff/ dotnet-ios-maccatalyst
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(CURDIR)/diff/dotnet/iOS-MacCatalyst-diff/ dotnet-ios-maccat
 else
 dotnet-iOS-MacCatalyst-markdown: ; @true
 endif # ENABLE_DOTNET
