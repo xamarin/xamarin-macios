@@ -104,7 +104,7 @@ namespace CoreMedia {
 
 			IntPtr buffer;
 			error = CMAudioSampleBufferCreateWithPacketDescriptions (IntPtr.Zero,
-				dataBuffer == null ? IntPtr.Zero : dataBuffer.handle,
+				dataBuffer.GetHandle (),
 				true, IntPtr.Zero, IntPtr.Zero,
 				formatDescription.handle,
 				samplesCount, sampleTimestamp,
@@ -565,8 +565,7 @@ namespace CoreMedia {
 		
 		public CMSampleBufferError SetDataBuffer (CMBlockBuffer dataBuffer)
 		{
-			var dataBufferHandle = dataBuffer == null ? IntPtr.Zero : dataBuffer.handle;
-			return CMSampleBufferSetDataBuffer (handle, dataBufferHandle);
+			return CMSampleBufferSetDataBuffer (Handle, dataBuffer.GetHandle ());
 		}
 		
 		/*[DllImport(Constants.CoreMediaLibrary)]
@@ -689,7 +688,7 @@ namespace CoreMedia {
 				throw new ArgumentOutOfRangeException ("samplesCount");
 
 			IntPtr buffer;
-			error = CMAudioSampleBufferCreateReadyWithPacketDescriptions (IntPtr.Zero, dataBuffer.handle,
+			error = CMAudioSampleBufferCreateReadyWithPacketDescriptions (IntPtr.Zero, dataBuffer.Handle,
 				formatDescription.handle, samplesCount, sampleTimestamp, packetDescriptions, out buffer);
 
 			if (error != CMSampleBufferError.None)
@@ -729,7 +728,7 @@ namespace CoreMedia {
 			var fdh = formatDescription == null ? IntPtr.Zero : formatDescription.Handle;
 			var timingCount = sampleTimingArray == null ? 0 : sampleTimingArray.Length;
 			var sizeCount = sampleSizeArray == null ? 0 : sampleSizeArray.Length;
-			error = CMSampleBufferCreateReady (IntPtr.Zero, dataBuffer.handle, fdh, samplesCount, timingCount,
+			error = CMSampleBufferCreateReady (IntPtr.Zero, dataBuffer.Handle, fdh, samplesCount, timingCount,
 				sampleTimingArray, sizeCount, sampleSizeArray, out buffer);
 
 			if (error != CMSampleBufferError.None)
