@@ -6,6 +6,8 @@
 //
 // Copyright 2013 Xamarin Inc
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -78,7 +80,7 @@ namespace CoreServices
 	public struct FSEvent
 	{
 		public ulong Id { get; internal set; }
-		public string Path { get; internal set; }
+		public string? Path { get; internal set; }
 		public FSEventStreamEventFlags Flags { get; internal set; }
 
 		public override string ToString ()
@@ -143,42 +145,31 @@ namespace CoreServices
 		}
 	}
 
-	public class FSEventStream : INativeObject, IDisposable
+	public class FSEventStream : NativeObject
 	{
-		IntPtr handle;
-		FSEventStreamCallback eventsCallback;
+		GCHandle gch;
 
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		~FSEventStream ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamRetain (IntPtr handle);
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern void FSEventStreamRelease (IntPtr handle);
 
-		protected virtual void Dispose (bool disposing)
+		protected override void Retain ()
 		{
-			if (handle != IntPtr.Zero) {
-				FSEventStreamRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			FSEventStreamRetain (GetCheckedHandle ());
 		}
 
-		void CheckDisposed ()
+		protected override void Release ()
 		{
-			if (handle == IntPtr.Zero) {
-				throw new ObjectDisposedException ("this");
-			}
+			FSEventStreamRelease (GetCheckedHandle ());
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			if (gch.IsAllocated)
+				gch.Free ();
+			base.Dispose (disposing);
 		}
 
 		delegate void FSEventStreamCallback (IntPtr handle, IntPtr userData, nint numEvents,
@@ -189,23 +180,20 @@ namespace CoreServices
 			FSEventStreamCallback callback, IntPtr context, IntPtr pathsToWatch,
 			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
-		public FSEventStream (CFAllocator allocator, NSArray pathsToWatch,
+		public FSEventStream (CFAllocator? allocator, NSArray pathsToWatch,
 			ulong sinceWhenId, TimeSpan latency, FSEventStreamCreateFlags flags)
 		{
-			if (pathsToWatch == null) {
-				throw new ArgumentNullException ("pathsToWatch");
-			}
+			if (pathsToWatch is null)
+				throw new ArgumentNullException (nameof (pathsToWatch));
 
-			eventsCallback = new FSEventStreamCallback (EventsCallback);
+			gch = GCHandle.Alloc (this);
 
-			handle = FSEventStreamCreate (
-				allocator ==  null ? IntPtr.Zero : allocator.Handle,
-				eventsCallback, IntPtr.Zero, pathsToWatch.Handle,
+			var handle = FSEventStreamCreate (
+				allocator.GetHandle (),
+				eventsCallback, GCHandle.ToIntPtr (gch), pathsToWatch.Handle,
 				sinceWhenId, latency.TotalSeconds, flags | (FSEventStreamCreateFlags)0x1 /* UseCFTypes */);
 
-			if (handle == IntPtr.Zero) {
-				throw new Exception ("Unable to create FSEventStream");
-			}
+			InitializeHandle (handle);
 		}
 
 		public FSEventStream (string [] pathsToWatch, TimeSpan latency, FSEventStreamCreateFlags flags)
@@ -213,7 +201,9 @@ namespace CoreServices
 		{
 		}
 
-		void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
+		static readonly FSEventStreamCallback eventsCallback = EventsCallback;
+
+		static void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
 			IntPtr eventPaths, IntPtr eventFlags, IntPtr eventIds)
 		{
 			if (numEvents == 0) {
@@ -226,20 +216,19 @@ namespace CoreServices
 			for (int i = 0; i < events.Length; i++) {
 				events[i].Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4);
 				events[i].Id = (uint)Marshal.ReadInt64 (eventIds, i * 8);
-				using (var cfstr = new CFString (pathArray.GetValue (i))) {
-					events[i].Path = cfstr.ToString ();
-				}
+				events[i].Path = CFString.FromHandle (pathArray.GetValue (i));
 			}
 
-			OnEvents (events);
+			var instance = GCHandle.FromIntPtr (userData).Target as FSEventStream;
+			instance?.OnEvents (events);
 		}
 
-		public event FSEventStreamEventsHandler Events;
+		public event FSEventStreamEventsHandler? Events;
 
 		protected virtual void OnEvents (FSEvent [] events)
 		{
 			var handler = Events;
-			if (handler != null) {
+			if (handler is not null) {
 				handler (this, new FSEventStreamEventsArgs (events));
 			}
 		}
@@ -247,24 +236,17 @@ namespace CoreServices
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyDescription (IntPtr handle);
 
-		public string Description {
+		public string? Description {
 			get {
-				if (handle == IntPtr.Zero) {
+				if (Handle == IntPtr.Zero) {
 					return null;
 				}
 
-				var strPtr = FSEventStreamCopyDescription (handle);
-				if (strPtr == IntPtr.Zero) {
-					return null;
-				}
-
-				using (var str = new CFString (strPtr, true)) {
-					return str.ToString ();
-				}
+				return CFString.FromHandle (FSEventStreamCopyDescription (Handle), true);
 			}
 		}
 
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return Description;
 		}
@@ -274,8 +256,7 @@ namespace CoreServices
 
 		public void Show ()
 		{
-			CheckDisposed ();
-			FSEventStreamShow (handle);
+			FSEventStreamShow (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -284,8 +265,7 @@ namespace CoreServices
 
 		public bool Start ()
 		{
-			CheckDisposed ();
-			return FSEventStreamStart (handle);
+			return FSEventStreamStart (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -293,8 +273,7 @@ namespace CoreServices
 
 		public void Stop ()
 		{
-			CheckDisposed ();
-			FSEventStreamStop (handle);
+			FSEventStreamStop (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -303,8 +282,7 @@ namespace CoreServices
 
 		public void ScheduleWithRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
-			CheckDisposed ();
-			FSEventStreamScheduleWithRunLoop (handle, runLoop.Handle, runLoopMode.Handle);
+			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);
 		}
 
 		public void ScheduleWithRunLoop (CFRunLoop runLoop)
@@ -325,17 +303,12 @@ namespace CoreServices
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyPathsBeingWatched (IntPtr handle);
 
-		public string [] PathsBeingWatched {
+		public string? []? PathsBeingWatched {
 			get {
-				CheckDisposed ();
-				var cfarray = new CFArray (FSEventStreamCopyPathsBeingWatched (handle), true);
-				var paths = new string[cfarray.Count];
-				for (int i = 0; i < paths.Length; i++) {
-					using (var cfstr = new CFString (cfarray.GetValue (i), true)) {
-						paths[i] = cfstr.ToString ();
-					}
-				}
-				return paths;
+				var cfarray = FSEventStreamCopyPathsBeingWatched (GetCheckedHandle ());
+				if (cfarray == IntPtr.Zero)
+					return Array.Empty<string> ();
+				return CFArray.StringArrayFromHandle (cfarray, true);
 			}
 		}
 
@@ -344,8 +317,7 @@ namespace CoreServices
 
 		public uint FlushAsync ()
 		{
-			CheckDisposed ();
-			return FSEventStreamFlushAsync (handle);
+			return FSEventStreamFlushAsync (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -353,8 +325,7 @@ namespace CoreServices
 
 		public void FlushSync ()
 		{
-			CheckDisposed ();
-			FSEventStreamFlushSync (handle);
+			FSEventStreamFlushSync (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -362,8 +333,7 @@ namespace CoreServices
 
 		public void Invalidate ()
 		{
-			CheckDisposed ();
-			FSEventStreamInvalidate (handle);
+			FSEventStreamInvalidate (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -371,8 +341,7 @@ namespace CoreServices
 
 		public ulong LatestEventId {
 			get {
-				CheckDisposed ();
-				return FSEventStreamGetLatestEventId (handle);
+				return FSEventStreamGetLatestEventId (GetCheckedHandle ());
 			}
 		}
 	}
