@@ -58,7 +58,7 @@ steps:
       "dotnet-legacy-tvOS" = "^dotnet-legacy-tvos-[a-zA-Z0-9\-]*\.md$";
       "dotnet-legacy-MacCatalyst" = "^dotnet-legacy-maccatalyst-[a-zA-Z0-9\-]*\.md$";
       "dotnet-legacy-macOS" = "^dotnet-legacy-macos-[a-zA-Z0-9\-]*\.md$";
-      "dotnet-iOS-MacCatalyst" = "^dotnet-ios-maccat-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-macCatiOS" = "^dotnet-ios-maccat-[a-zA-Z0-9\-]*\.md$";
     }
 
     [System.Collections.Generic.List[System.Object]]$gistsObj = @()
