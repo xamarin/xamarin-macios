@@ -1044,10 +1044,6 @@ namespace VideoToolbox {
 		[Field ("kVTVideoEncoderList_SupportsFrameReordering")]
 		NSString SupportsFrameReordering { get; }
 
-		[NoTV, NoMac, NoiOS, MacCatalyst (15,0)]
-		[Field ("kVTVideoEncoderList_SupportsMultiPass")]
-		NSString SupportsMultiPass { get; }
-
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("kVTVideoEncoderListOption_IncludeStandardDefinitionDVEncoders")]
 		NSString IncludeStandardDefinitionDVEncoders { get; }
