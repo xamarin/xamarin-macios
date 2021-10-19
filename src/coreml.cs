@@ -536,7 +536,7 @@ namespace CoreML {
 		[Export ("objectForKeyedSubscript:")]
 		[Internal]
 		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
-		NSNumber GetObject (IntPtr key);
+		NSNumber GetObjectInternal (IntPtr key);
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject (NSNumber obj, nint idx);
@@ -548,7 +548,7 @@ namespace CoreML {
 		[Export ("setObject:forKeyedSubscript:")]
 		[Internal]
 		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
-		void SetObject (NSNumber obj, IntPtr key);
+		void SetObjectInternal (NSNumber obj, IntPtr key);
 
 		// @interface Concatenating (MLMultiArray)
 

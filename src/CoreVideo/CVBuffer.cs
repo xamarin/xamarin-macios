@@ -149,7 +149,7 @@ namespace CoreVideo {
 // FIXME: we need to bring the new API to xamcore
 #if !MONOMAC
 		// any CF object can be attached
-		public T GetAttachment<T> (NSString key, out CVAttachmentMode attachmentMode) where T : class, INativeObject
+		public T? GetAttachment<T> (NSString key, out CVAttachmentMode attachmentMode) where T : class, INativeObject
 		{
 			if (key == null)
 				throw new ArgumentNullException ("key");
@@ -162,10 +162,10 @@ namespace CoreVideo {
 			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
 		}
 #else
-		public NSObject GetAttachment (NSString key, out CVAttachmentMode attachmentMode)
+		public NSObject? GetAttachment (NSString key, out CVAttachmentMode attachmentMode)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 			if (PlatformHelper.CheckSystemVersion (12, 0))
 				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
 			else
@@ -199,7 +199,7 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferCopyAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
-		public NSDictionary GetAttachments (CVAttachmentMode attachmentMode)
+		public NSDictionary? GetAttachments (CVAttachmentMode attachmentMode)
 		{
 #if IOS || __MACCATALYST__ || TVOS
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
@@ -214,7 +214,7 @@ namespace CoreVideo {
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
 		// and there is no easy way to downcast from NSDictionary to NSDictionary<TKey, TValue>
-		public NSDictionary<TKey, TValue> GetAttachments<TKey, TValue> (CVAttachmentMode attachmentMode)
+		public NSDictionary<TKey, TValue>? GetAttachments<TKey, TValue> (CVAttachmentMode attachmentMode)
 			where TKey : class, INativeObject
 			where TValue : class, INativeObject
 		{

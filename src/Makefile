@@ -1632,6 +1632,23 @@ all-local:: $(ALL_TARGETS)
 $(DOTNET_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
+DOTNET_macOS_SOURCES+=$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES)
+ifdef ENABLE_DOTNET
+define DotNetProjectFiles
+DOTNET_$(1)_SOURCES+=$$($$(shell echo $(1) | tr '[:lower:]' '[:upper:]')_SOURCES)
+DOTNET_$(1)_APIS=$$($$(shell echo $(1) | tr '[:lower:]' '[:upper:]')_APIS)
+$(DOTNET_BUILD_DIR)/projects/$(1)/$(1).csproj: dotnet.tmpl.csproj Makefile $$(wildcard $(CURDIR)/*.sources)
+	@mkdir -p $$(dir $$@)
+	@sed \
+		-e 's*%PLATFORM%*$(1)*' \
+		-e 's*<!--%FILES%-->*$$(foreach file,$$(DOTNET_$(1)_SOURCES),<Compile Include="../../../../$$(file)" Link="sources/$$(file)" />)*' \
+		-e 's*<!--%APIS%-->*$$(foreach file,$$(DOTNET_$(1)_APIS),<None Include="../../../../$$(file)" Link="apis/$$(file)" />)*' \
+		$$< | xmllint --format - > $$@
+PROJECT_FILES += $(DOTNET_BUILD_DIR)/projects/$(1)/$(1).csproj
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetProjectFiles,$(platform))))
+endif
+
 dotnet: $(DOTNET_TARGETS)
 ifdef ENABLE_DOTNET
 all-local:: $(DOTNET_TARGETS)

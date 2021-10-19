@@ -158,7 +158,6 @@ namespace CoreMidi {
 				if (totalObjs == 0)
 					return null;
 
-				var basePtr = (IntPtr) data.Bytes;
 				var connections = new MidiThruConnection[totalObjs];
 				unsafe {
 					uint* handles = (uint*) (IntPtr) data.Bytes;

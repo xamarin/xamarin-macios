@@ -19,22 +19,22 @@ namespace Xamarin.Bundler {
 namespace ObjCRuntime {
 #endif
 	static partial class ErrorHelper {
-		public static ProductException CreateError (int code, string message, params object [] args)
+		public static ProductException CreateError (int code, string message, params object? [] args)
 		{
 			return new ProductException (code, true, null, message, args);
 		}
 
-		public static ProductException CreateError (int code, Exception? innerException, string message, params object [] args)
+		public static ProductException CreateError (int code, Exception? innerException, string message, params object? [] args)
 		{
 			return new ProductException (code, true, innerException, message, args);
 		}
 
-		public static ProductException CreateWarning (int code, string message, params object [] args)
+		public static ProductException CreateWarning (int code, string message, params object? [] args)
 		{
 			return new ProductException (code, false, null, message, args);
 		}
 
-		public static ProductException CreateWarning (int code, Exception? innerException, string message, params object [] args)
+		public static ProductException CreateWarning (int code, Exception? innerException, string message, params object? [] args)
 		{
 			return new ProductException (code, false, innerException, message, args);
 		}

@@ -96,7 +96,7 @@ namespace CoreAnimation {
 				else if (type == CFString.GetTypeID ())
 					return CFString.FromHandle (handle);
 #if MONOMAC
-				else return (NSFont) Runtime.GetNSObject (handle);
+				else return Runtime.GetNSObject<NSFont> (handle);
 #else
 				return null;
 #endif

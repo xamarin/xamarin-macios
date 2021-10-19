@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -35,79 +37,61 @@ using ObjCRuntime;
 namespace CoreFoundation {	
 
 	// CFBase.h
-	public partial class CFAllocator : INativeObject, IDisposable 
+	public partial class CFAllocator : NativeObject
 	{
 #if !COREBUILD
-		static CFAllocator Default_cf;
-		static CFAllocator SystemDefault_cf;
-		static CFAllocator Malloc_cf;
-		static CFAllocator MallocZone_cf;
-		static CFAllocator Null_cf;
+		static CFAllocator? Default_cf;
+		static CFAllocator? SystemDefault_cf;
+		static CFAllocator? Malloc_cf;
+		static CFAllocator? MallocZone_cf;
+		static CFAllocator? Null_cf;
 #endif
-		IntPtr handle;
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes a 'bool owns' parameter instead.")]
 		public CFAllocator (IntPtr handle)
+			: base (handle, true /* backwards compatibility means we have to pass true here as opposed to the general pattern */)
 		{
-			this.handle = handle;
 		}
+#endif
 
+#if XAMCORE_4_0
+		internal CFAllocator (IntPtr handle, bool owns)
+#else
 		public CFAllocator (IntPtr handle, bool owns)
+#endif
+			: base (handle, owns)
 		{
-			if (!owns)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
 		}
 
-		~CFAllocator ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 #if !COREBUILD
 		public static CFAllocator Default {
 			get {
-				return Default_cf ?? (Default_cf = new CFAllocator (default_ptr)); 
+				return Default_cf ?? (Default_cf = new CFAllocator (default_ptr, false));
 			}
 		}
 
 		public static CFAllocator SystemDefault {
 			get {
-				return SystemDefault_cf ?? (SystemDefault_cf = new CFAllocator (system_default_ptr)); 
+				return SystemDefault_cf ?? (SystemDefault_cf = new CFAllocator (system_default_ptr, false));
 			}
 		}
 		
 		public static CFAllocator Malloc {
 			get {
-				return Malloc_cf ?? (Malloc_cf = new CFAllocator (malloc_ptr)); 
+				return Malloc_cf ?? (Malloc_cf = new CFAllocator (malloc_ptr, false));
 			}
 		}
 
 		public static CFAllocator MallocZone {
 			get {
-				return MallocZone_cf ?? (MallocZone_cf = new CFAllocator (malloc_zone_ptr)); 
+				return MallocZone_cf ?? (MallocZone_cf = new CFAllocator (malloc_zone_ptr, false));
 			}
 		}
 
 		public static CFAllocator Null {
 			get {
-				return Null_cf ?? (Null_cf = new CFAllocator (null_ptr)); 
+				return Null_cf ?? (Null_cf = new CFAllocator (null_ptr, false));
 			}
 		}
 #endif
@@ -117,7 +101,7 @@ namespace CoreFoundation {
 
 		public IntPtr Allocate (long size)
 		{
-			return CFAllocatorAllocate (handle, (nint)size, 0);
+			return CFAllocatorAllocate (Handle, (nint)size, 0);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -125,7 +109,7 @@ namespace CoreFoundation {
 
 		public void Deallocate (IntPtr ptr)
 		{
-			CFAllocatorDeallocate (handle, ptr);
+			CFAllocatorDeallocate (Handle, ptr);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFAllocatorGetTypeID")]

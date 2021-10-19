@@ -1135,9 +1135,9 @@ namespace QTKit {
 			return default (System.Boolean);
 		}
 
-		public virtual System.nint ChapterIndexForTime (QTKit.QTTime time)
+		public virtual nint ChapterIndexForTime (QTKit.QTTime time)
 		{
-			return default (System.nint);
+			return default (nint);
 		}
 
 		public virtual Foundation.NSDictionary[] Chapters ()
@@ -1367,7 +1367,7 @@ namespace QTKit {
 		{
 		}
 
-		public virtual QTKit.QTTime StartTimeOfChapter (System.nint chapterIndex)
+		public virtual QTKit.QTTime StartTimeOfChapter (nint chapterIndex)
 		{
 			return default (QTKit.QTTime);
 		}
@@ -1406,8 +1406,8 @@ namespace QTKit {
 			get { return default(System.Boolean); }
 		}
 
-		public virtual System.nint ChapterCount {
-			get { return default(System.nint); }
+		public virtual nint ChapterCount {
+			get { return default(nint); }
 		}
 
 		public virtual AppKit.NSImage CurrentFrameImage {
@@ -2049,12 +2049,12 @@ namespace QTKit {
 
 		public static readonly QTKit.QTTime IndefiniteTime;
 
-		public QTTime (System.Int64 timeValue, System.nint timeScale, QTKit.TimeFlags flags)
+		public QTTime (System.Int64 timeValue, nint timeScale, QTKit.TimeFlags flags)
 		{
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTTime (System.Int64 timeValue, System.nint timeScale)
+		public QTTime (System.Int64 timeValue, nint timeScale)
 		{
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
@@ -2069,8 +2069,8 @@ namespace QTKit {
 			set { }
 		}
 
-		public System.nint TimeScale {
-			get { return default(System.nint); }
+		public nint TimeScale {
+			get { return default(nint); }
 			set { }
 		}
 
@@ -3784,8 +3784,8 @@ namespace QTKit {
 			get { return default(QTKit.QTFormatDescription); }
 		}
 
-		public virtual System.nuint LengthForAllSamples {
-			get { return default(System.nuint); }
+		public virtual nuint LengthForAllSamples {
+			get { return default(nuint); }
 		}
 
 		public virtual QTKit.QTTime PresentationTime {
@@ -3796,12 +3796,12 @@ namespace QTKit {
 			get { return default(Foundation.NSDictionary); }
 		}
 
-		public virtual System.nint SampleCount {
-			get { return default(System.nint); }
+		public virtual nint SampleCount {
+			get { return default(nint); }
 		}
 
-		public virtual System.nint SampleUseCount {
-			get { return default(System.nint); }
+		public virtual nint SampleUseCount {
+			get { return default(nint); }
 		}
 
 	}
