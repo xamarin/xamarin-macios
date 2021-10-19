@@ -6,6 +6,8 @@
 // Copyright 2016 Xamarin Inc.
 //
 
+#nullable enable
+
 #if !MONOMAC && !WATCH
 
 using System;
@@ -54,36 +56,9 @@ namespace CoreGraphics {
 #endif
 #endif
 
-	public class CGColorConverter : INativeObject, IDisposable
+	public class CGColorConverter : NativeObject
 	{
-		/* invoked by marshallers */
-		internal CGColorConverter (IntPtr handle)
-		{
-		}
-
-		[Preserve (Conditional=true)]
-		internal CGColorConverter (IntPtr handle, bool owns)
-		{
-		}
-
 		public CGColorConverter (NSDictionary options, params CGColorConverterTriple [] triples)
-		{
-		}
-
-		~CGColorConverter ()
-		{
-		}
-
-		public void Dispose ()
-		{
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return IntPtr.Zero; }
-		}
-
-		protected virtual void Dispose (bool disposing)
 		{
 		}
 	}
