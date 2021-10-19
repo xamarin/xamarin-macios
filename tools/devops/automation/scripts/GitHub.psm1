@@ -611,81 +611,6 @@ function New-GitHubSummaryComment {
     return $request
 }
 
-function Test-Add-New-ApiDiffs {
-    param (
-        [Parameter(Mandatory)]
-        [string]
-        $APIDiff=""
-    )
-
-    $sb = [System.Text.StringBuilder]::new()
-    $sb.AppendLine(); # new line to start the list
-    if (-not [string]::IsNullOrEmpty($APIDiff)) {
-        Write-Host "Parsing API diff in path $APIDiff"
-        if (-not (Test-Path $APIDiff -PathType Leaf)) {
-            $sb.AppendLine("Path $APIDiff was not found!")
-        } else {
-            # read the json file, convert it to an object and add a line for each artifact
-            $json =  Get-Content $APIDiff | ConvertFrom-Json
-            # we are dealing with an object, not a dictionary
-            $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
-            $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
-            if ($hasHtmlLinks -or $hasMDlinks) {
-                # build the required list
-                $sb.AppendLine("# API diff")
-                Write-Host "Message is '$($json.message)'"
-                $sb.AppendLine($json.message)
-
-                $legacy = "API diff", "iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS"
-                $dotnet = "dotnet API diff", "dotnet-iOS", "dotnet-tvOS", "dotnet-MacCatalyst", "dotnet-macOS"
-                $dotnet_legacy = "dotnet legacy API diff", "dotnet-legacy-iOS", "dotnet-legacy-tvOS", "dotnet-legacy-MacCatalyst", "dotnet-legacy-macOS"
-                $dotnet_iOS_MacCatalyst = "dotnet iOS-MacCatalayst API diff", "dotnet-iOS-MacCatalyst"
-
-                foreach ($linkGroup in @($legacy, $dotnet, $dotnet_legacy, $dotnet_iOS_MacCatalyst)) {
-                    $sb.AppendLine("<details><summary>View $($linkGroup[0])</summary>")
-                    $sb.AppendLine("") # no new line results in a bad rendering in the links
-                    $htmlLink = ""
-                    $gistLink = ""
-
-                    foreach ($linkPlatform in $linkGroup[1..$($linkGroup.Count-1)]) {
-                        $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
-                        $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
-
-                        # some do not have md, some do not have html
-                        if ($platformHasHtmlLinks) {
-                            Write-Host "Found html link for $linkPlatform"
-                            $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
-                            $htmlLink = "[vsdrops]($htmlLinkUrl)"
-                        }
-
-                        if ($platformHasMDlinks) {
-                            Write-Host "Found gist link for $linkPlatform"
-                            $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
-                            $gistLink = "[gist]($gistLinkUrl)"
-                        }
-
-                        if (($htmlLink -eq "") -and ($gistLink -eq "")) {
-                            $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
-                        } else {
-                            # I don't like extra ' ' when we are missing vars, use join
-                            $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
-                            $sb.AppendLine($line)
-                        }
-                    }
-                    $sb.AppendLine("</details>")
-                    $sb.AppendLine("")
-                }
-                $sb.AppendLine("")
-                # Write-Host $sb.ToString()
-            } else {
-                $sb.AppendLine("# API diff")
-                $sb.AppendLine("")
-                $sb.AppendLine("**No api diff data found.**")
-            }
-        }
-    }
-}
-
 <# 
     .SYNOPSIS
         Get the information of a PR in GitHub.
@@ -974,4 +899,3 @@ Export-ModuleMember -Function New-GistWithFiles
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
 Export-ModuleMember -Function Push-RepositoryDispatch 
-Export-ModuleMember -Function Test-Add-New-ApiDiffs
