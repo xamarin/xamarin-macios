@@ -268,13 +268,13 @@ public partial class Generator {
 		case "CGImage":
 		case "ImageIO.CGImageMetadata":
 		case "CIBarcodeDescriptor":
-			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
+			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false)!;", propertyType, propertyName);
 			break;
 		case "AVCameraCalibrationData":
 		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
-			print ("return Runtime.GetNSObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
+			print ("return Runtime.GetNSObject <{0}> (GetHandle (\"{1}\"), false)!;", propertyType, propertyName);
 			break;
 		case "CIColor":
 		case "CIImage":

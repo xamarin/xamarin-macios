@@ -29,7 +29,7 @@ namespace Metal {
 		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static IMTLCounterSampleBuffer CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError error)
+		public static IMTLCounterSampleBuffer? CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError? error)
 		{
 			if (descriptor == null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));

@@ -79,7 +79,7 @@ namespace CoreVideo {
 			/* CFArrayRef __nullable */ IntPtr attributes,
 			/* CFDictionaryRef __nullable * __nonnull */ out IntPtr resolvedDictionaryOut);
 
-		public NSDictionary GetAttributes (NSDictionary [] attributes)
+		public NSDictionary? GetAttributes (NSDictionary [] attributes)
 		{
 			CVReturn ret;
 			IntPtr resolvedDictionaryOut;
