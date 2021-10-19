@@ -1,3 +1,4 @@
+## Selectors are all macOS only and not used in Catalyst
 !missing-field! ITLibMediaEntityPropertyPersistentID not bound
 !missing-field! ITLibMediaItemPropertyAddedDate not bound
 !missing-field! ITLibMediaItemPropertyAlbumArtist not bound
@@ -77,5 +78,4 @@
 !missing-field! ITLibPlaylistPropertyName not bound
 !missing-field! ITLibPlaylistPropertyParentPersistentID not bound
 !missing-field! ITLibPlaylistPropertyVisible not bound
-## appended from unclassified file
 !missing-field! ITLibPlaylistPropertyPrimary not bound
