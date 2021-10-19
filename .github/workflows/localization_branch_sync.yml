@@ -38,7 +38,7 @@ jobs:
 
     - uses: peterjgrainger/action-create-branch@v2.0.1
       name: 'Create Localization Branch'
-      if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot'}}
+      if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot') }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
