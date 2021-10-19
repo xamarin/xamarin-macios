@@ -14,13 +14,14 @@ jobs:
     name: 'Replace Localization Branch'
     runs-on: ubuntu-latest
     steps:
-    - name: 'Check for Fork'
-      run: echo "Action cannot be executed on forks" && exit 0
-      if: ${{ github.event.pull_request.head.repo.full_name != github.repository  }}
+    # We only want to run this GHA if not on a fork but don't want to trigger email failures if we are on fork using exit codes
+    - name: 'Confirm not on a Fork'
+      if: ${{ github.event.pull_request.head.repo.full_name == github.repository  }}
+      run: echo "Good, we are not on a fork."
 
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
-      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
+      if: ${{ success() && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branches: Localization
@@ -28,8 +29,12 @@ jobs:
 
     - uses: peterjgrainger/action-create-branch@v2.0.1
       name: 'Create Localization Branch'
-      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
+      if: ${{ success() && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         branch: 'Localization'
+
+    - name: 'Print message if on a Fork'
+      if: ${{ github.event.pull_request.head.repo.full_name != github.repository  }}
+      run: echo "This Github Action does not need to run on a fork."
