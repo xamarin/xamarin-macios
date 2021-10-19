@@ -14,18 +14,13 @@ jobs:
     name: 'Replace Localization Branch'
     runs-on: ubuntu-latest
     steps:
-    # Order of the steps are important!!
-
-    # Print better debugging info
+    # Print debugging info
     - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-
-    # Make sure the labels detection works
-    - name: Get label names
       run: |
-        echo "${{ toJson(github.event.pull_request.labels) }}"
+        echo "${{ toJson(github.event.pull_request.head.repo.full_name) }}"
+        echo "${{ toJson(github.repository) }}"
+        echo "${{ toJson(github.event.pull_request.merged) }}"
+        echo "${{ toJson(github.event.pull_request.user.login) }}"
         echo "${{ toJson(github.event.pull_request.labels.*.name) }}"
 
     # We only want to run this GHA if not on a fork but don't want to trigger email failures if we are on fork using exit codes
@@ -35,7 +30,7 @@ jobs:
 
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
-      if: ${{ success() && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot') }}
+      if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot') }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branches: Localization
@@ -43,7 +38,7 @@ jobs:
 
     - uses: peterjgrainger/action-create-branch@v2.0.1
       name: 'Create Localization Branch'
-      if: ${{ success() }}
+      if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot'}}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
