@@ -17,11 +17,11 @@ jobs:
     # Print debugging info
     - name: Dump GitHub context
       run: |
-        echo "${{ toJson(github.event.pull_request.head.repo.full_name) }}"
-        echo "${{ toJson(github.repository) }}"
-        echo "${{ toJson(github.event.pull_request.merged) }}"
-        echo "${{ toJson(github.event.pull_request.user.login) }}"
-        echo "${{ toJson(github.event.pull_request.labels.*.name) }}"
+        echo "github.event.pull_request.head.repo.full_name: ${{ toJson(github.event.pull_request.head.repo.full_name) }}"
+        echo "github.repository: ${{ toJson(github.repository) }}"
+        echo "github.repository && github.event.pull_request.merged: ${{ toJson(github.event.pull_request.merged) }}"
+        echo "github.event.pull_request.user.login: ${{ toJson(github.event.pull_request.user.login) }}"
+        echo "github.event.pull_request.labels.*.name: ${{ toJson(github.event.pull_request.labels.*.name) }}"
 
     # We only want to run this GHA if not on a fork but don't want to trigger email failures if we are on fork using exit codes
     - name: 'Confirm not on a Fork'
