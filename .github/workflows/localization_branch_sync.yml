@@ -2,7 +2,7 @@ name: Sync Localization Branch
 on:
   pull_request:
     branches:
-      - 'main'
+      - 'TJ-TestingSyncLocalization'
     types: [closed]
 
 concurrency: 
