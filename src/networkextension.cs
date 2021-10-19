@@ -97,7 +97,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[Native]
 	enum NEFilterManagerGrade : long {
 		Firewall = 1,
@@ -113,7 +113,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[Native]
 	enum NENetworkRuleProtocol : long {
 		Any = 0,
@@ -122,7 +122,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[Native]
 	enum NEFilterPacketProviderVerdict : long {
 		Allow = 0,
@@ -140,7 +140,7 @@ namespace NetworkExtension {
 		Statistics = 4,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (10,15,4), MacCatalyst (15,0)]
+	[NoWatch, NoTV, NoiOS, Mac (10,15,4), NoMacCatalyst]
 	[Native]
 	enum NEFilterReportFrequency : long {
 		None,
@@ -149,7 +149,7 @@ namespace NetworkExtension {
 		High,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (10,15,5), MacCatalyst (15,0)]
+	[NoWatch, NoTV, NoiOS, Mac (10,15,5), NoMacCatalyst]
 	[Native]
 	public enum NEFilterDataAttribute : long {
 		HasIpHeader = 1,
@@ -435,16 +435,16 @@ namespace NetworkExtension {
 		[Export ("handleRulesChanged")]
 		void HandleRulesChanged ();
 
-		[NoiOS, MacCatalyst (15,0)]
+		[NoiOS, NoMacCatalyst]
 		[Export ("applySettings:completionHandler:")]
 		[Async]
 		void ApplySettings ([NullAllowed] NEFilterSettings settings, Action<NSError> completionHandler);
 
-		[NoiOS, MacCatalyst (15,0)]
+		[NoiOS, NoMacCatalyst]
 		[Export ("resumeFlow:withVerdict:")]
 		void ResumeFlow (NEFilterFlow flow, NEFilterVerdict verdict);
 
-		[NoWatch, NoTV, NoiOS, Mac (10,15,4), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4), NoMacCatalyst]
 		[Export ("updateFlow:usingVerdict:forDirection:")]
 		void UpdateFlow (NEFilterSocketFlow flow, NEFilterDataVerdict verdict, NETrafficDirection direction);
 	}
@@ -454,7 +454,7 @@ namespace NetworkExtension {
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterDataVerdict : NSSecureCoding, NSCopying
 	{
-		[NoWatch, NoTV, NoiOS, Mac (10,15,4), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4), NoMacCatalyst]
 		[Export ("statisticsReportFrequency", ArgumentSemantic.Assign)]
 		NEFilterReportFrequency StatisticsReportFrequency { get; set; }
 
@@ -553,7 +553,7 @@ namespace NetworkExtension {
 		NSString ConfigurationDidChangeNotification { get; }
 
 		[NoiOS]
-		[Mac (10,15), MacCatalyst (15,0)]
+		[Mac (10,15), NoMacCatalyst]
 		[Export ("grade", ArgumentSemantic.Assign)]
 		NEFilterManagerGrade Grade { get; set; }
 
@@ -568,7 +568,7 @@ namespace NetworkExtension {
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterNewFlowVerdict : NSSecureCoding, NSCopying
 	{
-		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4), NoMacCatalyst]
 		[Export ("statisticsReportFrequency", ArgumentSemantic.Assign)]
 		NEFilterReportFrequency StatisticsReportFrequency { get; set; }
 
@@ -2072,7 +2072,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NENetworkRule : NSSecureCoding, NSCopying {
@@ -2106,7 +2106,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEFilterRule : NSSecureCoding, NSCopying {
@@ -2122,7 +2122,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEFilterSettings : NSSecureCoding, NSCopying {
@@ -2138,7 +2138,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NEFilterPacketContext {
 	}
@@ -2148,7 +2148,7 @@ namespace NetworkExtension {
 	delegate NEFilterPacketProviderVerdict NEFilterPacketHandler (NEFilterPacketContext context, IntPtr @interface, NETrafficDirection directiom, IntPtr packetBytes, nuint packetLength);
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NEFilterProvider))]
 	[DisableDefaultCtor] // returns `nil`
 	interface NEFilterPacketProvider {
@@ -2163,7 +2163,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NEVpnManager))]
 	[DisableDefaultCtor]
 	interface NETransparentProxyManager {
@@ -2175,7 +2175,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NETunnelNetworkSettings))]
 	interface NETransparentProxyNetworkSettings {
 
@@ -2337,7 +2337,7 @@ namespace NetworkExtension {
 		void DidReceiveIncomingCall (NEAppPushManager manager, NSDictionary userInfo);
 	}
 
-	[Mac (11,0), MacCatalyst (15,0)]
+	[Mac (11,0), NoMacCatalyst]
 	[NoiOS][NoTV][NoWatch]
 	[BaseType (typeof (NEAppProxyProvider))]
 	[DisableDefaultCtor] // `init` returns `nil`
