@@ -15,12 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Print debugging info
-    - name: 'Information'
-      script:
-        - |
-          echo "This commit came from {{ github.event.pull_request.head.repo.full_name }}. This commit is pushing to {{ github.repository }}."
-          echo "The delete action wants to make sure that the merged event is true, it is - {{ github.event.pull_request.merged }}."
-          echo "The delete action also wants to make sure that the labels contain the localization bot label, it is - {{ contains(github.event.pull_request.labels.*.names, 'localization_bot') }}."
+    # - name: 'Information'
+    #   script:
+    #     - |
+    #       echo "This commit came from {{ github.event.pull_request.head.repo.full_name }}. This commit is pushing to {{ github.repository }}."
+    #       echo "The delete action wants to make sure that the merged event is true, it is - {{ github.event.pull_request.merged }}."
+    #       echo "The delete action also wants to make sure that the labels contain the localization bot label, it is - {{ contains(github.event.pull_request.labels.*.names, 'localization_bot') }}."
 
     # Perhaps Print better debugging info
     - name: Dump GitHub context
