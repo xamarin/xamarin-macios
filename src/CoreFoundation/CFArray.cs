@@ -150,6 +150,14 @@ namespace CoreFoundation {
 			return ret;
 		}
 
+		static unsafe public string?[]? StringArrayFromHandle (IntPtr handle, bool releaseHandle)
+		{
+			var rv = StringArrayFromHandle (handle);
+			if (releaseHandle && handle != IntPtr.Zero)
+				CFObject.CFRelease (handle);
+			return rv;
+		}
+
 		// identical signature to NSArray API
 		static public T?[]? ArrayFromHandle<T> (IntPtr handle) where T : class, INativeObject
 		{
