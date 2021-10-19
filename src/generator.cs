@@ -2092,17 +2092,20 @@ public partial class Generator : IMemberGatherer {
 		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
 		var underlyingTypeName = RenderType (underlyingEnumType);
 		string itype;
+		string intermediateType;
 		object maxValue;
 		Func<FieldInfo, bool> isMaxDefinedFunc;
 		Func<FieldInfo, bool> isMinDefinedFunc = null;
 		if (TypeManager.System_Int64 == underlyingEnumType) {
-			nativeType = "nint";
+			nativeType = "IntPtr";
+			intermediateType = "nint";
 			itype = "int";
 			maxValue = long.MaxValue;
 			isMaxDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MaxValue;
 			isMinDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MinValue;
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
-			nativeType = "nuint";
+			nativeType = "UIntPtr";
+			intermediateType = "nuint";
 			itype = "uint";
 			maxValue = ulong.MaxValue;
 			isMaxDefinedFunc = (v) => (ulong) v.GetRawConstantValue () == ulong.MaxValue;
@@ -2111,7 +2114,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (!string.IsNullOrEmpty (attrib.ConvertToManaged)) {
-			preExpression = attrib.ConvertToManaged + " (";
+			preExpression = attrib.ConvertToManaged + " ((" + intermediateType + ") ";
 			postExpression = ")";
 		} else {
 			preExpression = "(" + renderedEnumType + ") (" + RenderType (underlyingEnumType) + ") ";
@@ -2156,15 +2159,15 @@ public partial class Generator : IMemberGatherer {
 
 		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
 		if (TypeManager.System_Int64 == underlyingEnumType) {
-			nativeType = "nint";
+			nativeType = "IntPtr";
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
-			nativeType = "nuint";
+			nativeType = "UIntPtr";
 		} else {
 			throw new BindingException (1029, enumType);
 		}
 
 		if (!string.IsNullOrEmpty (attrib.ConvertToNative)) {
-			preExpression = attrib.ConvertToNative + " (";
+			preExpression = "(" + nativeType + ") " + attrib.ConvertToNative + " (";
 			postExpression = ")";
 		} else {
 			preExpression = "(" + nativeType + ") (" + RenderType (underlyingEnumType) + ") ";
@@ -2188,9 +2191,9 @@ public partial class Generator : IMemberGatherer {
 
 		underlyingType = enumType.GetEnumUnderlyingType ();
 		if (underlyingType == TypeManager.System_Int64) {
-			nativeType = "nint";
+			nativeType = "IntPtr";
 		} else if (underlyingType == TypeManager.System_UInt64) {
-			nativeType = "nuint";
+			nativeType = "UIntPtr";
 		} else {
 			throw new BindingException (1026, true, enumType.FullName, "NativeAttribute");
 		}

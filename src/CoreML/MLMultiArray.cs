@@ -24,7 +24,7 @@ namespace CoreML {
 		// NSArray<NSNumber> => nint[]
 		internal static nint[] ConvertArray (IntPtr handle)
 		{
-			return NSArray.ArrayFromHandle<nint> (handle, (v) => Messaging.nint_objc_msgSend (v, Selector.GetHandle ("integerValue")));
+			return NSArray.ArrayFromHandle<nint> (handle, (v) => (nint) Messaging.IntPtr_objc_msgSend (v, Selector.GetHandle ("integerValue")));
 		}
 
 		public MLMultiArray (nint [] shape, MLMultiArrayDataType dataType, out NSError error)
