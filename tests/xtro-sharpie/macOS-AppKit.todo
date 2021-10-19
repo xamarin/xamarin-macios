@@ -1,0 +1,3 @@
+!missing-selector! NSScreen::auxiliaryTopLeftArea not bound
+!missing-selector! NSScreen::auxiliaryTopRightArea not bound
+!missing-selector! NSScreen::safeAreaInsets not bound

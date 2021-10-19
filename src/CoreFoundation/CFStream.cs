@@ -532,7 +532,7 @@ namespace CoreFoundation {
 				return;
 			CheckHandle ();
 			if (loop != null) {
-				DoSetClient (null, 0, IntPtr.Zero);
+				DoSetClient (null, (CFIndex) 0, IntPtr.Zero);
 				UnscheduleFromRunLoop (loop, loopMode);
 				loop = null;
 				loopMode = null;

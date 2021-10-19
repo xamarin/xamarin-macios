@@ -305,7 +305,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_options nw_framer_create_options (OS_nw_protocol_definition framer_definition);
 
-		public static T CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
+		public static T? CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));

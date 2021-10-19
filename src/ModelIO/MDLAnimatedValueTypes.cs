@@ -755,7 +755,7 @@ namespace ModelIO {
 		static unsafe IntPtr GetAlignedPtrForArray (IntPtr arrptr, int size, bool copy, out IntPtr alignedPtr)
 		{
 			// use the original pointer if it's already aligned on a 16 bytes boundary
-			if (((nuint) arrptr & 15) == 0) {
+			if (((nuint) (ulong) arrptr & 15) == 0) {
 				alignedPtr = arrptr;
 				// nothing to free
 				return IntPtr.Zero;

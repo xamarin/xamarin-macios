@@ -20,7 +20,7 @@ namespace Metal {
 #if !NET
 		[iOS (9,0)]
 #endif
-		public static MTLVertexDescriptor FromModelIO (MDLVertexDescriptor descriptor)
+		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor)
 		{
 			if (descriptor == null)
 				throw new ArgumentException ("descriptor");
@@ -38,7 +38,7 @@ namespace Metal {
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 #endif
-		public static MTLVertexDescriptor FromModelIO (MDLVertexDescriptor descriptor, out NSError error)
+		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor, out NSError? error)
 		{
 			if (descriptor == null)
 				throw new ArgumentException ("descriptor");
