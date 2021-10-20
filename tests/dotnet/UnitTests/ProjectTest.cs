@@ -277,7 +277,10 @@ namespace Xamarin.Tests {
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
-			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
+			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (
+				Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client", "dotnet"),
+				Path.Combine (Configuration.SourceRoot, "external", "MonoTouch.Dialog", "MonoTouch.Dialog", "dotnet")
+			);
 			try {
 				var result = DotNet.AssertBuild (project_path, verbosity);
 				var lines = BinLog.PrintToLines (result.BinLogPath);
