@@ -1969,7 +1969,7 @@ MACOS_FRAMEWORKS =          \
 	ImageCaptureCore	\
 	ImageKit                \
 	Intents                 \
-	IntentsUI 				\
+	IntentsUI               \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \

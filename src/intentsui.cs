@@ -12,10 +12,10 @@ using CoreGraphics;
 using Foundation;
 using Intents;
 using ObjCRuntime;
-#if !MONOMAC
-using UIKit;
-#else
+#if MONOMAC
 using AppKit;
+#else
+using UIKit;
 #endif
 
 namespace IntentsUI {
@@ -110,10 +110,10 @@ namespace IntentsUI {
 
 	[Mac (12,0)]
 	[iOS (12,0)]
-#if !MONOMAC
-	[BaseType (typeof (UIViewController))]
-#else
+#if MONOMAC
 	[BaseType (typeof (NSViewController))]
+#else
+	[BaseType (typeof (UIViewController))]
 #endif
 	[DisableDefaultCtor]
 	interface INUIAddVoiceShortcutViewController {
@@ -149,10 +149,10 @@ namespace IntentsUI {
 
 	[Mac (12,0)]
 	[iOS (12,0)]
-#if !MONOMAC
-	[BaseType (typeof (UIViewController))]
-#else
+#if MONOMAC
 	[BaseType (typeof (NSViewController))]
+#else
+	[BaseType (typeof (UIViewController))]
 #endif
 	[DisableDefaultCtor]
 	interface INUIEditVoiceShortcutViewController {
@@ -191,10 +191,10 @@ namespace IntentsUI {
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (12,0)]
-#if !MONOMAC
-	[BaseType (typeof (UIButton))]
-#else
+#if MONOMAC
 	[BaseType (typeof (NSButton))]
+#else
+	[BaseType (typeof (UIButton))]
 #endif
 	[DisableDefaultCtor]
 	interface INUIAddVoiceShortcutButton {
