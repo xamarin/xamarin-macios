@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Security;
@@ -11,7 +12,11 @@ using SecProtocolMetadataRef = System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+#else
+	[SupportedOSPlatform ("ios"), SupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos"), SupportedOSPlatform ("maccatalyst")]
+#endif
 	public class NWQuicMetadata : NWProtocolMetadata {
 
 		public NWQuicMetadata (IntPtr handle, bool owns) : base (handle, owns) { }

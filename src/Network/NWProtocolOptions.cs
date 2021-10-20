@@ -65,12 +65,36 @@ namespace Network {
 		}
 
 		// added to have a consistent API, but obsolete it
+
+#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst(15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern IntPtr nw_quic_create_options ();
 
-		[Obsolete ("Use the 'NWProtocolQuicOptions' class methods and constructors instead.")]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst(15,0)]
+#if !NET
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")] 
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public static NWProtocolOptions CreateQuic ()
 		{
 			return new NWProtocolUdpOptions (nw_quic_create_options (), owns: true);
@@ -260,5 +284,12 @@ namespace Network {
 
 		[Obsolete ("Use the 'NWProtocolTlsOptions' class instead.")]
 		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
+		
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_protocol_options_is_quic (IntPtr options);
+
+		public bool IsQuic => nw_protocol_options_is_quic (GetCheckedHandle ());
 	}
 }

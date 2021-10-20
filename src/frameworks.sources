@@ -1260,9 +1260,11 @@ NETWORK_SOURCES = \
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
 	Network/NWMulticastGroup.cs		\
+	Network/NWMultiplexGroup.cs		\
 	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
+	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
@@ -1272,6 +1274,8 @@ NETWORK_SOURCES = \
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
 	Network/NWQuicMetadata.cs			\
+	Network/NNWResolutionReport.cs \
+	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \
 	Network/NWTlsMetadata.cs \
 	Network/NWTxtRecord.cs	\

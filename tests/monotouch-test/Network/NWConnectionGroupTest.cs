@@ -62,5 +62,40 @@ namespace MonoTouchFixtures.Network {
 				connectionGroup.SetQueue (q);
 			});
 		}
+
+		[Test]
+		public void GetProtocolMetadataContextTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
+		
+		[Test]
+		public void GetProtocolMetadataContextDefinitionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
+		
+		[Test]
+		public void ExtractConnectionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
+
+		[Test]
+		public void TryReinsertExtractedConnectionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
+		
+		[Test]
+		public void SetNewConnectionHandlerTest()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
 	}
 }

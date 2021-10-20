@@ -118,6 +118,13 @@ namespace MonoTouchFixtures.Network {
 			Assert.IsNull (report.ProxyEndpoint);
 
 		}
+
+		[Test]
+		public void EnumerateResolutionReportsTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+		}
+		
 	}
 }
 #endif

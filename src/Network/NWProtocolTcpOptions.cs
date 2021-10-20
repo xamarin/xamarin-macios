@@ -18,6 +18,7 @@ using Foundation;
 using CoreFoundation;
 using Security;
 using OS_nw_protocol_definition=System.IntPtr;
+using OS_nw_protocol_options=System.IntPtr;
 using IntPtr=System.IntPtr;
 
 namespace Network {
@@ -70,5 +71,21 @@ namespace Network {
 		public void SetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen);
 
 		public void SetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
+		
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_tcp_options_set_multipath_force_version (OS_nw_protocol_options options, NWMultipathVersion multipath_force_version);
+
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public void ForceMultipathVersion (NWMultipathVersion version)
+			=> nw_tcp_options_set_multipath_force_version (GetCheckedHandle (), version);
 	}
 }

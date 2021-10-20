@@ -393,6 +393,28 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (parameters.ProhibitConstrained, "New value was not stored.");
 			}
 		}
+
+		[Test]
+		public void AttributionPropertyTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
+
+		[Test]
+		public void SetPrivacyContextTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
+
+		[Test]
+		public void CreateQuicTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.Fail ("Not implemented");
+		}
+
 	}
 }
 #endif

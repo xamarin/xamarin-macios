@@ -27,6 +27,7 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (m.IsIP, "IsIP");
 				Assert.False (m.IsTcp, "IsTcp");
 				Assert.False (m.IsUdp, "IsUdp");
+				Assert.False (m.IsQuic, "IsQuic");
 				Assert.NotNull (m.ProtocolDefinition, "ProtocolDefinition");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.SecProtocolMetadata; }, "SecProtocolMetadata");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.TlsSecProtocolMetadata; }, "TlsSecProtocolMetadata");
@@ -44,12 +45,20 @@ namespace MonoTouchFixtures.Network {
 				Assert.False (m.IsIP, "IsIP");
 				Assert.False (m.IsTcp, "IsTcp");
 				Assert.True (m.IsUdp, "IsUdp");
+				Assert.False (m.IsQuic, "IsQuic");
 				Assert.NotNull (m.ProtocolDefinition, "ProtocolDefinition");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.SecProtocolMetadata; }, "SecProtocolMetadata");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.TlsSecProtocolMetadata; }, "TlsSecProtocolMetadata");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.ServiceClass; }, "ServiceClass");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.IPServiceClass; }, "IPServiceClass");
 			}
+		}
+
+		[Test]
+		public void Quic ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			Assert.Fail ("Not implemented");
 		}
 	}
 }

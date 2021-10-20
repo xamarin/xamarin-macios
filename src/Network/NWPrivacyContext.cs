@@ -5,13 +5,20 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreFoundation;
 using System.Runtime.Versioning;
-
+using Foundation;
 using OS_nw_privacy_context=System.IntPtr;
 using OS_nw_resolver_config=System.IntPtr;
 
 namespace Network {
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#if !NET
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public class NWPrivacyContext : NativeObject {
+
+		public static NWPrivacyContext Default =>
+			new NWPrivacyContext (NWPrivacyContextConstants._DefaultContext, false); 
 
 		public NWPrivacyContext (IntPtr handle, bool owns) : base (handle, owns) {}
 

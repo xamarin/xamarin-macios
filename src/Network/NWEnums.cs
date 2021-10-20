@@ -243,4 +243,44 @@ namespace Network {
 		tls = 3,
 		https = 4,
 	}
+	
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	public enum NWResolverConfigEndpointType {
+		Https,
+		Tls,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	public enum NWMultipathVersion {
+		Unspecified = -1,
+		Version0 = 0,
+		Version1 = 1,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	public enum NWInterfaceRadioType {
+		Unknown = 0,
+		WifiB = 1,
+		WifiA = 2,
+		WifiG = 3,
+		WifiN = 4,
+		WifiAC = 5,
+		WifiAX = 6,
+		
+		CellLte = 0x80,
+		CellEndcSub6 = 0x81,
+		CellEndcMmw = 0x82,
+		CellNrSaSub6 = 0x83,
+		CellNrSaMmw = 0x84,
+		CellWcdma = 0x85,
+		CellGsm = 0x86,
+		CellCdma = 0x87,
+		CellEvdo = 0x88,
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+	public enum NWParametersAttribution {
+		Developer = 1,
+		User = 2,
+	}
 }
