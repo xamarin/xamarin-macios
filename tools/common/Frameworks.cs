@@ -208,6 +208,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ModelIO", 10, 11 },
 
 					{ "Intents", 10, 12 },
+					{ "IntentsUI", 12, 0 },
 					{ "IOSurface", "IOSurface", 10, 12 },
 					{ "Photos", "Photos", 10,12 },
 					{ "PhotosUI", "PhotosUI", 10,12 },
