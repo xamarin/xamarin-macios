@@ -55,13 +55,13 @@ namespace CoreML {
 		public NSNumber GetObject (params nint[] indices)
 		{
 			using (var arr = NSArray.FromNSObjects<nint> (NSNumber.FromNInt, indices))
-				return GetObject (arr.GetHandle ());
+				return GetObjectInternal (arr.GetHandle ());
 		}
 
 		public void SetObject (NSNumber obj, params nint[] indices)
 		{
 			using (var arr = NSArray.FromNSObjects<nint> (NSNumber.FromNInt, indices))
-				SetObject (obj, arr.GetHandle ());
+				SetObjectInternal (obj, arr.GetHandle ());
 		}
 
 		public nint[] Shape {

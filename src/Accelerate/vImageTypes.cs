@@ -61,12 +61,12 @@ namespace Accelerate {
 
 		public int Width {
 			get { return (int) WidthIntPtr; }
-			set { WidthIntPtr = value; }
+			set { WidthIntPtr = (vImagePixelCount) value; }
 		}
 
 		public int Height {
 			get { return (int) HeightIntPtr; }
-			set { HeightIntPtr = value; }
+			set { HeightIntPtr = (vImagePixelCount) value; }
 		}
 	}
 

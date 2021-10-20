@@ -154,24 +154,34 @@ namespace CoreGraphics {
 			return r;
 		}
 
+#if NET
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		unsafe extern static void CGPDFDictionaryApplyFunction (/* CGPDFDictionaryRef */ IntPtr dic, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> function, /* void* */ IntPtr info);
+#else
 		// CGPDFDictionaryApplierFunction
-		delegate void ApplierFunction (/* const char* */ string key, /* CGPDFObjectRef */ IntPtr value, /* void* */ IntPtr info);
+		delegate void ApplierFunction (/* const char* */ IntPtr key, /* CGPDFObjectRef */ IntPtr value, /* void* */ IntPtr info);
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFDictionaryApplyFunction (/* CGPDFDictionaryRef */ IntPtr dic, ApplierFunction function, /* void* */ IntPtr info);
 
 		static readonly ApplierFunction applyblock_handler = ApplyBridge;
+#endif // NET
 
 		public delegate void ApplyCallback (string key, object value, object info);
+
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplierFunction))]
 #endif
-		static void ApplyBridge (string key, IntPtr pdfObject, IntPtr info)
+#endif // NET
+		static void ApplyBridge (IntPtr key, IntPtr pdfObject, IntPtr info)
 		{
 			var data = (Tuple<ApplyCallback, object>) GCHandle.FromIntPtr (info).Target;
 			var callback = data.Item1;
 
-			callback (key, CGPDFObject.FromHandle (pdfObject), data.Item2);
+			callback (Marshal.PtrToStringUTF8 (key), CGPDFObject.FromHandle (pdfObject), data.Item2);
 		}
 
 		public void Apply (ApplyCallback callback, object info = null)
@@ -179,26 +189,42 @@ namespace CoreGraphics {
 			var data = new Tuple<ApplyCallback, object> (callback, info);
 			var gch = GCHandle.Alloc (data);
 			try {
+#if NET
+				unsafe {
+					CGPDFDictionaryApplyFunction (Handle, &ApplyBridge, GCHandle.ToIntPtr (gch));
+				}
+#else
 				CGPDFDictionaryApplyFunction (Handle, applyblock_handler, GCHandle.ToIntPtr (gch));
+#endif
 			} finally {
 				gch.Free ();
 			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplierFunction))]
 #endif
-		static void ApplyBridge2 (string key, IntPtr pdfObject, IntPtr info)
+#endif // NET
+		static void ApplyBridge2 (IntPtr key, IntPtr pdfObject, IntPtr info)
 		{
 			var callback = (Action<string,CGPDFObject>) GCHandle.FromIntPtr (info).Target;
 
-			callback (key, new CGPDFObject (pdfObject));
+			callback (Marshal.PtrToStringUTF8 (key), new CGPDFObject (pdfObject));
 		}
 
 		public void Apply (Action<string,CGPDFObject> callback)
 		{
 			GCHandle gch = GCHandle.Alloc (callback);
+#if NET
+			unsafe {
+				CGPDFDictionaryApplyFunction (Handle, &ApplyBridge2, GCHandle.ToIntPtr (gch));
+			}
+#else
 			CGPDFDictionaryApplyFunction (Handle, ApplyBridge2, GCHandle.ToIntPtr (gch));
+#endif
 			gch.Free ();
 		}
 

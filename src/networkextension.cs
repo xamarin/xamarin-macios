@@ -200,7 +200,7 @@ namespace NetworkExtension {
 
 		[NoWatch, NoTV, Mac (10,15,4), iOS (13,4)]
 		NWInterface NetworkInterface {
-			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, false)")]
+			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, false)!")]
 			get;
 			[Wrap ("WeakNetworkInterface = value.GetHandle ()")]
 			set;

@@ -317,7 +317,6 @@ namespace iTunesLibrary {
 		Kind,
 	}
 
-	[MacCatalyst (14,0)]
 	[Mac (10,14)]
 	public enum ITLibMediaEntityProperty {
 		[Field ("ITLibMediaEntityPropertyPersistentID")]

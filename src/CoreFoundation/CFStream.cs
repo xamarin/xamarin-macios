@@ -532,7 +532,7 @@ namespace CoreFoundation {
 				return;
 			CheckHandle ();
 			if (loop != null) {
-				DoSetClient (null, 0, IntPtr.Zero);
+				DoSetClient (null, (CFIndex) 0, IntPtr.Zero);
 				UnscheduleFromRunLoop (loop, loopMode);
 				loop = null;
 				loopMode = null;
@@ -685,6 +685,9 @@ namespace CoreFoundation {
 			loop = runLoop;
 			loopMode = runLoopMode;
 
+			if (!gch.IsAllocated)
+				gch = GCHandle.Alloc (this);
+
 			var ctx = new CFStreamClientContext ();
 			ctx.Info = GCHandle.ToIntPtr (gch);
 
@@ -711,7 +714,6 @@ namespace CoreFoundation {
 		protected CFStream (IntPtr handle)
 		{
 			this.handle = handle;
-			gch = GCHandle.Alloc (this);
 		}
 
 		protected void CheckHandle ()

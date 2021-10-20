@@ -140,9 +140,11 @@ namespace CoreMedia {
 			nint count = timing == null ? 0 : timing.Length;
 			IntPtr handle;
 
-			fixed (CMSampleTimingInfo *t = timing)
-				if ((status = CMSampleBufferCreateCopyWithNewTiming (IntPtr.Zero, original.Handle, count, t, out handle)) != 0)
+			fixed (CMSampleTimingInfo *t = timing) {
+				status = CMSampleBufferCreateCopyWithNewTiming (IntPtr.Zero, original.Handle, count, t, out handle);
+				if (status != (OSStatus) 0)
 					return null;
+			}
 			
 			return new CMSampleBuffer (handle, true);
 		}
@@ -488,12 +490,13 @@ namespace CoreMedia {
 		public unsafe CMSampleTimingInfo [] GetSampleTimingInfo (out OSStatus status) {
 			nint count;
 
-			status = 0;
+			status = default (OSStatus);
 
 			if (handle == IntPtr.Zero)
 				return null;
 
-			if ((status = CMSampleBufferGetSampleTimingInfoArray (handle, 0, null, out count)) != 0)
+			status = CMSampleBufferGetSampleTimingInfoArray (handle, 0, null, out count);
+			if (status != (OSStatus) 0)
 				return null;
 
 			CMSampleTimingInfo [] pInfo = new CMSampleTimingInfo [count];
@@ -501,9 +504,11 @@ namespace CoreMedia {
 			if (count == 0)
 				return pInfo;
 
-			fixed (CMSampleTimingInfo* info = pInfo)
-				if ((status = CMSampleBufferGetSampleTimingInfoArray (handle, count, info, out count)) != 0)
+			fixed (CMSampleTimingInfo* info = pInfo) {
+				status = CMSampleBufferGetSampleTimingInfoArray (handle, count, info, out count);
+				if (status != (OSStatus) 0)
 					return null;
+			}
 
 			return pInfo;
 		}

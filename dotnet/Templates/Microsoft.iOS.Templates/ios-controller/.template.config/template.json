@@ -1,7 +1,7 @@
 {
     "$schema": "http://json.schemastore.org/template",
     "author": "Microsoft",
-    "classifications": [ "iOS" ],
+    "classifications": [ "iOS", "Mobile" ],
     "name": "iOS Controller template",
     "description": "An iOS Controller class",
     "tags": {

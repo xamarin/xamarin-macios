@@ -452,10 +452,10 @@ MAC_EXTRA_CORE_SOURCES += \
 
 # Add new bindings + source files in frameworks.sources, not here.
 
-MAC_CORE_SOURCES += \
+MACOS_CORE_SOURCES += \
 	$(MAC_EXTRA_CORE_SOURCES) \
 
-MAC_SOURCES += \
+MACOS_SOURCES += \
 	$(MAC_EXTRA_CORE_SOURCES) \
 	$(MAC_BUILD_DIR)/AssemblyInfo.cs \
 	Darwin/KernelNotification.cs \
@@ -488,7 +488,7 @@ $(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.i
 		$< > $@
 
 $(PROJECT_DIR)/xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
-	@sed -e 's*<!--%FILES%-->*$(foreach file,$(MAC_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(MAC_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
+	@sed -e 's*<!--%FILES%-->*$(foreach file,$(MACOS_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(MACOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
 PROJECT_FILES += $(PROJECT_DIR)/xammac.csproj
 
@@ -511,16 +511,16 @@ MAC_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 MAC_GENERATE=$(SYSTEM_MONO) --debug $(MAC_GENERATOR)
 
 define MAC_GENERATOR_template
-$(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/mac-defines.rsp
+$(MAC_BUILD_DIR)/$(1)/core.dll: $(MACOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/macos-defines.rsp
 	@mkdir -p $(MAC_BUILD_DIR)/$(1)
 	$$(call Q_PROF_CSC,mac/$(1)) \
 		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe -nowarn:3021,612,618,1635 \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		$$(MAC_BOOTSTRAP_DEFINES) \
 		$(2) \
-		$$(MAC_CORE_SOURCES)
+		$$(MACOS_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll $(BUILD_DIR)/mac-$(1).rsp
+$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_GENERATOR) $(MACOS_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll $(BUILD_DIR)/mac-$(1).rsp
 	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
 
 $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
@@ -540,8 +540,8 @@ $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 		--ns=ObjCRuntime \
 		$(2) \
 		$(xm_$(1)_profile) \
-		$(MAC_APIS) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		$(MACOS_APIS) \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		> $$@
 endef
 
@@ -549,7 +549,7 @@ $(eval $(call MAC_GENERATOR_template,full,-d:NO_SYSTEM_DRAWING))
 $(eval $(call MAC_GENERATOR_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES)))
 
 define MAC_TARGETS_template
-$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pdb: $(MAC_BUILD_DIR)/$(1)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
+$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pdb: $(MAC_BUILD_DIR)/$(1)/generated-sources $(MACOS_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
 	@mkdir -p $(MAC_BUILD_DIR)/$(1)-64
 	$$(call Q_PROF_CSC,mac/$(1)-64) \
 		$$(MAC_$(1)_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug -unsafe \
@@ -563,8 +563,8 @@ $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pd
 		$$(MAC_CSC_FLAGS_XM) \
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) \
 		$(2) \
-		$$(MAC_SOURCES) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		$$(MACOS_SOURCES) \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		@$$<
 
 endef
@@ -585,16 +585,16 @@ $(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0/Xamarin.Mac.dll: $(MACOS_DOTNET_
 
 ### .NET ###
 
-$(MACOS_DOTNET_BUILD_DIR)/core-macos.dll: $(MAC_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/mac-defines.rsp | $(MACOS_DOTNET_BUILD_DIR)
+$(MACOS_DOTNET_BUILD_DIR)/core-macos.dll: $(MACOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/macos-defines.rsp | $(MACOS_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$@ \
 		$(MAC_CORE_WARNINGS_TO_FIX) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		$(MAC_CORE_DEFINES) \
-		$(MAC_CORE_SOURCES) \
+		$(MACOS_CORE_SOURCES) \
 		-out:$@ \
 
-$(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources: $(DOTNET_GENERATOR) $(MAC_APIS) $(MACOS_DOTNET_BUILD_DIR)/core-macos.dll $(DOTNET_BINDING_ATTRIBUTES) $(MACOS_DOTNET_BUILD_DIR)/macos.rsp | $(MACOS_DOTNET_BUILD_DIR)/generated-sources
+$(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources: $(DOTNET_GENERATOR) $(MACOS_APIS) $(MACOS_DOTNET_BUILD_DIR)/core-macos.dll $(DOTNET_BINDING_ATTRIBUTES) $(MACOS_DOTNET_BUILD_DIR)/macos.rsp | $(MACOS_DOTNET_BUILD_DIR)/generated-sources
 	$(Q_DOTNET_GEN) $< @$(MACOS_DOTNET_BUILD_DIR)/macos.rsp
 
 $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $(MACOS_DOTNET_BUILD_DIR)
@@ -606,11 +606,11 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 		-tmpdir:$(MACOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib:$(MACOS_DOTNET_BUILD_DIR)/core-macos.dll \
 		--target-framework=.NETCoreApp,Version=6.0,Profile=macos \
-		$(MAC_APIS) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		$(MACOS_APIS) \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		> $@
 
-$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
+$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MACOS_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_BUILD) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll -optimize \
 		-publicsign -keyfile:$(SN_KEY) \
@@ -620,8 +620,8 @@ $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamari
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX),$(WARNINGS_TO_IGNORE) \
 		$(MAC_CSC_FLAGS_XM) \
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN \
-		$(MAC_SOURCES) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		$(MACOS_SOURCES) \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
 		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
@@ -1631,6 +1631,23 @@ all-local:: $(ALL_TARGETS)
 
 $(DOTNET_TARGETS_DIRS):
 	$(Q) mkdir -p $@
+
+DOTNET_macOS_SOURCES+=$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES)
+ifdef ENABLE_DOTNET
+define DotNetProjectFiles
+DOTNET_$(1)_SOURCES+=$$($$(shell echo $(1) | tr '[:lower:]' '[:upper:]')_SOURCES)
+DOTNET_$(1)_APIS=$$($$(shell echo $(1) | tr '[:lower:]' '[:upper:]')_APIS)
+$(DOTNET_BUILD_DIR)/projects/$(1)/$(1).csproj: dotnet.tmpl.csproj Makefile $$(wildcard $(CURDIR)/*.sources)
+	@mkdir -p $$(dir $$@)
+	@sed \
+		-e 's*%PLATFORM%*$(1)*' \
+		-e 's*<!--%FILES%-->*$$(foreach file,$$(DOTNET_$(1)_SOURCES),<Compile Include="../../../../$$(file)" Link="sources/$$(file)" />)*' \
+		-e 's*<!--%APIS%-->*$$(foreach file,$$(DOTNET_$(1)_APIS),<None Include="../../../../$$(file)" Link="apis/$$(file)" />)*' \
+		$$< | xmllint --format - > $$@
+PROJECT_FILES += $(DOTNET_BUILD_DIR)/projects/$(1)/$(1).csproj
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetProjectFiles,$(platform))))
+endif
 
 dotnet: $(DOTNET_TARGETS)
 ifdef ENABLE_DOTNET
