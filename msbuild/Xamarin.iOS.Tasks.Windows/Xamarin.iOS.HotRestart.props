@@ -8,7 +8,6 @@
 		<HotRestartPayloadDir>$(HotRestartSignedAppOutputDir)Payload\</HotRestartPayloadDir>
 		<HotRestartSignedAppDir>$(HotRestartPayloadDir)$(_AppBundleName).app\</HotRestartSignedAppDir>
 		<HotRestartContentDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).content\</HotRestartContentDir>
-		<HotRestartAppContentDir>$(HotRestartSignedAppDir)$(_AppBundleName).content\</HotRestartAppContentDir>
 		<HotRestartContentStampDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).stamp\</HotRestartContentStampDir>
 		<HotRestartIPAPath>$(HotRestartSignedAppOutputDir)$(_AppBundleName).ipa</HotRestartIPAPath>
 

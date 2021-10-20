@@ -150,6 +150,10 @@
 			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
 		</PrepareAppBundle>
 
+		<PropertyGroup>
+			<HotRestartAppContentDir>$(HotRestartAppBundlePath)\$(_AppBundleName).content\</HotRestartAppContentDir>
+		</PropertyGroup>
+
 		<!-- Delete the build signature to force XMA do a full build next time -->
 		<Delete Files="$(BuildSignatureFile)" Condition="Exists('$(BuildSignatureFile)')"	/>
 
@@ -209,12 +213,12 @@
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
 		DependsOnTargets="_CreateHotRestartCachedBundle;_UnpackHotRestartLibraryResources"
 		Inputs="@(_HotRestartBundleResourceWithLogicalName);@(_FilesToHotRestartBundle)"
-		Outputs="@(_HotRestartBundleResourceWithLogicalName -> '$(HotRestartSignedAppDir)%(LogicalName)');
-			@(_FilesToHotRestartBundle -> '$(HotRestartSignedAppDir)%(Filename)%(Extension)')">
+		Outputs="@(_HotRestartBundleResourceWithLogicalName -> '$(HotRestartAppBundlePath)\%(LogicalName)');
+			@(_FilesToHotRestartBundle -> '$(HotRestartAppBundlePath)\%(Filename)%(Extension)')">
 
 		<!-- Copy Bundle resources -->
 		<Copy SourceFiles="@(_HotRestartBundleResourceWithLogicalName)"
-        DestinationFiles="@(_HotRestartBundleResourceWithLogicalName -> '$(HotRestartSignedAppDir)\%(LogicalName)')"
+        DestinationFiles="@(_HotRestartBundleResourceWithLogicalName -> '$(HotRestartAppBundlePath)\%(LogicalName)')"
         SkipUnchangedFiles="true"
         Condition="'@(_HotRestartBundleResourceWithLogicalName)' != ''">
 
@@ -222,7 +226,7 @@
 		</Copy>
 
 		<Copy SourceFiles="@(_FilesToHotRestartBundle)"
-        DestinationFiles="@(_FilesToHotRestartBundle -> '$(HotRestartSignedAppDir)\%(Filename)%(Extension)')"
+        DestinationFiles="@(_FilesToHotRestartBundle -> '$(HotRestartAppBundlePath)\%(Filename)%(Extension)')"
         SkipUnchangedFiles="true"
         Condition="'@(_FilesToHotRestartBundle)' != ''">
 
@@ -298,9 +302,9 @@
 
 	<PropertyGroup>
 		<_CreateHotRestartOutputBundleDependsOn>
-			_CodesignHotRestartAppBundle;
 			_CopyFilesToHotRestartBundle;
 			_CopyFilesToHotRestartContent;
+			_CodesignHotRestartAppBundle;
 		</_CreateHotRestartOutputBundleDependsOn>
 	</PropertyGroup>
 
