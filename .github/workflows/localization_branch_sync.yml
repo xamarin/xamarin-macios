@@ -13,7 +13,7 @@ jobs:
   replaceLocalizationBranch:
     name: 'Replace Localization Branch'
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot') }}
+    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot') }}
     steps:
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
