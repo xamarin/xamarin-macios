@@ -1154,6 +1154,13 @@ public partial class Generator : IMemberGatherer {
 		if (IsWrappedType (mai.Type))
 			return mai.Type.IsByRef ? "ref IntPtr" : "IntPtr";
 
+		if (mai.Type.Namespace == "System") {
+			if (mai.Type.Name == "nint")
+				return "IntPtr";
+			if (mai.Type.Name == "nuint")
+				return "UIntPtr";
+		}
+
 		if (IsNativeType (mai.Type))
 			return PrimitiveType (mai.Type, formatted);
 
@@ -1823,6 +1830,13 @@ public partial class Generator : IMemberGatherer {
 
 		if (castEnum && pi.ParameterType.IsEnum)
 			return "(" + PrimitiveType (pi.ParameterType) + ")" + safe_name;
+
+		if (castEnum && pi.ParameterType.Namespace == "System") {
+			if (pi.ParameterType.Name == "nint")
+				return "(IntPtr) " + safe_name;
+			else if (pi.ParameterType.Name == "nuint")
+				return "(UIntPtr) " + safe_name;
+		}
 
 		if (IsNativeType (pi.ParameterType))
 			return safe_name;
@@ -3926,6 +3940,10 @@ public partial class Generator : IMemberGatherer {
 					cast_a = "CFArray.ArrayFromHandle<" + FormatType (mi.DeclaringType, etype) + ">(";
 				cast_b = ")!";
 			}
+		} else if (mi.ReturnType.Namespace == "System" && mi.ReturnType.Name == "nint") {
+			cast_a = "(nint) ";
+		} else if (mi.ReturnType.Namespace == "System" && mi.ReturnType.Name == "nuint") {
+			cast_a = "(nuint) ";
 		}
 	}
 
