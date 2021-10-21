@@ -9,11 +9,6 @@ jobs:
     name: Labels verification
 
     steps:
-    - run: echo "$GITHUB_CONTEXT"
-      name: 'Debug context'
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-
     - run: exit 0
       name: 'Monojenkins PR'
       # always happy if monojenkins
