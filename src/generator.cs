@@ -2339,8 +2339,8 @@ public partial class Generator : IMemberGatherer {
 			marshal_types.Add (new MarshalType (TypeManager.MTAudioProcessingTap, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
 		if (Frameworks.HaveAddressBook) {
 			marshal_types.Add (TypeManager.ABAddressBook);
-			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle("));
-			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle("));
+			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
+			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle (", closingCreate: ")!"));
 		}
 		if (Frameworks.HaveCoreVideo) {
 			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
