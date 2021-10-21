@@ -576,7 +576,7 @@ function WriteDiffs {
             $sb.AppendLine($json.message)
 
             $commonPlatforms = "iOS", "macOS", "tvOS"
-            $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS", "macCatiOS");}
+            $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS" + "macCatiOS" + "macCat");}
             $dotnetPlatforms = @{Title="dotnet API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
             $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-legacy-" + $_});}
             $dotnetMaciOSPlatforms = @{Title="dotnet iOS-MacCatalayst API diff"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
