@@ -10,6 +10,9 @@
 // Copyright 2010 Novell, Inc
 // Copyright 2012-2014 Xamarin Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -27,69 +30,35 @@ namespace CoreMedia {
 #if !NET
 	[Watch (6,0)]
 #endif
-	public class CMFormatDescription : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CMFormatDescription (IntPtr handle)
-			: this (handle, false)
-		{
-		}
-
+	public class CMFormatDescription : NativeObject {
 		[Preserve (Conditional=true)]
 		internal CMFormatDescription (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CFObject.CFRetain (handle);
-
-			this.handle = handle;
 		}
-		
-		~CMFormatDescription ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-		
+				
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CMFormatDescriptionGetExtensions (/* CMFormatDescriptionRef */ IntPtr desc);
 
 #if !COREBUILD
 		
-		public NSDictionary GetExtensions ()
+		public NSDictionary? GetExtensions ()
 		{
-			var cfDictRef = CMFormatDescriptionGetExtensions (handle);
-			if (cfDictRef == IntPtr.Zero)
-				return null;
+			var cfDictRef = CMFormatDescriptionGetExtensions (Handle);
 			return Runtime.GetNSObject<NSDictionary> (cfDictRef);
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFPropertyListRef */ IntPtr CMFormatDescriptionGetExtension (/* CMFormatDescriptionRef */ IntPtr desc, /* CFStringRef */ IntPtr extensionkey);
 
-		public NSObject GetExtension (string extensionKey)
+		public NSObject? GetExtension (string extensionKey)
 		{
-			using (var ns = new NSString (extensionKey)){
-				var r =  CMFormatDescriptionGetExtension (handle, ns.Handle);
-				if (r == IntPtr.Zero)
-					return null;
+			var extensionKeyHandle = CFString.CreateNative (extensionKey);
+			try {
+				var r = CMFormatDescriptionGetExtension (Handle, extensionKeyHandle);
 				return Runtime.GetNSObject<NSObject> (r);
+			} finally {
+				CFString.ReleaseNative (extensionKeyHandle);
 			}
 		}
 
@@ -100,7 +69,7 @@ namespace CoreMedia {
 		{
 			get
 			{
-				return CMFormatDescriptionGetMediaSubType (handle);
+				return CMFormatDescriptionGetMediaSubType (Handle);
 			}
 		}
 
@@ -153,7 +122,7 @@ namespace CoreMedia {
 		{
 			get
 			{
-				return CMFormatDescriptionGetMediaType (handle);
+				return CMFormatDescriptionGetMediaType (Handle);
 			}
 		}
 		
@@ -168,7 +137,7 @@ namespace CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMFormatDescriptionError CMFormatDescriptionCreate (/* CFAllocatorRef */ IntPtr allocator, CMMediaType mediaType, /* FourCharCode */ uint mediaSubtype, /* CFDictionaryRef */ IntPtr extensions, /* CMFormatDescriptionRef* */ out IntPtr descOut);
 
-		public static CMFormatDescription Create (CMMediaType mediaType, uint mediaSubtype, out CMFormatDescriptionError error)
+		public static CMFormatDescription? Create (CMMediaType mediaType, uint mediaSubtype, out CMFormatDescriptionError error)
 		{
 			IntPtr handle;
 			error = CMFormatDescriptionCreate (IntPtr.Zero, mediaType, mediaSubtype, IntPtr.Zero, out handle);
@@ -178,18 +147,21 @@ namespace CoreMedia {
 			return Create (mediaType, handle, true);
 		}
 
-		public static CMFormatDescription Create (IntPtr handle, bool owns)
+		public static CMFormatDescription? Create (IntPtr handle, bool owns)
 		{
 			return Create (CMFormatDescriptionGetMediaType (handle), handle, owns);
 		}
 
-		public static CMFormatDescription Create (IntPtr handle)
+		public static CMFormatDescription? Create (IntPtr handle)
 		{
 			return Create (handle, false);
 		}
 
-		static CMFormatDescription Create (CMMediaType type, IntPtr handle, bool owns)
-		{		
+		static CMFormatDescription? Create (CMMediaType type, IntPtr handle, bool owns)
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+
 			switch (type) {
 			case CMMediaType.Video:
 				return new CMVideoFormatDescription (handle, owns);
@@ -205,7 +177,7 @@ namespace CoreMedia {
 
 		public AudioStreamBasicDescription? AudioStreamBasicDescription {
 			get {
-				var ret = CMAudioFormatDescriptionGetStreamBasicDescription (handle);
+				var ret = CMAudioFormatDescriptionGetStreamBasicDescription (Handle);
 				if (ret != IntPtr.Zero){
 					unsafe {
 						return *((AudioStreamBasicDescription *) ret);
@@ -218,10 +190,10 @@ namespace CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* AudioChannelLayout* */ IntPtr CMAudioFormatDescriptionGetChannelLayout (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
 			
-		public AudioChannelLayout AudioChannelLayout {
+		public AudioChannelLayout? AudioChannelLayout {
 			get {
 				nint size;
-				var res = CMAudioFormatDescriptionGetChannelLayout (handle, out size);
+				var res = CMAudioFormatDescriptionGetChannelLayout (Handle, out size);
 				if (res == IntPtr.Zero || size == 0)
 					return null;
 				return AudioChannelLayout.FromHandle (res);
@@ -231,11 +203,11 @@ namespace CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetFormatList (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
 
-		public AudioFormat [] AudioFormats {
+		public AudioFormat []? AudioFormats {
 			get {
 				unsafe {
 					nint size;
-					var v = CMAudioFormatDescriptionGetFormatList (handle, out size);
+					var v = CMAudioFormatDescriptionGetFormatList (Handle, out size);
 					if (v == IntPtr.Zero)
 						return null;
 					var items = size / sizeof (AudioFormat);
@@ -251,10 +223,10 @@ namespace CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* const void* */ IntPtr CMAudioFormatDescriptionGetMagicCookie (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
 
-		public byte [] AudioMagicCookie {
+		public byte []? AudioMagicCookie {
 			get {
 				nint size;
-				var h = CMAudioFormatDescriptionGetMagicCookie (handle, out size);
+				var h = CMAudioFormatDescriptionGetMagicCookie (Handle, out size);
 				if (h == IntPtr.Zero)
 					return null;
 
@@ -270,7 +242,7 @@ namespace CoreMedia {
 		public AudioFormat AudioMostCompatibleFormat {
 			get {
 				unsafe {
-					var ret = (AudioFormat *) CMAudioFormatDescriptionGetMostCompatibleFormat (handle);
+					var ret = (AudioFormat *) CMAudioFormatDescriptionGetMostCompatibleFormat (Handle);
 					if (ret == null)
 						return new AudioFormat ();
 					return *ret;
@@ -284,7 +256,7 @@ namespace CoreMedia {
 		public AudioFormat AudioRichestDecodableFormat {
 			get {
 				unsafe {
-					var ret = (AudioFormat *) CMAudioFormatDescriptionGetRichestDecodableFormat (handle);
+					var ret = (AudioFormat *) CMAudioFormatDescriptionGetRichestDecodableFormat (Handle);
 					if (ret == null)
 						return new AudioFormat ();
 					return *ret;
@@ -317,12 +289,6 @@ namespace CoreMedia {
 	[Watch (6,0)]
 #endif
 	public class CMAudioFormatDescription : CMFormatDescription {
-		
-		internal CMAudioFormatDescription (IntPtr handle)
-			: base (handle)
-		{
-		}
-
 		internal CMAudioFormatDescription (IntPtr handle, bool owns)
 			: base (handle, owns)
 		{
@@ -335,12 +301,6 @@ namespace CoreMedia {
 	[Watch (6,0)]
 #endif
 	public partial class CMVideoFormatDescription : CMFormatDescription {
-		
-		internal CMVideoFormatDescription (IntPtr handle)
-			: base (handle)
-		{
-		}
-
 		internal CMVideoFormatDescription (IntPtr handle, bool owns)
 			: base (handle, owns)
 		{
@@ -372,7 +332,7 @@ namespace CoreMedia {
 
 		public CMVideoDimensions Dimensions {
 			get {
-				return CMVideoFormatDescriptionGetDimensions (handle);
+				return CMVideoFormatDescriptionGetDimensions (Handle);
 			}
 		}
 
@@ -382,13 +342,13 @@ namespace CoreMedia {
 			/* CVImageBufferRef */ IntPtr imageBuffer,
 			/* CMVideoFormatDescriptionRef* */ out IntPtr outDesc);
 
-		public static CMVideoFormatDescription CreateForImageBuffer (CVImageBuffer imageBuffer, out CMFormatDescriptionError error)
+		public static CMVideoFormatDescription? CreateForImageBuffer (CVImageBuffer imageBuffer, out CMFormatDescriptionError error)
 		{
-			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
+			if (imageBuffer is null)
+				throw new ArgumentNullException (nameof (imageBuffer));
 
 			IntPtr desc;
-			error = CMVideoFormatDescriptionCreateForImageBuffer (IntPtr.Zero, imageBuffer.handle, out desc);
+			error = CMVideoFormatDescriptionCreateForImageBuffer (IntPtr.Zero, imageBuffer.Handle, out desc);
 			if (error != CMFormatDescriptionError.None)
 				return null;
 
@@ -410,16 +370,16 @@ namespace CoreMedia {
 #if !NET
 		[iOS (7,0), Mac (10,9)]
 #endif
-		public static CMVideoFormatDescription FromH264ParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, out CMFormatDescriptionError error)
+		public static CMVideoFormatDescription? FromH264ParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
-			if (parameterSets == null)
-				throw new ArgumentNullException ("parameterSets");
+			if (parameterSets is null)
+				throw new ArgumentNullException (nameof (parameterSets));
 
 			if (parameterSets.Count < 2)
 				throw new ArgumentException ("parameterSets must contain at least two elements");
 
 			if (nalUnitHeaderLength != 1 && nalUnitHeaderLength != 2 && nalUnitHeaderLength != 4)
-				throw new ArgumentOutOfRangeException ("nalUnitHeaderLength", "must be 1, 2 or 4");
+				throw new ArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
 
 			var handles = new GCHandle [parameterSets.Count];
 			try {
@@ -461,14 +421,11 @@ namespace CoreMedia {
 #if !NET
 		[iOS (7,0), Mac (10,9)]
 #endif
-		public byte[] GetH264ParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
+		public byte[]? GetH264ParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("VideoFormatDescription");
-
 			IntPtr ret;
 			nuint parameterSetSizeOut;
-			error = CMVideoFormatDescriptionGetH264ParameterSetAtIndex (Handle, index, out ret, out parameterSetSizeOut, out parameterSetCount, out nalUnitHeaderLength);
+			error = CMVideoFormatDescriptionGetH264ParameterSetAtIndex (GetCheckedHandle (), index, out ret, out parameterSetSizeOut, out parameterSetCount, out nalUnitHeaderLength);
 			if (error != CMFormatDescriptionError.None)
 				return null;
 
@@ -480,15 +437,15 @@ namespace CoreMedia {
 
 		public CGRect GetCleanAperture (bool originIsAtTopLeft)
 		{
-			return CMVideoFormatDescriptionGetCleanAperture (handle, originIsAtTopLeft);
+			return CMVideoFormatDescriptionGetCleanAperture (Handle, originIsAtTopLeft);
 		}
 
 		public CGSize GetPresentationDimensions (bool usePixelAspectRatio, bool useCleanAperture)
 		{
-			return CMVideoFormatDescriptionGetPresentationDimensions (handle, usePixelAspectRatio, useCleanAperture);
+			return CMVideoFormatDescriptionGetPresentationDimensions (Handle, usePixelAspectRatio, useCleanAperture);
 		}
 
-		public static NSObject [] GetExtensionKeysCommonWithImageBuffers ()
+		public static NSObject? []? GetExtensionKeysCommonWithImageBuffers ()
 		{
 			var arr = CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers ();
 			return NSArray.ArrayFromHandle<NSString> (arr);
@@ -496,9 +453,9 @@ namespace CoreMedia {
 
 		public bool VideoMatchesImageBuffer (CVImageBuffer imageBuffer)
 		{
-			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
-			return CMVideoFormatDescriptionMatchesImageBuffer (handle, imageBuffer.Handle);
+			if (imageBuffer is null)
+				throw new ArgumentNullException (nameof (imageBuffer));
+			return CMVideoFormatDescriptionMatchesImageBuffer (Handle, imageBuffer.Handle);
 		}
 
 #if !NET
@@ -523,9 +480,9 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 #endif
-		public static CMVideoFormatDescription FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions, out CMFormatDescriptionError error)
+		public static CMVideoFormatDescription? FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions, out CMFormatDescriptionError error)
 		{
-			if (parameterSets == null)
+			if (parameterSets is null)
 				throw new ArgumentNullException (nameof (parameterSets));
 
 			if (parameterSets.Count < 3)
@@ -567,7 +524,7 @@ namespace CoreMedia {
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (
-			/* CMFormatDescriptionRef */ IntPtr videoDesc, 
+			/* CMFormatDescriptionRef */ IntPtr videoDesc,
 			/* size_t  */ nuint parameterSetIndex,
 			/* const uint8_t** */ out IntPtr parameterSetPointerOut,
 			/* size_t* */ out nuint parameterSetSizeOut,
@@ -580,14 +537,11 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 #endif
-		public byte [] GetHevcParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
+		public byte []? GetHevcParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("VideoFormatDescription");
-
 			IntPtr ret;
 			nuint parameterSetSizeOut;
-			error = CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (Handle, index, out ret, out parameterSetSizeOut, out parameterSetCount, out nalUnitHeaderLength);
+			error = CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (GetCheckedHandle (), index, out ret, out parameterSetSizeOut, out parameterSetCount, out nalUnitHeaderLength);
 			if (error != CMFormatDescriptionError.None)
 				return null;
 
