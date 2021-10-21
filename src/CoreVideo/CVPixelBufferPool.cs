@@ -90,7 +90,7 @@ namespace CoreVideo {
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pool);
 
 		// TODO: Return type is CVPixelBufferAttributes but need different name when this one is not WeakXXXX
-		public NSDictionary PixelBufferAttributes {
+		public NSDictionary? PixelBufferAttributes {
 			get {
 				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetPixelBufferAttributes (handle));
 			}
@@ -100,7 +100,7 @@ namespace CoreVideo {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CVPixelBufferPoolGetAttributes (
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pool);
 
-		public NSDictionary Attributes {
+		public NSDictionary? Attributes {
 			get {
 				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetAttributes (handle));
 			}

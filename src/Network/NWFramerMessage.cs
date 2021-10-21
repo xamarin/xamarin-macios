@@ -144,7 +144,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_framer_message_copy_object_value (OS_nw_protocol_metadata message, string key);
 
-		public T GetObject<T> (string key) where T : NSObject
+		public T? GetObject<T> (string key) where T : NSObject
 			=> Runtime.GetNSObject<T> (nw_framer_message_copy_object_value (GetCheckedHandle (), key), owns: true);
 	}
 

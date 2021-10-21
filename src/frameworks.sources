@@ -500,7 +500,6 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGColorConverter.cs \
 	CoreGraphics/CGColorConversionInfo.cs \
 	CoreGraphics/CGDataConsumer.cs \
-	CoreGraphics/CGDataProvider-2.cs \
 	CoreGraphics/CGDataProvider.cs \
 	CoreGraphics/CGEvent.cs \
 	CoreGraphics/CGEventSource.cs \
@@ -1865,7 +1864,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/BlockProxyAttribute.cs \
 	ObjCRuntime/BindingImplAttribute.cs \
 	ObjCRuntime/CategoryAttribute.cs \
-	ObjCRuntime/Class.mac.cs \
 	ObjCRuntime/DelayedRegistrationAttribute.cs \
 	ObjCRuntime/DesignatedInitializerAttribute.cs \
 	ObjCRuntime/Dlfcn.cs \
@@ -1927,7 +1925,7 @@ COMMON_FRAMEWORKS =         \
 	StoreKit				\
 	UniformTypeIdentifiers  \
 
-MAC_FRAMEWORKS =            \
+MACOS_FRAMEWORKS =          \
 	$(COMMON_FRAMEWORKS)    \
 	Accounts                \
 	AdServices              \
@@ -2309,10 +2307,10 @@ IOS_API_SOURCES       := $(sort $(foreach framework,$(shell echo $(IOS_FRAMEWORK
 IOS_APIS              := $(sort $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                  $(IOS_API_SOURCES))
 IOS_SOURCES           := $(sort $(foreach framework,$(shell echo $(IOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))          $(SHARED_SOURCES) $(IOS_CORE_SOURCES))
 
-MAC_CORE_SOURCES      := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))     $(SHARED_CORE_SOURCES))
-MAC_API_SOURCES       := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))      $(SHARED_API_SOURCES))
-MAC_APIS              := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                  $(MAC_API_SOURCES))
-MAC_SOURCES           := $(sort $(foreach framework,$(shell echo $(MAC_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))          $(SHARED_SOURCES) $(MAC_CORE_SOURCES))
+MACOS_CORE_SOURCES    := $(sort $(foreach framework,$(shell echo $(MACOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))   $(SHARED_CORE_SOURCES))
+MACOS_API_SOURCES     := $(sort $(foreach framework,$(shell echo $(MACOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))    $(SHARED_API_SOURCES))
+MACOS_APIS            := $(sort $(foreach framework,$(shell echo $(MACOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                $(MACOS_API_SOURCES))
+MACOS_SOURCES         := $(sort $(foreach framework,$(shell echo $(MACOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))        $(SHARED_SOURCES) $(MACOS_CORE_SOURCES))
 
 WATCHOS_CORE_SOURCES  := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES)) $(SHARED_CORE_SOURCES))
 WATCHOS_API_SOURCES   := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))  $(SHARED_API_SOURCES))

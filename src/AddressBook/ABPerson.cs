@@ -882,7 +882,7 @@ namespace AddressBook {
 		{
 			if (handle == IntPtr.Zero)
 				return null;
-			return new ABMultiValue<string> (handle, ToString, ToIntPtr);
+			return new ABMultiValue<string> (handle, ToString, ToIntPtr, true);
 		}
 
 		public void SetEmails (ABMultiValue<string> value)
@@ -931,7 +931,7 @@ namespace AddressBook {
 		{
 			if (handle == IntPtr.Zero)
 				return null;
-			return new ABMultiValue<NSDictionary> (handle);
+			return new ABMultiValue<NSDictionary> (handle, true);
 		}
 
 		static ABMultiValue<T> CreateDictionaryMultiValue<T> (IntPtr handle, Func<NSDictionary, T> factory) where T : DictionaryContainer
@@ -941,7 +941,8 @@ namespace AddressBook {
 
 			return new ABMultiValue<T> (handle,
 				l => factory ((NSDictionary) (object) Runtime.GetNSObject (l)),
-				l => l.Dictionary.Handle);
+				l => l.Dictionary.Handle,
+				true);
 		}
 
 		public ABMultiValue<NSDate> GetDates ()
@@ -953,7 +954,7 @@ namespace AddressBook {
 		{
 			if (handle == IntPtr.Zero)
 				return null;
-			return new ABMultiValue<NSDate> (handle);
+			return new ABMultiValue<NSDate> (handle, true);
 		}
 
 		public void SetDates (ABMultiValue<NSDate> value)

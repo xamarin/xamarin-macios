@@ -158,13 +158,13 @@ namespace CoreVideo {
 			/* CFAllocatorRef __nullable */ IntPtr allocator, int /* OSType = int32_t */ pixelFormat);
 
 #if !XAMCORE_3_0
-		public static NSDictionary Create (int pixelFormat)
+		public static NSDictionary? Create (int pixelFormat)
 		{
 			return Runtime.GetNSObject<NSDictionary> (CVPixelFormatDescriptionCreateWithPixelFormatType (IntPtr.Zero, pixelFormat));
 		}
 #endif
 
-		public static NSDictionary Create (CVPixelFormatType pixelFormat) 
+		public static NSDictionary? Create (CVPixelFormatType pixelFormat) 
 		{
 			return Runtime.GetNSObject<NSDictionary> (CVPixelFormatDescriptionCreateWithPixelFormatType (IntPtr.Zero, (int) pixelFormat));
 		}

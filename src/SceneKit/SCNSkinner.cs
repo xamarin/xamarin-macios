@@ -22,20 +22,20 @@ namespace SceneKit {
 
 		static SCNMatrix4 []? FromNSArray (NSArray? nsa)
 		{
-			if (nsa == null)
+			if (nsa is null)
 				return null;
 
 			var count = nsa.Count;
 			var ret = new SCNMatrix4 [count];
 			for (nuint i = 0; i < count; i++)
-				ret [i] = Runtime.GetNSObject<NSValue> (nsa.ValueAt (i)).SCNMatrix4Value;
+				ret [i] = Runtime.GetNSObject<NSValue> (nsa.ValueAt (i))!.SCNMatrix4Value;
 
 			return ret;
 		}
 
 		static NSArray ToNSArray (SCNMatrix4 []? items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSArray ();
 
 			var count = items.Length;

@@ -11,6 +11,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
+
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
@@ -23,12 +25,15 @@ namespace SpriteKit
 #if !NET
 		[iOS (8,0), Mac (10,10)]
 #endif
-		public static T FromFile<T> (string file) where T : SKNode
+		public static T? FromFile<T> (string file) where T : SKNode
 		{
-			IntPtr handle;
-			using (var s = new NSString (file))
-				handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle(typeof(T)), Selector.GetHandle ("nodeWithFileNamed:"), s.Handle);
-			return Runtime.GetNSObject<T> (handle) ;
+			var fileHandle = CFString.CreateNative (file);
+			try {
+				var handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof (T)), Selector.GetHandle ("nodeWithFileNamed:"), fileHandle);
+				return Runtime.GetNSObject<T> (handle);
+			} finally {
+				CFString.ReleaseNative (fileHandle);
+			}
 		}
 
 		public void Add (SKNode node)
