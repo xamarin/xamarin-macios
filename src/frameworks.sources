@@ -1814,6 +1814,7 @@ WKWEBKIT_API_SOURCES = \
 
 WKWEBKIT_SOURCES = \
 	WKWebKit/WKCompat.cs \
+	WKWebKit/WKPreferences.cs \
 	WKWebKit/WKWindowFeatures.cs \
 
 #

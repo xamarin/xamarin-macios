@@ -303,10 +303,17 @@ namespace WebKit
 		[Export ("fraudulentWebsiteWarningEnabled")]
 		bool FraudulentWebsiteWarningEnabled { [Bind ("isFraudulentWebsiteWarningEnabled")] get; set; }
 
+		[Internal]
 		[Mac (11,3)][iOS (14,5)]
 		[MacCatalyst (14,5)]
 		[Export ("textInteractionEnabled")]
-		bool TextInteractionEnabled { [Bind ("isTextInteractionEnabled")] get; set; }
+		bool _OldTextInteractionEnabled { get; set; }
+
+		[Internal]
+		[Mac (12,0)][iOS (15,0)]
+		[MacCatalyst (15,0)]
+		[Export ("isTextInteractionEnabled")]
+		bool _NewGetTextInteractionEnabled ();
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
