@@ -410,7 +410,7 @@ namespace AddressBook {
 	public class ABMutableStringMultiValue : ABMutableMultiValue<string> {
 		public ABMutableStringMultiValue ()
 			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiString), 
-					ABPerson.ToString, ABPerson.ToIntPtr)
+					ABPerson.ToString, CFString.CreateNative)
 		{
 		}
 	}
