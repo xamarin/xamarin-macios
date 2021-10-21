@@ -1,6 +1,9 @@
 //
 // Copyright 2012-2014 Xamarin
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -13,13 +16,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFCopyDescription (IntPtr ptr);
 
-		public string GetDescription (IntPtr handle)
+		public string? GetDescription (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException ("handle");
+				throw new ArgumentNullException (nameof (handle));
 			
-			using (var s = new CFString (CFCopyDescription (handle)))
-				return s.ToString ();
+			return CFString.FromHandle (CFCopyDescription (handle));
 		}
 		
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFEqual")]
