@@ -11,7 +11,7 @@
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
-		<ProjectReference Include="$(RootTestsDirectory)/../external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet/$(_PlatformName)/MonoTouch.Dialog.csproj" />
+		<ProjectReference Include="$(MSBuildThisFileDirectory)/../../external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet/$(_PlatformName)/MonoTouch.Dialog.csproj" />
 	</ItemGroup>
 
 	<!-- Logic for tvOS -->
@@ -22,7 +22,7 @@
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-		<ProjectReference Include="$(RootTestsDirectory)/../external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet/$(_PlatformName)/MonoTouch.Dialog.csproj" />
+		<ProjectReference Include="$(MSBuildThisFileDirectory)/../../external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet/$(_PlatformName)/MonoTouch.Dialog.csproj" />
 	</ItemGroup>
 
 	<!-- Logic for macOS -->
@@ -42,7 +42,7 @@
 	<!-- Logic for all test suites -->
 	<ItemGroup>
 		<PackageReference Include="NUnitLite" Version="3.12.0" />
-		<ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
+		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
 		<!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
 		<PackageReference Include="System.Json" Version="4.7.1" />
 	</ItemGroup>
