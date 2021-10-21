@@ -7093,9 +7093,9 @@ public partial class Generator : IMemberGatherer {
 								print ($"Dlfcn.SetString (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", value.GetConstant ());");
 							else if (GetNativeEnumToNativeExpression (field_pi.PropertyType, out var preExpression, out var postExpression, out var _)) {
 								if (btype == TypeManager.System_nint || (BindThirdPartyLibrary && btype == TypeManager.System_Int64))
-									print ($"Dlfcn.SetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", {preExpression}value{postExpression});");
+									print ($"Dlfcn.SetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nint) {preExpression}value{postExpression});");
 								else if (btype == TypeManager.System_nuint || (BindThirdPartyLibrary && btype == TypeManager.System_UInt64))
-									print ($"Dlfcn.SetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", {preExpression}value{postExpression});");
+									print ($"Dlfcn.SetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nuint) {preExpression}value{postExpression});");
 								else
 									throw new BindingException (1021, true, fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
 							} else {
