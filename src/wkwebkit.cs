@@ -1074,7 +1074,7 @@ namespace WebKit
 
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoTV]
 		[Export ("upgradeKnownHostsToHTTPS")]
-		bool UpgradeKnownHostsToHTtps { get; set; }
+		bool UpgradeKnownHostsToHttps { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
