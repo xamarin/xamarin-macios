@@ -11,7 +11,6 @@
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
-		<ProjectReference Include="$(MSBuildThisFileDirectory)/../../external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet/$(_PlatformName)/MonoTouch.Dialog.csproj" />
 	</ItemGroup>
 
 	<!-- Logic for tvOS -->
@@ -22,7 +21,6 @@
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-		<ProjectReference Include="$(MSBuildThisFileDirectory)/../../external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet/$(_PlatformName)/MonoTouch.Dialog.csproj" />
 	</ItemGroup>
 
 	<!-- Logic for macOS -->
