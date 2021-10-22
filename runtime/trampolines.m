@@ -1513,7 +1513,11 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 		func = to_managed ? (void *) xamarin_nsnumber_to_nint : (void *) xamarin_nint_to_nsnumber;
 	} else if (!strcmp (fullname, "System.nuint")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_nuint : (void *) xamarin_nuint_to_nsnumber;
+#if DOTNET
+	} else if (!strcmp (fullname, "ObjCRuntime.nfloat")) {
+#else
 	} else if (!strcmp (fullname, "System.nfloat")) {
+#endif
 		func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
 	} else if (mono_class_is_enum (managedType)) {
 		MonoType *baseType = mono_class_enum_basetype (managedType);

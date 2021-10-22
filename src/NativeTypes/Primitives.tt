@@ -24,6 +24,10 @@
 // Copyright 2013 Xamarin, Inc. All rights reserved.
 //
 
+#if NET
+#define OBJCRUNTIME_nfloat
+#endif
+
 <#@ template language="C#v3.5" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -32,8 +36,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace System
-{
+using ObjCRuntime;
+
 <#
 	foreach (var type in new [] {
 		new { NSName = "nint", CilName32 = "Int32", CilName64 = "Int64", IsIntegerType = true },
@@ -56,6 +60,12 @@ namespace System
 			binops.Add ("^");
 		}
 #>
+#if OBJCRUNTIME_<#= type.NSName #>
+namespace ObjCRuntime
+#else
+namespace System
+#endif
+{
 	[Serializable]
 	[DebuggerDisplay ("{v,nq}")]
 	public unsafe struct <#= type.NSName #> : IFormattable, IConvertible, IComparable, IComparable<<#= type.NSName #>>, IEquatable <<#= type.NSName #>>
@@ -427,5 +437,5 @@ namespace System
 				Marshal.WriteIntPtr (destination, i * <#= type.NSName #>.Size, (IntPtr)source [i + startIndex]);
 		}
 	}
-<# } #>
 }
+<# } #>

@@ -28,7 +28,7 @@ namespace UIKit {
 		[UnsupportedOSPlatform ("ios7.0")]
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-		public static CGSize DrawString (this string This, CGPoint point, global::System.nfloat width, UIFont font, UILineBreakMode breakMode)
+		public static CGSize DrawString (this string This, CGPoint point, nfloat width, UIFont font, UILineBreakMode breakMode)
 		{
 			using (var self = ((NSString) This))
 				return self.DrawString (point, width, font, breakMode);
@@ -40,7 +40,7 @@ namespace UIKit {
 		[UnsupportedOSPlatform ("ios7.0")]
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-		public static CGSize DrawString (this string This, CGPoint point, global::System.nfloat width, UIFont font, global::System.nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment)
+		public static CGSize DrawString (this string This, CGPoint point, nfloat width, UIFont font, nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment)
 		{
 			using (var self = ((NSString) This))
 				return self.DrawString (point, width, font, fontSize, breakMode, adjustment);
@@ -52,7 +52,7 @@ namespace UIKit {
 		[UnsupportedOSPlatform ("ios7.0")]
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-		public static CGSize DrawString (this string This, CGPoint point, global::System.nfloat width, UIFont font, global::System.nfloat minFontSize, ref global::System.nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment)
+		public static CGSize DrawString (this string This, CGPoint point, nfloat width, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment)
 		{
 			using (var self = ((NSString) This))
 				return self.DrawString (point, width, font, minFontSize, ref actualFontSize, breakMode, adjustment);
@@ -112,7 +112,7 @@ namespace UIKit {
 		[UnsupportedOSPlatform ("ios7.0")]
 		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-		public static CGSize StringSize (this string This, UIFont font, global::System.nfloat forWidth, UILineBreakMode breakMode)
+		public static CGSize StringSize (this string This, UIFont font, nfloat forWidth, UILineBreakMode breakMode)
 		{
 			using (var self = ((NSString) This))
 				return self.StringSize (font, forWidth, breakMode);
@@ -147,7 +147,7 @@ namespace UIKit {
 #else
 		[UnsupportedOSPlatform ("ios7.0")]
 #endif
-		public static CGSize StringSize (this string This, UIFont font, global::System.nfloat minFontSize, ref global::System.nfloat actualFontSize, global::System.nfloat forWidth, UILineBreakMode lineBreakMode)
+		public static CGSize StringSize (this string This, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, nfloat forWidth, UILineBreakMode lineBreakMode)
 		{
 			using (var self = ((NSString) This))
 				return self.StringSize (font, minFontSize, ref actualFontSize, forWidth, lineBreakMode);

@@ -191,7 +191,11 @@ public class TypeManager {
 
 		System_nint = Lookup (platform_assembly, "System", "nint");
 		System_nuint = Lookup (platform_assembly, "System", "nuint");
+#if NET
+		System_nfloat = Lookup (platform_assembly, "ObjCRuntime", "nfloat");
+#else
 		System_nfloat = Lookup (platform_assembly, "System", "nfloat");
+#endif
 
 		/* fundamental */
 		NSObject = Lookup (platform_assembly, "Foundation", "NSObject");
