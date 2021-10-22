@@ -1859,7 +1859,7 @@ xamarin_release_managed_ref (id self, bool user_type)
 		set_flags_safe (self, (enum XamarinGCHandleFlags) (get_flags_safe (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
 		//
-		// This waypint (lock+unlock) is needed so that we can safely call retainCount in the
+		// This waypoint (lock+unlock) is needed so that we can safely call retainCount in the
 		// toggleref callback.
 		//
 		// The race is between the following actions (given a managed object Z):

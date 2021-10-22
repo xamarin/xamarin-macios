@@ -118,7 +118,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 					returnValue = NULL;
 				} else {
 					//
-					// This waypint (lock+unlock) is needed so that we can reliably call retainCount in the
+					// This waypoint (lock+unlock) is needed so that we can reliably call retainCount in the
 					// toggleref callback (by making sure the toggle ref callback sees the retain).
 					//
 					// The race is between the following actions (given a managed object Z):
