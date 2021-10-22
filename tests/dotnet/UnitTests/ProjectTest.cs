@@ -479,8 +479,9 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", errors [0].Message, "Error message");
+			var uniqueErrors = errors.Select (v => v.Message).Distinct ().ToArray ();
+			Assert.AreEqual (1, uniqueErrors.Length, "Error count");
+			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", uniqueErrors [0], "Error message");
 		}
 
 		[Test]
