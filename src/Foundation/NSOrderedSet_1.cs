@@ -6,6 +6,7 @@
 //
 // Copyright 2015, Xamarin Inc.
 //
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace Foundation {
 		{
 		}
 
-		public new TKey this [nint idx] {
+		public new TKey? this [nint idx] {
 			get {
 				var ret = _GetObject (idx);
 				return Runtime.GetINativeObject <TKey> (ret, false);
@@ -64,7 +65,7 @@ namespace Foundation {
 
 		public bool Contains (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			return _Contains (obj.Handle);
@@ -72,25 +73,25 @@ namespace Foundation {
 
 		public nint IndexOf (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			return _IndexOf (obj.Handle);
 		}
 
-		public TKey FirstObject ()
+		public TKey? FirstObject ()
 		{
 			var ret = _FirstObject ();
 			return Runtime.GetINativeObject <TKey> (ret, false);
 		}
 
-		public TKey LastObject ()
+		public TKey? LastObject ()
 		{
 			var ret = _LastObject ();
 			return Runtime.GetINativeObject <TKey> (ret, false);
 		}
 
-		public NSSet<TKey> AsSet ()
+		public NSSet<TKey>? AsSet ()
 		{
 			var ret = _AsSet ();
 			return Runtime.GetINativeObject <NSSet<TKey>> (ret, false);
@@ -110,11 +111,11 @@ namespace Foundation {
 		}
 		#endregion
 
-		public static NSOrderedSet<TKey> operator + (NSOrderedSet<TKey> first, NSOrderedSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator + (NSOrderedSet<TKey>? first, NSOrderedSet<TKey>? second)
 		{
-			if (first == null)
-				return second != null ? new NSOrderedSet<TKey> (second) : null;
-			if (second == null)
+			if (first is null)
+				return second is not null ? new NSOrderedSet<TKey> (second) : null;
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.UnionSet (second);
@@ -122,11 +123,11 @@ namespace Foundation {
 			return copyset;
 		}
 
-		public static NSOrderedSet<TKey> operator + (NSOrderedSet<TKey> first, NSSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator + (NSOrderedSet<TKey>? first, NSSet<TKey>? second)
 		{
-			if (first == null)
-				return second != null ? new NSOrderedSet<TKey> (second) : null;
-			if (second == null)
+			if (first is null)
+				return second is not null ? new NSOrderedSet<TKey> (second) : null;
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.UnionSet (second);
@@ -134,11 +135,11 @@ namespace Foundation {
 			return copyset;
 		}
 
-		public static NSOrderedSet<TKey> operator - (NSOrderedSet<TKey> first, NSOrderedSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator - (NSOrderedSet<TKey>? first, NSOrderedSet<TKey>? second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.MinusSet (second);
@@ -146,11 +147,11 @@ namespace Foundation {
 			return copyset;
 		}
 
-		public static NSOrderedSet<TKey> operator - (NSOrderedSet<TKey> first, NSSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator - (NSOrderedSet<TKey>? first, NSSet<TKey>? second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.MinusSet (second);
@@ -183,7 +184,7 @@ namespace Foundation {
 		public override bool Equals (object other)
 		{
 			var o = other as NSOrderedSet<TKey>;
-			if (o == null)
+			if (o is null)
 				return false;
 			return IsEqualToOrderedSet (o);
 		}
@@ -191,6 +192,19 @@ namespace Foundation {
 		public override int GetHashCode ()
 		{
 			return (int) GetNativeHash ();
+		}
+		
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options)
+			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other, options));
+
+		NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet other)
+			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other));
+
+		NSOrderedSet<TKey>? GetOrderedSet (NSOrderedCollectionDifference difference)
+		{
+			var ptr = _GetOrderedSet (difference); 
+			return (ptr == IntPtr.Zero)? null : new NSOrderedSet<TKey> (ptr);
 		}
 	}
 }

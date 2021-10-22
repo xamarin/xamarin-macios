@@ -224,6 +224,19 @@ namespace Foundation
 		[Export ("arrayWithContentsOfURL:error:")]
 		[return: NullAllowed]
 		NSArray FromUrl (NSUrl url, out NSError error);
+		
+		[Export ("differenceFromArray:withOptions:usingEquivalenceTest:")]
+		NSOrderedCollectionDifference<NSObject> DifferenceFromArray (NSObject[] other, NSOrderedCollectionDifferenceCalculationOptions options, Func<NSObject, NSObject, bool> block);
+
+		[Export ("differenceFromArray:withOptions:")]
+		NSOrderedCollectionDifference<NSObject> DifferenceFromArray (NSObject[] other, NSOrderedCollectionDifferenceCalculationOptions options);
+
+		[Export ("differenceFromArray:")]
+		NSOrderedCollectionDifference<NSObject> DifferenceFromArray (NSObject[] other);
+
+		[Export ("arrayByApplyingDifference:")]
+		[return: NullAllowed]
+		NSObject[] ArrayByApplyingDifference (NSOrderedCollectionDifference<NSObject> difference);
 	}
 
 #if MONOMAC
@@ -5311,6 +5324,10 @@ namespace Foundation
 
 		[Export ("UUIDString")]
 		string AsString ();
+		
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("compare:")]
+		NSComparisonResult Compare (NSUuid otherUUID);
 	}
 
 	[iOS (8,0)][Mac (10,10), Watch (2,0), TV (9,0)] // .objc_class_name_NSUserActivity", referenced from '' not found
@@ -9267,7 +9284,7 @@ namespace Foundation
 		IntPtr _FirstObject ();
 
 		[Export ("firstObject")]
-		NSObject FirstObject ();
+		NSObject? FirstObject ();
 
 		[Internal]
 		[Sealed]
@@ -9275,7 +9292,7 @@ namespace Foundation
 		IntPtr _LastObject ();
 
 		[Export ("lastObject")]
-		NSObject LastObject ();
+		NSObject? LastObject ();
 
 		[Export ("isEqualToOrderedSet:")]
 		bool IsEqualToOrderedSet (NSOrderedSet other);
@@ -9294,6 +9311,41 @@ namespace Foundation
 
 		[Export ("reversedOrderedSet")]
 		NSOrderedSet GetReverseOrderedSet ();
+		
+		// TODO
+		// [Export ("differenceFromOrderedSet:withOptions:usingEquivalenceTest:")]
+		// NSOrderedCollectionDifference DifferenceFromOrderedSet (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, Func<NSObject, NSObject, bool> block);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (other, options))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options);
+		
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromOrderedSet:withOptions:")]
+		IntPtr _GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (other))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSOrderedSet other);
+		
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromOrderedSet:")]
+		IntPtr _GetDifference (NSOrderedSet other);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedSet> (_GetOrderedSet (difference))")]
+		[return: NullAllowed]
+		NSOrderedSet GetOrderedSet (NSOrderedCollectionDifference difference);
+		
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("orderedSetByApplyingDifference:")]
+		[return: NullAllowed]
+		IntPtr _GetOrderedSet (NSOrderedCollectionDifference difference);
 	}
 
 	interface NSMutableOrderedSet<TKey> : NSMutableOrderedSet {}
@@ -16442,5 +16494,276 @@ namespace Foundation
 		Tcp,
 		Tls,
 		Https,
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSPresentationIntent : NSCopying, NSSecureCoding
+	
+	{
+		[Export ("intentKind")]
+		NSPresentationIntentKind IntentKind { get; }
+
+		[NullAllowed, Export ("parentIntent", ArgumentSemantic.Strong)]
+		NSPresentationIntent ParentIntent { get; }
+
+		[Static]
+		[Export ("paragraphIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateParagraphIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("headerIntentWithIdentity:level:nestedInsideIntent:")]
+		NSPresentationIntent CreateHeaderIntent (nint identity, nint level, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("codeBlockIntentWithIdentity:languageHint:nestedInsideIntent:")]
+		NSPresentationIntent CreateCodeBlockIntent (nint identity, [NullAllowed] string languageHint, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("thematicBreakIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateThematicBreakIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("orderedListIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateOrderedListIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("unorderedListIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateUnorderedListIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("listItemIntentWithIdentity:ordinal:nestedInsideIntent:")]
+		NSPresentationIntent CreateListItemIntent (nint identity, nint ordinal, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("blockQuoteIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateBlockQuoteIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableIntentWithIdentity:columnCount:alignments:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableIntent (nint identity, nint columnCount, NSNumber[] alignments, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableHeaderRowIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableHeaderRowIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableRowIntentWithIdentity:row:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableRowIntent (nint identity, nint row, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableCellIntentWithIdentity:column:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableCellIntent (nint identity, nint column, [NullAllowed] NSPresentationIntent parent);
+
+		[Export ("identity")]
+		nint Identity { get; }
+
+		[Export ("ordinal")]
+		nint Ordinal { get; }
+
+		[NullAllowed, Export ("columnAlignments")]
+		NSNumber[] ColumnAlignments { get; }
+
+		[Export ("columnCount")]
+		nint ColumnCount { get; }
+
+		[Export ("headerLevel")]
+		nint HeaderLevel { get; }
+
+		[NullAllowed, Export ("languageHint")]
+		string LanguageHint { get; }
+
+		[Export ("column")]
+		nint Column { get; }
+
+		[Export ("row")]
+		nint Row { get; }
+
+		[Export ("indentationLevel")]
+		nint IndentationLevel { get; }
+
+		[Export ("isEquivalentToPresentationIntent:")]
+		bool IsEquivalent (NSPresentationIntent other);
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSAttributedStringMarkdownParsingOptions : NSCopying
+	{
+		[Export ("allowsExtendedAttributes")]
+		bool AllowsExtendedAttributes { get; set; }
+
+		[Export ("interpretedSyntax", ArgumentSemantic.Assign)]
+		NSAttributedStringMarkdownInterpretedSyntax InterpretedSyntax { get; set; }
+
+		[Export ("failurePolicy", ArgumentSemantic.Assign)]
+		NSAttributedStringMarkdownParsingFailurePolicy FailurePolicy { get; set; }
+
+		[NullAllowed, Export ("languageCode")]
+		string LanguageCode { get; set; }
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSInflectionRule : NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("automaticRule")]
+		NSInflectionRule AutomaticRule { get; }
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSInflectionRule))]
+	interface NSInflectionRuleExplicit
+	{
+		[Export ("initWithMorphology:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSMorphology morphology);
+
+		[Export ("morphology", ArgumentSemantic.Copy)]
+		NSMorphology Morphology { get; }
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSMorphology : NSCopying, NSSecureCoding
+	{
+		[Export ("grammaticalGender", ArgumentSemantic.Assign)]
+		NSGrammaticalGender GrammaticalGender { get; set; }
+
+		[Export ("partOfSpeech", ArgumentSemantic.Assign)]
+		NSGrammaticalPartOfSpeech PartOfSpeech { get; set; }
+
+		[Export ("number", ArgumentSemantic.Assign)]
+		NSGrammaticalNumber Number { get; set; }
+		
+		[Export ("customPronounForLanguage:")]
+		[return: NullAllowed]
+		NSMorphologyCustomPronoun GetCustomPronoun (string language);
+
+		
+		[Export ("setCustomPronoun:forLanguage:error:")]
+		bool SetCustomPronoun ([NullAllowed] NSMorphologyCustomPronoun features, string language, [NullAllowed] out NSError error);
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NSMorphologyCustomPronoun : NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("isSupportedForLanguage:")]
+		bool IsSupported (string language);
+
+		[Static]
+		[Export ("requiredKeysForLanguage:")]
+		string[] GetRequiredKeysForLanguage (string language);
+
+		[NullAllowed, Export ("subjectForm")]
+		string SubjectForm { get; set; }
+
+		[NullAllowed, Export ("objectForm")]
+		string ObjectForm { get; set; }
+
+		[NullAllowed, Export ("possessiveForm")]
+		string PossessiveForm { get; set; }
+
+		[NullAllowed, Export ("possessiveAdjectiveForm")]
+		string PossessiveAdjectiveForm { get; set; }
+
+		[NullAllowed, Export ("reflexiveForm")]
+		string ReflexiveForm { get; set; }
+	}
+	
+	interface NSOrderedCollectionChange <TKey> : NSOrderedCollectionChange {}
+	
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSOrderedCollectionChange
+	{
+		[Internal]
+		[Static]
+		[Export ("changeWithObject:type:index:")]
+		IntPtr _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index);
+
+		[Internal]
+		[Static]
+		[Export ("changeWithObject:type:index:associatedIndex:")]
+		IntPtr _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+
+		[Internal]
+		[NullAllowed, Export ("object", ArgumentSemantic.Strong)]
+		IntPtr _Object { get; }
+
+		[Export ("changeType")]
+		NSCollectionChangeType ChangeType { get; }
+
+		[Export ("index")]
+		nuint Index { get; }
+
+		[Export ("associatedIndex")]
+		nuint AssociatedIndex { get; }
+
+		[Internal]
+		[Export ("initWithObject:type:index:")]
+		IntPtr Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index);
+		
+		[Wrap ("this (anObject!.Handle, type, index)")]
+		IntPtr Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index);
+
+		[Internal]
+		[Export ("initWithObject:type:index:associatedIndex:")]
+		IntPtr Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+		
+		[Wrap ("this (anObject!.Handle, type, index, associatedIndex)")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+	}
+	
+	interface NSOrderedCollectionDifference <TKey> : NSOrderedCollectionDifference {}
+	
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSOrderedCollectionDifference : INSFastEnumeration
+	{
+		[Export ("initWithChanges:")]
+		IntPtr Constructor (NSOrderedCollectionChange[] changes);
+		
+		[Internal]
+		[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges:")]
+		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects, NSOrderedCollectionChange[] changes);
+
+		[Wrap ("this (inserts, NSArray.FromNSObjects (insertedObjects), removes, NSArray.FromNSObjects (removedObjects), changes)")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects, NSOrderedCollectionChange[] changes);
+
+		[Internal]
+		[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:")]
+		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects);
+		
+		[Wrap ("this (inserts, NSArray.FromNSObjects (insertedObjects), removes, NSArray.FromNSObjects (removedObjects))")]
+		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects);
+
+		[Internal]
+		[Export ("insertions", ArgumentSemantic.Strong)]
+		IntPtr _Insertions { get; }
+
+		[Internal]
+		[Export ("removals", ArgumentSemantic.Strong)]
+		IntPtr _Removals { get; }
+
+		[Export ("hasChanges")]
+		bool HasChanges { get; }
+
+		// TODO
+		// [Export ("differenceByTransformingChangesWithBlock:")]
+		// NSOrderedCollectionDifference<NSObject> DifferenceByTransformingChangesWithBlock (Func<NSOrderedCollectionChange<NSObject>, NSOrderedCollectionChange<NSObject>> block);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("inverseDifference")]
+		IntPtr _InverseDifference ();
 	}
 }
