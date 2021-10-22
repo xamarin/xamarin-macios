@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -59,14 +61,9 @@ namespace CoreGraphics {
 		Xyz,
 	}
 
-	public class CGColorSpace : INativeObject
-#if !COREBUILD 
-		, IDisposable
-#endif
+	public class CGColorSpace : NativeObject
 	{
 #if !COREBUILD
-		internal IntPtr handle;
-
 #if !XAMCORE_3_0
 #if !NET
 		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.")]
@@ -76,42 +73,36 @@ namespace CoreGraphics {
 		public readonly static CGColorSpace Null = new CGColorSpace (IntPtr.Zero);
 #endif
 
-		// Invoked by the marshallers, we need to take a ref
+#if !XAMCORE_4_0
 		public CGColorSpace (IntPtr handle)
+			: base (handle, false)
 		{
-			this.handle = handle;
-			CGColorSpaceRetain (handle);
+		}
+#endif
+
+		static IntPtr Create (CFPropertyList propertyList)
+		{
+			if (propertyList is null)
+				throw new ArgumentNullException (nameof (propertyList));
+			return CGColorSpaceCreateWithPropertyList (propertyList.GetCheckedHandle ());
 		}
 
 		public CGColorSpace (CFPropertyList propertyList)
+			: base (Create (propertyList), true)
 		{
-			if (propertyList == null)
-				throw new ArgumentNullException (nameof (propertyList));
-			this.handle = CGColorSpaceCreateWithPropertyList (propertyList.Handle);
 		}
 
 		[Preserve (Conditional=true)]
 		internal CGColorSpace (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CGColorSpaceRetain (handle);
-
-			this.handle = handle;
 		}
 
-		~CGColorSpace ()
+		internal static CGColorSpace? FromHandle (IntPtr handle, bool owns)
 		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
+			if (handle == IntPtr.Zero)
+				return null;
+			return new CGColorSpace (handle, owns);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -119,15 +110,17 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceRetain (/* CGColorSpaceRef */ IntPtr space);
-		
-		protected virtual void Dispose (bool disposing)
+
+		protected override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CGColorSpaceRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CGColorSpaceRetain (GetCheckedHandle ());
 		}
-		
+
+		protected override void Release ()
+		{
+			CGColorSpaceRelease (GetCheckedHandle ());
+		}
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateDeviceGray ();
 
@@ -166,106 +159,106 @@ namespace CoreGraphics {
 #endif
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedGray (/* const CGFloat[3] */ nfloat [] whitepoint, /* const CGFloat[3] */ nfloat [] blackpoint, /* CGFloat */ nfloat gamma);
+		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedGray (/* const CGFloat[3] */ nfloat [] whitepoint, /* const CGFloat[3] */ nfloat []? blackpoint, /* CGFloat */ nfloat gamma);
 
-		public static CGColorSpace CreateCalibratedGray (nfloat [] whitepoint, nfloat [] blackpoint, nfloat gamma)
+		public static CGColorSpace? CreateCalibratedGray (nfloat [] whitepoint, nfloat []? blackpoint, nfloat gamma)
 		{
-			if (whitepoint == null)
+			if (whitepoint is null)
 				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
 				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
-			if (blackpoint != null && blackpoint.Length != 3)
+			if (blackpoint is not null && blackpoint.Length != 3)
 				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
 			
 			var ptr = CGColorSpaceCreateCalibratedGray (whitepoint, blackpoint, gamma);
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			return FromHandle (ptr, true);
 		}
 		
 		// 3, 3, 3, 9
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedRGB (/* const CGFloat[3] */ nfloat [] whitePoint, /* const CGFloat[3] */ nfloat [] blackPoint, /* const CGFloat[3] */ nfloat [] gamma, /* const CGFloat[9] */ nfloat [] matrix);
+		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedRGB (/* const CGFloat[3] */ nfloat [] whitePoint, /* const CGFloat[3] */ nfloat []? blackPoint, /* const CGFloat[3] */ nfloat []? gamma, /* const CGFloat[9] */ nfloat []? matrix);
 
-		public static CGColorSpace CreateCalibratedRGB (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] gamma, nfloat [] matrix)
+		public static CGColorSpace? CreateCalibratedRGB (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? gamma, nfloat []? matrix)
 		{
-			if (whitepoint == null)
+			if (whitepoint is null)
 				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
 				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
-			if (blackpoint != null && blackpoint.Length != 3)
+			if (blackpoint is not null && blackpoint.Length != 3)
 				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
-			if (gamma != null && gamma.Length != 3)
+			if (gamma is not null && gamma.Length != 3)
 				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (gamma));
-			if (matrix != null && matrix.Length != 9)
+			if (matrix is not null && matrix.Length != 9)
 				throw new ArgumentException ("Must be null or have exactly 9 values", nameof (matrix));
 			
 			var ptr = CGColorSpaceCreateCalibratedRGB (whitepoint, blackpoint, gamma, matrix);
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			return FromHandle (ptr, true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef __nullable */ IntPtr CGColorSpaceCreateLab (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] range);
+		extern static /* CGColorSpaceRef __nullable */ IntPtr CGColorSpaceCreateLab (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? range);
 
 		// Available since the beginning of time
-		public static CGColorSpace CreateLab (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] range)
+		public static CGColorSpace? CreateLab (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? range)
 		{
-			if (whitepoint == null)
+			if (whitepoint is null)
 				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
 				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
-			if (blackpoint != null && blackpoint.Length != 3)
+			if (blackpoint is not null && blackpoint.Length != 3)
 				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
-			if (range != null && range.Length != 4)
+			if (range is not null && range.Length != 4)
 				throw new ArgumentException ("Must be null or have exactly 4 values", nameof (range));
 
 			var ptr = CGColorSpaceCreateLab (whitepoint, blackpoint, range);
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			return FromHandle (ptr, true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateIndexed (/* CGColorSpaceRef */ IntPtr baseSpace,
 			/* size_t */ nint lastIndex, /* const unsigned char* */ byte[] colorTable);
 
-		public static CGColorSpace CreateIndexed (CGColorSpace baseSpace, int lastIndex, byte[] colorTable)
+		public static CGColorSpace? CreateIndexed (CGColorSpace baseSpace, int lastIndex, byte[] colorTable)
 		{
-			var ptr = CGColorSpaceCreateIndexed (baseSpace == null ? IntPtr.Zero : baseSpace.handle, lastIndex, colorTable);
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			var ptr = CGColorSpaceCreateIndexed (baseSpace.GetHandle (), lastIndex, colorTable);
+			return FromHandle (ptr, true);
 		}
 
 			
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreatePattern (/* CGColorSpaceRef */ IntPtr baseSpace);
 
-		public static CGColorSpace CreatePattern (CGColorSpace baseSpace)
+		public static CGColorSpace? CreatePattern (CGColorSpace baseSpace)
 		{
-			var ptr = CGColorSpaceCreatePattern (baseSpace == null ? IntPtr.Zero : baseSpace.handle);
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			var ptr = CGColorSpaceCreatePattern (baseSpace.GetHandle ());
+			return FromHandle (ptr, true);
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithName (/* CFStringRef */ IntPtr name);
 
-		public static CGColorSpace CreateWithName (string name)
+		public static CGColorSpace? CreateWithName (string name)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
+			if (name is null)
+				throw new ArgumentNullException (nameof (name));
 			using (var ns = new NSString (name)) {
 				var cs = CGColorSpaceCreateWithName (ns.Handle);
-				return cs == IntPtr.Zero ? null : new CGColorSpace (cs, true);
+				return FromHandle (cs, true);
 			}
 		}
 
-		static CGColorSpace Create (IntPtr handle)
+		static CGColorSpace? Create (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
 			var r = CGColorSpaceCreateWithName (handle);
-			return r == IntPtr.Zero ? null : new CGColorSpace (r, true);
+			return FromHandle (r, true);
 		}
 
 #if !NET
 		[iOS (9,0)]
 #endif
-		public static CGColorSpace CreateGenericGray ()
+		public static CGColorSpace? CreateGenericGray ()
 		{
 			return Create (CGColorSpaceNames.GenericGray.Handle);
 		}
@@ -273,7 +266,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (9,0)]
 #endif
-		public static CGColorSpace CreateGenericRgb ()
+		public static CGColorSpace? CreateGenericRgb ()
 		{
 			return Create (CGColorSpaceNames.GenericRgb.Handle);
 		}
@@ -281,7 +274,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (8,0)]
 #endif
-		public static CGColorSpace CreateGenericCmyk ()
+		public static CGColorSpace? CreateGenericCmyk ()
 		{
 			return Create (CGColorSpaceNames.GenericCmyk.Handle);
 		}
@@ -289,7 +282,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (9,0)]
 #endif
-		public static CGColorSpace CreateGenericRgbLinear ()
+		public static CGColorSpace? CreateGenericRgbLinear ()
 		{
 			return Create (CGColorSpaceNames.GenericRgbLinear.Handle);
 		}
@@ -297,7 +290,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (8,0)]
 #endif
-		public static CGColorSpace CreateAdobeRgb1988 ()
+		public static CGColorSpace? CreateAdobeRgb1988 ()
 		{
 			return Create (CGColorSpaceNames.AdobeRgb1998.Handle);
 		}
@@ -305,7 +298,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (8,0)]
 #endif
-		public static CGColorSpace CreateSrgb ()
+		public static CGColorSpace? CreateSrgb ()
 		{
 			return Create (CGColorSpaceNames.Srgb.Handle);
 		}
@@ -313,7 +306,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (8,0)]
 #endif
-		public static CGColorSpace CreateGenericGrayGamma2_2 ()
+		public static CGColorSpace? CreateGenericGrayGamma2_2 ()
 		{
 			return Create (CGColorSpaceNames.GenericGrayGamma2_2.Handle);
 		}
@@ -321,7 +314,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (9,0)][Mac (10,11)]
 #endif
-		public static CGColorSpace CreateGenericXyz ()
+		public static CGColorSpace? CreateGenericXyz ()
 		{
 			return Create (CGColorSpaceNames.GenericXyz.Handle);
 		}
@@ -329,7 +322,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (9,0)][Mac (10,11)]
 #endif
-		public static CGColorSpace CreateAcesCGLinear ()
+		public static CGColorSpace? CreateAcesCGLinear ()
 		{
 			return Create (CGColorSpaceNames.AcesCGLinear.Handle);
 		}
@@ -337,7 +330,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (9,0)][Mac (10,11)]
 #endif
-		public static CGColorSpace CreateItuR_709 ()
+		public static CGColorSpace? CreateItuR_709 ()
 		{
 			return Create (CGColorSpaceNames.ItuR_709.Handle);
 		}
@@ -345,7 +338,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (9,0)][Mac (10,11)]
 #endif
-		public static CGColorSpace CreateItuR_2020 ()
+		public static CGColorSpace? CreateItuR_2020 ()
 		{
 			return Create (CGColorSpaceNames.ItuR_2020.Handle);
 		}
@@ -353,7 +346,7 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (9,0)][Mac (10,11)]
 #endif
-		public static CGColorSpace CreateRommRgb ()
+		public static CGColorSpace? CreateRommRgb ()
 		{
 			return Create (CGColorSpaceNames.RommRgb.Handle);
 		}
@@ -361,10 +354,10 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceGetBaseColorSpace (/* CGColorSpaceRef */ IntPtr space);
 
-		public CGColorSpace GetBaseColorSpace ()
+		public CGColorSpace? GetBaseColorSpace ()
 		{
-			var h = CGColorSpaceGetBaseColorSpace (handle);
-			return h == IntPtr.Zero ? null : new CGColorSpace (h, false);
+			var h = CGColorSpaceGetBaseColorSpace (Handle);
+			return FromHandle (h, true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -372,7 +365,7 @@ namespace CoreGraphics {
 
 		public CGColorSpaceModel Model {
 			get {
-				return CGColorSpaceGetModel (handle);
+				return CGColorSpaceGetModel (Handle);
 			}
 		}
 
@@ -381,7 +374,7 @@ namespace CoreGraphics {
 		
 		public nint Components {
 			get {
-				return CGColorSpaceGetNumberOfComponents (handle);
+				return CGColorSpaceGetNumberOfComponents (Handle);
 			}
 		}
 
@@ -393,12 +386,12 @@ namespace CoreGraphics {
 		
 		public byte[] GetColorTable ()
 		{
-			nint n = CGColorSpaceGetColorTableCount (handle);
+			nint n = CGColorSpaceGetColorTableCount (Handle);
 			if (n == 0)
 				return Array.Empty<byte> ();
 			
-			byte[] table = new byte [n * GetBaseColorSpace ().Components];
-			CGColorSpaceGetColorTable (handle, table);
+			byte[] table = new byte [n * GetBaseColorSpace ()!.Components];
+			CGColorSpaceGetColorTable (Handle, table);
 			return table;
 		}
 			
@@ -446,20 +439,20 @@ namespace CoreGraphics {
 #endif
 #endif
 #if XAMCORE_4_0
-		public static CGColorSpace CreateIccProfile (NSData data)
+		public static CGColorSpace? CreateIccProfile (NSData? data)
 #else
-		public static CGColorSpace CreateICCProfile (NSData data)
+		public static CGColorSpace? CreateICCProfile (NSData? data)
 #endif
 		{
 			IntPtr ptr = CGColorSpaceCreateWithICCProfile (data.GetHandle ());
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			return FromHandle (ptr, true);
 		}
 
 #if !NET
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 #endif
-		public static CGColorSpace CreateIccData (NSData data)
+		public static CGColorSpace? CreateIccData (NSData data)
 		{
 			return CreateIccData (data.GetHandle ());
 		}
@@ -467,34 +460,32 @@ namespace CoreGraphics {
 #if !NET
 		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
 #endif
-		public static CGColorSpace CreateIccData (CGDataProvider provider)
+		public static CGColorSpace? CreateIccData (CGDataProvider provider)
 		{
 			return CreateIccData (provider.GetHandle ());
 		}
 
-		static CGColorSpace CreateIccData (IntPtr handle)
+		static CGColorSpace? CreateIccData (IntPtr handle)
 		{
 			var ptr = CGColorSpaceCreateWithICCData (handle);
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			return FromHandle (ptr, true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateICCBased (/* size_t */ nint nComponents,
-			/* const CGFloat* __nullable */ nfloat[] range, 
+			/* const CGFloat* __nullable */ nfloat[]? range, 
 			/* CGDataProviderRef __nullable */ IntPtr profile,
 			/* CGColorSpaceRef __nullable */ IntPtr alternate);
 
 #if XAMCORE_4_0
-		public static CGColorSpace CreateIccProfile (nfloat[] range, CGDataProvider profile, CGColorSpace alternate)
+		public static CGColorSpace? CreateIccProfile (nfloat[]? range, CGDataProvider profile, CGColorSpace alternate)
 #else
-		public static CGColorSpace CreateICCProfile (nfloat[] range, CGDataProvider profile, CGColorSpace alternate)
+		public static CGColorSpace? CreateICCProfile (nfloat[]? range, CGDataProvider profile, CGColorSpace alternate)
 #endif
 		{
-			nint nComponents = range == null ? 0 : range.Length / 2;
-			IntPtr p = profile == null ? IntPtr.Zero : profile.Handle;
-			IntPtr a = alternate == null ? IntPtr.Zero : alternate.Handle;
-			var ptr = CGColorSpaceCreateICCBased (nComponents, range, p, a);
-			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+			nint nComponents = range is null ? 0 : range.Length / 2;
+			var ptr = CGColorSpaceCreateICCBased (nComponents, range, profile.GetHandle (), alternate.GetHandle ());
+			return FromHandle (ptr, true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -536,13 +527,13 @@ namespace CoreGraphics {
 #endif
 #endif
 #if XAMCORE_4_0
-		public NSData GetIccProfile ()
+		public NSData? GetIccProfile ()
 #else
-		public NSData GetICCProfile ()
+		public NSData? GetICCProfile ()
 #endif
 		{
-			IntPtr ptr = CGColorSpaceCopyICCProfile (handle);
-			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
+			IntPtr ptr = CGColorSpaceCopyICCProfile (Handle);
+			return Runtime.GetNSObject<NSData> (ptr, true);
 		}
 
 #if !NET
@@ -558,10 +549,10 @@ namespace CoreGraphics {
 		[Watch (3,0)]
 		[TV (10,0)]
 #endif
-		public NSData GetIccData ()
+		public NSData? GetIccData ()
 		{
-			IntPtr ptr = CGColorSpaceCopyICCData (handle);
-			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
+			IntPtr ptr = CGColorSpaceCopyICCData (Handle);
+			return Runtime.GetNSObject<NSData> (ptr, true);
 		}
 
 #if !NET
@@ -575,9 +566,9 @@ namespace CoreGraphics {
 		[iOS (10,0)]
 		[TV (10,0)]
 #endif
-		public string Name {
+		public string? Name {
 			get {
-				return CFString.FromHandle (CGColorSpaceCopyName (handle), true);
+				return CFString.FromHandle (CGColorSpaceCopyName (Handle), true);
 			}
 		}
 
@@ -597,7 +588,7 @@ namespace CoreGraphics {
 #endif
 		public bool IsWideGamutRgb {
 			get {
-				return CGColorSpaceIsWideGamutRGB (handle);
+				return CGColorSpaceIsWideGamutRGB (Handle);
 			}
 		}
 
@@ -615,7 +606,7 @@ namespace CoreGraphics {
 #endif
 		public bool SupportsOutput {
 			get {
-				return CGColorSpaceSupportsOutput (handle);
+				return CGColorSpaceSupportsOutput (Handle);
 			}
 		}
 
@@ -635,9 +626,9 @@ namespace CoreGraphics {
 		[iOS(10,0)][Mac(10,12)]
 		[TV(10,0)][Watch(5,0)]
 #endif
-		public CFPropertyList ToPropertyList ()
+		public CFPropertyList? ToPropertyList ()
 		{
-			var x = CGColorSpaceCopyPropertyList (handle);
+			var x = CGColorSpaceCopyPropertyList (Handle);
 			if (x == IntPtr.Zero)
 				return null;
 			return new CFPropertyList (x, owns: true);
@@ -679,7 +670,7 @@ namespace CoreGraphics {
 #endif
 		public bool IsHdr {
 			get {
-				return CGColorSpaceIsHDR (handle);
+				return CGColorSpaceIsHDR (Handle);
 			}
 		}
 
@@ -707,7 +698,7 @@ namespace CoreGraphics {
 #endif
 		public bool UsesExtendedRange {
 			get {
-				return CGColorSpaceUsesExtendedRange (handle);
+				return CGColorSpaceUsesExtendedRange (Handle);
 			}
 		}
 
@@ -733,7 +724,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
-		public bool UsesItur2100TF => CGColorSpaceUsesITUR_2100TF (handle);
+		public bool UsesItur2100TF => CGColorSpaceUsesITUR_2100TF (Handle);
 
 #if !NET
 		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
@@ -756,7 +747,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
-		public CGColorSpace CreateLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateLinearized (handle), owns: true);
+		public CGColorSpace? CreateLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateLinearized (Handle), owns: true);
 
 #if !NET
 		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
@@ -779,7 +770,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
-		public CGColorSpace CreateExtended () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtended (handle), owns: true);
+		public CGColorSpace? CreateExtended () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtended (Handle), owns: true);
 
 #if !NET
 		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
@@ -802,7 +793,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
-		public CGColorSpace CreateExtendedLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtendedLinearized (handle), owns: true);
+		public CGColorSpace? CreateExtendedLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtendedLinearized (Handle), owns: true);
 
 #if !NET
 		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
@@ -818,7 +809,7 @@ namespace CoreGraphics {
 #else
 		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
-		public bool IsHlgBased => CGColorSpaceIsHLGBased (handle); 
+		public bool IsHlgBased => CGColorSpaceIsHLGBased (Handle); 
 
 #if !NET
 		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
@@ -834,7 +825,7 @@ namespace CoreGraphics {
 #else
 		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
-		public bool IsPQBased => CGColorSpaceIsPQBased (handle);
+		public bool IsPQBased => CGColorSpaceIsPQBased (Handle);
 
 
 #endif // !COREBUILD

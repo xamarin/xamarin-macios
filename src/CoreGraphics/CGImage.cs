@@ -339,7 +339,7 @@ namespace CoreGraphics {
 
 		public CGImage WithColorSpace (CGColorSpace cs)
 		{
-			var h = CGImageCreateCopyWithColorSpace (handle, cs == null ? IntPtr.Zero : cs.handle);
+			var h = CGImageCreateCopyWithColorSpace (handle, cs.GetHandle ());
 			return h == IntPtr.Zero ? null : new CGImage (h, true);
 		}
 
