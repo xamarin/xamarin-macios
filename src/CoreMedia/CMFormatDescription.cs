@@ -36,7 +36,7 @@ namespace CoreMedia {
 			: base (handle, owns)
 		{
 		}
-				
+
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CMFormatDescriptionGetExtensions (/* CMFormatDescriptionRef */ IntPtr desc);
 
