@@ -133,10 +133,10 @@ namespace System
 				break;
 			}
 
-			if (fromType == "IntPtr") {
+			if (fromType == "IntPtr" || fromType == "UIntPtr") {
 				Write ("*(({0} *)&v)", Cast (arch));
-			} else if (toType == "IntPtr") {
-				Write ("*((IntPtr *)&v.v)");
+			} else if (toType == "IntPtr" || toType == "UIntPtr") {
+				Write ("*(({0} *)&v.v)", toType);
 			} else {
 				Write ("({0})", Cast (arch));
 
