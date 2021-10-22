@@ -104,7 +104,10 @@ parameters:
       statusContext: 'M1 - Mac Big Sur (11.5)',
       demands: [
         "Agent.OS -equals Darwin",
-        "macOS.Architecture -equals arm64"
+        "macOS.Name -equals BigSur",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
       ]
     }]
 
