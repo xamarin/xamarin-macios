@@ -100,7 +100,7 @@ parameters:
     {
       stageName: 'mac_11_5_m1',
       displayName: 'M1 - Mac Big Sur (11.5)',
-      macPool: 'VSEng-VSMac-Xamarin-Shared-Trusted',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
       statusContext: 'M1 - Mac Big Sur (11.5)',
       demands: [
         "Agent.OS -equals Darwin",
