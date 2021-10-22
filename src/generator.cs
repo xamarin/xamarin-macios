@@ -2357,7 +2357,7 @@ public partial class Generator : IMemberGatherer {
 		if (Frameworks.HaveAudioUnit)
 			marshal_types.Add (TypeManager.AudioComponent);
 		if (Frameworks.HaveCoreMedia) {
-			marshal_types.Add (new MarshalType (TypeManager.CMFormatDescription, create: "CMFormatDescription.Create ("));
+			marshal_types.Add (new MarshalType (TypeManager.CMFormatDescription, create: "CMFormatDescription.Create (", closingCreate: ")!"));
 			marshal_types.Add (TypeManager.CMAudioFormatDescription);
 			marshal_types.Add (TypeManager.CMVideoFormatDescription);
 		}

@@ -94,3 +94,6 @@
 
 # Only shown MacCatalyst and there is not public documentation about them.
 
+# Deprecated and not used in MacCatalyst
+!unknown-pinvoke! AuthorizationExecuteWithPrivileges bound
+!unknown-pinvoke! SecCertificateCopySerialNumber bound
