@@ -163,7 +163,7 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void EnumerateResolutionReports (Action<NNWResolutionReport> handler)
+		public void EnumerateResolutionReports (Action<NWResolutionReport> handler)
 		{
 			if (handler == null) 
 				throw new ArgumentNullException (nameof (handler));

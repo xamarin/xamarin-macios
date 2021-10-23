@@ -21,7 +21,7 @@ namespace Network {
 #endif
 	public class NWResolutionReport : NativeObject {
 
-		protected NWResolutionReport (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWResolutionReport (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWReportResolutionSource nw_resolution_report_get_source (OS_nw_resolution_report resolutionReport);

@@ -1273,7 +1273,7 @@ NETWORK_SOURCES = \
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
 	Network/NWQuicMetadata.cs			\
-	Network/NNWResolutionReport.cs \
+	Network/NWResolutionReport.cs \
 	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \
 	Network/NWTlsMetadata.cs \
