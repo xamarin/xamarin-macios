@@ -27,6 +27,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -107,11 +109,6 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueRemoveValueAndLabelAtIndex")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
-
-		public static IntPtr ToIntPtr (NSObject value)
-		{
-			return value == null ? IntPtr.Zero : value.Handle;
-		}
 	}
 
 #if !NET
@@ -141,7 +138,7 @@ namespace AddressBook {
 
 		internal void AssertValid ()
 		{
-			if (self == null)
+			if (self is null)
 				throw new InvalidOperationException ();
 		}
 
@@ -152,7 +149,7 @@ namespace AddressBook {
 		IntPtr ToIntPtr (T value)
 		{
 			var mutable = self as ABMutableMultiValue<T>;
-			if (mutable == null)
+			if (mutable is null)
 				throw CreateNotSupportedException ();
 			return mutable.toNative (value);
 		}
@@ -178,16 +175,16 @@ namespace AddressBook {
 			}
 		}
 
-		public NSString Label {
+		public NSString? Label {
 			get {
 				AssertValid ();
-				return (NSString) Runtime.GetNSObject (ABMultiValue.CopyLabelAtIndex (self.Handle, index));
+				return Runtime.GetNSObject<NSString> (ABMultiValue.CopyLabelAtIndex (self.Handle, index));
 			}
 			set {
 				if (IsReadOnly)
 					throw CreateNotSupportedException ();
 				AssertValid ();
-				ABMultiValue.ReplaceLabelAtIndex (self.Handle, ABMultiValue.ToIntPtr (value), index);
+				ABMultiValue.ReplaceLabelAtIndex (self.Handle, value.GetHandle (), index);
 			}
 		}
 
@@ -213,69 +210,35 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-	public class ABMultiValue<T> : INativeObject, IDisposable, IEnumerable<ABMultiValueEntry<T>>
+	public class ABMultiValue<T> : NativeObject, IEnumerable<ABMultiValueEntry<T>>
 	{
-		IntPtr handle;
 		internal Converter<IntPtr, T> toManaged;
 		internal Converter<T, IntPtr> toNative;
 
-		internal ABMultiValue (IntPtr handle)
+		internal ABMultiValue (IntPtr handle, bool owns)
 			: this (handle, 
-					v => (T) (object) Runtime.GetNSObject (v), 
-					v => v == null ? IntPtr.Zero : ((INativeObject) v).Handle)
+					v => (T) (object) Runtime.GetNSObject (v)!,
+					v => ((INativeObject?) v).GetHandle (), owns)
 		{
 			if (!typeof (NSObject).IsAssignableFrom (typeof (T)))
 				throw new InvalidOperationException ("T must be an NSObject!");
 		}
 
-		internal ABMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
+		internal ABMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative, bool owns)
+			: base (handle, owns)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentException ("Handle must not be null.", "handle");
-			if (toManaged == null)
-				throw new ArgumentNullException ("toManaged");
-			if (toNative == null)
-				throw new ArgumentNullException ("toNative");
+			if (toManaged is null)
+				throw new ArgumentNullException (nameof (toManaged));
+			if (toNative is null)
+				throw new ArgumentNullException (nameof (toNative));
 
-			this.handle = handle;
 			this.toManaged = toManaged;
 			this.toNative  = toNative;
 		}
 
-		~ABMultiValue ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero)
-				CFObject.CFRelease (handle);
-			handle = IntPtr.Zero;
-		}
-
-		internal void AssertValid ()
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("");
-		}
-
-		public IntPtr Handle {
-			get {
-				AssertValid ();
-				return handle;
-			}
-		}
-
 		public virtual bool IsReadOnly {
 			get {
-				AssertValid ();
+				GetCheckedHandle ();
 				return true;
 			}
 		}
@@ -287,7 +250,7 @@ namespace AddressBook {
 		public T[] GetValues ()
 		{
 			return NSArray.ArrayFromHandle (ABMultiValue.CopyArrayOfAllValues (Handle), toManaged)
-				?? new T [0];
+				?? Array.Empty<T> ();
 		}
 
 		public nint Count {
@@ -348,38 +311,36 @@ namespace AddressBook {
 #endif
 	public class ABMutableMultiValue<T> : ABMultiValue<T>
 	{
-		internal ABMutableMultiValue (IntPtr handle)
-			: base (handle)
+		internal ABMutableMultiValue (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
 		internal ABMutableMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
-			: base (handle, toManaged, toNative)
+			: base (handle, toManaged, toNative, false)
 		{
 		}
 
 		public override bool IsReadOnly {
 			get {
-				AssertValid ();
+				GetCheckedHandle ();
 				return false;
 			}
 		}
 
-		public bool Add (T value, NSString label)
+		public bool Add (T value, NSString? label)
 		{
-			int _;
 			return ABMultiValue.AddValueAndLabel (Handle, 
 						toNative (value),
-						ABMultiValue.ToIntPtr (label),
+						label.GetHandle (),
 						out _);
 		}
 
-		public bool Insert (nint index, T value, NSString label)
+		public bool Insert (nint index, T value, NSString? label)
 		{
-			int _;
 			return ABMultiValue.InsertValueAndLabelAtIndex (Handle,
 					toNative (value),
-					ABMultiValue.ToIntPtr (label),
+					label.GetHandle (),
 					index,
 					out _);
 		}
@@ -406,7 +367,7 @@ namespace AddressBook {
 #endif
 	public class ABMutableDateMultiValue : ABMutableMultiValue<NSDate> {
 		public ABMutableDateMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDateTime))
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDateTime), true)
 		{
 		}
 	}
@@ -427,7 +388,7 @@ namespace AddressBook {
 #endif
 	public class ABMutableDictionaryMultiValue : ABMutableMultiValue<NSDictionary> {
 		public ABMutableDictionaryMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDictionary))
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDictionary), true)
 		{
 		}
 	}

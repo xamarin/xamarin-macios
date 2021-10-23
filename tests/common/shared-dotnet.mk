@@ -6,7 +6,9 @@ unexport MSBUILD_EXE_PATH
 
 BINLOG_TIMESTAMP:=$(shell date +%Y-%m-%d-%H%M%S)
 
+ifeq ($(TESTNAME),)
 TESTNAME:=$(notdir $(shell dirname "$(shell dirname "$(CURDIR)")"))
+endif
 
 prepare:
 	$(Q) $(MAKE) -C $(TOP)/tests/dotnet copy-dotnet-config
