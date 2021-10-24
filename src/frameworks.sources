@@ -1969,6 +1969,7 @@ MACOS_FRAMEWORKS =          \
 	ImageCaptureCore	\
 	ImageKit                \
 	Intents                 \
+	IntentsUI               \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \
@@ -2256,6 +2257,7 @@ MACCATALYST_FRAMEWORKS = \
 	IdentityLookup \
 	ImageIO \
 	Intents \
+	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
 	LinkPresentation \
