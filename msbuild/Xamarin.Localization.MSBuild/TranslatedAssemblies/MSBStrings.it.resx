@@ -711,10 +711,10 @@
         <value>Il percorso dell'archivio specificato non è un file di archivio valido (estensione xcarchive). Percorso dell'archivio: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Non è stato possibile eseguire il mapping della versione macOS {0} sulla versione Mac Catalyst corrispondente. Le versioni di macOS valide sono: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Non è stato possibile eseguire il mapping della versione Mac Catalyst{0} sulla versione macOS corrispondente. Le versioni di Mac Catalyst valide sono: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.
@@ -1072,14 +1072,14 @@
         </comment>
     </data>
   <data name="W7085" xml:space="preserve">
-        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+        <value>Creazione di un pacchetto di risorse di associazione compresso perché nell'input sono presenti collegamenti simbolici.</value>
     </data>
   <data name="E7086" xml:space="preserve">
-        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <value>Il valore '{0}' non è valido per la proprietà Compress. Valori validi: 'true', 'false' o 'auto'.</value>
         <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
     </data>
   <data name="W7087" xml:space="preserve">
-        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <value>È previsto un ‘file manifest' nella directory {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

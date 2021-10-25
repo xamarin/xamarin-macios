@@ -119,6 +119,23 @@ namespace CoreFoundation {
 				return CFArrayCreate (IntPtr.Zero, (IntPtr) pv, c, kCFTypeArrayCallbacks_ptr);
 		}
 
+		public static unsafe IntPtr Create (params string [] values)
+		{
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			var c = values.Length;
+			var _values = c <= 256 ? stackalloc IntPtr [c] : new IntPtr [c];
+			for (var i = 0; i < c; ++i)
+				_values [i] = values [i] is null ? CFNullHandle : CFString.CreateNative (values [i]);
+			fixed (IntPtr* pv = _values)
+				return CFArrayCreate (IntPtr.Zero, (IntPtr) pv, c, kCFTypeArrayCallbacks_ptr);
+		}
+
+		static public CFArray FromStrings (params string [] items)
+		{
+			return new CFArray (Create (items), true);
+		}
+
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFArrayGetCount")]
 		internal extern static /* CFIndex */ nint GetCount (/* CFArrayRef */ IntPtr theArray);
 
@@ -133,25 +150,41 @@ namespace CoreFoundation {
 		// identical signature to NSArray API
 		static unsafe public string?[]? StringArrayFromHandle (IntPtr handle)
 		{
-			if (handle == IntPtr.Zero)
-				return null;
+			return ArrayFromHandleFunc (handle, CFString.FromHandle);
+		}
 
-			var c = (int) GetCount (handle);
-			if (c == 0)
-				return Array.Empty<string> ();
-
-			var buffer = c <= 256 ? stackalloc IntPtr [c] : new IntPtr [c];
-			fixed (void* ptr = buffer)
-				CFArrayGetValues (handle, new CFRange (0, c), (IntPtr) ptr);
-
-			string?[] ret = new string [c];
-			for (var i = 0; i < c; i++)
-				ret [i] = CFString.FromHandle (buffer [i]);
-			return ret;
+		static unsafe public string?[]? StringArrayFromHandle (IntPtr handle, bool releaseHandle)
+		{
+			var rv = StringArrayFromHandle (handle);
+			if (releaseHandle && handle != IntPtr.Zero)
+				CFObject.CFRelease (handle);
+			return rv;
 		}
 
 		// identical signature to NSArray API
 		static public T?[]? ArrayFromHandle<T> (IntPtr handle) where T : class, INativeObject
+		{
+			var rv = ArrayFromHandleFunc<T> (handle, DefaultConvert<T>);
+			return rv;
+		}
+
+		static public T?[]? ArrayFromHandle<T> (IntPtr handle, bool releaseHandle) where T : class, INativeObject
+		{
+			var rv = ArrayFromHandle<T> (handle);
+			if (releaseHandle && handle != IntPtr.Zero)
+				CFObject.CFRelease (handle);
+			return rv;
+		}
+
+		static T DefaultConvert<T> (IntPtr handle) where T: class, INativeObject
+		{
+			if (handle != CFNullHandle)
+				return Runtime.GetINativeObject<T> (handle, false)!;
+			return null!;
+		}
+
+		// identical signature to NSArray API
+		static public T[]? ArrayFromHandleFunc<T> (IntPtr handle, Func<IntPtr, T> createObject)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
@@ -166,13 +199,19 @@ namespace CoreFoundation {
 					CFArrayGetValues (handle, new CFRange (0, c), (IntPtr) ptr);
 			}
 
-			T?[] ret = new T [c];
+			var ret = new T [c];
 			for (var i = 0; i < c; i++) {
-				var val = buffer [i];
-				if (val != CFNullHandle)
-					ret [i] = Runtime.GetINativeObject<T> (val, false);
+				ret [i] = createObject (buffer [i]);
 			}
 			return ret;
+		}
+
+		static public T[]? ArrayFromHandleFunc<T> (IntPtr handle, Func<IntPtr, T> createObject, bool releaseHandle)
+		{
+			var rv = ArrayFromHandleFunc<T> (handle, createObject);
+			if (releaseHandle && handle != IntPtr.Zero)
+				CFObject.CFRelease (handle);
+			return rv;
 		}
 	}
 }

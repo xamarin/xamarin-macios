@@ -2306,6 +2306,7 @@ namespace Registrar {
 				size += 8;
 				break;
 			case "System.IntPtr":
+			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
 				size += 4; // for now at least...
@@ -3892,9 +3893,8 @@ namespace Registrar {
 					if (retain)
 						setup_return.AppendLine ("[res retain];");
 					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					setup_return.AppendLine ("xamarin_framework_peer_lock ();");
+					setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 					setup_return.AppendLine ("mt_dummy_use (retval);");
-					setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
 				} else {
 					setup_return.AppendLine ("if (!retval) {");
 					setup_return.AppendLine ("res = NULL;");
@@ -3903,9 +3903,8 @@ namespace Registrar {
 					if (IsNSObject (type)) {
 						setup_return.AppendLine ("id retobj;");
 						setup_return.AppendLine ("retobj = xamarin_get_nsobject_handle (retval);");
-						setup_return.AppendLine ("xamarin_framework_peer_lock ();");
+						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 						setup_return.AppendLine ("[retobj retain];");
-						setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
 						if (!retain)
 							setup_return.AppendLine ("[retobj autorelease];");
 						setup_return.AppendLine ("mt_dummy_use (retval);");
@@ -3920,9 +3919,8 @@ namespace Registrar {
 						setup_return.AppendLine ("{0} retobj;", rettype);
 						setup_return.AppendLine ("retobj = xamarin_get_handle_for_inativeobject ((MonoObject *) retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-						setup_return.AppendLine ("xamarin_framework_peer_lock ();");
+						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 						setup_return.AppendLine ("[retobj retain];");
-						setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
 						if (!retain)
 							setup_return.AppendLine ("[retobj autorelease];");
 						setup_return.AppendLine ("mt_dummy_use (retval);");

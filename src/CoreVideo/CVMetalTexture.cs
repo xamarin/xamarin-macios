@@ -72,7 +72,7 @@ namespace CoreVideo {
 			/* float[2] */ IntPtr lowerLeft, /* float[2] */ IntPtr lowerRight, /* float[2] */ IntPtr upperRight, 
 			/* float[2] */ IntPtr upperLeft);
 
-		public IMTLTexture Texture {
+		public IMTLTexture? Texture {
 			get {
 				return Runtime.GetINativeObject<IMTLTexture> (CVMetalTextureGetTexture (handle), owns: false);
 			}

@@ -160,7 +160,7 @@ namespace SceneKit {
 		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
 		{
 			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
-				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true);
+				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true)!;
 				eventHandler (animation, animatedObject, playingBackward);
 			});
 			return Create (keyTime, handler);

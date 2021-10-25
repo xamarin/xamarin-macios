@@ -20,7 +20,7 @@ namespace Foundation {
 			set {
 				if (idx < 0 || (ulong) idx > Length)
 					throw new ArgumentException ("idx");
-				Marshal.WriteByte (new IntPtr (Bytes.ToInt64 () + idx), value);
+				Marshal.WriteByte (new IntPtr (((long) Bytes) + idx), value);
 			}
 		}
 

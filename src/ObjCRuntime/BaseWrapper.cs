@@ -1,5 +1,7 @@
 // Copyright 2014, Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if !COREBUILD
 
 using System;
@@ -9,34 +11,23 @@ using CoreFoundation;
 
 namespace ObjCRuntime {
 
-	public abstract class BaseWrapper : INativeObject, IDisposable {
+	public abstract class BaseWrapper : NativeObject {
 
 		public BaseWrapper (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			Handle = handle;
-			if (!owns)
+		}
+
+		protected override void Retain ()
+		{
+			if (Handle != IntPtr.Zero)
 				Messaging.void_objc_msgSend (Handle, Selector.GetHandle ("retain"));
 		}
 
-		~BaseWrapper ()
+		protected override void Release ()
 		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle { get; protected set; }
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero) {
+			if (Handle != IntPtr.Zero)
 				Messaging.void_objc_msgSend (Handle, Selector.GetHandle ("release"));
-				Handle = IntPtr.Zero;
-			}
 		}
 	}
 }

@@ -711,10 +711,10 @@
         <value>Sağlanan Arşiv yolu geçerli bir arşiv dosyasından (.xcarchive) değil. Arşiv Yolu: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>macOS {0} sürümü karşılık gelen bir Mac Catalyst sürümüne eşlenemedi. Geçerli macOS sürümleri şunlardır: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Mac Catalyst {0} sürümü karşılık gelen bir macOS sürümüne eşlenemedi. Geçerli Mac Catalyst sürümleri şunlardır: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Wi-Fi hata ayıklayıcısı ayarları için konak IP'leri çözümlenemedi.

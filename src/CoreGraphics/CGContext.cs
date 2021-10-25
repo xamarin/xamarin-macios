@@ -558,7 +558,7 @@ namespace CoreGraphics {
 
 		public void SetFillColor (CGColor color)
 		{
-			CGContextSetFillColorWithColor (handle, color == null ? IntPtr.Zero : color.handle);
+			CGContextSetFillColorWithColor (Handle, color.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -567,7 +567,7 @@ namespace CoreGraphics {
 
 		public void SetStrokeColor (CGColor color)
 		{
-			CGContextSetStrokeColorWithColor (handle, color == null ? IntPtr.Zero : color.handle);
+			CGContextSetStrokeColorWithColor (Handle, color.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -731,10 +731,10 @@ namespace CoreGraphics {
 
 		public void SetShadow (CGSize offset, nfloat blur, CGColor color = null)
 		{
-			if (color == null)
-				CGContextSetShadow (handle, offset, blur);
+			if (color is null)
+				CGContextSetShadow (Handle, offset, blur);
 			else
-				CGContextSetShadowWithColor (handle, offset, blur, color.handle);
+				CGContextSetShadowWithColor (Handle, offset, blur, color.Handle);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
