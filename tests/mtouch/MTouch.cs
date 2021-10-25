@@ -4248,6 +4248,15 @@ class C {
 			Tool.AssertWarningCount (messages, 2);
 		}
 
+		[Test]
+		public void BindingLibraryDSymCreated ()
+		{
+			var testDir = Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "iOS");
+			var csproj = Path.Combine (testDir, "framework-test-ios.csproj");
+			XBuild.BuildXI (csproj, "Release", "iPhone", timeout: TimeSpan.FromMinutes (15));
+			DirectoryAssert.Exists(Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "iOS", "bin", "iPhone", "Release-unified", "XTest.framework.dSYM"));
+		}
+
 		public void XamarinSdkAdjustLibs ()
 		{
 			using (var exttool = new MTouchTool ()) {

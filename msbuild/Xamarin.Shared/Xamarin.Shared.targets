@@ -2050,39 +2050,37 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Ditto>
 	</Target>
 
-	<Target Name="_GenerateFrameworkDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks"
+	<Target Name="_CalculateFrameworkDebugSymbolPath" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks">
+		<PropertyGroup>
+			<_Destination>$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM</_Destination>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_GenerateFrameworkDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false') and '$(IsMacEnabled)' == 'true' And !Exists (_Destination)" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks;_CalculateFrameworkDebugSymbolPath"
 		Inputs="%(_Frameworks.Identity)"
 		Outputs="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM\Contents\Info.plist"
 		>
 
-		<PropertyGroup>
-			<_Destination>$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM</_Destination>
-		</PropertyGroup>
+		<!-- run dsymutil on embedded frameworks -->
+		<DSymUtil
+			SessionId="$(BuildSessionId)"
+			Condition="'$(_NoDSymUtil)' == 'false'"
+			AppBundleDir="$(AppBundleDir)"
+			Architectures=""
+			DSymDir="$(_Destination)"
+			Executable="%(_Frameworks.Identity)"
+			ToolExe="$(DSymUtilExe)"
+			ToolPath="$(DSymUtilPath)">
+		</DSymUtil>
 
-		<!-- if the user framework does not provide it's own dSYM then we try to build one -->
-		<ItemGroup Condition="'$(IsMacEnabled)' == 'true' And !Exists (_Destination)">
-			<!-- run dsymutil on embedded frameworks -->
-			<DSymUtil
-				SessionId="$(BuildSessionId)"
-				Condition="'$(_NoDSymUtil)' == 'false'"
-				AppBundleDir="$(AppBundleDir)"
-				Architectures=""
-				DSymDir="$(_Destination)"
-				Executable="%(_Frameworks.Identity)"
-				ToolExe="$(DSymUtilExe)"
-				ToolPath="$(DSymUtilPath)">
-			</DSymUtil>
-
-			<!-- strip embedded frameworks -->
-			<SymbolStrip
-				SessionId="$(BuildSessionId)"
-				Condition="'$(_NoSymbolStrip)' == 'false'"
-				Executable="%(_Frameworks.Identity)"
-				IsFramework="true"
-				SymbolFile=""
-			>
-			</SymbolStrip>
-		</ItemGroup>
+		<!-- strip embedded frameworks -->
+		<SymbolStrip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(_NoSymbolStrip)' == 'false'"
+			Executable="%(_Frameworks.Identity)"
+			IsFramework="true"
+			SymbolFile="">
+		</SymbolStrip>
 
 		<!-- _GenerateDebugSymbols will run spotlight to index the dSYMs -->
 	</Target>
