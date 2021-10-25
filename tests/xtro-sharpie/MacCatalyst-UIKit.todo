@@ -430,17 +430,12 @@
 !missing-protocol-member! NSCollectionLayoutVisibleItem::transform not found
 !missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute
 !missing-requires-super! UIControl::contextMenuInteraction:willEndForConfiguration:animator: is missing an [RequiresSuper] attribute
-!missing-selector! +NSToolbarItem::itemWithItemIdentifier:barButtonItem: not bound
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
 !missing-selector! NSObject::accessibilityDragSourceDescriptors not bound
 !missing-selector! NSObject::accessibilityDropPointDescriptors not bound
 !missing-selector! NSObject::setAccessibilityDragSourceDescriptors: not bound
 !missing-selector! NSObject::setAccessibilityDropPointDescriptors: not bound
-!missing-selector! NSSharingServicePickerToolbarItem::activityItemsConfiguration not bound
-!missing-selector! NSSharingServicePickerToolbarItem::setActivityItemsConfiguration: not bound
-!missing-selector! NSSharingServicePickerTouchBarItem::activityItemsConfiguration not bound
-!missing-selector! NSSharingServicePickerTouchBarItem::setActivityItemsConfiguration: not bound
 !missing-selector! UIAlertView::initWithTitle:message:delegate:cancelButtonTitle:otherButtonTitles: not bound
 !missing-selector! UIBarAppearance::copy not bound
 !missing-selector! UIBarButtonItemAppearance::copy not bound
