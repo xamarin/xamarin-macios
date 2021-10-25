@@ -40,7 +40,18 @@ namespace CoreFoundation {
 		}
 
 		protected NativeObject (IntPtr handle, bool owns)
+			: this (handle, owns, false)
 		{
+		}
+
+		protected NativeObject (IntPtr handle, bool owns, bool verify)
+		{
+#if !COREBUILD
+			if (verify && handle == IntPtr.Zero && Class.ThrowOnInitFailure)
+				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
+					"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
+#endif
+
 			Handle = handle;
 			if (!owns)
 				Retain ();
