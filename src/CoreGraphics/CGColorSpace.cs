@@ -70,13 +70,26 @@ namespace CoreGraphics {
 #else
 		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-		public readonly static CGColorSpace Null = new CGColorSpace (IntPtr.Zero);
+		public readonly static CGColorSpace Null = CreateNull ();
 #endif
 
 #if !XAMCORE_4_0
 		public CGColorSpace (IntPtr handle)
 			: base (handle, false)
 		{
+		}
+#endif
+
+#if !XAMCORE_3_0
+		static CGColorSpace CreateNull ()
+		{
+			var throwOnInitFailure = Class.ThrowOnInitFailure;
+			Class.ThrowOnInitFailure = false;
+			try {
+				return new CGColorSpace (IntPtr.Zero, true);
+			} finally {
+				Class.ThrowOnInitFailure = throwOnInitFailure;
+			}
 		}
 #endif
 
