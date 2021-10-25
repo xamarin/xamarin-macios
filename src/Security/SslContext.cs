@@ -7,6 +7,8 @@
 // Copyright 2014-2016 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,60 +39,36 @@ namespace Security {
 	[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-	public class SslContext : INativeObject, IDisposable {
+	public class SslContext : NativeObject {
 
-		SslConnection connection;
+		SslConnection? connection;
 		SslStatus result;
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* SSLContextRef */ IntPtr SSLCreateContext (/* CFAllocatorRef */ IntPtr alloc, SslProtocolSide protocolSide, SslConnectionType connectionType);
 
 		public SslContext (SslProtocolSide protocolSide, SslConnectionType connectionType)
+			: base (SSLCreateContext (IntPtr.Zero, protocolSide, connectionType), true)
 		{
-			Handle = SSLCreateContext (IntPtr.Zero, protocolSide, connectionType);
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLClose (/* SSLContextRef */ IntPtr context);
 
-		~SslContext ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		bool disposed;
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (disposed)
-				return;
-
-			disposed = true;
-
 			if (Handle != IntPtr.Zero)
 				result = SSLClose (Handle);
 
 			// don't remove the read/write delegates before we closed the connection, i.e.
 			// the SSLClose will send an Alert for a "close notify"
-			if (connection != null) {
+			if (connection is not null) {
 				connection.Dispose ();
 				connection = null;
 			}
 
-			// SSLCreateContext -> CFRelease (not SSLDisposeContext)
-			if (Handle != IntPtr.Zero) {
-				CFObject.CFRelease (Handle);
-				Handle = IntPtr.Zero;
-			}
+			base.Dispose (disposing);
 		}
-
-		public IntPtr Handle { get; private set; }
 
 		public SslStatus GetLastStatus ()
 		{
@@ -149,11 +127,11 @@ namespace Security {
 		extern static /* OSStatus */ SslStatus SSLSetConnection (/* SSLContextRef */ IntPtr context, /* SSLConnectionRef */ IntPtr connection);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLSetIOFuncs (/* SSLContextRef */ IntPtr context, /* SSLReadFunc */ SslReadFunc readFunc, /* SSLWriteFunc */ SslWriteFunc writeFunc);
+		extern static /* OSStatus */ SslStatus SSLSetIOFuncs (/* SSLContextRef */ IntPtr context, /* SSLReadFunc */ SslReadFunc? readFunc, /* SSLWriteFunc */ SslWriteFunc? writeFunc);
 
-		public SslConnection Connection {
+		public SslConnection? Connection {
 			get {
-				if (connection == null)
+				if (connection is null)
 					return null;
 				IntPtr value;
 				result = SSLGetConnection (Handle, out value);
@@ -162,14 +140,14 @@ namespace Security {
 				return connection;
 			}
 			set {
-				// the read/write delegates needs to be set before set set the connection id
-				if (value == null)
+				// the read/write delegates needs to be set before setting the connection id
+				if (value is null)
 					result = SSLSetIOFuncs (Handle, null, null);
 				else
 					result = SSLSetIOFuncs (Handle, value.ReadFunc, value.WriteFunc);
 
 				if (result == SslStatus.Success) {
-					result = SSLSetConnection (Handle, value == null ? IntPtr.Zero : value.ConnectionId);
+					result = SSLSetConnection (Handle, value is null ? IntPtr.Zero : value.ConnectionId);
 					connection = value;
 				}
 			}
@@ -228,7 +206,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerID (/* SSLContextRef */ IntPtr context, /* const void* */ byte* peerID, /* size_t */ nint peerIDLen);
 
-		public unsafe byte[] PeerId {
+		public unsafe byte[]? PeerId {
 			get {
 				nint length;
 				IntPtr id;
@@ -240,7 +218,7 @@ namespace Security {
 				return data;
 			}
 			set {
-				nint length = (value == null) ? 0 : value.Length;
+				nint length = (value is null) ? 0 : value.Length;
 				fixed (byte *p = value) {
 					result = SSLSetPeerID (Handle, p, length);
 				}
@@ -263,8 +241,8 @@ namespace Security {
 
 		internal unsafe SslStatus Read (byte[] data, int offset, int size, out nint processed)
 		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
+			if (data is null)
+				throw new ArgumentNullException (nameof (data));
 			fixed (byte *d = &data [offset])
 				result = SSLRead (Handle, d, size, out processed);
 			return result;
@@ -272,7 +250,7 @@ namespace Security {
 
 		public unsafe SslStatus Read (byte[] data, out nint processed)
 		{
-			int size = data == null ? 0 : data.Length;
+			int size = data is null ? 0 : data.Length;
 			fixed (byte *d = data)
 				result = SSLRead (Handle, d, size, out processed);
 			return result;
@@ -283,8 +261,8 @@ namespace Security {
 
 		internal unsafe SslStatus Write (byte[] data, int offset, int size, out nint processed)
 		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
+			if (data is null)
+				throw new ArgumentNullException (nameof (data));
 			fixed (byte *d = &data [offset])
 				result = SSLWrite (Handle, d, size, out processed);
 			return result;
@@ -292,7 +270,7 @@ namespace Security {
 
 		public unsafe SslStatus Write (byte[] data, out nint processed)
 		{
-			int size = data == null ? 0 : data.Length;
+			int size = data is null ? 0 : data.Length;
 			fixed (byte *d = data)
 				result = SSLWrite (Handle, d, size, out processed);
 			return result;
@@ -305,7 +283,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetSupportedCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite *ciphers, /* size_t* */ ref nint numCiphers);
 
-		public unsafe IList<SslCipherSuite> GetSupportedCiphers ()
+		public unsafe IList<SslCipherSuite>? GetSupportedCiphers ()
 		{
 			nint n;
 			result = SSLGetNumberSupportedCiphers (Handle, out n);
@@ -327,7 +305,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetEnabledCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite *ciphers, /* size_t* */ ref nint numCiphers);
 
-		public unsafe IList<SslCipherSuite> GetEnabledCiphers ()
+		public unsafe IList<SslCipherSuite>? GetEnabledCiphers ()
 		{
 			nint n;
 			result = SSLGetNumberEnabledCiphers (Handle, out n);
@@ -348,8 +326,8 @@ namespace Security {
 
 		public unsafe SslStatus SetEnabledCiphers (IEnumerable<SslCipherSuite> ciphers)
 		{
-			if (ciphers == null)
-				throw new ArgumentNullException ("ciphers");
+			if (ciphers is null)
+				throw new ArgumentNullException (nameof (ciphers));
 
 			var array = ciphers.ToArray ();
 			fixed (SslCipherSuite *p = array)
@@ -401,7 +379,7 @@ namespace Security {
 
 		public unsafe SslStatus SetDatagramHelloCookie (byte[] cookie)
 		{
-			nint len = cookie == null ? 0 : cookie.Length;
+			nint len = cookie is null ? 0 : cookie.Length;
 			fixed (byte *p = cookie)
 				result = SSLSetDatagramHelloCookie (Handle, p, len);
 			return result;
@@ -411,10 +389,10 @@ namespace Security {
 		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainNameLength (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint peerNameLen);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte[] peerName, /* size_t */ ref nint peerNameLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte[]? peerName, /* size_t */ ref nint peerNameLen);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte[] peerName, /* size_t */ nint peerNameLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte[]? peerName, /* size_t */ nint peerNameLen);
 
 		public string PeerDomainName {
 			get {
@@ -427,7 +405,7 @@ namespace Security {
 				return result == SslStatus.Success ? Encoding.UTF8.GetString (bytes) : String.Empty;
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					result = SSLSetPeerDomainName (Handle, null, 0);
 				} else {
 					var bytes = Encoding.UTF8.GetBytes (value);
@@ -443,7 +421,7 @@ namespace Security {
 		extern unsafe static /* OSStatus */ SslStatus SSLCopyDistinguishedNames (/* SSLContextRef */ IntPtr context, /* CFArrayRef* */ out IntPtr names);
 
 		// TODO: need to setup a server that requires client-side certificates
-		public IList<T> GetDistinguishedNames<T> ()
+		public IList<T>? GetDistinguishedNames<T> ()
 		{
 			IntPtr p;
 			result = SSLCopyDistinguishedNames (Handle, out p);
@@ -480,15 +458,17 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetCertificate (/* SSLContextRef */ IntPtr context, /* _Nullable CFArrayRef */ IntPtr certRefs);
 
-		NSArray Bundle (SecIdentity identity, IEnumerable<SecCertificate> certificates)
+		NSArray Bundle (SecIdentity? identity, IEnumerable<SecCertificate>? certificates)
 		{
-			int i = identity == null ? 0 : 1;
-			int n = certificates == null ? 0 : certificates.Count ();
+			int i = identity is null ? 0 : 1;
+			int n = certificates is null ? 0 : certificates.Count ();
 			var ptrs = new IntPtr [n + i];
 			if (i == 1)
-				ptrs [0] = identity.Handle;
-			foreach (var certificate in certificates)
-				ptrs [i++] = certificate.Handle;
+				ptrs [0] = identity!.Handle;
+			if (certificates is not null) {
+				foreach (var certificate in certificates)
+					ptrs [i++] = certificate.Handle;
+			}
 			return NSArray.FromIntPtrs (ptrs);
 		}
 
@@ -549,7 +529,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLCopyPeerTrust (/* SSLContextRef */ IntPtr context, /* SecTrustRef */ out IntPtr trust);
 
-		public SecTrust PeerTrust {
+		public SecTrust? PeerTrust {
 			get {
 				IntPtr value;
 				result = SSLCopyPeerTrust (Handle, out value);
@@ -605,7 +585,7 @@ namespace Security {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public int SetSessionConfig (NSString config)
 		{
-			if (config == null)
+			if (config is null)
 				throw new ArgumentNullException (nameof (config));
 			
 			return SSLSetSessionConfig (Handle, config.Handle);
@@ -617,7 +597,7 @@ namespace Security {
 #endif
 		public int SetSessionConfig (SslSessionConfig config)
 		{
-			return SetSessionConfig (config.GetConstant ());
+			return SetSessionConfig (config.GetConstant ()!);
 		}
 
 #if !NET
@@ -722,7 +702,7 @@ namespace Security {
 #endif
 		public int SetOcspResponse (NSData response)
 		{
-			if (response == null)
+			if (response is null)
 				throw new ArgumentNullException (nameof (response));
 			return SSLSetOCSPResponse (Handle, response.Handle);
 		}
@@ -768,15 +748,13 @@ namespace Security {
 		[SupportedOSPlatform ("tvos11.0")]
 #endif
 
-		public string[] GetAlpnProtocols (out int error)
+		public string?[] GetAlpnProtocols (out int error)
 		{
 			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
 			error = SSLCopyALPNProtocols (Handle, ref protocols);
 			if (protocols == IntPtr.Zero)
 				return Array.Empty<string> ();
-			var result = CFArray.StringArrayFromHandle (protocols);
-			CFObject.CFRelease (protocols);
-			return result;
+			return CFArray.StringArrayFromHandle (protocols, true)!;
 		}
 
 #if !NET
@@ -786,7 +764,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 #endif
-		public string[] GetAlpnProtocols ()
+		public string?[] GetAlpnProtocols ()
 		{
 			int error;
 			return GetAlpnProtocols (out error);
