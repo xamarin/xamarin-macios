@@ -370,7 +370,7 @@ namespace CoreGraphics {
 		public CGColorSpace? GetBaseColorSpace ()
 		{
 			var h = CGColorSpaceGetBaseColorSpace (Handle);
-			return FromHandle (h, true);
+			return FromHandle (h, false);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
