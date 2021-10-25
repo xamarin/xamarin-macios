@@ -2250,7 +2250,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileProductDefinition>
 	</Target>
 
-	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition;_WriteAppManifest">
+	<Target Name="_CreateInstaller" Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="Codesign;_CompileProductDefinition;_WriteAppManifest">
 		<CreateInstallerPackage
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
