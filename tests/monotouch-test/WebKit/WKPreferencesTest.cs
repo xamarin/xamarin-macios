@@ -8,6 +8,8 @@ using Foundation;
 using WebKit;
 
 namespace MonoTouchFixtures.WebKit {
+	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class WKPreferencesTest {
 		[Test]
 		public void TextInteractionEnabledTest ()

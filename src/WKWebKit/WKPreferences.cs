@@ -16,7 +16,7 @@ namespace WebKit {
 #if !NET
 		[Mac (11,3)][iOS (14,5)][MacCatalyst (14,5)]
 #else
-		[SupportedOSPlatform ("ios14.5"), SupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.3"), SupportedOSPlatform ("maccatalyst14.5")]
+		[SupportedOSPlatform ("ios14.5"), SupportedOSPlatform ("macos11.3"), SupportedOSPlatform ("maccatalyst14.5")]
 #endif
 		public bool TextInteractionEnabled { 
 			get {
