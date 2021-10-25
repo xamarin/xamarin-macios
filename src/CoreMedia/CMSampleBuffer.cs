@@ -106,7 +106,7 @@ namespace CoreMedia {
 			error = CMAudioSampleBufferCreateWithPacketDescriptions (IntPtr.Zero,
 				dataBuffer.GetHandle (),
 				true, IntPtr.Zero, IntPtr.Zero,
-				formatDescription.handle,
+				formatDescription.Handle,
 				samplesCount, sampleTimestamp,
 				packetDescriptions,
 				out buffer);
@@ -241,7 +241,7 @@ namespace CoreMedia {
 			error = CMSampleBufferCreateForImageBuffer (IntPtr.Zero,
 				imageBuffer.handle, dataReady,
 				IntPtr.Zero, IntPtr.Zero,
-				formatDescription.handle,
+				formatDescription.Handle,
 				ref sampleTiming,
 				out buffer);
 
@@ -692,9 +692,8 @@ namespace CoreMedia {
 			if (samplesCount <= 0)
 				throw new ArgumentOutOfRangeException ("samplesCount");
 
-			IntPtr buffer;
 			error = CMAudioSampleBufferCreateReadyWithPacketDescriptions (IntPtr.Zero, dataBuffer.Handle,
-				formatDescription.handle, samplesCount, sampleTimestamp, packetDescriptions, out buffer);
+				formatDescription.Handle, samplesCount, sampleTimestamp, packetDescriptions, out var buffer);
 
 			if (error != CMSampleBufferError.None)
 				return null;

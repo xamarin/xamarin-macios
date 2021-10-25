@@ -7,6 +7,9 @@
  * Copyright 2014 Xamarin Inc
  * All Rights Reserved
  */
+
+#nullable enable
+
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -33,46 +36,23 @@ namespace CoreFoundation
 	delegate void CFMachPortCallBack (IntPtr cfMachPort, IntPtr msg, IntPtr size, IntPtr info);
 #endif
 	
-	public class CFMachPort : INativeObject, IDisposable 
+	public class CFMachPort : NativeObject
 	{
 		delegate void CFMachPortCallBack (IntPtr cfmachport, IntPtr msg, nint len, IntPtr context);
-			
-		internal IntPtr handle;
 
-		public CFMachPort (IntPtr handle) : this (handle, false)
+#if !XAMCORE_4_0
+		public CFMachPort (IntPtr handle) : base (handle, false)
 		{
 		}
+#endif
 
-		public CFMachPort (IntPtr handle, bool ownsHandle)
+#if XAMCORE_4_0
+		internal CFMachPort (IntPtr handle, bool owns)
+#else
+		public CFMachPort (IntPtr handle, bool owns)
+#endif
+			: base (handle, owns)
 		{
-			if (!ownsHandle)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
-		}
-
-		~CFMachPort ()
-		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -80,7 +60,7 @@ namespace CoreFoundation
 
 		public IntPtr MachPort {
 			get {
-				return CFMachPortGetPort (handle);
+				return CFMachPortGetPort (Handle);
 			}
 		}
 
@@ -89,7 +69,7 @@ namespace CoreFoundation
 
 		public void Invalidate ()
 		{
-			CFMachPortInvalidate (handle);
+			CFMachPortInvalidate (Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -97,7 +77,7 @@ namespace CoreFoundation
 		extern static bool CFMachPortIsValid (IntPtr handle);
 		public bool IsValid { 
 			get {
-				return CFMachPortIsValid (handle);
+				return CFMachPortIsValid (Handle);
 			}
 		}
 
@@ -107,7 +87,7 @@ namespace CoreFoundation
 		public CFRunLoopSource CreateRunLoopSource ()
 		{
 			// order is currently ignored, we must pass 0
-			var source = CFMachPortCreateRunLoopSource (IntPtr.Zero, handle, IntPtr.Zero);
+			var source = CFMachPortCreateRunLoopSource (IntPtr.Zero, Handle, IntPtr.Zero);
 			return new CFRunLoopSource (source, true);
 		}
 

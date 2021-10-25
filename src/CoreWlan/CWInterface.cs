@@ -1,5 +1,5 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
-
+#if !__MACCATALYST__
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
@@ -75,3 +75,4 @@ namespace CoreWlan {
 
 	}
 }
+#endif // !__MACCATALYST__

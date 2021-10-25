@@ -1154,6 +1154,13 @@ public partial class Generator : IMemberGatherer {
 		if (IsWrappedType (mai.Type))
 			return mai.Type.IsByRef ? "ref IntPtr" : "IntPtr";
 
+		if (mai.Type.Namespace == "System") {
+			if (mai.Type.Name == "nint")
+				return "IntPtr";
+			if (mai.Type.Name == "nuint")
+				return "UIntPtr";
+		}
+
 		if (IsNativeType (mai.Type))
 			return PrimitiveType (mai.Type, formatted);
 
@@ -1824,6 +1831,13 @@ public partial class Generator : IMemberGatherer {
 		if (castEnum && pi.ParameterType.IsEnum)
 			return "(" + PrimitiveType (pi.ParameterType) + ")" + safe_name;
 
+		if (castEnum && pi.ParameterType.Namespace == "System") {
+			if (pi.ParameterType.Name == "nint")
+				return "(IntPtr) " + safe_name;
+			else if (pi.ParameterType.Name == "nuint")
+				return "(UIntPtr) " + safe_name;
+		}
+
 		if (IsNativeType (pi.ParameterType))
 			return safe_name;
 
@@ -2092,17 +2106,20 @@ public partial class Generator : IMemberGatherer {
 		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
 		var underlyingTypeName = RenderType (underlyingEnumType);
 		string itype;
+		string intermediateType;
 		object maxValue;
 		Func<FieldInfo, bool> isMaxDefinedFunc;
 		Func<FieldInfo, bool> isMinDefinedFunc = null;
 		if (TypeManager.System_Int64 == underlyingEnumType) {
-			nativeType = "nint";
+			nativeType = "IntPtr";
+			intermediateType = "nint";
 			itype = "int";
 			maxValue = long.MaxValue;
 			isMaxDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MaxValue;
 			isMinDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MinValue;
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
-			nativeType = "nuint";
+			nativeType = "UIntPtr";
+			intermediateType = "nuint";
 			itype = "uint";
 			maxValue = ulong.MaxValue;
 			isMaxDefinedFunc = (v) => (ulong) v.GetRawConstantValue () == ulong.MaxValue;
@@ -2111,7 +2128,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (!string.IsNullOrEmpty (attrib.ConvertToManaged)) {
-			preExpression = attrib.ConvertToManaged + " (";
+			preExpression = attrib.ConvertToManaged + " ((" + intermediateType + ") ";
 			postExpression = ")";
 		} else {
 			preExpression = "(" + renderedEnumType + ") (" + RenderType (underlyingEnumType) + ") ";
@@ -2156,15 +2173,15 @@ public partial class Generator : IMemberGatherer {
 
 		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
 		if (TypeManager.System_Int64 == underlyingEnumType) {
-			nativeType = "nint";
+			nativeType = "IntPtr";
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
-			nativeType = "nuint";
+			nativeType = "UIntPtr";
 		} else {
 			throw new BindingException (1029, enumType);
 		}
 
 		if (!string.IsNullOrEmpty (attrib.ConvertToNative)) {
-			preExpression = attrib.ConvertToNative + " (";
+			preExpression = "(" + nativeType + ") " + attrib.ConvertToNative + " (";
 			postExpression = ")";
 		} else {
 			preExpression = "(" + nativeType + ") (" + RenderType (underlyingEnumType) + ") ";
@@ -2188,9 +2205,9 @@ public partial class Generator : IMemberGatherer {
 
 		underlyingType = enumType.GetEnumUnderlyingType ();
 		if (underlyingType == TypeManager.System_Int64) {
-			nativeType = "nint";
+			nativeType = "IntPtr";
 		} else if (underlyingType == TypeManager.System_UInt64) {
-			nativeType = "nuint";
+			nativeType = "UIntPtr";
 		} else {
 			throw new BindingException (1026, true, enumType.FullName, "NativeAttribute");
 		}
@@ -2339,8 +2356,8 @@ public partial class Generator : IMemberGatherer {
 			marshal_types.Add (new MarshalType (TypeManager.MTAudioProcessingTap, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
 		if (Frameworks.HaveAddressBook) {
 			marshal_types.Add (TypeManager.ABAddressBook);
-			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle("));
-			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle("));
+			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
+			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle (", closingCreate: ")!"));
 		}
 		if (Frameworks.HaveCoreVideo) {
 			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
@@ -2357,7 +2374,7 @@ public partial class Generator : IMemberGatherer {
 		if (Frameworks.HaveAudioUnit)
 			marshal_types.Add (TypeManager.AudioComponent);
 		if (Frameworks.HaveCoreMedia) {
-			marshal_types.Add (new MarshalType (TypeManager.CMFormatDescription, create: "CMFormatDescription.Create ("));
+			marshal_types.Add (new MarshalType (TypeManager.CMFormatDescription, create: "CMFormatDescription.Create (", closingCreate: ")!"));
 			marshal_types.Add (TypeManager.CMAudioFormatDescription);
 			marshal_types.Add (TypeManager.CMVideoFormatDescription);
 		}
@@ -3923,6 +3940,10 @@ public partial class Generator : IMemberGatherer {
 					cast_a = "CFArray.ArrayFromHandle<" + FormatType (mi.DeclaringType, etype) + ">(";
 				cast_b = ")!";
 			}
+		} else if (mi.ReturnType.Namespace == "System" && mi.ReturnType.Name == "nint") {
+			cast_a = "(nint) ";
+		} else if (mi.ReturnType.Namespace == "System" && mi.ReturnType.Name == "nuint") {
+			cast_a = "(nuint) ";
 		}
 	}
 
@@ -7072,9 +7093,9 @@ public partial class Generator : IMemberGatherer {
 								print ($"Dlfcn.SetString (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", value.GetConstant ());");
 							else if (GetNativeEnumToNativeExpression (field_pi.PropertyType, out var preExpression, out var postExpression, out var _)) {
 								if (btype == TypeManager.System_nint || (BindThirdPartyLibrary && btype == TypeManager.System_Int64))
-									print ($"Dlfcn.SetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", {preExpression}value{postExpression});");
+									print ($"Dlfcn.SetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nint) {preExpression}value{postExpression});");
 								else if (btype == TypeManager.System_nuint || (BindThirdPartyLibrary && btype == TypeManager.System_UInt64))
-									print ($"Dlfcn.SetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", {preExpression}value{postExpression});");
+									print ($"Dlfcn.SetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nuint) {preExpression}value{postExpression});");
 								else
 									throw new BindingException (1021, true, fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
 							} else {
