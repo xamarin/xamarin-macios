@@ -1090,21 +1090,6 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, nint, nint, nint); @try",
-					Variants = Variants.msgSend | Variants.msgSendSuper,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.NInt },
-					},
-					MarshalExceptions = true,
-				}
-			);
-
-			data.Add (
-				new FunctionData {
 					Comment = " // IntPtr func (IntPtr, Vector2); @try",
 					Prefix = "simd__",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
@@ -1274,18 +1259,6 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Vector2 func (nint)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.Vector2,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.NInt },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
 					Comment = " // void func (Matrix2)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
@@ -1385,22 +1358,6 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.Vector3 },
 						new ParameterData { TypeData = Types.Bool },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.IntPtr },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (Vector3, Vector2i, bool, IntPtr, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Vector3 },
-						new ParameterData { TypeData = Types.Vector2i },
-						new ParameterData { TypeData = Types.Bool },
-						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.IntPtr },
 					},
 				}
@@ -2415,18 +2372,6 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // NMatrix4 func (IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.NMatrix4,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.IntPtr }
-					}
-				}
-			);
-
-			data.Add (
-				new FunctionData {
 					Comment = " // void func  (NVector3, IntPtr)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
@@ -2466,20 +2411,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (Vector2D, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.Vector2d},
-						new ParameterData { TypeData = Types.IntPtr }
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (Vector2D, int)",
+					Comment = " // IntPtr func (Vector2D, nint)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.IntPtr,
@@ -3378,22 +3310,31 @@ namespace Xamarin.BindingMethods.Generator
 				RequireMarshal = false,
 			};
 			public static TypeData NInt = new TypeData {
-				ManagedType = "nint",
-				NativeType = "xm_nint_t",
-				NativeWrapperType = "xm_nint_t",
+				ManagedType = "IntPtr",
+				NativeType = "void *",
+				NativeWrapperType = "void *",
 				RequireMarshal = false,
+				IsNativeType = true,
+				Bit32Type = Int32,
+				Bit64Type = Int64,
 			};
 			public static TypeData NUInt = new TypeData {
-				ManagedType = "nuint",
-				NativeType = "xm_nuint_t",
-				NativeWrapperType = "xm_nuint_t",
+				ManagedType = "UIntPtr",
+				NativeType = "void *",
+				NativeWrapperType = "void *",
 				RequireMarshal = false,
+				IsNativeType = true,
+				Bit32Type = UInt32,
+				Bit64Type = UInt64,
 			};
 			public static TypeData NFloat = new TypeData {
 				ManagedType = "nfloat",
 				NativeType = "xm_nfloat_t",
 				NativeWrapperType = "xm_nfloat_t",
 				RequireMarshal = false,
+				IsNativeType = true,
+				Bit32Type = Float,
+				Bit64Type = Double,
 			};
 			public static TypeData Bool = new TypeData {
 				ManagedType = "bool",
@@ -3524,21 +3465,15 @@ namespace Xamarin.BindingMethods.Generator
 		public bool IsARMStret;
 #pragma warning restore 649
 		public bool IsAnyStret { get { return IsX86Stret || IsX64Stret || IsARMStret; } }
-		public bool IsNativeType { get { return ManagedType == "nint" || ManagedType == "nuint" || ManagedType == "nfloat"; } }
+		public bool IsNativeType;
+		public TypeData Bit32Type;
+		public TypeData Bit64Type;
 
 		public TypeData AsSpecificNativeType (bool as32bit)
 		{
-			switch (ManagedType) {
-			case "nint":
-				return as32bit ? MainClass.Types.Int32 : MainClass.Types.Int64;
-			case "nuint":
-				return as32bit ? MainClass.Types.UInt32 : MainClass.Types.UInt64;
-			case "nfloat":
-				return as32bit ? MainClass.Types.Float : MainClass.Types.Double;
-			default:
-				return this;
-			}
-
+			if (as32bit)
+				return Bit32Type ?? this;
+			return Bit64Type ?? this;
 		}
 	}
 
