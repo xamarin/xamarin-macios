@@ -576,7 +576,7 @@ namespace CoreGraphics {
 
 		public void SetFillColorSpace (CGColorSpace space)
 		{
-			CGContextSetFillColorSpace (handle, space == null ? IntPtr.Zero : space.handle);
+			CGContextSetFillColorSpace (handle, space.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -585,7 +585,7 @@ namespace CoreGraphics {
 
 		public void SetStrokeColorSpace (CGColorSpace space)
 		{
-			CGContextSetStrokeColorSpace (handle, space == null ? IntPtr.Zero : space.handle);
+			CGContextSetStrokeColorSpace (handle, space.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
