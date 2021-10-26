@@ -11996,7 +11996,7 @@ namespace AVFoundation {
 		bool CanPlayFastForward { get; }
 
 		[Field ("AVPlayerItemTimeJumpedNotification")]
-#if WATCH
+#if !XAMCORE_4_0 
 		[Notification]
 #else
 		[Notification (typeof (AVPlayerItemTimeJumpedEventArgs))]
