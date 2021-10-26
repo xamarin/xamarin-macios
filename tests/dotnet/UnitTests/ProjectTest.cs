@@ -277,7 +277,10 @@ namespace Xamarin.Tests {
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
-			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
+			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (
+				Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client", "dotnet"),
+				Path.Combine (Configuration.SourceRoot, "external", "MonoTouch.Dialog", "MonoTouch.Dialog", "dotnet")
+			);
 			try {
 				var result = DotNet.AssertBuild (project_path, verbosity);
 				var lines = BinLog.PrintToLines (result.BinLogPath);
@@ -476,8 +479,9 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", errors [0].Message, "Error message");
+			var uniqueErrors = errors.Select (v => v.Message).Distinct ().ToArray ();
+			Assert.AreEqual (1, uniqueErrors.Length, "Error count");
+			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", uniqueErrors [0], "Error message");
 		}
 
 		[Test]

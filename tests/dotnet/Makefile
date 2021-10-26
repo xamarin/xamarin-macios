@@ -68,3 +68,4 @@ copy-dotnet-config: $(TARGETS)
 		$(CP) -c NuGet.config global.json "$$dir"; \
 	done
 	$(Q) $(CP) -c NuGet.config global.json $(TOP)/external/Touch.Unit/Touch.Client/dotnet
+	$(Q) $(CP) -c NuGet.config global.json $(TOP)/external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet
