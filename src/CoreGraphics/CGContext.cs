@@ -764,7 +764,7 @@ namespace CoreGraphics {
 
 		public void DrawShading (CGShading shading)
 		{
-			CGContextDrawShading (handle, shading == null ? IntPtr.Zero : shading.handle);
+			CGContextDrawShading (Handle, shading.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
