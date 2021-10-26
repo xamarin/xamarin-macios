@@ -58,6 +58,9 @@ using AppKit;
 using UIImage = AppKit.NSImage;
 #else
 using UIKit;
+using AVSampleCursorChunkInfo = Foundation.NSObject;
+using AVSampleCursorStorageRange = Foundation.NSObject;
+using AVSampleCursorSyncInfo = Foundation.NSObject;
 #endif
 
 #if !NET
