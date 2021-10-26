@@ -834,9 +834,9 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 	
 	pthread_mutex_lock (&gchandle_hash_lock);
 	if (gchandle_hash == NULL) {
-		CFDictionaryValueCallBacks value_callbacks;
+		CFDictionaryValueCallBacks value_callbacks = { 0 };
 		value_callbacks.release = release_gchandle_dictionary_entry;
-		gchandle_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);
+		gchandle_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, &value_callbacks);
 	}
 	if (gc_handle == INVALID_GCHANDLE) {
 		CFDictionaryRemoveValue (gchandle_hash, self);
