@@ -1481,6 +1481,10 @@ namespace CoreText {
 	}
 
 	public partial class CTFont : NativeObject {
+		internal CTFont (IntPtr handle, bool owns)
+			: base (handle, owns, true)
+		{
+		}
 
 #region Font Creation
 		[DllImport (Constants.CoreTextLibrary)]
