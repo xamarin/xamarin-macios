@@ -149,10 +149,15 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static /* CGContextRef */ IntPtr CGPDFContextCreate (/* CGDataConsumerRef */ IntPtr consumer, CGRect *mediaBox, /* CFDictionaryRef */ IntPtr auxiliaryInfo);
 
-		unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect *mediaBox, CGPDFInfo info)
+		static unsafe IntPtr Create (CGDataConsumer dataConsumer, CGRect *mediaBox, CGPDFInfo info)
 		{
-			using (var dict = info == null ? null : info.ToDictionary ())
-				Handle = CGPDFContextCreate (dataConsumer.GetHandle (), mediaBox, dict.GetHandle ());
+			using (var dict = info?.ToDictionary ())
+				return CGPDFContextCreate (dataConsumer.GetHandle (), mediaBox, dict.GetHandle ());
+		}
+
+		unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect *mediaBox, CGPDFInfo info)
+			: base (Create (dataConsumer, mediaBox, info), true)
+		{
 		}
 
 		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect mediaBox, CGPDFInfo info) :
@@ -175,10 +180,15 @@ namespace CoreGraphics {
 		{
 		}
 
-		unsafe CGContextPDF (NSUrl url, CGRect *mediaBox, CGPDFInfo info)
+		static unsafe IntPtr Create (NSUrl url, CGRect *mediaBox, CGPDFInfo info)
 		{
-			using (var dict = info == null ? null : info.ToDictionary ())
-				Handle = CGPDFContextCreateWithURL (url.GetHandle (), mediaBox, dict.GetHandle ());
+			using (var dict = info?.ToDictionary ())
+				return CGPDFContextCreateWithURL (url.GetHandle (), mediaBox, dict.GetHandle ());
+		}
+
+		unsafe CGContextPDF (NSUrl url, CGRect *mediaBox, CGPDFInfo info)
+			: base (Create (url, mediaBox, info), true)
+		{
 		}
 
 		public unsafe CGContextPDF (NSUrl url, CGRect mediaBox, CGPDFInfo info) :
