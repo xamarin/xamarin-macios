@@ -23,7 +23,7 @@ namespace Security {
 
 	[Flags]
 	[Native]
-#if XAMCORE_4_0
+#if NET
 	// changed to CFOptionFlags in Xcode 8 SDK
 	public enum SecAccessControlCreateFlags : ulong {
 #else
@@ -88,7 +88,11 @@ namespace Security {
 #if !NET
 		[iOS (9,0)][Mac (10,12,1)]
 #endif
+#if NET
+		ApplicationPassword = 1UL << 31,
+#else
 		ApplicationPassword = 1 << 31,
+#endif
 	}
 	
 #if !NET
