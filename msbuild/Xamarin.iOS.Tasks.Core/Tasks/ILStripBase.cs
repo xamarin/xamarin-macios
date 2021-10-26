@@ -23,7 +23,7 @@ namespace ILStripTasks {
 			{
 				foreach (var item in Assemblies)
 				{
-					stripedItems.Add (new TaskItem (item.GetMetadata("OutputPath")));
+					stripedItems.Add (new TaskItem (item.GetMetadata("OutputPath"), item.CloneCustomMetadata ()));
 				}
 			}
 
