@@ -30,6 +30,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -84,14 +86,13 @@ namespace CoreFoundation {
 			CFReadStreamRef_InvokeRelease (release, Info);
 		}
 		
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			if (copyDescription != IntPtr.Zero) {
 				var ptr = CFReadStreamRef_InvokeCopyDescription (copyDescription, Info);
 				if (ptr != IntPtr.Zero) {
 					// Copy* -> so we must not retain again
-					using (var s = new CFString (ptr, true))
-						return s.ToString ();
+					return CFString.FromHandle (ptr, true);
 				}
 			}
 			return base.ToString ();
@@ -151,11 +152,10 @@ namespace CoreFoundation {
 		Error
 	}
 
-	public abstract class CFStream : CFType, INativeObject, IDisposable {
-		IntPtr handle;
+	public abstract class CFStream : CFType {
 		GCHandle gch;
-		CFRunLoop loop;
-		NSString loopMode;
+		CFRunLoop? loop;
+		NSString? loopMode;
 		bool open, closed;
 
 		#region Stream Constructors
@@ -209,13 +209,13 @@ namespace CoreFoundation {
 		public static void CreatePairWithSocket (CFSocket socket, out CFReadStream readStream,
 		                                         out CFWriteStream writeStream)
 		{
-			if (socket == null)
-				throw new ArgumentNullException ("socket");
+			if (socket is null)
+				throw new ArgumentNullException (nameof (socket));
 
 			IntPtr read, write;
 			CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), out read, out write);
-			readStream = new CFReadStream (read);
-			writeStream = new CFWriteStream (write);
+			readStream = new CFReadStream (read, true);
+			writeStream = new CFWriteStream (write, true);
 		}
 
 #if !NET
@@ -274,8 +274,8 @@ namespace CoreFoundation {
 				var sig = new CFSocketSignature (family, type, proto, address);
 				IntPtr read, write;
 				CFStreamCreatePairWithPeerSocketSignature (IntPtr.Zero, ref sig, out read, out write);
-				readStream = new CFReadStream (read);
-				writeStream = new CFWriteStream (write);
+				readStream = new CFReadStream (read, true);
+				writeStream = new CFWriteStream (write, true);
 			}
 		}
 
@@ -331,15 +331,15 @@ namespace CoreFoundation {
 #endif
 #endif
 		public static void CreatePairWithSocketToHost (IPEndPoint endpoint,
-		                                               out CFReadStream readStream,
-		                                               out CFWriteStream writeStream)
+		                                               out CFReadStream? readStream,
+		                                               out CFWriteStream? writeStream)
 		{
 			using (var host = CFHost.Create (endpoint)) {
 				IntPtr read, write;
 				CFStreamCreatePairWithSocketToCFHost (IntPtr.Zero, host.Handle, endpoint.Port, out read, out write);
 				// API can return null streams
-				readStream = read == IntPtr.Zero ? null : new CFReadStream (read);
-				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write);
+				readStream = read == IntPtr.Zero ? null : new CFReadStream (read, true);
+				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
 			}
 		}
 #endif
@@ -392,16 +392,16 @@ namespace CoreFoundation {
 #endif
 #endif
 		public static void CreatePairWithSocketToHost (string host, int port,
-		                                               out CFReadStream readStream,
-		                                               out CFWriteStream writeStream)
+		                                               out CFReadStream? readStream,
+		                                               out CFWriteStream? writeStream)
 		{
 			using (var str = new CFString (host)) {
 				IntPtr read, write;
 				CFStreamCreatePairWithSocketToHost (
 					IntPtr.Zero, str.Handle, port, out read, out write);
 				// API not annotated (yet?) but it's safe to bet it match CFStreamCreatePairWithSocketToCFHost
-				readStream = read == IntPtr.Zero ? null : new CFReadStream (read);
-				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write);
+				readStream = read == IntPtr.Zero ? null : new CFReadStream (read, true);
+				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
 			}
 		}
 #if !WATCH
@@ -431,11 +431,11 @@ namespace CoreFoundation {
 #endif
 		public static CFHTTPStream CreateForHTTPRequest (CFHTTPMessage request)
 		{
-			if (request == null)
-				throw new ArgumentNullException ("request");
+			if (request is null)
+				throw new ArgumentNullException (nameof (request));
 
 			var handle = CFReadStreamCreateForHTTPRequest (IntPtr.Zero, request.Handle);
-			return new CFHTTPStream (handle);
+			return new CFHTTPStream (handle, true);
 		}
 
 		// CFHTTPStream.h in CFNetwork.framework (not CoreFoundation)
@@ -465,24 +465,24 @@ namespace CoreFoundation {
 #endif
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, CFReadStream body)
 		{
-			if (request == null)
-				throw new ArgumentNullException ("request");
-			if (body == null)
-				throw new ArgumentNullException ("body");
+			if (request is null)
+				throw new ArgumentNullException (nameof (request));
+			if (body is null)
+				throw new ArgumentNullException (nameof (body));
 
 			var handle = CFReadStreamCreateForStreamedHTTPRequest (IntPtr.Zero, request.Handle, body.Handle);
-			return new CFHTTPStream (handle);
+			return new CFHTTPStream (handle, true);
 		}
 
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, NSInputStream body)
 		{
-			if (request == null)
-				throw new ArgumentNullException ("request");
-			if (body == null)
-				throw new ArgumentNullException ("body");
+			if (request is null)
+				throw new ArgumentNullException (nameof (request));
+			if (body is null)
+				throw new ArgumentNullException (nameof (body));
 
 			var handle = CFReadStreamCreateForStreamedHTTPRequest (IntPtr.Zero, request.Handle, body.Handle);
-			return new CFHTTPStream (handle);
+			return new CFHTTPStream (handle, true);
 		}
 #endif
 
@@ -495,15 +495,15 @@ namespace CoreFoundation {
 		{
 			IntPtr read, write;
 			CFStreamCreateBoundPair (IntPtr.Zero, out read, out write, bufferSize);
-			readStream = new CFReadStream (read);
-			writeStream = new CFWriteStream (write);
+			readStream = new CFReadStream (read, true);
+			writeStream = new CFWriteStream (write, true);
 		}
 
 		#endregion
 
 		#region Stream API
 
-		public abstract CFException GetError ();
+		public abstract CFException? GetError ();
 
 		protected void CheckError ()
 		{
@@ -516,7 +516,7 @@ namespace CoreFoundation {
 		{
 			if (open || closed)
 				throw new InvalidOperationException ();
-			CheckHandle ();
+			GetCheckedHandle ();
 			if (!DoOpen ()) {
 				CheckError ();
 				throw new InvalidOperationException ();
@@ -530,8 +530,8 @@ namespace CoreFoundation {
 		{
 			if (!open)
 				return;
-			CheckHandle ();
-			if (loop != null) {
+			GetCheckedHandle ();
+			if (loop is not null) {
 				DoSetClient (null, (CFIndex) 0, IntPtr.Zero);
 				UnscheduleFromRunLoop (loop, loopMode);
 				loop = null;
@@ -549,7 +549,7 @@ namespace CoreFoundation {
 
 		public CFStreamStatus GetStatus ()
 		{
-			CheckHandle ();
+			GetCheckedHandle ();
 			return DoGetStatus ();
 		}
 
@@ -557,17 +557,17 @@ namespace CoreFoundation {
 
 		internal IntPtr GetProperty (NSString name)
 		{
-			CheckHandle ();
+			GetCheckedHandle ();
 			return DoGetProperty (name);
 		}
 
 		protected abstract IntPtr DoGetProperty (NSString name);
 
-		protected abstract bool DoSetProperty (NSString name, INativeObject value);
+		protected abstract bool DoSetProperty (NSString name, INativeObject? value);
 
-		internal void SetProperty (NSString name, INativeObject value)
+		internal void SetProperty (NSString name, INativeObject? value)
 		{
-			CheckHandle ();
+			GetCheckedHandle ();
 			if (DoSetProperty (name, value))
 				return;
 			throw new InvalidOperationException (string.Format (
@@ -596,11 +596,11 @@ namespace CoreFoundation {
 			}
 		}
 
-		public event EventHandler<StreamEventArgs> OpenCompletedEvent;
-		public event EventHandler<StreamEventArgs> HasBytesAvailableEvent;
-		public event EventHandler<StreamEventArgs> CanAcceptBytesEvent;
-		public event EventHandler<StreamEventArgs> ErrorEvent;
-		public event EventHandler<StreamEventArgs> ClosedEvent;
+		public event EventHandler<StreamEventArgs>? OpenCompletedEvent;
+		public event EventHandler<StreamEventArgs>? HasBytesAvailableEvent;
+		public event EventHandler<StreamEventArgs>? CanAcceptBytesEvent;
+		public event EventHandler<StreamEventArgs>? ErrorEvent;
+		public event EventHandler<StreamEventArgs>? ClosedEvent;
 
 		protected virtual void OnOpenCompleted (StreamEventArgs args)
 		{
@@ -639,9 +639,9 @@ namespace CoreFoundation {
 
 		#endregion
 
-		protected abstract void ScheduleWithRunLoop (CFRunLoop loop, NSString mode);
+		protected abstract void ScheduleWithRunLoop (CFRunLoop loop, NSString? mode);
 
-		protected abstract void UnscheduleFromRunLoop (CFRunLoop loop, NSString mode);
+		protected abstract void UnscheduleFromRunLoop (CFRunLoop loop, NSString? mode);
 
 		protected delegate void CFStreamCallback (IntPtr s, nint type, IntPtr info);
 
@@ -649,7 +649,7 @@ namespace CoreFoundation {
 		static void OnCallback (IntPtr s, nint type, IntPtr info)
 		{
 			var stream = GCHandle.FromIntPtr (info).Target as CFStream;
-			stream.OnCallback ((CFStreamEventType) (long) type);
+			stream?.OnCallback ((CFStreamEventType) (long) type);
 		}
 
 		static CFStreamCallback OnCallbackDelegate = OnCallback;
@@ -678,9 +678,9 @@ namespace CoreFoundation {
 
 		public void EnableEvents (CFRunLoop runLoop, NSString runLoopMode)
 		{
-			if (open || closed || (loop != null))
+			if (open || closed || (loop is not null))
 				throw new InvalidOperationException ();
-			CheckHandle ();
+			GetCheckedHandle ();
 
 			loop = runLoop;
 			loopMode = runLoopMode;
@@ -699,7 +699,7 @@ namespace CoreFoundation {
 			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (CFStreamClientContext)));
 			try {
 				Marshal.StructureToPtr (ctx, ptr, false);
-				if (!DoSetClient (OnCallbackDelegate, (nint) (long) args, ptr))
+				if (!DoSetClient (OnCallbackDelegate, (CFIndex) (long) args, ptr))
 					throw new InvalidOperationException ("Stream does not support async events.");
 			} finally {
 				Marshal.FreeHGlobal (ptr);
@@ -708,46 +708,30 @@ namespace CoreFoundation {
 			ScheduleWithRunLoop (runLoop, runLoopMode);
 		}
 
-		protected abstract bool DoSetClient (CFStreamCallback callback, CFIndex eventTypes,
+		protected abstract bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
 		                                     IntPtr context);
 
-		protected CFStream (IntPtr handle)
-		{
-			this.handle = handle;
-		}
-
+#if !XAMCORE_4_0
+		[Obsolete ("Call 'GetCheckedHandle ()' instead.")]
 		protected void CheckHandle ()
 		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException (GetType ().Name);
+			GetCheckedHandle ();
 		}
+#endif
 
-		~CFStream ()
+		protected CFStream (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			Dispose (false);
 		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		protected virtual void Dispose (bool disposing)
+				
+		protected override void Dispose (bool disposing)
 		{
 			if (disposing) {
 				Close ();
 				if (gch.IsAllocated)
 					gch.Free ();
 			}
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			base.Dispose (disposing);
 		}
 
 #if !NET
@@ -779,10 +763,10 @@ namespace CoreFoundation {
 #endif
 		public DispatchQueue ReadDispatchQueue {
 			get {
-				return new DispatchQueue (CFReadStreamCopyDispatchQueue (handle));
+				return new DispatchQueue (CFReadStreamCopyDispatchQueue (Handle));
 			}
 			set {
-				CFReadStreamSetDispatchQueue (handle, value == null ? IntPtr.Zero : value.Handle);
+				CFReadStreamSetDispatchQueue (Handle, value.GetHandle ());
 			}
 		}
 
@@ -791,10 +775,10 @@ namespace CoreFoundation {
 #endif
 		public DispatchQueue WriteDispatchQueue {
 			get {
-				return new DispatchQueue (CFWriteStreamCopyDispatchQueue (handle));
+				return new DispatchQueue (CFWriteStreamCopyDispatchQueue (Handle));
 			}
 			set {
-				CFWriteStreamSetDispatchQueue (handle, value == null ? IntPtr.Zero : value.Handle);
+				CFWriteStreamSetDispatchQueue (Handle, value.GetHandle ());
 			}
 		}
 	}
