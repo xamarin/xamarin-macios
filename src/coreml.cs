@@ -65,6 +65,10 @@ namespace CoreML {
 		// added in xcode12 but it's the same a `Double` and can be used in earlier versions
 		Float64 = 0x10000 | 64,
 		Float32 = 0x10000 | 32,
+#if MONOMAC // macOS 12 Only
+		[Mac (12,0)]
+		Float16 = 0x10000 | 16,
+#endif
 		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
 		Float = 0x10000 | 32,
 		Int32 = 0x20000 | 32,
@@ -516,6 +520,11 @@ namespace CoreML {
 		[Export ("count")]
 		nint Count { get; }
 
+		[NullAllowed]
+		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Export ("pixelBuffer")]
+		CVPixelBuffer PixelBuffer { get; }
+
 		// From MLMultiArray (Creation) Category
 
 		[Export ("initWithShape:dataType:error:")]
@@ -523,6 +532,10 @@ namespace CoreML {
 
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
 		IntPtr Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
+
+		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Export ("initWithPixelBuffer:shape:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSNumber [] shape);
 
 		// From MLMultiArray (NSNumberDataAccess) Category
 
@@ -614,6 +627,11 @@ namespace CoreML {
  		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
 		[Export ("usesCPUOnly")]
 		bool UsesCpuOnly { get; set; }
+
+		// Leaving it intentionally as NSDictionary to make it easier to use the lowlevel apis.
+		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Export ("outputBackings", ArgumentSemantic.Copy)]
+		NSDictionary OutputBackings { get; set; }
 	}
 
 	[NoWatch, TV (11,2), Mac (10,13,2), iOS (11,2)]
