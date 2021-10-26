@@ -235,18 +235,18 @@ namespace Foundation {
 		internal static nuint GetCount (IntPtr handle)
 		{
 	#if MONOMAC
-			return Messaging.nuint_objc_msgSend (handle, selCountHandle);
+			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, selCountHandle);
 	#else
-			return Messaging.nuint_objc_msgSend (handle, Selector.GetHandle ("count"));
+			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, Selector.GetHandle ("count"));
 	#endif
 		}
 
 		internal static IntPtr GetAtIndex (IntPtr handle, nuint i)
 		{
 	#if MONOMAC
-			return Messaging.IntPtr_objc_msgSend_nuint (handle, selObjectAtIndex_Handle, i);
+			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, selObjectAtIndex_Handle, (UIntPtr) i);
 	#else
-			return Messaging.IntPtr_objc_msgSend_nuint (handle, Selector.GetHandle ("objectAtIndex:"), i);
+			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
 	#endif
 		}
 			

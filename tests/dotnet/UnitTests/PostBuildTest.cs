@@ -83,6 +83,8 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			AssertBundleAssembliesStripStatus (appPath, shouldStrip);
+			Assert.That (Path.Combine (appPath, "MySimpleApp.dll"), Does.Exist, "Application Assembly");
+			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Exist, "Platform Assembly");
 		}
 
 		[Test]

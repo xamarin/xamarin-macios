@@ -2309,6 +2309,7 @@ namespace Registrar {
 				size += 8;
 				break;
 			case "System.IntPtr":
+			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
 				size += 4; // for now at least...

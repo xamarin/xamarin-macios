@@ -944,8 +944,8 @@ namespace AddressBook {
 		}
 
 		public ABPersonKind PersonKind {
-			get {return ABPersonKindId.ToPersonKind (PropertyTo<NSNumber> (ABPersonPropertyId.Kind));}
-			set {SetValue (ABPersonPropertyId.Kind, ABPersonKindId.FromPersonKind (value));}
+			get { return ABPersonKindId.ToPersonKind (PropertyTo<NSNumber> (ABPersonPropertyId.Kind!)!); }
+			set { SetValue (ABPersonPropertyId.Kind!, ABPersonKindId.FromPersonKind (value)); }
 		}
 
 		public ABMultiValue<string>? GetPhones ()

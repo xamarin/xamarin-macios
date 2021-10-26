@@ -113,4 +113,29 @@ namespace WebKit
 		Video = 1 << 1,
 		All = UInt64.MaxValue
 	}
+
+	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Native]
+	public enum WKMediaCaptureState : long {
+		None,
+		Active,
+		Muted,
+	}
+
+	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Native]
+	public enum WKMediaCaptureType : long {
+		Camera,
+		Microphone,
+		CameraAndMicrophone,
+	}
+
+	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Native]
+	public enum WKPermissionDecision : long {
+		Prompt,
+		Grant,
+		Deny,
+	}
+
 }
