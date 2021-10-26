@@ -1313,11 +1313,9 @@ namespace AppKit {
 		Natural = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC
-	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
-	// properly fix all the API using this.
+#if !NET && MONOMAC
+	// Use Foundation.NSWritingDirection in .NET.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	// [Obsolete ("Use NSWritingDirection in Foundation instead.")]
 	[Flags]
 	[Native]
 	public enum NSWritingDirection : long {
@@ -1327,7 +1325,7 @@ namespace AppKit {
 		[Obsolete ("This API is not available on this platform.")]
 		Override = 2,
 	}
-#endif // !XAMCORE_4_0 && MONOMAC
+#endif // !NET && MONOMAC
 
 	[NoMacCatalyst]
 #if !XAMCORE_4_0
