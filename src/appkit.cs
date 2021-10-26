@@ -13146,6 +13146,21 @@ namespace AppKit {
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get; }
 
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("safeAreaInsets")]
+		NSEdgeInsets SafeAreaInsets { get; }
+
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("auxiliaryTopLeftArea")]
+		CGRect AuxiliaryTopLeftArea { get; }
+
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("auxiliaryTopRightArea")]
+		CGRect AuxiliaryTopRightArea { get; }
+
 		[Mac (12,0)]
 		[Export ("maximumFramesPerSecond")]
 		nint MaximumFramesPerSecond { get; }

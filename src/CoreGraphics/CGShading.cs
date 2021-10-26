@@ -25,38 +25,44 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics {
 
 	// CGShading.h
-	public class CGShading : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
+	public class CGShading : NativeObject
 	{
 #if !COREBUILD
-		internal IntPtr handle;
-
-		/* invoked by marshallers */
+#if !XAMCORE_4_0
 		public CGShading (IntPtr handle)
+			: base (handle, false)
 		{
-			this.handle = handle;
-			CGShadingRetain (handle);
 		}
+#endif
 
 		[Preserve (Conditional=true)]
 		internal CGShading (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CGShadingRetain (handle);
 		}
-		
+
+		protected override void Retain ()
+		{
+			CGShadingRetain (GetCheckedHandle ());
+		}
+
+		protected override void Release ()
+		{
+			CGShadingRelease (GetCheckedHandle ());
+		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingCreateAxial (/* CGColorSpaceRef */ IntPtr space, 
@@ -64,16 +70,12 @@ namespace CoreGraphics {
 
 		public static CGShading CreateAxial (CGColorSpace colorspace, CGPoint start, CGPoint end, CGFunction function, bool extendStart, bool extendEnd)
 		{
-			if (colorspace == null)
-				throw new ArgumentNullException ("colorspace");
-			if (colorspace.Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("colorspace");
-			if (function == null)
-				throw new ArgumentNullException ("function");
-			if (function.Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("function");
+			if (colorspace is null)
+				throw new ArgumentNullException (nameof (colorspace));
+			if (function is null)
+				throw new ArgumentNullException (nameof (function));
 
-			return new CGShading (CGShadingCreateAxial (colorspace.Handle, start, end, function.Handle, extendStart, extendEnd), true);
+			return new CGShading (CGShadingCreateAxial (colorspace.GetCheckedHandle (), start, end, function.GetCheckedHandle (), extendStart, extendEnd), true);
 		}
 		
 		[DllImport(Constants.CoreGraphicsLibrary)]
@@ -84,47 +86,20 @@ namespace CoreGraphics {
 		public static CGShading CreateRadial (CGColorSpace colorspace, CGPoint start, nfloat startRadius, CGPoint end, nfloat endRadius,
 						      CGFunction function, bool extendStart, bool extendEnd)
 		{
-			if (colorspace == null)
-				throw new ArgumentNullException ("colorspace");
-			if (colorspace.Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("colorspace");
-			if (function == null)
-				throw new ArgumentNullException ("function");
-			if (function.Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("function");
+			if (colorspace is null)
+				throw new ArgumentNullException (nameof (colorspace));
+			if (function is null)
+				throw new ArgumentNullException (nameof (function));
 
-			return new CGShading (CGShadingCreateRadial (colorspace.Handle, start, startRadius, end, endRadius,
-								     function.Handle, extendStart, extendEnd), true);
+			return new CGShading (CGShadingCreateRadial (colorspace.GetCheckedHandle (), start, startRadius, end, endRadius,
+								     function.GetCheckedHandle (), extendStart, extendEnd), true);
 		}
-
-		~CGShading ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
+			
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingRelease (/* CGShadingRef */ IntPtr shading);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGShadingRetain (/* CGShadingRef */ IntPtr shading);
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CGShadingRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 #endif // !COREBUILD
 	}
 }
