@@ -102,7 +102,7 @@ namespace CoreGraphics {
 			if (components == null)
 				throw new ArgumentNullException ("components");
 
-			handle = CGGradientCreateWithColorComponents (colorspace.handle, components, locations, components.Length / (colorspace.Components+1));
+			handle = CGGradientCreateWithColorComponents (colorspace.Handle, components, locations, components.Length / (colorspace.Components+1));
 		}
 
 		public CGGradient (CGColorSpace colorspace, nfloat [] components)
@@ -114,7 +114,7 @@ namespace CoreGraphics {
 			if (components == null)
 				throw new ArgumentNullException ("components");
 
-			handle = CGGradientCreateWithColorComponents (colorspace.handle, components, null, components.Length / (colorspace.Components+1));
+			handle = CGGradientCreateWithColorComponents (colorspace.Handle, components, null, components.Length / (colorspace.Components+1));
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
@@ -129,9 +129,8 @@ namespace CoreGraphics {
 			if (colors == null)
 				throw new ArgumentNullException ("colors");
 			
-			IntPtr csh = colorspace == null ? IntPtr.Zero : colorspace.handle;
 			using (var array = CFArray.FromNativeObjects (colors))
-				handle = CGGradientCreateWithColors (csh, array.Handle, locations);
+				handle = CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, locations);
 		}
 
 		public CGGradient (CGColorSpace colorspace, CGColor [] colors)
@@ -139,9 +138,8 @@ namespace CoreGraphics {
 			if (colors == null)
 				throw new ArgumentNullException ("colors");
 			
-			IntPtr csh = colorspace == null ? IntPtr.Zero : colorspace.handle;
 			using (var array = CFArray.FromNativeObjects (colors))
-				handle = CGGradientCreateWithColors (csh, array.Handle, null);
+				handle = CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, null);
 		}
 #endif // !COREBUILD
 	}

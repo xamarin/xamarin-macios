@@ -8,6 +8,8 @@
 // Copyright 2012-2014 Xamarin Inc. (http://www.xamarin.com)
 //
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Security.Authentication;
@@ -24,60 +26,18 @@ namespace CFNetwork {
 namespace CoreServices {
 #endif
 
-	public partial class CFHTTPMessage : CFType, INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CFHTTPMessage (IntPtr handle)
-			: this (handle, false)
-		{
-		}
-
+	public partial class CFHTTPMessage : CFType {
 		internal CFHTTPMessage (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
 		}
-
 
 		[DllImport (Constants.CFNetworkLibrary, EntryPoint="CFHTTPMessageGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
-
-		~CFHTTPMessage ()
-		{
-			Dispose (false);
-		}
 		
-		protected void CheckHandle ()
+		static IntPtr GetVersion (Version? version)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException (GetType ().Name);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get {
-				CheckHandle ();
-				return handle;
-			}
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		static IntPtr GetVersion (Version version)
-		{
-			if ((version == null) || version.Equals (HttpVersion.Version11))
+			if ((version is null) || version.Equals (HttpVersion.Version11))
 				return _HTTPVersion1_1;
 
 			if (version.Equals (HttpVersion.Version10))
@@ -122,12 +82,12 @@ namespace CoreServices {
 			/* CFAllocatorRef __nullable */ IntPtr alloc, /* CFStringRef __nonnull*/ IntPtr requestMethod,
 			/* CFUrlRef __nonnull */ IntPtr url, /* CFStringRef __nonnull */ IntPtr httpVersion);
 
-		public static CFHTTPMessage CreateRequest (CFUrl url, NSString method, Version version)
+		public static CFHTTPMessage CreateRequest (CFUrl url, NSString method, Version? version)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
-			if (method == null)
-				throw new ArgumentNullException ("method");
+			if (url is null)
+				throw new ArgumentNullException (nameof (url));
+			if (method is null)
+				throw new ArgumentNullException (nameof (method));
 
 			var handle = CFHTTPMessageCreateRequest (
 				IntPtr.Zero, method.Handle, url.Handle, GetVersion (version));
@@ -139,13 +99,10 @@ namespace CoreServices {
 			return CreateRequest (uri, method, null);
 		}
 
-		public static CFHTTPMessage CreateRequest (Uri uri, string method, Version version)
+		public static CFHTTPMessage CreateRequest (Uri uri, string method, Version? version)
 		{
-			if (uri == null)
-				throw new ArgumentNullException ("uri");
-
-			CFUrl urlRef = null;
-			NSString methodRef = null;
+			if (uri is null)
+				throw new ArgumentNullException (nameof (uri));
 
 			// the method is obsolete, but EscapeDataString does not work the same way. We could get the components
 			// of the Uri and then EscapeDataString, but this might introduce bugs, so for now we will ignore the warning
@@ -153,19 +110,12 @@ namespace CoreServices {
 			var escaped = Uri.EscapeUriString (uri.ToString ());
 #pragma warning restore SYSLIB0013
 
-			try {
-				urlRef = CFUrl.FromUrlString (escaped, null);
-				if (urlRef == null)
-					throw new ArgumentException ("Invalid URL.");
-				methodRef = new NSString (method);
+			using var urlRef = CFUrl.FromUrlString (escaped, null);
+			if (urlRef is null)
+				throw new ArgumentException ("Invalid URL.");
+			using var methodRef = new NSString (method);
 
-				return CreateRequest (urlRef, methodRef, version);
-			} finally {
-				if (urlRef != null)
-					urlRef.Dispose ();
-				if (methodRef != null)
-					methodRef.Dispose ();
-			}
+			return CreateRequest (urlRef, methodRef, version);
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -174,8 +124,7 @@ namespace CoreServices {
 
 		public bool IsRequest {
 			get {
-				CheckHandle ();
-				return CFHTTPMessageIsRequest (Handle);
+				return CFHTTPMessageIsRequest (GetCheckedHandle ());
 			}
 		}
 
@@ -196,15 +145,14 @@ namespace CoreServices {
 		extern static /* CFStringRef __nullable */ IntPtr CFHTTPMessageCopyResponseStatusLine (
 			/* CFHTTPMessageRef __nonnull */ IntPtr response);
 
-		public string ResponseStatusLine {
+		public string? ResponseStatusLine {
 			get {
 				if (IsRequest)
 					throw new InvalidOperationException ();
 				var ptr = CFHTTPMessageCopyResponseStatusLine (Handle);
 				if (ptr == IntPtr.Zero)
 					return null;
-				using (var line = new NSString (ptr))
-					return line.ToString ();
+				return CFString.FromHandle (ptr, true);
 			}
 		}
 
@@ -214,8 +162,7 @@ namespace CoreServices {
 
 		public Version Version {
 			get {
-				CheckHandle ();
-				IntPtr ptr = CFHTTPMessageCopyVersion (handle);
+				var ptr = CFHTTPMessageCopyVersion (GetCheckedHandle ());
 				try {
 					// FIXME: .NET HttpVersion does not include (yet) Version20, so Version11 is returned
 					if (ptr == _HTTPVersion1_0)
@@ -236,8 +183,7 @@ namespace CoreServices {
 
 		public bool IsHeaderComplete {
 			get {
-				CheckHandle ();
-				return CFHTTPMessageIsHeaderComplete (Handle);
+				return CFHTTPMessageIsHeaderComplete (GetCheckedHandle ());
 			}
 		}
 
@@ -249,16 +195,16 @@ namespace CoreServices {
 
 		public bool AppendBytes (byte[] bytes)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+			if (bytes is null)
+				throw new ArgumentNullException (nameof (bytes));
 
 			return CFHTTPMessageAppendBytes (Handle, bytes, bytes.Length);
 		}
 
 		public bool AppendBytes (byte[] bytes, nint count)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+			if (bytes is null)
+				throw new ArgumentNullException (nameof (bytes));
 
 			return CFHTTPMessageAppendBytes (Handle, bytes, count);
 		}
@@ -267,10 +213,9 @@ namespace CoreServices {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CFHTTPMessageCopyAllHeaderFields (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message);
 
-		public NSDictionary GetAllHeaderFields ()
+		public NSDictionary? GetAllHeaderFields ()
 		{
-			CheckHandle ();
-			return Runtime.GetNSObject <NSDictionary> (CFHTTPMessageCopyAllHeaderFields (handle));
+			return Runtime.GetNSObject <NSDictionary> (CFHTTPMessageCopyAllHeaderFields (GetCheckedHandle ()));
 		}
 
 		#region Authentication
@@ -310,30 +255,25 @@ namespace CoreServices {
 
 		public void ApplyCredentials (CFHTTPAuthentication auth, NetworkCredential credential)
 		{
-			if (auth == null)
-				throw new ArgumentNullException ("auth");
-			if (credential == null)
-				throw new ArgumentNullException ("credential");
+			if (auth is null)
+				throw new ArgumentNullException (nameof (auth));
+			if (credential is null)
+				throw new ArgumentNullException (nameof (credential));
 
 			if (auth.RequiresAccountDomain) {
 				ApplyCredentialDictionary (auth, credential);
 				return;
 			}
 
-			var username = new CFString (credential.UserName);
-			var password = new CFString (credential.Password);
-
+			var username = CFString.CreateNative (credential.UserName);
+			var password = CFString.CreateNative (credential.Password);
 			try {
-				CFStreamError error;
-
-				var ok = CFHTTPMessageApplyCredentials (
-					Handle, auth.Handle, username.Handle, password.Handle,
-					out error);
+				var ok = CFHTTPMessageApplyCredentials (Handle, auth.Handle, username, password, out var error);
 				if (!ok)
 					throw GetException ((CFStreamErrorHTTPAuthentication) error.code);
 			} finally {
-				username.Dispose ();
-				password.Dispose ();
+				CFString.ReleaseNative (username);
+				CFString.ReleaseNative (password);
 			}
 		}
 
@@ -400,10 +340,10 @@ namespace CoreServices {
 		                               NSString password, AuthenticationScheme scheme,
 		                               bool forProxy)
 		{
-			if (username == null)
-				throw new ArgumentNullException ("username");
-			if (password == null)
-				throw new ArgumentNullException ("password");
+			if (username is null)
+				throw new ArgumentNullException (nameof (username));
+			if (password is null)
+				throw new ArgumentNullException (nameof (password));
 
 			return CFHTTPMessageAddAuthentication (
 				Handle, failureResponse.GetHandle (), username.Handle,
@@ -417,19 +357,22 @@ namespace CoreServices {
 
 		public void ApplyCredentialDictionary (CFHTTPAuthentication auth, NetworkCredential credential)
 		{
-			if (auth == null)
-				throw new ArgumentNullException ("auth");
-			if (credential == null)
-				throw new ArgumentNullException ("credential");
+			if (auth is null)
+				throw new ArgumentNullException (nameof (auth));
+			if (credential is null)
+				throw new ArgumentNullException (nameof (credential));
 
-			var keys = new NSString [3];
-			var values = new CFString [3];
+			var length = credential.Domain is null ? 2 : 3;
+			var keys = new NSString [length];
+			var values = new CFString [length];
 			keys [0] = _AuthenticationUsername;
 			keys [1] = _AuthenticationPassword;
-			keys [2] = _AuthenticationAccountDomain;
-			values [0] = (CFString)credential.UserName;
-			values [1] = (CFString)credential.Password;
-			values [2] = credential.Domain != null ? (CFString)credential.Domain : null;
+			values [0] = credential.UserName!;
+			values [1] = credential.Password!;
+			if (credential.Domain is not null) {
+				keys [2] = _AuthenticationAccountDomain;
+				values [2] = credential.Domain;
+			}
 
 			var dict = CFDictionary.FromObjectsAndKeys (values, keys);
 
@@ -442,10 +385,9 @@ namespace CoreServices {
 				throw GetException ((CFStreamErrorHTTPAuthentication) error.code);
 			} finally {
 				dict.Dispose ();
-				values [0].Dispose ();
-				values [1].Dispose ();
-				if (values [2] != null)
-					values [2].Dispose ();
+				values [0]?.Dispose ();
+				values [1]?.Dispose ();
+				values [2]?.Dispose ();
 			}
 		}
 
@@ -457,18 +399,17 @@ namespace CoreServices {
 
 		public void SetHeaderFieldValue (string name, string value)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
+			if (name is null)
+				throw new ArgumentNullException (nameof (name));
 
-			NSString nstr = (NSString)name;
-			NSString vstr = value != null ? (NSString)value : null;
-			IntPtr vptr = vstr != null ? vstr.Handle : IntPtr.Zero;
-
-			CFHTTPMessageSetHeaderFieldValue (Handle, nstr.Handle, vptr);
-
-			nstr.Dispose ();
-			if (vstr != null)
-				vstr.Dispose ();
+			var nameHandle = CFString.CreateNative (name);
+			var valueHandle = CFString.CreateNative (value);
+			try {
+				CFHTTPMessageSetHeaderFieldValue (Handle, nameHandle, valueHandle);
+			} finally {
+				CFString.ReleaseNative (nameHandle);
+				CFString.ReleaseNative (valueHandle);
+			}
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -477,8 +418,8 @@ namespace CoreServices {
 
 		public void SetBody (byte[] buffer)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
 			
 			using (var data = new CFDataBuffer (buffer))
 				CFHTTPMessageSetBody (Handle, data.Handle);

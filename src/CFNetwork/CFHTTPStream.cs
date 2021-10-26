@@ -60,7 +60,7 @@ namespace CoreServices {
 				throw new InvalidCastException ();
 			}
 
-			return new CFHTTPMessage (handle);
+			return new CFHTTPMessage (handle, true);
 		}
 
 		public CFHTTPMessage GetResponseHeader ()
@@ -73,7 +73,7 @@ namespace CoreServices {
 				CFObject.CFRelease (handle);
 				throw new InvalidCastException ();
 			}
-			return new CFHTTPMessage (handle);
+			return new CFHTTPMessage (handle, true);
 		}
 
 		public bool AttemptPersistentConnection {
