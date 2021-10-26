@@ -116,7 +116,6 @@ namespace MonoTouchFixtures.Network {
 		{
 			TestRuntime.IgnoreInCI ("CI bots might have proxies setup and will mean that the test will fail.");
 			Assert.IsNull (report.ProxyEndpoint);
-
 		}
 
 		[Test]

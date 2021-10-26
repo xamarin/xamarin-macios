@@ -79,7 +79,7 @@ namespace MonoTouchFixtures.Network {
 		public void ForceMultipathVersionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13,0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow(() => options.ForceMultipathVersion (NWMultipathVersion.Version0));
 		}
 
 	}

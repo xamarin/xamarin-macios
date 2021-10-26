@@ -102,7 +102,7 @@ namespace MonoTouchFixtures.Network {
 		public void DisableMulticastLoopbackTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13,0);
-			Assert.Fail("Not implemented");
+			Assert.DoesNotThrow (() => options.DisableMulticastLoopback (false));
 		}
 	}
 }

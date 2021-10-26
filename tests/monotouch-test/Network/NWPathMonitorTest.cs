@@ -115,7 +115,9 @@ namespace monotouchtest.Network
 		public void ProhibitInterfaceTypeTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow (() => {
+				monitor.ProhibitInterfaceType (NWInterfaceType.Wifi);
+			});
 		}
 	}
 }

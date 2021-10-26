@@ -398,21 +398,25 @@ namespace MonoTouchFixtures.Network {
 		public void AttributionPropertyTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			using (var parameters = new NWParameters ()) {
+				Assert.DoesNotThrow (() => {
+					parameters.Attribution = NWParametersAttribution.Developer;
+				});
+				Assert.AreEqual (NWParametersAttribution.Developer, parameters.Attribution);
+			}
 		}
 
 		[Test]
 		public void SetPrivacyContextTest ()
 		{
+			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
-		}
-
-		[Test]
-		public void CreateQuicTest ()
-		{
-			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			using (var privacy = NWPrivacyContext.Default)
+			using (var parameters = new NWParameters ()) {
+				Assert.DoesNotThrow (() => {
+					parameters.SetPrivacyContext (privacy);
+				});
+			}
 		}
 
 	}

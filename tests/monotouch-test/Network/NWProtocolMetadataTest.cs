@@ -27,7 +27,6 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (m.IsIP, "IsIP");
 				Assert.False (m.IsTcp, "IsTcp");
 				Assert.False (m.IsUdp, "IsUdp");
-				Assert.False (m.IsQuic, "IsQuic");
 				Assert.NotNull (m.ProtocolDefinition, "ProtocolDefinition");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.SecProtocolMetadata; }, "SecProtocolMetadata");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.TlsSecProtocolMetadata; }, "TlsSecProtocolMetadata");
@@ -45,7 +44,6 @@ namespace MonoTouchFixtures.Network {
 				Assert.False (m.IsIP, "IsIP");
 				Assert.False (m.IsTcp, "IsTcp");
 				Assert.True (m.IsUdp, "IsUdp");
-				Assert.False (m.IsQuic, "IsQuic");
 				Assert.NotNull (m.ProtocolDefinition, "ProtocolDefinition");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.SecProtocolMetadata; }, "SecProtocolMetadata");
 				Assert.Throws<InvalidOperationException> (() => { var x = m.TlsSecProtocolMetadata; }, "TlsSecProtocolMetadata");
@@ -57,8 +55,19 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void Quic ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
-			Assert.Fail ("Not implemented");
+			using (var m = NWProtocolMetadata.CreateIPMetadata ()) {
+				Assert.That (m.IPMetadataEcnFlag, Is.EqualTo (NWIPEcnFlag.NonEct), "IPMetadataEcnFlag");
+				Assert.That (m.IPMetadataReceiveTime, Is.EqualTo (0), "IPMetadataReceiveTime");
+				Assert.True (m.IsIP, "IsIP");
+				Assert.False (m.IsTcp, "IsTcp");
+				Assert.False (m.IsUdp, "IsUdp");
+				Assert.False (m.IsQuic, "IsQuic");
+				Assert.NotNull (m.ProtocolDefinition, "ProtocolDefinition");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.SecProtocolMetadata; }, "SecProtocolMetadata");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.TlsSecProtocolMetadata; }, "TlsSecProtocolMetadata");
+				Assert.That (m.ServiceClass, Is.EqualTo (NWServiceClass.BestEffort), "ServiceClass");
+				Assert.That (m.IPServiceClass, Is.EqualTo (NWServiceClass.BestEffort), "IPServiceClass");
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Contexts;
 using System.Threading;
 using CoreFoundation;
 using Foundation;
@@ -67,35 +68,52 @@ namespace MonoTouchFixtures.Network {
 		public void GetProtocolMetadataContextTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow (() => {
+				using var context = new NWContentContext ("test");
+				connectionGroup.GetProtocolMetadata (context);
+			});
 		}
 		
 		[Test]
 		public void GetProtocolMetadataContextDefinitionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow (() => {
+				using var context = new NWContentContext ("test");
+				connectionGroup.GetProtocolMetadata (context);
+			});
 		}
 		
 		[Test]
 		public void ExtractConnectionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow (() => {
+				connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions());
+			});
 		}
 
 		[Test]
 		public void TryReinsertExtractedConnectionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow (() => {
+				var conn = connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions());
+				if (conn is not null) {
+					connectionGroup.TryReinsertExtractedConnection (conn);
+				}
+			});
 		}
 		
 		[Test]
 		public void SetNewConnectionHandlerTest()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow (() => {
+				connectionGroup.SetNewConnectionHandler ((conn) => {
+					Console.WriteLine ("New connection received.");
+				});
+			});
 		}
 	}
 }

@@ -54,7 +54,11 @@ namespace MonoTouchFixtures.Network {
 		public void SetNewConnectionGroupHandlerTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			Assert.Fail ("Not implemented");
+			Assert.DoesNotThrow (() => {
+				listener.SetNewConnectionHandler ((c) => {
+					Console.WriteLine ("New connection");
+				});
+			});
 		}
 	}
 }
