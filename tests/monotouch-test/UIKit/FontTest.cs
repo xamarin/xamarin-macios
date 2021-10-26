@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {

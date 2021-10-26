@@ -15,6 +15,7 @@ using AppKit;
 #else
 using UIKit;
 #endif
+using ObjCRuntime;
 using NUnit.Framework;
 using System.Linq;
 
