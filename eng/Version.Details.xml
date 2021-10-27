@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.100-rtm.21525.3">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.100-rtm.21526.10">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>c020befd81ed503c4ef5784e59872b3bfa45f881</Sha>
+      <Sha>fd022a39be98d4be424e0513815095b2f5a6b964</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.100-1.21519.4" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
@@ -11,6 +11,11 @@
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="6.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>4822e3c3aa77eb82b2fb33c9321f923cf11ddde6</Sha>
+    </Dependency>
+    <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="6.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://github.com/dotnet/aspnetcore</Uri>
+      <Sha>ae1a6cbe225b99c0bf38b7e31bf60cb653b73a52</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
