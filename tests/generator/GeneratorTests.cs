@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -19,11 +21,20 @@ namespace GeneratorTests
 			var bgen = new BGenTool ();
 			bgen.CreateTemporaryBinding ("");
 			bgen.ResponseFile = Path.Combine (Cache.CreateTemporaryDirectory (), "rspfile");
+
+			var arguments = new List<string> ();
 #if NET
-			File.WriteAllLines (bgen.ResponseFile, new string [] { $"--target-framework:{TargetFramework.DotNet_6_0_iOS_String}" });
+			var targetFramework = TargetFramework.DotNet_6_0_iOS_String;
+			var tf = TargetFramework.Parse (targetFramework);
+			arguments.Add ($"--baselib={Configuration.GetBaseLibrary (tf)}");
+			arguments.Add ($"--attributelib={Configuration.GetBindingAttributePath (tf)}");
+			arguments.AddRange (Directory.GetFiles (Configuration.DotNet6BclDir, "*.dll").Select (v => $"-r:{v}"));
 #else
-			File.WriteAllLines (bgen.ResponseFile, new string [] { "--target-framework:Xamarin.iOS,v1.0" });
+			var targetFramework = "Xamarin.iOS,v1.0";
 #endif
+			arguments.Add ($"--target-framework={targetFramework}");
+
+			File.WriteAllLines (bgen.ResponseFile, arguments.ToArray ());
 			bgen.AssertExecute ("response file");
 			bgen.AssertNoWarnings ();
 		}
