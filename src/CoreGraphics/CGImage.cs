@@ -133,14 +133,18 @@ namespace CoreGraphics {
 #if !COREBUILD
 #if !XAMCORE_4_0
 		public CGImage (IntPtr handle)
-			: base (handle, false)
+			: base (handle, false, verify: false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
 		internal CGImage (IntPtr handle, bool owns)
+#if XAMCORE_4_0
 			: base (handle, owns)
+#else
+			: base (handle, owns, verify: false)
+#endif
 		{
 		}
 
