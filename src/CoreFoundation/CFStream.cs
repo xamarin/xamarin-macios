@@ -723,7 +723,7 @@ namespace CoreFoundation {
 			: base (handle, owns)
 		{
 		}
-				
+
 		protected override void Dispose (bool disposing)
 		{
 			if (disposing) {
