@@ -1,8 +1,4 @@
 # added and removed in the same version.
-!missing-selector! WKWebView::closeAllMediaPresentations not bound
 !missing-selector! WKWebView::loadSimulatedRequest:withResponse:responseData: not bound
 !missing-selector! WKWebView::loadSimulatedRequest:withResponseHTMLString: not bound
-!missing-selector! WKWebView::pauseAllMediaPlayback: not bound
 !missing-selector! WKWebView::requestMediaPlaybackState: not bound
-!missing-selector! WKWebView::resumeAllMediaPlayback: not bound
-!missing-selector! WKWebView::suspendAllMediaPlayback: not bound

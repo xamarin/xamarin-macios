@@ -1381,4 +1381,12 @@ namespace Metal {
 		UserID = 1,
 		Motion = 2,
 	}
+
+	[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+	[Native]
+	public enum MTLTextureCompressionType : long
+	{
+		Lossless = 0,
+		Lossy = 1,
+	}
 }
