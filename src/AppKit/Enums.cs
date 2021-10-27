@@ -2173,13 +2173,8 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-#if XAMCORE_4_0
-	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
-	public enum NSOpenGLProfile : long {
-#else
 	public enum NSOpenGLProfile : int {
-#endif
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
 		Version4_1Core  = 0x4100
