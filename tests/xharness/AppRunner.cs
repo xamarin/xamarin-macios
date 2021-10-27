@@ -426,7 +426,10 @@ namespace Xharness {
 				}
 			}
 
-			listener.Cancel ();
+			if (!listener.StopAsync ().Wait (TimeSpan.FromSeconds (5))) {
+				MainLog.WriteLine ("Failed to stop listener within 5 seconds. Will cancel it.");
+				listener.Cancel ();
+			}
 			listener.Dispose ();
 
 			// close a tunnel if it was created
