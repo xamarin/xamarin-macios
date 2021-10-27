@@ -11282,8 +11282,8 @@ namespace AVFoundation {
 
 		[iOS (10,0), Mac (10,15)]
 		[Export ("supportedColorSpaces")]
-#if XAMCORE_4_0
-		[BindAs (typeof (CGColorSpace []))]
+#if NET
+		[BindAs (typeof (AVCaptureColorSpace []))]
 #endif
 		NSNumber[] SupportedColorSpaces { get; }
 
