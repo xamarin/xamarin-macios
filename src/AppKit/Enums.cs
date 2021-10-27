@@ -2695,12 +2695,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSFontPanelMode : ulong {
-#else
-	public enum NSFontPanelMode : int {
-#endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
 		CollectionMask = 1 << 2,
