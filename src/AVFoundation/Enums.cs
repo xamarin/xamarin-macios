@@ -145,7 +145,7 @@ namespace AVFoundation {
 		Locked, AutoWhiteBalance, ContinuousAutoWhiteBalance
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+#if !NET
 	[Flags]
 	[Native]
 	[Deprecated (PlatformName.iOS, 6, 0)]
