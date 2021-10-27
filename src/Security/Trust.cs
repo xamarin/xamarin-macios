@@ -235,7 +235,7 @@ namespace Security {
 				if ((index < 0) || (index >= Count))
 					throw new ArgumentOutOfRangeException (nameof (index));
 
-				return new SecCertificate (SecTrustGetCertificateAtIndex (GetCheckedHandle (), index));
+				return new SecCertificate (SecTrustGetCertificateAtIndex (GetCheckedHandle (), index), false);
 			}
 		}
 
