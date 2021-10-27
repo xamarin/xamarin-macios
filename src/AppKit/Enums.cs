@@ -867,12 +867,8 @@ namespace AppKit {
 #region NSWindow
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : ulong {
-#else
-	public enum NSWindowStyle : int {
-#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
