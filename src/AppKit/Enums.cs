@@ -1505,19 +1505,17 @@ namespace AppKit {
 		Auto, Fit, Clip
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : ulong {
-#else
-	public enum NSGlyphStorageOptions : int
-#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
