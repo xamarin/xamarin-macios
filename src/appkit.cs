@@ -4320,7 +4320,6 @@ namespace AppKit {
 	{
 		[Abstract]
 		[Export ("changeColor:")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSColorChanging' instead.")]
 		void ChangeColor ([NullAllowed] NSColorPanel sender);
 	}
 
@@ -18744,9 +18743,11 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
-	partial interface NSTextView : NSTextInputClient, NSTextLayoutOrientationProvider, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate, NSMenuItemValidation, NSUserInterfaceValidations, NSTextInput, NSTextContent
-#if XAMCORE_4_0
-		, NSColorChanging, // ChangeColor has the wrong param type
+	partial interface NSTextView : NSTextInputClient, NSTextLayoutOrientationProvider, NSDraggingSource, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate, NSMenuItemValidation, NSUserInterfaceValidations, NSTextInput, NSTextContent
+#if NET
+		, NSColorChanging
+#else
+		, NSTextFinderClient
 #endif
 	{
 		[DesignatedInitializer]
@@ -19308,6 +19309,13 @@ namespace AppKit {
 			[Wrap ("SetContentType (value.GetConstant()!)")]
 			set;
 		}
+
+#if NET
+		// This came from the NSTextFinderClient protocol in legacy Xamarin, but NSTextView doesn't really implement that protocol,
+		// so when it was removed for .NET, we still need to expose the API from NSTextFinderClient that NSTextView actually has.
+		[Export ("selectedRanges", ArgumentSemantic.Copy)]
+		NSArray SelectedRanges { get; set;  }
+#endif
 	}
 
 	[NoMacCatalyst]

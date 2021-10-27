@@ -302,7 +302,6 @@
 !missing-protocol-conformance! NSController should conform to NSEditor
 !missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSTextView should conform to NSColorChanging
 
 ## NSStandardKeyBindingResponding is strange case - technically on NSResponder but responder subclasses can implement any that make sense.
 !missing-protocol-conformance! NSTextView should conform to NSStandardKeyBindingResponding
