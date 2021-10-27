@@ -769,20 +769,23 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string [] CopyDotNetSupportingFiles (string targetDirectory)
+		public static string [] CopyDotNetSupportingFiles (params string[] targetDirectories)
 		{
 			var srcDirectory = Path.Combine (SourceRoot, "tests", "dotnet");
 			var files = new string [] { "global.json", "NuGet.config" };
-			var targets = new string [files.Length];
+			var targets = new List<string> ();
 			for (var i = 0; i < files.Length; i++) {
 				var fn = files [i];
-				targets [i] = Path.Combine (targetDirectory, fn);
 				var src = Path.Combine (srcDirectory, fn);
 				if (!File.Exists (src))
 					ExecutionHelper.Execute ("make", new [] { "-C", srcDirectory, fn });
-				File.Copy (src, targets [i], true);
+				foreach (var targetDirectory in targetDirectories) {
+					var target = Path.Combine (targetDirectory, fn);
+					File.Copy (src, target, true);
+					targets.Add (target);
+				}
 			}
-			return targets;
+			return targets.ToArray ();
 		}
 
 		public static Dictionary<string, string> GetBuildEnvironment (ApplePlatform platform)
