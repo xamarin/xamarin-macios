@@ -7648,7 +7648,7 @@ public partial class Generator : IMemberGatherer {
 				print ("{");
 				indent++;
 				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
-					print ("this.{0} = {1};", GetPublicParameterName (p), p.Name);
+					print ("this.{0} = {1};", GetPublicParameterName (p), p.Name.GetSafeParamName ());
 				}
 				indent--;
 				print ("}");
