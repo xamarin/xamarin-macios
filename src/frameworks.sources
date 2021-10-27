@@ -1814,6 +1814,7 @@ WKWEBKIT_API_SOURCES = \
 
 WKWEBKIT_SOURCES = \
 	WKWebKit/WKCompat.cs \
+	WKWebKit/WKPreferences.cs \
 	WKWebKit/WKWindowFeatures.cs \
 
 #
@@ -1969,6 +1970,7 @@ MACOS_FRAMEWORKS =          \
 	ImageCaptureCore	\
 	ImageKit                \
 	Intents                 \
+	IntentsUI               \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \
@@ -2256,6 +2258,7 @@ MACCATALYST_FRAMEWORKS = \
 	IdentityLookup \
 	ImageIO \
 	Intents \
+	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
 	LinkPresentation \

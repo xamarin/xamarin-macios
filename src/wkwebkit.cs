@@ -16,6 +16,7 @@ using CoreGraphics;
 using Security;
 #if MONOMAC
 using AppKit;
+using UIColor=AppKit.NSColor;
 #else
 using UIKit;
 using NSPrintInfo = Foundation.NSObject;
@@ -302,10 +303,17 @@ namespace WebKit
 		[Export ("fraudulentWebsiteWarningEnabled")]
 		bool FraudulentWebsiteWarningEnabled { [Bind ("isFraudulentWebsiteWarningEnabled")] get; set; }
 
+		[Internal]
 		[Mac (11,3)][iOS (14,5)]
 		[MacCatalyst (14,5)]
 		[Export ("textInteractionEnabled")]
-		bool TextInteractionEnabled { /* changed in xcode 13.0 beta [Bind ("isTextInteractionEnabled")] */ get; set; }
+		bool _OldTextInteractionEnabled { get; set; }
+
+		[Internal]
+		[Mac (12,0)][iOS (15,0)]
+		[MacCatalyst (15,0)]
+		[Export ("isTextInteractionEnabled")]
+		bool _NewGetTextInteractionEnabled ();
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -573,6 +581,16 @@ namespace WebKit
 		[iOS (13,0)][NoMac]
 		[Export ("webView:contextMenuDidEndForElement:")]
 		void ContextMenuDidEnd (WKWebView webView, WKContextMenuElementInfo elementInfo);
+		
+		[Async]
+		[NoMac, NoTV, iOS (15,0), MacCatalyst (15,0)]
+		[Export ("webView:requestDeviceOrientationAndMotionPermissionForOrigin:initiatedByFrame:decisionHandler:")]
+		void RequestDeviceOrientationAndMotionPermission (WKWebView webView, WKSecurityOrigin origin, WKFrameInfo frame, Action<WKPermissionDecision> decisionHandler);
+		
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("webView:requestMediaCapturePermissionForOrigin:initiatedByFrame:type:decisionHandler:")]
+		void RequestMediaCapturePermission (WKWebView webView, WKSecurityOrigin origin, WKFrameInfo frame, WKMediaCaptureType type, Action<WKPermissionDecision> decisionHandler);
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -885,17 +903,20 @@ namespace WebKit
 		// [Export ("closeAllMediaPresentations")]
 		// void CloseAllMediaPresentations ();
 
-		// [Mac (11,3)][iOS (14,5)]
-		// [MacCatalyst (14,5)]
-		// [Async]
-		// [Export ("pauseAllMediaPlayback:")]
-		// void PauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("closeAllMediaPresentationsWithCompletionHandler:")]
+		void CloseAllMediaPresentations ([NullAllowed] Action completionHandler);
 
-		// [Mac (11,3)][iOS (14,5)]
-		// [MacCatalyst (14,5)]
-		// [Async]
-		// [Export ("suspendAllMediaPlayback:")]
-		// void SuspendAllMediaPlayback ([NullAllowed] Action completionHandler);
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("pauseAllMediaPlaybackWithCompletionHandler:")]
+		void PauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("setAllMediaPlaybackSuspended:completionHandler:")]
+		void SetAllMediaPlaybackSuspended (bool suspended, [NullAllowed] Action completionHandler);
 
 		// [Mac (11,3)][iOS (14,5)]
 		// [MacCatalyst (14,5)]
@@ -903,11 +924,10 @@ namespace WebKit
 		// [Export ("resumeAllMediaPlayback:")]
 		// void ResumeAllMediaPlayback ([NullAllowed] Action completionHandler);
 
-		// [Mac (11,3)][iOS (14,5)]
-		// [MacCatalyst (14,5)]
-		// [Async]
-		// [Export ("requestMediaPlaybackState:")]
-		// void RequestMediaPlaybackState (Action<WKMediaPlaybackState> completionHandler);
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("requestMediaPlaybackStateWithCompletionHandler:")]
+		void RequestMediaPlaybackState (Action<WKMediaPlaybackState> completionHandler);
 
 		[Mac (11,3)][iOS (14,5)]
 		[MacCatalyst (14,5)]
@@ -920,6 +940,49 @@ namespace WebKit
 		[Async]
 		[Export ("resumeDownloadFromResumeData:completionHandler:")]
 		void ResumeDownload (NSData resumeData, Action<WKDownload> completionHandler);
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("cameraCaptureState")]
+		WKMediaCaptureState CameraCaptureState { get; }
+		
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[NullAllowed, Export ("interactionState", ArgumentSemantic.Copy)]
+		NSObject InteractionState { get; set; }
+
+		[Mac (12,0), iOS (15,0), MacCatalyst(15,0), NoTV]
+		[Export ("loadFileRequest:allowingReadAccessToURL:")]
+		WKNavigation LoadFileRequest (NSUrlRequest request, NSUrl readAccessURL);
+		
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("loadSimulatedRequest:response:responseData:")]
+		WKNavigation LoadSimulatedRequest (NSUrlRequest request, NSUrlResponse response, NSData data);
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("loadSimulatedRequest:responseHTMLString:")]
+		WKNavigation LoadSimulatedRequest (NSUrlRequest request, string htmlString);
+		
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("microphoneCaptureState")]
+		WKMediaCaptureState MicrophoneCaptureState { get; }
+		
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("setCameraCaptureState:completionHandler:")]
+		void SetCameraCaptureState (WKMediaCaptureState state, [NullAllowed] Action completionHandler);
+		
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+		[Export ("setMicrophoneCaptureState:completionHandler:")]
+		void SetMicrophoneCaptureState (WKMediaCaptureState state, [NullAllowed] Action completionHandler);
+		
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV]
+		[Export ("themeColor")]
+		[NullAllowed]
+		UIColor ThemeColor { get; }
+
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV]
+		[NullAllowed, Export ("underPageBackgroundColor", ArgumentSemantic.Copy)]
+		UIColor UnderPageBackgroundColor { get; set; }
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -1008,6 +1071,10 @@ namespace WebKit
 		[iOS (14,0)]
 		[Export ("limitsNavigationsToAppBoundDomains")]
 		bool LimitsNavigationsToAppBoundDomains { get; set; }
+
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoTV]
+		[Export ("upgradeKnownHostsToHTTPS")]
+		bool UpgradeKnownHostsToHttps { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit

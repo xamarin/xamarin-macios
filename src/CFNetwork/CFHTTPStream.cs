@@ -7,6 +7,8 @@
 // Copyright 2012-2015 Xamarin Inc. (http://www.xamarin.com)
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using CoreFoundation;
@@ -28,12 +30,12 @@ namespace CoreServices {
 #endif
 	public partial class CFHTTPStream : CFReadStream {
 
-		internal CFHTTPStream (IntPtr handle)
-			: base (handle)
+		internal CFHTTPStream (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
-		public Uri FinalURL {
+		public Uri? FinalURL {
 			get {
 				var handle = GetProperty (_FinalURL);
 				if (handle == IntPtr.Zero)
@@ -44,12 +46,12 @@ namespace CoreServices {
 					throw new InvalidCastException ();
 				}
 
-				using (var url = new CFUrl (handle))
+				using (var url = new CFUrl (handle, false))
 					return new Uri (url.ToString ());
 			}
 		}
 
-		public CFHTTPMessage GetFinalRequest ()
+		public CFHTTPMessage? GetFinalRequest ()
 		{
 			var handle = GetProperty (_FinalRequest);
 			if (handle == IntPtr.Zero)
@@ -60,10 +62,10 @@ namespace CoreServices {
 				throw new InvalidCastException ();
 			}
 
-			return new CFHTTPMessage (handle);
+			return new CFHTTPMessage (handle, true);
 		}
 
-		public CFHTTPMessage GetResponseHeader ()
+		public CFHTTPMessage? GetResponseHeader ()
 		{
 			var handle = GetProperty (_ResponseHeader);
 			if (handle == IntPtr.Zero)
@@ -73,7 +75,7 @@ namespace CoreServices {
 				CFObject.CFRelease (handle);
 				throw new InvalidCastException ();
 			}
-			return new CFHTTPMessage (handle);
+			return new CFHTTPMessage (handle, true);
 		}
 
 		public bool AttemptPersistentConnection {
@@ -132,8 +134,8 @@ namespace CoreServices {
 #if !WATCHOS
 		public void SetProxy (CFProxySettings proxySettings)
 		{
-			if (proxySettings == null)
-				throw new ArgumentNullException ("proxySettings");
+			if (proxySettings is null)
+				throw new ArgumentNullException (nameof (proxySettings));
 
 			SetProperty (_Proxy, proxySettings.Dictionary);
 		}

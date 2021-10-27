@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
 
@@ -6,10 +7,7 @@ using Foundation;
 using ObjCRuntime;
 using Security;
 
-#if NET
 using System.Runtime.Versioning;
-#endif
-
 
 #nullable enable
 
@@ -363,3 +361,4 @@ namespace CoreWlan {
 			=> TryGetEAPIdentityList (list, out var _);
 	}
 }
+#endif // !__MACCATALYST__

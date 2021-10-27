@@ -796,6 +796,11 @@ namespace FileProvider {
 
 		[Export ("metadataVersion")]
 		NSData MetadataVersion { get; }
+
+		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+		[Static]
+		[Export ("beforeFirstSyncComponent")]
+		NSData BeforeFirstSyncComponent { get; }
 	}
 
 	[Mac (11,0)]
