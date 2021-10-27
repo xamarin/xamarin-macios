@@ -323,7 +323,10 @@ namespace AVFoundation {
 	}
 #endif // !XAMCORE_3_0 || MONOMAC 
 
-#if !MONOMAC || !XAMCORE_4_0
+	[Mac (10,15)]
+	[iOS (8,0)]
+	[TV (12,0)]
+	[Watch (7,0)]
 	[Flags]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -331,6 +334,8 @@ namespace AVFoundation {
 		ShouldResume = 1
 	}
 
+	[Mac (10,15)]
+	[Watch (7,0)]
 	[Flags]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -338,6 +343,8 @@ namespace AVFoundation {
 		NotifyOthersOnDeactivation = 1
 	}
 
+	[Mac (10,15)]
+	[Watch (7,0)]
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionPortOverride : ulong {
@@ -352,6 +359,8 @@ namespace AVFoundation {
 		Speaker = 0x73706b72 // 'spkr'
 	}
 
+	[Mac (10,15)]
+	[Watch (7,0)]
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionRouteChangeReason : ulong {
@@ -400,7 +409,7 @@ namespace AVFoundation {
 #else
 		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
 #endif
-		[NoWatch, iOS (10,0), TV (10,0)]
+		[Watch (3,0), iOS (10,0), TV (10,0)]
 		AllowBluetoothA2DP = 32,
 #if XAMCORE_4_0 // Removed in Xcode 12 GM
 		[NoMac]
@@ -415,12 +424,15 @@ namespace AVFoundation {
 		OverrideMutedMicrophoneInterruption = 128,
 	}
 
+	[Mac (10,15)]
+	[Watch (7,0)]
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionInterruptionType : ulong  {
 		Ended, Began
 	}
 
+	[Mac (10,15)]
 	[Native]
 	// NSInteger - AVAudioSession.h
 	// typedef CF_ENUM(NSInteger, AVAudioSessionErrorCode) -> CoreAudioTypes.framework/Headers/AudioSessionTypes.h
@@ -445,7 +457,6 @@ namespace AVFoundation {
 		ExpiredSession = 0x21736573, // '!ses'
 		SessionNotActive = 0x696e6163, // 'inac'
 	}
-#endif
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
@@ -482,15 +493,14 @@ namespace AVFoundation {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
 	[iOS (7,0)]
+	[Mac (10,14)]
 	[Native]
 	// NSInteger - AVSpeechSynthesis.h
 	public enum AVSpeechBoundary : long {
 		Immediate,
 		Word
 	}
-#endif
 
 	[iOS (8,0)]
 	[Native]
