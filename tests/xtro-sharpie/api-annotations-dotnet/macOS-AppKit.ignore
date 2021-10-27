@@ -272,7 +272,6 @@
 !unknown-field! NSTableColumn bound
 !unknown-field! NSTextMovement bound
 !unknown-native-enum! NSAlertButtonReturn bound
-!unknown-native-enum! NSAlertType bound
 !unknown-native-enum! NSApplicationLayoutDirection bound
 !unknown-native-enum! NSBackingStore bound
 !unknown-native-enum! NSCellHit bound

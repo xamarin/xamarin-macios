@@ -1708,19 +1708,17 @@ namespace AppKit {
 		Default, Regular, Small
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : long {
-#else
-	public enum NSAlertType : int {
-#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
 		DefaultReturn
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
