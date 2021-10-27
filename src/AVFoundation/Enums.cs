@@ -515,8 +515,10 @@ namespace AVFoundation {
 		Auto = 7,
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
-	[NoTV, Watch (5,0)]
+	[iOS (8,0)]
+	[Mac (10,15)]
+	[TV (12,0)]
+	[Watch (7,0)]
 	[Native]
 	public enum AVAudioSessionRecordPermission : ulong {
 		Undetermined = 1970168948 /*'undt'*/,
@@ -524,12 +526,14 @@ namespace AVFoundation {
 		Granted = 1735552628 /*'grnt'*/
 	}
 
+	[iOS (8,0)]
+	[Mac (10,15)]
+	[Watch (7,0)]
 	[Native]
 	public enum AVAudioSessionSilenceSecondaryAudioHintType : ulong {
 		Begin = 1,
 		End = 0
 	}
-#endif
 
 	[Flags]
 	[Native]
