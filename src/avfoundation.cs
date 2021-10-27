@@ -1929,10 +1929,12 @@ namespace AVFoundation {
 		[Export ("setActive:error:")]
 		bool SetActive (bool beActive, out NSError outError);
 
+#if !NET
 		[NoTV, NoMac]
 		[Export ("setActive:withFlags:error:")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'SetActive (bool, AVAudioSessionSetActiveOptions, out NSError)' instead.")]
 		bool SetActive (bool beActive, AVAudioSessionFlags flags, out NSError outError);
+#endif // !NET
 
 		[NoMac]
 		[Export ("setCategory:error:")]

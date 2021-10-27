@@ -258,7 +258,7 @@ namespace AVFoundation {
 		Unknown, ReadyToPlay, Failed
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+#if !NET
 	[NoTV]
 	[Flags]
 	[Native]
