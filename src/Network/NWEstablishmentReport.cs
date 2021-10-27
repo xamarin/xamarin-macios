@@ -152,7 +152,8 @@ namespace Network {
 		static void TrampolineEnumerateResolutionReport (IntPtr block, nw_resolution_report_t report)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWResolutionReport>> (block);
-			if (del == null) return;
+			if (del is null)
+				return;
 			using var nwReport = new NWResolutionReport (report, owns: false);
 			del (nwReport);
 		}
@@ -165,10 +166,10 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateResolutionReports (Action<NWResolutionReport> handler)
 		{
-			if (handler == null) 
+			if (handler is null) 
 				throw new ArgumentNullException (nameof (handler));
 
-			BlockLiteral blockHandler = new();
+			BlockLiteral blockHandler = new ();
 			blockHandler.SetupBlockUnsafe (static_EnumerateResolutionReport, handler);
 			try {
 				nw_establishment_report_enumerate_protocols (GetCheckedHandle (), ref blockHandler);

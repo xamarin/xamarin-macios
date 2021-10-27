@@ -28,10 +28,10 @@ namespace Network {
 				throw new ArgumentNullException (nameof (urlEndpoint));
 			switch (endpointType) {
 			case NWResolverConfigEndpointType.Https:
-				InitializeHandle ( nw_resolver_config_create_https (urlEndpoint.Handle));
+				InitializeHandle (nw_resolver_config_create_https (urlEndpoint.Handle));
 				break;
 			case NWResolverConfigEndpointType.Tls:
-				InitializeHandle ( nw_resolver_config_create_tls (urlEndpoint.Handle));
+				InitializeHandle (nw_resolver_config_create_tls (urlEndpoint.Handle));
 				break;
 			default:
 				throw new ArgumentOutOfRangeException ("Unknown endpoint type.");

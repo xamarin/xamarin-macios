@@ -51,7 +51,7 @@ namespace Network {
 			nw_quic_get_application_error (GetCheckedHandle ());
 		
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_quic_set_application_error (OS_nw_protocol_metadata metadata, ulong application_error, string reason);
+		static extern void nw_quic_set_application_error (OS_nw_protocol_metadata metadata, ulong application_error, string reason);
 
 		public (ulong error, string? reason) ApplicationError {
 			get => (ApplicationErrorCode, ApplicationErrorReason);

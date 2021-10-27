@@ -293,7 +293,7 @@ namespace Network {
 			if (context is null)
 				throw new ArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_copy_protocol_metadata (GetCheckedHandle (), context.Handle);
-			return ptr == IntPtr.Zero? null : new NWProtocolMetadata (ptr, true);
+			return ptr == IntPtr.Zero ? null : new NWProtocolMetadata (ptr, true);
 		}
 
 #if !NET
@@ -315,7 +315,7 @@ namespace Network {
 			if (definition is null)
 				throw new ArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_copy_protocol_metadata_for_message (GetCheckedHandle (), context.Handle, definition.Handle);
-			return ptr == IntPtr.Zero? null : new NWProtocolMetadata (ptr, true);
+			return ptr == IntPtr.Zero ? null : new NWProtocolMetadata (ptr, true);
 		}
 
 #if !NET
@@ -373,9 +373,9 @@ namespace Network {
 		static void TrampolineSetNewConnectionHandler (IntPtr block, IntPtr connection)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnection>> (block);
-			if (del != null) {
+			if (del is not null) {
 				// the ownership of the object is for the caller
-				var nwReport = new NWConnection(connection, owns: true);
+				using var nwReport = new NWConnection (connection, owns: true);
 				del (nwReport);
 			}
 		}
@@ -388,7 +388,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionHandler (Action<NWConnection> handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				throw new ArgumentNullException (nameof (handler));
 
 			var block_handler = new BlockLiteral ();

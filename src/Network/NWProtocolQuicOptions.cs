@@ -42,7 +42,7 @@ namespace Network {
 		static extern bool nw_quic_get_stream_is_unidirectional (OS_nw_protocol_options options);
 		
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_quic_set_stream_is_unidirectional (OS_nw_protocol_options options, [MarshalAs(UnmanagedType.I1)] bool isUnidirectional);
+		static extern void nw_quic_set_stream_is_unidirectional (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool isUnidirectional);
 
 		public bool StreamIsUnidirectional {
 			get => nw_quic_get_stream_is_unidirectional (GetCheckedHandle ());

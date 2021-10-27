@@ -289,8 +289,9 @@ namespace Network {
 		static void TrampolineNewConnectionGroup (IntPtr block, nw_connection_group_t connectionGroup)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnectionGroup>> (block);
-			if (del == null) return;
-			using var nwConnectionGroup = new NWConnectionGroup(connectionGroup, owns: false);
+			if (del is null)
+				return;
+			using var nwConnectionGroup = new NWConnectionGroup (connectionGroup, owns: false);
 			del (nwConnectionGroup);
 		}
 
@@ -302,7 +303,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionGroupHandler (Action<NWConnectionGroup> handler)
 		{
-			BlockLiteral blockHandler = new();
+			BlockLiteral blockHandler = new ();
 			blockHandler.SetupBlockUnsafe (static_NewConnectionGroup, handler);
 			try {
 				nw_listener_set_new_connection_group_handler (GetCheckedHandle (), ref blockHandler);
