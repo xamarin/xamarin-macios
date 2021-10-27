@@ -13,3 +13,8 @@
 !missing-selector! CLLocationManager::startMonitoringForRegion:desiredAccuracy: not bound
 !missing-selector! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: not bound
 !missing-selector! CLLocationManager::disallowDeferredLocationUpdates not bound
+
+# Fixed in XAMCORE_4_0
+!unknown-field! CLLocationPushServiceErrorDomain bound
+!unknown-native-enum! CLLocationPushServiceError bound
+!unknown-protocol! CLLocationPushServiceExtension bound
