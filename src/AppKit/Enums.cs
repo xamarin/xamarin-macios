@@ -2186,12 +2186,8 @@ namespace AppKit {
 	}
 	
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertButtonReturn : long {
-#else
-	public enum NSAlertButtonReturn : int {
-#endif
 		First = 1000,
 		Second = 1001,
 		Third = 1002,
