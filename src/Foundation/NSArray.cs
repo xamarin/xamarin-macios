@@ -355,6 +355,14 @@ namespace Foundation {
 			return ret;
 		}
 
+		static public T [] ArrayFromHandle<T> (IntPtr handle, Converter<IntPtr, T> creator, bool releaseHandle)
+		{
+			var rv = ArrayFromHandle<T> (handle, creator);
+			if (releaseHandle && handle == IntPtr.Zero)
+				NSObject.DangerousRelease (handle);
+			return rv;
+		}
+
 		// FIXME: before proving a real `this` indexer we need to clean the issues between
 		// NSObject and INativeObject coexistance across all the API (it can not return T)
 

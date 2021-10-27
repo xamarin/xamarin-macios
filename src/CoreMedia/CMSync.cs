@@ -24,9 +24,11 @@ namespace CoreMedia {
 #endif
 	public class CMClock : CMClockOrTimebase
 	{
+#if !XAMCORE_4_0
 		public CMClock (IntPtr handle) : base (handle)
 		{
 		}
+#endif
 
 		internal CMClock (IntPtr handle, bool owns) 
 			: base (handle, owns)
@@ -82,8 +84,8 @@ namespace CoreMedia {
 
 		public bool MightDrift (CMClock otherClock)
 		{
-			if (otherClock == null)
-				throw new ArgumentNullException ("otherClock");
+			if (otherClock is null)
+				throw new ArgumentNullException (nameof (otherClock));
 
 			return CMClockMightDrift (Handle, otherClock.Handle);
 		}
@@ -134,16 +136,20 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterClock (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef */ IntPtr masterClock, /* CMTimebaseRef* */ out IntPtr timebaseOut);
 
-		public CMTimebase (CMClock masterClock)
+		static IntPtr Create (CMClock masterClock)
 		{
-			if (masterClock == null)
-				throw new ArgumentNullException ("masterClock");
+			if (masterClock is null)
+				throw new ArgumentNullException (nameof (masterClock));
 
-			var error = CMTimebaseCreateWithMasterClock (IntPtr.Zero, masterClock.Handle, out handle);
+			var error = CMTimebaseCreateWithMasterClock (IntPtr.Zero, masterClock.Handle, out var handle);
 			if (error != CMTimebaseError.None)
 				throw new ArgumentException (error.ToString ());
+			return handle;
+		}
 
-			CFObject.CFRetain (Handle);
+		public CMTimebase (CMClock masterClock)
+			: base (Create (masterClock), true)
+		{
 		}
 
 #if !NET
@@ -160,16 +166,20 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterTimebase (/* CFAllocatorRef */ IntPtr allocator, /* CMTimebaseRef */ IntPtr masterTimebase, /* CMTimebaseRef* */ out IntPtr timebaseOut);
 
-		public CMTimebase (CMTimebase masterTimebase)
+		static IntPtr Create (CMTimebase masterTimebase)
 		{
-			if (masterTimebase == null)
-				throw new ArgumentNullException ("masterTimebase");
+			if (masterTimebase is null)
+				throw new ArgumentNullException (nameof (masterTimebase));
 
-			var error = CMTimebaseCreateWithMasterTimebase (IntPtr.Zero, masterTimebase.Handle, out handle);
+			var error = CMTimebaseCreateWithMasterTimebase (IntPtr.Zero, masterTimebase.Handle, out var handle);
 			if (error != CMTimebaseError.None)
 				throw new ArgumentException (error.ToString ());
+			return handle;
+		}
 
-			CFObject.CFRetain (Handle);
+		public CMTimebase (CMTimebase masterTimebase)
+			: base (Create (masterTimebase), true)
+		{
 		}
 		
 #if !NET
@@ -180,19 +190,25 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern CMTimebaseError CMTimebaseCreateWithSourceClock (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMClock */ IntPtr sourceClock, /* CMTimebase */ out IntPtr  timebaseOut);
 
+		static IntPtr Create (CFAllocator? allocator, CMClock sourceClock)
+		{
+			if (sourceClock is null)
+				throw new ArgumentNullException (nameof (sourceClock));
+
+			var error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, out var handle);
+			if (error != CMTimebaseError.None)
+				throw new ArgumentException (error.ToString ());
+			return handle;
+		}
+
 #if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 #else
 		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		public CMTimebase (CFAllocator? allocator, CMClock sourceClock)
+			: base (Create (allocator, sourceClock), true)
 		{
-			if (sourceClock is null)
-				throw new ArgumentNullException (nameof (sourceClock));
-
-			var error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, out handle);
-			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
 		}
 
 #if !NET
@@ -203,19 +219,25 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern CMTimebaseError CMTimebaseCreateWithSourceTimebase (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMTimebase */ IntPtr sourceTimebase, /* CMTimebase */ out IntPtr timebaseOut);
 
+		static IntPtr Create (CFAllocator? allocator, CMTimebase sourceTimebase)
+		{
+			if (sourceTimebase is null)
+				throw new ArgumentNullException (nameof (sourceTimebase));
+
+			var error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, out var handle);
+			if (error != CMTimebaseError.None)
+				throw new ArgumentException (error.ToString ());
+			return handle;
+		}
+
 #if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 #else
 		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		public CMTimebase (CFAllocator? allocator, CMTimebase sourceTimebase)
+			: base (Create (allocator, sourceTimebase), true)
 		{
-			if (sourceTimebase is null)
-				throw new ArgumentNullException (nameof (sourceTimebase));
-
-			var error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, out handle);
-			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -424,7 +446,7 @@ namespace CoreMedia {
 
 		public CMTimebaseError NotificationBarrier ()
 		{
-			return CMTimebaseNotificationBarrier (handle);
+			return CMTimebaseNotificationBarrier (Handle);
 		}
 
 		public const double VeryLongTimeInterval = 256.0 * 365.0 * 24.0 * 60.0 * 60.0;
@@ -435,10 +457,10 @@ namespace CoreMedia {
 
 		public CMTimebaseError AddTimer (NSTimer timer, NSRunLoop runloop)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
-			if (runloop == null)
-				throw new ArgumentNullException ("runloop");
+			if (timer is null)
+				throw new ArgumentNullException (nameof (timer));
+			if (runloop is null)
+				throw new ArgumentNullException (nameof (runloop));
 
 			// NSRunloop and CFRunloop[Ref] are NOT toll free bridged types
 			using (var cf = runloop.GetCFRunLoop ())
@@ -450,8 +472,8 @@ namespace CoreMedia {
 
 		public CMTimebaseError RemoveTimer (NSTimer timer)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
+			if (timer is null)
+				throw new ArgumentNullException (nameof (timer));
 
 			return CMTimebaseRemoveTimer (Handle, timer.Handle);
 		}
@@ -461,8 +483,8 @@ namespace CoreMedia {
 
 		public CMTimebaseError SetTimerNextFireTime (NSTimer timer, CMTime fireTime)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
+			if (timer is null)
+				throw new ArgumentNullException (nameof (timer));
 
 			return CMTimebaseSetTimerNextFireTime (Handle, timer.Handle, fireTime, 0);
 		}
@@ -472,8 +494,8 @@ namespace CoreMedia {
 
 		public CMTimebaseError SetTimerToFireImmediately (NSTimer timer)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
+			if (timer is null)
+				throw new ArgumentNullException (nameof (timer));
 
 			return CMTimebaseSetTimerToFireImmediately (Handle, timer.Handle);
 		}
@@ -507,7 +529,7 @@ namespace CoreMedia {
 #endif
 		public CMTimebaseError SetMasterTimebase (CMTimebase newMasterTimebase)
 		{
-			if (newMasterTimebase == null)
+			if (newMasterTimebase is null)
 				throw new ArgumentNullException (nameof (newMasterTimebase));
 
 			return CMTimebaseSetMasterTimebase (Handle, newMasterTimebase.Handle);
@@ -542,7 +564,7 @@ namespace CoreMedia {
 #endif
 		public CMTimebaseError SetMasterClock (CMClock newMasterClock)
 		{
-			if (newMasterClock == null)
+			if (newMasterClock is null)
 				throw new ArgumentNullException (nameof (newMasterClock));
 
 			return CMTimebaseSetMasterClock (Handle, newMasterClock.Handle);
@@ -710,48 +732,18 @@ namespace CoreMedia {
 #if !NET
 	[Watch (6,0)]
 #endif
-	public class CMClockOrTimebase : IDisposable, INativeObject
+	public class CMClockOrTimebase : NativeObject
 	{
-		internal IntPtr handle;
-
-		internal CMClockOrTimebase ()
+#if !XAMCORE_4_0
+		public CMClockOrTimebase (IntPtr handle)
+			: base (handle, false)
 		{
 		}
-
-		public CMClockOrTimebase (IntPtr handle) : this (handle, false)
-		{
-		}
+#endif
 
 		internal CMClockOrTimebase (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-
-		~CMClockOrTimebase ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero){
-				CFObject.CFRelease (Handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		public IntPtr Handle { 
-			get {
-				return handle;
-			}
 		}
 
 #if !COREBUILD
@@ -760,7 +752,7 @@ namespace CoreMedia {
 
 		public CMTime Time { 
 			get {
-				return CMSyncGetTime (handle);
+				return CMSyncGetTime (Handle);
 			}
 		}
 
@@ -769,11 +761,11 @@ namespace CoreMedia {
 
 		public static double GetRelativeRate (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
 		{
-			if (clockOrTimebaseA == null)
-				throw new ArgumentNullException ("clockOrTimebaseA");
+			if (clockOrTimebaseA is null)
+				throw new ArgumentNullException (nameof (clockOrTimebaseA));
 
-			if (clockOrTimebaseB == null)
-				throw new ArgumentNullException ("clockOrTimebaseB");
+			if (clockOrTimebaseB is null)
+				throw new ArgumentNullException (nameof (clockOrTimebaseB));
 
 			return CMSyncGetRelativeRate (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}
@@ -788,13 +780,13 @@ namespace CoreMedia {
 
 		public static CMSyncError GetRelativeRateAndAnchorTime (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB,  out double relativeRate, out CMTime timeA, out CMTime timeB)
 		{
-			if (clockOrTimebaseA == null)
-				throw new ArgumentNullException ("clockOrTimebaseA");
+			if (clockOrTimebaseA is null)
+				throw new ArgumentNullException (nameof (clockOrTimebaseA));
 
-			if (clockOrTimebaseB == null)
-				throw new ArgumentNullException ("clockOrTimebaseB");
+			if (clockOrTimebaseB is null)
+				throw new ArgumentNullException (nameof (clockOrTimebaseB));
 
-			return CMSyncGetRelativeRateAndAnchorTime (clockOrTimebaseA.Handle, clockOrTimebaseB.handle, out relativeRate, out timeA, out timeB);
+			return CMSyncGetRelativeRateAndAnchorTime (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle, out relativeRate, out timeA, out timeB);
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -802,10 +794,10 @@ namespace CoreMedia {
 
 		public static CMTime ConvertTime (CMTime time, CMClockOrTimebase from, CMClockOrTimebase to)
 		{
-			if (from == null)
-				throw new ArgumentNullException ("from");
-			if (to == null)
-				throw new ArgumentNullException ("to");
+			if (from is null)
+				throw new ArgumentNullException (nameof (from));
+			if (to is null)
+				throw new ArgumentNullException (nameof (to));
 
 			return CMSyncConvertTime (time, from.Handle, to.Handle);
 		}
@@ -816,11 +808,11 @@ namespace CoreMedia {
 
 		public static bool MightDrift (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
 		{
-			if (clockOrTimebaseA == null)
-				throw new ArgumentNullException ("clockOrTimebaseA");
+			if (clockOrTimebaseA is null)
+				throw new ArgumentNullException (nameof (clockOrTimebaseA));
 
-			if (clockOrTimebaseB == null)
-				throw new ArgumentNullException ("clockOrTimebaseB");
+			if (clockOrTimebaseB is null)
+				throw new ArgumentNullException (nameof (clockOrTimebaseB));
 
 			return CMSyncMightDrift (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}

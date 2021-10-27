@@ -103,3 +103,7 @@
 !incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::areBarycentricCoordsSupported is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::compressionType is REQUIRED and should be abstract
+
+## Adding it to the icebox until it is available on all platforms
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple8 = 1008 not bound

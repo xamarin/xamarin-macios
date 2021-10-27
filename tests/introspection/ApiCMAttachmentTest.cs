@@ -175,6 +175,7 @@ namespace Introspection {
 			case "AudioFile": // does crash the tests
 			case "CFHTTPAuthentication":
 			case "CFHTTPStream":
+			case "CFType":
 			case "SystemSound": // does crash the tests
 			case "MusicPlayer": // does crash the tests
 			case "MusicTrack": // does crash the tests
