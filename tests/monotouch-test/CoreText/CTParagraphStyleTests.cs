@@ -13,6 +13,7 @@ using System.Linq;
 
 using Foundation;
 using CoreText;
+using ObjCRuntime;
 
 namespace MonoTouchFixtures.CoreText {
 

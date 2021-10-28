@@ -16,6 +16,7 @@ using AppKit;
 using UIKit;
 #endif
 using CoreGraphics;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
