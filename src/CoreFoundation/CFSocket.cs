@@ -326,7 +326,7 @@ namespace CoreFoundation {
 				throw new CFSocketException (CFSocketError.Error);
 			gch = GCHandle.Alloc (this);
 
-			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0));
+			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
 			loop.AddSource (source, CFRunLoop.ModeDefault);
 		}
 
@@ -350,7 +350,7 @@ namespace CoreFoundation {
 			if (handle == IntPtr.Zero)
 				throw new CFSocketException (CFSocketError.Error);
 
-			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0));
+			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
 			var loop = CFRunLoop.Current;
 			loop.AddSource (source, CFRunLoop.ModeDefault);
 		}
@@ -360,7 +360,7 @@ namespace CoreFoundation {
 			this.handle = handle;
 			gch = GCHandle.Alloc (this);
 
-			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0));
+			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
 			var loop = CFRunLoop.Current;
 			loop.AddSource (source, CFRunLoop.ModeDefault);
 		}

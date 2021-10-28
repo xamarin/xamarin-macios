@@ -1225,7 +1225,7 @@ namespace Foundation {
 			{
 				status = NSStreamStatus.NotOpen;
 				stream = inputStream;
-				source = new CFRunLoopSource (Handle);
+				source = new CFRunLoopSource (Handle, false);
 			}
 
 			public override NSStreamStatus Status => status;
