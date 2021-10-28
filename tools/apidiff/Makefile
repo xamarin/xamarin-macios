@@ -108,18 +108,12 @@ $(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin
 	$(Q) sed -e 's_<assembly name="Xamarin.TVOS" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml > $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $< $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml $@
 
-# this is a hack to show the difference between Catalyst (iOS) and iOS
-$(APIDIFF_DIR)/maccat-to-ios.md: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.MacCatalyst/Xamarin.iOS.xml
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) --md $^ $@.tmp
-	$(Q) sed '/^#### Removed Type /d' $@.tmp > $@
-
 # create diff files for all the assemblies per platform
 
 $(APIDIFF_DIR)/mac-api-diff.html:     $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).html)
 $(APIDIFF_DIR)/ios-api-diff.html:     $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
 $(APIDIFF_DIR)/watchos-api-diff.html: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
 $(APIDIFF_DIR)/tvos-api-diff.html:    $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
-$(APIDIFF_DIR)/maccat-api-diff.html:  $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
 
 # Compare new dotnet vs. stable dotnet
 $(APIDIFF_DIR)/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html:                 $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.html
@@ -188,8 +182,6 @@ API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/tvos-api-diff.html
 API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/diff/ios-to-tvos.html
 endif
 ifdef INCLUDE_MACCATALYST
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/maccat-api-diff.html
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/maccat-to-ios.md
 ifdef ENABLE_DOTNET
 API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst-api-diff.html
 endif
@@ -220,13 +212,6 @@ ifdef INCLUDE_WATCH
 		echo "<h2><a href='watchos-api-diff.html'>Xamarin.WatchOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.WatchOS API diff is empty</h2>" >> $@; \
-	fi;
-endif
-ifdef INCLUDE_MACCATALYST
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/maccat-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='maccat-api-diff.html'>Xamarin.MacCatalyst API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.MacCatalyst API diff is empty</h2>" >> $@; \
 	fi;
 endif
 endif
@@ -281,13 +266,6 @@ ifdef INCLUDE_TVOS
 		echo "<h2><a href='dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html'>Xamarin.TVOS New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.TVOS New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
-	fi;
-endif
-ifdef INCLUDE_MACCATALYST
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html'>Xamarin.MacCatalyst New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.MacCatalyst New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
 	fi;
 endif
 endif
@@ -374,7 +352,6 @@ IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-reference
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
-MACCATALYST_REFS = $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES_MACCATALYST_IOS),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml)
 
 $(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
@@ -442,12 +419,11 @@ update-tvos-refs: $(TVOS_REFS)
 update-watchos-refs: $(WATCHOS_REFS)
 update-ios-refs: $(IOS_REFS)
 update-mac-refs: $(MAC_REFS)
-update-maccat-refs: $(MACCATALYST_REFS)
 ifdef ENABLE_DOTNET
 update-dotnet: $(DOTNET_REFS)
 endif
 
-update-refs: $(WATCHOS_REFS) $(TVOS_REFS) $(IOS_REFS) $(MAC_REFS) $(MACCATALYST_REFS)
+update-refs: $(WATCHOS_REFS) $(TVOS_REFS) $(IOS_REFS) $(MAC_REFS)
 ifdef ENABLE_DOTNET
 update-refs: $(DOTNET_REFS)
 endif
@@ -510,8 +486,6 @@ watchos-markdown: ; @true
 endif
 
 ifdef INCLUDE_MACCATALYST
-maccat-markdown: merger.exe $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst $(CURDIR)/diff/xi/Xamarin.MacCatalyst/ maccat
 dotnet-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Dotnet $(CURDIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/ dotnet-maccatalyst
 dotnet-legacy-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md
@@ -523,7 +497,6 @@ else
 dotnet-iOS-MacCatalyst-markdown: ; @true
 endif # ENABLE_DOTNET
 else
-maccat-markdown: ; @true
 dotnet-maccatalyst-markdown: ; @true
 dotnet-legacy-maccatalyst-markdown: ; @true
 dotnet-iOS-MacCatalyst-markdown: ; @true
@@ -581,14 +554,10 @@ ifdef INCLUDE_TVOS
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/tvos-api-diff.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/diff/ios-to-tvos.html"
 endif
-ifdef INCLUDE_MACCATALYST
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/maccat-api-diff.html"
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/maccat-to-ios.md"
-endif
 endif
 	$(Q) $(MAKE) $(UNZIP_STAMP) $(UNZIP_STAMP_DOTNET_iOS) $(UNZIP_STAMP_DOTNET_tvOS) $(UNZIP_STAMP_DOTNET_macOS) $(UNZIP_STAMP_DOTNET_MacCatalyst)
 	$(Q) $(MAKE) all -j8
-	$(Q) $(MAKE) ios-markdown tvos-markdown watchos-markdown macos-markdown maccat-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
+	$(Q) $(MAKE) ios-markdown tvos-markdown watchos-markdown macos-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
 	$(Q) $(CP) api-diff.html index.html
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
