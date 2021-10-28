@@ -53,7 +53,7 @@ namespace CoreGraphics {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out byte value);
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGPDFObjectGetValue")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFObjectGetNIntValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out nint value);
 
