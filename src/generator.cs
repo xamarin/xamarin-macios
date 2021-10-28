@@ -1684,7 +1684,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (TypeManager.INativeObject.IsAssignableFrom (pi.ParameterType)) {
 				pars.AppendFormat ("IntPtr {0}", safe_name);
-				invoke.AppendFormat ("new {0} ({1})", pi.ParameterType, safe_name);
+				invoke.AppendFormat ("new {0} ({1}, false)", pi.ParameterType, safe_name);
 				continue;
 			}
 
