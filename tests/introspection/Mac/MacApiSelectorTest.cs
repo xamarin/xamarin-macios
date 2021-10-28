@@ -204,6 +204,36 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "startup:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipDeviceController":
+					return true;
+				}
+				break;
+			case "readAttributeFabricIdWithResponseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipGeneralCommissioning":
+					return true;
+				}
+				break;
+			case "removeAllFabrics:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "removeFabric:nodeId:vendorId:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "setFabric:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {
