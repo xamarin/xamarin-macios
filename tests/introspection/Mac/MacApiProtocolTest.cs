@@ -121,6 +121,8 @@ namespace Introspection {
 				case "OSLogMessageComponent":
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
+				case "MEComposeSession":
+				case "MEComposeContext":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -157,6 +159,7 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSPropertyMapping":
 				case "HMAccessoryOwnershipToken":
+				case "MEComposeSession":
 					return true;
 				}
 				break;
@@ -235,6 +238,7 @@ namespace Introspection {
 				case "OSLogMessageComponent":
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
+				case "MEComposeContext":
 					return true;
 				}
 				break;
