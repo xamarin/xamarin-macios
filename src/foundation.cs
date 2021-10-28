@@ -4929,26 +4929,32 @@ namespace Foundation
 		[Wrap ("Perform (modes.GetConstants ()!, block)")]
 		void Perform (NSRunLoopMode[] modes, Action block);
 
-#if !XAMCORE_4_0
+#if !NET
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[Field ("NSDefaultRunLoopMode")]
 		NSString NSDefaultRunLoopMode { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[Field ("NSRunLoopCommonModes")]
 		NSString NSRunLoopCommonModes { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message:  "Use 'NSXpcConnection' instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSModalPanelRunLoopMode", "AppKit")]
 		NSString NSRunLoopModalPanelMode { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSEventTrackingRunLoopMode", "AppKit")]
 		NSString NSRunLoopEventTracking { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[NoMac][NoWatch]
 		[Field ("UITrackingRunLoopMode", "UIKit")]
 		NSString UITrackingRunLoopMode { get; }
@@ -7659,13 +7665,9 @@ namespace Foundation
 		[Export ("levelsOfUndo")]
 		nint LevelsOfUndo { get; set; }
 		
-#if XAMCORE_4_0
-		[Internal]
+#if NET
 		[Export ("runLoopModes")]
-		NSString [] _RunLoopModes { get; set; } 
-
-		[Wrap ("RunLoopModes.GetConstants ()")]
-		NSRunLoop [] RunLoopModes { get; set; } 
+		NSString [] WeakRunLoopModes { get; set; }
 #else
 		[Export ("runLoopModes")]
 		string [] RunLoopModes { get; set; } 

@@ -8,6 +8,8 @@
 //
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -17,5 +19,23 @@ namespace Foundation {
 		public virtual void SetActionName (string actionName) {
 			SetActionname (actionName);
 		}
+
+#if NET
+		public NSRunLoopMode []? RunLoopModes {
+			get {
+				var modes = WeakRunLoopModes;
+				if (modes is null)
+					return null;
+
+				var array = new NSRunLoopMode [modes.Length];
+				for (int n = 0; n < modes.Length; n++)
+					array [n] = NSRunLoopModeExtensions.GetValue (modes [n]);
+				return array;
+			}
+			set {
+				WeakRunLoopModes = value?.GetConstants ()!;
+			}
+		}
+#endif
 	}
 }
