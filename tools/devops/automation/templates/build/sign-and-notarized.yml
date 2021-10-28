@@ -88,7 +88,7 @@ steps:
   condition: and(${{ parameters.condition }}, contains(variables['configuration.BuildPkgs'], 'True'))
   timeoutInMinutes: 180
 
-- task: MicroBuildSigningPlugin@3
+- task: MicroBuildSigningPlugin@3.3.11
   displayName: 'Install Signing Plugin'
   inputs:
     signType: '${{ parameters.signatureType }}'
