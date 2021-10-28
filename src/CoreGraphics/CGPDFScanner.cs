@@ -90,7 +90,7 @@ namespace CoreGraphics {
 
 		public CGPDFContentStream GetContentStream ()
 		{
-			return new CGPDFContentStream (CGPDFScannerGetContentStream (Handle));
+			return new CGPDFContentStream (CGPDFScannerGetContentStream (Handle), false);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
