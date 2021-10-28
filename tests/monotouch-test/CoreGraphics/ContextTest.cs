@@ -11,6 +11,7 @@ using System;
 using System.Drawing;
 using Foundation;
 using CoreGraphics;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {

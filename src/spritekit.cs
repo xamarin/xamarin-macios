@@ -42,7 +42,11 @@ using AppKit;
 using UIColor = global::AppKit.NSColor;
 using UIImage = global::AppKit.NSImage;
 using UIView = global::AppKit.NSView;
+#if NET
+using pfloat = ObjCRuntime.nfloat;
+#else
 using pfloat = System.nfloat;
+#endif
 #else
 using UIKit;
 using NSLineBreakMode = global::UIKit.UILineBreakMode;

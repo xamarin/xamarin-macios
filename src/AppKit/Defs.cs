@@ -22,6 +22,9 @@
 //
 using System;
 using System.Runtime.InteropServices;
+
+using ObjCRuntime;
+
 namespace AppKit {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSEdgeInsets {
