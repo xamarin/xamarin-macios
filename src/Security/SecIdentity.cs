@@ -22,8 +22,7 @@ namespace Security {
 
 		public SecKey PrivateKey {
 			get {
-				IntPtr p;
-				SecStatusCode result = SecIdentityCopyPrivateKey (handle, out p);
+				SecStatusCode result = SecIdentityCopyPrivateKey (Handle, out var p);
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
 				return new SecKey (p, true);
