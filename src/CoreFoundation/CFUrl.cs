@@ -63,6 +63,8 @@ namespace CoreFoundation {
 		
 		static public CFUrl? FromFile (string filename)
 		{
+			if (filename is null)
+				throw new ArgumentNullException (nameof (filename));
 			var strHandle = CFString.CreateNative (filename);
 			try {
 				var handle = CFURLCreateWithFileSystemPath (IntPtr.Zero, strHandle, (nint)(long)CFUrlPathStyle.POSIX, false);
