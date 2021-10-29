@@ -10,6 +10,8 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using UIKit;
 
+#nullable enable
+
 namespace MonoTouchFixtures.Network {
 	[TestFixture]
 	[Preserve (AllMembers = true)]

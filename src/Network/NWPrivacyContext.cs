@@ -26,7 +26,7 @@ namespace Network {
 		static extern unsafe OS_nw_privacy_context nw_privacy_context_create (string description);
 
 		public NWPrivacyContext (string description)
-			: base (nw_privacy_context_create (description), true)
+			: base (nw_privacy_context_create (description), true) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_privacy_context_flush_cache (OS_nw_privacy_context privacyContext);

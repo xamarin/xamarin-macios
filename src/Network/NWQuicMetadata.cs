@@ -51,11 +51,11 @@ namespace Network {
 			nw_quic_get_application_error (GetCheckedHandle ());
 		
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_quic_set_application_error (OS_nw_protocol_metadata metadata, ulong application_error, string reason);
+		static extern void nw_quic_set_application_error (OS_nw_protocol_metadata metadata, ulong application_error, string? reason);
 
 		public (ulong error, string? reason) ApplicationError {
 			get => (ApplicationErrorCode, ApplicationErrorReason);
-			set => nw_quic_set_application_error (GetCheckedHandle (), value.error, value.reason!); 
+			set => nw_quic_set_application_error (GetCheckedHandle (), value.error, value.reason); 
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -69,11 +69,6 @@ namespace Network {
 
 		public ulong StreamId
 			=> nw_quic_get_stream_id (GetCheckedHandle ());
-
-		// extern uint8_t nw_quic_get_stream_type (nw_protocol_metadata_t _Nonnull stream_metadata) __attribute__((availability(macos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable)));
-		[NoWatch, NoTV, NoMac, NoiOS]
-		[DllImport (Constants.NetworkLibrary)]
-		static extern byte nw_quic_get_stream_type (OS_nw_protocol_metadata stream_metadata);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_quic_get_stream_application_error (OS_nw_protocol_metadata metadata);

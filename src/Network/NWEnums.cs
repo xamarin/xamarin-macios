@@ -237,11 +237,11 @@ namespace Network {
 
 	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
 	public enum NWReportResolutionProtocol {
-		unknown = 0,
-		udp = 1,
-		tcp = 2,
-		tls = 3,
-		https = 4,
+		Unknown = 0,
+		Udp = 1,
+		Tcp = 2,
+		Tls = 3,
+		Https = 4,
 	}
 	
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
