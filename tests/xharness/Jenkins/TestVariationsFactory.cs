@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
@@ -92,10 +93,10 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
 						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = (HumanMessage: "#1683", IssueLink: "https://github.com/xamarin/maccore/issues/1683") };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = (HumanMessage:"#1682", IssueLink:"https://github.com/xamarin/maccore/issues/1682") };
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1683", issueLink: "https://github.com/xamarin/maccore/issues/1683") };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1682", issueLink: "https://github.com/xamarin/maccore/issues/1682") };
 						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = (HumanMessage:"#1682", IssueLink:"https://github.com/xamarin/maccore/issues/1682") };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1682", issueLink: "https://github.com/xamarin/maccore/issues/1682") };
 					}
 					break;
 				}
@@ -189,7 +190,7 @@ namespace Xharness.Jenkins {
 					if (task.TestProject.IsDotNetProject)
 						variation += " [dotnet]";
 
-					if (known_failure.HasValue)
+					if (known_failure is not null)
 						ignored = true;
 
 					var clone = task.TestProject.Clone ();
