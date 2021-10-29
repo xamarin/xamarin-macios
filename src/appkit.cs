@@ -612,7 +612,7 @@ namespace AppKit {
 		[Export ("discardEventsMatchingMask:beforeEvent:"), Protected]
 		void DiscardEvents (nuint mask, NSEvent lastEvent);
 	
-                [ThreadSafe]
+		[ThreadSafe]
 		[Export ("postEvent:atStart:")]
 		void PostEvent (NSEvent theEvent, bool atStart);
 	
@@ -809,13 +809,14 @@ namespace AppKit {
 		[Notification, Field ("NSApplicationDidChangeScreenParametersNotification")]
 		NSString DidChangeScreenParametersNotification { get; }
 
-		[Mac (12,0)]
-		[Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
-		NSString ProtectedDataWillBecomeUnavailableNotification { get; }
+		// https://github.com/xamarin/xamarin-macios/issues/1318
+		// [Mac (12,0)]
+		// [Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
+		// NSString ProtectedDataWillBecomeUnavailableNotification { get; }
 
-		[Mac (12,0)]
-		[Field ("NSApplicationProtectedDataDidBecomeAvailableNotification")]
-		NSString ProtectedDataDidBecomeAvailableNotification { get; }
+		// [Mac (12,0)]
+		// [Field ("NSApplicationProtectedDataDidBecomeAvailableNotification")]
+		// NSString ProtectedDataDidBecomeAvailableNotification { get; }
 
 		[Field ("NSApplicationLaunchIsDefaultLaunchKey")]
 		NSString LaunchIsDefaultLaunchKey  { get; }
