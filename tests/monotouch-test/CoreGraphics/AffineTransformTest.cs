@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;
+using ObjCRuntime;
 
 using NUnit.Framework;
 

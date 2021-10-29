@@ -1,8 +1,10 @@
 #if !__MACCATALYST__
 using System;
 using System.Diagnostics;
+
 using Foundation;
 using CoreGraphics;
+using ObjCRuntime;
 
 namespace AppKit {
 

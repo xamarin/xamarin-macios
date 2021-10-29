@@ -107,7 +107,7 @@ We have introduced 6 new types to make this possible:
 
 In the Classic assembly, the `System.Drawing` types are backed by the 32-bit
 `System.Single` type. In the Unified assemblies, the `CoreGraphics` types
-are backed by 32/64-bit `System.nfloat` type.
+are backed by 32/64-bit `System.nfloat` type (`ObjCRuntime.nfloat` in .NET).
 
 #### Enums ####
 

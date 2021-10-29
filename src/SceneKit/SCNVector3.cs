@@ -34,7 +34,11 @@ using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using MathHelper = global::OpenTK.MathHelper;
 #if MONOMAC
+#if NET
+using pfloat = ObjCRuntime.nfloat;
+#else
 using pfloat = System.nfloat;
+#endif
 #else
 using pfloat = System.Single;
 #endif
