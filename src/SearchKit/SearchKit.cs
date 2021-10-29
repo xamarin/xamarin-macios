@@ -281,6 +281,11 @@ namespace SearchKit
 			}
 		}
 
+		public void Close ()
+		{
+			Dispose ();
+		}
+
 		protected override void Retain ()
 		{
 			throw new InvalidOperationException ();
