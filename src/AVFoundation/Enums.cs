@@ -638,9 +638,7 @@ namespace AVFoundation {
 		Auto = -1
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#endif
+	[Mac (10,15)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV, NoWatch, iOS (8,0)]
 	[Native]
