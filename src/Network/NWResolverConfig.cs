@@ -34,7 +34,7 @@ namespace Network {
 				InitializeHandle (nw_resolver_config_create_tls (urlEndpoint.Handle));
 				break;
 			default:
-				throw new ArgumentOutOfRangeException ("Unknown endpoint type.");
+				throw new ArgumentOutOfRangeException ($"Unknown endpoint type: {endpointType}");
 			}
 		}
 
