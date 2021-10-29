@@ -31,7 +31,11 @@ using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
 
 #if MONOMAC
+#if NET
+using pfloat = ObjCRuntime.nfloat;
+#else
 using pfloat = System.nfloat;
+#endif
 #else
 using pfloat = System.Single;
 #endif

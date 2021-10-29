@@ -20,6 +20,7 @@ using AppKit;
 using UIKit;
 #endif
 using AVFoundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AVFoundation {

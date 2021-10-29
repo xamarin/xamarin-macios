@@ -365,7 +365,8 @@ $$(UNZIP_STAMP_DOTNET_$(1)): $$(BUNDLE_ZIP_DOTNET_$(1))
 	$$(Q_GEN) unzip -q -d $$(UNZIP_DIR_DOTNET_$(1)) $$(BUNDLE_ZIP_DOTNET_$(1))
 	$$(Q) touch $$@
 
-$$(UNZIP_DIR_DOTNET_$(1))/%.dll: $$(UNZIP_STAMP_DOTNET_$(1))
+$$(UNZIP_DIR_DOTNET_$(1))/%.dll: $$(UNZIP_STAMP_DOTNET_$(1)) ;
+
 endef
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetUnzipBundle,$(platform))))
