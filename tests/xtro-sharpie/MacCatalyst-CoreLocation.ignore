@@ -3,8 +3,3 @@
 !missing-selector! CLLocationManager::disallowDeferredLocationUpdates not bound
 !missing-selector! CLLocationManager::startRangingBeaconsInRegion: not bound
 !missing-selector! CLLocationManager::stopRangingBeaconsInRegion: not bound
-
-# removal would create breaking changes
-!unknown-field! CLLocationPushServiceErrorDomain bound
-!unknown-native-enum! CLLocationPushServiceError bound
-!unknown-protocol! CLLocationPushServiceExtension bound
