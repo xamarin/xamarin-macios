@@ -14,6 +14,7 @@ namespace MonoTouchFixtures.WebKit {
 		[Test]
 		public void TextInteractionEnabledTest ()
 		{
+			TestRuntime.AssertXcodeVersion (13, 1);
 			using var preferences = new WKPreferences ();
 			// ignore the OS version, the property should always work
 			Assert.DoesNotThrow (() => preferences.TextInteractionEnabled = true, "Getter");

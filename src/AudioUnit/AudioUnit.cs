@@ -1037,9 +1037,14 @@ namespace AudioUnit
 		public bool IsAtEnd { get { return current == null; }}
 
 		public AURenderEventEnumerator (IntPtr ptr)
+			: this (ptr, false)
 		{
-			Handle = ptr;
-			current = (AURenderEvent *) ptr;
+		}
+
+		internal AURenderEventEnumerator (IntPtr handle, bool owns)
+		{
+			Handle = handle;
+			current = (AURenderEvent *) handle;
 		}
 
 		public void Dispose ()
