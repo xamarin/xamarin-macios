@@ -395,7 +395,7 @@ namespace Introspection {
 					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
 					if (result != SecStatusCode.Success)
 						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
-					return new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle));
+					return Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false);
 				}
 			case "SecTrust":
 				X509Certificate x = new X509Certificate (mail_google_com);
@@ -462,7 +462,7 @@ namespace Introspection {
 					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
 					if (result != SecStatusCode.Success)
 						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
-					return new SecIdentity2 (new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle)));
+					return new SecIdentity2 (Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false));
 				}
 				
 			case "SecKey":
