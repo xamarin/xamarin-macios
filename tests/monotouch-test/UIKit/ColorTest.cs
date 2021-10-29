@@ -8,6 +8,7 @@ using System.Drawing;
 #endif
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {

@@ -40,20 +40,14 @@ namespace CoreFoundation {
 		}
 
 		protected NativeObject (IntPtr handle, bool owns)
-			: this (handle, owns, false)
+			: this (handle, owns, true)
 		{
 		}
 
 		protected NativeObject (IntPtr handle, bool owns, bool verify)
 		{
-#if !COREBUILD
-			if (verify && handle == IntPtr.Zero && Class.ThrowOnInitFailure)
-				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
-					"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
-#endif
-
-			Handle = handle;
-			if (!owns)
+			InitializeHandle (handle, verify);
+			if (!owns && handle != IntPtr.Zero)
 				Retain ();
 		}
 
@@ -84,15 +78,20 @@ namespace CoreFoundation {
 		// https://developer.apple.com/documentation/corefoundation/1521153-cfrelease
 		protected virtual void Release () => CFObject.CFRelease (GetCheckedHandle ());
 
-		protected virtual void InitializeHandle (IntPtr handle)
+		void InitializeHandle (IntPtr handle, bool verify)
 		{
 #if !COREBUILD
-			if (handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
+			if (verify && handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
 				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
 				    "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
 			}
 #endif
 			this.handle = handle;
+		}
+
+		protected virtual void InitializeHandle (IntPtr handle)
+		{
+			InitializeHandle (handle, true);
 		}
 
 		public IntPtr GetCheckedHandle ()

@@ -897,32 +897,48 @@ namespace WebKit
 		NSPrintOperation GetPrintOperation (NSPrintInfo printInfo);
 
 		// Apple renamed those API since Xcode 12.5
-
-		// [Mac (11,3)][iOS (14,5)]
-		// [MacCatalyst (14,5)]
-		// [Export ("closeAllMediaPresentations")]
-		// void CloseAllMediaPresentations ();
+		[Internal]
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+ 		[Export ("closeAllMediaPresentations")]
+ 		void _OldCloseAllMediaPresentations ();
 
 		[Async]
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 		[Export ("closeAllMediaPresentationsWithCompletionHandler:")]
 		void CloseAllMediaPresentations ([NullAllowed] Action completionHandler);
 
+		[Internal]
+		[Mac (11,3)][iOS (14,5)]
+ 		[MacCatalyst (14,5)]
+ 		[Async]
+ 		[Export ("pauseAllMediaPlayback:")]
+ 		void _OldPauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Internal]
 		[Async]
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 		[Export ("pauseAllMediaPlaybackWithCompletionHandler:")]
-		void PauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+		void _NewPauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Internal]
+		[Mac (11,3)][iOS (14,5)]
+ 		[MacCatalyst (14,5)]
+ 		[Async]
+ 		[Export ("suspendAllMediaPlayback:")]
+ 		void _OldSuspendAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Internal]
+		[Mac (11,3)][iOS (14,5)]
+ 		[MacCatalyst (14,5)]
+ 		[Async]
+ 		[Export ("resumeAllMediaPlayback:")]
+ 		void _OldResumeAllMediaPlayback ([NullAllowed] Action completionHandler);
 
 		[Async]
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 		[Export ("setAllMediaPlaybackSuspended:completionHandler:")]
 		void SetAllMediaPlaybackSuspended (bool suspended, [NullAllowed] Action completionHandler);
-
-		// [Mac (11,3)][iOS (14,5)]
-		// [MacCatalyst (14,5)]
-		// [Async]
-		// [Export ("resumeAllMediaPlayback:")]
-		// void ResumeAllMediaPlayback ([NullAllowed] Action completionHandler);
 
 		[Async]
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]

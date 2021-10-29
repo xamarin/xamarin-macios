@@ -226,6 +226,13 @@ namespace ObjCRuntime
 			if (type.IsNested)
 				return false;
 
+#if NET
+			if (type.Namespace == "ObjCRuntime" && type.Name == "nfloat") {
+				type_size = is_64_bits ? 8 : 4;
+				return true;
+			}
+#endif
+
 			if (type.Namespace != "System")
 				return false;
 
@@ -251,7 +258,9 @@ namespace ObjCRuntime
 				type_size = 8;
 				return true;
 			case "IntPtr":
+#if !NET
 			case "nfloat":
+#endif
 			case "nuint":
 			case "nint":
 				type_size = is_64_bits ? 8 : 4;
