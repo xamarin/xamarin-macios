@@ -123,9 +123,9 @@ namespace CoreVideo {
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 #if IOS || __MACCATALYST__ || TVOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+			if (SystemVersion.CheckiOS (15, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (8, 0))
+			if (SystemVersion.CheckwatchOS (8, 0))
 #endif
 				return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
@@ -135,7 +135,7 @@ namespace CoreVideo {
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
-			if (PlatformHelper.CheckSystemVersion (12, 0))
+			if (SystemVersion.CheckmacOS (12, 0))
 				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			else
 				return Runtime.GetNSObject<NSObject> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
@@ -171,11 +171,11 @@ namespace CoreVideo {
 		public NSDictionary? GetAttachments (CVAttachmentMode attachmentMode)
 		{
 #if IOS || __MACCATALYST__ || TVOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+			if (SystemVersion.CheckiOS (15, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (8, 0))
+			if (SystemVersion.CheckwatchOS (8, 0))
 #elif MONOMAC
-			if (PlatformHelper.CheckSystemVersion (12, 0))
+			if (SystemVersion.CheckmacOS (12, 0))
 #endif
 				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
 			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);

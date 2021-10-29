@@ -282,38 +282,6 @@ namespace ObjCRuntime
 
 			return platform;
 		}
-
-#if !COREBUILD && !WATCH
-#if MONOMAC
-		const int sys1 = 1937339185;
-		const int sys2 = 1937339186;
-
-		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
-#if !NET
-		[Deprecated (PlatformName.MacOSX, 10, 8)]
-#else
-		[UnsupportedOSPlatform ("macos10.8")]
-#endif
-		[DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
-		static extern int Gestalt (int selector, out int result);
-
-		static int osx_major, osx_minor;
-
-		public static bool CheckSystemVersion (int major, int minor)
-		{
-			if (osx_major == 0) {
-				Gestalt (sys1, out osx_major);
-				Gestalt (sys2, out osx_minor);
-			}
-			return osx_major > major || (osx_major == major && osx_minor >= minor);
-		}
-#else
-		public static bool CheckSystemVersion (int major, int minor)
-		{
-			return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
-		}
-#endif
-#endif
 	}
 
 	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]

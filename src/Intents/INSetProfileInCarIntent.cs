@@ -28,7 +28,7 @@ namespace Intents {
 		protected INSetProfileInCarIntent (NSNumber profileNumber, string profileLabel, NSNumber defaultProfile)
 		{
 			// Apple created this change in 10,2
-			if (UIDevice.CurrentDevice.CheckSystemVersion (10, 2))
+			if (SystemVersion.CheckiOS (10, 2))
 				InitializeHandle (InitWithProfileNumberName (profileNumber, profileLabel, defaultProfile));
 			else
 				InitializeHandle (InitWithProfileNumberLabel (profileNumber, profileLabel, defaultProfile));
