@@ -181,6 +181,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 		</CreateBindingResourcePackage>
 
+		<MakeDir
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
+		/>
+
 		<Touch
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -282,7 +288,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).mSYM;@(_DebugSymbolDir)" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true' Or '$(_PlatformName)' == 'macOS'" Files="$(DeviceSpecificOutputPath)dsym.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="(('$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true') Or '$(_PlatformName)' == 'macOS')" Files="$(DeviceSpecificOutputPath)dsym.items" />
 	</Target>
 
 	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
@@ -2050,39 +2056,44 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Ditto>
 	</Target>
 
-	<Target Name="_GenerateFrameworkDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks"
+	<Target Name="_CalculateFrameworkDebugSymbolPath" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks">
+		<ItemGroup>
+			<_Frameworks>
+				<_Destination>$(AppBundleDir)\..\%(Filename).framework.dSYM</_Destination>
+			</_Frameworks>
+			<_Frameworks>
+				<_DestinationExists>$([System.IO.File]::Exists('%(_Destination)'))</_DestinationExists>
+			</_Frameworks>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_GenerateFrameworkDebugSymbols" Condition="(('$(_PlatformName)' == 'macOS') Or (('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false') and '$(IsMacEnabled)' == 'true'))" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks;_CalculateFrameworkDebugSymbolPath"
 		Inputs="%(_Frameworks.Identity)"
-		Outputs="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM\Contents\Info.plist"
+		Outputs="%(_Frameworks._Destination)\Contents\Info.plist"
 		>
 
-		<PropertyGroup>
-			<_Destination>$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM</_Destination>
-		</PropertyGroup>
+		<!-- Due to MSB4116 we can not check _DestinationExists in the condition for this target, thus all tasks must check it themselves -->
 
-		<!-- if the user framework does not provide it's own dSYM then we try to build one -->
-		<ItemGroup Condition="'$(IsMacEnabled)' == 'true' And !Exists (_Destination)">
-			<!-- run dsymutil on embedded frameworks -->
-			<DSymUtil
-				SessionId="$(BuildSessionId)"
-				Condition="'$(_NoDSymUtil)' == 'false'"
-				AppBundleDir="$(AppBundleDir)"
-				Architectures=""
-				DSymDir="$(_Destination)"
-				Executable="%(_Frameworks.Identity)"
-				ToolExe="$(DSymUtilExe)"
-				ToolPath="$(DSymUtilPath)">
-			</DSymUtil>
+		<!-- run dsymutil on embedded frameworks -->
+		<DSymUtil
+			SessionId="$(BuildSessionId)"
+			Condition="'$(_NoDSymUtil)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
+			AppBundleDir="$(AppBundleDir)"
+			Architectures=""
+			DSymDir="%(_Frameworks._Destination)"
+			Executable="%(_Frameworks.Identity)"
+			ToolExe="$(DSymUtilExe)"
+			ToolPath="$(DSymUtilPath)">
+		</DSymUtil>
 
-			<!-- strip embedded frameworks -->
-			<SymbolStrip
-				SessionId="$(BuildSessionId)"
-				Condition="'$(_NoSymbolStrip)' == 'false'"
-				Executable="%(_Frameworks.Identity)"
-				IsFramework="true"
-				SymbolFile=""
-			>
-			</SymbolStrip>
-		</ItemGroup>
+		<!-- strip embedded frameworks -->
+		<SymbolStrip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(_NoSymbolStrip)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
+			Executable="%(_Frameworks.Identity)"
+			IsFramework="true"
+			SymbolFile="">
+		</SymbolStrip>
 
 		<!-- _GenerateDebugSymbols will run spotlight to index the dSYMs -->
 	</Target>
@@ -2125,7 +2136,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_GenerateDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;_GenerateFrameworkDebugSymbols;_GenerateAppExtensionDebugSymbols;_PrepareDebugSymbolGeneration"
+	<PropertyGroup>
+		<GenerateDebugSymbolsDependsOn>
+			_CompileToNative;
+			_ParseBundlerArguments;
+			_CalculateFrameworkDebugSymbolPath;
+			_GenerateFrameworkDebugSymbols;
+			_GenerateAppExtensionDebugSymbols;
+			_PrepareDebugSymbolGeneration
+		</GenerateDebugSymbolsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_GenerateDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="$(GenerateDebugSymbolsDependsOn)"
 		Inputs="$(_NativeExecutable)" Outputs="$(AppBundleDir).dSYM\Contents\Info.plist">
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Directories="$(AppBundleDir).dSYM" />
