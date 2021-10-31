@@ -54,7 +54,7 @@ namespace Metal {
 		{
 			if (sampleBuffer == null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
-			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_nuint_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, sampleIndex, barrier);
+			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_UIntPtr_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, (UIntPtr) sampleIndex, barrier);
 		}
 	}
 #endif // MONOMAC

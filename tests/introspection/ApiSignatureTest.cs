@@ -33,7 +33,11 @@ using ObjCRuntime;
 namespace Introspection {
 
 	public abstract class ApiSignatureTest : ApiBaseTest {
-
+#if NET
+		const string NFloatTypeName = "ObjCRuntime.nfloat";
+#else
+		const string NFloatTypeName = "System.nfloat";
+#endif
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		// note: the returned string is not ours to free
 		static extern IntPtr objc_getClass (string name);
@@ -662,7 +666,7 @@ namespace Introspection {
 				switch (type.FullName) {
 				case "System.Double":
 					return true;
-				case "System.nfloat":
+				case NFloatTypeName:
 					return IntPtr.Size == 8;
 				default:
 					return false;
@@ -671,7 +675,7 @@ namespace Introspection {
 				switch (type.FullName) {
 				case "System.Single":
 					return true;
-				case "System.nfloat":
+				case NFloatTypeName:
 					return IntPtr.Size == 4;
 				default:
 					return false;

@@ -657,7 +657,7 @@
 			</_AssembliesToBeStripped>
 		</ItemGroup>
 		<Xamarin.MacDev.Tasks.ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)">
-			<Output TaskParameter="StrippedAssemblies" PropertyName="_StrippedAssemblies" />
+			<Output TaskParameter="StrippedAssemblies" ItemName="_StrippedAssemblies" />
 		</Xamarin.MacDev.Tasks.ILStrip>
 		<ItemGroup>
 			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />

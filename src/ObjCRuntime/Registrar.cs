@@ -88,6 +88,14 @@ namespace Registrar {
 		public Application App { get; protected set; }
 #endif
 
+#if MMP || MTOUCH || BUNDLER
+		static string NFloatTypeName { get => Driver.IsDotNet ? "ObjCRuntime.nfloat" : "System.nfloat"; }
+#elif NET
+		const string NFloatTypeName = "ObjCRuntime.nfloat";
+#else
+		const string NFloatTypeName = "System.nfloat";
+#endif
+
 		Dictionary<TAssembly, object> assemblies = new Dictionary<TAssembly, object> (); // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 		// locking: all accesses must lock 'types'.
 		Dictionary<TType, ObjCType> types = new Dictionary<TType, ObjCType> ();
@@ -715,10 +723,11 @@ namespace Registrar {
 					case "System.nuint":
 					case "System.Single":
 					case "System.Double":
-					case "System.nfloat":
 					case "System.Boolean":
 						return true;
 					default:
+						if (outputTypeName == NFloatTypeName)
+							return true;
 						return Registrar.IsEnum (underlyingOutputType);
 					}
 				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
@@ -2615,6 +2624,7 @@ namespace Registrar {
 			var typeFullName = GetTypeFullName (type);
 
 			switch (typeFullName) {
+			case "System.UIntPtr":
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";
@@ -2641,11 +2651,12 @@ namespace Registrar {
 				return Is64Bits ? "q" : "i";
 			case "System.nuint":
 				return Is64Bits ? "Q" : "I";
-			case "System.nfloat":
-				return Is64Bits ? "d" : "f";
 			case "System.DateTime":
 				throw CreateException (4102, member, Errors.MT4102, "System.DateTime", "Foundation.NSDate", member.FullName);
 			}
+
+			if (typeFullName == NFloatTypeName)
+				return Is64Bits ? "d" : "f";
 
 			if (Is (type, ObjCRuntime, "Selector"))
 				return ":";

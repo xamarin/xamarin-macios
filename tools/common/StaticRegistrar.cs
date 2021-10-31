@@ -213,6 +213,8 @@ namespace Registrar {
 
 	class StaticRegistrar : Registrar
 	{
+		static string NFloatTypeName { get => Driver.IsDotNet ? "ObjCRuntime.nfloat" : "System.nfloat"; }
+
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
 		public Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap {
@@ -730,10 +732,11 @@ namespace Registrar {
 				case "System.Int64": 
 				case "System.UInt64": return 8;
 				case "System.IntPtr":
-				case "System.nfloat":
 				case "System.nuint":
 				case "System.nint": return is_64_bits ? 8 : 4;
 				default:
+					if (type.FullName == NFloatTypeName)
+						return is_64_bits ? 8 : 4;
 					int size = 0;
 					foreach (FieldDefinition field in type.Fields) {
 						if (field.IsStatic)
@@ -2306,6 +2309,7 @@ namespace Registrar {
 				size += 8;
 				break;
 			case "System.IntPtr":
+			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
 				size += 4; // for now at least...
@@ -2448,14 +2452,15 @@ namespace Registrar {
 			case "System.nuint":
 				CheckNamespace ("Foundation", exceptions);
 				return "NSUInteger";
-			case "System.nfloat":
-				CheckNamespace ("CoreGraphics", exceptions);
-				return "CGFloat";
 			case "System.DateTime":
 				throw ErrorHelper.CreateError (4102, Errors.MT4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
 			default:
+				if (type.FullName == NFloatTypeName) {
+					CheckNamespace ("CoreGraphics", exceptions);
+					return "CGFloat";
+				}
 				TypeDefinition td = ResolveType (type);
 				if (IsNSObject (td)) {
 					if (!IsPlatformType (td))
@@ -2509,10 +2514,11 @@ namespace Registrar {
 				case "System.UInt64": return "llu";
 				case "System.nint":	return "zd";
 				case "System.nuint": return "tu";
-				case "System.nfloat":
 				case "System.Single":
 				case "System.Double": return "f";
 				default:
+					if (type.FullName == NFloatTypeName)
+						return "f";
 					unknown = true;
 					return "p";
 				}
@@ -4396,9 +4402,10 @@ namespace Registrar {
 			case "System.nuint": return "xamarin_nuint_to_nsnumber";
 			case "System.Single": return "xamarin_float_to_nsnumber";
 			case "System.Double": return "xamarin_double_to_nsnumber";
-			case "System.nfloat": return "xamarin_nfloat_to_nsnumber";
 			case "System.Boolean": return "xamarin_bool_to_nsnumber";
 			default:
+				if (typeName == NFloatTypeName)
+					return "xamarin_nfloat_to_nsnumber";
 				if (IsEnum (managedType))
 					return GetManagedToNSNumberFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName);
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
@@ -4421,9 +4428,12 @@ namespace Registrar {
 			case "System.nuint": nativeType = "NSUInteger"; return "xamarin_nsnumber_to_nuint";
 			case "System.Single": nativeType = "float"; return "xamarin_nsnumber_to_float";
 			case "System.Double": nativeType = "double"; return "xamarin_nsnumber_to_double";
-			case "System.nfloat": nativeType = "CGFloat"; return "xamarin_nsnumber_to_nfloat";
 			case "System.Boolean": nativeType = "BOOL"; return "xamarin_nsnumber_to_bool";
 			default:
+				if (typeName == NFloatTypeName) {
+					nativeType = "CGFloat";
+					return "xamarin_nsnumber_to_nfloat";
+				}
 				if (IsEnum (managedType))
 					return GetNSNumberToManagedFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName, out nativeType);
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
