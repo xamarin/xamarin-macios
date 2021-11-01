@@ -181,6 +181,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 		</CreateBindingResourcePackage>
 
+		<MakeDir
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
+		/>
+
 		<Touch
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
