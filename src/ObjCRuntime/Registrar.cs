@@ -2624,6 +2624,7 @@ namespace Registrar {
 			var typeFullName = GetTypeFullName (type);
 
 			switch (typeFullName) {
+			case "System.UIntPtr":
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";

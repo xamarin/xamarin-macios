@@ -70,6 +70,11 @@ namespace CoreFoundation {
 			}
 		}
 
+		protected void ClearHandle ()
+		{
+			handle = IntPtr.Zero;
+		}
+
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
 		// https://developer.apple.com/documentation/corefoundation/1521269-cfretain?language=occ
 		protected virtual void Retain () => CFObject.CFRetain (GetCheckedHandle ());
