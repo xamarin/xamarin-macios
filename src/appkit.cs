@@ -809,7 +809,7 @@ namespace AppKit {
 		[Notification, Field ("NSApplicationDidChangeScreenParametersNotification")]
 		NSString DidChangeScreenParametersNotification { get; }
 
-		// https://github.com/xamarin/xamarin-macios/issues/1318
+		// https://github.com/xamarin/xamarin-macios/issues/13185
 		// [Mac (12,0)]
 		// [Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
 		// NSString ProtectedDataWillBecomeUnavailableNotification { get; }
