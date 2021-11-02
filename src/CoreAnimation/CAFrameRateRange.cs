@@ -35,7 +35,7 @@ namespace CoreAnimation {
 
 #if !COREBUILD
 		[Field ("CAFrameRateRangeDefault", "CoreAnimation")]
- 		public static CAFrameRateRange Default => (CAFrameRateRange) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreAnimation.Handle, "CAFrameRateRangeDefault"), typeof (CAFrameRateRange))!;
+ 		public static CAFrameRateRange Default => Marshal.PtrToStructure<CAFrameRateRange> (Dlfcn.GetIndirect (Libraries.CoreAnimation.Handle, "CAFrameRateRangeDefault"))!;
 #endif
 
 	}
