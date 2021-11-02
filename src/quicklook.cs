@@ -33,6 +33,7 @@ using Foundation;
 using CoreGraphics;
 #if MONOMAC
 using AppKit;
+using UIWindowSceneActivationConfiguration=Foundation.NSObject;
 #else
 using UIKit;
 #endif
@@ -242,19 +243,19 @@ namespace QuickLook {
 		nint InitialPreviewIndex { get; set; }
 	}
 
-	// TODO: BaseType UIWindowSceneActivationConfiguration must first be implemented in UIKit
-	// [iOS (15,0), MacCatalyst (15,0)]
-	// [BaseType (typeof(UIWindowSceneActivationConfiguration))]
-	// interface QLPreviewSceneActivationConfiguration
-	// {
-	// 	[Export ("initWithItemsAtURLs:options:")]
-	// 	[DesignatedInitializer]
-	// 	IntPtr Constructor (NSUrl[] urls, [NullAllowed] QLPreviewSceneOptions options);
+	[iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(UIWindowSceneActivationConfiguration))]
+	interface QLPreviewSceneActivationConfiguration
+	{
+		[Export ("initWithItemsAtURLs:options:")]
 
-	// 	[Export ("initWithUserActivity:")]
-	// 	[DesignatedInitializer]
-	// 	IntPtr Constructor (NSUserActivity userActivity);
-	// }
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUrl[] urls, [NullAllowed] QLPreviewSceneOptions options);
+
+		[Export ("initWithUserActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUserActivity userActivity);
+	}
 
 	[iOS (11,0)]
 	[Protocol]
@@ -279,4 +280,5 @@ namespace QuickLook {
 		NSString OptionIconModeKey { get; }
 	}
 #endif
+
 }
