@@ -40,4 +40,8 @@
 	</PropertyGroup>
 
 	<!-- Logic for all test suites -->
+	<PropertyGroup>
+		<!-- Disable the implicit FSharp.Core reference, because sometimes the implicit reference wants a version that isn't available anywhere -->
+		<DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+	</PropertyGroup>
 </Project>
