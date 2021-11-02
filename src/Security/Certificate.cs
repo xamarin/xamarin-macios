@@ -168,12 +168,8 @@ namespace Security {
 
 		byte[] GetRawData ()
 		{
-			using (NSData data = DerData) {
-				int len = (int)data.Length;
-				byte[] raw = new byte [len];
-				Marshal.Copy (data.Bytes, raw, 0, len);
-				return raw;
-			}
+			using (NSData data = DerData)
+				return data.ToArray ();
 		}
 
 		public X509Certificate ToX509Certificate ()
@@ -251,10 +247,7 @@ namespace Security {
 
 				using var publicKeyDict = new NSDictionary (ptr, false);
 				var dataPtr = publicKeyDict.LowlevelObjectForKey (SecPropertyKey.Value);
-				if (dataPtr == IntPtr.Zero)
-					return null;
-
-				return Runtime.GetNSObject<NSData> (dataPtr, false);
+				return Runtime.GetNSObject<NSData> (dataPtr);
 			}
 		}
 #else
@@ -607,7 +600,11 @@ namespace Security {
 #endif
 
 		[Preserve (Conditional = true)]
+#if NET
+		internal SecKey (IntPtr handle, bool owns)
+#else
 		public SecKey (IntPtr handle, bool owns)
+#endif
 			: base (handle, owns)
 		{
 		}
