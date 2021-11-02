@@ -1,9 +1,0 @@
-!deprecated-attribute-missing! CADisplayLink::preferredFramesPerSecond missing a [Deprecated] attribute
-!deprecated-attribute-missing! CADisplayLink::setPreferredFramesPerSecond: missing a [Deprecated] attribute
-!missing-field! CAFrameRateRangeDefault not bound
-!missing-pinvoke! CAFrameRateRangeIsEqualToRange is not bound
-!missing-pinvoke! CAFrameRateRangeMake is not bound
-!missing-selector! CAAnimation::preferredFrameRateRange not bound
-!missing-selector! CAAnimation::setPreferredFrameRateRange: not bound
-!missing-selector! CADisplayLink::preferredFrameRateRange not bound
-!missing-selector! CADisplayLink::setPreferredFrameRateRange: not bound
