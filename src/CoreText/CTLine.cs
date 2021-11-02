@@ -209,10 +209,9 @@ namespace CoreText {
 		static unsafe readonly CaretEdgeEnumeratorProxy static_enumerate = TrampolineEnumerate;
 
 		[MonoPInvokeCallback (typeof (CaretEdgeEnumeratorProxy))]
-		static unsafe void TrampolineEnumerate (IntPtr blockPtr, double offset, nint charIndex, bool leadingEdge, ref bool stop)
+		static void TrampolineEnumerate (IntPtr blockPtr, double offset, nint charIndex, bool leadingEdge, ref bool stop)
 		{
-			var block = (BlockLiteral*) blockPtr;
-			var del = (CaretEdgeEnumerator) (block->Target);
+			var del = BlockLiteral.GetTarget<CaretEdgeEnumerator> (blockPtr);
 			if (del is not null)
 				del (offset, charIndex, leadingEdge, ref stop);
 		}
