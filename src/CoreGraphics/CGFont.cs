@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -37,78 +40,64 @@ using CoreText;
 namespace CoreGraphics {
 
 	// CGFont.h
-	public class CGFont : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
+	public class CGFont : NativeObject
 		{
 #if !COREBUILD
-		internal IntPtr handle;
-
 		[Preserve (Conditional=true)]
 		internal CGFont (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+
+		static CGFont Create (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException ("handle");
-
-			this.handle = handle;
-
-			if (!owns)
-				CGFontRetain (handle);
-		}
-		
-		~CGFont ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
+				throw new ArgumentNullException (nameof (handle));
+			return new CGFont (handle, true);
 		}
 
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFontRef */ IntPtr CGFontRetain (/* CGFontRef */ IntPtr font);
 	
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGFontRelease (/* CGFontRef */ IntPtr font);
 		
-		protected virtual void Dispose (bool disposing)
+		protected override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CGFontRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CGFontRetain (GetCheckedHandle ());
+		}
+
+		protected override void Release ()
+		{
+			CGFontRelease (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFontRef */ IntPtr CGFontCreateWithDataProvider (/* CGDataProviderRef __nullable */ IntPtr provider);
 
-		public static CGFont CreateFromProvider (CGDataProvider provider)
+		public static CGFont? CreateFromProvider (CGDataProvider provider)
 		{
 			// the API accept a `nil` argument but returns `nil`, we take a shortcut (no native call)
 			// and have a unit tests to make sure this behavior does not change over time
-			if (provider == null)
+			if (provider is null)
 				return null;
-			return new CGFont (CGFontCreateWithDataProvider (provider.Handle), true);
+			return Create (CGFontCreateWithDataProvider (provider.Handle));
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFontRef */ IntPtr CGFontCreateWithFontName (/* CFStringRef __nullable */ IntPtr name);
 
-		public static CGFont CreateWithFontName (string name)
+		public static CGFont? CreateWithFontName (string name)
 		{
 			// the API accept a `nil` argument but returns `nil`, we take a shortcut (no native call)
 			// and have a unit tests to make sure this behavior does not change over time
-			if (name == null)
+			if (name is null)
 				return null;
-			using (CFString s = name){
-				return new CGFont (CGFontCreateWithFontName (s.Handle), true);
+			var nameHandle = CFString.CreateNative (name);
+			try {
+				return Create (CGFontCreateWithFontName (nameHandle));
+			} finally {
+				CFString.ReleaseNative (nameHandle);
 			}
 		}
 		
@@ -124,7 +113,7 @@ namespace CoreGraphics {
 
 		public nint NumberOfGlyphs {
 			get {
-				return CGFontGetNumberOfGlyphs (handle);
+				return CGFontGetNumberOfGlyphs (Handle);
 			}
 		}
 		
@@ -133,25 +122,25 @@ namespace CoreGraphics {
 
 		public int UnitsPerEm {
 			get {
-				return CGFontGetUnitsPerEm (handle);
+				return CGFontGetUnitsPerEm (Handle);
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFStringRef __nullable */ IntPtr CGFontCopyPostScriptName (/* CGFontRef __nullable */ IntPtr font);
 
-		public string PostScriptName {
+		public string? PostScriptName {
 			get {
-				return CFString.FromHandle (CGFontCopyPostScriptName (handle), releaseHandle: true);
+				return CFString.FromHandle (CGFontCopyPostScriptName (Handle), releaseHandle: true);
 			}
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFStringRef __nullable */ IntPtr CGFontCopyFullName (/* CGFontRef __nullable */ IntPtr font);
 
-		public string FullName {
+		public string? FullName {
 			get {
-				return CFString.FromHandle (CGFontCopyFullName (handle), releaseHandle: true);
+				return CFString.FromHandle (CGFontCopyFullName (Handle), releaseHandle: true);
 			}
 		}
 		
@@ -160,7 +149,7 @@ namespace CoreGraphics {
 
 		public int Ascent {
 			get {
-				return CGFontGetAscent (handle);
+				return CGFontGetAscent (Handle);
 			}
 		}
 		
@@ -169,7 +158,7 @@ namespace CoreGraphics {
 
 		public int Descent {
 			get {
-				return CGFontGetDescent (handle);
+				return CGFontGetDescent (Handle);
 			}
 		}
 		
@@ -178,7 +167,7 @@ namespace CoreGraphics {
 
 		public int Leading {
 			get {
-				return CGFontGetLeading (handle);
+				return CGFontGetLeading (Handle);
 			}
 		}
 		
@@ -187,7 +176,7 @@ namespace CoreGraphics {
 
 		public int CapHeight {
 			get {
-				return CGFontGetCapHeight (handle);
+				return CGFontGetCapHeight (Handle);
 			}
 		}
 		
@@ -196,7 +185,7 @@ namespace CoreGraphics {
 
 		public int XHeight {
 			get {
-				return CGFontGetXHeight (handle);
+				return CGFontGetXHeight (Handle);
 			}
 		}
 		
@@ -205,7 +194,7 @@ namespace CoreGraphics {
 
 		public CGRect FontBBox {
 			get {
-				return CGFontGetFontBBox (handle);
+				return CGFontGetFontBBox (Handle);
 			}
 		}
 		
@@ -214,7 +203,7 @@ namespace CoreGraphics {
 
 		public nfloat ItalicAngle {
 			get {
-				return CGFontGetItalicAngle (handle);
+				return CGFontGetItalicAngle (Handle);
 			}
 		}
 			
@@ -223,7 +212,7 @@ namespace CoreGraphics {
 
 		public nfloat StemV {
 			get {
-				return CGFontGetStemV (handle);
+				return CGFontGetStemV (Handle);
 			}
 		}
 		
@@ -246,17 +235,22 @@ namespace CoreGraphics {
 		public ushort GetGlyphWithGlyphName (string s)
 		{
 			// note: the API is marked to accept a null CFStringRef but it currently (iOS9 beta 4) crash when provided one
-			using (var cs = new CFString (s)){
-				return CGFontGetGlyphWithGlyphName (handle, cs.Handle);
+			if (s is null)
+				throw new ArgumentNullException (nameof (s));
+			var sHandle = CFString.CreateNative (s);
+			try {
+				return CGFontGetGlyphWithGlyphName (Handle, sHandle);
+			} finally {
+				CFString.ReleaseNative (sHandle);
 			}
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFStringRef __nullable */ IntPtr CGFontCopyGlyphNameForGlyph (/* CGFontRef __nullable */ IntPtr font, /* CGGlyph */ ushort glyph);
 
-		public string GlyphNameForGlyph (ushort glyph)
+		public string? GlyphNameForGlyph (ushort glyph)
 		{
-			return CFString.FromHandle (CGFontCopyGlyphNameForGlyph (handle, glyph), releaseHandle: true);
+			return CFString.FromHandle (CGFontCopyGlyphNameForGlyph (Handle, glyph), releaseHandle: true);
 		}
 		
 		//[DllImport (Constants.CoreGraphicsLibrary)]
@@ -280,12 +274,12 @@ namespace CoreGraphics {
 
 		public unsafe CTFont ToCTFont (nfloat size)
 		{
-			return new CTFont (CTFontCreateWithGraphicsFont (handle, size, null, IntPtr.Zero), true);
+			return new CTFont (CTFontCreateWithGraphicsFont (Handle, size, null, IntPtr.Zero), true);
 		}
 
 		public unsafe CTFont ToCTFont (nfloat size, CGAffineTransform matrix)
 		{
-			return new CTFont (CTFontCreateWithGraphicsFont (handle, size, &matrix, IntPtr.Zero), true);
+			return new CTFont (CTFontCreateWithGraphicsFont (Handle, size, &matrix, IntPtr.Zero), true);
 		}
 	
 #if TODO
