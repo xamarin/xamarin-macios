@@ -234,6 +234,24 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "loadedTimeRanges":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "URLAsset":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "options":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {

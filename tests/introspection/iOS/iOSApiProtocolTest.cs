@@ -739,6 +739,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.3
 				case "WKPreferences": // Conformance not in headers
+				case "QLPreviewSceneActivationConfiguration":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":

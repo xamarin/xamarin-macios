@@ -637,3 +637,20 @@
 !missing-null-allowed! 'System.Void Foundation.NSScriptCommandDescription::.ctor(Foundation.NSString,Foundation.NSString,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'Foundation.NSPort Foundation.NSPortMessage::get_ReceivePort()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSPort Foundation.NSPortMessage::get_SendPort()' is missing an [NullAllowed] on return type
+
+## Deprecated and not used in Catalyst
+!missing-field! NSConnectionReplyMode not bound
+
+## Only reference is deprecated and not used in Catalyst
+!missing-pinvoke! NSFileTypeForHFSTypeCode is not bound
+
+## Deprecated and none of its selectors had documented availability
+!missing-protocol! NSUserNotificationCenterDelegate not bound
+
+## Ignored in macOS and header files indicate NSCoding protocol
+!extra-designated-initializer! NSScriptCommand::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
+
+## Also exported under iOS selectors (i.e. CGRectValue)
+!missing-selector! NSValue::pointValue not bound
+!missing-selector! NSValue::rectValue not bound
+!missing-selector! NSValue::sizeValue not bound

@@ -48,14 +48,14 @@ namespace Security {
 	public partial class SecCertificate : NativeObject {
 #if !NET
 		public SecCertificate (IntPtr handle)
-			: base (handle, false, true)
+			: base (handle, false, verify: true)
 		{
 		}
-#endif
-		
+#endif // !NET
+
 		[Preserve (Conditional = true)]
 		internal SecCertificate (IntPtr handle, bool owns)
-			: base (handle, owns, true)
+			: base (handle, owns, verify: true)
 		{
 		}
 #if !COREBUILD
@@ -245,7 +245,7 @@ namespace Security {
 				if (ptr == IntPtr.Zero)
 					return null;
 
-				var publicKeyDict = new NSDictionary (ptr, false);
+				using var publicKeyDict = new NSDictionary (ptr, false);
 				var dataPtr = publicKeyDict.LowlevelObjectForKey (SecPropertyKey.Value);
 				return Runtime.GetNSObject<NSData> (dataPtr);
 			}
@@ -527,12 +527,13 @@ namespace Security {
 	}
 
 	public partial class SecIdentity : NativeObject {
-		[Obsolete ("FIXME", error: false)] // TEMPORARY
+#if !NET
 		public SecIdentity (IntPtr handle)
 			: base (handle, false)
 		{
 		}
-		
+#endif
+
 		[Preserve (Conditional = true)]
 		internal SecIdentity (IntPtr handle, bool owns)
 			: base (handle, owns)
@@ -597,7 +598,7 @@ namespace Security {
 		{
 		}
 #endif
-		
+
 		[Preserve (Conditional = true)]
 #if NET
 		internal SecKey (IntPtr handle, bool owns)
@@ -1006,7 +1007,7 @@ namespace Security {
 #if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 #endif
-		static public SecKey? CreateRandomKey (SecKeyType keyType, int keySizeInBits, NSDictionary parameters, out NSError? error)
+		static public SecKey? CreateRandomKey (SecKeyType keyType, int keySizeInBits, NSDictionary? parameters, out NSError? error)
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters is null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
@@ -1244,7 +1245,8 @@ namespace Security {
 		{
 			if (parameters is null)
 				throw new ArgumentNullException (nameof (parameters));
-			return GetKeyExchangeResult (algorithm, publicKey, parameters.Dictionary, out error);
+
+			return GetKeyExchangeResult (algorithm, publicKey, parameters.Dictionary!, out error);
 		}
 
 #endif

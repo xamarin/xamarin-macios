@@ -7,6 +7,8 @@
 // Copyright 2013 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -22,7 +24,8 @@ namespace Security {
 
 		public SecKey PrivateKey {
 			get {
-				SecStatusCode result = SecIdentityCopyPrivateKey (Handle, out var p);
+				IntPtr p;
+				SecStatusCode result = SecIdentityCopyPrivateKey (Handle, out p);
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
 				return new SecKey (p, true);

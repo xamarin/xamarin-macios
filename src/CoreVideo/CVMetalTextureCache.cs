@@ -152,7 +152,7 @@ namespace CoreVideo {
 				textureOut:   out texture);
 			if (errorCode != 0)
 				return null;
-			return new CVMetalTexture (texture);
+			return new CVMetalTexture (texture, true);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
