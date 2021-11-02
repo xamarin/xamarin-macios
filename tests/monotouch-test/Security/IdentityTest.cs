@@ -10,6 +10,7 @@
 
 using System;
 using Foundation;
+using ObjCRuntime;
 using Security;
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace MonoTouchFixtures.Security {
 				NSDictionary[] array;
 				if (SecImportExport.ImportPkcs12 (ImportExportTest.farscape_pfx, options, out array) != SecStatusCode.Success)
 					Assert.Fail ("ImportPkcs12");
-				return new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle));
+				return Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false);
 			}
 		}
 
