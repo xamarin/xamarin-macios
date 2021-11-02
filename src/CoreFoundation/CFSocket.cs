@@ -306,6 +306,7 @@ namespace CoreFoundation {
 				loop.AddSource (source, CFRunLoop.ModeDefault);
 			} catch {
 				gch.Free ();
+				throw;
 			}
 		}
 
