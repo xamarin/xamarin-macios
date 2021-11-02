@@ -58,7 +58,7 @@ namespace CoreGraphics {
 
 		public CGPDFDocument Document {
 			get {
-				return new CGPDFDocument (CGPDFPageGetDocument (handle));
+				return new CGPDFDocument (CGPDFPageGetDocument (handle), false);
 			}
 		}
 
