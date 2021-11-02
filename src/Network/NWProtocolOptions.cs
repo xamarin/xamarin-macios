@@ -285,7 +285,11 @@ namespace Network {
 		[Obsolete ("Use the 'NWProtocolTlsOptions' class instead.")]
 		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
 		
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_protocol_options_is_quic (IntPtr options);

@@ -41,7 +41,7 @@ namespace Network {
 			=> nw_privacy_context_disable_logging (GetCheckedHandle ()); 
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_privacy_context_require_encrypted_name_resolution (OS_nw_privacy_context privacyContext, bool requireEncryptedNameResolution, OS_nw_resolver_config fallbackResolverConfig);
+		static extern void nw_privacy_context_require_encrypted_name_resolution (OS_nw_privacy_context privacyContext, [MarshalAs (UnmanagedType.I1)] bool requireEncryptedNameResolution, OS_nw_resolver_config fallbackResolverConfig);
 
 		public void RequireEncryptedNameResolution (bool requireEncryptedNameResolution, NWResolverConfig? fallbackResolverConfig)
 			=> nw_privacy_context_require_encrypted_name_resolution (GetCheckedHandle (), requireEncryptedNameResolution, fallbackResolverConfig.GetHandle ());
