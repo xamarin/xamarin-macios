@@ -115,7 +115,6 @@ namespace PrintCore {
 		
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMSessionCreatePrinterList (IntPtr printSession, out IntPtr printerListArray, out int index, out IntPtr printer);
-				
 		public PMStatusCode CreatePrinterList (out string? []? printerList, out int index, out PMPrinter? printer)
 		{
 			var code = PMSessionCreatePrinterList (Handle, out var array, out index, out var printerHandle);
