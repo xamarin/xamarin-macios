@@ -25,6 +25,10 @@
 # in either core.dll or the platform assembly, are added to SHARED_[CORE_]SOURCES.
 #
 
+DOTNET_REMOVED_FRAMEWORKS = \
+	iAd \
+	QTKit \
+
 # Accelerate
 
 ACCELERATE_SOURCES = \
