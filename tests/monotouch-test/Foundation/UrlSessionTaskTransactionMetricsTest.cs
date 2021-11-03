@@ -7,7 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-using System;
 using Foundation;
 #if MONOMAC
 using AppKit;
