@@ -964,9 +964,7 @@ namespace AVFoundation {
 		Unavailable = 4
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#endif
+	[Mac (10, 15)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, iOS (11,0)]
 	[Native]
