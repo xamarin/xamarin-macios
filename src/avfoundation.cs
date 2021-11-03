@@ -383,7 +383,7 @@ namespace AVFoundation {
 
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoWatch]
 	[Obsolete ("Use AVMediaCharacteristics enum values")]
 	[BaseType (typeof (NSObject))][Static]
@@ -564,7 +564,7 @@ namespace AVFoundation {
 		Scc = 22,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoWatch]
 	[BaseType (typeof (NSObject))][Static]
 	[Obsolete ("Use AVFileTypes enum values")]
@@ -3064,7 +3064,7 @@ namespace AVFoundation {
 		[Export ("availableMetadataFormats")]
 		string [] AvailableMetadataFormats { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetMetadataForFormat' with enum values AVMetadataFormat.")]
 		[Wrap ("GetMetadataForFormat (new NSString (format))", IsVirtual = true)]
 		AVMetadataItem [] MetadataForFormat (string format);
@@ -3383,7 +3383,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	interface AVCaptureSynchronizedDataCollection : INSFastEnumeration
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetSynchronizedData' instead.")]
 		[Wrap ("GetSynchronizedData (captureOutput)", isVirtual: true)]
 		[return: NullAllowed]
@@ -5101,7 +5101,7 @@ namespace AVFoundation {
 		[Field ("AVMetadataCommonKeyAccessibilityDescription")]
 		NSString CommonKeyAccessibilityDescription { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("AVMetadataFormatQuickTimeUserData")]
 		[Obsolete ("Use 'AVMetadataFormat' enum values")]
 		NSString FormatQuickTimeUserData { get; }
@@ -5283,7 +5283,7 @@ namespace AVFoundation {
 		[Field ("AVMetadata3GPUserDataKeyMediaRating")]
 		NSString K3GPUserDataKeyMediaRating { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[iOS (7,0), Mac (10, 9)]
 		[Field ("AVMetadataFormatISOUserData")]
 		[Obsolete ("Use 'AVMetadataFormat' enum values")]
@@ -5432,7 +5432,7 @@ namespace AVFoundation {
 		[Field ("AVMetadataQuickTimeMetadataKeyIsMontage")]
 		NSString QuickTimeMetadataKeyIsMontage { get; }
 		
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("AVMetadataFormatiTunesMetadata")]
 		[Obsolete ("Use 'AVMetadataFormat' enum values")]
 		NSString FormatiTunesMetadata { get; }
@@ -5586,7 +5586,7 @@ namespace AVFoundation {
 		[Field ("AVMetadataiTunesMetadataKeyExecProducer")]
 		NSString iTunesMetadataKeyExecProducer { get; }
 		
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("AVMetadataFormatID3Metadata")]
 		[Obsolete ("Use 'AVMetadataFormat' enum values")]
 		NSString FormatID3Metadata { get; }
@@ -5906,7 +5906,7 @@ namespace AVFoundation {
 		[Field ("AVMetadataIcyMetadataKeyStreamURL")]
 		NSString IcyMetadataKeyStreamUrl { get; }
 		
-#if !XAMCORE_4_0
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataFormatHLSMetadata")]
 		[Obsolete ("Use 'AVMetadataFormat' enum values")]
@@ -9907,7 +9907,7 @@ namespace AVFoundation {
 		[Export ("availableEmbeddedThumbnailPhotoCodecTypes")]
 		NSString[] _GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'AvailableEmbeddedThumbnailPhotoCodecTypes' instead.")]
 		[iOS (11, 0)]
 		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = false)]
@@ -10615,7 +10615,7 @@ namespace AVFoundation {
 		[return: NullAllowed]
 		AVCaptureDevice GetDefaultDevice (AVMediaTypes mediaType);
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoWatch]
 		[Obsolete ("Use 'GetDefaultDevice (AVMediaTypes)'.")]
 		[Static]
@@ -13284,7 +13284,7 @@ namespace AVFoundation {
 		[Export ("enqueueSampleBuffer:")]
 		void Enqueue (CMSampleBuffer sampleBuffer);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Wrap ("Enqueue (sampleBuffer)", IsVirtual = true)]
 		[Obsolete ("Use the 'Enqueue' method instead.")]
 		void EnqueueSampleBuffer (CMSampleBuffer sampleBuffer);
@@ -13299,7 +13299,7 @@ namespace AVFoundation {
 		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
 		void RequestMediaData (DispatchQueue queue, Action handler);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Wrap ("RequestMediaData (queue, enqueuer)", IsVirtual = true)]
 		[Obsolete ("Use the 'RequestMediaData' method instead.")]
 		void RequestMediaDataWhenReadyOnQueue (DispatchQueue queue, Action enqueuer);
@@ -14769,7 +14769,7 @@ namespace AVFoundation {
 	interface AVAudioSourceNode : AVAudioMixing {
 		[Export ("initWithRenderBlock:")]
 		[DesignatedInitializer]
-#if XAMCORE_4_0
+#if NET
 		NativeHandle Constructor (AVAudioSourceNodeRenderHandler renderHandler);
 #else
 		NativeHandle Constructor (AVAudioSourceNodeRenderHandler2 renderHandler);
@@ -14777,7 +14777,7 @@ namespace AVFoundation {
 
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
-#if XAMCORE_4_0
+#if NET
 		NativeHandle Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
 #else
 		NativeHandle Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler2 renderHandler);
