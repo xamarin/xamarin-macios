@@ -126,12 +126,12 @@ namespace CoreGraphics {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPathEqualToPath (/* CGPathRef */ IntPtr path1, /* CGPathRef */ IntPtr path2);
 
-		public static bool operator == (CGPath path1, CGPath path2)
+		public static bool operator == (CGPath? path1, CGPath? path2)
 		{
 			return Object.Equals (path1, path2);
 		}
 
-		public static bool operator != (CGPath path1, CGPath path2)
+		public static bool operator != (CGPath? path1, CGPath? path2)
 		{
 			return !Object.Equals (path1, path2);
 		}

@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -34,7 +37,6 @@ using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using CoreGraphics;
 
 namespace CoreText {
 
@@ -218,7 +220,6 @@ namespace CoreText {
 		{
 			values [index].pointer = IntPtr.Zero;
 			value.Dispose ();
-			value = null;
 		}
 	}
 
@@ -228,7 +229,7 @@ namespace CoreText {
 		{
 		}
 
-		public IEnumerable<CTTextTab> TabStops {get; set;}
+		public IEnumerable<CTTextTab>? TabStops {get; set;}
 		public CTTextAlignment? Alignment {get; set;}
 		public CTLineBreakMode? LineBreakMode {get; set;}
 		public CTWritingDirection? BaseWritingDirection {get; set;}
@@ -251,7 +252,7 @@ namespace CoreText {
 		{
 			var values = new List<CTParagraphStyleSpecifierValue> ();
 
-			if (TabStops != null)
+			if (TabStops is not null)
 				values.Add (CreateValue (CTParagraphStyleSpecifier.TabStops, TabStops));
 			if (Alignment.HasValue)
 				values.Add (CreateValue (CTParagraphStyleSpecifier.Alignment, (byte) Alignment.Value));
@@ -314,53 +315,18 @@ namespace CoreText {
 		}
 	}
 
-	public class CTParagraphStyle : INativeObject, IDisposable {
-		internal IntPtr handle;
-
+	public class CTParagraphStyle : NativeObject {
 		internal CTParagraphStyle (IntPtr handle, bool owns)
+			: base (handle, owns, true)
 		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-		
-		public IntPtr Handle {
-			get {return handle;}
-		}
-
-		~CTParagraphStyle ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 #region Paragraph Style Creation
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern IntPtr CTParagraphStyleCreate (CTParagraphStyleSetting[] settings, nint settingCount);
-		public CTParagraphStyle (CTParagraphStyleSettings settings)
+		static extern IntPtr CTParagraphStyleCreate (CTParagraphStyleSetting[]? settings, nint settingCount);
+		public CTParagraphStyle (CTParagraphStyleSettings? settings)
+			: base (settings is null ? CTParagraphStyleCreate (null, 0) : CreateFromSettings (settings), true, true)
 		{
-			handle = settings == null 
-				? CTParagraphStyleCreate (null, 0)
-				: CreateFromSettings (settings);
-
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
 
 		static unsafe IntPtr CreateFromSettings (CTParagraphStyleSettings s)
@@ -408,7 +374,7 @@ namespace CoreText {
 		static extern IntPtr CTParagraphStyleCreateCopy (IntPtr paragraphStyle);
 		public CTParagraphStyle Clone ()
 		{
-			return new CTParagraphStyle (CTParagraphStyleCreateCopy (handle), true);
+			return new CTParagraphStyle (CTParagraphStyleCreateCopy (Handle), true);
 		}
 #endregion
 
@@ -417,13 +383,13 @@ namespace CoreText {
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool CTParagraphStyleGetValueForSpecifier (IntPtr paragraphStyle, CTParagraphStyleSpecifier spec, nuint valueBufferSize, void* valueBuffer);
 
-		public unsafe CTTextTab[] GetTabStops ()
+		public unsafe CTTextTab?[]? GetTabStops ()
 		{
 			IntPtr cfArrayRef;
-			if (!CTParagraphStyleGetValueForSpecifier (handle, CTParagraphStyleSpecifier.TabStops, (uint) IntPtr.Size, (void*) &cfArrayRef))
+			if (!CTParagraphStyleGetValueForSpecifier (Handle, CTParagraphStyleSpecifier.TabStops, (uint) IntPtr.Size, (void*) &cfArrayRef))
 				throw new InvalidOperationException ("Unable to get property value.");
 			if (cfArrayRef == IntPtr.Zero)
-				return new CTTextTab [0];
+				return Array.Empty<CTTextTab> ();
 			return NSArray.ArrayFromHandle (cfArrayRef, p => new CTTextTab (p, false));
 		}
 
@@ -434,7 +400,7 @@ namespace CoreText {
 		unsafe byte GetByteValue (CTParagraphStyleSpecifier spec)
 		{
 			byte value;
-			if (!CTParagraphStyleGetValueForSpecifier (handle, spec, sizeof (byte), &value))
+			if (!CTParagraphStyleGetValueForSpecifier (Handle, spec, sizeof (byte), &value))
 				throw new InvalidOperationException ("Unable to get property value.");
 			return value;
 		}
@@ -466,7 +432,7 @@ namespace CoreText {
 		GetFloatValue (CTParagraphStyleSpecifier spec)
 		{
 			nfloat value;
-			if (!CTParagraphStyleGetValueForSpecifier (handle, spec, (nuint) sizeof (nfloat), &value))
+			if (!CTParagraphStyleGetValueForSpecifier (Handle, spec, (nuint) sizeof (nfloat), &value))
 				throw new InvalidOperationException ("Unable to get property value.");
 			return
 #if !XAMCORE_4_0

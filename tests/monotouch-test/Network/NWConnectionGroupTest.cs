@@ -1,7 +1,7 @@
-using System;
 using CoreFoundation;
 using Foundation;
 using Network;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Network {

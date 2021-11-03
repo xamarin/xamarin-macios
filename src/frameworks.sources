@@ -394,6 +394,7 @@ COREANIMATION_API_SOURCES = \
 	CoreAnimation/CAEnums.cs \
 
 COREANIMATION_CORE_SOURCES = \
+	CoreAnimation/CAFrameRateRange.cs \
 	CoreAnimation/CATransform3D.cs \
 
 COREANIMATION_SOURCES = \

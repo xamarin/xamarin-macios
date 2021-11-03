@@ -1,7 +1,6 @@
 #if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using System.Threading;
 
 using Foundation;

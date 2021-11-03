@@ -10,12 +10,8 @@
 #if !__TVOS__ && !__WATCHOS__
 
 using System;
-using System.Drawing;
-using System.IO;
-using System.Threading;
 using Foundation;
 using AVFoundation;
-using CoreMedia;
 using ObjCRuntime;
 using NUnit.Framework;
 

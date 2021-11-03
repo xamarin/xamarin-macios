@@ -466,11 +466,7 @@ namespace NaturalLanguage {
 
 		[Export ("vectorForString:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
-		[return: BindAs (typeof (float[]?))]
-#else
 		[return: BindAs (typeof (float[]))]
-#endif
 		// doc says "array of double" but other API uses float ?!?
 		NSNumber[] GetVector (string @string);
 

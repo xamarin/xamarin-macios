@@ -158,7 +158,9 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "QuartzComposer", "Quartz", 10, 5, "QuartzComposer" },
 					{ "ImageCaptureCore", "ImageCaptureCore", 10,5 },
 
+#if !NET
 					{ "QTKit", 10, 6 },
+#endif
 					{ "QuickLookUI", "Quartz", 10, 6, "QuickLookUI" },
 
 					{ "MediaToolbox", 10, 9 },
@@ -732,6 +734,7 @@ public class Frameworks : Dictionary <string, Framework>
 		case ApplePlatform.MacCatalyst:
 			break; // Include all frameworks by default
 		case ApplePlatform.MacOSX:
+#if !NET
 			switch (framework.Name) {
 			case "QTKit":
 #if MMP
@@ -744,6 +747,7 @@ public class Frameworks : Dictionary <string, Framework>
 #endif
 				return true;
 			}
+#endif // !NET
 			return true;
 		default:
 			throw ErrorHelper.CreateError (71, Errors.MX0071 /* "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, app.Platform, app.GetProductName ());

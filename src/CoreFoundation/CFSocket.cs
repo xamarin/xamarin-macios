@@ -302,10 +302,11 @@ namespace CoreFoundation {
 				var handle = CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) cbTypes, OnCallback, ref ctx);
 				InitializeHandle (handle);
 
-				var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0));
+				var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
 				loop.AddSource (source, CFRunLoop.ModeDefault);
 			} catch {
 				gch.Free ();
+				throw;
 			}
 		}
 
@@ -321,7 +322,7 @@ namespace CoreFoundation {
 				var handle = CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) cbTypes, OnCallback, ref ctx);
 				InitializeHandle (handle);
 
-				var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0));
+				var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
 				var loop = CFRunLoop.Current;
 				loop.AddSource (source, CFRunLoop.ModeDefault);
 			} catch {
@@ -336,7 +337,7 @@ namespace CoreFoundation {
 			gch = GCHandle.Alloc (this);
 
 			try {
-				var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0));
+				var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
 				var loop = CFRunLoop.Current;
 				loop.AddSource (source, CFRunLoop.ModeDefault);
 			} catch {
