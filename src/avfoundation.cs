@@ -10185,7 +10185,7 @@ namespace AVFoundation {
 		bool IsStillImageStabilizationScene { get; }
 
 		[NoMac]
-#if XAMCORE_4_0
+#if NET
 		[BindAs (typeof (AVCaptureFlashMode []))]
 #endif		
 		[Export ("supportedFlashModes")]
