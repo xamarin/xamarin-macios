@@ -1317,7 +1317,7 @@ namespace AVFoundation {
 		[Export ("position")]
 		Vector3 Position { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("sourceMode", ArgumentSemantic.Assign)]
