@@ -207,7 +207,7 @@ namespace Xamarin.Bundler {
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
 						switch (framework.Name) {
-#if MONOMAC
+#if MONOMAC && !NET
 						case "QTKit":
 							// we already warn in Frameworks.cs Gather method
 							if (!Driver.LinkProhibitedFrameworks)
