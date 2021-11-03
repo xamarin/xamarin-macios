@@ -3363,8 +3363,9 @@ namespace AVFoundation {
 
 #endif // MONOMAC
 
-#if XAMCORE_4_0
-	[Abstract] // Abstract superclass.
+#if NET
+	// Making a class abstract has problems: https://github.com/xamarin/xamarin-macios/issues/4969, so we're not doing this yet
+	// [Abstract] // Abstract superclass.
 #endif
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, iOS (11,0)]
@@ -9317,8 +9318,9 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_4_0
-	[Abstract] // as per docs
+#if NET
+	// Making a class abstract has problems (see https://github.com/xamarin/xamarin-macios/issues/4969), so not doing this (yet).
+	// [Abstract] // as per docs
 #endif
 	// Objective-C exception thrown.  Name: NSGenericException Reason: Cannot instantiate AVCaptureOutput because it is an abstract superclass.
 	[DisableDefaultCtor]
