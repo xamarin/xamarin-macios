@@ -62,7 +62,7 @@ namespace ImageIO {
 		{
 		}
 
-		CGImageMetadataTag (NSString xmlns, NSString? prefix, NSString? name, CGImageMetadataType type, IntPtr value)
+		CGImageMetadataTag (NSString xmlns, NSString? prefix, NSString name, CGImageMetadataType type, IntPtr value)
 		{
 			if (xmlns is null)
 				throw new ArgumentNullException (nameof (xmlns));
