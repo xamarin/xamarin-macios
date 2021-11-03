@@ -99,7 +99,7 @@ namespace CoreText {
 	}
 
 	internal static class CTFrameAttributesExtensions {
-		public static IntPtr GetHandle (this CTFrameAttributes self)
+		public static IntPtr GetHandle (this CTFrameAttributes? self)
 		{
 			if (self is null)
 				return IntPtr.Zero;
