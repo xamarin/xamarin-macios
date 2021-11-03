@@ -1121,7 +1121,7 @@ namespace AVFoundation {
 		AVAudioEnvironmentReverbParameters ReverbParameters { get; }
 
 		[Export ("applicableRenderingAlgorithms")]
-#if XAMCORE_4_0
+#if NET
 		NSNumber [] ApplicableRenderingAlgorithms { get; }
 #else
 		NSObject [] ApplicableRenderingAlgorithms ();
