@@ -2589,7 +2589,7 @@ namespace AVFoundation {
 
 		[iOS (7,0)]
 		[Export ("dataSources"), NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		AVAudioSessionDataSourceDescription [] DataSources { get; }
 #else
 		AVAudioSessionDataSourceDescription [] DataSourceDescriptions { get; }
