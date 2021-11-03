@@ -9503,7 +9503,7 @@ namespace AVFoundation {
 		void SetSampleBufferDelegateQueue ([NullAllowed] IAVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackQueue);
 
 		// 5.0 APIs
-#if XAMCORE_4_0
+#if NET
 		[BindAs (typeof (CoreVideo.CVPixelFormatType []))]
 #endif
 		[Export ("availableVideoCVPixelFormatTypes")]
