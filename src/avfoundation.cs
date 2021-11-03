@@ -8121,7 +8121,7 @@ namespace AVFoundation {
 		string PresetName { get;  }
 
 		[Export ("supportedFileTypes")]
-#if XAMCORE_4_0
+#if NET
 		string [] SupportedFileTypes { get;  }
 #else
 		NSObject [] SupportedFileTypes { get;  }
