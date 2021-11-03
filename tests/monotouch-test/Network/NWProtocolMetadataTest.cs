@@ -55,6 +55,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void Quic ()
 		{
+			TestRuntime.AssertXcodeVersion (13,0);
 			using (var m = NWProtocolMetadata.CreateIPMetadata ()) {
 				Assert.That (m.IPMetadataEcnFlag, Is.EqualTo (NWIPEcnFlag.NonEct), "IPMetadataEcnFlag");
 				Assert.That (m.IPMetadataReceiveTime, Is.EqualTo (0), "IPMetadataReceiveTime");
