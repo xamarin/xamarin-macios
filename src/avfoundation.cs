@@ -6992,7 +6992,7 @@ namespace AVFoundation {
 		[Export ("time")]
 		CMTime Time{ get;}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("AVMetadataObjectTypeFace")]
 		NSString TypeFace { get; }
 
@@ -7066,9 +7066,8 @@ namespace AVFoundation {
 #endif
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoWatch]
-	[NoTV]
 #endif
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Mac (10,10)]
@@ -12038,7 +12037,7 @@ namespace AVFoundation {
 		bool CanPlayFastForward { get; }
 
 		[Field ("AVPlayerItemTimeJumpedNotification")]
-#if !XAMCORE_4_0 
+#if !NET
 		[Notification]
 #else
 		[Notification (typeof (AVPlayerItemTimeJumpedEventArgs))]
