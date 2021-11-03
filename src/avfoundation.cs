@@ -14760,7 +14760,7 @@ namespace AVFoundation {
 		[Export ("replacementFormatDescription")]
 		CMFormatDescription ReplacementFormatDescription { get; }
 	}
-#if XAMCORE_4_0
+#if NET
 	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (ref bool isSilence, ref AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
 #else
 	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
