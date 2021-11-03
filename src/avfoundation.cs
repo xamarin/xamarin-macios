@@ -1357,7 +1357,7 @@ namespace AVFoundation {
 	{
 
 		[iOS (9,0), Mac (10,11)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -3255,7 +3255,7 @@ namespace AVFoundation {
 	[iOS (12, 0), TV (12,0), Watch (6,0)]
 	interface AVFragmentMinding {
 
-#if !MONOMAC || XAMCORE_4_0
+#if !MONOMAC || NET
 		[Abstract] // not kept in Mac OS because is a breaking change, in other paltforms we are ok
 #endif
 		[Export ("isAssociatedWithFragmentMinder")]
@@ -4013,7 +4013,7 @@ namespace AVFoundation {
 	[Model]
 	[Protocol]
 	interface AVAssetResourceLoaderDelegate {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[NoWatch]
