@@ -13138,8 +13138,8 @@ namespace AVFoundation {
 	interface AVAsynchronousKeyValueLoading {
 		[Abstract]
 		[Export ("statusOfValueForKey:error:")]
-#if XAMCORE_4_0
-		AVKeyValueStatus StatusOfValueForKeyerror (string key, out NSError error);
+#if NET
+		AVKeyValueStatus GetStatusOfValue (string forKey, out NSError error);
 #else
 		AVKeyValueStatus StatusOfValueForKeyerror (string key, [NullAllowed] IntPtr outError);
 #endif
