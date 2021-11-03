@@ -18,8 +18,6 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
-using System.Drawing;
-using System.Threading;
 
 namespace MonoTouchFixtures.CoreFoundation
 {
