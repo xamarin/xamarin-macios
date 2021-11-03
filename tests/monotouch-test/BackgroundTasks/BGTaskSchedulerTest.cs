@@ -1,11 +1,6 @@
 #if __IOS__ || __TVOS__
-using System;
-using System.IO;
-using System.IO.Compression;
-
 using Foundation;
 using BackgroundTasks;
-using Compression;
 using ObjCRuntime;
 
 using NUnit.Framework;
