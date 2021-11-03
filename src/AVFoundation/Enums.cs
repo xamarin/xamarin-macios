@@ -426,7 +426,7 @@ namespace AVFoundation {
 		CannotStartRecording = 0x21726563, // '!rec'
 		BadParam = -50,
 		InsufficientPriority = 0x21707269, // '!pri'
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'ResourceNotAvailable' instead.")]
 		CodeResourceNotAvailable = 0x21726573,
 #endif
