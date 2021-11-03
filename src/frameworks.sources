@@ -1836,6 +1836,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/Constants.cs \
+	ObjCRuntime/DisposableObject.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \

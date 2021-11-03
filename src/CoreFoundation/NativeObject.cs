@@ -28,13 +28,7 @@ namespace CoreFoundation {
 	// base class to be reused for other patterns that use other retain/release
 	// systems.
 	//
-	public abstract class NativeObject : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get => handle;
-			protected set => InitializeHandle (value);
-		}
-
+	public abstract class NativeObject : DisposableObject {
 		protected NativeObject ()
 		{
 		}
@@ -45,34 +39,17 @@ namespace CoreFoundation {
 		}
 
 		protected NativeObject (IntPtr handle, bool owns, bool verify)
+			: base (handle, owns, verify)
 		{
-			InitializeHandle (handle, verify);
 			if (!owns && handle != IntPtr.Zero)
 				Retain ();
 		}
 
-		~NativeObject ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero) {
+			if (Handle != IntPtr.Zero)
 				Release ();
-				handle = IntPtr.Zero;
-			}
-		}
-
-		protected void ClearHandle ()
-		{
-			handle = IntPtr.Zero;
+			base.Dispose (disposing);
 		}
 
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
@@ -82,28 +59,5 @@ namespace CoreFoundation {
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
 		// https://developer.apple.com/documentation/corefoundation/1521153-cfrelease
 		protected virtual void Release () => CFObject.CFRelease (GetCheckedHandle ());
-
-		void InitializeHandle (IntPtr handle, bool verify)
-		{
-#if !COREBUILD
-			if (verify && handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
-				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
-				    "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
-			}
-#endif
-			this.handle = handle;
-		}
-
-		protected virtual void InitializeHandle (IntPtr handle)
-		{
-			InitializeHandle (handle, true);
-		}
-
-		public IntPtr GetCheckedHandle ()
-		{
-			if (handle == IntPtr.Zero)
-				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
-			return handle;
-		}
 	}
 }

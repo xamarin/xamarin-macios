@@ -134,11 +134,7 @@ namespace Security {
 #else
 	[MacCatalyst (15,0)]
 #endif
-	public unsafe class Authorization : INativeObject, IDisposable {
-		IntPtr handle;
-
-		public IntPtr Handle { get { return handle; } }
-		
+	public unsafe class Authorization : DisposableObject {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, out IntPtr auth);
 
@@ -156,9 +152,9 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationFree (IntPtr handle, AuthorizationFlags flags);
 		
-		internal Authorization (IntPtr handle)
+		internal Authorization (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
 		}
 
 #if !NET
@@ -174,23 +170,16 @@ namespace Security {
 			return AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, args, IntPtr.Zero);
 		}
 
-		public void Dispose ()
+		protected override void Dispose (bool disposing)
 		{
-			GC.SuppressFinalize (this);
-			Dispose (0, true);
-		}
-
-		~Authorization ()
-		{
-			Dispose (0, false);
+			Dispose (0, disposing);
 		}
 		
 		public virtual void Dispose (AuthorizationFlags flags, bool disposing)
 		{
-			if (handle != IntPtr.Zero){
-				AuthorizationFree (handle, flags);
-				handle = IntPtr.Zero;
-			}
+			if (Handle != IntPtr.Zero && Owns)
+				AuthorizationFree (Handle, flags);
+			base.Dispose (disposing);
 		}
 		
 		public static Authorization? Create (AuthorizationFlags flags)
@@ -247,7 +236,7 @@ namespace Security {
 					code = AuthorizationCreate (ppars, penv, flags, out auth);
 					if (code != 0)
 						return null;
-					return new Authorization (auth);
+					return new Authorization (auth, true);
 				}
 			} finally {
 				if (ppars != null){

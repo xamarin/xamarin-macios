@@ -71,26 +71,16 @@ namespace AudioUnit
 	[Obsolete ("Starting with macos11.0 use 'AVAudioEngine' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-	public class AUGraph : INativeObject, IDisposable
+	public class AUGraph : DisposableObject
 	{
 		readonly GCHandle gcHandle;
-		IntPtr handle;
-		bool owns;
 
 		[Preserve (Conditional = true)]
 		internal AUGraph (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			this.owns = owns;
 			gcHandle = GCHandle.Alloc (this);
 		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
 
 		static IntPtr Create ()
 		{
@@ -259,7 +249,7 @@ namespace AudioUnit
 			if (error != AUGraphError.OK || ptr == IntPtr.Zero)
 				return null;
 
-			return new AudioUnit (ptr);
+			return new AudioUnit (ptr, false);
 		}
 
 		// AudioComponentDescription struct in only correctly fixed for unified
@@ -271,7 +261,7 @@ namespace AudioUnit
 			if (error != AUGraphError.OK || ptr == IntPtr.Zero)
 				return null;
 
-			return new AudioUnit (ptr);
+			return new AudioUnit (ptr, false);
 		}
 
 		public AUGraphError GetNumberOfInteractions (out uint interactionsCount)
@@ -377,15 +367,9 @@ namespace AudioUnit
 			CAShow (GetCheckedHandle ());
 		}
 
-		public void Dispose()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero && owns) {
+			if (Handle != IntPtr.Zero && Owns) {
 				AUGraphUninitialize (Handle);
 				AUGraphClose (Handle);
 				DisposeAUGraph (Handle);
@@ -394,21 +378,9 @@ namespace AudioUnit
 			if (gcHandle.IsAllocated)
 				gcHandle.Free ();
 
-			handle = IntPtr.Zero;
+			base.Dispose (disposing);
 		}
 
-		~AUGraph ()
-		{
-			Dispose (false);
-		}
-
-		IntPtr GetCheckedHandle ()
-		{
-			if (handle == IntPtr.Zero)
-				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
-			return handle;
-		}
-			
 		[DllImport(Constants.AudioToolboxLibrary, EntryPoint = "NewAUGraph")]
 		static extern int /* OSStatus */ NewAUGraph (out IntPtr outGraph);
 
