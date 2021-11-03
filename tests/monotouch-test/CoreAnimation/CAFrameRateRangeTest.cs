@@ -1,3 +1,4 @@
+#if !__WATCHOS__
 using System;
 using NUnit.Framework;
 
@@ -24,3 +25,4 @@ namespace MonoTouchFixtures.CoreAnimation {
 			=> Assert.IsNotNull (CAFrameRateRange.Default, "Default");
 	}
 }
+#endif
