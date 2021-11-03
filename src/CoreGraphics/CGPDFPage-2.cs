@@ -63,7 +63,7 @@ namespace CoreGraphics {
 
 		public CGPDFDocument Document {
 			get {
-				return new CGPDFDocument (CGPDFPageGetDocument (Handle));
+				return new CGPDFDocument (CGPDFPageGetDocument (Handle), false);
 			}
 		}
 
