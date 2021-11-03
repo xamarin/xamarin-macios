@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-using CoreFoundation;
 using Foundation;
 
 namespace MonoTouchFixtures.Foundation {
