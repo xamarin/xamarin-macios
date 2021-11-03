@@ -5,7 +5,6 @@
 
 #if !__TVOS__ && !__WATCHOS__
 
-using System;
 using Foundation;
 using AudioToolbox;
 using AVFoundation;
