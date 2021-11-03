@@ -120,7 +120,7 @@ namespace CoreGraphics {
 		public CGPDFPage? GetPage (nint page)
 		{
 			var h = CGPDFDocumentGetPage (Handle, page);
-			return h == IntPtr.Zero ? null : new CGPDFPage (h);
+			return h == IntPtr.Zero ? null : new CGPDFPage (h, false);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

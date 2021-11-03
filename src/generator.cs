@@ -755,8 +755,10 @@ public class NamespaceManager
 			ImplicitNamespaces.Add ("AVFoundation");
 		if (Frameworks.HaveOpenGL)
 			ImplicitNamespaces.Add ("OpenGL");
+#if !NET
 		if (Frameworks.HaveQTKit)
 			ImplicitNamespaces.Add ("QTKit");
+#endif
 		if (Frameworks.HaveAppKit)
 			ImplicitNamespaces.Add ("AppKit");
 		if (Frameworks.HaveCloudKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.iOS)
