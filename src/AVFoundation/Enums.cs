@@ -305,7 +305,10 @@ namespace AVFoundation {
 		Succeeded, Failed, Cancelled
 	}
 
-#if !XAMCORE_3_0 || MONOMAC
+#if XAMCORE_3_0
+	[NoiOS]
+	[NoWatch]
+#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[Native]
@@ -314,6 +317,9 @@ namespace AVFoundation {
 		NotPlaying, Playing
 	}
 
+#if XAMCORE_3_0
+	[NoiOS]
+#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV, NoWatch]
 	[Native]
@@ -321,7 +327,6 @@ namespace AVFoundation {
 	public enum AVVideoFieldMode : long {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
-#endif // !XAMCORE_3_0 || MONOMAC 
 
 	[Mac (10,15)]
 	[iOS (8,0)]
