@@ -16,7 +16,6 @@ using ObjCRuntime;
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
-using MonoTests.System.Net.Http;
 
 namespace monotouchtest {
 	[TestFixture]

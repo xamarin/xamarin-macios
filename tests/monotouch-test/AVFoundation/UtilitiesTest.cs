@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using CoreGraphics;
 using Foundation;
