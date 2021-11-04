@@ -4455,7 +4455,7 @@ public partial class Generator : IMemberGatherer {
 			var pit = bind_as == null ? pi.ParameterType : bind_as.Type;
 			if (IsWrappedType (pit) || TypeManager.INativeObject.IsAssignableFrom (pit)) {
 				if (needs_null_check && !null_allowed_override) {
-					print ($"var {safe_name}__handle__ = {safe_name}.GetNonNullHandle (nameof ({safe_name}));");
+					print ($"var {safe_name}__handle__ = {safe_name}!.GetNonNullHandle (nameof ({safe_name}));");
 				} else {
 					print ($"var {safe_name}__handle__ = {safe_name}.GetHandle ();");
 				}
