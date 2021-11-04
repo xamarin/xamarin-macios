@@ -338,7 +338,7 @@ namespace AudioUnit
 			if (component.Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("component");
 			
-			int err = AudioComponentInstanceNew (component.handle, out handle);
+			int err = AudioComponentInstanceNew (component.Handle, out handle);
 			if (err != 0)
 				throw new AudioUnitException (err);
 			
