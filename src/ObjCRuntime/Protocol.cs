@@ -4,9 +4,9 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
-using System.Reflection;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -29,7 +29,11 @@ namespace ObjCRuntime {
 			this.handle = Runtime.GetProtocolForType (type);
 		}
 
+#if NET
+		internal Protocol (IntPtr handle)
+#else
 		public Protocol (IntPtr handle)
+#endif
 		{
 			this.handle = handle;
 		}
@@ -45,9 +49,9 @@ namespace ObjCRuntime {
 			get { return this.handle; }
 		}
 
-		public string Name {
+		public string? Name {
 			get {
-				IntPtr ptr = protocol_getName (this.handle);
+				IntPtr ptr = protocol_getName (Handle);
 				return Marshal.PtrToStringAuto (ptr);
 			}
 		}
@@ -58,7 +62,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
-		internal extern static IntPtr objc_getProtocol (string name);
+		internal extern static IntPtr objc_getProtocol (string? name);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static IntPtr objc_allocateProtocol (string name);
