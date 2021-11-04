@@ -243,7 +243,7 @@ namespace CoreLocation {
 		void DismissHeadingCalibrationDisplay ();
 	
 		[NoWatch][NoTV]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message : "Set the purpose using the NSLocationUsageDescription key in the Info.plist instead.")]
 		// Default property value is null but it cannot be set to that value
 		// it crash when a null is provided
@@ -298,7 +298,7 @@ namespace CoreLocation {
 		void StopMonitoringSignificantLocationChanges ();
 
 		[NoWatch][NoTV][NoMac]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Export ("startMonitoringForRegion:desiredAccuracy:")]
 		void StartMonitoring (CLRegion region, double desiredAccuracy);
 
@@ -474,7 +474,7 @@ namespace CoreLocation {
 	partial interface CLLocationManagerDelegate
 	{
 		[NoWatch][NoTV]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Export ("locationManager:didUpdateToLocation:fromLocation:"), EventArgs ("CLLocationUpdated")]
 		void UpdatedLocation (CLLocationManager  manager, CLLocation newLocation, CLLocation oldLocation);
 	
