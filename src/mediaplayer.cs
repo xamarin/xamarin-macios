@@ -25,12 +25,12 @@ namespace MediaPlayer {
 	[Mac (10,12,2)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
 #if !MONOMAC
-#if XAMCORE_4_0
+#if NET
 	[NoWatch] // marked as unavailable in xcode 12 beta 1
 #else
 	[Watch (5,0)]
 	[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
-#endif // XAMCORE_4_0
+#endif // NET
 	[TV (14,0)]
 	interface MPMediaEntity : NSSecureCoding {
 #else
@@ -52,7 +52,7 @@ namespace MediaPlayer {
 		[Export ("objectForKeyedSubscript:")]
 		NSObject GetObject (NSObject key);
 
-#if XAMCORE_4_0
+#if NET
 		[NoWatch] // marked as unavailable in xcode 12 beta 1
 #else
 		[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
@@ -302,7 +302,7 @@ namespace MediaPlayer {
 #else
 	[BaseType (typeof (NSObject))]
 #endif
-#if XAMCORE_3_0 || !IOS
+#if XAMCORE_3_0 || !IOS || NET
 	interface MPMediaItemCollection : NSSecureCoding {
 #else
 	// part of the bug is that we inlined MPMediaEntity needlessly
@@ -758,7 +758,7 @@ namespace MediaPlayer {
 	}
 
 	[NoMac]
-#if XAMCORE_4_0
+#if NET
 	[NoWatch] // marked as unavailable in xcode 12 beta 1
 	[NoTV]
 #else
@@ -826,22 +826,26 @@ namespace MediaPlayer {
 		[Export ("initWithContentURL:")]
 		IntPtr Constructor (NSUrl url);
 
+#if !NET
 		[NoWatch]
 		[Export ("backgroundColor", ArgumentSemantic.Retain)]
 		// <quote>You should avoid using this property. It is available only when you use the initWithContentURL: method to initialize the movie player controller object.</quote>
 		[Deprecated (PlatformName.iOS, 3, 2, message: "Do not use; this API was removed and is not always available.")]
 		[Obsoleted (PlatformName.iOS, 8, 0, message: "Do not use; this API was removed and is not always available.")]
 		UIColor BackgroundColor { get; set; }
+#endif
 
 		[NoWatch]
 		[Export ("scalingMode")]
 		MPMovieScalingMode ScalingMode { get; set; }
 
+#if !NET
 		[NoWatch]
 		[Export ("movieControlMode")]
 		[Deprecated (PlatformName.iOS, 3, 2, message: "Do not use; this API was removed.")]
 		[Obsoleted (PlatformName.iOS, 8, 0, message: "Do not use; this API was removed.")]
 		MPMovieControlMode MovieControlMode { get; set; }
+#endif
 
 		[NoWatch]
 		[Export ("initialPlaybackTime")]
@@ -1147,7 +1151,7 @@ namespace MediaPlayer {
 		string Keyspace { get;  }
 
 		[Export ("value")]
-#if XAMCORE_3_0
+#if NET
 		NSObject Value { get;  }
 #else
 		NSObject value { get;  }
@@ -1173,11 +1177,13 @@ namespace MediaPlayer {
 		[Export ("moviePlayer")]
 		MPMoviePlayerController MoviePlayer { get; }
 
+#if !NET
 		// Directly removed, shows up in iOS 6.1 SDK, but not any later SDKs.
 		[Deprecated (PlatformName.iOS, 7, 0, message: "Do not use; this API was removed.")]
 		[Obsoleted (PlatformName.iOS, 7, 0, message: "Do not use; this API was removed.")]
 		[Export ("shouldAutorotateToInterfaceOrientation:")]
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation orientation);
+#endif // !NET
 	}
 #endif
 
@@ -1550,7 +1556,7 @@ namespace MediaPlayer {
 		[Abstract]
 		[Export ("contentItemAtIndexPath:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		MPContentItem GetContentItem (NSIndexPath indexPath);
 #else
 		MPContentItem ContentItem (NSIndexPath indexPath);
