@@ -661,7 +661,7 @@ namespace Security {
 #else
 			// Apple changed/fixed this in iOS7 (not the only change, see comments above)
 			// test suite has a test case that needs to work on both pre-7.0 and post-7.0
-			if ((kind == SecClass.Identity) && !UIDevice.CurrentDevice.CheckSystemVersion (7,0))
+			if ((kind == SecClass.Identity) && !SystemVersion.CheckiOS (7,0))
 				queryDict = new NSMutableDictionary ();
 			else
 				queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
