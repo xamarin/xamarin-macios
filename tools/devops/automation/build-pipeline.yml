@@ -52,7 +52,10 @@ parameters:
       useXamarinStorage: False,
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
-      iOSDeviceDemand: 'ios'
+      iOSDeviceDemand: [
+        'ios',
+        "Agent.OSVersion -equals '11.6'"
+      ]
     },
     {
       devicePrefix: 'tvos',
@@ -63,7 +66,10 @@ parameters:
       useXamarinStorage: False,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
-      iOSDeviceDemand: 'tvos'
+      iOSDeviceDemand: [
+        'tvos',
+        "Agent.OSVersion -equals '11.6'"
+      ]
     }]
 
 - name: macTestsConfigurations
