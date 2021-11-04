@@ -9,6 +9,8 @@ using ObjCRuntime;
 
 namespace Foundation {
 
+	public delegate NSOrderedCollectionDifference<NSObject>? NSOrderedCollectionDifferenceGetDifferenceHandler (NSOrderedCollectionChange<NSObject>? collectionChange);
+
 #if !NET
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
@@ -17,9 +19,37 @@ namespace Foundation {
 	public partial class NSOrderedCollectionDifference
 	{
 
-		NSObject[] Insertions => NSArray.ArrayFromHandle<NSObject> (_Insertions);
+		public NSObject[] Insertions => NSArray.ArrayFromHandle<NSObject> (_Insertions);
 
-		NSObject[] Removals => NSArray.ArrayFromHandle<NSObject> (_Removals);
+		public NSObject[] Removals => NSArray.ArrayFromHandle<NSObject> (_Removals);
 
+		internal delegate NSOrderedCollectionDifference<NSObject>? NSOrderedCollectionDifferenceGetDifferenceHandlerProxy (IntPtr blockLiteral, /* NSOrderedCollectionChange */ IntPtr change);
+		static readonly NSOrderedCollectionDifferenceGetDifferenceHandlerProxy static_ChangeAllback = GetDiffHandler;
+
+		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceGetDifferenceHandlerProxy))]
+		static NSOrderedCollectionDifference<NSObject>? GetDiffHandler (IntPtr block, IntPtr change)
+		{
+			var callback = BlockLiteral.GetTarget<NSOrderedCollectionDifferenceGetDifferenceHandler> (block);
+			if (callback is not null) {
+				var nsChange = Runtime.GetNSObject<NSOrderedCollectionChange<NSObject>> (change, false);
+				return callback (nsChange);
+			}
+			return null;
+		}
+
+		public NSOrderedCollectionDifference? GetDifference (NSOrderedCollectionDifferenceGetDifferenceHandler callback)
+		{
+			if (callback is null)
+				throw new ArgumentNullException (nameof (callback));
+
+			var block = new BlockLiteral ();
+			block.SetupBlock (static_ChangeAllback, callback);
+			try {
+				return Runtime.GetNSObject<NSOrderedCollectionDifference> (_GetDifference (ref block));
+			} finally {
+				block.CleanupBlock ();
+			}
+		}
+	
 	}
 }

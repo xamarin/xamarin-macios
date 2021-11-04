@@ -33,9 +33,36 @@ namespace Foundation {
 		public NSOrderedCollectionDifference (NSIndexSet inserts, TKey[]? insertedObjects, NSIndexSet removes, TKey[]? removedObjects)
 			: base (inserts, NSArray.FromNSObjects (insertedObjects), removes, NSArray.FromNSObjects (removedObjects)) {}
 
-		TKey[] Insertions => NSArray.ArrayFromHandle<TKey> (_Insertions);
+		public TKey[] Insertions => NSArray.ArrayFromHandle<TKey> (_Insertions);
 
-		TKey[] Removals => NSArray.ArrayFromHandle<TKey> (_Removals);
+		public TKey[] Removals => NSArray.ArrayFromHandle<TKey> (_Removals);
+
+		static readonly NSOrderedCollectionDifferenceGetDifferenceHandlerProxy static_ChangeAllback = GetDiffHandlerTemplate;
+
+		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceGetDifferenceHandlerProxy))]
+		static NSOrderedCollectionDifference<NSObject>? GetDiffHandlerTemplate (IntPtr block, IntPtr change)
+		{
+			var callback = BlockLiteral.GetTarget<NSOrderedCollectionDifferenceGetDifferenceHandler> (block);
+			if (callback is not null) {
+				var nsChange = Runtime.GetNSObject<NSOrderedCollectionChange<NSObject>> (change, false);
+				return callback (nsChange);
+			}
+			return null;
+		}
+
+		public NSOrderedCollectionDifference<TKey>? GetDifference (NSOrderedCollectionDifferenceGetDifferenceHandler callback)
+		{
+			if (callback is null)
+				throw new ArgumentNullException (nameof (callback));
+
+			var block = new BlockLiteral ();
+			block.SetupBlock (static_ChangeAllback, callback);
+			try {
+				return Runtime.GetNSObject<NSOrderedCollectionDifference<TKey>> (_GetDifference (ref block));
+			} finally {
+				block.CleanupBlock ();
+			}
+		}
 
 	}
 }

@@ -764,6 +764,10 @@ namespace Foundation  {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		Json5Allowed = 8,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		TopLevelDictionaryAssumed = 16,
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
 		AllowFragments = FragmentsAllowed,
@@ -896,7 +900,9 @@ namespace Foundation  {
 		MinimalBookmark = 1 << 9,
 		SuitableForBookmarkFile = 1 << 10,
 		WithSecurityScope = 1 << 11,
-		SecurityScopeAllowOnlyReadAccess = 1 << 12
+		SecurityScopeAllowOnlyReadAccess = 1 << 12,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		CreationWithoutImplicitSecurityScope = 1 << 29,
 	}
 
 	[Flags]
@@ -905,6 +911,8 @@ namespace Foundation  {
 		WithoutUI = 1 << 8,
 		WithoutMounting = 1 << 9,
 		WithSecurityScope = 1 << 10,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		WithoutImplicitStartAccessing = 1 << 15,
 	}
 
 	[Native]

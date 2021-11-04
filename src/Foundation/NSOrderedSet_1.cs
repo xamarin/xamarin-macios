@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -194,17 +195,64 @@ namespace Foundation {
 			return (int) GetNativeHash ();
 		}
 		
+#if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options)
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options)
 			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other, options));
 
-		NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet other)
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet other)
 			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other));
 
-		NSOrderedSet<TKey>? GetOrderedSet (NSOrderedCollectionDifference difference)
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedSet<TKey>? GetOrderedSet (NSOrderedCollectionDifference difference)
 		{
 			var ptr = _GetOrderedSet (difference); 
 			return (ptr == IntPtr.Zero)? null : new NSOrderedSet<TKey> (ptr);
+		}
+
+		static readonly NSOrderedCollectionDifferenceEquivalenceTestProxy static_DiffEqualityGeneric = DiffEqualityHandlerGeneric;
+
+		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceEquivalenceTestProxy))]
+		static bool DiffEqualityHandlerGeneric (IntPtr block, IntPtr first, IntPtr second)
+		{
+			var callback = BlockLiteral.GetTarget<NSOrderedCollectionDifferenceEquivalenceTest<TKey>> (block);
+			if (callback is not null) {
+				var nsFirst = Runtime.GetINativeObject<TKey> (first, false);
+				var nsSecond = Runtime.GetINativeObject<TKey> (second, false);
+				return callback (nsFirst, nsSecond);
+			}
+			return false;
+		}
+
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference<TKey>? GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options, NSOrderedCollectionDifferenceEquivalenceTest<TKey> equivalenceTest) 
+		{
+			if (equivalenceTest is null)
+				throw new ArgumentNullException (nameof (equivalenceTest));
+
+			var block = new BlockLiteral ();
+			block.SetupBlock (static_DiffEqualityGeneric, equivalenceTest);
+			try {
+				return Runtime.GetNSObject<NSOrderedCollectionDifference<TKey>> (_GetDifference (other, options, ref block));
+			} finally {
+				block.CleanupBlock ();
+			}
 		}
 	}
 }

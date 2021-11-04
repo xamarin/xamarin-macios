@@ -19,6 +19,12 @@ namespace Foundation {
 	public sealed partial class NSOrderedCollectionChange<TKey> : NSOrderedCollectionChange
 		where TKey : class, INativeObject {
 
+		public NSOrderedCollectionChange (NSObject anObject, NSCollectionChangeType type, nuint index)
+			: base (anObject, type, index) {}
+
+		public NSOrderedCollectionChange (NSObject? anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex)
+			: base (anObject, type, index, associatedIndex) {}
+
 		public static NSOrderedCollectionChange<TKey> ChangeWithObject (TKey? anObject, NSCollectionChangeType type, nuint index)
 			=> new NSOrderedCollectionChange<TKey> (NSOrderedCollectionChange._ChangeWithObject (anObject!.Handle, type, index));
 
@@ -33,6 +39,6 @@ namespace Foundation {
 		public NSOrderedCollectionChange (TKey? anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex)
 			: base (anObject!.Handle, type, index, associatedIndex) {}
 
-		TKey? Object => Runtime.GetINativeObject<TKey> (_Object, true);
+		public TKey? Object => Runtime.GetINativeObject<TKey> (_Object, true);
 	}
 }

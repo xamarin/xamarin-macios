@@ -224,19 +224,41 @@ namespace Foundation
 		[Export ("arrayWithContentsOfURL:error:")]
 		[return: NullAllowed]
 		NSArray FromUrl (NSUrl url, out NSError error);
-		
-		[Export ("differenceFromArray:withOptions:usingEquivalenceTest:")]
-		NSOrderedCollectionDifference<NSObject> DifferenceFromArray (NSObject[] other, NSOrderedCollectionDifferenceCalculationOptions options, Func<NSObject, NSObject, bool> block);
 
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Internal]
 		[Export ("differenceFromArray:withOptions:")]
-		NSOrderedCollectionDifference<NSObject> DifferenceFromArray (NSObject[] other, NSOrderedCollectionDifferenceCalculationOptions options);
+		IntPtr _GetDifference (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options);
 
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (NSArray.FromNSObjects (other), options))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSObject[] other, NSOrderedCollectionDifferenceCalculationOptions options);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("differenceFromArray:")]
-		NSOrderedCollectionDifference<NSObject> DifferenceFromArray (NSObject[] other);
+		IntPtr _GetDifference (NSArray other);
 
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference(NSArray.FromNSObjects (other)))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSObject[] other);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("arrayByApplyingDifference:")]
 		[return: NullAllowed]
-		NSObject[] ArrayByApplyingDifference (NSOrderedCollectionDifference<NSObject> difference);
+		IntPtr _GetArrayByApplyingDifference (NSOrderedCollectionDifference difference);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("NSArray.ArrayFromHandle<NSObject> (_GetArrayByApplyingDifference (difference))")]
+		[return: NullAllowed]
+		NSObject[] GetArrayByApplyingDifference (NSOrderedCollectionDifference difference);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromArray:withOptions:usingEquivalenceTest:")]
+		IntPtr _GetDifferenceFromArray (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> block */ ref BlockLiteral block);
 	}
 
 #if MONOMAC
@@ -567,6 +589,55 @@ namespace Foundation
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[Wrap ("LoadFromHtml (data, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSData data, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithContentsOfMarkdownFileAtURL:options:baseURL:error:")]
+		IntPtr Constructor (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithMarkdown:options:baseURL:error:")]
+		IntPtr Constructor (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithMarkdownString:options:baseURL:error:")]
+		IntPtr Constructor (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("attributedStringByInflectingString")]
+		NSAttributedString AttributedStringByInflectingString { get; }
+
+	}
+
+	// we follow the API found in swift
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	public enum NSAttributedStringNameKey {
+
+		[Field ("NSAlternateDescriptionAttributeName")]
+		AlternateDescription,
+
+		[Field ("NSImageURLAttributeName")]
+		ImageUrl,
+
+		[Field ("NSInflectionRuleAttributeName")]
+		InflectionRule,  
+
+		[Field ("NSInflectionAlternativeAttributeName")]
+		InflectionAlternative,
+
+		[Field ("NSInlinePresentationIntentAttributeName")]
+		InlinePresentationIntent,
+
+		[Field ("NSLanguageIdentifierAttributeName")]
+		LanguageIdentifier,
+
+		[Field ("NSMorphologyAttributeName")]
+		Morphology,
+
+		[Field ("NSPresentationIntentAttributeName")]
+		PresentationIntentAttributeName,
+
+		[Field ("NSReplacementIndexAttributeName")]
+		ReplacementIndex,
 	}
 
 	[NoWatch][NoTV] // really inside WKWebKit
@@ -950,7 +1021,7 @@ namespace Foundation
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
 		[Availability (Deprecated = Platform.Mac_10_10)]
-		IntPtr Constructor (string description, string calendarFormat, NSObject locale);
+		IntPtr Constructor (string description, string calendarFormat, [NullAllowed] NSObject locale);
 
 		[Export ("initWithString:calendarFormat:")]
 		[Availability (Deprecated = Platform.Mac_10_10)]
@@ -1004,13 +1075,14 @@ namespace Foundation
 		[Export ("yearOfCommonEra")]
 		nint YearOfCommonEra { get; }
 
+		[NullAllowed]
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("calendarFormat")]
 		string CalendarFormat { get; set; }
 
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithCalendarFormat:locale:")]
-		string GetDescription (string calendarFormat, NSObject locale);
+		string GetDescription (string calendarFormat, [NullAllowed] NSObject locale);
 
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithCalendarFormat:")]
@@ -1018,8 +1090,9 @@ namespace Foundation
 
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithLocale:")]
-		string GetDescription (NSLocale locale);
+		string GetDescription ([NullAllowed] NSLocale locale);
 
+		[NullAllowed]
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("timeZone")]
 		NSTimeZone TimeZone { get; set; }
@@ -1686,6 +1759,15 @@ namespace Foundation
 		[Export ("stringForObjectValue:")]
 		[return: NullAllowed]
 		string GetString ([NullAllowed] NSObject obj);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Export ("stringFromMeasurement:countStyle:")]
+		string StringFromMeasurement (NSUnitInformationStorage  measurement, NSByteCountFormatterCountStyle countStyle);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("stringFromMeasurement:")]
+		string StringFromMeasurement (NSUnitInformationStorage measurement);
 	}
 
 	[BaseType (typeof (NSFormatter))]
@@ -2249,6 +2331,10 @@ namespace Foundation
 		[Export ("personNameComponentsFromString:")]
 		[return: NullAllowed]
 		NSPersonNameComponents GetComponents (string @string);
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("locale", ArgumentSemantic.Copy)]
+		NSLocale Locale { get; set; }
 	}
 	
 	
@@ -3576,7 +3662,10 @@ namespace Foundation
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("arrayWithContentsOfURL:")]
 		NSMutableArray FromUrl (NSUrl url);
-		
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("applyDifference:")]
+		void ApplyDifference (NSOrderedCollectionDifference difference);
 	}
 	
 	interface NSMutableArray<TValue> : NSMutableArray {}
@@ -4240,7 +4329,7 @@ namespace Foundation
 #if !XAMCORE_4_0 && !WATCH
 		[Obsolete("Use 'FromFunction (NSExpressionCallbackHandler, NSExpression[])' instead.")]
 		[Static, Export ("expressionForBlock:arguments:")]
-		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);
+		NSExpression FromFunction (NSExpressionHandler target, [NullAllowed] NSExpression[] parameters);
 #endif
 
 		[Static, Export ("expressionForBlock:arguments:")]
@@ -4931,7 +5020,7 @@ namespace Foundation
 		NSString NSRunLoopCommonModes { get; }
 
 		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSXpcConnection' instead.")]
-		[NoiOS, NoWatch, NoTV]
+		[NoiOS, NoWatch, NoTV, MacCatalyst (15,0)]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
 
@@ -5241,24 +5330,29 @@ namespace Foundation
 		[Export ("defaultStore")]
 		NSUbiquitousKeyValueStore DefaultStore { get; }
 
+		[return: NullAllowed]
 		[Export ("objectForKey:"), Internal]
 		NSObject ObjectForKey (string aKey);
 
 		[Export ("setObject:forKey:"), Internal]
-		void SetObjectForKey (NSObject anObject, string aKey);
+		void SetObjectForKey ([NullAllowed] NSObject anObject, string aKey);
 
 		[Export ("removeObjectForKey:")]
 		void Remove (string aKey);
 
+		[return: NullAllowed]
 		[Export ("stringForKey:")]
 		string GetString (string aKey);
 
+		[return: NullAllowed]
 		[Export ("arrayForKey:")]
 		NSObject [] GetArray (string aKey);
 
+		[return: NullAllowed]
 		[Export ("dictionaryForKey:")]
 		NSDictionary GetDictionary (string aKey);
 
+		[return: NullAllowed]
 		[Export ("dataForKey:")]
 		NSData GetData (string aKey);
 
@@ -5272,16 +5366,16 @@ namespace Foundation
 		bool GetBool (string aKey);
 
 		[Export ("setString:forKey:"), Internal]
-		void _SetString (string aString, string aKey);
+		void _SetString ([NullAllowed] string aString, string aKey);
 
 		[Export ("setData:forKey:"), Internal]
-		void _SetData (NSData data, string key);
+		void _SetData ([NullAllowed] NSData data, string key);
 
 		[Export ("setArray:forKey:"), Internal]
-		void _SetArray (NSObject [] array, string key);
+		void _SetArray ([NullAllowed] NSObject [] array, string key);
 
 		[Export ("setDictionary:forKey:"), Internal]
-		void _SetDictionary (NSDictionary aDictionary, string aKey);
+		void _SetDictionary ([NullAllowed] NSDictionary aDictionary, string aKey);
 
 		[Export ("setLongLong:forKey:"), Internal]
 		void _SetLong (long value, string aKey);
@@ -6710,21 +6804,22 @@ namespace Foundation
 		[Export ("canHandleRequest:")][Static]
 		bool CanHandleRequest (NSUrlRequest request);
 	
+		[return: NullAllowed]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("connectionWithRequest:delegate:")][Static]
-		NSUrlConnection FromRequest (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NSUrlConnection FromRequest (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
 	
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		IntPtr Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		IntPtr Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
 	
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:startImmediately:")]
-		IntPtr Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
+		IntPtr Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
 	
 		[Export ("start")]
 		void Start ();
@@ -7135,6 +7230,9 @@ namespace Foundation
 		[Export ("streamTaskWithHostName:port:")]
 		NSUrlSessionStreamTask CreateBidirectionalStream (string hostname, nint port);
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the Network.framework instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the Network.framework instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the Network.framework instead.")]
 		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Export ("streamTaskWithNetService:")]
@@ -7288,6 +7386,10 @@ namespace Foundation
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("countOfBytesClientExpectsToReceive")]
 		long CountOfBytesClientExpectsToReceive { get; set; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Retain)]
+		NSObject WeakDelegate { get; set; }
 
 	}
 
@@ -7924,6 +8026,10 @@ namespace Foundation
 		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; [NotImplemented] set; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("attribution")]
+		NSURLRequestAttribution Attribution { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8104,6 +8210,10 @@ namespace Foundation
 		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; set; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("attribution", ArgumentSemantic.Assign)]
+		NSURLRequestAttribution Attribution { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLResponse")]
@@ -9284,7 +9394,8 @@ namespace Foundation
 		IntPtr _FirstObject ();
 
 		[Export ("firstObject")]
-		NSObject? FirstObject ();
+		[return: NullAllowed]
+		NSObject FirstObject ();
 
 		[Internal]
 		[Sealed]
@@ -9292,7 +9403,8 @@ namespace Foundation
 		IntPtr _LastObject ();
 
 		[Export ("lastObject")]
-		NSObject? LastObject ();
+		[return: NullAllowed]
+		NSObject LastObject ();
 
 		[Export ("isEqualToOrderedSet:")]
 		bool IsEqualToOrderedSet (NSOrderedSet other);
@@ -9312,10 +9424,6 @@ namespace Foundation
 		[Export ("reversedOrderedSet")]
 		NSOrderedSet GetReverseOrderedSet ();
 		
-		// TODO
-		// [Export ("differenceFromOrderedSet:withOptions:usingEquivalenceTest:")]
-		// NSOrderedCollectionDifference DifferenceFromOrderedSet (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, Func<NSObject, NSObject, bool> block);
-
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (other, options))")]
 		[return: NullAllowed]
@@ -9346,6 +9454,11 @@ namespace Foundation
 		[Export ("orderedSetByApplyingDifference:")]
 		[return: NullAllowed]
 		IntPtr _GetOrderedSet (NSOrderedCollectionDifference difference);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromOrderedSet:withOptions:usingEquivalenceTest:")]
+		/* NSOrderedCollectionDifference<NSObject>*/ IntPtr _GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> */ ref BlockLiteral block);
 	}
 
 	interface NSMutableOrderedSet<TKey> : NSMutableOrderedSet {}
@@ -9485,6 +9598,16 @@ namespace Foundation
 
 		[Export ("sortRange:options:usingComparator:")]
 		void SortRange (NSRange range, NSSortOptions sortOptions, NSComparator comparator);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("applyDifference:")]
+		void _ApplyDifference (IntPtr difference);
+
+		[Sealed]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("applyDifference:")]
+		void ApplyDifference (NSOrderedCollectionDifference<NSObject> difference);
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -9947,6 +10070,10 @@ namespace Foundation
 		[Export ("setPreservationPriority:forTags:")]
 		void SetPreservationPriority (double priority, NSSet<NSString> tags);
 #endif
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("localizedAttributedStringForKey:value:table:")]
+		NSAttributedString GetLocalizedAttributedString (string key, [NullAllowed] string value, [NullAllowed] string tableName);
 	}
 
 #if !MONOMAC
@@ -10485,6 +10612,9 @@ namespace Foundation
 		void RemoveIndexesInRange (NSRange range);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the Network.framework instead.")]
 	[NoWatch]
 	[DisableDefaultCtor] // the instance just crash when trying to call selectors
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSNetServiceDelegate)})]
@@ -10533,6 +10663,7 @@ namespace Foundation
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; }
 
+		[NullAllowed]
 		[Export ("addresses", ArgumentSemantic.Copy)]
 		NSData [] Addresses { get; }
 
@@ -10563,17 +10694,19 @@ namespace Foundation
 		[Static, Export ("dataFromTXTRecordDictionary:")]
 		NSData DataFromTxtRecord (NSDictionary dictionary);
 		
+		[NullAllowed]
 		[Export ("hostName", ArgumentSemantic.Copy)]
 		string HostName { get; }
 
 		[Export ("getInputStream:outputStream:")]
 		bool GetStreams (out NSInputStream inputStream, out NSOutputStream outputStream);
 		
+		[return: NullAllowed]
 		[Export ("TXTRecordData")]
 		NSData GetTxtRecordData ();
 
 		[Export ("setTXTRecordData:")]
-		bool SetTxtRecordData (NSData data);
+		bool SetTxtRecordData ([NullAllowed] NSData data);
 
 		//NSData TxtRecordData { get; set; }
 
@@ -10621,6 +10754,9 @@ namespace Foundation
 		void DidAcceptConnection (NSNetService sender, NSInputStream inputStream, NSOutputStream outputStream);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the Network.framework instead.")]
 	[NoWatch]
 	[BaseType (typeof (NSObject),
 		   Delegates=new string [] {"WeakDelegate"},
@@ -10952,6 +11088,7 @@ namespace Foundation
 #if MONOMAC
 		[Export ("rectValue")]
 #else
+		[MacCatalyst (15,0)]
 		[Export ("CGRectValue")]
 #endif
 		CGRect CGRectValue { get; }
@@ -10959,6 +11096,7 @@ namespace Foundation
 #if MONOMAC
 		[Export ("sizeValue")]
 #else
+		[MacCatalyst (15,0)]
 		[Export ("CGSizeValue")]
 #endif
 		CGSize CGSizeValue { get; }
@@ -10966,6 +11104,7 @@ namespace Foundation
 #if MONOMAC
 		[Export ("pointValue")]
 #else
+		[MacCatalyst (15,0)]
 		[Export ("CGPointValue")]
 #endif
 		CGPoint CGPointValue { get; }
@@ -11782,8 +11921,9 @@ namespace Foundation
 #if MONOMAC || __MACCATALYST__
 		[DesignatedInitializer]
 		[Export ("initWithSendPort:receivePort:components:")]
-		IntPtr Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
+		IntPtr Constructor ([NullAllowed] NSPort sendPort, [NullAllowed] NSPort recvPort, [NullAllowed] NSArray components);
 
+		[NullAllowed]
 		[Export ("components")]
 		NSArray Components { get; }
 
@@ -11795,9 +11935,11 @@ namespace Foundation
 		[Export ("sendBeforeDate:")]
 		bool SendBefore (NSDate date);
 
+		[NullAllowed]
 		[Export ("receivePort")]
 		NSPort ReceivePort { get; }
 
+		[NullAllowed]
 		[Export ("sendPort")]
 		NSPort SendPort { get; }
 
@@ -11938,20 +12080,23 @@ namespace Foundation
 
 		[Export ("automaticTerminationSupportEnabled")]
 		bool AutomaticTerminationSupportEnabled { get; set; }
+
 #else
+
 		[iOS (8,2)]
 		[Export ("performExpiringActivityWithReason:usingBlock:")]
 		void PerformExpiringActivity (string reason, Action<bool> block);
 
-		[iOS (9,0)]
+#endif
+
+		[iOS (9,0), TV (15,0), MacCatalyst (15,0), Mac (12,0)]
 		[Export ("lowPowerModeEnabled")]
 		bool LowPowerModeEnabled { [Bind ("isLowPowerModeEnabled")] get; }
 
-		[iOS (9,0)]
+		[iOS (9,0), Mac (12,0)]
 		[Notification]
 		[Field ("NSProcessInfoPowerStateDidChangeNotification")]
 		NSString PowerStateDidChangeNotification { get; }
-#endif
 
 		[Mac (10,10,3)]
 		[Watch (4,0)]
@@ -12141,6 +12286,10 @@ namespace Foundation
 	
 		[Field ("NSProgressFileCompletedCountKey")]
 		NSString FileCompletedCountKey { get; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("NSProgressFileOperationKindDuplicating")]
+		NSString FileOperationKindDuplicatingKey { get; }
 
 #if MONOMAC
 		[Field ("NSProgressFileAnimationImageKey")]
@@ -12842,6 +12991,7 @@ namespace Foundation
 		NSFileVersion GetSpecificVersion (NSUrl url, NSObject persistentIdentifier);
 
 #if MONOMAC
+		[return: NullAllowed]
 		[Static]
 		[Export ("addVersionOfItemAtURL:withContentsOfURL:options:error:")]
 		NSFileVersion AddVersion (NSUrl url, NSUrl contentsURL, NSFileVersionAddingOptions options, out NSError outError);
@@ -12999,6 +13149,7 @@ namespace Foundation
 		bool EvaluateWithObject (NSObject obj, NSDictionary substitutionVariables);
 #if MONOMAC
 		// 10.9+
+		[return: NullAllowed]
 		[Static]
 		[Mac (10, 9)]
 		[Export ("predicateFromMetadataQueryString:")]
@@ -13055,11 +13206,11 @@ namespace Foundation
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		IntPtr Constructor (NSUrlRequest request, NSObject delegate1);
+		IntPtr Constructor (NSUrlRequest request, [NullAllowed] NSObject delegate1);
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithResumeData:delegate:path:")]
-		IntPtr Constructor (NSData resumeData, NSObject delegate1, string path);
+		IntPtr Constructor (NSData resumeData, [NullAllowed] NSObject delegate1, string path);
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -13070,6 +13221,7 @@ namespace Foundation
 		[Export ("request")]
 		NSUrlRequest Request { get; }
 
+		[NullAllowed]
 		[Export ("resumeData")]
 		NSData ResumeData { get; }
 
@@ -13809,6 +13961,7 @@ namespace Foundation
 #if MONOMAC
 	partial interface NSFilePresenter {
 
+		[NullAllowed]
 		[Export ("primaryPresentedItemURL")]
 		NSUrl PrimaryPresentedItemUrl { get; }
 	}
@@ -13819,6 +13972,7 @@ namespace Foundation
 		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 12, 0, message : "Use the Network.framework instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[NoMacCatalyst]
@@ -13828,7 +13982,7 @@ namespace Foundation
 		NSHost _Current { get;}
 
 		[Static, Internal, Export ("hostWithName:")]
-		NSHost _FromName (string name);
+		NSHost _FromName ([NullAllowed] string name);
 
 		[Static, Internal, Export ("hostWithAddress:")]
 		NSHost _FromAddress (string address);
@@ -13836,15 +13990,18 @@ namespace Foundation
 		[Export ("isEqualToHost:")]
 		bool Equals ([NullAllowed] NSHost host);
 
+		[NullAllowed]
 		[Export ("name")]
 		string Name { get; }
 
+		[NullAllowed]
 		[Export ("localizedName")]
 		string LocalizedName { get; }
 
 		[Export ("names")]
 		string [] Names { get; }
 
+		[NullAllowed]
 		[Internal, Export ("address")]
 		string _Address { get; }
 
@@ -13878,7 +14035,9 @@ namespace Foundation
 	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
+#if !__MACCATAYUST__
 		[DesignatedInitializer]
+#endif
 		[Export ("initWithCommandDescription:")]
 		IntPtr Constructor (NSScriptCommandDescription cmdDescription);
 
@@ -13888,11 +14047,13 @@ namespace Foundation
 		IntPtr GetCurrentCommand ();
 
 		[Export ("appleEvent")]
+		[NullAllowed]
 		NSAppleEventDescriptor AppleEvent { get; }
 
 		[Export ("executeCommand")]
 		IntPtr Execute ();
 		
+		[NullAllowed]
 		[Export ("evaluatedReceivers")]
 		NSObject EvaluatedReceivers { get; }
 	}
@@ -13927,7 +14088,7 @@ namespace Foundation
 		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithSuiteName:commandName:dictionary:")]
-		IntPtr Constructor (NSString suiteName, NSString commandName, NSDictionary commandDeclaration);
+		IntPtr Constructor (NSString suiteName, NSString commandName, [NullAllowed] NSDictionary commandDeclaration);
 
 		[Internal]
 		[Export ("appleEventClassCode")]
@@ -13957,6 +14118,7 @@ namespace Foundation
 		[Export ("isOptionalArgumentWithName:")]
 		bool NSIsOptionalArgument (NSString name);
 
+		[return: NullAllowed]
 		[Internal]
 		[Export ("typeForArgumentWithName:")]
 		NSString GetNSTypeForArgument (NSString name);
@@ -13965,6 +14127,7 @@ namespace Foundation
 		[Export ("appleEventCodeForReturnType")]
 		int FCCAppleEventCodeForReturnType { get; }
 
+		[NullAllowed]
 		[Export ("returnType")]
 		string ReturnType { get; }
 
@@ -14031,6 +14194,7 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
+		[return: NullAllowed]
 		[Static, Export ("connectionWithReceivePort:sendPort:")]
 		NSConnection Create ([NullAllowed] NSPort receivePort, [NullAllowed] NSPort sendPort);
 
@@ -14045,24 +14209,29 @@ namespace Foundation
 		[Export ("removeRunLoop:")]
 		void RemoveRunLoop (NSRunLoop runLoop);
 
+		[return: NullAllowed]
 		[Static, Export ("serviceConnectionWithName:rootObject:usingNameServer:")]
 		NSConnection CreateService (string name, NSObject root, NSPortNameServer server);
 
+		[return: NullAllowed]
 		[Static, Export ("serviceConnectionWithName:rootObject:")]
 		NSConnection CreateService (string name, NSObject root);
 
 		[Export ("registerName:")]
-		bool RegisterName (string name);
+		bool RegisterName ([NullAllowed] string name);
 
 		[Export ("registerName:withNameServer:")]
-		bool RegisterName (string name, NSPortNameServer server);
+		bool RegisterName ([NullAllowed] string name, NSPortNameServer server);
 
+		[NullAllowed]
 		[Export ("rootObject", ArgumentSemantic.Retain)]
 		NSObject RootObject { get; set; }
 
+		[return: NullAllowed]
 		[Static, Export ("connectionWithRegisteredName:host:")]
 		NSConnection LookupService (string name, [NullAllowed] string hostName);
 
+		[return: NullAllowed]
 		[Static, Export ("connectionWithRegisteredName:host:usingNameServer:")]
 		NSConnection LookupService (string name, [NullAllowed] string hostName, NSPortNameServer server);
 
@@ -14081,6 +14250,7 @@ namespace Foundation
 		[Export ("localObjects")]
 		NSObject [] LocalObjects { get; }
 
+		[NullAllowed]
 		[Static, Export ("currentConversation")]
 		NSObject CurrentConversation { get; }
 
@@ -14185,11 +14355,13 @@ namespace Foundation
 		[Static, Export ("systemDefaultPortNameServer")]
 		NSPortNameServer SystemDefault { get; }
 
+		[return: NullAllowed]
 		[Export ("portForName:")]
 		NSPort GetPort (string portName);
 
+		[return: NullAllowed]
 		[Export ("portForName:host:")]
-		NSPort GetPort (string portName, string hostName);
+		NSPort GetPort (string portName, [NullAllowed] string hostName);
 
 		[Export ("registerPort:name:")]
 		bool RegisterPort (NSPort port, string portName);
@@ -14548,30 +14720,38 @@ namespace Foundation
 	[DesignatedDefaultCtor]
 	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotification : NSCoding, NSCopying {
+		[NullAllowed]
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
 		
+		[NullAllowed]
 		[Export ("subtitle", ArgumentSemantic.Copy)]
 		string Subtitle { get; set; }
 		
+		[NullAllowed]
 		[Export ("informativeText", ArgumentSemantic.Copy)]
 		string InformativeText { get; set; }
 		
 		[Export ("actionButtonTitle", ArgumentSemantic.Copy)]
 		string ActionButtonTitle { get; set; }
 		
+		[NullAllowed]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; set; }
 		
+		[NullAllowed]
 		[Export ("deliveryDate", ArgumentSemantic.Copy)]
 		NSDate DeliveryDate { get; set; }
 		
+		[NullAllowed]
 		[Export ("deliveryTimeZone", ArgumentSemantic.Copy)]
 		NSTimeZone DeliveryTimeZone { get; set; }
 		
+		[NullAllowed]
 		[Export ("deliveryRepeatInterval", ArgumentSemantic.Copy)]
 		NSDateComponents DeliveryRepeatInterval { get; set; }
 		
+		[NullAllowed]
 		[Export ("actualDeliveryDate")]
 		NSDate ActualDeliveryDate { get; }
 		
@@ -14581,6 +14761,7 @@ namespace Foundation
 		[Export ("remote")]
 		bool Remote { [Bind("isRemote")] get; }
 		
+		[NullAllowed]
 		[Export ("soundName", ArgumentSemantic.Copy)]
 		string SoundName { get; set; }
 		
@@ -16612,6 +16793,16 @@ namespace Foundation
 		[Static]
 		[Export ("automaticRule")]
 		NSInflectionRule AutomaticRule { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Static]
+		[Export ("canInflectLanguage:")]
+		bool CanInflectLanguage (string language);
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Static]
+		[Export ("canInflectPreferredLocalization")]
+		bool CanInflectPreferredLocalization { get; }
 	}
 	
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -16643,9 +16834,15 @@ namespace Foundation
 		[return: NullAllowed]
 		NSMorphologyCustomPronoun GetCustomPronoun (string language);
 
-		
 		[Export ("setCustomPronoun:forLanguage:error:")]
 		bool SetCustomPronoun ([NullAllowed] NSMorphologyCustomPronoun features, string language, [NullAllowed] out NSError error);
+
+		[Export ("unspecified")]
+		bool Unspecified { [Bind ("isUnspecified")] get; }
+
+		[Static]
+		[Export ("userMorphology")]
+		NSMorphology UserMorphology { get; }
 	}
 	
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15, 0)]
@@ -16714,6 +16911,7 @@ namespace Foundation
 		IntPtr Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index);
 
 		[Internal]
+		[DesignatedInitializer]
 		[Export ("initWithObject:type:index:associatedIndex:")]
 		IntPtr Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
 		
@@ -16732,6 +16930,7 @@ namespace Foundation
 		IntPtr Constructor (NSOrderedCollectionChange[] changes);
 		
 		[Internal]
+		[DesignatedInitializer]
 		[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges:")]
 		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects, NSOrderedCollectionChange[] changes);
 
@@ -16757,9 +16956,9 @@ namespace Foundation
 		[Export ("hasChanges")]
 		bool HasChanges { get; }
 
-		// TODO
-		// [Export ("differenceByTransformingChangesWithBlock:")]
-		// NSOrderedCollectionDifference<NSObject> DifferenceByTransformingChangesWithBlock (Func<NSOrderedCollectionChange<NSObject>, NSOrderedCollectionChange<NSObject>> block);
+		[Internal]
+		[Export ("differenceByTransformingChangesWithBlock:")]
+		IntPtr _GetDifference (/* Func<NSOrderedCollectionChange<NSObject>, NSOrderedCollectionChange<NSObject>>*/ ref BlockLiteral block); 
 
 		[Internal]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

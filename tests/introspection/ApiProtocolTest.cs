@@ -405,6 +405,7 @@ namespace Introspection {
 				case "QLPreviewReply": // conformance not in headers
 				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
+				case "NSInflectionRule": 
 					return true;
 				}
 				break;

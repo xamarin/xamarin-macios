@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -9,6 +10,11 @@ using ObjCRuntime;
 
 namespace Foundation {
 
+#if !NET
+	[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
 	public partial class NSOrderedCollectionChange
 	{
 
@@ -18,7 +24,7 @@ namespace Foundation {
 		public static NSOrderedCollectionChange ChangeWithObject (NSObject? anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex)
 			=> new NSOrderedCollectionChange (NSOrderedCollectionChange._ChangeWithObject (anObject!.Handle, type, index, associatedIndex));
 
-		NSObject? Object => Runtime.GetNSObject<NSObject> (_Object);
+		public NSObject? Object => Runtime.GetNSObject<NSObject> (_Object);
 
 	}
 }
