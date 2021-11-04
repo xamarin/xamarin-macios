@@ -11,6 +11,7 @@ namespace MonoTouchFixtures.AVFoundation {
 	[Preserve (AllMembers = true)]
 	public class CaptureDeviceTest {
 
+#if !NET
 		void Compare (NSString constant, AVMediaTypes value)
 		{
 			Assert.That (AVCaptureDevice.GetDefaultDevice (constant), Is.EqualTo (AVCaptureDevice.GetDefaultDevice (value)), value.ToString ());
@@ -35,7 +36,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Compare (AVMediaType.Video, AVMediaTypes.Video);
 
 			if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9,0))
-				Compare (AVMediaType.MetadataObject, AVMediaTypes.MetadataObject);
+				Compare (AVMediaTypes.MetadataObject, AVMediaTypes.MetadataObject);
 
 			// obsoleted in iOS 6, removed in iOS12
 #if !__MACCATALYST__
@@ -45,6 +46,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				Compare (AVMediaType.TimedMetadata, AVMediaTypes.TimedMetadata);
 #endif
 		}
+#endif // !NET
 	}
 }
 #endif
