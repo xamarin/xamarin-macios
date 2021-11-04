@@ -20239,7 +20239,7 @@ namespace AppKit {
 		[Export ("isExcludedFromWindowsMenu")]
 		bool ExcludedFromWindowsMenu { get; } 
 	
-		[Export ("contentView", ArgumentSemantic.Retain)]
+		[Export ("contentView", ArgumentSemantic.Retain)][NullAllowed]
 		NSView ContentView  { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
