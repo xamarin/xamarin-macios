@@ -238,18 +238,18 @@ namespace Foundation {
 		internal static nuint GetCount (IntPtr handle)
 		{
 	#if MONOMAC
-			return Messaging.nuint_objc_msgSend (handle, selCountHandle);
+			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, selCountHandle);
 	#else
-			return Messaging.nuint_objc_msgSend (handle, Selector.GetHandle ("count"));
+			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, Selector.GetHandle ("count"));
 	#endif
 		}
 
 		internal static IntPtr GetAtIndex (IntPtr handle, nuint i)
 		{
 	#if MONOMAC
-			return Messaging.IntPtr_objc_msgSend_nuint (handle, selObjectAtIndex_Handle, i);
+			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, selObjectAtIndex_Handle, (UIntPtr) i);
 	#else
-			return Messaging.IntPtr_objc_msgSend_nuint (handle, Selector.GetHandle ("objectAtIndex:"), i);
+			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
 	#endif
 		}
 			
@@ -356,6 +356,14 @@ namespace Foundation {
 				ret [i] = creator (GetAtIndex (handle, i));
 
 			return ret;
+		}
+
+		static public T [] ArrayFromHandle<T> (IntPtr handle, Converter<IntPtr, T> creator, bool releaseHandle)
+		{
+			var rv = ArrayFromHandle<T> (handle, creator);
+			if (releaseHandle && handle == IntPtr.Zero)
+				NSObject.DangerousRelease (handle);
+			return rv;
 		}
 
 		// FIXME: before proving a real `this` indexer we need to clean the issues between

@@ -612,7 +612,7 @@ namespace AppKit {
 		[Export ("discardEventsMatchingMask:beforeEvent:"), Protected]
 		void DiscardEvents (nuint mask, NSEvent lastEvent);
 	
-                [ThreadSafe]
+		[ThreadSafe]
 		[Export ("postEvent:atStart:")]
 		void PostEvent (NSEvent theEvent, bool atStart);
 	
@@ -809,13 +809,14 @@ namespace AppKit {
 		[Notification, Field ("NSApplicationDidChangeScreenParametersNotification")]
 		NSString DidChangeScreenParametersNotification { get; }
 
-		[Mac (12,0)]
-		[Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
-		NSString ProtectedDataWillBecomeUnavailableNotification { get; }
+		// https://github.com/xamarin/xamarin-macios/issues/13185
+		// [Mac (12,0)]
+		// [Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
+		// NSString ProtectedDataWillBecomeUnavailableNotification { get; }
 
-		[Mac (12,0)]
-		[Field ("NSApplicationProtectedDataDidBecomeAvailableNotification")]
-		NSString ProtectedDataDidBecomeAvailableNotification { get; }
+		// [Mac (12,0)]
+		// [Field ("NSApplicationProtectedDataDidBecomeAvailableNotification")]
+		// NSString ProtectedDataDidBecomeAvailableNotification { get; }
 
 		[Field ("NSApplicationLaunchIsDefaultLaunchKey")]
 		NSString LaunchIsDefaultLaunchKey  { get; }
@@ -13146,6 +13147,21 @@ namespace AppKit {
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get; }
 
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("safeAreaInsets")]
+		NSEdgeInsets SafeAreaInsets { get; }
+
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("auxiliaryTopLeftArea")]
+		CGRect AuxiliaryTopLeftArea { get; }
+
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("auxiliaryTopRightArea")]
+		CGRect AuxiliaryTopRightArea { get; }
+
 		[Mac (12,0)]
 		[Export ("maximumFramesPerSecond")]
 		nint MaximumFramesPerSecond { get; }
@@ -20223,7 +20239,7 @@ namespace AppKit {
 		[Export ("isExcludedFromWindowsMenu")]
 		bool ExcludedFromWindowsMenu { get; } 
 	
-		[Export ("contentView", ArgumentSemantic.Retain)]
+		[Export ("contentView", ArgumentSemantic.Retain)][NullAllowed]
 		NSView ContentView  { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]

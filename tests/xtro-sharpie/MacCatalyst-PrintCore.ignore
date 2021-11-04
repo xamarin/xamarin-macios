@@ -1,3 +1,4 @@
+## Selectors are all macOS only and not used in Catalyst
 !missing-enum! PMDataFormat not bound
 !missing-pinvoke! PMCGImageCreateWithEPSDataProvider is not bound
 !missing-pinvoke! PMCopyAvailablePPDs is not bound

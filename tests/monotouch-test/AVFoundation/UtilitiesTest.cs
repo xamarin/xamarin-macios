@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using CoreGraphics;
 using Foundation;
@@ -20,6 +19,7 @@ using AppKit;
 using UIKit;
 #endif
 using AVFoundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AVFoundation {

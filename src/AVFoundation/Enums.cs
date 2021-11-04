@@ -1358,4 +1358,24 @@ namespace AVFoundation {
 		Stopped = 3,
 	}
 
+	[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+	[Native]
+	public enum AVCapturePrimaryConstituentDeviceSwitchingBehavior : long
+	{
+		Unsupported = 0,
+		Auto = 1,
+		Restricted = 2,
+		Locked = 3,
+	}
+
+	[Flags, NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+	[Native]
+	public enum AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions : ulong
+	{
+		None = 0x0,
+		VideoZoomChanged = 1uL << 0,
+		FocusModeChanged = 1uL << 1,
+		ExposureModeChanged = 1uL << 2,
+	}
+
 }

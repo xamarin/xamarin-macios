@@ -47,7 +47,11 @@ namespace CoreLocation {
 	}
 
 	[ErrorDomain ("CLLocationPushServiceErrorDomain")]
+#if __MACCATALYST__ || XAMCORE_4_0 // Apple fixed this in Xcode 13.1
+	[iOS (15,0), NoTV, NoMacCatalyst, NoMac, NoWatch]
+#else
 	[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+#endif
 	[Native]
 	public enum CLLocationPushServiceError : long {
 		Unknown = 0,
@@ -905,7 +909,11 @@ namespace CoreLocation {
 		NSNumber Minor { get; }
 	}
 
+#if __MACCATALYST__ || XAMCORE_4_0 // Apple fixed this in Xcode 13.1
+	[iOS (15,0), NoTV, NoMacCatalyst, NoMac, NoWatch]
+#else
 	[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+#endif
 	[Protocol]
 	interface CLLocationPushServiceExtension
 	{

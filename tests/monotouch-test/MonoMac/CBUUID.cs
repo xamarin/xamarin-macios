@@ -23,13 +23,6 @@ namespace MonoMacFixtures.CoreBluetooth
 	[Preserve (AllMembers = true)]
 	public class CBUUIDTest
 	{
-		[SetUp]
-		public void SetUp ()
-		{
-			if (IntPtr.Size == 4 && PlatformHelper.CheckSystemVersion(10, 13))
-				Assert.Ignore("CCUUID was removed from 32-bit in macOS 10.13");
-		}
-
 		[Test]
 		public void Roundtrip_16bits ()
 		{

@@ -366,26 +366,25 @@ xamarin_get_managed_object_for_ptr_fast (id self, GCHandle *exception_gchandle)
 	return mobj;
 }
 
-void xamarin_framework_peer_lock ()
+// See comments in the following methods to explain the logic here:
+// xamarin_marshal_return_value_impl in trampolines.m
+// xamarin_release_managed_ref in runtime.m
+void xamarin_framework_peer_waypoint ()
 {
 	// COOP: CHECK
 	MONO_ASSERT_GC_UNSAFE;
-	
+
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&framework_peer_release_lock);
+	pthread_mutex_unlock (&framework_peer_release_lock);
 	MONO_EXIT_GC_SAFE;
 }
 
-// Same as xamarin_framework_peer_lock, except the current mode should be GC Safe.
-void xamarin_framework_peer_lock_safe ()
+// Same as xamarin_framework_peer_waypoint, except the current mode should be GC Safe.
+void xamarin_framework_peer_waypoint_safe ()
 {
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
-
 	pthread_mutex_lock (&framework_peer_release_lock);
-}
-
-void xamarin_framework_peer_unlock ()
-{
 	pthread_mutex_unlock (&framework_peer_release_lock);
 }
 
@@ -1860,7 +1859,7 @@ xamarin_release_managed_ref (id self, bool user_type)
 		set_flags_safe (self, (enum XamarinGCHandleFlags) (get_flags_safe (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
 		//
-		// This lock is needed so that we can safely call retainCount in the
+		// This waypoint (lock+unlock) is needed so that we can safely call retainCount in the
 		// toggleref callback.
 		//
 		// The race is between the following actions (given a managed object Z):
@@ -1925,8 +1924,8 @@ xamarin_release_managed_ref (id self, bool user_type)
 		//
 		//    This is https://github.com/xamarin/xamarin-macios/issues/3943
 		//
-		xamarin_framework_peer_lock_safe ();
-		xamarin_framework_peer_unlock ();
+		// See also comment in xamarin_marshal_return_value_impl
+		xamarin_framework_peer_waypoint_safe ();
 	}
 
 	[self release];

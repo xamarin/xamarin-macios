@@ -5,6 +5,8 @@
 // Copyright 2013-2014 Xamarin Inc
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -14,8 +16,6 @@ using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
-using CoreFoundation;
-using CoreGraphics;
 
 namespace ImageIO {
 	
@@ -31,25 +31,19 @@ namespace ImageIO {
 #if !NET
 		[iOS (7,0)]
 #endif
-		public CGImageMetadata CopyMetadata (nint index, NSDictionary options)
+		public CGImageMetadata? CopyMetadata (nint index, NSDictionary? options)
 		{
-			IntPtr o = options == null ? IntPtr.Zero : options.Handle;
-			IntPtr result = CGImageSourceCopyMetadataAtIndex (Handle, index, o);
-			return (result == IntPtr.Zero) ? null : new CGImageMetadata (result);
+			var result = CGImageSourceCopyMetadataAtIndex (Handle, index, options.GetHandle ());
+			return (result == IntPtr.Zero) ? null : new CGImageMetadata (result, true);
 		}
 
 #if !NET
 		[iOS (7,0)]
 #endif
-		public CGImageMetadata CopyMetadata (nint index, CGImageOptions options)
+		public CGImageMetadata? CopyMetadata (nint index, CGImageOptions? options)
 		{
-			NSDictionary o = null;
-			if (options != null)
-				o = options.ToDictionary ();
-			var result = CopyMetadata (index, o);
-			if (options != null)
-				o.Dispose ();
-			return result;
+			using var o = options?.ToDictionary ();
+			return CopyMetadata (index, o);
 		}
 
 		// CGImageSource.h

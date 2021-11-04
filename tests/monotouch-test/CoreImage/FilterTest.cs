@@ -13,7 +13,6 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using AVFoundation;
 using CoreGraphics;
 using CoreImage;
 using CoreText;

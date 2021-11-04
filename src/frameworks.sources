@@ -394,6 +394,7 @@ COREANIMATION_API_SOURCES = \
 	CoreAnimation/CAEnums.cs \
 
 COREANIMATION_CORE_SOURCES = \
+	CoreAnimation/CAFrameRateRange.cs \
 	CoreAnimation/CATransform3D.cs \
 
 COREANIMATION_SOURCES = \
@@ -1818,6 +1819,7 @@ WKWEBKIT_API_SOURCES = \
 
 WKWEBKIT_SOURCES = \
 	WKWebKit/WKCompat.cs \
+	WKWebKit/WKPreferences.cs \
 	WKWebKit/WKWindowFeatures.cs \
 
 #
@@ -1849,6 +1851,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Selector.cs \
+	ObjCRuntime/SystemVersion.cs \
 	ObjCRuntime/ThrowHelper.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
@@ -1973,6 +1976,7 @@ MACOS_FRAMEWORKS =          \
 	ImageCaptureCore	\
 	ImageKit                \
 	Intents                 \
+	IntentsUI               \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \
@@ -2260,6 +2264,7 @@ MACCATALYST_FRAMEWORKS = \
 	IdentityLookup \
 	ImageIO \
 	Intents \
+	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
 	LinkPresentation \

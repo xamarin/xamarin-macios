@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -51,39 +53,46 @@ namespace CoreGraphics {
 		extern static IntPtr CGBitmapContextCreate (/* void* */ IntPtr data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent, 
 			/* size_t */ nint bytesPerRow, /* CGColorSpaceRef */ IntPtr colorSpace, /* CGBitmapInfo = uint32_t */ uint bitmapInfo);
 
-		static IntPtr GetHandle (CGColorSpace colorSpace)
-		{
-			if (colorSpace == null)
-				return IntPtr.Zero;
-			return colorSpace.Handle;
-		}
-
-		public CGBitmapContext (IntPtr data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace colorSpace, CGImageAlphaInfo bitmapInfo)
-			: base (CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, GetHandle (colorSpace), (uint) bitmapInfo), true)
+		public CGBitmapContext (IntPtr data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGImageAlphaInfo bitmapInfo)
+			: base (CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, colorSpace.GetHandle (), (uint) bitmapInfo), true)
 		{
 		}
 
-		public CGBitmapContext (IntPtr data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace colorSpace, CGBitmapFlags bitmapInfo)
-			: base (CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, GetHandle (colorSpace), (uint) bitmapInfo), true)
+		public CGBitmapContext (IntPtr data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGBitmapFlags bitmapInfo)
+			: base (CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, colorSpace.GetHandle (), (uint) bitmapInfo), true)
 		{
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGBitmapContextCreate (/* void* */ byte [] data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent, 
+		extern static IntPtr CGBitmapContextCreate (/* void* */ byte []? data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent, 
 			/* size_t */ nint bytesPerRow, /* CGColorSpaceRef */ IntPtr colorSpace, /* CGBitmapInfo = uint32_t */ uint bitmapInfo);
 
-		public CGBitmapContext (byte [] data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace colorSpace, CGImageAlphaInfo bitmapInfo)
+		static IntPtr Create (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGImageAlphaInfo bitmapInfo, out GCHandle buffer)
 		{
+			buffer = default (GCHandle);
 			if (data != null)
 				buffer = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
-			Handle = CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, GetHandle (colorSpace), (uint) bitmapInfo);
+			return CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, colorSpace.GetHandle (), (uint) bitmapInfo);
 		}
 
-		public CGBitmapContext (byte [] data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace colorSpace, CGBitmapFlags bitmapInfo)
+		public CGBitmapContext (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGImageAlphaInfo bitmapInfo)
+			: base (Create (data, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo, out var buffer), true)
 		{
+			this.buffer = buffer;
+		}
+
+		static IntPtr Create (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGBitmapFlags bitmapInfo, out GCHandle buffer)
+		{
+			buffer = default (GCHandle);
 			if (data != null)
 				buffer = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
-			Handle = CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, GetHandle (colorSpace), (uint) bitmapInfo);
+			return CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, colorSpace.GetHandle (), (uint) bitmapInfo);
+		}
+
+		public CGBitmapContext (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGBitmapFlags bitmapInfo)
+			: base (Create (data, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo, out var buffer))
+		{
+			this.buffer = buffer;
 		}
 
 		protected override void Dispose (bool disposing)
@@ -138,7 +147,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGBitmapContextGetColorSpace (/* CGContextRef */ IntPtr context);
 
-		public CGColorSpace ColorSpace {
+		public CGColorSpace? ColorSpace {
 			get {
 				var ptr = CGBitmapContextGetColorSpace (Handle);
 				return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, false);
@@ -162,7 +171,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGImageRef */ IntPtr CGBitmapContextCreateImage (/* CGContextRef */ IntPtr context);
 
-		public CGImage ToImage ()
+		public CGImage? ToImage ()
 		{
 			var h = CGBitmapContextCreateImage (Handle);
 			// do not return an invalid instance (null handle) if something went wrong

@@ -1,4 +1,3 @@
-using System;
 using Foundation;
 using NUnit.Framework;
 

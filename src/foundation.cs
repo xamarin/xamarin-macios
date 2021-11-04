@@ -147,6 +147,12 @@ namespace Foundation
 	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
 	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
 
+#if NET
+	[BaseType (typeof (NSObject))]
+	interface NSAutoreleasePool {
+	}
+#endif
+
 	interface NSArray<TValue> : NSArray {}
 
 	[BaseType (typeof (NSObject))]

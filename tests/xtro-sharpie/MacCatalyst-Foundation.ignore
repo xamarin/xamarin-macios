@@ -631,6 +631,8 @@
 !extra-designated-initializer! NSScriptCommand::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 
 # we expose the Uikit verisons
+## Also exported under iOS selectors (i.e. CGRectValue)
+
 !missing-selector! NSValue::pointValue not bound
 !missing-selector! NSValue::rectValue not bound
 !missing-selector! NSValue::sizeValue not bound

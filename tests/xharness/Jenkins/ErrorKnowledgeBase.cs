@@ -8,17 +8,17 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness.Jenkins {
 	public class ErrorKnowledgeBase : IErrorKnowledgeBase {
-		static readonly Dictionary<string, (string HumanMessage, string IssueLink)> testErrorMaps = new Dictionary<string, (string HumanMessage, string IssueLink)> {
-			["error HE0038: Failed to launch the app"] = (HumanMessage: "HE0038", IssueLink: "https://github.com/xamarin/maccore/issues/581)"),
-			["Couldn't establish a TCP connection with any of the hostnames"] = (HumanMessage: "Tcp Connection Error: Tests are reported as crashes when they succeeded.", IssueLink: "https://github.com/xamarin/maccore/issues/1741"),
-			["BCLTests.TestRunner.Core.TcpTextWriter..ctor"] = (HumanMessage: "Tcp Connection Error: Tests are reported as crashes when they succeeded.", IssueLink: "https://github.com/xamarin/maccore/issues/1741"),
+		static readonly Dictionary<string, KnownIssue> testErrorMaps = new Dictionary<string, KnownIssue> {
+			["error HE0038: Failed to launch the app"] = new KnownIssue ("HE0038", issueLink: "https://github.com/xamarin/maccore/issues/581)"),
+			["Couldn't establish a TCP connection with any of the hostnames"] = new KnownIssue ("Tcp Connection Error: Tests are reported as crashes when they succeeded.", issueLink: "https://github.com/xamarin/maccore/issues/1741"),
+			["BCLTests.TestRunner.Core.TcpTextWriter..ctor"] = new KnownIssue ("Tcp Connection Error: Tests are reported as crashes when they succeeded.", issueLink: "https://github.com/xamarin/maccore/issues/1741"),
 		};
 		
-		static readonly Dictionary<string, (string HumanMessage, string IssueLink)> buildErrorMaps = new Dictionary<string, (string HumanMessage, string IssueLink)> {
-			["error MT5210: Native linking failed, undefined symbol: ___multi3"] = (HumanMessage: "Undefined symbol ___multi3 on Release Mode.", IssueLink:"https://github.com/mono/mono/issues/18560"),
+		static readonly Dictionary<string, KnownIssue> buildErrorMaps = new Dictionary<string, KnownIssue> {
+			["error MT5210: Native linking failed, undefined symbol: ___multi3"] = new KnownIssue ("Undefined symbol ___multi3 on Release Mode.", issueLink: "https://github.com/mono/mono/issues/18560"),
 		};
 		
-		static bool TryFindErrors (IFileBackedLog? log, Dictionary<string, (string HumanMessage, string IssueLink)> errorMap, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? failureMessage)
+		static bool TryFindErrors (IFileBackedLog? log, Dictionary<string, KnownIssue> errorMap, [NotNullWhen (true)] out KnownIssue? failureMessage)
 		{
 			failureMessage = null;
 			if (log == null) {
@@ -45,13 +45,13 @@ namespace Xharness.Jenkins {
 			return false;
 		}
 
-		public bool IsKnownBuildIssue (IFileBackedLog buildLog, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? knownFailureMessage) => 
+		public bool IsKnownBuildIssue (IFileBackedLog buildLog, [NotNullWhen (true)] out KnownIssue? knownFailureMessage) => 
 			TryFindErrors (buildLog, buildErrorMaps, out knownFailureMessage);
 
-		public bool IsKnownTestIssue (IFileBackedLog runLog, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? knownFailureMessage) =>
+		public bool IsKnownTestIssue (IFileBackedLog runLog, [NotNullWhen (true)] out KnownIssue? knownFailureMessage) =>
 			TryFindErrors (runLog, testErrorMaps, out knownFailureMessage);
 
-		public bool IsKnownInstallIssue (IFileBackedLog installLog, [NotNullWhen (true)] out (string HumanMessage, string? IssueLink)? knownFailureMessage)
+		public bool IsKnownInstallIssue (IFileBackedLog installLog, [NotNullWhen (true)] out KnownIssue? knownFailureMessage)
 		{
 			// nothing yet that we are aware of
 			knownFailureMessage = null;

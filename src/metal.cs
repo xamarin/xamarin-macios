@@ -1808,6 +1808,13 @@ namespace Metal {
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; }
 
+		[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("compressionType")]
+		MTLTextureCompressionType CompressionType { get; }
+
 		[Abstract, Export ("newTextureViewWithPixelFormat:")]
 		[return: NullAllowed]
 		[return: Release]
@@ -1983,6 +1990,10 @@ namespace Metal {
 		[Mac (10,14), iOS (12,0), TV (12,0)]
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; set; }
+
+		[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+		[Export ("compressionType")]
+		MTLTextureCompressionType CompressionType { get; set; }
 
 		[Mac (10, 15), iOS (13, 0), TV (13,0)]
 		[Export ("hazardTrackingMode", ArgumentSemantic.Assign)]

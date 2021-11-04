@@ -40,9 +40,14 @@ namespace CoreFoundation {
 		}
 
 		protected NativeObject (IntPtr handle, bool owns)
+			: this (handle, owns, true)
 		{
-			Handle = handle;
-			if (!owns)
+		}
+
+		protected NativeObject (IntPtr handle, bool owns, bool verify)
+		{
+			InitializeHandle (handle, verify);
+			if (!owns && handle != IntPtr.Zero)
 				Retain ();
 		}
 
@@ -65,6 +70,11 @@ namespace CoreFoundation {
 			}
 		}
 
+		protected void ClearHandle ()
+		{
+			handle = IntPtr.Zero;
+		}
+
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
 		// https://developer.apple.com/documentation/corefoundation/1521269-cfretain?language=occ
 		protected virtual void Retain () => CFObject.CFRetain (GetCheckedHandle ());
@@ -73,15 +83,20 @@ namespace CoreFoundation {
 		// https://developer.apple.com/documentation/corefoundation/1521153-cfrelease
 		protected virtual void Release () => CFObject.CFRelease (GetCheckedHandle ());
 
-		protected virtual void InitializeHandle (IntPtr handle)
+		void InitializeHandle (IntPtr handle, bool verify)
 		{
 #if !COREBUILD
-			if (handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
+			if (verify && handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
 				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
 				    "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
 			}
 #endif
 			this.handle = handle;
+		}
+
+		protected virtual void InitializeHandle (IntPtr handle)
+		{
+			InitializeHandle (handle, true);
 		}
 
 		public IntPtr GetCheckedHandle ()

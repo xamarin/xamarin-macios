@@ -100,7 +100,7 @@ namespace Xharness.Jenkins {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
-			Simulators = new SimulatorLoader (processManager);
+			Simulators = new SimulatorLoader (processManager, new SimulatorSelector ());
 			Devices = new HardwareDeviceLoader (processManager);
 			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
@@ -225,7 +225,7 @@ namespace Xharness.Jenkins {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
-				Timeout = TimeSpan.FromMinutes (90),
+				Timeout = TimeSpan.FromMinutes (120),
 				Ignored = !IncludeDotNet,
 			};
 			Tasks.Add (runDotNetTests);

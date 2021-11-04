@@ -12,7 +12,6 @@
 using System;
 using Foundation;
 using AudioToolbox;
-using CoreFoundation;
 using ObjCRuntime;
 using NUnit.Framework;
 
