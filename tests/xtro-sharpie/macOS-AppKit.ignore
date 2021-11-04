@@ -1323,7 +1323,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSWindow::RunToolbarCustomizationPalette(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_ColorSpace(AppKit.NSColorSpace)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSWindow::set_ContentView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_ContentViewController(AppKit.NSViewController)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_InitialFirstResponder(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_MiniWindowImage(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
