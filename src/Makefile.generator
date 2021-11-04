@@ -60,7 +60,7 @@ $(BUILD_DIR)/%-defines.rsp: frameworks.sources Makefile.generator generate-defin
 	$(Q) mv $@.tmp $@
 
 # This rule means: generate a <platform>-defines.rsp for the frameworks in the variable <PLATFORM>_FRAMEWORKS
-$(DOTNET_BUILD_DIR)/%-defines.rsp: frameworks.sources Makefile.generator generate-defines.csharp
+$(DOTNET_BUILD_DIR)/%-defines-dotnet.rsp: frameworks.sources Makefile.generator generate-defines.csharp
 	@mkdir -p $(dir $@)
 	$(Q) ./generate-defines.csharp $@.tmp '$(filter-out $(DOTNET_REMOVED_$(shell echo $* | tr a-z A-Z)_FRAMEWORKS),$($(shell echo $* | tr a-z A-Z)_FRAMEWORKS))'
 	$(Q) mv $@.tmp $@
