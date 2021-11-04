@@ -394,6 +394,7 @@ COREANIMATION_API_SOURCES = \
 	CoreAnimation/CAEnums.cs \
 
 COREANIMATION_CORE_SOURCES = \
+	CoreAnimation/CAFrameRateRange.cs \
 	CoreAnimation/CATransform3D.cs \
 
 COREANIMATION_SOURCES = \
@@ -1846,6 +1847,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Selector.cs \
+	ObjCRuntime/SystemVersion.cs \
 	ObjCRuntime/ThrowHelper.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \

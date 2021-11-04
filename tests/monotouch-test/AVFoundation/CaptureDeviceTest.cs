@@ -1,5 +1,4 @@
 #if __IOS__
-using System;
 using Foundation;
 using AVFoundation;
 using ObjCRuntime;
