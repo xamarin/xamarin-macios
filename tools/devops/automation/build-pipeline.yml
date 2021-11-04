@@ -83,8 +83,8 @@ parameters:
     {
       stageName: 'mac_10_14',
       displayName: 'Mac Mojave (10.14)',
-      macPool: 'Hosted Mac Internal Mojave',
-      useImage: false,
+      macPool: 'internal-macos-10.14',
+      useImage: true,
       statusContext: 'Mac Mojave (10.14)',
       demands: [
         "Agent.OS -equals Darwin",
@@ -93,8 +93,8 @@ parameters:
     {
       stageName: 'mac_10_13',
       displayName: 'Mac High Sierra (10.13)',
-      macPool: 'Hosted Mac Internal',
-      useImage: false,
+      macPool: 'internal-macos-10.1',
+      useImage: true,
       statusContext: 'Mac High Sierra (10.13)',
       demands: [
         "Agent.OS -equals Darwin",
