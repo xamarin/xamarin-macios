@@ -59,7 +59,7 @@ namespace GameKit {
 #if WATCH
 			Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
 #else
-			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
+			if (SystemVersion.CheckiOS (7, 0))
 				Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
 			else
 				Handle = InitWithCategory (categoryOrIdentifier);
