@@ -46,6 +46,7 @@ namespace CoreWlan {
 		bool IsEqualToChannel (CWChannel channel);
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 10)]
 	[BaseType (typeof (NSObject))]
@@ -84,10 +85,12 @@ namespace CoreWlan {
 		[Export ("allUser8021XProfiles")]
 		CW8021XProfile[] AllUser8021XProfiles { get; }
 	}
+#endif
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CWConfiguration : NSSecureCoding, NSMutableCopying {
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("rememberedNetworks")]
 		NSSet RememberedNetworks { get; set; }
@@ -115,6 +118,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("requireAdminForIBSSCreation")]
 		bool RequireAdminForIBSSCreation { get; set; }
+#endif
 
 		[Export ("networkProfiles", ArgumentSemantic.Copy)]
 		[Internal]
@@ -171,6 +175,7 @@ namespace CoreWlan {
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CWInterface {
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("supportsWoW")]
 		bool SupportsWow { get; }
@@ -325,6 +330,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("commitConfiguration:error:")]
 		bool CommitConfiguration (CWConfiguration config, out NSError error);
+#endif // !NET
 
 		[Export ("powerOn", ArgumentSemantic.Assign)]
 		bool PowerOn { get; }
@@ -459,6 +465,7 @@ namespace CoreWlan {
 		NSSet _ScanForNetworksWithName ([NullAllowed] string networkName, bool includeHidden, [NullAllowed] out NSError error);
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 10)]
@@ -483,10 +490,12 @@ namespace CoreWlan {
 		[Export ("isEqualToProfile:")]
 		bool IsEqualToProfile (CWWirelessProfile profile);
 	}
+#endif // !NET
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CWNetwork : NSSecureCoding, NSCopying {
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[NullAllowed]
 		[Export ("bssidData")]
@@ -523,6 +532,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("wirelessProfile")]
 		CWWirelessProfile WirelessProfile { get; }
+#endif
 
 		[NullAllowed]
 		[Export ("ssid")]
