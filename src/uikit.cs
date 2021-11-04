@@ -20085,7 +20085,7 @@ namespace UIKit {
 		Class SceneClass { get; set; }
 
 		Type SceneType {
-			[Wrap ("Class.Lookup (SceneClass)")] get;
+			[Wrap ("Class.Lookup (SceneClass)!")] get;
 			[Wrap ("SceneClass = value is null ? null : new Class (value)")] set;
 		}
 
@@ -20094,7 +20094,7 @@ namespace UIKit {
 		Class DelegateClass { get; set; }
 
 		Type DelegateType {
-			[Wrap ("Class.Lookup (DelegateClass)")] get;
+			[Wrap ("Class.Lookup (DelegateClass)!")] get;
 			[Wrap ("DelegateClass = value is null ? null : new Class (value)")] set;
 		}
 
