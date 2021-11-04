@@ -128,7 +128,7 @@ namespace AudioToolbox {
 				if (MusicSequenceGetAUGraph (handle, out h) != MusicPlayerStatus.Success)
 					return null;
 
-				return new AUGraph (h);
+				return new AUGraph (h, false);
 			}
 			set {
 				if (value == null)
