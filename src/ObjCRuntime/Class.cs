@@ -70,11 +70,7 @@ namespace ObjCRuntime {
 			this.handle = GetClassHandle (type);
 		}
 
-#if NET
-		internal Class (IntPtr handle)
-#else
 		public Class (IntPtr handle)
-#endif
 		{
 			this.handle = handle;
 		}
