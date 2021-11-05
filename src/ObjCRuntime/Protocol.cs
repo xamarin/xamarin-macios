@@ -29,11 +29,7 @@ namespace ObjCRuntime {
 			this.handle = Runtime.GetProtocolForType (type);
 		}
 
-#if NET
-		internal Protocol (IntPtr handle)
-#else
 		public Protocol (IntPtr handle)
-#endif
 		{
 			this.handle = handle;
 		}
