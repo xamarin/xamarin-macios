@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if MONOMAC || __MACCATALYST__
 
 using ObjCRuntime;
@@ -88,9 +90,9 @@ namespace Security {
 	[MacCatalyst (15,0)]
 #endif
 	public class AuthorizationParameters {
-		public string PathToSystemPrivilegeTool;
-		public string Prompt;
-		public string IconPath;
+		public string? PathToSystemPrivilegeTool;
+		public string? Prompt;
+		public string? IconPath;
 	}
 
 #if NET
@@ -99,8 +101,8 @@ namespace Security {
 	[MacCatalyst (15,0)]
 #endif
 	public class AuthorizationEnvironment {
-		public string Username;
-		public string Password;
+		public string? Username;
+		public string? Password;
 		public bool   AddToSharedCredentialPool;
 	}
 
@@ -169,7 +171,7 @@ namespace Security {
 #endif
 		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string [] args)
 		{
-			return AuthorizationExecuteWithPrivileges (handle, pathToTool, flags, args, IntPtr.Zero);
+			return AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, args, IntPtr.Zero);
 		}
 
 		public void Dispose ()
@@ -191,21 +193,21 @@ namespace Security {
 			}
 		}
 		
-		public static Authorization Create (AuthorizationFlags flags)
+		public static Authorization? Create (AuthorizationFlags flags)
 		{
 			return Create (null, null, flags);
 		}
 		
-		static void EncodeString (ref AuthorizationItem item, string key, string value)
+		static void EncodeString (ref AuthorizationItem item, string key, string? value)
 		{
 			item.name = Marshal.StringToHGlobalAuto (key);
-			if (value != null){
+			if (value is not null) {
 				item.value = Marshal.StringToHGlobalAuto (value);
 				item.valueLen = value.Length;
 			}
 		}
 		
-		public static Authorization Create (AuthorizationParameters parameters, AuthorizationEnvironment environment, AuthorizationFlags flags)
+		public static Authorization? Create (AuthorizationParameters? parameters, AuthorizationEnvironment? environment, AuthorizationFlags flags)
 		{
 			AuthorizationItemSet pars = new AuthorizationItemSet ();
 			AuthorizationItemSet *ppars = null;

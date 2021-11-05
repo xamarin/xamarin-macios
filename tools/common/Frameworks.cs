@@ -319,7 +319,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreMedia", "CoreMedia", 4 },
 				{ "CoreVideo", "CoreVideo", 4 },
 				{ "CoreTelephony", "CoreTelephony", 4 },
+#if !NET
 				{ "iAd", "iAd", 4 },
+#endif
 				{ "QuickLook", "QuickLook", 4 },
 				{ "ImageIO", "ImageIO", 4 },
 				{ "AssetsLibrary", "AssetsLibrary", 4 },
@@ -645,7 +647,9 @@ public class Frameworks : Dictionary <string, Framework>
 				case "EventKitUI":
 				case "HealthKit":
 				case "HealthKitUI":
+#if !NET
 				case "iAd":
+#endif
 				case "IdentityLookupUI":
 				case "Messages":
 				case "MessageUI":
