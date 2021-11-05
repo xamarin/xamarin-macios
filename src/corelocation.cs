@@ -33,9 +33,7 @@ namespace CoreLocation {
 		Outside
 	}
 
-#if XAMCORE_4_0 // Unavailable on macOS
-	[NoMac]
-#endif
+	[Mac (10,15)]
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
