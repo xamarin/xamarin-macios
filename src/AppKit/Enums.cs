@@ -753,6 +753,7 @@ namespace AppKit {
 		ModeSwitch     = 0xF747
 	}
 
+	[NoMacCatalyst]
 #if !NET
 	[Native]
 	public enum NSEventSubtype : ulong {
