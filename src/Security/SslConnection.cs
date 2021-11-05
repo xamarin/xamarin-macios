@@ -17,9 +17,11 @@ using ObjCRuntime;
 
 namespace Security {
 
-	delegate SslStatus SslReadFunc (IntPtr connection, IntPtr data, /* size_t* */ ref nint dataLength);
+#if !NET
+	unsafe delegate SslStatus SslReadFunc (IntPtr connection, IntPtr data, /* size_t* */ nint* dataLength);
 
-	delegate SslStatus SslWriteFunc (IntPtr connection, IntPtr data, /* size_t* */ ref nint dataLength);
+	unsafe delegate SslStatus SslWriteFunc (IntPtr connection, IntPtr data, /* size_t* */ nint* dataLength);
+#endif
 
 #if !NET
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
@@ -46,8 +48,12 @@ namespace Security {
 		{
 			handle = GCHandle.Alloc (this);
 			ConnectionId = GCHandle.ToIntPtr (handle);
-			ReadFunc = Read;
-			WriteFunc = Write;
+#if !NET
+			unsafe {
+				ReadFunc = Read;
+				WriteFunc = Write;
+			}
+#endif
 		}
 
 		~SslConnection ()
@@ -69,25 +75,38 @@ namespace Security {
 
 		public IntPtr ConnectionId { get; private set; }
 
+#if NET
+		unsafe internal delegate* unmanaged<IntPtr, IntPtr, nint*, SslStatus> ReadFunc { get { return &Read; } }
+		unsafe internal delegate* unmanaged<IntPtr, IntPtr, nint*, SslStatus> WriteFunc { get { return &Write; } }
+#else
 		internal SslReadFunc ReadFunc { get; private set; }
 		internal SslWriteFunc WriteFunc { get; private set; }
+#endif
 
 		public abstract SslStatus Read (IntPtr data, ref nint dataLength);
 
 		public abstract SslStatus Write (IntPtr data, ref nint dataLength);
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (SslReadFunc))]
-		static SslStatus Read (IntPtr connection, IntPtr data, ref nint dataLength)
+#endif
+		unsafe static SslStatus Read (IntPtr connection, IntPtr data, nint* dataLength)
 		{
 			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
-			return c.Read (data, ref dataLength);
+			return c.Read (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (SslWriteFunc))]
-		static SslStatus Write (IntPtr connection, IntPtr data, ref nint dataLength)
+#endif
+		unsafe static SslStatus Write (IntPtr connection, IntPtr data, nint* dataLength)
 		{
 			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
-			return c.Write (data, ref dataLength);
+			return c.Write (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 	}
 
