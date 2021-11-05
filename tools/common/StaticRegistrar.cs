@@ -2223,6 +2223,7 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
+#if !NET
 			case "iAd":
 				if (App.SdkVersion.Major >= 13) {
 					// most of the framework has been obliterated from the headers
@@ -2235,6 +2236,7 @@ namespace Registrar {
 					return;
 				}
 				goto default;
+#endif
 			case "ThreadNetwork":
 				h = "<ThreadNetwork/THClient.h>";
 				break;
