@@ -394,6 +394,7 @@ COREANIMATION_API_SOURCES = \
 	CoreAnimation/CAEnums.cs \
 
 COREANIMATION_CORE_SOURCES = \
+	CoreAnimation/CAFrameRateRange.cs \
 	CoreAnimation/CATransform3D.cs \
 
 COREANIMATION_SOURCES = \
@@ -1846,6 +1847,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Selector.cs \
+	ObjCRuntime/SystemVersion.cs \
 	ObjCRuntime/ThrowHelper.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
@@ -2300,6 +2302,18 @@ MACCATALYST_FRAMEWORKS = \
 	VideoToolbox \
 	Vision \
 	WKWebKit \
+
+# List frameworks that have been removed in .NET
+
+DOTNET_REMOVED_IOS_FRAMEWORKS = \
+	iAd \
+
+DOTNET_REMOVED_MACOS_FRAMEWORKS = \
+	QTKit \
+
+DOTNET_REMOVED_TVOS_FRAMEWORKS = \
+
+DOTNET_REMOVED_MACCATALYST_FRAMEWORKS = \
 
 #
 # Compute the SOURCES variables.

@@ -1,5 +1,4 @@
 #if !__WATCHOS__
-using System;
 using System.IO;
 using Foundation;
 using AVFoundation;

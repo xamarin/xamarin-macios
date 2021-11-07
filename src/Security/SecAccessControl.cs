@@ -12,6 +12,8 @@
 // calling SecAddItem.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -98,55 +100,18 @@ namespace Security {
 #if !NET
 	[Mac (10,10)][iOS (8,0)]
 #endif
-	public partial class SecAccessControl : INativeObject, IDisposable {
-
-		private IntPtr handle;
-
-		public IntPtr Handle {
-			get {
+	public partial class SecAccessControl : NativeObject {
 #if !COREBUILD
-				if (handle == IntPtr.Zero) {
-					IntPtr error;
-					handle = SecAccessControlCreateWithFlags (IntPtr.Zero, KeysAccessible.FromSecAccessible (Accessible), (nint)(int)Flags, out error);
-				}
-#endif
-				return handle;
-			}
-			internal set { handle = value; }
-		}
-
-		public void Dispose ()
+		internal SecAccessControl (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-#if !COREBUILD
-			Dispose (true);
-#endif
-			GC.SuppressFinalize (this);
-		}
-
-#if !COREBUILD
-		internal SecAccessControl (IntPtr handle)
-		{
-			// note: the properties won't match reality
-			Handle = handle;
 		}
 
 		public SecAccessControl (SecAccessible accessible, SecAccessControlCreateFlags flags = SecAccessControlCreateFlags.UserPresence)
+			: base (SecAccessControlCreateWithFlags (IntPtr.Zero, KeysAccessible.FromSecAccessible (accessible), (nint) (long) flags, out var _), true)
 		{
 			Accessible = accessible;
 			Flags = flags;
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		~SecAccessControl ()
-		{
-			Dispose (false);
 		}
 			
 		public SecAccessible Accessible { get; private set; }

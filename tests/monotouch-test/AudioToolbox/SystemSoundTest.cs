@@ -13,10 +13,8 @@ using System;
 using System.IO;
 using Foundation;
 using AudioToolbox;
-using CoreFoundation;
 using ObjCRuntime;
 using NUnit.Framework;
-using System.Threading;
 
 namespace MonoTouchFixtures.AudioToolbox {
 	

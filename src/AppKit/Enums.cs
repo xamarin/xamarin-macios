@@ -753,50 +753,58 @@ namespace AppKit {
 		ModeSwitch     = 0xF747
 	}
 
-#if !XAMCORE_4_0 && !__MACCATALYST__
+	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSEventSubtype : ulong {
 #else
 	public enum NSEventSubtype : short {
 #endif
+		/* event subtypes for NSEventTypeAppKitDefined events */
 		WindowExposed = 0,
 		ApplicationActivated = 1,
 		ApplicationDeactivated = 2,
-		[Mac (10,10)]
-		Touch = 3,
 		WindowMoved = 4,
 		ScreenChanged = 8,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This API is not available on this platform.")]
 		AWT = 16,
 #endif
+		/* event subtypes for NSEventTypeSystemDefined events */
+		/* the value is repeated from above */
+		PowerOff = 1,
+
+		/* event subtypes for mouse events */
+		/* the values are repeated from above */
+		MouseEvent = 0, /* NX_SUBTYPE_DEFAULT */
+		TabletPoint = 1, /* NX_SUBTYPE_TABLET_POINT */
+		TabletProximity = 2, /* NX_SUBTYPE_TABLET_PROXIMITY */
+		Touch = 3, /* NX_SUBTYPE_MOUSE_TOUCH */
 	}
 
+#if !NET
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSSystemDefinedEvents : ulong {
-#else
-	public enum NSSystemDefinedEvents : short {
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.PowerOff' instead.")]
 		NSPowerOffEventType = 1
 	}
+#endif // !NET
 
+#if !NET
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSEventMouseSubtype : ulong {
-#else
-	public enum NSEventMouseSubtype : short {
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.MouseEvent' instead.")]
 		Mouse, 
-#if !XAMCORE_4_0
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletPoint' instead.")]
 		TablePoint, 
-#else
-		TabletPoint, 
-#endif
-		TabletProximity, Touch
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletProximity' instead.")]
+		TabletProximity,
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.Touch' instead.")]
+		Touch,
 	}
+#endif // !NET
 	
 #endregion
 
@@ -1313,11 +1321,9 @@ namespace AppKit {
 		Natural = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC
-	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
-	// properly fix all the API using this.
+#if !NET && MONOMAC
+	// Use Foundation.NSWritingDirection in .NET.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	// [Obsolete ("Use NSWritingDirection in Foundation instead.")]
 	[Flags]
 	[Native]
 	public enum NSWritingDirection : long {
@@ -1327,7 +1333,7 @@ namespace AppKit {
 		[Obsolete ("This API is not available on this platform.")]
 		Override = 2,
 	}
-#endif // !XAMCORE_4_0 && MONOMAC
+#endif // !NET && MONOMAC
 
 	[NoMacCatalyst]
 #if !XAMCORE_4_0

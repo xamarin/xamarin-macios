@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Foundation;
 using ObjCRuntime;
-using Security;
 using NUnit.Framework;
 
 namespace monotouchtest

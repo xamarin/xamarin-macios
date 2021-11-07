@@ -86,7 +86,7 @@ namespace AddressBook {
 		{
 #if __MACCATALYST__
 			// avoid TypeLoadException if used before macOS 11.x
-			if (!UIKit.UIDevice.CurrentDevice.CheckSystemVersion (14,0))
+			if (!SystemVersion.CheckiOS (14,0))
 				return;
 #endif
 			// ensure we can init. This is needed before iOS6 (as per doc).
@@ -170,7 +170,7 @@ namespace AddressBook {
 
 		static ABAddressBook ()
 		{
-			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain");
+			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain")!;
 		}
 
 		protected override void Dispose (bool disposing)

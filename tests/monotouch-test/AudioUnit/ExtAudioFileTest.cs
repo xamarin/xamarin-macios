@@ -13,7 +13,6 @@ using NUnit.Framework;
 using Foundation;
 using AudioUnit;
 using CoreFoundation;
-using System.IO;
 
 namespace MonoTouchFixtures.AudioUnit {
 	

@@ -9,7 +9,6 @@
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
-using System;
 using Foundation;
 using UIKit;
 using CoreLocation;

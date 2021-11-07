@@ -283,7 +283,7 @@ namespace ObjCRuntime
 			return platform;
 		}
 
-#if !COREBUILD && !WATCH
+#if !COREBUILD && !WATCH && !NET
 #if MONOMAC
 		const int sys1 = 1937339185;
 		const int sys2 = 1937339186;

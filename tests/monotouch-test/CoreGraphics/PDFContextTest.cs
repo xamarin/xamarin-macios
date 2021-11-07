@@ -8,8 +8,6 @@
 //
 
 using System;
-using System.Drawing;
-using System.IO;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;

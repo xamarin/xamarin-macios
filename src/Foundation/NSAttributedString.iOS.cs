@@ -58,7 +58,7 @@ namespace Foundation {
 		// use the best selector based on the OS version
 		public NSAttributedString (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error)
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion (9,0))
+			if (SystemVersion.CheckiOS (9,0))
 				Handle = InitWithURL (url, options, out resultDocumentAttributes, ref error);
 			else
 				Handle = InitWithFileURL (url, options, out resultDocumentAttributes, ref error);

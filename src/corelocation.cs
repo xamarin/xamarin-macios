@@ -33,9 +33,7 @@ namespace CoreLocation {
 		Outside
 	}
 
-#if XAMCORE_4_0 // Unavailable on macOS
-	[NoMac]
-#endif
+	[Mac (10,15)]
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
@@ -47,7 +45,7 @@ namespace CoreLocation {
 	}
 
 	[ErrorDomain ("CLLocationPushServiceErrorDomain")]
-#if XAMCORE_4_0 // Apple fixed this in Xcode 13.1
+#if __MACCATALYST__ || XAMCORE_4_0 // Apple fixed this in Xcode 13.1
 	[iOS (15,0), NoTV, NoMacCatalyst, NoMac, NoWatch]
 #else
 	[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
@@ -909,7 +907,7 @@ namespace CoreLocation {
 		NSNumber Minor { get; }
 	}
 
-#if XAMCORE_4_0 // Apple fixed this in Xcode 13.1
+#if __MACCATALYST__ || XAMCORE_4_0 // Apple fixed this in Xcode 13.1
 	[iOS (15,0), NoTV, NoMacCatalyst, NoMac, NoWatch]
 #else
 	[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]

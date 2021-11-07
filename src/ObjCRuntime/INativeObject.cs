@@ -29,6 +29,14 @@ namespace ObjCRuntime {
 				ThrowHelper.ThrowObjectDisposedException (self);
 			return self.Handle;
 		}
+
+		public static IntPtr GetCheckedHandle (this INativeObject self)
+		{
+			if (self.Handle == IntPtr.Zero)
+				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (self);
+
+			return self.Handle;
+		}
 	}
 #endif
 }

@@ -47,7 +47,7 @@ namespace CoreServices {
 				}
 
 				using (var url = new CFUrl (handle, false))
-					return new Uri (url.ToString ());
+					return new Uri (url.ToString ()!);
 			}
 		}
 

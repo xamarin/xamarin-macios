@@ -2210,10 +2210,12 @@ namespace Registrar {
 					}
 				}
 				goto default;
+#if !NET
 			case "QTKit":
 				if (App.Platform == ApplePlatform.MacOSX && App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
 				goto default;
+#endif
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
@@ -2221,6 +2223,7 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
+#if !NET
 			case "iAd":
 				if (App.SdkVersion.Major >= 13) {
 					// most of the framework has been obliterated from the headers
@@ -2233,6 +2236,7 @@ namespace Registrar {
 					return;
 				}
 				goto default;
+#endif
 			case "ThreadNetwork":
 				h = "<ThreadNetwork/THClient.h>";
 				break;
@@ -2653,7 +2657,9 @@ namespace Registrar {
 			return ns == nsToMatch;
 		}
 
+#if !NET
 		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
+#endif
 		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
@@ -2727,8 +2733,10 @@ namespace Registrar {
 						continue; // Some types are not supported in the simulator.
 					}
 				} else {
+#if !NET
 					if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 						continue; // QTKit header was removed in 10.12 SDK
+#endif
 				}
 				
 				// Xcode 11 removed WatchKit for iOS!

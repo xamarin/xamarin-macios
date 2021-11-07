@@ -1,4 +1,3 @@
-using System;
 using CoreData;
 using Foundation;
 using NUnit.Framework;

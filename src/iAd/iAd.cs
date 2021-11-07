@@ -7,6 +7,8 @@
 // Copyright 2011-2014, 2016 Xamarin Inc
 //
 
+#if !NET
+
 using System;
 using ObjCRuntime;
 
@@ -55,10 +57,8 @@ namespace iAd {
 	public enum ADClientError : long {
 		Unknown = 0,
 		TrackingRestrictedOrDenied = 1,
-#if !XAMCORE_4_0
 		[Obsolete ("Use 'TrackingRestrictedOrDenied' instead.")]
 		LimitAdTracking = TrackingRestrictedOrDenied,
-#endif
 		MissingData = 2,
 		CorruptResponse = 3,
 		RequestClientError = 4,
@@ -67,3 +67,5 @@ namespace iAd {
 		UnsupportedPlatform = 7,
 	}
 }
+
+#endif // !NET
