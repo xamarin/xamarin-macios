@@ -815,7 +815,7 @@
 		</value>
 	</data>
   <data name="MX1306" xml:space="preserve">
-		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
+		<value>ファイル '{0}' を展開できませんでした。ビルド ログを参照して、ネイティブの 'unzip' コマンドからの詳細情報をご確認ください。</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>必要な 'Xamarin.Mac.dll' アセンブリが参照にありません
