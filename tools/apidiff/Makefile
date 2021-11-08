@@ -316,60 +316,75 @@ endif # ENABLE_DOTNET
 
 all-local:: $(APIDIFF_DIR)/api-diff.html
 
-# Rules to re-create the reference infos from the current stable 'bundle.zip. assemblies
+# Rules to re-create the reference infos from the current stable 'bundle.zip' assemblies
 
-# split the URL in words based on the path separator, and then chose the 6th word (the hash) in the bundle zip filename
-APIDIFF_HASH ?= $(word 6,$(subst /, ,$(APIDIFF_REFERENCES)))
-BUNDLE_ZIP ?= $(APIDIFF_DIR)/bundle-$(APIDIFF_HASH).zip
-$(BUNDLE_ZIP):
-	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
-	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
-		echo "Found a cached version of $(APIDIFF_REFERENCES)) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
-		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
-	else \
-		curl -L $(APIDIFF_REFERENCES) > $@.tmp; \
-	fi
-	$(Q) mv $@.tmp $@
+# First download the bundle zips we need. Multiple platforms may (or may not) share the same bundle.zip (with the same url),
+# so account for that and only download each bundle.zip once.
+APIDIFF_URLS=$(APIDIFF_REFERENCES_iOS) $(APIDIFF_REFERENCES_Mac) $(foreach platform,$(DOTNET_PLATFORMS),$(APIDIFF_REFERENCES_DOTNET_$(platform)))
+APIDIFF_UNIQUE_URLS=$(sort $(APIDIFF_URLS))
+APIDIFF_UNIQUE_HASHES=$(foreach url,$(APIDIFF_UNIQUE_URLS),$(word 5,$(subst /, ,$(url))))
 
-UNZIP_STAMP=$(APIDIFF_DIR)/.unzip.$(APIDIFF_HASH).stamp
-UNZIP_DIR=temp/downloads/$(APIDIFF_HASH)
-$(UNZIP_STAMP): $(BUNDLE_ZIP)
-	$(Q) rm -Rf $(UNZIP_DIR)
-	$(Q) mkdir -p $(dir $(UNZIP_DIR))
-	$(Q_GEN) unzip -q -d $(UNZIP_DIR) $(BUNDLE_ZIP)
-	$(Q) touch $@
-
-# the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
-$(UNZIP_DIR)/%.dll: $(UNZIP_STAMP) ;
-
-# # The dotnet bundles can come from different urls, so unzip them separately.
-# # However, if the hash the urls contain are the same, reuse that hash's zip file
-define DotNetUnzipBundle
-APIDIFF_HASH_DOTNET_$(1) ?= $$(word 6,$$(subst /, ,$$(APIDIFF_REFERENCES_DOTNET_$(1))))
-BUNDLE_ZIP_DOTNET_$(1) ?= $$(APIDIFF_DIR)/bundle-$$(APIDIFF_HASH_DOTNET_$(1)).zip
-$$(BUNDLE_ZIP_DOTNET_$(1)):
-	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
+define DownloadBundle
+BUNDLE_ZIP_$(1)=$(APIDIFF_DIR)/bundle-$(1).zip
+BUNDLE_ZIP_$(1)_URL=$(shell echo $(APIDIFF_UNIQUE_URLS) | tr ' ' '\n' | grep '/$(1)/')
+$$(BUNDLE_ZIP_$(1)):
+	@# download to a temporary filename so interrupted downloads won't prevent re-downloads.
+	@echo "Downloading $$(BUNDLE_ZIP_$(1)_URL)..."
 	$$(Q) if test -f ~/Library/Caches/xamarin-macios/$$(notdir $$@); then \
-		echo "Found a cached version of $$(APIDIFF_REFERENCES_DOTNET_$(1))) in ~/Library/Caches/xamarin-macios/$$(notdir $$@)."; \
+		echo "Found a cached version of $$(notdir $$@) in ~/Library/Caches/xamarin-macios/$$(notdir $$@)."; \
 		$$(CP) ~/Library/Caches/xamarin-macios/$$(notdir $$@) $$@.tmp; \
 	else \
-		curl -L $$(APIDIFF_REFERENCES_DOTNET_$(1)) > $$@.tmp; \
+		curl -f -L $$(if $$(V),-v,-s) "$$(BUNDLE_ZIP_$(1)_URL)" --output $$@.tmp; \
+		if [[ "x$$$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
+			mkdir -p ~/Library/Caches/xamarin-macios/; \
+			$$(CP) $$@.tmp ~/Library/Caches/xamarin-macios/"$$(notdir $$@)"; \
+			echo "Cached the download of $$(notdir $$@) in ~/Library/Caches/xamarin-macios"; \
+		fi; \
 	fi
 	$$(Q) mv $$@.tmp $$@
 
-UNZIP_STAMP_DOTNET_$(1)=$$(APIDIFF_DIR)/.unzip.dotnet-$(1)-$$(APIDIFF_HASH_DOTNET_$(1)).stamp
-UNZIP_DIR_DOTNET_$(1)=temp/downloads/dotnet-$(1)-$$(APIDIFF_HASH_DOTNET_$(1))
-$$(UNZIP_STAMP_DOTNET_$(1)): $$(BUNDLE_ZIP_DOTNET_$(1))
-	$$(Q) rm -Rf $$(UNZIP_DIR_DOTNET_$(1))
-	$$(Q) mkdir -p $$(dir $$(UNZIP_DIR_DOTNET_$(1)))
-	$$(Q_GEN) unzip -q -d $$(UNZIP_DIR_DOTNET_$(1)) $$(BUNDLE_ZIP_DOTNET_$(1))
+BUNDLE_ZIPS+=$$(BUNDLE_ZIP_$(1))
+endef
+$(foreach hash,$(APIDIFF_UNIQUE_HASHES),$(eval $(call DownloadBundle,$(hash))))
+
+download: $(BUNDLE_ZIPS)
+
+# Here we unzip the downloaded bundle.
+define UnzipBundle
+UNZIP_STAMP_$(1)=$(APIDIFF_DIR)/.unzip.$(1).stamp
+UNZIP_DIR_$(1)=temp/downloads/$(1)
+$$(UNZIP_STAMP_$(1)): $$(BUNDLE_ZIP_$(1))
+	$$(Q) rm -Rf "$$(UNZIP_DIR_$(1))"
+	$$(Q) mkdir -p $$(dir $$(UNZIP_DIR_$(1)))
+	$$(Q_GEN) unzip $$(if $$(V),,-q) -d $$(UNZIP_DIR_$(1)) $$<
 	$$(Q) touch $$@
 
-$$(UNZIP_DIR_DOTNET_$(1))/%.dll: $$(UNZIP_STAMP_DOTNET_$(1)) ;
+# the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
+$$(UNZIP_DIR_$(1))/%.dll: $$(UNZIP_STAMP_$(1)) ;
 
+UNZIP_STAMPS+=$$(UNZIP_STAMP_$(1))
 endef
+$(foreach hash,$(APIDIFF_UNIQUE_HASHES),$(eval $(call UnzipBundle,$(hash))))
 
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetUnzipBundle,$(platform))))
+unzip: $(UNZIP_STAMPS)
+
+# Compute the unzip dir per platform
+APIDIFF_HASH_iOS=$(word 5,$(subst /, ,$(APIDIFF_REFERENCES_iOS)))
+UNZIP_DIR_iOS=$(UNZIP_DIR_$(APIDIFF_HASH_iOS))
+UNZIP_STAMP_iOS=$(UNZIP_STAMP_$(APIDIFF_HASH_iOS))
+APIDIFF_HASH_Mac=$(word 5,$(subst /, ,$(APIDIFF_REFERENCES_Mac)))
+UNZIP_DIR_Mac=$(UNZIP_DIR_$(APIDIFF_HASH_Mac))
+UNZIP_STAMP_Mac=$(UNZIP_STAMP_$(APIDIFF_HASH_Mac))
+
+define DotNetUnzipDirectory
+APIDIFF_HASH_DOTNET_$(1)=$$(word 5,$$(subst /, ,$$(APIDIFF_REFERENCES_DOTNET_$(1))))
+UNZIP_DIR_DOTNET_$(1)=$$(UNZIP_DIR_$$(APIDIFF_HASH_DOTNET_$(1)))
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetUnzipDirectory,$(platform))))
+
+# the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
+$(UNZIP_DIR_Mac)/%.dll: $(UNZIP_STAMP_Mac) ;
+$(UNZIP_DIR_iOS)/%.dll: $(UNZIP_STAMP_iOS) ;
 
 IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
@@ -378,7 +393,7 @@ TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-referenc
 MACCATALYST_REFS = $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES_MACCATALYST_IOS),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml)
 
-$(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR_iOS)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
@@ -386,7 +401,7 @@ $(APIDIFF_DIR)/updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/li
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
-$(APIDIFF_DIR)/references/xm/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xm/%.xml: $(UNZIP_DIR_Mac)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
@@ -461,7 +476,7 @@ verify-reference-assemblies-ios: $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $
 
 clean-local::
 	rm -rf temp references updated-references diff dotnet *.exe* api-diff.html
-	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMP) $(UNZIP_STAMP_DOTNET_iOS) $(UNZIP_STAMP_DOTNET_tvOS) $(UNZIP_STAMP_DOTNET_macOS) $(UNZIP_STAMP_DOTNET_MacCatalyst)
+	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMPS)
 	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md dotnet-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
@@ -587,7 +602,7 @@ ifdef INCLUDE_MACCATALYST
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/maccat-to-ios.md"
 endif
 endif
-	$(Q) $(MAKE) $(UNZIP_STAMP) $(UNZIP_STAMP_DOTNET_iOS) $(UNZIP_STAMP_DOTNET_tvOS) $(UNZIP_STAMP_DOTNET_macOS) $(UNZIP_STAMP_DOTNET_MacCatalyst)
+	$(Q) $(MAKE) $(UNZIP_STAMPS)
 	$(Q) $(MAKE) all -j8
 	$(Q) $(MAKE) ios-markdown tvos-markdown watchos-markdown macos-markdown maccat-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
 	$(Q) $(CP) api-diff.html index.html
