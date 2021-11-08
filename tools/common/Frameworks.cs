@@ -363,7 +363,6 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
-				// { "WatchKit", "WatchKit", 8,2 }, // Removed in Xcode 11
 
 				{ "ReplayKit", "ReplayKit", 9 },
 				{ "Contacts", "Contacts", 9 },

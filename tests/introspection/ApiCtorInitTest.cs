@@ -130,6 +130,7 @@ namespace Introspection {
 #endif
 			}
 
+#if !NET
 			switch (type.Namespace) {
 #if __IOS__
 			case "WatchKit":
@@ -139,6 +140,7 @@ namespace Introspection {
 				return true; // QTKit has been removed from macos.
 #endif
 			}
+#endif // !NET
 
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)
 			if (SkipDueToRejectedTypes (type))
