@@ -204,29 +204,45 @@ namespace SystemConfiguration {
 				StatusCodeError.SCError () : StatusCode.OK;
 		}
 
+#if !NET
 		delegate void SCNetworkReachabilityCallBack (/* SCNetworkReachabilityRef */ IntPtr handle, /* SCNetworkReachabilityFlags */ NetworkReachabilityFlags flags, /* void* */ IntPtr info);
+#endif
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
+		unsafe static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr handle, 
+#if NET
+			/* __nullable SCNetworkReachabilityCallBack */ delegate* unmanaged<IntPtr, NetworkReachabilityFlags, IntPtr, void> callout,
+#else
 			/* __nullable */ SCNetworkReachabilityCallBack? callout,
+#endif
 			/* __nullable */ ref SCNetworkReachabilityContext context);
 		
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
+		unsafe static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
 			/* SCNetworkReachabilityRef __nullable */ IntPtr handle, 
+#if NET
+			/* __nullable SCNetworkReachabilityCallBack */ delegate* unmanaged<IntPtr, NetworkReachabilityFlags, IntPtr, void> callout,
+#else
 			/* __nullable */ SCNetworkReachabilityCallBack? callout, 
+#endif
 			/* SCNetworkReachabilityContext* __nullable */ IntPtr context);
 
 		public delegate void Notification (NetworkReachabilityFlags flags);
 
 		Notification? notification;
 		GCHandle gch;
+#if !NET
 		SCNetworkReachabilityCallBack? callouth;
+#endif
 		
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (SCNetworkReachabilityCallBack))]
+#endif
 		static void Callback (IntPtr handle, NetworkReachabilityFlags flags, IntPtr info)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (info);
@@ -245,19 +261,32 @@ namespace SystemConfiguration {
 				gch = GCHandle.Alloc (this);
 				var ctx = new SCNetworkReachabilityContext (GCHandle.ToIntPtr (gch));
 
+#if !NET
 				lock (typeof (NetworkReachability)){
 					if (callouth == null)
 						callouth = Callback;
 				}
+#endif
 				
+#if NET
+				unsafe {
+					if (!SCNetworkReachabilitySetCallback (Handle, &Callback, ref ctx))
+						return StatusCodeError.SCError ();
+				}
+#else
 				if (!SCNetworkReachabilitySetCallback (Handle, callouth, ref ctx))
 					return StatusCodeError.SCError ();
+#endif
 			} else {
 				if (callback is null){
 					this.notification = null;
+#if !NET
 					callouth = null;
-					if (!SCNetworkReachabilitySetCallback (Handle, null, IntPtr.Zero))
-						return StatusCodeError.SCError ();
+#endif
+					unsafe {
+						if (!SCNetworkReachabilitySetCallback (Handle, null, IntPtr.Zero))
+							return StatusCodeError.SCError ();
+					}
 					
 					return StatusCode.OK;
 				}
