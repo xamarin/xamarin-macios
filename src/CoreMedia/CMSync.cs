@@ -572,20 +572,14 @@ namespace CoreMedia {
 #endif
 
 #if !COREBUILD
-#if MONOMAC // CheckVersion
-		const int GetMethodDeprecatedMajor = 10;
-		const int GetMethodDeprecatedMinor = 11;
-#elif IOS
-		const int GetMethodDeprecatedMajor = 9;
-		const int GetMethodDeprecatedMinor = 0;
-#endif
-
 		bool IsDeprecated ()
 		{
 #if __MACCATALYST__
 			return true;
-#elif IOS || MONOMAC
-			return PlatformHelper.CheckSystemVersion (GetMethodDeprecatedMajor, GetMethodDeprecatedMinor);
+#elif IOS
+			return SystemVersion.CheckiOS (9, 0);
+#elif MONOMAC
+			return SystemVersion.CheckmacOS (10, 11);
 #elif TVOS || WATCH
 			return true;
 #endif

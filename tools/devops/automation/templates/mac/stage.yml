@@ -3,6 +3,10 @@ parameters:
 - name: macPool
   type: string
 
+- name: useImage
+  type: boolean
+  default: false
+
 - name: stageName
   type: string
 
@@ -36,8 +40,11 @@ stages:
       clean: all
 
     pool:
-      name: ${{ parameters.macPool }}
-      demands: ${{ parameters.demands }}
+      ${{ if eq(parameters.useImage, false) }}:
+        name: ${{ parameters.macPool }}
+        demands: ${{ parameters.demands }}
+      ${{ else }}:
+        vmImage: ${{ parameters.macPool }}
 
     steps:
     - template: build.yml
