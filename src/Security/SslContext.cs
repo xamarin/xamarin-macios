@@ -127,7 +127,14 @@ namespace Security {
 		extern static /* OSStatus */ SslStatus SSLSetConnection (/* SSLContextRef */ IntPtr context, /* SSLConnectionRef */ IntPtr connection);
 
 		[DllImport (Constants.SecurityLibrary)]
+#if NET
+		unsafe extern static /* OSStatus */ SslStatus SSLSetIOFuncs (
+			/* SSLContextRef */ IntPtr context,
+			/* SSLReadFunc */ delegate* unmanaged<IntPtr, IntPtr, nint*, SslStatus> readFunc,
+			/* SSLWriteFunc */ delegate* unmanaged<IntPtr, IntPtr, nint*, SslStatus> writeFunc);
+#else
 		extern static /* OSStatus */ SslStatus SSLSetIOFuncs (/* SSLContextRef */ IntPtr context, /* SSLReadFunc */ SslReadFunc? readFunc, /* SSLWriteFunc */ SslWriteFunc? writeFunc);
+#endif
 
 		public SslConnection? Connection {
 			get {
@@ -141,10 +148,12 @@ namespace Security {
 			}
 			set {
 				// the read/write delegates needs to be set before setting the connection id
-				if (value is null)
-					result = SSLSetIOFuncs (Handle, null, null);
-				else
-					result = SSLSetIOFuncs (Handle, value.ReadFunc, value.WriteFunc);
+				unsafe {
+					if (value is null)
+						result = SSLSetIOFuncs (Handle, null, null);
+					else
+						result = SSLSetIOFuncs (Handle, value.ReadFunc, value.WriteFunc);
+				}
 
 				if (result == SslStatus.Success) {
 					result = SSLSetConnection (Handle, value is null ? IntPtr.Zero : value.ConnectionId);
