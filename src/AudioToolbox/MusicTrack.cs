@@ -249,7 +249,7 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceDisposeTrack (/* MusicSequence */ IntPtr inSequence, /* MusicTrack */ IntPtr inTrack);
 
-		public static MusicTrack FromSequence (MusicSequence sequence)
+		public static MusicTrack? FromSequence (MusicSequence sequence)
 		{
 			if (sequence is null)
 				throw new ArgumentNullException (nameof (sequence));
