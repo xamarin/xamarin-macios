@@ -420,12 +420,14 @@ namespace Introspection {
 						return true;
 					}
 					break;
+#if !NET // NSMenuView does not exist in .NET
 				case "NSMenuView":
 					switch (selectorName) {
 					case "menuBarHeight":
 						return TestRuntime.IsVM; // skip on vms due to hadware problems
 					}
 					break;
+#endif // !NET
 #if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":

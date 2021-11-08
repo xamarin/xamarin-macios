@@ -8512,9 +8512,12 @@ namespace AppKit {
 		[Export ("menuItem", ArgumentSemantic.Retain)]
 		NSMenuItem MenuItem { get; set; }
 
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "API only available on 32bits platforms.")]
 		[Export ("menuView")]
 		[NullAllowed]
 		NSMenuView MenuView { get; set; }
+#endif
 
 		[Export ("needsSizing")]
 		bool NeedsSizing { get; set; }
@@ -8524,6 +8527,7 @@ namespace AppKit {
 
 	}
 
+#if !NET
 	[Mac (10, 0, 0, PlatformArchitecture.Arch32)] // kept for the arch limitation
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "API only available on 32bits platforms.")]
@@ -8641,6 +8645,7 @@ namespace AppKit {
 		[Export ("horizontalEdgePadding")]
 		nfloat HorizontalEdgePadding { get; set; }
 	}
+#endif // !NET
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
