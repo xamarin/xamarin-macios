@@ -1264,9 +1264,11 @@ NETWORK_SOURCES = \
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
 	Network/NWMulticastGroup.cs		\
+	Network/NWMultiplexGroup.cs		\
 	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
+	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
@@ -1275,12 +1277,17 @@ NETWORK_SOURCES = \
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
+	Network/NWQuicMetadata.cs			\
+	Network/NWResolutionReport.cs \
+	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \
 	Network/NWTlsMetadata.cs \
 	Network/NWTxtRecord.cs	\
+	Network/NWProtocolQuicOptions.cs	\
 	Network/NWProtocolTcpOptions.cs	\
 	Network/NWProtocolTlsOptions.cs	\
 	Network/NWProtocolUdpOptions.cs	\
+	Network/NWResolutionReport.cs \
 	Network/NWUdpMetadata.cs \
 	Network/NWWebSocketMetadata.cs	\
 	Network/NWWebSocketOptions.cs	\
@@ -2306,6 +2313,19 @@ MACCATALYST_FRAMEWORKS = \
 	VideoToolbox \
 	Vision \
 	WKWebKit \
+
+# List frameworks that have been removed in .NET
+
+DOTNET_REMOVED_IOS_FRAMEWORKS = \
+	iAd \
+	WatchKit \
+
+DOTNET_REMOVED_MACOS_FRAMEWORKS = \
+	QTKit \
+
+DOTNET_REMOVED_TVOS_FRAMEWORKS = \
+
+DOTNET_REMOVED_MACCATALYST_FRAMEWORKS = \
 
 #
 # Compute the SOURCES variables.

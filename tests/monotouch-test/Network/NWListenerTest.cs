@@ -1,4 +1,6 @@
 #if !__WATCHOS__
+using System;
+
 using Foundation;
 using Network;
 
@@ -42,6 +44,17 @@ namespace MonoTouchFixtures.Network {
 			Assert.AreEqual (defaultValue, listener.ConnectionLimit);
 			listener.ConnectionLimit = 10;
 			Assert.AreEqual (10, listener.ConnectionLimit, "New value was not stored.");
+		}
+
+		[Test]
+		public void SetNewConnectionGroupHandlerTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				listener.SetNewConnectionHandler ((c) => {
+					Console.WriteLine ("New connection");
+				});
+			});
 		}
 	}
 }

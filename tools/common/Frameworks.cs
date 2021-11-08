@@ -319,7 +319,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreMedia", "CoreMedia", 4 },
 				{ "CoreVideo", "CoreVideo", 4 },
 				{ "CoreTelephony", "CoreTelephony", 4 },
+#if !NET
 				{ "iAd", "iAd", 4 },
+#endif
 				{ "QuickLook", "QuickLook", 4 },
 				{ "ImageIO", "ImageIO", 4 },
 				{ "AssetsLibrary", "AssetsLibrary", 4 },
@@ -361,7 +363,6 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
-				// { "WatchKit", "WatchKit", 8,2 }, // Removed in Xcode 11
 
 				{ "ReplayKit", "ReplayKit", 9 },
 				{ "Contacts", "Contacts", 9 },
@@ -645,7 +646,9 @@ public class Frameworks : Dictionary <string, Framework>
 				case "EventKitUI":
 				case "HealthKit":
 				case "HealthKitUI":
+#if !NET
 				case "iAd":
+#endif
 				case "IdentityLookupUI":
 				case "Messages":
 				case "MessageUI":

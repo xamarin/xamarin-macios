@@ -2223,6 +2223,7 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
+#if !NET
 			case "iAd":
 				if (App.SdkVersion.Major >= 13) {
 					// most of the framework has been obliterated from the headers
@@ -2235,6 +2236,7 @@ namespace Registrar {
 					return;
 				}
 				goto default;
+#endif
 			case "ThreadNetwork":
 				h = "<ThreadNetwork/THClient.h>";
 				break;
@@ -2737,11 +2739,13 @@ namespace Registrar {
 #endif
 				}
 				
+#if !NET
 				// Xcode 11 removed WatchKit for iOS!
 				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
 					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from the iOS SDK."));
 					continue;
 				}
+#endif
 
 				if (@class.IsFakeProtocol)
 					continue;

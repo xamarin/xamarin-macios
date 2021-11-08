@@ -170,7 +170,7 @@ namespace AddressBook {
 
 		static ABAddressBook ()
 		{
-			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain");
+			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain")!;
 		}
 
 		protected override void Dispose (bool disposing)

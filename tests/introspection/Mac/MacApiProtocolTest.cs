@@ -36,8 +36,10 @@ namespace Introspection {
 			case "AVCaptureSynchronizedData":
 			case "CXProvider":
 				return TestRuntime.IsVM; // skip only on vms
+#if !NET // NSMenuView does not exist in .NET
 			case "NSMenuView": // not longer supported
 				return true;
+#endif // !NET
 			default:
 				return base.Skip (type);
 			}

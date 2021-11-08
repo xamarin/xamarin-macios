@@ -95,6 +95,10 @@ using NSTouchBar = Foundation.NSObject;
 using NSToolbar =  Foundation.NSObject;
 #endif
 
+#if !NET
+using NSWritingDirection = UIKit.UITextWritingDirection;
+#endif
+
 using System;
 using System.ComponentModel;
 
@@ -6594,11 +6598,11 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("baseWritingDirectionForPosition:inDirection:")]
-		UITextWritingDirection GetBaseWritingDirection (UITextPosition forPosition, UITextStorageDirection direction);
+		NSWritingDirection GetBaseWritingDirection (UITextPosition forPosition, UITextStorageDirection direction);
 
 		[Abstract]
 		[Export ("setBaseWritingDirection:forRange:")]
-		void SetBaseWritingDirectionforRange (UITextWritingDirection writingDirection, UITextRange range);
+		void SetBaseWritingDirectionforRange (NSWritingDirection writingDirection, UITextRange range);
 
 		[Abstract]
 		[Export ("firstRectForRange:")]
@@ -6772,7 +6776,7 @@ namespace UIKit {
 		CGRect Rect { get; }
 		
 		[Export ("writingDirection")]
-		UITextWritingDirection WritingDirection { get;  }
+		NSWritingDirection WritingDirection { get;  }
 
 		[Export ("containsStart")]
 		bool ContainsStart { get;  }
@@ -20085,7 +20089,7 @@ namespace UIKit {
 		Class SceneClass { get; set; }
 
 		Type SceneType {
-			[Wrap ("Class.Lookup (SceneClass)")] get;
+			[Wrap ("Class.Lookup (SceneClass)!")] get;
 			[Wrap ("SceneClass = value is null ? null : new Class (value)")] set;
 		}
 
@@ -20094,7 +20098,7 @@ namespace UIKit {
 		Class DelegateClass { get; set; }
 
 		Type DelegateType {
-			[Wrap ("Class.Lookup (DelegateClass)")] get;
+			[Wrap ("Class.Lookup (DelegateClass)!")] get;
 			[Wrap ("DelegateClass = value is null ? null : new Class (value)")] set;
 		}
 

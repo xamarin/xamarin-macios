@@ -503,7 +503,7 @@ namespace AudioToolbox
 			return FillComplexBuffer (ref outputDataPacketSize, outputData, packetDescription, new Tuple<AudioConverter, AudioConverterComplexInputData?> (this, newInputDataHandler));
 		}
 
-		public AudioConverterError? FillComplexBuffer (ref int outputDataPacketSize,
+		public AudioConverterError FillComplexBuffer (ref int outputDataPacketSize,
 			AudioBuffers outputData, AudioStreamPacketDescription[] packetDescription)
 		{
 			if (outputData is null)

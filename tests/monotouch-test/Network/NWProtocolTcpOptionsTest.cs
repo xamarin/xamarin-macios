@@ -5,6 +5,7 @@ using Foundation;
 using Network;
 
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace MonoTouchFixtures.Network {
 
@@ -71,6 +72,13 @@ namespace MonoTouchFixtures.Network {
 
 		[Test]
 		public void DisableEcnTest () => Assert.DoesNotThrow (() => options.SetDisableEcn (true));
+
+		[Test]
+		public void ForceMultipathVersionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			Assert.DoesNotThrow(() => options.ForceMultipathVersion (NWMultipathVersion.Version0));
+		}
 
 	}
 }

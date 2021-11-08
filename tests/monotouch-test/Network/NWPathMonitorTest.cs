@@ -111,6 +111,15 @@ namespace monotouchtest.Network
 			monitor?.Dispose ();
 		}
 
+
+		[Test]
+		public void ProhibitInterfaceTypeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				monitor.ProhibitInterfaceType (NWInterfaceType.Wifi);
+			});
+		}
 	}
 }
 #endif
