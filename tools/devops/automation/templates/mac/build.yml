@@ -203,7 +203,7 @@ steps:
       Set-GitHubStatus -Status "success" -Description "Tests passed Xamarin.Mac tests on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
       $request = New-GitHubComment -Header "Tests passed on macOS $Env:CONTEXT" -Description "Tests passed" -Message "**All** tests on macOS X $Env:CONTEXT passed." -Emoji ":white_check_mark:"
     }
-    # wwe set the result to 0, the reason is that release pipelines do not like failing tests,
+    # we set the result to 0, the reason is that release pipelines do not like failing tests,
     # yet we do have some  flacky ones, this will allow the release to run. The comment will let use know that we failed
     exit 0  
   displayName: 'Run tests'
