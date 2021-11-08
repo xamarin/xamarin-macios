@@ -9,6 +9,12 @@ resources:
     checkoutOptions:
       submodules: false  # no need
 
+  # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
+  # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
+  pipelines:
+  - pipeline: macios
+    source: xamarin-macios
+
 variables:
 - group: xamops-azdev-secrets
 - group: Xamarin-Secrets
@@ -29,7 +35,9 @@ jobs:
   workspace:
     clean: all
 
-
   steps:
   - checkout: self
     persistCredentials: true
+
+  # downlod ALL artifacts
+  - download: macios 
