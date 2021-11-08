@@ -93,7 +93,7 @@ parameters:
     {
       stageName: 'mac_10_13',
       displayName: 'Mac High Sierra (10.13)',
-      macPool: 'internal-macos-10.1',
+      macPool: 'internal-macos-10.13',
       useImage: true,
       statusContext: 'Mac High Sierra (10.13)',
       demands: [
