@@ -96,6 +96,13 @@ namespace MonoTouchFixtures.Network {
 
 		[Test]
 		public void SetIPLocalAddressPreference () => Assert.DoesNotThrow (() => options.SetIPLocalAddressPreference (NWIPLocalAddressPreference.Temporary));
+
+		[Test]
+		public void DisableMulticastLoopbackTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			Assert.DoesNotThrow (() => options.DisableMulticastLoopback (false));
+		}
 	}
 }
 #endif
