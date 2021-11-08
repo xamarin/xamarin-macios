@@ -286,6 +286,7 @@ namespace Security {
 		}
 
 
+#if !NET
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetNumberSupportedCiphers (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint numCiphers);
 
@@ -354,6 +355,7 @@ namespace Security {
 				return value;
 			}
 		}
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetDatagramWriteSize (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint bufSize);
