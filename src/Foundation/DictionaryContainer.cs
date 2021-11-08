@@ -198,6 +198,15 @@ namespace Foundation {
 			return Runtime.GetINativeObject<T> (Dictionary.LowlevelObjectForKey (key.Handle), false);
 		}
 
+		protected string[]? GetStringArrayValue (NSString key)
+		{
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
+
+			var array = Dictionary.LowlevelObjectForKey (key.Handle);
+			return CFArray.StringArrayFromHandle (array)!;
+		}
+
 		protected NSDictionary? GetNSDictionary (NSString key)
 		{
 			if (key == null)
