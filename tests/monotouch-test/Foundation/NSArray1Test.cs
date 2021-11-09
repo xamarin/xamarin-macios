@@ -104,7 +104,7 @@ namespace MonoTouchFixtures.Foundation {
 			using var str2 = (NSString) "1";
 			using var str3 = (NSString) "1";
 			
-			using var array1 = NSArray.FromObjects (str1, str2 );
+			using var array1 = NSArray.FromObjects (str1, str2);
 			using var array2 = NSArray.FromObjects (str1, str3);
 			NSOrderedCollectionDifference? diff = null;
 			Assert.DoesNotThrow (() => {

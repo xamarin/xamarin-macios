@@ -9,7 +9,6 @@ namespace MonoTouchFixtures.Foundation {
 	[Preserve (AllMembers = true)]
 	public class NSOrderedCollectionChange1Test {
 		
-		
 		[Test]
 		public void ChangeWithObjectTest ()
 		{
@@ -27,7 +26,7 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (13,0);
 
 			var str = new NSString ("Test");
-			var change = NSOrderedCollectionChange<NSString>.ChangeWithObject(str, NSCollectionChangeType.Insert, 0, 1);
+			var change = NSOrderedCollectionChange<NSString>.ChangeWithObject (str, NSCollectionChangeType.Insert, 0, 1);
 			Assert.AreEqual (str, change.Object, "Content");
 			Assert.AreEqual ((nuint)0, change.Index, "Index");
 			Assert.AreEqual ((nuint)1, change.AssociatedIndex);

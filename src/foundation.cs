@@ -5427,7 +5427,7 @@ namespace Foundation
 		
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("compare:")]
-		NSComparisonResult Compare (NSUuid otherUUID);
+		NSComparisonResult Compare (NSUuid otherUuid);
 	}
 
 	[iOS (8,0)][Mac (10,10), Watch (2,0), TV (9,0)] // .objc_class_name_NSUserActivity", referenced from '' not found
@@ -16691,7 +16691,6 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPresentationIntent : NSCopying, NSSecureCoding
-	
 	{
 		[Export ("intentKind")]
 		NSPresentationIntentKind IntentKind { get; }
