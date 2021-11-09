@@ -1562,8 +1562,198 @@ namespace Registrar {
 			}
 		}
 
-		void CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
+#if !NET
+		bool GetLegacyAvailabilityAttribute (ICustomAttribute ca, PlatformName currentPlatform, out Version sdkVersion, out string message)
 		{
+			var caType = ca.AttributeType;
+			AvailabilityKind kind;
+			PlatformName platformName = global::ObjCRuntime.PlatformName.None;
+			PlatformArchitecture architecture = PlatformArchitecture.All;
+			int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
+			bool shorthand = false;
+
+			sdkVersion = null;
+			message = null;
+
+			switch (caType.Name) {
+			case "MacAttribute":
+				shorthand = true;
+				platformName = global::ObjCRuntime.PlatformName.MacOSX;
+				goto case "IntroducedAttribute";
+			case "iOSAttribute":
+				shorthand = true;
+				platformName = global::ObjCRuntime.PlatformName.iOS;
+				goto case "IntroducedAttribute";
+			case "IntroducedAttribute":
+				kind = AvailabilityKind.Introduced;
+				break;
+			default:
+				return false;
+			}
+
+			switch (ca.ConstructorArguments.Count) {
+			case 2:
+				if (!shorthand)
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+				majorVersion = (byte) ca.ConstructorArguments [0].Value;
+				minorVersion = (byte) ca.ConstructorArguments [1].Value;
+				break;
+			case 3:
+				if (!shorthand) {
+					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+					architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
+					message = (string) ca.ConstructorArguments [2].Value;
+				} else {
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
+						var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
+						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+					} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
+						minorVersion = (byte) ca.ConstructorArguments [2].Value;
+					} else {
+						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+					}
+				}
+				break;
+			case 4:
+				if (!shorthand)
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+
+				majorVersion = (byte) ca.ConstructorArguments [0].Value;
+				minorVersion = (byte) ca.ConstructorArguments [1].Value;
+				minorVersion = (byte) ca.ConstructorArguments [2].Value;
+				if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
+					var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
+					architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+				} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
+					architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
+				} else {
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+				}
+				break;
+			case 5:
+				platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+				majorVersion = (int) ca.ConstructorArguments [1].Value;
+				minorVersion = (int) ca.ConstructorArguments [2].Value;
+				architecture = (PlatformArchitecture) ca.ConstructorArguments [3].Value;
+				message = (string) ca.ConstructorArguments [4].Value;
+				break;
+			case 6:
+				platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+				majorVersion = (int) ca.ConstructorArguments [1].Value;
+				minorVersion = (int) ca.ConstructorArguments [2].Value;
+				subminorVersion = (int) ca.ConstructorArguments [3].Value;
+				architecture = (PlatformArchitecture) ca.ConstructorArguments [4].Value;
+				message = (string) ca.ConstructorArguments [5].Value;
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+			}
+
+			if (platformName != currentPlatform)
+				return false;
+
+			sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+			switch (kind) {
+			case AvailabilityKind.Introduced:
+				if (shorthand) {
+					sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+				} else {
+					switch (ca.ConstructorArguments.Count) {
+					case 5:
+						sdkVersion = new Version (majorVersion, minorVersion);
+						break;
+					case 6:
+						sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+						break;
+					default:
+						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+					}
+				}
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163_A, kind);
+			}
+
+			return true;
+		}
+#endif // !NET
+
+#if NET
+		bool GetDotNetAvailabilityAttribute (ICustomAttribute ca, PlatformName currentPlatform, out Version sdkVersion, out string message)
+		{
+			var caType = ca.AttributeType;
+			var platformName = global::ObjCRuntime.PlatformName.None;
+
+			sdkVersion = null;
+			message = null;
+
+			string supportedPlatformAndVersion;
+			switch (ca.ConstructorArguments.Count) {
+			case 1:
+				supportedPlatformAndVersion = (string) ca.ConstructorArguments [0].Value;
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+			}
+
+			if (string.IsNullOrEmpty (supportedPlatformAndVersion))
+				return false;
+
+			var versionIndex = -1;
+			for (var i = 0; i < supportedPlatformAndVersion.Length; i++) {
+				if (supportedPlatformAndVersion [i] >= '0' && supportedPlatformAndVersion [i] <= '9') {
+					versionIndex = i;
+					break;
+				}
+			}
+			string supportedPlatform;
+			string supportedVersion = null;
+
+			if (versionIndex == -1) {
+				supportedPlatform = supportedPlatformAndVersion;
+			} else {
+				supportedPlatform = supportedPlatformAndVersion.Substring (0, versionIndex);
+				supportedVersion = supportedPlatformAndVersion.Substring (versionIndex);
+			}
+
+			supportedPlatform = supportedPlatform.ToLowerInvariant ();
+			switch (supportedPlatform) {
+			case "ios":
+				platformName = global::ObjCRuntime.PlatformName.iOS;
+				break;
+			case "tvos":
+				platformName = global::ObjCRuntime.PlatformName.TvOS;
+				break;
+			case "macos":
+				platformName = global::ObjCRuntime.PlatformName.MacOSX;
+				break;
+			case "maccatalyst":
+				plathuhformName = global::ObjCRuntime.PlatformName.MacCatalyst;
+				break;
+			case "watchos":
+				platformName = global::ObjCRuntime.PlatformName.WatchOS;
+				break;
+			default:
+				return false;
+			}
+
+			if (platformName != currentPlatform)
+				return false;
+
+			if (!Version.TryParse (supportedVersion, out sdkVersion))
+				return false;
+
+			return true;
+		}
+#endif // NET
+
+		bool CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, out Version sdkVersion, out string message)
+		{
+			sdkVersion = null;
+			message = null;
+
 			PlatformName currentPlatform;
 			switch (App.Platform) {
 			case ApplePlatform.iOS:
@@ -1585,188 +1775,67 @@ namespace Registrar {
 				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 			}
 
-			foreach (var ca in attributes) {
-				var caType = ca.AttributeType;
-				if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
-					continue;
-				
-				AvailabilityKind kind;
-				PlatformName platformName = global::ObjCRuntime.PlatformName.None;
-				PlatformArchitecture architecture = PlatformArchitecture.All;
-				string message = null;
-				int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
-				bool shorthand = false;
+			global::ObjCRuntime.PlatformName [] platforms;
 
-				switch (caType.Name) {
-				case "MacAttribute":
-					shorthand = true;
-					platformName = global::ObjCRuntime.PlatformName.MacOSX;
-					goto case "IntroducedAttribute";
-				case "iOSAttribute":
-					shorthand = true;
-					platformName = global::ObjCRuntime.PlatformName.iOS;
-					goto case "IntroducedAttribute";
-				case "IntroducedAttribute":
-					kind = AvailabilityKind.Introduced;
-					break;
-				case "DeprecatedAttribute":
-					kind = AvailabilityKind.Deprecated;
-					break;
-				case "ObsoletedAttribute":
-					kind = AvailabilityKind.Obsoleted;
-					break;
-				case "UnavailableAttribute":
-					kind = AvailabilityKind.Unavailable;
-					break;
-				default:
-					continue;
-				}
+#if !NET
+			if (currentPlatform == global::ObjCRuntime.PlatformName.MacCatalyst) {
+				// Fall back to any iOS attributes if we can't find something for Mac Catalyst
+				platforms = new global::ObjCRuntime.PlatformName [] {
+					currentPlatform,
+					global::ObjCRuntime.PlatformName.iOS,
+				};
 
-				switch (ca.ConstructorArguments.Count) {
-				case 2:
-					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					majorVersion = (byte) ca.ConstructorArguments [0].Value;
-					minorVersion = (byte) ca.ConstructorArguments [1].Value;
-					break;
-				case 3:
-					if (!shorthand) {
-						platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-						architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
-						message = (string) ca.ConstructorArguments [2].Value;
-					} else {
-						majorVersion = (byte) ca.ConstructorArguments [0].Value;
-						minorVersion = (byte) ca.ConstructorArguments [1].Value;
-						if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
-							var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
-							architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
-						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
-							minorVersion = (byte) ca.ConstructorArguments [2].Value;
-						} else {
-							throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-						}
-					}
-					break;
-				case 4:
-					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-
-					majorVersion = (byte) ca.ConstructorArguments [0].Value;
-					minorVersion = (byte) ca.ConstructorArguments [1].Value;
-					minorVersion = (byte) ca.ConstructorArguments [2].Value;
-					if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
-						var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
-						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
-					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
-						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
-					} else {
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case 5:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					majorVersion = (int) ca.ConstructorArguments [1].Value;
-					minorVersion = (int) ca.ConstructorArguments [2].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [3].Value;
-					message = (string) ca.ConstructorArguments [4].Value;
-					break;
-				case 6:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					majorVersion = (int) ca.ConstructorArguments [1].Value;
-					minorVersion = (int) ca.ConstructorArguments [2].Value;
-					subminorVersion = (int) ca.ConstructorArguments [3].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [4].Value;
-					message = (string) ca.ConstructorArguments [5].Value;
-					break;
-				default:
-					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-				}
-
-				if (platformName != currentPlatform)
-					continue;
-
-				AvailabilityBaseAttribute rv;
-				switch (kind) {
-				case AvailabilityKind.Introduced:
-					if (shorthand) {
-						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-					} else {
-						switch (ca.ConstructorArguments.Count) {
-						case 3:
-							rv = new IntroducedAttribute (platformName, architecture, message);
-							break;
-						case 5:
-							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-							break;
-						case 6:
-							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-							break;
-						default:
-							throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-						}
-					}
-					break;
-				case AvailabilityKind.Deprecated:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new DeprecatedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
-						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case AvailabilityKind.Obsoleted:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new ObsoletedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
-						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case AvailabilityKind.Unavailable:
-					rv = new UnavailableAttribute (platformName, architecture, message);
-					break;
-				default:
-					throw ErrorHelper.CreateError (4163, Errors.MT4163_A, kind);
-				}
-
-				if (list == null)
-					list = new List<AvailabilityBaseAttribute> ();
-				list.Add (rv);
+			} else {
+				platforms = new global::ObjCRuntime.PlatformName [] {
+					currentPlatform,
+				};
 			}
+#else
+			platforms = new global::ObjCRuntime.PlatformName [] {
+				currentPlatform,
+			};
+#endif
+
+			foreach (var platform in platforms) {
+				foreach (var ca in attributes) {
+					var caType = ca.AttributeType;
+#if NET
+					if (!caType.Is ("System.Runtime.Versioning", "SupportedOSPlatformAttribute"))
+						continue;
+					if (GetDotNetAvailabilityAttribute (ca, platform, out sdkVersion, out message))
+						return true;
+#else
+					if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
+						continue;
+					if (GetLegacyAvailabilityAttribute (ca, platform, out sdkVersion, out message))
+						return true;
+#endif
+				}
+			}
+
+			return false;
 		}
 
-		protected override List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TypeReference obj)
+		protected override Version GetSdkIntroducedVersion (TypeReference obj, out string message)
 		{
 			TypeDefinition td = obj.Resolve ();
-			List<AvailabilityBaseAttribute> rv = null;
 
-			if (td == null)
+			message = null;
+
+			if (td is null)
 				return null;
-			
-			if (td.HasCustomAttributes)
-				CollectAvailabilityAttributes (td.CustomAttributes, ref rv);
-			
-			if (AvailabilityAnnotations != null) {
-				object attribObjects;
-				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
-					CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, ref rv);
+
+			if (td.HasCustomAttributes) {
+				if (CollectAvailabilityAttributes (td.CustomAttributes, out var sdkVersion, out message))
+					return sdkVersion;
 			}
 
-			return rv;
+			if (AvailabilityAnnotations is not null && AvailabilityAnnotations.TryGetValue (td, out var attribObjects)) {
+				if (CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, out var sdkVersion, out message))
+					return sdkVersion;
+			}
+
+			return null;
 		}
 
 		protected override Version GetSDKVersion ()

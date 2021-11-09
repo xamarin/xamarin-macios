@@ -337,7 +337,7 @@ namespace Xamarin.Tests
 
 		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null);
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
+		public static string CreateCode (string code, string usings, string extraCode)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
@@ -345,8 +345,12 @@ namespace Xamarin.Tests
 				code = usings + "\n" + code;
 			if (extraCode != null)
 				code += extraCode;
+			return code;
+		}
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArgs, profile, appName);
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
+		{
+			return CompileTestAppCode ("exe", targetDirectory, CreateCode (code, usings, extraCode), extraArgs, profile, appName);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
