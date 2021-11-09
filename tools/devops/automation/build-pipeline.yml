@@ -97,16 +97,6 @@ parameters:
       ]
     },
     {
-      stageName: 'mac_10_13',
-      displayName: 'Mac High Sierra (10.13)',
-      macPool: 'internal-macos-10.13',
-      useImage: true,
-      statusContext: 'Mac High Sierra (10.13)',
-      demands: [
-        "Agent.OS -equals Darwin",
-      ]
-    },
-    {
       stageName: 'mac_11_5_m1',
       displayName: 'M1 - Mac Big Sur (11.5)',
       macPool: 'VSEng-VSMac-Xamarin-Shared',
