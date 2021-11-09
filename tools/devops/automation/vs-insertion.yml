@@ -9,6 +9,30 @@ resources:
     checkoutOptions:
       submodules: false  # no need
 
+  - repository: templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/sign-and-notarized
+    endpoint: xamarin
+
+  # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
+  # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
+  pipelines:
+  - pipeline: macios
+    source: xamarin-macios
+
 variables:
 - group: xamops-azdev-secrets
 - group: Xamarin-Secrets
@@ -20,16 +44,62 @@ variables:
 - name: system.debug
   value: true
 
+# this pipeline is triggered when we want to do a release and uses a release trigger, this means that it does not have conditions (a human accepted it)
+# or dependencies (the release pipeline was triggered accordingly.
+#
+stages:
+- stage: prepare_release
+  displayName: Prepare Release
 
-jobs:
-- job: publish_results
-  displayName: Create VS Insertion
-  pool:
-    vmImage: windows-latest
-  workspace:
-    clean: all
+  jobs:
+  # Check - "xamarin-macios (Prepare Release Sign NuGets)"
+  - template: sign-artifacts/jobs/v2.yml@templates
+    parameters:
+      artifactName: package
+      signType: Real
+      usePipelineArtifactTasks: true
 
+  # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
+  - template: nuget-msi-convert/job/v2.yml@templates
+    parameters:
+      yamlResourceName: templates
+      dependsOn: signing
+      artifactName: nuget-signed
+      propsArtifactName: package
+      signType: Real
 
-  steps:
-  - checkout: self
-    persistCredentials: true
+  # Check - "xamarin-macios (Prepare Release Push NuGets)"
+  - job: push_signed_nugets
+    displayName: Push NuGets
+    dependsOn: nuget_convert
+    variables:
+      skipNugetSecurityAnalysis: true
+    pool:
+      vmImage: macOS-10.15
+
+    steps:
+    - download: macios
+      artifact: nuget-signed
+      patterns: |
+        *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to dotnet6
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: dnceng-dotnet6
+
+    - download: macios
+      artifact: vs-msi-nugets
+      patterns: |
+        *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to dotnet6
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: dnceng-dotnet6

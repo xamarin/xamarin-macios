@@ -30,7 +30,7 @@ namespace CoreBluetooth {
 		{
 			ConnectPeripheral (peripheral, options == null ? null : options.Dictionary);
 		}
-#if !XAMCORE_4_0 && !TVOS && !WATCH
+#if !NET && !TVOS && !WATCH
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public void RetrievePeripherals (CBUUID [] peripheralUuids)
 			=> throw new NotSupportedException ();

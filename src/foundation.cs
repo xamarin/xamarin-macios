@@ -15067,7 +15067,11 @@ namespace Foundation
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[NullAllowed, Export ("negotiatedTLSCipherSuite", ArgumentSemantic.Copy)]
 		// <quote>It is a 2-byte sequence in host byte order.</quote> but it refers to (nicer) `tls_ciphersuite_t`
+#if NET
+		[BindAs (typeof (TlsCipherSuite?))]
+#else
 		[BindAs (typeof (SslCipherSuite?))]
+#endif
 		NSNumber NegotiatedTlsCipherSuite { get; }
 
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]

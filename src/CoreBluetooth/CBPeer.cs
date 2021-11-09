@@ -12,14 +12,12 @@ namespace CoreBluetooth {
 #if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public virtual CBUUID UUID { 
 			get {
 				return CBUUID.FromCFUUID (_UUID);	
 			}
 		}
+#endif // !NET
 	}
 }
 #endif
