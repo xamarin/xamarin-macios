@@ -1730,7 +1730,7 @@ namespace Registrar {
 				platformName = global::ObjCRuntime.PlatformName.MacOSX;
 				break;
 			case "maccatalyst":
-				plathuhformName = global::ObjCRuntime.PlatformName.MacCatalyst;
+				platformName = global::ObjCRuntime.PlatformName.MacCatalyst;
 				break;
 			case "watchos":
 				platformName = global::ObjCRuntime.PlatformName.WatchOS;
