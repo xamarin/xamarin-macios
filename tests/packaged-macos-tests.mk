@@ -18,8 +18,8 @@ IS_APPLE_SILICON=1
 endif
 
 MACOS_VERSION:=$(shell sw_vers -productVersion)
-MACOS_MAJOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $1}')
-MACOS_MINOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $2}')
+MACOS_MAJOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $$1}')
+MACOS_MINOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $$2}')
 SUPPORTS_MACCATALYST:=$(shell echo '$(MACOS_MAJOR_VERSION).$(MACOS_MINOR_VERSION) >= 10.15' | bc)
 
 CONFIG?=Debug
