@@ -79,9 +79,6 @@ stages:
 
     steps:
     - download: macios
-      artifact: nuget-signed
-      patterns: |
-        *.nupkg
 
     - task: NuGetCommand@2
       displayName: Publish Nugets to dotnet6
@@ -90,11 +87,6 @@ stages:
         packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
         nuGetFeedType: external
         publishFeedCredentials: dnceng-dotnet6
-
-    - download: macios
-      artifact: vs-msi-nugets
-      patterns: |
-        *.nupkg
 
     - task: NuGetCommand@2
       displayName: Publish Nugets to dotnet6
