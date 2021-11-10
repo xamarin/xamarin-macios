@@ -1563,9 +1563,28 @@ namespace Registrar {
 		}
 
 #if !NET
-		bool GetLegacyAvailabilityAttribute (ICustomAttribute ca, PlatformName currentPlatform, out Version sdkVersion, out string message)
+		PlatformName AsPlatformName (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return global::ObjCRuntime.PlatformName.iOS;
+			case ApplePlatform.TVOS:
+				return global::ObjCRuntime.PlatformName.TvOS;
+			case ApplePlatform.WatchOS:
+				return global::ObjCRuntime.PlatformName.WatchOS;
+			case ApplePlatform.MacOSX:
+				return global::ObjCRuntime.PlatformName.MacOSX;
+			case ApplePlatform.MacCatalyst:
+				return global::ObjCRuntime.PlatformName.MacCatalyst;
+			default:
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"unknown platform: {platform}");
+			}
+		}
+
+		bool GetLegacyAvailabilityAttribute (ICustomAttribute ca, ApplePlatform platform, out Version sdkVersion, out string message)
 		{
 			var caType = ca.AttributeType;
+			var currentPlatform = AsPlatformName (platform);
 			AvailabilityKind kind;
 			PlatformName platformName = global::ObjCRuntime.PlatformName.None;
 			PlatformArchitecture architecture = PlatformArchitecture.All;
@@ -1681,10 +1700,10 @@ namespace Registrar {
 #endif // !NET
 
 #if NET
-		bool GetDotNetAvailabilityAttribute (ICustomAttribute ca, PlatformName currentPlatform, out Version sdkVersion, out string message)
+		bool GetDotNetAvailabilityAttribute (ICustomAttribute ca, ApplePlatform currentPlatform, out Version sdkVersion, out string message)
 		{
 			var caType = ca.AttributeType;
-			var platformName = global::ObjCRuntime.PlatformName.None;
+			var platformName = ApplePlatform.None;
 
 			sdkVersion = null;
 			message = null;
@@ -1721,19 +1740,19 @@ namespace Registrar {
 			supportedPlatform = supportedPlatform.ToLowerInvariant ();
 			switch (supportedPlatform) {
 			case "ios":
-				platformName = global::ObjCRuntime.PlatformName.iOS;
+				platformName = ApplePlatform.iOS;
 				break;
 			case "tvos":
-				platformName = global::ObjCRuntime.PlatformName.TvOS;
+				platformName = ApplePlatform.TVOS;
 				break;
 			case "macos":
-				platformName = global::ObjCRuntime.PlatformName.MacOSX;
+				platformName = ApplePlatform.MacOSX;
 				break;
 			case "maccatalyst":
-				platformName = global::ObjCRuntime.PlatformName.MacCatalyst;
+				platformName = ApplePlatform.MacCatalyst;
 				break;
 			case "watchos":
-				platformName = global::ObjCRuntime.PlatformName.WatchOS;
+				platformName = ApplePlatform.WatchOS;
 				break;
 			default:
 				return false;
@@ -1754,44 +1773,44 @@ namespace Registrar {
 			sdkVersion = null;
 			message = null;
 
-			PlatformName currentPlatform;
+			ApplePlatform currentPlatform;
 			switch (App.Platform) {
 			case ApplePlatform.iOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
+				currentPlatform = ApplePlatform.iOS;
 				break;
 			case ApplePlatform.TVOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
+				currentPlatform = ApplePlatform.TVOS;
 				break;
 			case ApplePlatform.WatchOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
+				currentPlatform = ApplePlatform.WatchOS;
 				break;
 			case ApplePlatform.MacOSX:
-				currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
+				currentPlatform = ApplePlatform.MacOSX;
 				break;
 			case ApplePlatform.MacCatalyst:
-				currentPlatform = global::ObjCRuntime.PlatformName.MacCatalyst;
+				currentPlatform = ApplePlatform.MacCatalyst;
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 			}
 
-			global::ObjCRuntime.PlatformName [] platforms;
+			ApplePlatform [] platforms;
 
 #if !NET
-			if (currentPlatform == global::ObjCRuntime.PlatformName.MacCatalyst) {
+			if (currentPlatform == ApplePlatform.MacCatalyst) {
 				// Fall back to any iOS attributes if we can't find something for Mac Catalyst
-				platforms = new global::ObjCRuntime.PlatformName [] {
+				platforms = new ApplePlatform [] {
 					currentPlatform,
-					global::ObjCRuntime.PlatformName.iOS,
+					ApplePlatform.iOS,
 				};
 
 			} else {
-				platforms = new global::ObjCRuntime.PlatformName [] {
+				platforms = new ApplePlatform [] {
 					currentPlatform,
 				};
 			}
 #else
-			platforms = new global::ObjCRuntime.PlatformName [] {
+			platforms = new ApplePlatform [] {
 				currentPlatform,
 			};
 #endif
