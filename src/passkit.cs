@@ -246,14 +246,14 @@ namespace PassKit {
 		[NoMacCatalyst]
 		[NoWatch]
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; }
 
 		[NoMac]
 		[NoMacCatalyst]
 		[NoWatch]
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ShippingContact' instead.")]
 		ABRecord ShippingAddress { get; }
 
 		[Export ("shippingMethod", ArgumentSemantic.Strong)]
@@ -485,7 +485,7 @@ namespace PassKit {
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; set; }
 
 		[NoMac]
@@ -499,7 +499,7 @@ namespace PassKit {
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ShippingContact' instead.")]
 		ABRecord ShippingAddress { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -619,13 +619,13 @@ namespace PassKit {
 		[NoMac]
 		[NoWatch]
 		[Export ("paymentInstrumentName", ArgumentSemantic.Copy)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PaymentMethod' instead.")]
 		string PaymentInstrumentName { get; }
 
 		[NoMac]
 		[NoWatch]
 		[Export ("paymentNetwork")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PaymentMethod' instead.")]
 		string PaymentNetwork { get; }
 
 		[Export ("transactionIdentifier")]

@@ -261,7 +261,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[Native]
@@ -302,7 +302,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[Native]
@@ -318,7 +318,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[Native]
@@ -353,7 +353,7 @@ namespace Intents {
 #if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
 	[NoMac]
 #else
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -656,7 +656,7 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 		[iOS (11,0), Mac (10,13), Watch (4,0)]
 		InProgress,
@@ -699,7 +699,7 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 	}
 
@@ -737,7 +737,7 @@ namespace Intents {
 		FailureInsufficientFunds,
 		FailureNoBankAccount,
 		[iOS (11, 0)]
-		[Mac (10, 13, 0, PlatformArchitecture.Arch64)]
+		[Mac (10, 13, 0)]
 		[Watch (4, 0)]
 		FailureNotEligible,
 		[iOS (11,1), Watch (4,1)]
@@ -790,7 +790,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Native]
@@ -880,10 +880,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		FailureCallingServiceNotAvailable,
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		FailureContactNotSupportedByApp,
@@ -926,10 +926,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		FailureCallingServiceNotAvailable,
 		[Watch (4,0), iOS (11,0)]
 		FailureContactNotSupportedByApp,
@@ -1023,7 +1023,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	[Native]
@@ -2055,7 +2055,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	public enum INIntentIdentifier {
@@ -2181,7 +2181,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 2)]
-	[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 2)]
 	[Watch (3, 2)]
 	[NoTV]
 	enum INPersonHandleLabel {
@@ -2979,7 +2979,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -3072,7 +3072,7 @@ namespace Intents {
 #if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
 	[NoMac]
 #else
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INStartAudioCallIntentHandling, INStartVideoCallIntentHandling and INSearchCallHistoryIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 13, 0, message: "Implement 'INStartAudioCallIntentHandling and INSearchCallHistoryIntentHandling' instead.")]
@@ -3717,7 +3717,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -3824,7 +3824,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[Abstract]
@@ -3882,7 +3882,7 @@ namespace Intents {
 	interface INIntentResolutionResult<ObjectType> : INIntentResolutionResult { }
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[Abstract]
@@ -3917,7 +3917,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[Abstract]
@@ -3934,7 +3934,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -4198,7 +4198,7 @@ namespace Intents {
 #if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
 	[NoMac]
 #else
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -4387,7 +4387,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -4469,7 +4469,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -4483,23 +4483,23 @@ namespace Intents {
 		INPersonHandleType Type { get; }
 
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		[Export ("label"), NullAllowed, Protected]
 		NSString WeakLabel { get; }
 
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		[Wrap ("INPersonHandleLabelExtensions.GetValue (WeakLabel)")]
 		INPersonHandleLabel Label { get; }
 
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		[Wrap ("this (value, type, label.GetConstant ())")]
 		IntPtr Constructor (string value, INPersonHandleType type, INPersonHandleLabel label);
 
 		[DesignatedInitializer]
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		[Export ("initWithValue:type:label:"), Protected]
 		IntPtr Constructor ([NullAllowed] string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
@@ -4508,7 +4508,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -4559,7 +4559,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -7008,7 +7008,7 @@ namespace Intents {
 	interface IINSpeakable { }
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[Protocol]
@@ -7047,7 +7047,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -7065,7 +7065,7 @@ namespace Intents {
 		IntPtr InitWithIdentifier (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
 
 		[iOS (10, 2)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
+		[Mac (10, 12, 2)]
 		[Export ("initWithSpokenPhrase:")]
 		IntPtr Constructor (string spokenPhrase);
 	}
@@ -7335,7 +7335,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Protocol]
@@ -7462,7 +7462,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
 	[DisableDefaultCtor]
@@ -7740,7 +7740,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
 	[Category]
