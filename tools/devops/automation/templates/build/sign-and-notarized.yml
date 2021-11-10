@@ -148,13 +148,23 @@ steps:
   timeoutInMinutes: 180
   condition: ${{ parameters.condition }}
 
+- task: ArchiveFiles@1
+  displayName: 'Archive ERSP temp'
+  inputs:
+    rootFolder: '$(System.DefaultWorkingDirectory)/esrp'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/erp.zip'
+  continueOnError: true
+  condition: ${{ parameters.condition }}
+
 # Upload the esrp temp dir
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: ESRP temp'
   inputs:
-    targetPath: '$(System.DefaultWorkingDirectory)/esrp'
+    targetPath: '$(Build.ArtifactStagingDirectory)/erp.zip'
     artifactName: ESRP-tmp
   continueOnError: true
+  condition: ${{ parameters.condition }}
 
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
   displayName: 'Install Notarizing Plugin'
@@ -173,16 +183,10 @@ steps:
     targetPath: $(Build.SourcesDirectory)/package/notarized
     artifactName: not-notarized-pkg
   continueOnError: true
-
-- pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized
-  displayName: 'ESRP notarizing packages'
   condition: ${{ parameters.condition }}
 
-- pwsh: |
-    $notarizedRoot = Join-Path $(Build.SourcesDirectory) package notarized
-    Get-ChildItem -Path $notarizedRoot -Filter *.pkg -Recurse -File | ForEach-Object {
-       Write-Host "pkgutil --check-signature $($_.FullName)"
-       pkgutil --check-signature "$($_.FullName)"
-    }
-  displayName: 'Verify ESRP notarization'
+- task: PowerShell@2
+  inputs:
+    filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
+  displayName: 'Notarize & verify packages (ESRP)'
   condition: ${{ parameters.condition }}
