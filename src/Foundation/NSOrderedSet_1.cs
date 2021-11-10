@@ -219,7 +219,7 @@ namespace Foundation {
 		public NSOrderedSet<TKey>? GetOrderedSet (NSOrderedCollectionDifference difference)
 		{
 			var ptr = _GetOrderedSet (difference); 
-			return (ptr == IntPtr.Zero)? null : new NSOrderedSet<TKey> (ptr);
+			return Runtime.GetNSObject<NSOrderedSet<TKey>> (ptr);
 		}
 
 		static readonly NSOrderedCollectionDifferenceEquivalenceTestProxy static_DiffEqualityGeneric = DiffEqualityHandlerGeneric;

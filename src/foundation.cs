@@ -1773,7 +1773,7 @@ namespace Foundation
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("stringFromMeasurement:")]
-		string StringFromMeasurement (NSUnitInformationStorage measurement);
+		string Create (NSUnitInformationStorage measurement);
 	}
 
 	[BaseType (typeof (NSFormatter))]
@@ -14041,7 +14041,7 @@ namespace Foundation
 	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
-#if !__MACCATAYUST__
+#if !__MACCATALYST__
 		[DesignatedInitializer]
 #endif
 		[Export ("initWithCommandDescription:")]

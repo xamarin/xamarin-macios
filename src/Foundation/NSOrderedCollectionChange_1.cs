@@ -26,10 +26,10 @@ namespace Foundation {
 			: base (anObject, type, index, associatedIndex) {}
 
 		public static NSOrderedCollectionChange<TKey> ChangeWithObject (TKey? anObject, NSCollectionChangeType type, nuint index)
-			=> new NSOrderedCollectionChange<TKey> (NSOrderedCollectionChange._ChangeWithObject (anObject!.Handle, type, index));
+			=> new NSOrderedCollectionChange<TKey> (NSOrderedCollectionChange._ChangeWithObject (anObject.GetHandle (), type, index));
 
 		public static NSOrderedCollectionChange<TKey> ChangeWithObject (TKey? anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex)
-			=> new NSOrderedCollectionChange<TKey> (NSOrderedCollectionChange._ChangeWithObject (anObject!.Handle, type, index, associatedIndex));
+			=> new NSOrderedCollectionChange<TKey> (NSOrderedCollectionChange._ChangeWithObject (anObject.GetHandle (), type, index, associatedIndex));
 
 		internal NSOrderedCollectionChange (IntPtr handle) : base (handle) { }
 

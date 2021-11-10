@@ -19,10 +19,10 @@ namespace Foundation {
 	{
 
 		public static NSOrderedCollectionChange ChangeWithObject (NSObject? anObject, NSCollectionChangeType type, nuint index)
-			=> new NSOrderedCollectionChange (NSOrderedCollectionChange._ChangeWithObject (anObject!.Handle, type, index));
+			=> new NSOrderedCollectionChange (NSOrderedCollectionChange._ChangeWithObject (anObject.GetHandle (), type, index));
 
 		public static NSOrderedCollectionChange ChangeWithObject (NSObject? anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex)
-			=> new NSOrderedCollectionChange (NSOrderedCollectionChange._ChangeWithObject (anObject!.Handle, type, index, associatedIndex));
+			=> new NSOrderedCollectionChange (NSOrderedCollectionChange._ChangeWithObject (anObject.GetHandle (), type, index, associatedIndex));
 
 		public NSObject? Object => Runtime.GetNSObject<NSObject> (_Object);
 
