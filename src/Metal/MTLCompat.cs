@@ -29,7 +29,7 @@ namespace Metal {
 		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static IMTLCounterSampleBuffer CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError error)
+		public static IMTLCounterSampleBuffer? CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError? error)
 		{
 			if (descriptor == null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
@@ -54,7 +54,7 @@ namespace Metal {
 		{
 			if (sampleBuffer == null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
-			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_nuint_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, sampleIndex, barrier);
+			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_UIntPtr_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, (UIntPtr) sampleIndex, barrier);
 		}
 	}
 #endif // MONOMAC

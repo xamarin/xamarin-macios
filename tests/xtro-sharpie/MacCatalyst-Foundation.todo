@@ -1,7 +1,6 @@
 !deprecated-attribute-missing! NSNetService missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSNetServiceBrowser missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURLSession::streamTaskWithNetService: missing a [Deprecated] attribute
-!extra-designated-initializer! NSScriptCommand::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !missing-enum! NSAttributedStringFormattingOptions not bound
 !missing-enum! NSAttributedStringMarkdownInterpretedSyntax not bound
 !missing-enum! NSAttributedStringMarkdownParsingFailurePolicy not bound
@@ -17,7 +16,6 @@
 !missing-enum-value! NSUrlBookmarkCreationOptions native value NSURLBookmarkCreationWithoutImplicitSecurityScope = 536870912 not bound
 !missing-enum-value! NSUrlBookmarkResolutionOptions native value NSURLBookmarkResolutionWithoutImplicitStartAccessing = 32768 not bound
 !missing-field! NSAlternateDescriptionAttributeName not bound
-!missing-field! NSConnectionReplyMode not bound
 !missing-field! NSImageURLAttributeName not bound
 !missing-field! NSInflectionAlternativeAttributeName not bound
 !missing-field! NSInflectionRuleAttributeName not bound
@@ -46,8 +44,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUrlConnection::.ctor(Foundation.NSUrlRequest,Foundation.INSUrlConnectionDelegate)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSUrlConnection::.ctor(Foundation.NSUrlRequest,Foundation.INSUrlConnectionDelegate,System.Boolean)' is missing an [NullAllowed] on parameter #1
-!missing-pinvoke! NSFileTypeForHFSTypeCode is not bound
-!missing-protocol! NSUserNotificationCenterDelegate not bound
 !missing-selector! +NSAttributedString::localizedAttributedStringWithFormat: not bound
 !missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options: not bound
 !missing-selector! +NSByteCountFormatter::stringFromMeasurement:countStyle: not bound
@@ -154,9 +150,6 @@
 !missing-selector! NSURLSessionTask::delegate not bound
 !missing-selector! NSURLSessionTask::setDelegate: not bound
 !missing-selector! NSUUID::compare: not bound
-!missing-selector! NSValue::pointValue not bound
-!missing-selector! NSValue::rectValue not bound
-!missing-selector! NSValue::sizeValue not bound
 !missing-type! NSAttributedStringMarkdownParsingOptions not bound
 !missing-type! NSInflectionRule not bound
 !missing-type! NSInflectionRuleExplicit not bound

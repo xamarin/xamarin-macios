@@ -121,15 +121,11 @@ namespace Xamarin.Mac.Tests
 				if (Asserts.IsAtLeastElCapitan && IntPtr.Size == 4)
 					return true;
 				break;
-			case "CBCentralManager":
-				if (IntPtr.Size == 4 && PlatformHelper.CheckSystemVersion(10, 13)) // Removed from 32-bit in macOS 10.13
-					return true;
-				break;
 			case "AVCaptureView":
 				// Deallocating a AVCaptureView makes it trigger a permission dialog, which we don't want, so just skip this type.
 				return true;
 			case "GKGameCenterViewController": // the native 'init' method returned nil.
-				if (PlatformHelper.CheckSystemVersion (11, 0))
+				if (TestRuntime.CheckXcodeVersion (12, 0))
 					return true;
 				break;
 			case "SKView":

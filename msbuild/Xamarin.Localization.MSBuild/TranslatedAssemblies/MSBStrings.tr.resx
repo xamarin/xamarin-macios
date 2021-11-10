@@ -711,10 +711,10 @@
         <value>Sağlanan Arşiv yolu geçerli bir arşiv dosyasından (.xcarchive) değil. Arşiv Yolu: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>macOS {0} sürümü karşılık gelen bir Mac Catalyst sürümüne eşlenemedi. Geçerli macOS sürümleri şunlardır: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Mac Catalyst {0} sürümü karşılık gelen bir macOS sürümüne eşlenemedi. Geçerli Mac Catalyst sürümleri şunlardır: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Wi-Fi hata ayıklayıcısı ayarları için konak IP'leri çözümlenemedi.
@@ -1054,7 +1054,7 @@
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>Info.plist ({1}) dosyasındaki {0} değeri proje dosyasındaki SupportedOSPlatformVersion değeri ({2}) ile eşleşmiyor (proje dosyasında SupportedOSPlatformVersion değeri yoksa bir varsayılan değer alınır). Info.plist dosyasındaki değeri SupportedOSPlatformVersion değeriyle eşleşecek şekilde değiştirin veya Info.plist dosyasındaki değeri kaldırın (ve dosyada yoksa, proje dosyasına bir SupportedOSPlatformVersion değeri ekleyin).</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>Tüm yazı tipi dosyalarının uygulama paketi grubunda aynı dizinde bulunması gerekir. Aşağıdaki yazı tipi dosyaları uygulama paketi grubunda farklı hedef dizinlerde bulunuyor:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>Hedef dizin: {0}</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Girişte sembolik bağlantılar olduğundan sıkıştırılmış bağlama kaynak paketi oluşturuluyor.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>'{0}' değeri Compress özelliği için geçersiz. Geçerli değerler: 'true', 'false' veya 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>{0} dizininde bir 'manifest' dosyası bekleniyor.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

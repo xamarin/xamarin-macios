@@ -8,8 +8,6 @@
 //
 
 #if !MONOMAC
-using System;
-using System.Drawing;
 using AVFoundation;
 using Foundation;
 using ObjCRuntime;

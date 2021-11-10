@@ -711,10 +711,10 @@
         <value>指定されたアーカイブ パスは、有効なアーカイブ ファイル (.xcarchive) からのものではありません。アーカイブ パス: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>macOS バージョン {0} を対応する Mac Catalyst のバージョンにマップできませんでした。有効な macOS バージョンは次のとおりです: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Mac Catalyst のバージョン {0} を対応する macOS バージョンにマップできませんでした。有効な Mac Catalyst のバージョンは次のとおりです: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi デバッガー設定のホスト IP を解決できませんでした。
@@ -1054,7 +1054,7 @@
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>Info.plist ({1}) の {0} 値がプロジェクトファイルのSupportedOSPlatformVersion の値 ({2}) と一致しません (プロジェクトファイルに SupportedOSPlatformVersion 値が存在しない場合は、既定値を仮定します)。SupportedOSPlatformVersion 値に一致するようにInfo.plist の値を変更するか、 Info.plist の値を削除します (そして変数が存在しない場合は、SupportedOSPlatformVersion 値をプロジェクトファイルに追加してください)。</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>すべてのフォント ファイルは、アプリ バンドル内の同じディレクトリに配置する必要があります。次のフォント ファイルには、アプリ バンドルで異なるターゲット ディレクトリがあります。</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>ターゲット ディレクトリは {0} です</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>入力にシンボリックリンクが含まれているため、圧縮バインド リソース パッケージを作成しています。</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>圧縮プロパティでは、値 '{0}' は無効です。有効な値: 'true'、'false'、'auto'。</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>ディレクトリ {0} に 'manifest' ファイルが必要です。</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

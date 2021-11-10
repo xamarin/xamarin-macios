@@ -36,7 +36,7 @@ namespace Xharness.Jenkins.TestTasks {
 		bool BuildOnly { get; set; }
 		bool Ignored { get; set; }
 
-		(string HumanMessage, string IssueLink)? KnownFailure { get; set; }
+		KnownIssue KnownFailure { get; set; }
 		string ProjectConfiguration { get; set; }
 		string ProjectPlatform { get; set; }
 		string ProjectFile { get; }

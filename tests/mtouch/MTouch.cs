@@ -2027,11 +2027,11 @@ public class TestApp {
 
 		static string GetFrameworksBindingLibrary (Profile profile)
 		{
-			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
+			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/iOS/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
+			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
 
 			if (!File.Exists (fn)) {
-				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bindings-framework-test" + GetProjectSuffix (profile) + ".csproj");
+				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bindings-framework-test.csproj");
 				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
@@ -4246,6 +4246,19 @@ class C {
 			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunitlite.dll' is not valid and was ignored.*");
 			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunit.framework.dll' is not valid and was ignored.*");
 			Tool.AssertWarningCount (messages, 2);
+		}
+
+		[Test]
+		public void BindingLibraryDSymCreated ()
+		{
+			// framework-test for macOS has binding library that should have dSYMs
+			var testDir = Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS");
+			var csproj = Path.Combine (testDir, "framework-test-mac.csproj");
+			var arguments = new string [] {
+				"/p:ArchiveOnBuild=true",
+			};
+			XBuild.BuildXM (csproj, "Release", "x86", arguments: arguments, timeout: TimeSpan.FromMinutes (15));
+			DirectoryAssert.Exists(Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS", "bin", "x86", "Release", "XTest.framework.dSYM"));
 		}
 
 		public void XamarinSdkAdjustLibs ()

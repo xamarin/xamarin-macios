@@ -198,7 +198,6 @@
 !missing-protocol-conformance! NSTableView should conform to NSTextViewDelegate
 !missing-protocol-conformance! NSText should conform to NSChangeSpelling
 !missing-protocol-conformance! NSText should conform to NSIgnoreMisspelledWords
-!missing-protocol-conformance! NSTextAttachmentCell should conform to NSTextAttachmentCell
 !missing-protocol-conformance! NSTitlebarAccessoryViewController should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSView should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSWindow should conform to NSAnimatablePropertyContainer
@@ -1324,7 +1323,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSWindow::RunToolbarCustomizationPalette(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_ColorSpace(AppKit.NSColorSpace)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSWindow::set_ContentView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_ContentViewController(AppKit.NSViewController)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_InitialFirstResponder(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_MiniWindowImage(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
@@ -1414,8 +1412,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSSpellChecker::ShowCorrectionIndicatorOfType(AppKit.NSCorrectionIndicatorType,System.String,System.String[],CoreGraphics.CGRect,AppKit.NSRulerView,AppKit.NSSpellCheckerShowCorrectionIndicatorOfTypeHandler)' is missing an [NullAllowed] on parameter #5
 !missing-null-allowed! 'System.Void AppKit.NSStringDrawing_NSString::DrawAtPoint(Foundation.NSString,CoreGraphics.CGPoint,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSStringDrawing_NSString::DrawInRect(Foundation.NSString,CoreGraphics.CGRect,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void AppKit.NSTextAttachmentCell::DrawWithFrame(CoreGraphics.CGRect,AppKit.NSView,System.nuint)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AppKit.NSTextAttachmentCell::DrawWithFrame(CoreGraphics.CGRect,AppKit.NSView,System.nuint,AppKit.NSLayoutManager)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSTextAttachmentCell::Highlight(System.Boolean,CoreGraphics.CGRect,AppKit.NSView)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSTextView::.ctor(CoreGraphics.CGRect,AppKit.NSTextContainer)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSTrackingArea::.ctor(CoreGraphics.CGRect,AppKit.NSTrackingAreaOptions,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
@@ -1443,3 +1439,7 @@
 
 # deprecated in 10.12, now removed
 !extra-enum-value! Managed value 7 for NSWindowButton.FullScreenButton not found in native headers
+
+# notifications do not respond and were added in a beta, ignoring until we can test they work:
+!missing-field! NSApplicationProtectedDataDidBecomeAvailableNotification not bound
+!missing-field! NSApplicationProtectedDataWillBecomeUnavailableNotification not bound

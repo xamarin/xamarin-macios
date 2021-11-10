@@ -87,6 +87,18 @@ using UIFocusSystem = Foundation.NSObject;
 using UIPointerAccessoryPosition = Foundation.NSObject;
 #endif // !IOS
 
+#if __MACCATALYST__
+using AppKit;
+#else
+using NSTouchBarProvider = Foundation.NSObject;
+using NSTouchBar = Foundation.NSObject;
+using NSToolbar =  Foundation.NSObject;
+#endif
+
+#if !NET
+using NSWritingDirection = UIKit.UITextWritingDirection;
+#endif
+
 using System;
 using System.ComponentModel;
 
@@ -499,7 +511,7 @@ namespace UIKit {
 #if !WATCH
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
+	[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'CoreMotion' instead.")]
 	interface UIAcceleration {
 		[Export ("timestamp")]
 		double Time { get; }
@@ -516,7 +528,7 @@ namespace UIKit {
 
 	[NoTV]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIAccelerometerDelegate)})]
-	[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
+	[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'CoreMotion' instead.")]
 	interface UIAccelerometer {
 		[Static] [Export ("sharedAccelerometer")]
 		UIAccelerometer SharedAccelerometer { get; }
@@ -1249,7 +1261,7 @@ namespace UIKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'UIAlertController' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIAlertController' instead.")]
 		[Export ("initWithTitle:delegate:cancelButtonTitle:destructiveButtonTitle:otherButtonTitles:")][Internal][PostGet ("WeakDelegate")]
 		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] IUIActionSheetDelegate Delegate, [NullAllowed] string cancelTitle, [NullAllowed] string destroy, [NullAllowed] string other);
 
@@ -1550,7 +1562,7 @@ namespace UIKit {
 		
 		[NullAllowed] // by default this property is null
 		[Export ("completionHandler", ArgumentSemantic.Copy)]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use the 'CompletionWithItemsHandler' property instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use the 'CompletionWithItemsHandler' property instead.")]
 		Action<NSString,bool> CompletionHandler { get; set;  }
 
 		[Export ("excludedActivityTypes", ArgumentSemantic.Copy)]
@@ -1629,7 +1641,7 @@ namespace UIKit {
 
 	[NoTV]
 	[BaseType (typeof (UIView), KeepRefUntil="Dismissed", Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIAlertViewDelegate)})]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'UIAlertController' with a 'UIAlertControllerStyle.Alert' type instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIAlertController' with a 'UIAlertControllerStyle.Alert' type instead.")]
 	interface UIAlertView : NSCoding {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
@@ -1644,7 +1656,7 @@ namespace UIKit {
 		// 9 arguments, where the 9th is nil (this is the 'mustAlsoBeNull' argument). Remember that Objective-C always has two hidden
 		// arguments (id, SEL), which means we only need 7 more. And 'mustAlsoBeNull' is that 7th argument.
 		// So on ARM64 the 8th argument ('mustBeNull') is ignored, and iOS sees the 9th argument ('mustAlsoBeNull') as the 8th argument.
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'UIAlertController' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIAlertController' instead.")]
 		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] IUIAlertViewDelegate viewDelegate, [NullAllowed] string cancelButtonTitle, IntPtr otherButtonTitles, IntPtr mustBeNull, IntPtr mustAlsoBeNull);
 
 		[Wrap ("WeakDelegate")]
@@ -2159,7 +2171,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("setStatusBarHidden:animated:")]
-		[Availability (Deprecated = Platform.iOS_3_2, Message = "Use 'SetStatusBarHidden (bool, UIStatusBarAnimation)' instead.")]
+		[Deprecated (PlatformName.iOS, 3, 2, message: "Use 'SetStatusBarHidden (bool, UIStatusBarAnimation)' instead.")]
 		void SetStatusBarHidden (bool hidden, bool animated);
 
 		[NoTV]
@@ -2192,7 +2204,7 @@ namespace UIKit {
 
 		// From @interface UIApplication (UIRemoteNotifications)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'RegisterUserNotifications', 'RegisterForNotifications'  or 'UNUserNotificationCenter.RequestAuthorization' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'RegisterUserNotifications', 'RegisterForNotifications'  or 'UNUserNotificationCenter.RequestAuthorization' instead.")]
 		[Export ("registerForRemoteNotificationTypes:")]
 		void RegisterForRemoteNotificationTypes (UIRemoteNotificationType types);
 
@@ -2202,7 +2214,7 @@ namespace UIKit {
 
 		// From @interface UIApplication (UIRemoteNotifications)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CurrentUserNotificationSettings' or 'UNUserNotificationCenter.GetNotificationSettings' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'CurrentUserNotificationSettings' or 'UNUserNotificationCenter.GetNotificationSettings' instead.")]
 		[Export ("enabledRemoteNotificationTypes")]
 		UIRemoteNotificationType EnabledRemoteNotificationTypes { get; }
 
@@ -2954,7 +2966,7 @@ namespace UIKit {
 		void OnResignActivation (UIApplication application);
 
 		[NoTV]
-		[Availability (Obsoleted = Platform.iOS_9_0, Message="Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
 		[Export ("application:handleOpenURL:")]
 		bool HandleOpenURL (UIApplication application, NSUrl url);
 		
@@ -3015,7 +3027,7 @@ namespace UIKit {
 		void ProtectedDataDidBecomeAvailable (UIApplication application);
 
 		[NoTV]
-		[Availability (Obsoleted = Platform.iOS_9_0, Message="Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
 		[Export ("application:openURL:sourceApplication:annotation:")]
 		bool OpenUrl (UIApplication application, NSUrl url, string sourceApplication, NSObject annotation);
 
@@ -4601,17 +4613,17 @@ namespace UIKit {
 		[Export ("groupTableViewBackgroundColor")][Static]
 		UIColor GroupTableViewBackgroundColor { get; }
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoWatch][NoTV]
 		[Export ("viewFlipsideBackgroundColor")][Static]
 		UIColor ViewFlipsideBackgroundColor { get; }
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoWatch][NoTV]
 		[Export ("scrollViewTexturedBackgroundColor")][Static]
 		UIColor ScrollViewTexturedBackgroundColor { get; }
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoWatch][NoTV]
 		[Static, Export ("underPageBackgroundColor")]
 		UIColor UnderPageBackgroundColor { get; }
@@ -6249,17 +6261,17 @@ namespace UIKit {
 		//
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_3_2)]
+		[Deprecated (PlatformName.iOS, 3, 2)]
 		[Field ("UIKeyboardCenterBeginUserInfoKey")]
 		NSString CenterBeginUserInfoKey { get; }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_3_2)]
+		[Deprecated (PlatformName.iOS, 3, 2)]
 		[Field ("UIKeyboardCenterEndUserInfoKey")]
 		NSString CenterEndUserInfoKey { get; }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_3_2)]
+		[Deprecated (PlatformName.iOS, 3, 2)]
 		[Field ("UIKeyboardBoundsUserInfoKey")]
 		NSString BoundsUserInfoKey { get; }
 #endif
@@ -6586,11 +6598,11 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("baseWritingDirectionForPosition:inDirection:")]
-		UITextWritingDirection GetBaseWritingDirection (UITextPosition forPosition, UITextStorageDirection direction);
+		NSWritingDirection GetBaseWritingDirection (UITextPosition forPosition, UITextStorageDirection direction);
 
 		[Abstract]
 		[Export ("setBaseWritingDirection:forRange:")]
-		void SetBaseWritingDirectionforRange (UITextWritingDirection writingDirection, UITextRange range);
+		void SetBaseWritingDirectionforRange (NSWritingDirection writingDirection, UITextRange range);
 
 		[Abstract]
 		[Export ("firstRectForRange:")]
@@ -6621,17 +6633,17 @@ namespace UIKit {
 		[Export ("characterOffsetOfPosition:withinRange:")]
 		nint GetCharacterOffsetOfPosition (UITextPosition position, UITextRange range);
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'NSAttributedString.BackgroundColorAttributeName'.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'NSAttributedString.BackgroundColorAttributeName'.")]
 		[Field ("UITextInputTextBackgroundColorKey")]
 		[NoTV]
 		NSString TextBackgroundColorKey { get; }
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'NSAttributedString.ForegroundColorAttributeName'.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'NSAttributedString.ForegroundColorAttributeName'.")]
 		[Field ("UITextInputTextColorKey")]
 		[NoTV]
 		NSString TextColorKey { get; }
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'NSAttributedString.FontAttributeName'.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'NSAttributedString.FontAttributeName'.")]
 		[Field ("UITextInputTextFontKey")]
 		[NoTV]
 		NSString TextFontKey { get; }
@@ -6764,7 +6776,7 @@ namespace UIKit {
 		CGRect Rect { get; }
 		
 		[Export ("writingDirection")]
-		UITextWritingDirection WritingDirection { get;  }
+		NSWritingDirection WritingDirection { get;  }
 
 		[Export ("containsStart")]
 		bool ContainsStart { get;  }
@@ -6822,7 +6834,7 @@ namespace UIKit {
 
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'UserNotifications.UNNotificationRequest' instead.")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationRequest' instead.")]
 	[DisableDefaultCtor] // designated
 	interface UILocalNotification : NSCoding, NSCopying {
 
@@ -8496,7 +8508,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("minimumFontSize")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'MinimumScaleFactor' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'MinimumScaleFactor' instead.")]
 		nfloat MinimumFontSize { get; set; }
 
 		[Export ("baselineAdjustment")]
@@ -8517,7 +8529,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("adjustsLetterSpacingToFitWidth")]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSKernAttributeName' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSKernAttributeName' instead.")]
 		bool AdjustsLetterSpacingToFitWidth { get; set;  }
 
 		[Export ("minimumScaleFactor")]
@@ -8838,11 +8850,11 @@ namespace UIKit {
 	[Model]
 	[Protocol]
 	interface UIDocumentInteractionControllerDelegate {
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Export ("documentInteractionController:canPerformAction:"), DelegateName ("UIDocumentInteractionProbe"), DefaultValue (false)]
 		bool CanPerformAction (UIDocumentInteractionController controller, [NullAllowed] Selector action);
 
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Export ("documentInteractionController:performAction:"), DelegateName ("UIDocumentInteractionProbe"), DefaultValue (false)]
 		bool PerformAction (UIDocumentInteractionController controller, [NullAllowed] Selector action);
 		
@@ -8903,7 +8915,7 @@ namespace UIKit {
 
 #if !XAMCORE_3_0
 		[Export ("allowsImageEditing")]
-		[Availability (Deprecated = Platform.iOS_3_1)]
+		[Deprecated (PlatformName.iOS, 3, 1)]
 		bool AllowsImageEditing { get; set; }
 #endif
 
@@ -9010,7 +9022,7 @@ namespace UIKit {
 	[Protocol]
 	interface UIImagePickerControllerDelegate {
 #if !XAMCORE_3_0
-		[Availability (Obsoleted = Platform.iOS_3_0)]
+		[Obsoleted (PlatformName.iOS, 3, 0)]
 		[Export ("imagePickerController:didFinishPickingImage:editingInfo:"), EventArgs ("UIImagePickerImagePicked")]
 		void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo);
 #endif
@@ -10404,6 +10416,9 @@ namespace UIKit {
 #endif // !TVOS
 #if IOS
 	, UIPasteConfigurationSupporting
+#if __MACCATALYST__
+	, NSTouchBarProvider
+#endif // __MACCATALYST__
 #endif // IOS
 	{
 
@@ -10614,6 +10629,18 @@ namespace UIKit {
 		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("captureTextFromCamera:")]
 		void CaptureTextFromCamera ([NullAllowed] NSObject sender);
+
+		[MacCatalyst (13, 0)]
+		[NoWatch, NoTV, NoiOS]
+		[Export ("makeTouchBar")]
+		[return: NullAllowed]
+		NSTouchBar CreateTouchBar ();
+
+		[MacCatalyst (13, 0)]
+		[NoWatch, NoTV, NoiOS]
+		[Export ("touchBar", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		NSTouchBar TouchBar { get; set; }
 	}
 	
 	[Category, BaseType (typeof (UIResponder))]
@@ -11337,7 +11364,7 @@ namespace UIKit {
 	}
 		
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController'.")]
+	[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UISearchController'.")]
 	[NoMacCatalyst] // Objective-C exception thrown.  Name: NSGenericException Reason: UISearchDisplayController is no longer supported when linking against this version of iOS. Please migrate your application to UISearchController.
 	[NoTV]
 	interface UISearchDisplayController {
@@ -11402,51 +11429,51 @@ namespace UIKit {
 	interface UISearchDisplayDelegate {
 		
 		[Export ("searchDisplayControllerWillBeginSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void WillBeginSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayControllerDidBeginSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void DidBeginSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayControllerWillEndSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void WillEndSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayControllerDidEndSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void DidEndSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayController:didLoadSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void DidLoadSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:willUnloadSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void WillUnloadSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:willShowSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void WillShowSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:didShowSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void DidShowSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:willHideSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void WillHideSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:didHideSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		void DidHideSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:shouldReloadTableForSearchString:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		bool ShouldReloadForSearchString (UISearchDisplayController controller, string forSearchString);
 		
 		[Export ("searchDisplayController:shouldReloadTableForSearchScope:")]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		bool ShouldReloadForSearchScope (UISearchDisplayController controller, nint forSearchOption);
 	}
 	
@@ -11499,7 +11526,7 @@ namespace UIKit {
 
 		[Export ("segmentedControlStyle")]
 		[NoTV][NoWatch]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "The 'SegmentedControlStyle' property no longer has any effect.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "The 'SegmentedControlStyle' property no longer has any effect.")]
 		UISegmentedControlStyle ControlStyle { get; set; }
 
 		[Export ("momentary")]
@@ -11958,7 +11985,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("selectedImageTintColor", ArgumentSemantic.Retain)]
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		[NullAllowed]
 		[Appearance]
 		UIColor SelectedImageTintColor { get; set;  }
@@ -12187,19 +12214,19 @@ namespace UIKit {
 		string BadgeValue { get; set; } 
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use the '(string, UIImage, UIImage)' constructor or the 'Image' and 'SelectedImage' properties along with 'RenderingMode = UIImageRenderingMode.AlwaysOriginal'.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use the '(string, UIImage, UIImage)' constructor or the 'Image' and 'SelectedImage' properties along with 'RenderingMode = UIImageRenderingMode.AlwaysOriginal'.")]
 		[Export ("setFinishedSelectedImage:withFinishedUnselectedImage:")]
 		[PostGet ("FinishedSelectedImage")]
 		[PostGet ("FinishedUnselectedImage")]
 		void SetFinishedImages ([NullAllowed] UIImage selectedImage, [NullAllowed] UIImage unselectedImage);
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Export ("finishedSelectedImage")]
 		UIImage FinishedSelectedImage { get; }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Export ("finishedUnselectedImage")]
 		UIImage FinishedUnselectedImage { get; }
 
@@ -12683,7 +12710,7 @@ namespace UIKit {
 		UIView GetViewForFooter (UITableView tableView, nint section);
 
 #if !XAMCORE_3_0
-		[Availability (Deprecated = Platform.iOS_3_0)]
+		[Deprecated (PlatformName.iOS, 3, 0)]
 		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
 		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
 #endif
@@ -13109,7 +13136,7 @@ namespace UIKit {
 		UIView GetViewForFooter (UITableView tableView, nint section);
 
 #if !XAMCORE_3_0
-		[Availability (Deprecated = Platform.iOS_3_0)]
+		[Deprecated (PlatformName.iOS, 3, 0)]
 		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
 		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
 #endif
@@ -14151,7 +14178,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("contentStretch")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'CreateResizableImage' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'CreateResizableImage' instead.")]
 		CGRect ContentStretch { get; set; }
 
 		[Static] [Export ("beginAnimations:context:")]
@@ -14290,7 +14317,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("viewForBaselineLayout")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message="Override 'ViewForFirstBaselineLayout' or 'ViewForLastBaselineLayout'.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Override 'ViewForFirstBaselineLayout' or 'ViewForLastBaselineLayout'.")]
 		UIView ViewForBaselineLayout { get; }
 
 		[iOS (9,0)]
@@ -14706,7 +14733,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("viewDidUnload")]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		void ViewDidUnload ();
 
 		[Export ("isViewLoaded")]
@@ -14739,17 +14766,17 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("presentModalViewController:animated:")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'PresentViewController (UIViewController, bool, NSAction)' instead and set the 'ModalViewController' property to true.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'PresentViewController (UIViewController, bool, NSAction)' instead and set the 'ModalViewController' property to true.")]
 		void PresentModalViewController (UIViewController modalViewController, bool animated);
 
 		[NoTV]
 		[Export ("dismissModalViewControllerAnimated:")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'DismissViewController (bool, NSAction)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'DismissViewController (bool, NSAction)' instead.")]
 		void DismissModalViewController (bool animated);
 		
 		[NoTV]
 		[Export ("modalViewController")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'PresentedViewController' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'PresentedViewController' instead.")]
 		UIViewController ModalViewController { get; }
 
 		[Export ("modalTransitionStyle", ArgumentSemantic.Assign)]
@@ -14757,7 +14784,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("wantsFullScreenLayout", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'EdgesForExtendedLayout', 'ExtendedLayoutIncludesOpaqueBars' and 'AutomaticallyAdjustsScrollViewInsets' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'EdgesForExtendedLayout', 'ExtendedLayoutIncludesOpaqueBars' and 'AutomaticallyAdjustsScrollViewInsets' instead.")]
 		bool WantsFullScreenLayout { get; set; }
 
 		[Export ("parentViewController")][NullAllowed]
@@ -14770,52 +14797,52 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("shouldAutorotateToInterfaceOrientation:")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use both 'GetSupportedInterfaceOrientations' and 'PreferredInterfaceOrientationForPresentation' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use both 'GetSupportedInterfaceOrientations' and 'PreferredInterfaceOrientationForPresentation' instead.")]
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation);
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use Adaptive View Controllers instead.")]
 		[Export ("rotatingHeaderView")]
 		UIView RotatingHeaderView { get; }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use Adaptive View Controllers instead.")]
 		[Export ("rotatingFooterView")]
 		UIView RotatingFooterView { get; }
 
 		[NoTV]
 		[Export ("interfaceOrientation")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use Adaptive View Controllers instead.")]
 		UIInterfaceOrientation InterfaceOrientation { get; }
 
 		[NoTV]
 		[Export ("willRotateToInterfaceOrientation:duration:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use Adaptive View Controllers instead.")]
 		void WillRotate (UIInterfaceOrientation toInterfaceOrientation, double duration);
 				 
 		[NoTV]
 		[Export ("didRotateFromInterfaceOrientation:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use Adaptive View Controllers instead.")]
 		void DidRotate (UIInterfaceOrientation fromInterfaceOrientation);
 		
 		[NoTV]
 		[Export ("willAnimateRotationToInterfaceOrientation:duration:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use Adaptive View Controllers instead.")]
 		void WillAnimateRotation (UIInterfaceOrientation toInterfaceOrientation, double duration);
 
 		[NoTV]
 		[Export ("willAnimateFirstHalfOfRotationToInterfaceOrientation:duration:")]
-		[Availability (Deprecated = Platform.iOS_5_0)]
+		[Deprecated (PlatformName.iOS, 5, 0)]
 		void WillAnimateFirstHalfOfRotation (UIInterfaceOrientation toInterfaceOrientation, double duration);
 
 		[NoTV]
 		[Export ("didAnimateFirstHalfOfRotationToInterfaceOrientation:")]
-		[Availability (Deprecated = Platform.iOS_5_0)]
+		[Deprecated (PlatformName.iOS, 5, 0)]
 		void DidAnimateFirstHalfOfRotation (UIInterfaceOrientation toInterfaceOrientation);
 		
 		[NoTV]
 		[Export ("willAnimateSecondHalfOfRotationFromInterfaceOrientation:duration:")]
-		[Availability (Deprecated = Platform.iOS_5_0)]
+		[Deprecated (PlatformName.iOS, 5, 0)]
 		void WillAnimateSecondHalfOfRotation (UIInterfaceOrientation fromInterfaceOrientation, double duration);
 
 		// These come from @interface UIViewController (UIViewControllerEditing)
@@ -14830,7 +14857,7 @@ namespace UIKit {
 
 		// These come from @interface UIViewController (UISearchDisplayControllerSupport)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UISearchController' instead.")]
 		[NoMacCatalyst]
 		[Export ("searchDisplayController", ArgumentSemantic.Retain)]
 		UISearchDisplayController SearchDisplayController { get; }
@@ -14874,20 +14901,20 @@ namespace UIKit {
 		// 3.2 extensions from MoviePlayer
 		[NoMac]
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Export ("presentMoviePlayerViewControllerAnimated:")]
 		void PresentMoviePlayerViewController (MPMoviePlayerViewController moviePlayerViewController);
 
 		[NoMac]
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Export ("dismissMoviePlayerViewControllerAnimated")]
 		void DismissMoviePlayerViewController ();
 
 
 		// This is defined in a category in UIPopoverSupport.h: UIViewController (UIPopoverController)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'PreferredContentSize' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'PreferredContentSize' instead.")]
 		[Export ("contentSizeForViewInPopover")]
 		CGSize ContentSizeForViewInPopover { get; set; }
 
@@ -14916,7 +14943,7 @@ namespace UIKit {
 		bool ProvidesPresentationContextTransitionStyle { get; set;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Export ("viewWillUnload")]
 		void ViewWillUnload ();
 
@@ -14959,7 +14986,7 @@ namespace UIKit {
 		void AttemptRotationToDeviceOrientation ();
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Export ("automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers")]
 		/*PROTECTED*/ bool AutomaticallyForwardAppearanceAndRotationMethodsToChildViewControllers { get; }
 
@@ -15043,7 +15070,7 @@ namespace UIKit {
 		UIInterfaceOrientation PreferredInterfaceOrientationForPresentation ();
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use Adaptive View Controllers instead.")]
 		[Export ("shouldAutomaticallyForwardRotationMethods")]
 		bool ShouldAutomaticallyForwardRotationMethods { get; }
 
@@ -15355,6 +15382,17 @@ namespace UIKit {
 		[NoWatch, NoTV, iOS (14,0)]
 		[Export ("setNeedsUpdateOfPrefersPointerLocked")]
 		void SetNeedsUpdateOfPrefersPointerLocked ();
+
+		[NoiOS][NoTV][NoWatch]
+		[MacCatalyst (13,0)]
+		[Export ("setNeedsTouchBarUpdate")]
+		void SetNeedsTouchBarUpdate ();
+
+		[NoiOS][NoTV][NoWatch]
+		[MacCatalyst (13, 0)]
+		[NullAllowed]
+		[Export ("childViewControllerForTouchBar")]
+		UIViewController ChildViewControllerForTouchBar { get; }
 	}
 
 	[iOS (7,0)]
@@ -16230,22 +16268,22 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("splitViewController:popoverController:willPresentViewController:"), EventArgs ("UISplitViewPresent")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UISearchController' instead.")]
 		void WillPresentViewController (UISplitViewController svc, UIPopoverController pc, UIViewController aViewController);
 
 		[NoTV]
 		[Export ("splitViewController:willHideViewController:withBarButtonItem:forPopoverController:"), EventArgs ("UISplitViewHide")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UISearchController' instead.")]
 		void WillHideViewController (UISplitViewController svc, UIViewController aViewController, UIBarButtonItem barButtonItem, UIPopoverController pc);
 
 		[NoTV]
 		[Export ("splitViewController:willShowViewController:invalidatingBarButtonItem:"), EventArgs ("UISplitViewShow")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UISearchController' instead.")]
 		void WillShowViewController (UISplitViewController svc, UIViewController aViewController, UIBarButtonItem button);
 
 		[NoTV]
 		[Export ("splitViewController:shouldHideViewController:inOrientation:"), DelegateName ("UISplitViewControllerHidePredicate"), DefaultValue (true)]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UISearchController' instead.")]
 		bool ShouldHideViewController (UISplitViewController svc, UIViewController viewController, UIInterfaceOrientation inOrientation);
 	
 		[iOS (8,0)]
@@ -16417,7 +16455,7 @@ namespace UIKit {
 		UIViewController InstantiateViewController (string identifier, [NullAllowed] UIStoryboardViewControllerCreator creator);
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[DisableDefaultCtor] // as it subclass UIStoryboardSegue we end up with the same error
 	[BaseType (typeof (UIStoryboardSegue))]
 	interface UIStoryboardPopoverSegue {
@@ -16713,7 +16751,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UITextInputMode : NSSecureCoding {
 		[Export ("currentInputMode"), NullAllowed][Static]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoTV]
 		UITextInputMode CurrentInputMode { get; }
 
@@ -17248,73 +17286,73 @@ namespace UIKit {
 	interface UIStringDrawing {
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGPoint, UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.DrawString (CGPoint, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:withFont:")]
 		CGSize DrawString (CGPoint point, UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:lineBreakMode:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, UILineBreakMode breakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:fontSize:lineBreakMode:baselineAdjustment:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:minFontSize:actualFontSize:lineBreakMode:baselineAdjustment:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:")]
 		CGSize DrawString (CGRect rect, UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:lineBreakMode:")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:lineBreakMode:alignment:")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode, UITextAlignment alignment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetSizeUsingAttributes (UIStringAttributes)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.GetSizeUsingAttributes (UIStringAttributes)' instead.")]
 		[Export ("sizeWithFont:")]
 		CGSize StringSize (UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:forWidth:lineBreakMode:")]
 		CGSize StringSize (UIFont font, nfloat forWidth, UILineBreakMode breakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:constrainedToSize:")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:constrainedToSize:lineBreakMode:")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize, UILineBreakMode lineBreakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		// Wait for guidance here: https://devforums.apple.com/thread/203655
 		//[Obsolete ("Deprecated on iOS7.   No guidance.")]
 		[Export ("sizeWithFont:minFontSize:actualFontSize:forWidth:lineBreakMode:")]
@@ -18030,7 +18068,7 @@ namespace UIKit {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'PreferredFocusEnvironments' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		UIView PreferredFocusedView { get; set; }
 
@@ -18329,7 +18367,7 @@ namespace UIKit {
 		[Abstract]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		[iOS (9,0)] // duplicated so it's inlined properly
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'PreferredFocusEnvironments' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
 		UIView PreferredFocusedView { get; }
 
 		[Abstract]
@@ -20051,7 +20089,7 @@ namespace UIKit {
 		Class SceneClass { get; set; }
 
 		Type SceneType {
-			[Wrap ("Class.Lookup (SceneClass)")] get;
+			[Wrap ("Class.Lookup (SceneClass)!")] get;
 			[Wrap ("SceneClass = value is null ? null : new Class (value)")] set;
 		}
 
@@ -20060,7 +20098,7 @@ namespace UIKit {
 		Class DelegateClass { get; set; }
 
 		Type DelegateType {
-			[Wrap ("Class.Lookup (DelegateClass)")] get;
+			[Wrap ("Class.Lookup (DelegateClass)!")] get;
 			[Wrap ("DelegateClass = value is null ? null : new Class (value)")] set;
 		}
 
@@ -20994,6 +21032,12 @@ namespace UIKit {
 		[NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("focusSystem")]
 		UIFocusSystem FocusSystem { get; }
+
+		[NoWatch][NoTV][NoiOS]
+		[MacCatalyst (13, 0)]
+		[Export ("titlebar")]
+		[NullAllowed]
+		UITitlebar Titlebar { get; }
 	}
 
 	interface IUIWindowSceneDelegate { }
@@ -23146,4 +23190,47 @@ namespace UIKit {
 		UIPointerAccessory CreateArrow (UIPointerAccessoryPosition position);
 	}
 
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13,0)]
+	[Native]
+	public enum UITitlebarTitleVisibility : long
+	{
+		Visible,
+		Hidden,
+	}
+
+	[MacCatalyst (14,0)][NoiOS][NoTV][NoWatch]
+	[Native]
+	public enum UITitlebarToolbarStyle : long
+	{
+		Automatic,
+		Expanded,
+		Preference,
+		Unified,
+		UnifiedCompact,
+	}
+
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface UITitlebar
+	{
+		[Export ("titleVisibility", ArgumentSemantic.Assign)]
+		UITitlebarTitleVisibility TitleVisibility { get; set; }
+
+		[MacCatalyst (14, 0)]
+		[Export ("toolbarStyle", ArgumentSemantic.Assign)]
+		UITitlebarToolbarStyle ToolbarStyle { get; set; }
+
+		[MacCatalyst (14, 0)]
+		[Export ("separatorStyle", ArgumentSemantic.Assign)]
+		UITitlebarSeparatorStyle SeparatorStyle { get; set; }
+
+		[NullAllowed, Export ("toolbar", ArgumentSemantic.Strong)]
+		NSToolbar Toolbar { get; set; }
+
+		[Export ("autoHidesToolbarInFullScreen")]
+		bool AutoHidesToolbarInFullScreen { get; set; }
+
+		[NullAllowed, Export ("representedURL", ArgumentSemantic.Copy)]
+		NSUrl RepresentedUrl { get; set; }
+	}
 }

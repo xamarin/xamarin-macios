@@ -34,13 +34,13 @@ using System.Collections.Generic;
 
 namespace Darwin {
 
-	public class SystemLog : IDisposable, INativeObject {
+	public class SystemLog : DisposableObject {
 		static SystemLog _default;
 		
 		public static SystemLog Default {
 			get {
 				if (_default == null)
-					_default = new SystemLog (IntPtr.Zero);
+					_default = new SystemLog ();
 				return _default;
 			}
 		}
@@ -48,28 +48,11 @@ namespace Darwin {
 		[Flags]
 		public enum Option { Stderr, NoDelay, NoRemote }
 
-		bool disposed;
-		IntPtr handle;
-		public IntPtr Handle { get { return handle; } }
-
-		public void Dispose ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		~SystemLog ()
-		{
-			Dispose (false);
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (!disposed){
-				asl_close (handle);
-				disposed = true;
-				handle = IntPtr.Zero;
-			}
+			if (Handle != IntPtr.Zero && Owns)
+				asl_close (Handle);
+			base.Dispose (disposing);
 		}
 		
 		[DllImport (Constants.SystemLibrary)]
@@ -78,32 +61,39 @@ namespace Darwin {
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr asl_open (string ident, string facility, Option /* uint32_t */ options);
 
-		SystemLog (IntPtr handle)
+		SystemLog ()
+			: base (IntPtr.Zero, false, false)
 		{
-			this.handle = handle;
+		}
+
+		SystemLog (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
 		}
 		
 		public SystemLog (string ident, string facility, Option options = 0)
+			: base (
+					asl_open (
+						Runtime.ThrowOnNull (ident, nameof (ident)),
+						Runtime.ThrowOnNull (facility, nameof (facility)),
+						options),
+					true
+				)
 		{
-			if (ident == null)
-				throw new ArgumentNullException ("ident");
-			if (facility == null)
-				throw new ArgumentNullException ("facility");
-			
-			handle = asl_open (ident, facility, options);
 		}
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr asl_open_from_file (int /* int */ fd, string ident, string facility);
 		
 		public SystemLog (int fileDescriptor, string ident, string facility)
+			: base (
+					asl_open_from_file (
+						fileDescriptor,
+						Runtime.ThrowOnNull (ident, nameof (ident)),
+						Runtime.ThrowOnNull (facility, nameof (facility))),
+					true
+				)
 		{
-			if (ident == null)
-				throw new ArgumentNullException ("ident");
-			if (facility == null)
-				throw new ArgumentNullException ("facility");
-
-			handle = asl_open_from_file (fileDescriptor, ident, facility);
 		}
 
 		[DllImport (Constants.SystemLibrary)]
@@ -114,12 +104,12 @@ namespace Darwin {
 		
 		public void AddLogFile (int descriptor)
 		{
-			asl_add_log_file (handle, descriptor);
+			asl_add_log_file (Handle, descriptor);
 		}
 
 		public void RemoveLogFile (int descriptor)
 		{
-			asl_remove_log_file (handle, descriptor);
+			asl_remove_log_file (Handle, descriptor);
 		}
 
 		[DllImport (Constants.SystemLibrary)]
@@ -130,7 +120,7 @@ namespace Darwin {
 			var txt = text == null ? "" : String.Format (text, args);
 			if (txt.IndexOf ('%') != -1)
 				txt = txt.Replace ("%", "%%");
-			return asl_log (handle, msg == null ? IntPtr.Zero : msg.Handle, txt);
+			return asl_log (Handle, msg.GetHandle (), txt);
 		}
 
 		public int Log (string text)
@@ -138,7 +128,7 @@ namespace Darwin {
 			if (text == null)
 				throw new ArgumentNullException ("text");
 			
-			return asl_log (handle, IntPtr.Zero, text);
+			return asl_log (Handle, IntPtr.Zero, text);
 		}
 		
 		[DllImport (Constants.SystemLibrary)]
@@ -149,7 +139,7 @@ namespace Darwin {
 			if (msg == null)
 				throw new ArgumentNullException ("msg");
 			
-			return asl_send (handle, msg.Handle);
+			return asl_send (Handle, msg.Handle);
 		}
 
 		[DllImport (Constants.SystemLibrary)]
@@ -157,7 +147,7 @@ namespace Darwin {
 		
 		public int SetFilter (int level)
 		{
-			return asl_set_filter (handle, level);
+			return asl_set_filter (Handle, level);
 		}
 
 		[DllImport (Constants.SystemLibrary)]
@@ -173,18 +163,17 @@ namespace Darwin {
 		{
 			if (msg == null)
 				throw new ArgumentNullException ("msg");
-			var search = asl_search (handle, msg.Handle);
+			var search = asl_search (Handle, msg.Handle);
 			IntPtr mh;
 			
 			while ((mh = aslresponse_next (search)) != IntPtr.Zero)
-				yield return new Message (mh);
+				yield return new Message (mh, false);
 
 			aslresponse_free (search);
 		}
 	}
 
-	public class Message : IDisposable, INativeObject {
-		public IntPtr Handle { get; private set; }
+	public class Message : DisposableObject {
 		public enum Kind { Message, Query }
 
 		[Flags]
@@ -204,36 +193,24 @@ namespace Darwin {
 			True = 7
 		}
 
-		internal Message (IntPtr handle)
+		internal Message (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.Handle = handle;
 		}
 		
 		public Message (Kind kind)
+			: base (asl_new (kind), true)
 		{
-			Handle = asl_new (kind);
 		}
 
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		~Message ()
-		{
-			Dispose (false);
-		}
-		
 		[DllImport (Constants.SystemLibrary)]
 		extern static void asl_free (IntPtr handle);
 
-		protected virtual void Dispose (bool disposing)
+		protected override void Dispose (bool disposing)
 		{
-			if (Handle != IntPtr.Zero){
+			if (Handle != IntPtr.Zero && Owns)
 				asl_free (Handle);
-				Handle = IntPtr.Zero;
-			}
+			base.Dispose (disposing);
 		}
 
 		[DllImport (Constants.SystemLibrary)]

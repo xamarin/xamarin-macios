@@ -22,6 +22,7 @@ using OS_nw_establishment_report=System.IntPtr;
 using nw_endpoint_t=System.IntPtr;
 using nw_report_protocol_enumerator_t=System.IntPtr;
 using nw_protocol_definition_t=System.IntPtr;
+using nw_resolution_report_t=System.IntPtr;
 
 namespace Network {
 
@@ -133,6 +134,47 @@ namespace Network {
 			get {
 				var ptr = nw_establishment_report_copy_proxy_endpoint (GetCheckedHandle ());
 				return (ptr == IntPtr.Zero) ? null : new NWEndpoint (ptr, owns:true);
+			}
+		}
+		
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_establishment_report_enumerate_resolution_reports (OS_nw_establishment_report report, ref BlockLiteral enumerateBlock);
+		
+		delegate void nw_report_resolution_report_enumerator_t (IntPtr block, nw_resolution_report_t report);
+		static nw_report_resolution_report_enumerator_t static_EnumerateResolutionReport = TrampolineEnumerateResolutionReport;
+
+		[MonoPInvokeCallback (typeof (nw_report_resolution_report_enumerator_t))]
+		static void TrampolineEnumerateResolutionReport (IntPtr block, nw_resolution_report_t report)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWResolutionReport>> (block);
+			if (del is null)
+				return;
+			using var nwReport = new NWResolutionReport (report, owns: false);
+			del (nwReport);
+		}
+
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void EnumerateResolutionReports (Action<NWResolutionReport> handler)
+		{
+			if (handler is null) 
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral blockHandler = new ();
+			blockHandler.SetupBlockUnsafe (static_EnumerateResolutionReport, handler);
+			try {
+				nw_establishment_report_enumerate_protocols (GetCheckedHandle (), ref blockHandler);
+			} finally {
+				blockHandler.CleanupBlock ();
 			}
 		}
 	}

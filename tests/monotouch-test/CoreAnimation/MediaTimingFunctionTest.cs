@@ -10,11 +10,9 @@
 #if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using CoreGraphics;
 using Foundation;
 using CoreAnimation;
-using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMotion {

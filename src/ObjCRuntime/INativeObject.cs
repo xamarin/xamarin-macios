@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using Foundation;
 
@@ -16,17 +18,25 @@ namespace ObjCRuntime {
 
 		// help to avoid the (too common pattern)
 		// 	var p = x == null ? IntPtr.Zero : x.Handle;
-		static public IntPtr GetHandle (this INativeObject self)
+		static public IntPtr GetHandle (this INativeObject? self)
 		{
-			return self == null ? IntPtr.Zero : self.Handle;
+			return self is null ? IntPtr.Zero : self.Handle;
 		}
 
 		static public IntPtr GetNonNullHandle (this INativeObject self, string argumentName)
 		{
-			if (self == null)
+			if (self is null)
 				ThrowHelper.ThrowArgumentNullException (argumentName);
 			if (self.Handle == IntPtr.Zero)
 				ThrowHelper.ThrowObjectDisposedException (self);
+			return self.Handle;
+		}
+
+		public static IntPtr GetCheckedHandle (this INativeObject self)
+		{
+			if (self.Handle == IntPtr.Zero)
+				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (self);
+
 			return self.Handle;
 		}
 	}

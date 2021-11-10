@@ -699,6 +699,7 @@ namespace Introspection {
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
 				case "UISheetPresentationControllerDetent": // conformance not in headers
+				case "CAConstraintLayoutManager": // Not declared in header file
 					return true;
 				}
 				break;
@@ -738,6 +739,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.3
 				case "WKPreferences": // Conformance not in headers
+				case "QLPreviewSceneActivationConfiguration":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":

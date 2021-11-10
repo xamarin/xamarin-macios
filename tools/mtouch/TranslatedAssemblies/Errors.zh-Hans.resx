@@ -742,10 +742,10 @@
 		<value>未与框架 {0} (由 {1} 中的模块引用进行引用)链接，因为它在当前平台({2})上不可用。</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>无法将 Mac Catalyst 版本 {0} 映射到相应的 macOS 版本。有效的 Mac Catalyst 版本为: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>无法将 macOS 版本 {0} 映射到相应的 Mac Catalyst 版本。有效的 macOS 版本为: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>使用 CoreCLR 时，选项“{0}”无法取值“{1}”。</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>绑定库 "{0}" 包含用户框架({0})，但嵌入式用户框架需要 iOS 8.0 (部署目标是 {1})。请将 Info.plist 文件中的部署目标至少设为 8.0。
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>无法解压缩文件“{0}”。请查看生成日志，以从本机 “unzip” 命令获取详细信息。</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>引用中缺少必需的 "Xamarin.Mac.dll" 程序集

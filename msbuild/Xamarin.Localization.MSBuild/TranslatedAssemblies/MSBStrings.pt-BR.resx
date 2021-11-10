@@ -711,10 +711,10 @@
         <value>O Caminho do Arquivo Morto fornecido não é de um arquivo morto válido (.xcarchive). Caminho do Arquivo Morto: '{0}'</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Não foi possível mapear a versão MacOS {0} para uma versão Mac Catalyst correspondente. As versões válidas do MacOS são: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Não foi possível mapear a versão Mac Catalyst {0} para uma versão MacOS correspondente. As versões válidas do Mac Catalyst são: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Não foi possível resolver os IPs do host para as configurações do depurador de WiFi.
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>Todos os arquivos de fontes devem estar localizados no mesmo diretório no pacote de aplicativos. Os seguintes arquivos de fonte têm diretórios de destino diferentes no pacote de aplicativos:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>O diretório de destino é {0}</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Criando um pacote de recursos de associação compactado porque existem links simbólicos na entrada.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>O valor '{0}' é inválido na propriedade Compress. Valores válidos: 'true', 'false' ou 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>Esperado um arquivo de 'manifesto' no diretório {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

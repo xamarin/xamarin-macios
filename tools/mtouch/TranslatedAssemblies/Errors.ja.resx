@@ -742,10 +742,10 @@
 		<value>現在のプラットフォーム ({2}) では使用できないため、({1} のモジュール参照で参照されている) フレームワーク {0} とリンクしていません。</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Mac Catalyst のバージョン {0} を対応する macOS バージョンにマップできませんでした。有効な Mac Catalyst のバージョンは次のとおりです: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>macOS バージョン {0} を対応する Mac Catalyst のバージョンにマップできませんでした。有効な macOS バージョンは次のとおりです: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>CoreCLR を使用している場合、オプション '{0}' は値 '{1}' を取得できません。</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>バインド ライブラリ '{0}' にはユーザー フレームワーク ({0}) が含まれていますが、埋め込みユーザー フレームワークには iOS 8.0 が必要です (配置ターゲットは {1})。Info.plist ファイルで配置ターゲットを 8.0 以上に設定してください。
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>ファイル '{0}' を展開できませんでした。ビルド ログを参照して、ネイティブの 'unzip' コマンドからの詳細情報をご確認ください。</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>必要な 'Xamarin.Mac.dll' アセンブリが参照にありません

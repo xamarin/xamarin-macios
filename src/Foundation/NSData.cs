@@ -274,7 +274,7 @@ namespace Foundation {
 			get {
 				if (idx < 0 || (ulong) idx > Length)
 					throw new ArgumentException ("idx");
-				return Marshal.ReadByte (new IntPtr (Bytes.ToInt64 () + idx));
+				return Marshal.ReadByte (new IntPtr (((long) Bytes) + idx));
 			}
 
 			set {

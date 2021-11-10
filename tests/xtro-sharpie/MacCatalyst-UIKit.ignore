@@ -1,3 +1,8 @@
+# https://github.com/xamarin/xamarin-macios/issues/12871 
+# Catalyst field constants that are loaded from private UIKitCore are not being handled by Field attribute
+!missing-field! NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier not bound
+!missing-field! NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier not bound
+
 # Apple docs: Deprecated in iOS 3.2
 !unknown-field! UIKeyboardBoundsUserInfoKey bound
 !unknown-field! UIKeyboardCenterBeginUserInfoKey bound
@@ -34,3 +39,10 @@
 
 ## Grouped nint constants
 !unknown-native-enum! UIFocusGroupPriority bound
+
+## Selectors documented in web docs but not in header files
+!missing-selector! +NSToolbarItem::itemWithItemIdentifier:barButtonItem: not bound
+!missing-selector! NSSharingServicePickerToolbarItem::activityItemsConfiguration not bound
+!missing-selector! NSSharingServicePickerToolbarItem::setActivityItemsConfiguration: not bound
+!missing-selector! NSSharingServicePickerTouchBarItem::activityItemsConfiguration not bound
+!missing-selector! NSSharingServicePickerTouchBarItem::setActivityItemsConfiguration: not bound

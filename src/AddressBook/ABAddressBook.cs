@@ -27,6 +27,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -55,14 +57,14 @@ namespace AddressBook {
 #endif
 #endif
 	public class ExternalChangeEventArgs : EventArgs {
-		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary info)
+		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary? info)
 		{
 			AddressBook = addressBook;
 			Info        = info;
 		}
 
 		public ABAddressBook AddressBook {get; private set;}
-		public NSDictionary Info {get; private set;}
+		public NSDictionary? Info {get; private set;}
 	}
 
 	// Quoth the docs: 
@@ -84,7 +86,7 @@ namespace AddressBook {
 		{
 #if __MACCATALYST__
 			// avoid TypeLoadException if used before macOS 11.x
-			if (!UIKit.UIDevice.CurrentDevice.CheckSystemVersion (14,0))
+			if (!SystemVersion.CheckiOS (14,0))
 				return;
 #endif
 			// ensure we can init. This is needed before iOS6 (as per doc).
@@ -124,11 +126,10 @@ namespace AddressBook {
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-	public class ABAddressBook : INativeObject, IDisposable, IEnumerable<ABRecord> {
+	public class ABAddressBook : NativeObject, IEnumerable<ABRecord> {
 
 		public static readonly NSString ErrorDomain;
 
-		IntPtr handle;
 		GCHandle sender;
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -143,22 +144,18 @@ namespace AddressBook {
 #endif
 #endif
 		public ABAddressBook ()
+			: this (ABAddressBookCreate (), true)
 		{
-			this.handle = ABAddressBookCreate ();
-
-			InitConstants.Init ();
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		internal extern static IntPtr ABAddressBookCreateWithOptions (IntPtr dictionary, out IntPtr cfError);
 
-		public static ABAddressBook Create (out NSError error)
+		public static ABAddressBook? Create (out NSError? error)
 		{
-			IntPtr e;
-			
-			var handle = ABAddressBookCreateWithOptions (IntPtr.Zero, out e);
+			var handle = ABAddressBookCreateWithOptions (IntPtr.Zero, out var e);
 			if (handle == IntPtr.Zero){
-				error = new NSError (e);
+				error = Runtime.GetNSObject<NSError> (e);
 				return null;
 			}
 			error = null;
@@ -166,55 +163,21 @@ namespace AddressBook {
 		}
 			
 		internal ABAddressBook (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
 			InitConstants.Init ();
-			if (!owns)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
 		}
 
-		internal ABAddressBook (IntPtr handle)
-		{
-			InitConstants.Init ();
-			this.handle = handle;
-		}
-		
 		static ABAddressBook ()
 		{
-			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain");
+			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain")!;
 		}
 
-		~ABAddressBook ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero)
-				CFObject.CFRelease (handle);
 			if (sender.IsAllocated)
 				sender.Free ();
-			handle = IntPtr.Zero;
-		}
-
-		void AssertValid ()
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("");
-		}
-
-		public IntPtr Handle {
-			get {
-				AssertValid ();
-				return handle;
-			}
+			base.Dispose (disposing);
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -226,23 +189,18 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		extern unsafe static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, void * completion);
+		extern static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, ref BlockLiteral completion);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void RequestAccess (Action<bool,NSError> onCompleted)
+		public void RequestAccess (Action<bool,NSError?> onCompleted)
 		{
-			if (onCompleted == null)
-				throw new ArgumentNullException ("onCompleted");
-			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_completionHandler, onCompleted);
+			if (onCompleted is null)
+				throw new ArgumentNullException (nameof (onCompleted));
 
-				ABAddressBookRequestAccessWithCompletion (Handle, (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
-			}
+			var block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_completionHandler, onCompleted);
+			ABAddressBookRequestAccessWithCompletion (Handle, ref block_handler);
+			block_handler.CleanupBlock ();
 		}
 
 		internal delegate void InnerCompleted (IntPtr block, bool success, IntPtr error);
@@ -251,9 +209,9 @@ namespace AddressBook {
 		static unsafe void TrampolineCompletionHandler (IntPtr block, bool success, IntPtr error)
 		{
 			var descriptor = (BlockLiteral *) block;
-			var del = (Action<bool, NSError>) (descriptor->Target);
-			if (del != null)
-				del (success, error == IntPtr.Zero ? null : (Foundation.NSError) Runtime.GetNSObject (error));
+			var del = descriptor->Target as Action<bool, NSError?>;
+			if (del is not null)
+				del (success, Runtime.GetNSObject<NSError> (error));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -261,8 +219,7 @@ namespace AddressBook {
 		extern static bool ABAddressBookHasUnsavedChanges (IntPtr addressBook);
 		public bool HasUnsavedChanges {
 			get {
-				AssertValid ();
-				return ABAddressBookHasUnsavedChanges (Handle);
+				return ABAddressBookHasUnsavedChanges (GetCheckedHandle ());
 			}
 		}
 
@@ -271,9 +228,7 @@ namespace AddressBook {
 		extern static bool ABAddressBookSave (IntPtr addressBook, out IntPtr error);
 		public void Save ()
 		{
-			AssertValid ();
-			IntPtr error;
-			if (!ABAddressBookSave (Handle, out error))
+			if (!ABAddressBookSave (GetCheckedHandle (), out var error))
 				throw CFException.FromCFError (error);
 		}
 
@@ -281,8 +236,7 @@ namespace AddressBook {
 		extern static void ABAddressBookRevert (IntPtr addressBook);
 		public void Revert ()
 		{
-			AssertValid ();
-			ABAddressBookRevert (Handle);
+			ABAddressBookRevert (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -290,12 +244,10 @@ namespace AddressBook {
 		extern static bool ABAddressBookAddRecord (IntPtr addressBook, IntPtr record, out IntPtr error);
 		public void Add (ABRecord record)
 		{
-			if (record == null)
-				throw new ArgumentNullException ("record");
+			if (record is null)
+				throw new ArgumentNullException (nameof (record));
 
-			AssertValid ();
-			IntPtr error;
-			if (!ABAddressBookAddRecord (Handle, record.Handle, out error))
+			if (!ABAddressBookAddRecord (GetCheckedHandle (), record.Handle, out var error))
 				throw CFException.FromCFError (error);
 			record.AddressBook = this;
 		}
@@ -305,12 +257,10 @@ namespace AddressBook {
 		extern static bool ABAddressBookRemoveRecord (IntPtr addressBook, IntPtr record, out IntPtr error);
 		public void Remove (ABRecord record)
 		{
-			if (record == null)
-				throw new ArgumentNullException ("record");
+			if (record is null)
+				throw new ArgumentNullException (nameof (record));
 
-			AssertValid ();
-			IntPtr error;
-			if (!ABAddressBookRemoveRecord (Handle, record.Handle, out error))
+			if (!ABAddressBookRemoveRecord (GetCheckedHandle (), record.Handle, out var error))
 				throw CFException.FromCFError (error);
 			record.AddressBook = null;
 		}
@@ -319,8 +269,7 @@ namespace AddressBook {
 		extern static nint ABAddressBookGetPersonCount (IntPtr addressBook);
 		public nint PeopleCount {
 			get {
-				AssertValid ();
-				return ABAddressBookGetPersonCount (Handle);
+				return ABAddressBookGetPersonCount (GetCheckedHandle ());
 			}
 		}
 
@@ -328,8 +277,7 @@ namespace AddressBook {
 		extern static IntPtr ABAddressBookCopyArrayOfAllPeople (IntPtr addressBook);
 		public ABPerson [] GetPeople ()
 		{
-			AssertValid ();
-			IntPtr cfArrayRef = ABAddressBookCopyArrayOfAllPeople (Handle);
+			var cfArrayRef = ABAddressBookCopyArrayOfAllPeople (GetCheckedHandle ());
 			return NSArray.ArrayFromHandle (cfArrayRef, h => new ABPerson (h, this));
 		}
 
@@ -338,10 +286,9 @@ namespace AddressBook {
 
 		public ABPerson [] GetPeople (ABRecord source)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
-			AssertValid ();
-			IntPtr cfArrayRef = ABAddressBookCopyArrayOfAllPeopleInSource (Handle, source.Handle);
+			if (source is null)
+				throw new ArgumentNullException (nameof (source));
+			var cfArrayRef = ABAddressBookCopyArrayOfAllPeopleInSource (GetCheckedHandle (), source.Handle);
 			return NSArray.ArrayFromHandle (cfArrayRef, l => new ABPerson (l, this));
 		}
 
@@ -350,10 +297,9 @@ namespace AddressBook {
 
 		public ABPerson [] GetPeople (ABRecord source, ABPersonSortBy sortOrdering)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
-			AssertValid ();
-			IntPtr cfArrayRef = ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering (Handle, source.Handle, sortOrdering);
+			if (source is null)
+				throw new ArgumentNullException (nameof (source));
+			var cfArrayRef = ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering (GetCheckedHandle (), source.Handle, sortOrdering);
 			return NSArray.ArrayFromHandle (cfArrayRef, l => new ABPerson (l, this));
 		}		
 
@@ -361,8 +307,7 @@ namespace AddressBook {
 		extern static nint ABAddressBookGetGroupCount (IntPtr addressBook);
 		public nint GroupCount {
 			get {
-				AssertValid ();
-				return ABAddressBookGetGroupCount (Handle);
+				return ABAddressBookGetGroupCount (GetCheckedHandle ());
 			}
 		}
 
@@ -370,8 +315,7 @@ namespace AddressBook {
 		extern static IntPtr ABAddressBookCopyArrayOfAllGroups (IntPtr addressBook);
 		public ABGroup [] GetGroups ()
 		{
-			AssertValid ();
-			IntPtr cfArrayRef = ABAddressBookCopyArrayOfAllGroups (Handle);
+			var cfArrayRef = ABAddressBookCopyArrayOfAllGroups (GetCheckedHandle ());
 			return NSArray.ArrayFromHandle (cfArrayRef, h => new ABGroup (h, this));
 		}
 
@@ -380,23 +324,21 @@ namespace AddressBook {
 
 		public ABGroup[] GetGroups (ABRecord source)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
+			if (source is null)
+				throw new ArgumentNullException (nameof (source));
 
-			AssertValid ();
-			IntPtr cfArrayRef = ABAddressBookCopyArrayOfAllGroupsInSource (Handle, source.Handle);
+			var cfArrayRef = ABAddressBookCopyArrayOfAllGroupsInSource (GetCheckedHandle (), source.Handle);
 			return NSArray.ArrayFromHandle (cfArrayRef, l => new ABGroup (l, this));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyLocalizedLabel (IntPtr label);
-		public static string LocalizedLabel (NSString label)
+		public static string? LocalizedLabel (NSString label)
 		{
-			if (label == null)
-				throw new ArgumentNullException ("label");
+			if (label is null)
+				throw new ArgumentNullException (nameof (label));
 
-			using (var s = new NSString (ABAddressBookCopyLocalizedLabel (label.Handle)))
-				return s.ToString ();
+			return CFString.FromHandle (ABAddressBookCopyLocalizedLabel (label.Handle));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -412,29 +354,29 @@ namespace AddressBook {
 		{
 			GCHandle s = GCHandle.FromIntPtr (context);
 			var self = s.Target as ABAddressBook;
-			if (self == null)
+			if (self is null)
 				return;
 			self.OnExternalChange (new ExternalChangeEventArgs (
 					       new ABAddressBook (addressBook, false),
-						(NSDictionary) Runtime.GetNSObject (info)));
+					       Runtime.GetNSObject<NSDictionary> (info)));
 		}
 
 		object eventLock = new object ();
 
-		EventHandler<ExternalChangeEventArgs> externalChange;
+		EventHandler<ExternalChangeEventArgs>? externalChange;
 
 		protected virtual void OnExternalChange (ExternalChangeEventArgs e)
 		{
-			AssertValid ();
-			EventHandler<ExternalChangeEventArgs> h = externalChange;
-			if (h != null)
+			GetCheckedHandle ();
+			var h = externalChange;
+			if (h is not null)
 				h (this, e);
 		}
 
 		public event EventHandler<ExternalChangeEventArgs> ExternalChange {
 			add {
 				lock (eventLock) {
-					if (externalChange == null) {
+					if (externalChange is null) {
 						sender = GCHandle.Alloc (this);
 						ABAddressBookRegisterExternalChangeCallback (Handle, ExternalChangeCallback, GCHandle.ToIntPtr (sender));
 					}
@@ -444,7 +386,7 @@ namespace AddressBook {
 			remove {
 				lock (eventLock) {
 					externalChange -= value;
-					if (externalChange == null) {
+					if (externalChange is null) {
 						ABAddressBookUnregisterExternalChangeCallback (Handle, ExternalChangeCallback, GCHandle.ToIntPtr (sender));
 						sender.Free ();
 					}
@@ -459,7 +401,7 @@ namespace AddressBook {
 
 		public IEnumerator<ABRecord> GetEnumerator ()
 		{
-			AssertValid ();
+			GetCheckedHandle ();
 			foreach (var p in GetPeople ())
 				yield return p;
 			foreach (var g in GetGroups ())
@@ -468,7 +410,7 @@ namespace AddressBook {
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookGetGroupWithRecordID (IntPtr addressBook, int /* ABRecordID */ recordId);
-		public ABGroup GetGroup (int recordId)
+		public ABGroup? GetGroup (int recordId)
 		{
 			var h = ABAddressBookGetGroupWithRecordID (Handle, recordId);
 			if (h == IntPtr.Zero)
@@ -478,7 +420,7 @@ namespace AddressBook {
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookGetPersonWithRecordID (IntPtr addressBook, int /* ABRecordID */ recordId);
-		public ABPerson GetPerson (int recordId)
+		public ABPerson? GetPerson (int recordId)
 		{
 			var h = ABAddressBookGetPersonWithRecordID (Handle, recordId);
 			if (h == IntPtr.Zero)
@@ -490,10 +432,13 @@ namespace AddressBook {
 		extern static IntPtr ABAddressBookCopyPeopleWithName (IntPtr addressBook, IntPtr name);
 		public ABPerson [] GetPeopleWithName (string name)
 		{
-			IntPtr cfArrayRef;
-			using (var s = new NSString (name))
-				cfArrayRef = ABAddressBookCopyPeopleWithName (Handle, s.Handle);
-			return NSArray.ArrayFromHandle (cfArrayRef, h => new ABPerson (h, this));
+			var nameHandle = CFString.CreateNative (name);
+			try {
+				var cfArrayRef = ABAddressBookCopyPeopleWithName (Handle, nameHandle);
+				return NSArray.ArrayFromHandle (cfArrayRef, h => new ABPerson (h, this));
+			} finally {
+				CFString.ReleaseNative (nameHandle);
+			}
 		}
 		
 		// ABSource
@@ -501,19 +446,17 @@ namespace AddressBook {
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr /* CFArrayRef */ ABAddressBookCopyArrayOfAllSources (IntPtr /* ABAddressBookRef */ addressBook);
-		public ABSource [] GetAllSources ()
+		public ABSource []? GetAllSources ()
 		{
-			AssertValid ();
-			IntPtr cfArrayRef = ABAddressBookCopyArrayOfAllSources (Handle);
+			var cfArrayRef = ABAddressBookCopyArrayOfAllSources (GetCheckedHandle ());
 			return NSArray.ArrayFromHandle (cfArrayRef, h => new ABSource (h, this));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr /* ABRecordRef */ ABAddressBookCopyDefaultSource (IntPtr /* ABAddressBookRef */ addressBook);
-		public ABSource GetDefaultSource ()
+		public ABSource? GetDefaultSource ()
 		{
-			AssertValid ();
-			IntPtr h = ABAddressBookCopyDefaultSource (Handle);
+			var h = ABAddressBookCopyDefaultSource (GetCheckedHandle ());
 			if (h == IntPtr.Zero)
 				return null;
 			return new ABSource (h, this);
@@ -521,10 +464,9 @@ namespace AddressBook {
 		
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr /* ABRecordRef */ ABAddressBookGetSourceWithRecordID (IntPtr /* ABAddressBookRef */ addressBook, int /* ABRecordID */ sourceID);
-		public ABSource GetSource (int sourceID)
+		public ABSource? GetSource (int sourceID)
 		{
-			AssertValid ();
-			var h = ABAddressBookGetSourceWithRecordID (Handle, sourceID);
+			var h = ABAddressBookGetSourceWithRecordID (GetCheckedHandle (), sourceID);
 			if (h == IntPtr.Zero)
 				return null;
 			return new ABSource (h, this);

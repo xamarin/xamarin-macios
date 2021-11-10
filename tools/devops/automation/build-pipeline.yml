@@ -52,7 +52,10 @@ parameters:
       useXamarinStorage: False,
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
-      iOSDeviceDemand: 'ios'
+      iOSDeviceDemand: [
+        'ios',
+        "Agent.OSVersion -equals '11.6'"
+      ]
     },
     {
       devicePrefix: 'tvos',
@@ -63,7 +66,10 @@ parameters:
       useXamarinStorage: False,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
-      iOSDeviceDemand: 'tvos'
+      iOSDeviceDemand: [
+        'tvos',
+        "Agent.OSVersion -equals '11.6'"
+      ]
     }]
 
 - name: macTestsConfigurations
@@ -72,7 +78,8 @@ parameters:
     {
       stageName: 'mac_10_15',
       displayName: 'Mac Catalina (10.15)',
-      macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted',
+      macPool: 'macOS-10.15',
+      useImage: true,
       statusContext: 'Mac Catalina (10.15)',
       demands: [
         "Agent.OS -equals Darwin",
@@ -82,17 +89,9 @@ parameters:
     {
       stageName: 'mac_10_14',
       displayName: 'Mac Mojave (10.14)',
-      macPool: 'Hosted Mac Internal Mojave',
+      macPool: 'internal-macos-10.14',
+      useImage: true,
       statusContext: 'Mac Mojave (10.14)',
-      demands: [
-        "Agent.OS -equals Darwin",
-      ]
-    },
-    {
-      stageName: 'mac_10_13',
-      displayName: 'Mac High Sierra (10.13)',
-      macPool: 'Hosted Mac Internal',
-      statusContext: 'Mac High Sierra (10.13)',
       demands: [
         "Agent.OS -equals Darwin",
       ]
@@ -100,11 +99,15 @@ parameters:
     {
       stageName: 'mac_11_5_m1',
       displayName: 'M1 - Mac Big Sur (11.5)',
-      macPool: 'VSEng-VSMac-Xamarin-Shared-Trusted',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
       statusContext: 'M1 - Mac Big Sur (11.5)',
       demands: [
         "Agent.OS -equals Darwin",
-        "macOS.Architecture -equals arm64"
+        "macOS.Name -equals BigSur",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
       ]
     }]
 
@@ -279,6 +282,7 @@ stages:
           stageName: ${{ config['stageName'] }}
           displayName: ${{ config['displayName'] }}
           macPool: ${{ config['macPool'] }}
+          useImage: ${{ config['useImage'] }}
           statusContext: ${{ config['statusContext'] }}
           keyringPass: $(pass--lab--mac--builder--keychain)
           demands: ${{ config['demands'] }}

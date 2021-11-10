@@ -938,7 +938,7 @@ namespace Xamarin.Bundler {
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
 					if (lastAssembly == null) {
-						ErrorHelper.CreateWarning (7, Errors.MX0007, rootName);
+						ErrorHelper.Warning (7, Errors.MX0007, rootName);
 						continue;
 					}
 					

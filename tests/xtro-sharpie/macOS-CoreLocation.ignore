@@ -14,6 +14,7 @@
 !missing-selector! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: not bound
 !missing-selector! CLLocationManager::disallowDeferredLocationUpdates not bound
 
-## only marked with ios(15.0) but (as of xcode 13 b3) lacks annotations that it's not available on other platforms
-!missing-selector! CLLocationManager::startMonitoringLocationPushesWithCompletion: not bound
-!missing-selector! CLLocationManager::stopMonitoringLocationPushes not bound
+# Fixed in XAMCORE_4_0
+!unknown-field! CLLocationPushServiceErrorDomain bound
+!unknown-native-enum! CLLocationPushServiceError bound
+!unknown-protocol! CLLocationPushServiceExtension bound

@@ -9,20 +9,14 @@ steps:
     make
     var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=$VAR_NAME)
     var=${var#*=}
-    echo "##vso[task.setvariable variable=Credential]$var"
+    echo "##vso[task.setvariable variable=nuget-feed;issecret=true]$var"
   displayName: 'Retrieve nuget feed'
   name: ConfigureNuget
   env:
-    ${{ if not(contains (variables['Build.DefinitionName'], 'private')) }}:
-      VAR_NAME=NUGET_PUBLIC_FEED
-    ${{ if contains (variables['Build.DefinitionName'], 'private') }}:
-      VAR_NAME=NUGET_PRIVATE_FEED
-
-- task: NuGetAuthenticate@0
-  displayName: 'Authenticate dotnet-tool feed'
-  inputs:
-    nuGetServiceConnections: $(ConfigureNuget.Credential)
-  condition: contains (variables['Build.DefinitionName'], 'private')
+    ${{ if not(contains(variables['Build.DefinitionName'], 'private')) }}:
+      VAR_NAME: 'NUGET_PUBLIC_FEED'
+    ${{ else }}:
+      VAR_NAME: 'NUGET_PRIVATE_FEED'
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -37,7 +31,7 @@ steps:
     command: push
     packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
     nuGetFeedType: external
-    publishFeedCredentials: $(ConfigureNuget.Credential)
+    publishFeedCredentials: variables['nuget-feed']
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -52,4 +46,4 @@ steps:
     command: push
     packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
     nuGetFeedType: external
-    publishFeedCredentials: $(ConfigureNuget.Credential)
+    publishFeedCredentials: variables['nuget-feed']

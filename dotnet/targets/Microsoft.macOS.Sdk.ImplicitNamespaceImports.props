@@ -23,8 +23,8 @@
 		Ref: https://github.com/dotnet/sdk/issues/19793#issuecomment-900620060
 	-->
 	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'macOS' And '$(Language)' == 'C#' And ('$(ImplicitUsings)' == 'true' or '$(ImplicitUsings)' == 'enable')">
-		<Using Include="AppKit" />
-		<Using Include="CoreGraphics" />
-		<Using Include="Foundation" />
+		<Using Include="AppKit" Platform="macOS" />
+		<Using Include="CoreGraphics" Platform="macOS" />
+		<Using Include="Foundation" Platform="macOS" />
 	</ItemGroup>
 </Project>

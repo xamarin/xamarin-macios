@@ -32,11 +32,15 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			#region implemented abstract members of MonoTouch.CoreBluetooth.CBCentralManagerDelegate
 			public override void UpdatedState (CBCentralManager central)
 			{
+#if NET
+				if (central.State == CBManagerState.PoweredOn)
+#else
 				if (central.State == CBCentralManagerState.PoweredOn)
+#endif
 					PoweredOnEvent.Set ();
 			}
 
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 			public override void RetrievedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
 			{
 			}
@@ -44,7 +48,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			public override void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
 			{
 			}
-#endif // !XAMCORE_3_0
+#endif // !XAMCORE_3_0 && !NET
 
 			public override void DiscoveredPeripheral (CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
 			{
@@ -105,7 +109,6 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			mgr.ScanForPeripherals ((CBUUID[])null, (NSDictionary)null);
 		}
 
-#if !XAMCORE_3_0
 		[Test]
 		public void RetrievePeripherals ()
 		{
@@ -114,11 +117,12 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				using (var uuid = new NSUuid (heartRateMonitorUUID.ToString (true)))
 					mgr.RetrievePeripheralsWithIdentifiers (uuid);
 			} else {
+#if !XAMCORE_3_0 && !NET
 				// that API was deprecated in 7.0 and removed from 9.0
 				mgr.RetrievePeripherals (heartRateMonitorUUID);
+#endif // !XAMCORE_3_0 && !NET
 			}
 		}
-#endif // !XAMCORE_3_0
 	}
 }
 

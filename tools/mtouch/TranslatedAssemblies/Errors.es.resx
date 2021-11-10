@@ -742,10 +742,10 @@
 		<value>No establecer una vinculación con el marco {0} (al que se hace referencia mediante una referencia de módulo en {1}) porque no está disponible en la plataforma actual ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>No se pudo asignar la versión Mac Catalyst {0} a la versión de macOS correspondiente. Las versiones de Mac Catalyst son: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>No se pudo asignar la versión de macOS {0} a la versión correspondiente de Mac Catalyst. Las versiones válidas de macOS son: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>La opción "{0}" no puede tomar el valor "{1}" cuando se usa CoreCLR.</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>La biblioteca de enlace "{0}" contiene un marco de usuario ({0}), pero los marcos de usuario insertados requieren iOS 8.0 (el destino de implementación es {1}). Establezca el destino de implementación en el archivo Info.plist en al menos 8.0.
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>No se pudo descomprimir el archivo '{0}'. Revise el registro de compilación para más información del comando nativo "unzip".</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>Falta el ensamblado "Xamarin.Mac.dll" necesario en las referencias.

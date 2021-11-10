@@ -36,8 +36,10 @@ namespace Introspection {
 			case "AVCaptureSynchronizedData":
 			case "CXProvider":
 				return TestRuntime.IsVM; // skip only on vms
+#if !NET // NSMenuView does not exist in .NET
 			case "NSMenuView": // not longer supported
 				return true;
+#endif // !NET
 			default:
 				return base.Skip (type);
 			}
@@ -121,6 +123,8 @@ namespace Introspection {
 				case "OSLogMessageComponent":
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
+				case "MEComposeSession":
+				case "MEComposeContext":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -157,6 +161,7 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSPropertyMapping":
 				case "HMAccessoryOwnershipToken":
+				case "MEComposeSession":
 					return true;
 				}
 				break;
@@ -235,6 +240,7 @@ namespace Introspection {
 				case "OSLogMessageComponent":
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
+				case "MEComposeContext":
 					return true;
 				}
 				break;
