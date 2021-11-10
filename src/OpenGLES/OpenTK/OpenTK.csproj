@@ -369,24 +369,6 @@
     <Compile Include="Input\MouseState.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Math\BezierCurve.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Math\BezierCurveCubic.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Math\BezierCurveQuadric.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Math\Box2.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Math\Functions.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Math\Half.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Math\Matrix3d.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -408,25 +390,16 @@
     <Compile Include="Math\Vector2d.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Math\Vector2h.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Math\Vector3.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Math\Vector3d.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Math\Vector3h.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Math\Vector4.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Math\Vector4d.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Math\Vector4h.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Platform\Factory.cs">

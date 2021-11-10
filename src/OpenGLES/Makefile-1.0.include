@@ -1,10 +1,4 @@
 IOS_OPENTK_1_0_CORE_SOURCES = \
-	$(OPENTK_PATH)/Source/OpenTK/Math/BezierCurve.cs			\
-	$(OPENTK_PATH)/Source/OpenTK/Math/BezierCurveCubic.cs		\
-	$(OPENTK_PATH)/Source/OpenTK/Math/BezierCurveQuadric.cs		\
-	$(OPENTK_PATH)/Source/OpenTK/Math/Box2.cs					\
-	$(OPENTK_PATH)/Source/OpenTK/Math/Functions.cs				\
-	$(OPENTK_PATH)/Source/OpenTK/Math/Half.cs					\
 	$(OPENTK_PATH)/Source/OpenTK/Math/MathHelper.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Matrix2.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Matrix3.cs				\
@@ -12,16 +6,13 @@ IOS_OPENTK_1_0_CORE_SOURCES = \
 	$(OPENTK_PATH)/Source/OpenTK/Math/Matrix4.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Matrix4d.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Quaternion.cs				\
-	$(OPENTK_PATH)/Source/OpenTK/Math/Quaterniond.cs				\
+	$(OPENTK_PATH)/Source/OpenTK/Math/Quaterniond.cs			\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Vector2.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Vector2d.cs				\
-	$(OPENTK_PATH)/Source/OpenTK/Math/Vector2h.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Vector3.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Vector3d.cs				\
-	$(OPENTK_PATH)/Source/OpenTK/Math/Vector3h.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Vector4.cs				\
 	$(OPENTK_PATH)/Source/OpenTK/Math/Vector4d.cs				\
-	$(OPENTK_PATH)/Source/OpenTK/Math/Vector4h.cs				\
 	OpenGLES/OpenTK/Math/Vector2i.cs					\
 	OpenGLES/OpenTK/Math/Vector3i.cs					\
 	OpenGLES/OpenTK/Math/Vector4i.cs
