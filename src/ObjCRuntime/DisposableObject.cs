@@ -1,5 +1,5 @@
 //
-// DisposableObject.cs: A base class for for many native data types without assuming any particular lifecycle.
+// DisposableObject.cs: A base class for many native data types without assuming any particular lifecycle.
 
 // Authors:
 //   Rolf Bjarne Kvinge
