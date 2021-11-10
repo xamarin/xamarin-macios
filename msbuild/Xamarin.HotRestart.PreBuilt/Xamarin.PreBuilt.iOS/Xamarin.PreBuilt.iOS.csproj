@@ -10,6 +10,7 @@
     <_LinkMode>None</_LinkMode>
     <UseInterpreter>true</UseInterpreter>
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.2" />
