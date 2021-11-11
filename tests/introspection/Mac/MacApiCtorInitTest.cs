@@ -126,15 +126,6 @@ namespace Introspection {
 					return true;
 				break;
 
-#if !XAMCORE_3_0
-			case "SpriteKit.SKView":
-				// Causes a crash later. Filed as radar://18440271.
-				// Apple said they won't fix this ('init' isn't a designated initializer)
-				if (IntPtr.Size == 8)
-					return true;
-				break;
-#endif
-
 			case "MonoMac.AppKit.NSSpeechRecognizer":
 			case "AppKit.NSSpeechRecognizer":
 				// Makes OSX put up "a download is required for speech recognition" dialog.
