@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Diagnostics;
+using System.Text.Json;
 
 using Mono.Cecil;
 
@@ -681,6 +683,172 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm")), File.Exists (armtxt), "arm.txt");
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
+
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")] // https://github.com/xamarin/xamarin-macios/issues/12410
+		public void AppWithXCAssets (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "AppWithXCAssets";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+
+			DeleteAssets (project_path);
+			CopyAssets (project_path);
+
+			Clean (project_path);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			var resourcesDirectory = GetResourcesDirectory (platform, appPath);
+
+			var assetsCar = Path.Combine (resourcesDirectory, "Assets.car");
+			Assert.That (assetsCar, Does.Exist, "Assets.car");
+
+			var doc = ProcessAssets (assetsCar);
+			var foundAssets = FindAssets (doc);
+
+			var TotalUniqueAssets = 18;
+			Assert.AreEqual (TotalUniqueAssets, foundAssets.Count, "There were a different number of assets found.");
+			Assert.IsFalse (foundAssets.Contains ("Data.DS_StoreDataTest"), "DS_Store files should not be included.");
+
+			var arm64txt = Path.Combine (resourcesDirectory, "arm64.txt");
+			var armtxt = Path.Combine (resourcesDirectory, "arm.txt");
+			var x64txt = Path.Combine (resourcesDirectory, "x64.txt");
+			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm64")), File.Exists (arm64txt), "arm64.txt");
+			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm")), File.Exists (armtxt), "arm.txt");
+			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
+		}
+
+		void DeleteAssets (string project_path)
+		{
+			string xcassetsDir = Path.Combine (project_path, @"../Assets.xcassets");
+			try {
+				if (Directory.Exists (xcassetsDir))
+					Directory.Delete (xcassetsDir, true);
+			}
+			catch (Exception e){
+				Console.WriteLine($"Deleting Assets.xcassets failed: {e.Message}");
+			}
+		}
+
+		void CopyAssets (string project_path)
+		{
+			DirectoryInfo testingAssetsDir = new DirectoryInfo (Path.Combine (project_path, @"../../TestingAssets"));
+			string xcassetsDir = Path.Combine (project_path, @"../Assets.xcassets");
+
+			if (!testingAssetsDir.Exists)
+				throw new DirectoryNotFoundException ($"TestingAssets directory does not exist or could not be found: {testingAssetsDir}");
+
+			if (!Directory.Exists (xcassetsDir))
+				CopyDirectoryContents (testingAssetsDir, xcassetsDir);
+		}
+
+		void CopyDirectoryContents (DirectoryInfo dir, string DestDirectory) {
+			Directory.CreateDirectory (DestDirectory);
+			foreach (FileInfo file in dir.GetFiles ()) {
+				string tempPath = Path.Combine (DestDirectory, file.Name);
+				file.CopyTo (tempPath, false);
+			}
+			foreach (DirectoryInfo subDir in dir.GetDirectories ()){
+				CopyDirectoryContents (subDir, Path.Combine (DestDirectory, subDir.Name));
+			}
+		}
+
+		JsonDocument ProcessAssets (string assetsPath) {
+			try {
+				using (Process myProcess = new Process ()) {
+					myProcess.StartInfo.UseShellExecute = false;
+					myProcess.StartInfo.RedirectStandardOutput = true;
+					myProcess.StartInfo.Arguments = $"--sdk iphoneos assetutil --info {assetsPath}";
+					myProcess.StartInfo.FileName = "xcrun";
+					myProcess.StartInfo.CreateNoWindow = true;
+					myProcess.Start ();
+
+					string output = myProcess.StandardOutput.ReadToEnd ();
+					StreamReader reader = myProcess.StandardOutput;
+					myProcess.WaitForExit ();
+
+					return JsonDocument.Parse (output);
+				}
+			}
+			catch (Exception e) {
+				Console.WriteLine($"Couldn't process: {e.Message}");
+			}
+			return null;
+		}
+
+		HashSet<string> FindAssets (JsonDocument doc)
+		{
+			var jsonArray = doc.RootElement.EnumerateArray ();
+			var foundElements = new HashSet<string> ();
+
+			foreach (var item in jsonArray) {
+				var result = IsTarget (item);
+				if (result is not null)
+					foundElements.Add (result);
+			}
+			return foundElements;
+		}
+
+		string IsTarget (JsonElement item) {
+			if (item.TryGetProperty ("AssetType", out var assetType)) {
+				foreach (var target in XCAssetTargets) {
+					var result = IsTarget (item, assetType, target);
+					if (result is not null)
+						return result;
+				}
+			}
+			return null;
+		}
+
+		string IsTarget (JsonElement item, JsonElement assetType, XCAssetTarget target)
+		{
+			if (assetType.ToString () == target.AssetType) {
+				if (item.TryGetProperty (target.CategoryName, out var value)) {
+					if (target.Values.Contains (value.ToString ()))
+						return string.Concat (assetType.ToString (), ".", value.ToString ());
+				}
+			}
+			return null;
+		}
+
+		public class XCAssetTarget {
+			public string AssetType { get; set; }
+			public string CategoryName { get; set; }
+			public string [] Values { get; set; }
+			public XCAssetTarget (string assetType, string categoryName, string[] values) {
+				AssetType = assetType;
+				CategoryName = categoryName;
+				Values = values;
+			}
+		}
+
+		static XCAssetTarget[] XCAssetTargets = {
+			new XCAssetTarget ("Image", "RenditionName", new string [] { "samplejpeg.jpeg", "samplejpg.jpg",
+				"samplepdf.pdf", "samplepng2.png", "spritejpeg.jpeg", "loopsvg.svg", "symboltestsvg.svg" }),
+
+			new XCAssetTarget ("Data", "Name", new string [] { "BmpImageDataTest", "JsonDataTest", "DS_StoreDataTest",
+				"DngImageDataTest", "EpsImageDataTest", "TiffImageDataTest" }),
+
+			new XCAssetTarget ("Color", "Name", new string [] { "ColorTest" }),
+
+			new XCAssetTarget ("Contents", "Name", new string [] { "SpritesTest" }),
+
+			new XCAssetTarget ("Texture Rendition", "Name", new string [] { "TextureTest" }),
+
+			new XCAssetTarget ("Vector", "RenditionName", new string [] { "samplepdf.pdf", "loopsvg.svg" }),
+
+			new XCAssetTarget ("Vector Glyph", "Name", new string [] { "SymbolTest" }),
+		};
 
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
