@@ -714,6 +714,7 @@ namespace Xamarin.Tests {
 			Assert.That (assetsCar, Does.Exist, "Assets.car");
 
 			var doc = ProcessAssets (assetsCar);
+			Assert.IsNotNull (doc, "There was an issue processing the asset binary.");
 			var foundAssets = FindAssets (doc);
 
 			var TotalUniqueAssets = 18;
@@ -821,7 +822,7 @@ namespace Xamarin.Tests {
 			return null;
 		}
 
-		public class XCAssetTarget {
+		class XCAssetTarget {
 			public string AssetType { get; set; }
 			public string CategoryName { get; set; }
 			public string [] Values { get; set; }
