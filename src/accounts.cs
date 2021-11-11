@@ -89,7 +89,7 @@ namespace Accounts {
 		[NoMac] // marked as unavailable in xcode10 beta 2
 #endif
 		[Export ("requestAccessToAccountsWithType:withCompletionHandler:")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, ACRequestCompletionHandler completionHandler);
 

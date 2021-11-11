@@ -88,6 +88,9 @@
       <Link>BinLog.cs</Link>
     </Compile>
     <Compile Include="LocalizationTests.cs" />
+    <Compile Include="..\common\DotNet.cs">
+      <Link>DotNet.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\tools\mtouch\mtouch.csproj">

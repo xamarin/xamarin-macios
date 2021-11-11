@@ -307,7 +307,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		// This was removed in the headers in the macOS 10.11 SDK
 		[NoiOS][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'TextStorage' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'TextStorage' instead.")]
 		[Export ("attributedString")]
 		NSAttributedString AttributedString { get; }
 #endif
@@ -335,7 +335,7 @@ namespace UIKit {
 		// This was removed in the headers in the macOS 10.11 SDK
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("layoutOptions")]
 		NSGlyphStorageOptions LayoutOptions { get; }
 #endif
@@ -400,7 +400,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharacterRange, nint delta, NSRange invalidatedCharacterRange) instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharacterRange, nint delta, NSRange invalidatedCharacterRange) instead).")]
 		[Export ("textStorage:edited:range:changeInLength:invalidatedRange:")]
 		void TextStorageEdited (NSTextStorage str, NSTextStorageEditedFlags editedMask, NSRange newCharRange, nint changeInLength, NSRange invalidatedCharRange);
 #endif
@@ -434,7 +434,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("insertGlyph:atGlyphIndex:characterIndex:")]
 		void InsertGlyph (NSGlyph glyph, nint glyphIndex, nint charIndex);
 #endif
@@ -442,7 +442,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("replaceGlyphAtIndex:withGlyph:")]
 		void ReplaceGlyphAtIndex (nint glyphIndex, NSGlyph newGlyph);
 #endif
@@ -450,7 +450,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("deleteGlyphsInRange:")]
 		void DeleteGlyphs (NSRange glyphRange);
 #endif
@@ -458,7 +458,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("setCharacterIndex:forGlyphAtIndex:")]
 		void SetCharacterIndex (nint charIndex, nint glyphIndex);
 #endif
@@ -466,7 +466,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("setIntAttribute:value:forGlyphAtIndex:")]
 		void SetIntAttribute (nint attributeTag, nint value, nint glyphIndex);
 #endif
@@ -474,7 +474,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("invalidateGlyphsOnLayoutInvalidationForGlyphRange:")]
 		void InvalidateGlyphsOnLayoutInvalidation (NSRange glyphRange);
 #endif
@@ -489,10 +489,10 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[Export ("glyphAtIndex:isValidIndex:")]
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'GetCGGlyph' instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		NSGlyph GlyphAtIndex (nint glyphIndex, ref bool isValidIndex);
 #else
- 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
+ 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 		CGGlyph GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
 #endif // MONOMAC
 #endif // !XAMCORE_4_0
@@ -500,10 +500,10 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[Export ("glyphAtIndex:")]
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'GetCGGlyph' instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		NSGlyph GlyphAtIndex (nint glyphIndex);
 #else
- 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
+ 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 		CGGlyph GlyphAtIndex (nuint glyphIndex);
 #endif // MONOMAC
 #endif // !XAMCORE_4_0
@@ -537,7 +537,7 @@ namespace UIKit {
 
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'GetGlyphs' instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetGlyphs' instead).")]
 		[Export ("intAttribute:forGlyphAtIndex:")]
 		nint GetIntAttribute (nint attributeTag, nint glyphIndex);
 #endif
@@ -890,7 +890,7 @@ namespace UIKit {
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Export ("rectArrayForGlyphRange:withinSelectedGlyphRange:inTextContainer:rectCount:")]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		IntPtr GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, IntPtr textContainerHandle, out nuint rectCount);
 
 		[Export ("boundingRectForGlyphRange:inTextContainer:")]
@@ -1111,7 +1111,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("substituteFontForFont:")]
 		NSFont SubstituteFontForFont (NSFont originalFont);
 #endif
@@ -1140,7 +1140,7 @@ namespace UIKit {
 
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("glyphGenerator", ArgumentSemantic.Retain)]
 		NSGlyphGenerator GlyphGenerator { get; set; }
 
@@ -1160,7 +1160,7 @@ namespace UIKit {
 		bool BackgroundLayoutEnabled { get; set; }
 
 		[NoiOS][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("usesScreenFonts")]
 		bool UsesScreenFonts { get; set; }
 
@@ -2567,12 +2567,12 @@ namespace UIKit {
 	[Protocol]
 	partial interface NSTextStorageDelegate {
 		[NoiOS][NoTV][NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use WillProcessEditing instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use WillProcessEditing instead.")]
 		[Export ("textStorageWillProcessEditing:")]
 		void TextStorageWillProcessEditing (NSNotification notification);
 
 		[NoiOS][NoTV][NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use DidProcessEditing instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use DidProcessEditing instead.")]
 		[Export ("textStorageDidProcessEditing:")]
 		void TextStorageDidProcessEditing (NSNotification notification);
 
@@ -3027,7 +3027,7 @@ namespace UIKit {
 		NSTextView TextView { get; set; }
 
 		[NoiOS][NoMacCatalyst][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use Size instead.")]
 		[Export ("containerSize")]
 		CGSize ContainerSize { get; set; }
 

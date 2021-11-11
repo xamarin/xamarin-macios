@@ -79,7 +79,7 @@ namespace LocalAuthentication {
 		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
 
 #if !MONOMAC
-		[Availability (Introduced = Platform.iOS_8_3, Deprecated = Platform.iOS_9_0)]
+		[iOS (8, 3), Deprecated (PlatformName.iOS, 9, 0)]
 		[NullAllowed]
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
