@@ -412,6 +412,9 @@ function New-GitHubSummaryComment {
         $APIDiff="",
 
         [string]
+        $APIGeneratorDiffJson="",
+
+        [string]
         $APIGeneratorDiff=""
     )
 
@@ -442,16 +445,21 @@ function New-GitHubSummaryComment {
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
     if (-not [string]::IsNullOrEmpty($APIDiff)) {
-        WriteDiffs $sb $APIDiff
+        WriteDiffs $sb "API diff" $APIDiff
     } else {
         Write-Host "API diff urls have not been provided."
     }
+    if (-not [string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
+        WriteDiffs $sb "API Current PR diff" $APIGeneratorDiffJson
+    } else {
+        Write-Host "API Current PR diff urls have not been provided."
+    }
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
-        Write-Host "Parsing API diff in path $APIGeneratorDiff"
+        Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
         if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
             $sb.AppendLine("Path $APIGeneratorDiff was not found!")
         } else {
-            $sb.AppendLine("# API & Generator diff")
+            $sb.AppendLine("# Generator diff")
             $sb.AppendLine("")
             # ugly workaround to get decent new lines
             foreach ($line in Get-Content -Path $APIGeneratorDiff)
@@ -461,7 +469,7 @@ function New-GitHubSummaryComment {
             $sb.AppendLine($apidiffcomments)
         }
     } else {
-        Write-Host "API & Generator diff comments have not been provided."
+        Write-Host "Generator diff comments have not been provided."
     }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
@@ -557,6 +565,10 @@ function WriteDiffs {
         [System.Text.StringBuilder]
         $sb,
 
+        [Parameter(Mandatory)]
+        [String]
+        $header,
+
         [String]
         $APIDiff
     )
@@ -571,7 +583,7 @@ function WriteDiffs {
         $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
         $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
         if ($hasHtmlLinks -or $hasMDlinks) {
-            $sb.AppendLine("# API diff")
+            $sb.AppendLine("# $header")
             Write-Host "Message is '$($json.message)'"
             $sb.AppendLine($json.message)
 
