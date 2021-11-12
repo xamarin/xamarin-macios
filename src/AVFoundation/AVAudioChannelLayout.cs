@@ -21,10 +21,7 @@ using System.Runtime.InteropServices;
 
 namespace AVFoundation {
 	public partial class AVAudioChannelLayout {
-		[ThreadStatic] 
-		static IntPtr handleToLayout;
-
-		static IntPtr CreateLayoutPtr (AudioChannelLayout layout)
+		static IntPtr CreateLayoutPtr (AudioChannelLayout layout, out IntPtr handleToLayout)
 		{
 			int size;
 			handleToLayout = layout.ToBlock (out size);
@@ -34,9 +31,9 @@ namespace AVFoundation {
 		[DesignatedInitializer]
 		public AVAudioChannelLayout (AudioChannelLayout layout)
 #if NET
-			: this (CreateLayoutPtr (layout))
+			: this (CreateLayoutPtr (layout, out var handleToLayout))
 #else
-			: this ((nint) CreateLayoutPtr (layout))
+			: this ((nint) CreateLayoutPtr (layout, out var handleToLayout))
 #endif
 		{
 			Marshal.FreeHGlobal (handleToLayout);
