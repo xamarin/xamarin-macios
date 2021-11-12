@@ -94,24 +94,6 @@ namespace Introspection {
 			case "MonoMac.AppKit.NSWindow":
 			case "AppKit.NSWindow":
 				return true;
-			case "MonoMac.Foundation.NSUrlSession":
-			case "Foundation.NSUrlSession":
-			case "MonoMac.Foundation.NSUrlSessionTask":
-			case "Foundation.NSUrlSessionTask":
-			case "MonoMac.Foundation.NSUrlSessionDataTask":
-			case "Foundation.NSUrlSessionDataTask":
-			case "MonoMac.Foundation.NSUrlSessionUploadTask":
-			case "Foundation.NSUrlSessionUploadTask":
-			case "MonoMac.Foundation.NSUrlSessionDownloadTask":
-			case "Foundation.NSUrlSessionDownloadTask":
-			case "MonoMac.Foundation.NSUrlSessionConfiguration":
-			case "Foundation.NSUrlSessionConfiguration":
-				// These types were introduced as 64-bit only in Mavericks, and 32+64bits in Yosemite. We can't
-				// express that with our AvailabilityAttribute, we set it as available (for all architectures, since
-				// we can't distinguish them) starting with Mavericks.
-				if (Mac.Is32BitMavericks)
-					return true;
-				break;
 
 			case "GLKit.GLKSkyboxEffect":
 				// Crashes inside libGL.dylib, most likely because something hasn't been initialized yet, because
