@@ -7,7 +7,7 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_NOTIFICATIONCENTER
+#if HAS_NOTIFICATIONCENTER && HAS_UIKIT
 
 using System;
 using Foundation;
