@@ -232,7 +232,7 @@ namespace MapKit {
 
 #if !MONOMAC && !TVOS
 	[BaseType (typeof (MKOverlayPathView))]
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKCircleRenderer' instead.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKCircleRenderer' instead.")]
 	interface MKCircleView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -550,7 +550,7 @@ namespace MapKit {
 
 #if !MONOMAC && !TVOS
 		[Export ("viewForOverlay:")]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
 		MKOverlayView ViewForOverlay (IMKOverlay overlay);
 #endif // !MONOMAC && !TVOS
 
@@ -719,11 +719,11 @@ namespace MapKit {
 
 #if !MONOMAC && !TVOS
 		[Export ("mapView:viewForOverlay:"), DelegateName ("MKMapViewOverlay"), DefaultValue (null)]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
 		MKOverlayView GetViewForOverlay (MKMapView mapView, IMKOverlay overlay);
 
 		[Export ("mapView:didAddOverlayViews:"), EventArgs ("MKOverlayViews")]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'DidAddOverlayRenderers' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'DidAddOverlayRenderers' instead.")]
 		void DidAddOverlayViews (MKMapView mapView, MKOverlayView overlayViews);
 #endif // !MONOMAC && !TVOS
 
@@ -868,7 +868,7 @@ namespace MapKit {
 		
 #if IOS
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'CoreLocation.CLGeocoder' instead.")]
+	[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'CoreLocation.CLGeocoder' instead.")]
 	// crash (at least) at Dispose time when instance is created by 'init'
 	[DisableDefaultCtor]
 	interface MKReverseGeocoder {
@@ -913,7 +913,7 @@ namespace MapKit {
 	}
 #pragma warning restore 618
 
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer' instead.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayRenderer' instead.")]
 	[BaseType (typeof (UIView))]
 	interface MKOverlayView {
 		[Export ("overlay")]
@@ -956,7 +956,7 @@ namespace MapKit {
 		void SetNeedsDisplay (MKMapRect mapRect, /* MKZoomScale */ nfloat zoomScale);
 	}
 
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayPathRenderer' instead.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayPathRenderer' instead.")]
 	[BaseType (typeof (MKOverlayView))]
 	interface MKOverlayPathView {
 		[Export ("initWithOverlay:")]
@@ -1049,7 +1049,7 @@ namespace MapKit {
 }
 
 #if !MONOMAC && !TVOS
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKPolygonRenderer' instead.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKPolygonRenderer' instead.")]
 	[BaseType (typeof (MKOverlayPathView))]
 	interface MKPolygonView {
 		[Export ("initWithFrame:")]
@@ -1122,7 +1122,7 @@ namespace MapKit {
 	}
 
 #if !MONOMAC && !TVOS
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKPolylineRenderer' instead.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKPolylineRenderer' instead.")]
 	[BaseType (typeof (MKOverlayPathView))]
 	interface MKPolylineView {
 		[Export ("initWithFrame:")]

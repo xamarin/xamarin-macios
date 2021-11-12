@@ -1078,7 +1078,7 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreateVCardRepresentationWithPeople (IntPtr people);
 
-		public static NSData GetVCards (params ABPerson[] people)
+		public static NSData? GetVCards (params ABPerson[] people)
 		{
 			if (people is null)
 				throw new ArgumentNullException (nameof (people));
@@ -1089,7 +1089,7 @@ namespace AddressBook {
 			}
 
 			var ptr = ABPersonCreateVCardRepresentationWithPeople (CFArray.Create (ptrs));
-			return new NSData (ptr, true);
+			return Runtime.GetNSObject<NSData> (ptr, true);
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]

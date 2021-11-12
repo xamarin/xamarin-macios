@@ -18,7 +18,7 @@ using System;
 
 namespace AssetsLibrary {
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	interface ALAssetLibraryChangedEventArgs {
 		[Export ("ALAssetLibraryUpdatedAssetsKey")]
 		NSSet UpdatedAssets { get; }
@@ -33,7 +33,7 @@ namespace AssetsLibrary {
 		NSSet DeletedAssetGroupsKey { get; }
 	}
 	
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsLibrary {
 		[Export ("assetForURL:resultBlock:failureBlock:")]
@@ -93,10 +93,10 @@ namespace AssetsLibrary {
 		NSString DeletedAssetGroupsKey { get; }
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryGroupsEnumerationResultsDelegate (ALAssetsGroup group, ref bool stop);
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAsset {
 		[Export ("valueForProperty:")]
@@ -171,7 +171,7 @@ namespace AssetsLibrary {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	interface ALAssetRepresentation {
 		[Export ("UTI")]
 		string Uti { get; }
@@ -213,7 +213,7 @@ namespace AssetsLibrary {
 		CGSize Dimensions { get; }
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsFilter {
 		[Static, Export ("allPhotos")]
@@ -226,10 +226,10 @@ namespace AssetsLibrary {
 		ALAssetsFilter AllAssets { get; }
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	delegate void ALAssetsEnumerator (ALAsset result, nint index, ref bool stop);
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsGroup {
 		[Export ("valueForProperty:"), Internal]

@@ -194,8 +194,6 @@ namespace Introspection {
 			case "MetalPerformanceShaders.MPSPredicate":
 				// Fails on Catalina: Could not initialize an instance of the type 
 				// 'MetalPerformanceShaders.MPSPredicate': the native 'init' method returned nil. 
-				if (Mac.CheckSystemVersion (10, 14))
-					break;
 				if (Mac.CheckSystemVersion (10, 15))
 					return true;
 				break;
