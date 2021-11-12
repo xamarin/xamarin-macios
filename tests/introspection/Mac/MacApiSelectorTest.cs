@@ -16,6 +16,7 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
 	
@@ -696,7 +697,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "buttonPressed":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1796
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}
@@ -709,7 +710,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "isSyncFailureHidden":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1797
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}

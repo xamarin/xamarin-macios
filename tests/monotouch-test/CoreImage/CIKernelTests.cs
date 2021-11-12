@@ -15,6 +15,7 @@ using UIKit;
 using PlatformImage = UIKit.UIImage;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreImage
 {
@@ -122,8 +123,8 @@ namespace MonoTouchFixtures.CoreImage
 		[Test]
 		public void CIKernel_BasicTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			Exception ex = null;
 			var t = new Thread (() => {
@@ -174,8 +175,8 @@ namespace MonoTouchFixtures.CoreImage
 		[Test]
 		public void CIKernel_TestFromPrograms ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			CIKernel[] kernels = 
 				CIKernel.FromProgramMultiple (

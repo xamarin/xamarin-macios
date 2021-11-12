@@ -31,9 +31,6 @@
     <Compile Include="..\..\..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
-      <Link>ApplePlatform.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>

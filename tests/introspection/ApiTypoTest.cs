@@ -34,6 +34,7 @@ using AppKit;
 using UIKit;
 #endif
 using Foundation;
+using Xamarin.Utils;
 
 namespace Introspection
 {
@@ -1001,7 +1002,7 @@ namespace Introspection
 			case Constants.CoreImageLibrary:
 				break;
 			default:
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 11, 0)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 11, 0)) {
 					// on macOS 11.0 the frameworks binary files are not present (cache) but can be loaded
 					if (!Directory.Exists (Path.GetDirectoryName (lib)))
 						return false;

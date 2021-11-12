@@ -18,6 +18,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
 	
@@ -43,7 +44,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Video ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 
@@ -81,7 +82,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void RefcountTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			// Bug #27205
 
