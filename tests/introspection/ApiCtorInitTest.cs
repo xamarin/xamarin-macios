@@ -128,7 +128,7 @@ namespace Introspection {
 #else
 				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
 #endif
-			case "SpriteKit.SKView":
+			case "SKView":
 				// Causes a crash later. Filed as radar://18440271.
 				// Apple said they won't fix this ('init' isn't a designated initializer)
 				return true;
