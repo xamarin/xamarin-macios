@@ -242,6 +242,7 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#if !NET
 						case "WatchKit":
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
@@ -249,6 +250,7 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#endif
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
 								if (App.LinkMode != LinkMode.None) {

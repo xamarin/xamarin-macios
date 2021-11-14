@@ -1264,23 +1264,23 @@ namespace SceneKit {
 		SCNLight Create ();
 
 #if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[NoiOS]
 #elif !MONOMAC
 		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("attributeForKey:")]
 		[return: NullAllowed]
 		NSObject GetAttribute (NSString lightAttribute);
 
 #if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[NoiOS]
 #elif !MONOMAC
 		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("setAttribute:forKey:")]
 		void SetAttribute ([NullAllowed] NSObject value, NSString attribuetKey);
 
@@ -1483,7 +1483,7 @@ namespace SceneKit {
 	}
 
 #if MONOMAC
-	[Availability (Deprecated = Platform.Mac_10_10)]
+	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	[Static]
 	interface SCNLightAttribute {
 		[Field ("SCNLightAttenuationStartKey")]
@@ -2488,16 +2488,16 @@ namespace SceneKit {
 	interface SCNProgramDelegate {
 #if MONOMAC
 	#if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[Unavailable (PlatformName.iOS)]
 	#endif
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("program:bindValueForSymbol:atLocation:programID:renderer:")]
 		bool BindValue (SCNProgram program, string symbol, uint /* unsigned int */ location, uint /* unsigned int */ programID, SCNRenderer renderer);
 
 	#if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[Unavailable (PlatformName.iOS)]
 	#endif
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("program:unbindValueForSymbol:atLocation:programID:renderer:")]
 		void UnbindValue (SCNProgram program, string symbol, uint /* unsigned int */ location, uint /* unsigned int */ programID, SCNRenderer renderer);
 #endif
@@ -2507,10 +2507,10 @@ namespace SceneKit {
 
 #if MONOMAC
 	#if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[NoiOS]
 		[NoTV, NoWatch]
 	#endif
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the SCNProgram's Opaque property instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the SCNProgram's Opaque property instead.")]
 		[NoMacCatalyst]
 		[Export ("programIsOpaque:")]
 		bool IsProgramOpaque (SCNProgram program);
@@ -3047,7 +3047,8 @@ namespace SceneKit {
 		IntPtr Context { get;  }
 
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_10, Unavailable = Platform.iOS_Version)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[NoiOS]
 		[Export ("currentTime")]
 		double CurrentTime { get; set; }
 #endif

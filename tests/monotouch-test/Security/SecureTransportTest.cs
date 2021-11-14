@@ -48,7 +48,9 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Tls_1_0), "MinProtocol");
 				else
 					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Ssl_3_0), "MinProtocol");
+#if !NET
 				Assert.That (ssl.NegotiatedCipher, Is.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipher");
+#endif
 				Assert.That (ssl.NegotiatedProtocol, Is.EqualTo (SslProtocol.Unknown), "NegotiatedProtocol");
 
 				Assert.That (ssl.PeerDomainName, Is.Empty, "PeerDomainName");
@@ -118,7 +120,9 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (ssl.MaxDatagramRecordSize, Is.EqualTo ((nint) 1400), "MaxDatagramRecordSize");
 				Assert.That (ssl.MaxProtocol, Is.EqualTo (SslProtocol.Dtls_1_0), "MaxProtocol");
 				Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Dtls_1_0), "MinProtocol");
+#if !NET
 				Assert.That (ssl.NegotiatedCipher, Is.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipher");
+#endif
 				Assert.That (ssl.NegotiatedProtocol, Is.EqualTo (SslProtocol.Unknown), "NegotiatedProtocol");
 				Assert.Null (ssl.PeerId, "PeerId");
 				Assert.That (ssl.SessionState, Is.EqualTo (SslSessionState.Idle), "SessionState");
@@ -136,10 +140,8 @@ namespace MonoTouchFixtures.Security {
 			}
 		}
 
+#if !NET
 		[Test]
-#if NET
-		[Ignore ("Fails on ARM64 due to: https://github.com/xamarin/xamarin-macios/issues/11498)")]
-#endif
 		public void SslSupportedCiphers ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
@@ -174,6 +176,7 @@ namespace MonoTouchFixtures.Security {
 			}
 			Assert.That (ssl_client_ciphers, Is.EqualTo (ssl_server_ciphers), "same");
 		}
+#endif
 
 #if !__WATCHOS__
 		// This test uses sockets (TcpClient), which doesn't work on watchOS.
@@ -203,7 +206,9 @@ namespace MonoTouchFixtures.Security {
 
 				// FIXME: iOS 8 beta 1 bug ?!? the state is not updated (maybe delayed?) but the code still works
 				//Assert.That (ssl.SessionState, Is.EqualTo (SslSessionState.Connected), "Connected");
+#if !NET
 				Assert.That (ssl.NegotiatedCipher, Is.Not.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipher");
+#endif
 				Assert.That (ssl.NegotiatedProtocol, Is.EqualTo (SslProtocol.Tls_1_2), "NegotiatedProtocol");
 
 				nint processed;

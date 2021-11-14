@@ -798,13 +798,32 @@ namespace Xamarin.Bundler {
 			if (!enable_msym.HasValue)
 				enable_msym = !EnableDebug && IsDeviceBuild;
 
-			if (!UseMonoFramework.HasValue && DeploymentTarget >= new Version (8, 0)) {
-				if (IsExtension) {
-					UseMonoFramework = true;
-					Driver.Log (2, $"The extension {Name} will automatically link with Mono.framework.");
-				} else if (Extensions.Count > 0) {
-					UseMonoFramework = true;
-					Driver.Log (2, "Automatically linking with Mono.framework because this is an app with extensions");
+			if (!UseMonoFramework.HasValue) {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.MacCatalyst:
+					if (DeploymentTarget >= new Version (8, 0)) {
+						if (IsExtension) {
+							UseMonoFramework = true;
+							Driver.Log (2, $"The extension {Name} will automatically link with Mono.framework.");
+						} else if (Extensions.Count > 0) {
+							UseMonoFramework = true;
+							Driver.Log (2, "Automatically linking with Mono.framework because this is an app with extensions");
+						}
+					}
+					break;
+				case ApplePlatform.WatchOS:
+					if (IsWatchExtension && Extensions.Count > 0) {
+						UseMonoFramework = true;
+						Driver.Log (2, "Automatically linking with Mono.framework because this is a watch app with extensions");
+					} else if (!IsWatchExtension) {
+						UseMonoFramework = true;
+						Driver.Log (2, $"The extension {Name} will automatically link with Mono.framework.");
+					}
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
 			}
 

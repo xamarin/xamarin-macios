@@ -75,7 +75,7 @@ namespace ReplayKit {
 		RPScreenRecorder SharedRecorder { get; }
 
 		[NoMac]
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'StartRecording (Action<NSError>)' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'StartRecording (Action<NSError>)' instead.")]
 		[Async]
 		[Export ("startRecordingWithMicrophoneEnabled:handler:")]
 		void StartRecording (bool microphoneEnabled, [NullAllowed] Action<NSError> handler);

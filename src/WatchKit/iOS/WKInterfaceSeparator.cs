@@ -1,4 +1,4 @@
-#if __IOS__
+#if __IOS__ && !NET
 using System;
 using System.ComponentModel;
 using System.Runtime.Versioning;
@@ -8,11 +8,7 @@ using ObjCRuntime;
 
 namespace WatchKit {
 	[Register ("WKInterfaceSeparator", SkipRegistration = true)]
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-#endif
 	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class WKInterfaceSeparator : WKInterfaceObject {
@@ -34,4 +30,4 @@ namespace WatchKit {
 		}
 	} /* class WKInterfaceSeparator */
 }
-#endif // __IOS__
+#endif // __IOS__ && !NET

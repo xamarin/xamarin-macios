@@ -114,8 +114,14 @@ namespace MonoTouchFixtures.Network {
 		{
 			TestRuntime.IgnoreInCI ("CI bots might have proxies setup and will mean that the test will fail.");
 			Assert.IsNull (report.ProxyEndpoint);
-
 		}
+
+		[Test]
+		public void EnumerateResolutionReportsTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+		}
+		
 	}
 }
 #endif

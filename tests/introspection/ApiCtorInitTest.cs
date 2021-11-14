@@ -97,8 +97,10 @@ namespace Introspection {
 			case "NSUnitPressure": // -init should never be called on NSUnit!
 			case "NSUnitSpeed": // -init should never be called on NSUnit!
 				return true;
+#if !NET // NSMenuView does not exist in .NET
 			case "NSMenuView":
 				return TestRuntime.IsVM; // skip on vms due to hadware problems
+#endif // !NET
 			case "MPSCnnNeuron": // Cannot directly initialize MPSCNNNeuron. Use one of the sub-classes of MPSCNNNeuron
 			case "MPSCnnNeuronPReLU":
 			case "MPSCnnNeuronHardSigmoid":
@@ -128,6 +130,7 @@ namespace Introspection {
 #endif
 			}
 
+#if !NET
 			switch (type.Namespace) {
 #if __IOS__
 			case "WatchKit":
@@ -137,6 +140,7 @@ namespace Introspection {
 				return true; // QTKit has been removed from macos.
 #endif
 			}
+#endif // !NET
 
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)
 			if (SkipDueToRejectedTypes (type))

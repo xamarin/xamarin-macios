@@ -179,7 +179,7 @@ namespace WatchKit {
 		[Export ("reloadRootPageControllersWithNames:contexts:orientation:pageIndex:")]
 		void ReloadRootPageControllers (string[] names, [NullAllowed] NSObject[] contexts, WKPageOrientation orientation, nint pageIndex);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 		// now exposed with the corresponding WKErrorCode enum
 		[Field ("WatchKitErrorDomain")]
 		NSString ErrorDomain { get; }
@@ -903,7 +903,7 @@ namespace WatchKit {
 		[Export ("currentTime")]
 		double CurrentTime {
 			get;
-#if XAMCORE_4_0
+#if NET
 			[Watch (3,2)]
 			set;
 		}

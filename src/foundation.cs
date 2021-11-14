@@ -938,82 +938,82 @@ namespace Foundation
 
 #if MONOMAC
 	// Obsolete, but the only API surfaced by WebKit.WebHistory.
-	[Availability (Deprecated = Platform.Mac_10_10, Message="Use NSCalendar and NSDateComponents.")]
+	[Deprecated (PlatformName.MacOSX, 10, 1, message: "Use NSCalendar and NSDateComponents.")]
 	[BaseType (typeof (NSDate))]
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		IntPtr Constructor (string description, string calendarFormat, NSObject locale);
 
 		[Export ("initWithString:calendarFormat:")]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		IntPtr Constructor (string description, string calendarFormat);
 
 		[Export ("initWithString:")]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		IntPtr Constructor (string description);
 
 		[Export ("initWithYear:month:day:hour:minute:second:timeZone:")]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		IntPtr Constructor (nint year, nuint month, nuint day, nuint hour, nuint minute, nuint second, [NullAllowed] NSTimeZone aTimeZone);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("dateByAddingYears:months:days:hours:minutes:seconds:")]
 		NSCalendarDate DateByAddingYears (nint year, nint month, nint day, nint hour, nint minute, nint second);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("dayOfCommonEra")]
 		nint DayOfCommonEra { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("dayOfMonth")]
 		nint DayOfMonth { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("dayOfWeek")]
 		nint DayOfWeek { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("dayOfYear")]
 		nint DayOfYear { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("hourOfDay")]
 		nint HourOfDay { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("minuteOfHour")]
 		nint MinuteOfHour { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("monthOfYear")]
 		nint MonthOfYear { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("secondOfMinute")]
 		nint SecondOfMinute { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("yearOfCommonEra")]
 		nint YearOfCommonEra { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("calendarFormat")]
 		string CalendarFormat { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("descriptionWithCalendarFormat:locale:")]
 		string GetDescription (string calendarFormat, NSObject locale);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("descriptionWithCalendarFormat:")]
 		string GetDescription (string calendarFormat);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("descriptionWithLocale:")]
 		string GetDescription (NSLocale locale);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("timeZone")]
 		NSTimeZone TimeZone { get; set; }
 	}
@@ -4923,7 +4923,7 @@ namespace Foundation
 		[Field ("NSRunLoopCommonModes")]
 		NSString NSRunLoopCommonModes { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSXpcConnection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message:  "Use 'NSXpcConnection' instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
@@ -6147,7 +6147,7 @@ namespace Foundation
 		NSString UbiquitousItemIsDownloadedKey { get; }
 
 		[Field ("NSURLUbiquitousItemIsDownloadingKey")]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		NSString UbiquitousItemIsDownloadingKey { get; }
 
 		[Field ("NSURLUbiquitousItemIsUploadedKey")]
@@ -6766,15 +6766,18 @@ namespace Foundation
 	[Protocol]
 	interface NSUrlConnectionDelegate {
 		[Export ("connection:canAuthenticateAgainstProtectionSpace:")]
-		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use 'WillSendRequestForAuthenticationChallenge' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'WillSendRequestForAuthenticationChallenge' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'WillSendRequestForAuthenticationChallenge' instead.")]
 		bool CanAuthenticateAgainstProtectionSpace (NSUrlConnection connection, NSUrlProtectionSpace protectionSpace);
 
 		[Export ("connection:didReceiveAuthenticationChallenge:")]
-		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use 'WillSendRequestForAuthenticationChallenge' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'WillSendRequestForAuthenticationChallenge' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'WillSendRequestForAuthenticationChallenge' instead.")]
 		void ReceivedAuthenticationChallenge (NSUrlConnection connection, NSUrlAuthenticationChallenge challenge);
 
 		[Export ("connection:didCancelAuthenticationChallenge:")]
-		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use 'WillSendRequestForAuthenticationChallenge' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'WillSendRequestForAuthenticationChallenge' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'WillSendRequestForAuthenticationChallenge' instead.")]
 		void CanceledAuthenticationChallenge (NSUrlConnection connection, NSUrlAuthenticationChallenge challenge);
 
 		[Export ("connectionShouldUseCredentialStorage:")]
@@ -6972,7 +6975,7 @@ namespace Foundation
 	//
 	// Leaving the null allowed for now.
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)] // 64-bit on 10.9, but 32/64-bit on 10.10
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name="NSURLSession")]
 	[DisableDefaultCtorAttribute]
 	partial interface NSUrlSession {
@@ -7200,7 +7203,7 @@ namespace Foundation
 	}
 	
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name="NSURLSessionTask")]
 	[DisableDefaultCtor]
 	partial interface NSUrlSessionTask : NSCopying, NSProgressReporting
@@ -7298,7 +7301,7 @@ namespace Foundation
 	// "NSURLSession is not available for i386 targets before Mac OS X 10.10."
 
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDataTask")]
 	[DisableDefaultCtor]
 	partial interface NSUrlSessionDataTask {
@@ -7311,7 +7314,7 @@ namespace Foundation
 	}
 
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSUrlSessionDataTask), Name="NSURLSessionUploadTask")]
 	[DisableDefaultCtor]
 	partial interface NSUrlSessionUploadTask {
@@ -7324,7 +7327,7 @@ namespace Foundation
 	}
 
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDownloadTask")]
 	[DisableDefaultCtor]
 	partial interface NSUrlSessionDownloadTask {
@@ -7376,7 +7379,7 @@ namespace Foundation
 	}
 
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name="NSURLSessionConfiguration")]
 	[DisableDefaultCtorAttribute]
 	partial interface NSUrlSessionConfiguration : NSCopying {
@@ -7516,7 +7519,7 @@ namespace Foundation
 	}
 
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[Model, BaseType (typeof (NSObject), Name="NSURLSessionDelegate")]
 	[Protocol]
 	partial interface NSUrlSessionDelegate {
@@ -7532,7 +7535,7 @@ namespace Foundation
 	}
 
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[Model]
 	[BaseType (typeof (NSUrlSessionDelegate), Name="NSURLSessionTaskDelegate")]
 	[Protocol]
@@ -7567,7 +7570,7 @@ namespace Foundation
 	}
 	
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name="NSURLSessionDataDelegate")]
 	[Protocol]
@@ -7590,7 +7593,7 @@ namespace Foundation
 	}
 	
 	[iOS (7,0)]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	[Mac (10, 9)]
 	[Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name="NSURLSessionDownloadDelegate")]
 	[Protocol]
@@ -8574,7 +8577,7 @@ namespace Foundation
 		nfloat MinimumScaleFactor { get; set;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoMacCatalyst]
 		[Export ("minimumTrackingAdjustment")]
 		nfloat MinimumTrackingAdjustment { get; set;  }
@@ -8583,7 +8586,7 @@ namespace Foundation
 		nfloat ActualScaleFactor { get;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Export ("actualTrackingAdjustment")]
 		nfloat ActualTrackingAdjustment { get;  }
 
@@ -13577,7 +13580,8 @@ namespace Foundation
 #endif
 		NSString TextLayoutSectionsAttribute { get; }
 
-		[NoiOS, NoWatch, NoTV][Availability (Deprecated = Platform.Mac_10_11)]
+		[NoiOS, NoWatch, NoTV]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("NSUnderlineByWordMask", "AppKit")]
 		nint UnderlineByWordMaskAttributeName { get; }
 
@@ -14834,7 +14838,11 @@ namespace Foundation
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[NullAllowed, Export ("negotiatedTLSCipherSuite", ArgumentSemantic.Copy)]
 		// <quote>It is a 2-byte sequence in host byte order.</quote> but it refers to (nicer) `tls_ciphersuite_t`
+#if NET
+		[BindAs (typeof (TlsCipherSuite?))]
+#else
 		[BindAs (typeof (SslCipherSuite?))]
+#endif
 		NSNumber NegotiatedTlsCipherSuite { get; }
 
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]

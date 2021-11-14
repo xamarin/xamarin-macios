@@ -308,12 +308,6 @@ namespace Registrar {
 			}
 		}
 
-		protected override List<AvailabilityBaseAttribute> GetAvailabilityAttributes (Type obj)
-		{
-			// No need to implement this until GetSDKVersion is implemented.
-			return null;
-		}
-
 		protected override Version GetSDKVersion ()
 		{
 			// As far as I can tell we can't figure this out at runtime,

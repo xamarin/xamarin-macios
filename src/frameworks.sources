@@ -1260,9 +1260,11 @@ NETWORK_SOURCES = \
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
 	Network/NWMulticastGroup.cs		\
+	Network/NWMultiplexGroup.cs		\
 	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
+	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
@@ -1271,12 +1273,17 @@ NETWORK_SOURCES = \
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
+	Network/NWQuicMetadata.cs			\
+	Network/NWResolutionReport.cs \
+	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \
 	Network/NWTlsMetadata.cs \
 	Network/NWTxtRecord.cs	\
+	Network/NWProtocolQuicOptions.cs	\
 	Network/NWProtocolTcpOptions.cs	\
 	Network/NWProtocolTlsOptions.cs	\
 	Network/NWProtocolUdpOptions.cs	\
+	Network/NWResolutionReport.cs \
 	Network/NWUdpMetadata.cs \
 	Network/NWWebSocketMetadata.cs	\
 	Network/NWWebSocketOptions.cs	\
@@ -1836,6 +1843,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/Constants.cs \
+	ObjCRuntime/DisposableObject.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \
@@ -2307,6 +2315,7 @@ MACCATALYST_FRAMEWORKS = \
 
 DOTNET_REMOVED_IOS_FRAMEWORKS = \
 	iAd \
+	WatchKit \
 
 DOTNET_REMOVED_MACOS_FRAMEWORKS = \
 	QTKit \

@@ -52,7 +52,9 @@ parameters:
       useXamarinStorage: False,
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
-      iOSDeviceDemand: 'ios'
+      iOSDeviceDemand: [
+        'ios',
+      ]
     },
     {
       devicePrefix: 'tvos',
@@ -63,7 +65,9 @@ parameters:
       useXamarinStorage: False,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
-      iOSDeviceDemand: 'tvos'
+      iOSDeviceDemand: [
+        'tvos',
+      ]
     }]
 
 - name: macTestsConfigurations
@@ -83,19 +87,9 @@ parameters:
     {
       stageName: 'mac_10_14',
       displayName: 'Mac Mojave (10.14)',
-      macPool: 'Hosted Mac Internal Mojave',
-      useImage: false,
+      macPool: 'internal-macos-10.14',
+      useImage: true,
       statusContext: 'Mac Mojave (10.14)',
-      demands: [
-        "Agent.OS -equals Darwin",
-      ]
-    },
-    {
-      stageName: 'mac_10_13',
-      displayName: 'Mac High Sierra (10.13)',
-      macPool: 'Hosted Mac Internal',
-      useImage: false,
-      statusContext: 'Mac High Sierra (10.13)',
       demands: [
         "Agent.OS -equals Darwin",
       ]
