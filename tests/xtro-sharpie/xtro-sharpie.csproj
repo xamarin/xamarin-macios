@@ -65,7 +65,7 @@
     </Reference>
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
-    <Reference Include="mscorlib" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

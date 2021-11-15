@@ -15,7 +15,7 @@ namespace Extrospection {
 		{
 		}
 
-		public void Execute (string pchFile, IEnumerable<string> assemblyNames)
+		public void Execute (string pchFile, IEnumerable<string> assemblyNames, string outputDirectory = "")
 		{
 			var managed_reader = new AssemblyReader () {
 				new ReleaseAttributeCheck (),
@@ -60,7 +60,7 @@ namespace Extrospection {
 
 			managed_reader.End ();
 
-			Log.Save ();
+			Log.Save (outputDirectory);
 		}
 	}
 
