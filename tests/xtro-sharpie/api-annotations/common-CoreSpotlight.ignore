@@ -1,4 +1,2 @@
 # note: framework not available on watchOS
 
-!missing-field! CoreSpotlightVersionNumber not bound
-!missing-field! CoreSpotlightVersionString not bound

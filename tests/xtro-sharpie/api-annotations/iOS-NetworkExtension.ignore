@@ -2,4 +2,3 @@
 ## NetworkExtension.NWPathStatus is the oldest, but NetworkExtension isn't present on all the platforms Network
 ## is, which means we can't use the same managed enum for both cases (the native enums aren't entirely identical
 ## either: one is pointer sized while the other is 32-bit always).
-!duplicate-type-name! NWPathStatus enum exists as both NetworkExtension.NWPathStatus and Network.NWPathStatus

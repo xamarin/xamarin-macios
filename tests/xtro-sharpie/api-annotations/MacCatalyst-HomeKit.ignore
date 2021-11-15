@@ -15,4 +15,3 @@
 # Only supported in iOS 15
 
 # Deprecated
-!missing-selector! HMHome::removeUser:completionHandler: not bound
