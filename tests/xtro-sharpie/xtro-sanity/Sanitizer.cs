@@ -6,42 +6,7 @@ using System.IO;
 namespace Extrospection {
 	class Sanitizer {
 
-		static List<string> platforms;
-
-		static List<string> Platforms {
-			get {
-				if (platforms != null)
-					return platforms;
-
-				platforms = new List<string> (4);
-				foreach (var line in File.ReadAllLines ("../../Make.config")) {
-					var eq = line.IndexOf ('=');
-					if (eq == -1)
-						continue;
-					if (!line.StartsWith ("INCLUDE_", StringComparison.Ordinal))
-						continue;
-
-					switch (line.Substring (0, eq)) {
-					case "INCLUDE_IOS":
-						platforms.Add ("iOS");
-						break;
-					case "INCLUDE_TVOS":
-						platforms.Add ("tvOS");
-						break;
-					case "INCLUDE_WATCH":
-						platforms.Add ("watchOS");
-						break;
-					case "INCLUDE_MAC":
-						platforms.Add ("macOS");
-						break;
-					case "INCLUDE_MACCATALYST":
-						platforms.Add ("MacCatalyst");
-						break;
-					}
-				}
-				return platforms;
-			}
-		}
+		static List<string> Platforms;
 
 		static bool IsEntry (string line)
 		{
@@ -209,7 +174,7 @@ namespace Extrospection {
 		public static int Main (string [] args)
 		{
 			directory = args.Length == 0 ? "." : args [0];
-			Environment.CurrentDirectory = directory;
+			Platforms = args.Skip (1).ToList ();
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
