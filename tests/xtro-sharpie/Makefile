@@ -9,6 +9,7 @@ SHARPIE ?= sharpie
 XCODE=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
 ANNOTATIONS_DIR=.
+DOTNET_ANNOTATIONS_DIR=api-annotations-dotnet
 
 all-local::
 
@@ -27,6 +28,7 @@ XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/
 XIOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
 XIOS_ARCH = arm64
 XIOS_PCH = iphoneos$(IOS_SDK_VERSION)-$(XIOS_ARCH).pch
+XIOS_RID = ios-arm64
 
 $(XIOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) \
@@ -44,6 +46,7 @@ XTVOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git
 XTVOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
 XTVOS_ARCH = arm64
 XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
+XTVOS_RID = tvos-arm64
 
 $(XTVOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) -exclude RealityKit
@@ -51,6 +54,7 @@ $(XTVOS_PCH): .stamp-check-sharpie
 XMACOS ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll
 XMACOS_ARCH = x86_64
 XMACOS_PCH = macosx$(MACOS_SDK_VERSION)-$(XMACOS_ARCH).pch
+XMACOS_RID = osx-x64
 
 $(XMACOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) -exclude RealityKit -exclude JavaNativeFoundation
@@ -59,6 +63,7 @@ XMACCATALYST ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versi
 XMACCATALYST_GL ?=
 XMACCATALYST_ARCH = x86_64
 XMACCATALYST_PCH = ios$(MACCATALYST_SDK_VERSION)-macabi-$(XMACCATALYST_ARCH).pch
+XMACCATALYST_RID = maccatalyst-x64
 
 $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
@@ -83,6 +88,13 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-exclude Virtualization \
 	-i HomeKit/HomeKit.h \
 
+define DotNetAssembly
+X$(2)_DOTNET ?= $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(X$(2)_RID)/runtimes/$(X$(2)_RID)/lib/$(DOTNET_TFM)/$(DOTNET_$(2)_ASSEMBLY_NAME).dll
+
+dotnet-$(1)-$($(2)_SDK_VERSION).g.cs: .stamp-check-sharpie
+	$$(SHARPIE) query -bind $$(X$(2)_PCH) > $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetAssembly,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
 
@@ -134,14 +146,34 @@ gen-all: gen-ios gen-tvos gen-watchos gen-macos gen-maccatalyst
 wrench:
 	$(MAKE) -j8 classify
 
+dotnet-wrench:
+	$(MAKE) -j8 dotnet-classify
+
 report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
 	rm -rf report/
 	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(ANNOTATIONS_DIR) report
 
 report: report/index.html
 
+dotnet-report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
+	rm -rf report-dotnet
+	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(DOTNET_ANNOTATIONS_DIR) report-dotnet
+
+dotnet-report: dotnet-report/index.html
+
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
+
+define DotNetClassify
+.stamp-dotnet-classify-$(1): bin/Debug/xtro-sharpie.exe $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $$(DOTNET_ANNOTATIONS_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	touch $$@
+
+dotnet-classify-$(1): .stamp-dotnet-classify-$(1)
+DOTNET_CLASSIFY += .stamp-dotnet-classify-$(1)
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetClassify,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 ifdef INCLUDE_IOS
 INCLUDED_PLATFORMS+=iOS
@@ -194,13 +226,19 @@ endif
 
 classify: .stamp-classify
 
+.stamp-dotnet-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(DOTNET_CLASSIFY)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) $(DOTNET_PLATFORMS)
+	$(Q) touch $@
+
+dotnet-classify: .stamp-dotnet-classify
+
 insane:
 	XTRO_SANITY_SKIP=1 make all
 
 remove-empty:
 	find . -size 0 | xargs git rm
 
-all: report
+all: report dotnet-report
 
 .stamp-check-sharpie:
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie
@@ -215,7 +253,11 @@ $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
 	$(Q) touch $@
 
 unclassified2todo: $(U2TODO)
-	$(MONO) $(U2TODO)
+	cd $(ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
 	@for filename in $(git status -s | cut -c4- | grep .todo); do \
 		sort -o "$filename" "$filename"; \
 	done
+
+unclassified2todo-dotnet: $(U2TODO)
+	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
+	cd $(DOTNET_ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
