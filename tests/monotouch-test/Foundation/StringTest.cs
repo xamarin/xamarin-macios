@@ -23,6 +23,7 @@ using UIStringAttributes = AppKit.NSStringAttributes;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 	
@@ -175,7 +176,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void DrawingExtensions ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var s = new NSString ("foo")) {
 				NSStringDrawingOptions options = NSStringDrawingOptions.OneShot;

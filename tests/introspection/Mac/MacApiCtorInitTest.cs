@@ -15,6 +15,7 @@ using Foundation;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
 
@@ -142,7 +143,7 @@ namespace Introspection {
 				// https://trello.com/c/T6vkA2QF/62-29311598-ikpicturetaker-crashes-randomly-upon-deallocation?menu=filter&filter=corenfc
 				return true;
 			case "Photos.PHProjectChangeRequest":
-				if (TestRuntime.CheckSystemVersion (ObjCRuntime.PlatformName.MacOSX, 10, 15)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15)) {
 					/*
 	 Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'This method can only be called from inside of -[PHPhotoLibrary performChanges:completionHandler:] or -[PHPhotoLibrary performChangesAndWait:error:]'
 	0   CoreFoundation                      0x00007fff34f29063 __exceptionPreprocess + 250

@@ -14,6 +14,7 @@ using ARKit;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
@@ -28,7 +29,7 @@ namespace MonoTouchFixtures.ARKit {
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

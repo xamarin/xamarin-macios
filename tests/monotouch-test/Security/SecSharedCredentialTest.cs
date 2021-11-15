@@ -6,6 +6,7 @@ using Foundation;
 using Security;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
 	
@@ -23,7 +24,7 @@ namespace MonoTouchFixtures.Security {
 		public void SetUp ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 
 			domainName = "com.xamarin.monotouch-test";
 			account = "twitter";
@@ -55,7 +56,7 @@ namespace MonoTouchFixtures.Security {
 		[Timeout (5000)]
 		public void AddSharedWebCredentialNotNullPassword ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			Action<NSError> handler = (NSError e) =>  {
 				// we do nothing, if we did block the test should be interactive because a dialog is shown.
@@ -69,7 +70,7 @@ namespace MonoTouchFixtures.Security {
 		[Timeout (5000)]
 		public void AddSharedWebCredentialNullPassword ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			password = null;
 			Action<NSError> handler = (NSError e) =>  {
@@ -81,7 +82,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void CreateSharedWebCredentialPassword ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			var pwd = SecSharedCredential.CreateSharedWebCredentialPassword ();
 			Assert.IsNotNull (pwd);
