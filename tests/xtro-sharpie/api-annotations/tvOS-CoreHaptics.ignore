@@ -1,0 +1,2 @@
+# AVFoundation is not present on tvOS issue: https://github.com/xamarin/maccore/issues/2261
+!missing-selector! CHHapticEngine::initWithAudioSession:error: not bound

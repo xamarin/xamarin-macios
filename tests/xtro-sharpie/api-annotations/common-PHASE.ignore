@@ -1,0 +1,6 @@
+# Added and deprecated in the same version
+!missing-type! PHASEGeneratorParameters not bound
+!missing-selector! PHASEGeneratorParameters::gain not bound
+!missing-selector! PHASEGeneratorParameters::rate not bound
+!missing-selector! PHASEGeneratorParameters::setGain: not bound
+!missing-selector! PHASEGeneratorParameters::setRate: not bound

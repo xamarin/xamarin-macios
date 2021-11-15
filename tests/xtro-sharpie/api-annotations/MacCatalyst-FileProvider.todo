@@ -1,0 +1,4 @@
+!missing-enum-value! NSFileProviderItemCapabilities native value NSFileProviderItemCapabilitiesAllowsAll = 63 not bound
+
+# MacCatalyst 14.5 only, Maybe? They are unavailable in iOS
+## appended from unclassified file

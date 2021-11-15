@@ -1,0 +1,5 @@
+## typedef is used + untyped enum in ALAssetsLibrary.h: typedef NSUInteger ALAssetsGroupType;
+!unknown-native-enum! ALAssetsGroupType bound
+
+## was returned by `valueForProperty:` on error condition. API deprecated in iOS9
+!missing-field! ALErrorInvalidProperty not bound

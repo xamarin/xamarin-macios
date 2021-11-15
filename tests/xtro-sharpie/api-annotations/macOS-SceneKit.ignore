@@ -1,0 +1,10 @@
+!incorrect-protocol-member! SCNSceneRenderer::currentTime is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::setCurrentTime: is REQUIRED and should be abstract
+!missing-selector! SCNProgram::geometryShader not bound
+!missing-selector! SCNProgram::setGeometryShader: not bound
+!missing-selector! SCNProgram::setTessellationControlShader: not bound
+!missing-selector! SCNProgram::setTessellationEvaluationShader: not bound
+!missing-selector! SCNProgram::tessellationControlShader not bound
+!missing-selector! SCNProgram::tessellationEvaluationShader not bound
+!missing-selector! SCNText::chamferSegmentCount not bound
+!missing-selector! SCNText::setChamferSegmentCount: not bound

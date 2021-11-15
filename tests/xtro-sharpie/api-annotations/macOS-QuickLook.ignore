@@ -1,0 +1,55 @@
+!missing-field! kQLPreviewContentIDScheme not bound
+!missing-field! kQLPreviewOptionCursorKey not bound
+!missing-field! kQLPreviewPropertyAttachmentDataKey not bound
+!missing-field! kQLPreviewPropertyAttachmentsKey not bound
+!missing-field! kQLPreviewPropertyBaseBundlePathKey not bound
+!missing-field! kQLPreviewPropertyCursorKey not bound
+!missing-field! kQLPreviewPropertyDisplayNameKey not bound
+!missing-field! kQLPreviewPropertyHeightKey not bound
+!missing-field! kQLPreviewPropertyMIMETypeKey not bound
+!missing-field! kQLPreviewPropertyPDFStyleKey not bound
+!missing-field! kQLPreviewPropertyStringEncodingKey not bound
+!missing-field! kQLPreviewPropertyTextEncodingNameKey not bound
+!missing-field! kQLPreviewPropertyWidthKey not bound
+!missing-field! kQLThumbnailPropertyBadgeImageKey not bound
+!missing-field! kQLThumbnailPropertyBaseBundlePathKey not bound
+!missing-field! kQLThumbnailPropertyExtensionKey not bound
+!missing-pinvoke! QLPreviewRequestCopyContentUTI is not bound
+!missing-pinvoke! QLPreviewRequestCopyOptions is not bound
+!missing-pinvoke! QLPreviewRequestCopyURL is not bound
+!missing-pinvoke! QLPreviewRequestCreateContext is not bound
+!missing-pinvoke! QLPreviewRequestCreatePDFContext is not bound
+!missing-pinvoke! QLPreviewRequestFlushContext is not bound
+!missing-pinvoke! QLPreviewRequestGetDocumentObject is not bound
+!missing-pinvoke! QLPreviewRequestGetGeneratorBundle is not bound
+!missing-pinvoke! QLPreviewRequestGetTypeID is not bound
+!missing-pinvoke! QLPreviewRequestIsCancelled is not bound
+!missing-pinvoke! QLPreviewRequestSetDataRepresentation is not bound
+!missing-pinvoke! QLPreviewRequestSetDocumentObject is not bound
+!missing-pinvoke! QLPreviewRequestSetURLRepresentation is not bound
+!missing-pinvoke! QLThumbnailCancel is not bound
+!missing-pinvoke! QLThumbnailCopyDocumentURL is not bound
+!missing-pinvoke! QLThumbnailCopyImage is not bound
+!missing-pinvoke! QLThumbnailCopyOptions is not bound
+!missing-pinvoke! QLThumbnailCreate is not bound
+!missing-pinvoke! QLThumbnailDispatchAsync is not bound
+!missing-pinvoke! QLThumbnailGetContentRect is not bound
+!missing-pinvoke! QLThumbnailGetMaximumSize is not bound
+!missing-pinvoke! QLThumbnailGetTypeID is not bound
+!missing-pinvoke! QLThumbnailIsCancelled is not bound
+!missing-pinvoke! QLThumbnailRequestCopyContentUTI is not bound
+!missing-pinvoke! QLThumbnailRequestCopyOptions is not bound
+!missing-pinvoke! QLThumbnailRequestCopyURL is not bound
+!missing-pinvoke! QLThumbnailRequestCreateContext is not bound
+!missing-pinvoke! QLThumbnailRequestFlushContext is not bound
+!missing-pinvoke! QLThumbnailRequestGetDocumentObject is not bound
+!missing-pinvoke! QLThumbnailRequestGetGeneratorBundle is not bound
+!missing-pinvoke! QLThumbnailRequestGetMaximumSize is not bound
+!missing-pinvoke! QLThumbnailRequestGetTypeID is not bound
+!missing-pinvoke! QLThumbnailRequestIsCancelled is not bound
+!missing-pinvoke! QLThumbnailRequestSetDocumentObject is not bound
+!missing-pinvoke! QLThumbnailRequestSetImage is not bound
+!missing-pinvoke! QLThumbnailRequestSetImageAtURL is not bound
+!missing-pinvoke! QLThumbnailRequestSetImageWithData is not bound
+!missing-pinvoke! QLThumbnailRequestSetThumbnailWithDataRepresentation is not bound
+!missing-pinvoke! QLThumbnailRequestSetThumbnailWithURLRepresentation is not bound

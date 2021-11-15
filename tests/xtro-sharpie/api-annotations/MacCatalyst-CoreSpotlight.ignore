@@ -1,0 +1,5 @@
+## not annotated for catalyst and not responding on macOS 12 beta 3
+!missing-selector! CSSearchableItemAttributeSet::actionIdentifiers not bound
+!missing-selector! CSSearchableItemAttributeSet::setActionIdentifiers: not bound
+!missing-selector! CSSearchableItemAttributeSet::setSharedItemContentType: not bound
+!missing-selector! CSSearchableItemAttributeSet::sharedItemContentType not bound

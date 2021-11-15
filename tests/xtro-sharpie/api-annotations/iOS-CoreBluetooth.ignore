@@ -1,0 +1,6 @@
+## obsoleted (removed from headers) in iOS 8.4
+!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrieveConnectedPeripherals: found
+!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrievePeripherals: found
+
+## obsoleted (removed from headers) in iOS 8.4
+!extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
