@@ -3,7 +3,9 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(DOTNET6_VERSION_BAND)
+# The sdk version band has the last two digits set to 0: https://github.com/dotnet/sdk/blob/22c4860dcb2cf6b123dd641cc4a87a50380759d5/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/SdkDirectoryWorkloadManifestProvider.cs#L52-L53
+MANIFEST_VERSION_BAND=$(shell echo $(DOTNET6_VERSION_BAND) | sed 's/..$$/00/')
+DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(MANIFEST_VERSION_BAND)
 DOTNET_PACKS_PATH=$(DOTNET6_DIR)/packs
 DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET6_DIR)/template-packs
 TMP_PKG_DIR=_pkg
