@@ -58,6 +58,26 @@
     <StartArguments>ios15.0-macabi-x86_64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS (.NET)' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>iphoneos15.0-arm64.pch --output-directory api-annotations ../../_build/Microsoft.iOS.Runtime.ios-arm64/runtimes/ios-arm64/lib/net6.0/Xamarin.iOS.dll</StartArguments>
+    <StartWorkingDirectory>.</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS (.NET)' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>appletvos13.4-arm64.pch --output-directory api-annotations ../../_build/Microsoft.tvOS.Runtime.tvos-arm64/runtimes/tvos-arm64/lib/net6.0/Xamarin.TVOS.dll</StartArguments>
+    <StartWorkingDirectory>.</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS (.NET)' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>macosx10.15-x86_64.pch --output-directory api-annotations ../../_build/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/lib/net6.0/Xamarin.Mac.dll</StartArguments>
+    <StartWorkingDirectory>.</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'MacCatalyst (.NET)' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>ios15.0-macabi-x86_64.pch --output-directory api-annotations ../../_build/Microsoft.MacCatalyst.Runtime.maccatalyst-x64/runtimes/maccatalyst-x64/lib/net6.0/Xamarin.MacCatalyst.dll</StartArguments>
+    <StartWorkingDirectory>.</StartWorkingDirectory>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Clang">
