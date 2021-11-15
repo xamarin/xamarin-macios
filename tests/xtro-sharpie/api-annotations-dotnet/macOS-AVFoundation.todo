@@ -1,0 +1,9 @@
+!extra-enum-value! Managed value 1 for AVAudioSessionRouteSharingPolicy.LongForm is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value -11872 for AVError.SessionHardwareCostOverage is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value -11873 for AVError.UnsupportedDeviceActiveFormat is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 17 for AVAudioSessionCategoryOptions.InterruptSpokenAudioAndMixWithOthers is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 1936747378 for AVAudioSessionPortOverride.Speaker is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 32 for AVAudioSessionCategoryOptions.AllowBluetoothA2DP is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 4 for AVAudioSessionCategoryOptions.AllowBluetooth is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 64 for AVAudioSessionCategoryOptions.AllowAirPlay is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 8 for AVAudioSessionCategoryOptions.DefaultToSpeaker is available for the current platform while the value in the native header is not

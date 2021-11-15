@@ -1,0 +1,15 @@
+## OSX-only enums - fixed in XAMCORE_3_0
+!unknown-native-enum! AVCaptureDeviceTransportControlsPlaybackMode bound
+!unknown-native-enum! AVVideoFieldMode bound
+
+## from iOS 4.0 to 5.1
+!unknown-field! AVMediaTypeTimedMetadata bound
+
+## no generator support for NSFastEnumeration / https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+# Deprecated in iOS 6.0 but we have same C# signature as a method that was deprecated in iOS 8.0
+!deprecated-attribute-wrong! AVAudioRecorderDelegate::audioRecorderEndInterruption:withFlags: has 8.0 not 6.0 on [Deprecated] attribute
