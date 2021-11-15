@@ -205,6 +205,4 @@
       <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhone'">$(DefineConstants);AOT</DefineConstants>
     </PropertyGroup>
   </Target>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

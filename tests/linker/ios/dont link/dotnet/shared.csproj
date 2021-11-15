@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <ItemGroup>
     <ProjectReference Include="$(RootTestsDirectory)\BundledResources\dotnet\$(_PlatformName)\BundledResources.csproj" />
