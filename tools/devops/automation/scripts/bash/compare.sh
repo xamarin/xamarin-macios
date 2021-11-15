@@ -70,6 +70,7 @@ mkdir -p "$API_COMPARISON"
 
 
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
+cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
