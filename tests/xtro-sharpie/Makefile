@@ -144,7 +144,7 @@ endif
 
 gen-all: gen-ios gen-tvos gen-watchos gen-macos gen-maccatalyst
 
-wrench: classify
+wrench: classify dotnet-classify
 
 report: build
 	rm -rf report/
