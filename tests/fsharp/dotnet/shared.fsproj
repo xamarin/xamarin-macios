@@ -31,6 +31,4 @@
     <Compile Include="$(RootTestsDirectory)/common/mac/MacMain.fs" Condition="$(TargetFramework.EndsWith('-macos'))" />
     <Compile Include="$(FSharpTestDirectory)/Main.fs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
   </ItemGroup>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

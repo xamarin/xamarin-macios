@@ -19,7 +19,6 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
     <Compile Include="$(IntrospectionTestDirectory)\Mac\MacApiCtorInitTest.cs" />
