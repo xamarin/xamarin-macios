@@ -84,6 +84,7 @@ namespace Extrospection {
 		}
 
 		public static Platforms Platform { get; set; }
+		public static bool IsDotNet { get; set; }
 
 		public static int GetPlatformManagedValue (Platforms platform)
 		{
@@ -150,6 +151,10 @@ namespace Extrospection {
 					break;
 				case "NoMacAttribute":
 					if (Platform == Platforms.macOS)
+						return false;
+					break;
+				case "UnsupportedOSPlatformAttribute":
+					if (AttributeHelpers.IsOSPlatformAttribute (ca, Platform))
 						return false;
 					break;
 				}
@@ -548,6 +553,24 @@ namespace Extrospection {
 				return "UnsafeUnretained|Assign";
 
 			return argSem.ToString ();
+		}
+
+		public static string AsPlatformAttributeString (this Platforms platform)
+		{
+			switch (platform) {
+			case Platforms.iOS:
+				return "ios";
+			case Platforms.MacCatalyst:
+				return "maccatalyst";
+			case Platforms.macOS:
+				return "macos";
+			case Platforms.tvOS:
+				return "tvos";
+			case Platforms.watchOS:
+				return "watchos";
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
 		}
 	}
 }
