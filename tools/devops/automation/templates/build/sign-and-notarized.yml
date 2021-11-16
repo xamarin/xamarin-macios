@@ -134,13 +134,16 @@ steps:
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
     PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
     echo "Packages found at $PACKAGES"
-    echo "Temp dir is $ESRP_TEMP"
-    mkdir -p "$ESRP_TEMP"
+    if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+      export ESRP_TEMP="$WORKING_DIR/esrp"
+      echo "Temp dir is $ESRP_TEMP"
+      mkdir -p "$ESRP_TEMP"
+    fi
 
     echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
     ls -R $(Build.SourcesDirectory)/package
   env:
-    ESRP_TEMP: $(System.DefaultWorkingDirectory)/esrp
+    WORKING_DIR: $(System.DefaultWorkingDirectory)
     PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
   name: notarize
@@ -149,13 +152,13 @@ steps:
   condition: ${{ parameters.condition }}
 
 - task: ArchiveFiles@1
-  displayName: 'Archive ERSP temp'
+  displayName: 'Archive ESPP temp'
   inputs:
     rootFolder: '$(System.DefaultWorkingDirectory)/esrp'
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/erp.zip'
   continueOnError: true
-  condition: ${{ parameters.condition }}
+  condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
 
 # Upload the esrp temp dir
 - task: PublishPipelineArtifact@1
@@ -164,7 +167,7 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/erp.zip'
     artifactName: ESRP-tmp
   continueOnError: true
-  condition: ${{ parameters.condition }}
+  condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
 
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
   displayName: 'Install Notarizing Plugin'
