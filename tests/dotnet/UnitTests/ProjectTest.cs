@@ -15,6 +15,8 @@ using Xamarin.Utils;
 using Xamarin.Tests;
 using Xamarin.MacDev;
 
+#nullable enable
+
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetProjectTest : TestBaseClass {
@@ -137,9 +139,9 @@ namespace Xamarin.Tests {
 			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
 			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("EmbeddedResources.Welcome.resources"), "libtest.a");
 			var asm_dir = Path.GetDirectoryName (asm);
-			Assert.That (Path.Combine (asm_dir, "en-AU", "EmbeddedResources.resources.dll"), Does.Exist, "en-AU");
-			Assert.That (Path.Combine (asm_dir, "de", "EmbeddedResources.resources.dll"), Does.Exist, "de");
-			Assert.That (Path.Combine (asm_dir, "es", "EmbeddedResources.resources.dll"), Does.Exist, "es");
+			Assert.That (Path.Combine (asm_dir!, "en-AU", "EmbeddedResources.resources.dll"), Does.Exist, "en-AU");
+			Assert.That (Path.Combine (asm_dir!, "de", "EmbeddedResources.resources.dll"), Does.Exist, "de");
+			Assert.That (Path.Combine (asm_dir!, "es", "EmbeddedResources.resources.dll"), Does.Exist, "es");
 		}
 
 		[TestCase ("iOS")]
@@ -314,11 +316,11 @@ namespace Xamarin.Tests {
 				var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for interdependent-binding-projects.dll");
 
-				var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+				var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir!, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				// The native library is removed from the resources by the linker
 				Assert.That (ad1.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test.dll");
 
-				var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+				var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir!, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				// The native library is removed from the resources by the linker
 				Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test2.dll");
 			} finally {
@@ -378,7 +380,7 @@ namespace Xamarin.Tests {
 				}
 			}
 			var result = DotNet.AssertBuild (project_path, properties);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), "monotouchtest.app");
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", platform.ToFramework (), "monotouchtest.app");
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -594,15 +596,15 @@ namespace Xamarin.Tests {
 
 			var rv = DotNet.AssertBuild (project_path, GetDefaultProperties ());
 
-			var dllPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), $"{project}.dll");
+			var dllPath = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", platform.ToFramework (), $"{project}.dll");
 			Assert.That (dllPath, Does.Exist, "Binding assembly");
 
 			// Verify that the MyNativeClass class exists in the assembly, and that it's actually a class.
 			var ad = AssemblyDefinition.ReadAssembly (dllPath, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			var myNativeClass = ad.MainModule.Types.FirstOrDefault (v => v.FullName == "MyApiDefinition.MyNativeClass");
-			Assert.IsFalse (myNativeClass.IsInterface, "IsInterface");
+			Assert.IsFalse (myNativeClass!.IsInterface, "IsInterface");
 			var myStruct = ad.MainModule.Types.FirstOrDefault (v => v.FullName == "MyClassLibrary.MyStruct");
-			Assert.IsTrue (myStruct.IsValueType, "MyStruct");
+			Assert.IsTrue (myStruct!.IsValueType, "MyStruct");
 
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
@@ -695,7 +697,6 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithXCAssets";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 
 			DeleteAssets (project_path);
@@ -715,10 +716,13 @@ namespace Xamarin.Tests {
 
 			var doc = ProcessAssets (assetsCar);
 			Assert.IsNotNull (doc, "There was an issue processing the asset binary.");
+
 			var foundAssets = FindAssets (doc);
 
-			var TotalUniqueAssets = 18;
-			Assert.AreEqual (TotalUniqueAssets, foundAssets.Count, "There were a different number of assets found.");
+			// Seems the 2 vectors are not being consumed in MacCatalyst but they still appear in the image Datasets
+			var TotalUniqueAssets = platform == ApplePlatform.MacCatalyst ? 14 : 16;
+
+			Assert.AreEqual (TotalUniqueAssets, foundAssets.Count, $"There were a different number of assets found: {foundAssets.Count}");
 			Assert.IsFalse (foundAssets.Contains ("Data.DS_StoreDataTest"), "DS_Store files should not be included.");
 
 			var arm64txt = Path.Combine (resourcesDirectory, "arm64.txt");
@@ -737,7 +741,7 @@ namespace Xamarin.Tests {
 					Directory.Delete (xcassetsDir, true);
 			}
 			catch (Exception e){
-				Console.WriteLine($"Deleting Assets.xcassets failed: {e.Message}");
+				Assert.Fail ($"Deleting Assets.xcassets failed: {e.Message}");
 			}
 		}
 
@@ -747,7 +751,7 @@ namespace Xamarin.Tests {
 			string xcassetsDir = Path.Combine (project_path, @"../Assets.xcassets");
 
 			if (!testingAssetsDir.Exists)
-				throw new DirectoryNotFoundException ($"TestingAssets directory does not exist or could not be found: {testingAssetsDir}");
+				Assert.Fail ($"TestingAssets directory does not exist or could not be found: {testingAssetsDir}");
 
 			if (!Directory.Exists (xcassetsDir))
 				CopyDirectoryContents (testingAssetsDir, xcassetsDir);
@@ -765,26 +769,17 @@ namespace Xamarin.Tests {
 		}
 
 		JsonDocument ProcessAssets (string assetsPath) {
-			try {
-				using (Process myProcess = new Process ()) {
-					myProcess.StartInfo.UseShellExecute = false;
-					myProcess.StartInfo.RedirectStandardOutput = true;
-					myProcess.StartInfo.Arguments = $"--sdk iphoneos assetutil --info {assetsPath}";
-					myProcess.StartInfo.FileName = "xcrun";
-					myProcess.StartInfo.CreateNoWindow = true;
-					myProcess.Start ();
+			var output = new StringBuilder ();
+			var executable = "xcrun";
+			var arguments = new string [] { "--sdk", "iphoneos", "assetutil", "--info", assetsPath };
+			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 
-					string output = myProcess.StandardOutput.ReadToEnd ();
-					StreamReader reader = myProcess.StandardOutput;
-					myProcess.WaitForExit ();
+			// This Execution call produces an output with an objc warning. We just want the json below it.
+			if (output.ToString ().StartsWith ("objc"))
+				output.Remove (0, output.ToString ().IndexOf ('\n'));
 
-					return JsonDocument.Parse (output);
-				}
-			}
-			catch (Exception e) {
-				Console.WriteLine($"Couldn't process: {e.Message}");
-			}
-			return null;
+			return JsonDocument.Parse (output.ToString ());
 		}
 
 		HashSet<string> FindAssets (JsonDocument doc)
@@ -793,17 +788,17 @@ namespace Xamarin.Tests {
 			var foundElements = new HashSet<string> ();
 
 			foreach (var item in jsonArray) {
-				var result = IsTarget (item);
+				var result = GetTarget (item);
 				if (result is not null)
 					foundElements.Add (result);
 			}
 			return foundElements;
 		}
 
-		string IsTarget (JsonElement item) {
+		string? GetTarget (JsonElement item) {
 			if (item.TryGetProperty ("AssetType", out var assetType)) {
 				foreach (var target in XCAssetTargets) {
-					var result = IsTarget (item, assetType, target);
+					var result = GetTarget (item, assetType, target);
 					if (result is not null)
 						return result;
 				}
@@ -811,7 +806,7 @@ namespace Xamarin.Tests {
 			return null;
 		}
 
-		string IsTarget (JsonElement item, JsonElement assetType, XCAssetTarget target)
+		string? GetTarget (JsonElement item, JsonElement assetType, XCAssetTarget target)
 		{
 			if (assetType.ToString () == target.AssetType) {
 				if (item.TryGetProperty (target.CategoryName, out var value)) {
@@ -835,7 +830,7 @@ namespace Xamarin.Tests {
 
 		static XCAssetTarget[] XCAssetTargets = {
 			new XCAssetTarget ("Image", "RenditionName", new string [] { "samplejpeg.jpeg", "samplejpg.jpg",
-				"samplepdf.pdf", "samplepng2.png", "spritejpeg.jpeg", "loopsvg.svg", "symboltestsvg.svg" }),
+				"samplepdf.pdf", "samplepng2.png", "spritejpeg.jpeg", "loopsvg.svg" }),
 
 			new XCAssetTarget ("Data", "Name", new string [] { "BmpImageDataTest", "JsonDataTest", "DS_StoreDataTest",
 				"DngImageDataTest", "EpsImageDataTest", "TiffImageDataTest" }),
@@ -847,8 +842,6 @@ namespace Xamarin.Tests {
 			new XCAssetTarget ("Texture Rendition", "Name", new string [] { "TextureTest" }),
 
 			new XCAssetTarget ("Vector", "RenditionName", new string [] { "samplepdf.pdf", "loopsvg.svg" }),
-
-			new XCAssetTarget ("Vector Glyph", "Name", new string [] { "SymbolTest" }),
 		};
 
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
@@ -865,7 +858,7 @@ namespace Xamarin.Tests {
 				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
 
 			var magicWord = Guid.NewGuid ().ToString ();
-			var env = new Dictionary<string, string> {
+			var env = new Dictionary<string, string?> {
 				{ "MAGIC_WORD", magicWord },
 				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
 			};
@@ -985,7 +978,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir), appPath);
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, appPath);
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
 	}
