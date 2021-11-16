@@ -152,11 +152,11 @@ steps:
   condition: ${{ parameters.condition }}
 
 - task: ArchiveFiles@1
-  displayName: 'Archive ESPP temp'
+  displayName: 'Archive ESRP temp'
   inputs:
     rootFolder: '$(System.DefaultWorkingDirectory)/esrp'
     includeRootFolder: false
-    archiveFile: '$(Build.ArtifactStagingDirectory)/erp.zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/esrp.zip'
   continueOnError: true
   condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
 
@@ -164,7 +164,7 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: ESRP temp'
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/erp.zip'
+    targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
     artifactName: ESRP-tmp
   continueOnError: true
   condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
