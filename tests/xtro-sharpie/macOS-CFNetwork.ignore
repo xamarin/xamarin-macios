@@ -16,9 +16,3 @@
 !missing-field! kCFNetworkProxiesSOCKSEnable not bound
 !missing-field! kCFNetworkProxiesSOCKSPort not bound
 !missing-field! kCFNetworkProxiesSOCKSProxy not bound
-!missing-field! kCFStreamPropertySSLPeerCertificates not bound
-!missing-field! kCFStreamSSLAllowsAnyRoot not bound
-!missing-field! kCFStreamSSLAllowsExpiredCertificates not bound
-!missing-field! kCFStreamSSLAllowsExpiredRoots not bound
-!missing-pinvoke! CFNetServiceRegister is not bound
-!missing-pinvoke! CFNetServiceResolve is not bound

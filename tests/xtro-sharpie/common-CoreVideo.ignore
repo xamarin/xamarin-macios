@@ -42,7 +42,6 @@
 
 # iOS and tvOS
 
-!missing-field! kCVOpenGLESTextureCacheMaximumTextureAgeKey not bound
 !missing-field! kCVPixelBufferIOSurfaceCoreAnimationCompatibilityKey not bound
 !missing-field! kCVPixelBufferIOSurfaceOpenGLESFBOCompatibilityKey not bound
 !missing-field! kCVPixelBufferIOSurfaceOpenGLESTextureCompatibilityKey not bound
@@ -51,5 +50,3 @@
 ## *GetTypeID are generally not bound
 !missing-pinvoke! CVMetalTextureCacheGetTypeID is not bound
 !missing-pinvoke! CVMetalTextureGetTypeID is not bound
-!missing-pinvoke! CVOpenGLESTextureCacheGetTypeID is not bound
-!missing-pinvoke! CVOpenGLESTextureGetTypeID is not bound

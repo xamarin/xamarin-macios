@@ -45,7 +45,6 @@
 !missing-pinvoke! CGColorConversionInfoGetTypeID is not bound
 !missing-pinvoke! CGColorCreateCopy is not bound
 !missing-pinvoke! CGColorGetTypeID is not bound
-!missing-pinvoke! CGColorSpaceCreateWithPlatformColorSpace is not bound
 !missing-pinvoke! CGColorSpaceGetTypeID is not bound
 !missing-pinvoke! CGContextGetTypeID is not bound
 !missing-pinvoke! CGDataConsumerCreate is not bound
