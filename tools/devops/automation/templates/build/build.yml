@@ -101,4 +101,4 @@ steps:
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8 -w
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8 -w
   displayName: 'Build'
-  timeoutInMinutes: 30
+  timeoutInMinutes: 20
