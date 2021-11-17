@@ -1,12 +1,6 @@
 # This job will parse all the labels present in a PR, will set
 # the tags for the build AND will set a number of configuration
 # variables to be used by the rest of the projects
-parameters:
-
-- name: enableDotnet
-  type: boolean
-  default: false
-
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -137,8 +131,6 @@ steps:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOTNET: "True"
   name: labels
   displayName: 'Configure build'
 
@@ -149,47 +141,3 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
     artifactName: build-configuration
   continueOnError: true
-
-- bash: |
-    echo "current directory: $PWD"
-    make LocProject.json
-  displayName: 'Generate LocProject.json'
-  continueOnError: true
-  workingDirectory: $(Build.SourcesDirectory)\tools\devops 
-
-- powershell: |
-    git config user.email "valco@microsoft.com"
-    git config user.name "vs-mobiletools-engineering-service2"
-    git branch -d Localization
-    git push origin --delete Localization
-    git checkout -b Localization
-    git push origin Localization
-  displayName: "Create a new Localization branch from main"
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule'), eq(variables.isMain, 'True'))
-
-- task: OneLocBuild@2
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  env:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  inputs:
-    locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
-    outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: true
-    ${{ if ne(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: false
-    packageSourceAuth: patAuth
-    patVariable: '$(OneLocBuild--PAT)'
-    isAutoCompletePrSelected: false
-    prSourceBranchPrefix: 'locfiles'
-    repoType: gitHub
-    gitHubPatVariable: '$(GitHub.Token)'
-
-- task: PublishBuildArtifacts@1
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'localizationDrop'
-    publishLocation: 'Container'
