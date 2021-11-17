@@ -11,6 +11,8 @@
     <_LinkMode>None</_LinkMode>
     <UseInterpreter>true</UseInterpreter>
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
+    <!-- this app will be re-signed during the build on customers' machines, so no need to sign it here -->
+    <EnableCodeSigning>false</EnableCodeSigning>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.2" />
