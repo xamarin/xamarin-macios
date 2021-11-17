@@ -79,6 +79,13 @@ namespace ObjCRuntime {
 			this.handle = handle;
 		}
 
+#if NET
+		public Class (NativeHandle handle)
+		{
+			this.handle = handle;
+		}
+#endif
+
 		[Preserve (Conditional = true)]
 #if NET
 		internal Class (NativeHandle handle, bool owns)
