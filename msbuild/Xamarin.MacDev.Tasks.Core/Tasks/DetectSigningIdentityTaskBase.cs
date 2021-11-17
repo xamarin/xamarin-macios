@@ -581,6 +581,16 @@ namespace Xamarin.MacDev.Tasks
 
 					return !Log.HasLoggedErrors;
 				}
+
+				if (!SdkIsSimulator && !RequireCodeSigning) {
+					// The "-" key is a special value allowed by the codesign utility that
+					// allows us to get away with not having an actual codesign key.
+					DetectedCodeSigningKey = "-";
+
+					ReportDetectedCodesignInfo ();
+
+					return !Log.HasLoggedErrors;
+				}
 			}
 
 			// Note: if we make it this far, we absolutely need a codesigning certificate
