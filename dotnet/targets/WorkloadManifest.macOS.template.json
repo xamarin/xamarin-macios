@@ -6,7 +6,6 @@
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
-				"Microsoft.@PLATFORM@.Runtime.osx-arm64",
 				"Microsoft.@PLATFORM@.Runtime.osx-x64",
 				"Microsoft.@PLATFORM@.Templates"
 			],

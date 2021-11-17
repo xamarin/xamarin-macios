@@ -7,10 +7,7 @@
 				"Microsoft.@PLATFORM@.Sdk",
 				"microsoft-@PLATFORM@-windows-sdk",
 				"Microsoft.@PLATFORM@.Ref",
-				"Microsoft.@PLATFORM@.Runtime.ios-arm",
 				"Microsoft.@PLATFORM@.Runtime.ios-arm64",
-				"Microsoft.@PLATFORM@.Runtime.iossimulator-x86",
-				"Microsoft.@PLATFORM@.Runtime.iossimulator-x64",
 				"Microsoft.@PLATFORM@.Templates"
 			],
 			"extends": [
