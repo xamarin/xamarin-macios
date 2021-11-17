@@ -4,6 +4,7 @@ parameters:
 - name: gitHubToken
   type: string
 
+jobs:
 - job: build
   dependsOn:
   - AgentPoolSelector
