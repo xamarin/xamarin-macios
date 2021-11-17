@@ -180,4 +180,4 @@ ifdef ENABLE_XAMARIN
 SUBDIRS += $(MACCORE_PATH)
 endif
 
-SUBDIRS += tests
+#SUBDIRS += tests
