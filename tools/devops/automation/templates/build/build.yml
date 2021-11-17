@@ -98,7 +98,7 @@ steps:
     set -x
     set -e
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8 -w
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8 -w
   displayName: 'Build'
   timeoutInMinutes: 30
