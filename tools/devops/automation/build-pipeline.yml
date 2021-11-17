@@ -5,27 +5,6 @@
 # https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/job/main/
 # https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
 #
-parameters:
-- name: runTests
-  type: boolean
-  default: true
-
-- name: runDeviceTests
-  type: boolean
-  default: true
-
-- name: runSamples
-  type: boolean
-  default: false
-  
-- name: provisionatorChannel
-  type: string
-  default: 'latest'
-
-- name: enableDotnet
-  type: boolean
-  default: true
-
 resources:
   repositories:
   - repository: self

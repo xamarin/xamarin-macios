@@ -168,8 +168,6 @@ steps:
   name: configuration
   displayName: "Parse PR labels"
   timeoutInMinutes: 5
-  env:
-    RUN_DEVICE_TESTS: '${{ parameters.runDeviceTests }}'
 
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - task: PowerShell@2
