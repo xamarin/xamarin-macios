@@ -6,9 +6,6 @@ parameters:
 
 jobs:
 - job: build
-  dependsOn:
-  - AgentPoolSelector
-  - configure
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
