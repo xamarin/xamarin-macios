@@ -77,7 +77,8 @@ namespace Extrospection {
 				return;
 
 			if (!enums.TryGetValue (mname, out var type)) {
-				Log.On (framework).Add ($"!missing-enum! {name} not bound");
+				if (!decl.IsDeprecated ()) // don't report deprecated enums as unbound
+					Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
 			} else
 				enums.Remove (mname);
@@ -131,12 +132,14 @@ namespace Extrospection {
 			}
 
 			// check correct [Native] decoration
-			if (native) {
-				if (!IsNative (type))
-					Log.On (framework).Add ($"!missing-enum-native! {name}");
-			} else {
-				if (IsNative (type))
-					Log.On (framework).Add ($"!extra-enum-native! {name}");
+			if (!decl.IsDeprecated ()) {
+				if (native) {
+					if (!IsNative (type))
+						Log.On (framework).Add ($"!missing-enum-native! {name}");
+				} else {
+					if (IsNative (type))
+						Log.On (framework).Add ($"!extra-enum-native! {name}");
+				}
 			}
 
 			int managed_size = 4;
@@ -254,7 +257,7 @@ namespace Extrospection {
 				}
 			}
 
-			if (native_size != managed_size)
+			if (native_size != managed_size && !decl.IsDeprecated ())
 				Log.On (framework).Add ($"!wrong-enum-size! {name} managed {managed_size} vs native {native_size}");
 		}
 
