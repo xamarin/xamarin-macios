@@ -159,10 +159,4 @@ stages:
   jobs:
     - template: templates/build/stage.yml
       parameters:
-        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-        runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
-        runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
         gitHubToken: ${{ variables['GitHub.Token'] }}
-        xqaCertPass: $(xqa--certificates--password)
-        enableDotnet: ${{ parameters.enableDotnet }}
