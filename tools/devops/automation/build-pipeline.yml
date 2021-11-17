@@ -14,6 +14,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runGovernanceTests
+  type: boolean
+  default: true 
+
 - name: runSamples
   type: boolean
   default: false
@@ -224,17 +228,18 @@ schedules:
 
 stages:
 
-- stage: governance_checks
-  displayName: 'Governance Checks'
-  dependsOn:
-  - build_packages
-  jobs:
-    - job: governance
-      displayName: 'Governance Checks'
-      pool:
-        vmImage: windows-latest
-      steps:
-      - template: templates/governance-checks.yml
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: governance_checks
+    displayName: 'Governance Checks'
+    dependsOn:
+    - build_packages
+    jobs:
+      - job: governance
+        displayName: 'Governance Checks'
+        pool:
+          vmImage: windows-latest
+        steps:
+        - template: templates/governance-checks.yml
 
 - stage: build_packages
   displayName: 'Build'
