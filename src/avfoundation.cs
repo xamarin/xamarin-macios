@@ -10462,7 +10462,7 @@ namespace AVFoundation {
 #endif
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[iOS (8,0), Mac (11, 0)]
+		[iOS (8,0), Mac (10, 14)]
 		[Export ("highResolutionStillImageOutputEnabled")]
 		bool HighResolutionStillImageOutputEnabled { [Bind ("isHighResolutionStillImageOutputEnabled")] get; set; }
 	}
