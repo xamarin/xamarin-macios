@@ -4,33 +4,6 @@ parameters:
 - name: gitHubToken
   type: string
 
-jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
-
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-
-  steps:
-  - template: configure.yml
-
-- job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
-  pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
-    vmImage: ubuntu-latest
-  steps:
-  - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-
-  # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-  - template: azure-devops-pools/agent-pool-selector.yml@templates
-    parameters:
-      agentPoolPR: $(PRBuildPool)
-      agentPoolPRUrl: $(PRBuildPoolUrl)
-      agentPoolCI: $(CIBuildPool)
-      agentPoolCIUrl: $(CIBuildPoolUrl)
-
 - job: build
   dependsOn:
   - AgentPoolSelector
@@ -38,13 +11,12 @@ jobs:
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
-    AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    PR_ID: 13377
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    BRANCH_NAME: make-hang
   pool:
-    name: $(AgentPoolComputed)
+    name: VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted
     demands:
     - Agent.OS -equals Darwin
     - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed

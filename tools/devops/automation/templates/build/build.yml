@@ -45,23 +45,6 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Show Environment'
 
-- powershell: |
-    Write-Host "Python version"
-    python --version
-
-    Write-Host "Python location"
-    which python
-
-    Write-Host "Python2 location"
-    which python2
-
-    Write-Host "Python3 location"
-    which python3
-
-    Write-Host "Pip3 version"
-    pip3 -V
-  displayName: 'Show Python information'
-
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
@@ -108,65 +91,12 @@ steps:
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
   displayName: 'Provision simulators'
 
-- bash: |
-    set -x
-    sudo rm -Rf /Developer/MonoTouch
-    sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
-    sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
-  displayName: 'Delete library folders'
-  timeoutInMinutes: 5
-
 - bash:
     set -x
     set -e
     rm -Rvf $(Build.SourcesDirectory)/package
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
   displayName: 'Clear results directory'
-  timeoutInMinutes: 5
-
-# Use the env variables that were set by the label parsing in the configure step
-# print some useful logging to allow to know what is going on AND allow make some
-# choices, there are labels that contradict each other (skip-package vs build-packages)
-# we use warnings for those case we are not sure about.
-- pwsh: |
-    # we have a number of scripts that require to be executed from the top of the src, rather
-    # than keeping track of the location of the script, we create two env vars that can be used to
-    # get to the top
-    $configVars = @{} # var name/value pair, later print twice, to process and debug
-
-    $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
-    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
-
-    $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
-    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
-
-    $buildReason = "$(Build.Reason)"
-    $buildSourceBranchName = "$(Build.SourceBranchName)"
-
-    Write-Host "PrID in env is $Env:PR_ID"
-    if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
-      $configVars.Add("PR_ID", $Env:PR_ID)
-    } else {
-      $configVars.Add("PR_ID", "")
-    }
-
-    # decide if we are dealing with a PR or a re-triggered PR or a build from
-    # a branch in origin
-
-    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
-      $configVars.Add("IsPR", "True")
-    } else {
-      # set the defaults, all the things! o/
-      $configVars.Add("IsPR", "False")
-    }
-    # write debugging and process of the vars
-    foreach($key in $configVars.Keys) {
-      Write-Host "$key='$($configVars[$key])'"
-      Write-Host "##vso[task.setvariable variable=$key;isOutput=true]$($configVars[$key])"
-    }
-
-  name: configuration
-  displayName: "Parse PR labels"
   timeoutInMinutes: 5
 
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
