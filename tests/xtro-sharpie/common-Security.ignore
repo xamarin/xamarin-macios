@@ -31,9 +31,6 @@
 ## xcode11.0 backlog
 !missing-pinvoke! sec_protocol_options_set_pre_shared_key_selection_block is not bound
 
-## `Max` values can change and cause breaking changes
-!missing-enum-value! SslProtocol native value kTLSProtocolMaxSupported = 999 not bound
-
 ## extra value for initialization
 !extra-enum-value! Managed value -1 for SslSessionState.Invalid not found in native headers
 

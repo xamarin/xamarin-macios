@@ -13,8 +13,8 @@ namespace Extrospection {
 		Dictionary<string,TypeDefinition> obsoleted_enums = new Dictionary<string,TypeDefinition> ();
 		Dictionary<long, FieldDefinition> managed_signed_values = new Dictionary<long, FieldDefinition> ();
 		Dictionary<ulong, FieldDefinition> managed_unsigned_values = new Dictionary<ulong, FieldDefinition> ();
-		Dictionary<long, string> native_signed_values = new Dictionary<long, string> ();
-		Dictionary<ulong, string> native_unsigned_values = new Dictionary<ulong,string> ();
+		Dictionary<long, (string Name, bool Deprecated)> native_signed_values = new Dictionary<long, (string Name, bool Deprecated)> ();
+		Dictionary<ulong, (string Name, bool Deprecated)> native_unsigned_values = new Dictionary<ulong,(string Name, bool Deprecated)> ();
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -192,15 +192,16 @@ namespace Extrospection {
 					if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer))
 						n = integer.SExtValue;
 
-					native_signed_values [n] = value.ToString ();
+					native_signed_values [n] = new (value.ToString (), value.IsDeprecated ());
 					// assume, sequentially assigned (in case next `value.InitExpr` is null)
 					n++;
 				}
 
 				foreach (var value in native_signed_values.Keys) {
-					if (!managed_signed_values.ContainsKey (value))
-						Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_signed_values [value]} = {value} not bound");
-					else
+					if (!managed_signed_values.ContainsKey (value)) {
+						if (!native_signed_values [value].Deprecated && !decl.IsDeprecated ())
+							Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_signed_values [value].Name} = {value} not bound");
+					} else
 						managed_signed_values.Remove (value);
 				}
 
@@ -227,7 +228,7 @@ namespace Extrospection {
 					if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer))
 						n = integer.ZExtValue;
 
-					native_unsigned_values [n] = value.ToString ();
+					native_unsigned_values [n] = new (value.ToString (), value.IsDeprecated ());
 					// assume, sequentially assigned (in case next `value.InitExpr` is null)
 					n++;
 				}
@@ -242,8 +243,10 @@ namespace Extrospection {
 							log = !managed_unsigned_values.ContainsKey (UInt64.MaxValue);
 							managed_unsigned_values.Remove (UInt64.MaxValue);
 						}
-						if (log)
-							Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value]} = {value} not bound");
+						if (log) {
+							if (!native_unsigned_values [value].Deprecated && !decl.IsDeprecated ())
+								Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value].Name} = {value} not bound");
+						}
 					} else
 						managed_unsigned_values.Remove (value);
 				}
