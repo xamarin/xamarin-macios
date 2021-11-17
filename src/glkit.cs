@@ -550,9 +550,7 @@ namespace GLKit {
 		[Field ("GLKTextureLoaderOriginBottomLeft")]
 		NSString OriginBottomLeft { get; }
 		
-#if XAMCORE_4_0 // Unavailable in macOS
-		[NoMac]
-#endif
+		[Mac (10,14)]
 		[Field ("GLKTextureLoaderGrayscaleAsAlpha")]
 		NSString GrayscaleAsAlpha { get; }
 

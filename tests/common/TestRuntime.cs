@@ -31,6 +31,8 @@ using UIKit;
 #endif
 using ObjCRuntime;
 
+using Xamarin.Utils;
+
 partial class TestRuntime
 {
 
@@ -744,38 +746,40 @@ partial class TestRuntime
 		}
 	}
 
-	public static bool CheckSystemVersion (PlatformName platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	public static bool CheckSystemVersion (ApplePlatform platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 		switch (platform) {
-		case PlatformName.iOS:
+		case ApplePlatform.iOS:
 			return CheckiOSSystemVersion (major, minor, throwIfOtherPlatform);
-		case PlatformName.MacOSX:
+		case ApplePlatform.MacOSX:
 			return CheckMacSystemVersion (major, minor, build, throwIfOtherPlatform);
-		case PlatformName.TvOS:
+		case ApplePlatform.TVOS:
 			return ChecktvOSSystemVersion (major, minor, throwIfOtherPlatform);
-		case PlatformName.WatchOS:
+		case ApplePlatform.WatchOS:
 			return CheckWatchOSSystemVersion (major, minor, throwIfOtherPlatform);
+		case ApplePlatform.MacCatalyst:
+			return CheckMacCatalystSystemVersion (major, minor, throwIfOtherPlatform);
 		default:
 			throw new Exception ($"Unknown platform: {platform}");
 		}
 	}
 
-	public static void AssertSystemVersion (PlatformName platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	public static void AssertSystemVersion (ApplePlatform platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 		switch (platform) {
-		case PlatformName.iOS:
+		case ApplePlatform.iOS:
 			AssertiOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
-		case PlatformName.MacOSX:
+		case ApplePlatform.MacOSX:
 			AssertMacSystemVersion (major, minor, build, throwIfOtherPlatform);
 			break;
-		case PlatformName.TvOS:
+		case ApplePlatform.TVOS:
 			AsserttvOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
-		case PlatformName.WatchOS:
+		case ApplePlatform.WatchOS:
 			AssertWatchOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
-		case PlatformName.MacCatalyst:
+		case ApplePlatform.MacCatalyst:
 			AssertMacCatalystSystemVersion (major, minor, build, throwIfOtherPlatform);
 			break;
 		default:

@@ -16,6 +16,7 @@ using Foundation;
 using AVFoundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -34,7 +35,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.AreEqual (0, obj.WeakAvailableMetadataObjectTypes.Length, "WeakAvailableMetadataObjectTypes#");
 				Assert.IsNotNull (obj.WeakMetadataObjectTypes, "WeakMetadataObjectTypes");
 				Assert.AreEqual (0, obj.WeakMetadataObjectTypes.Length, "WeakMetadataObjectTypes#");
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false))
 					Assert.AreEqual (new CGRect (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
 
 #if !__MACCATALYST__ // https://github.com/xamarin/maccore/issues/2345
@@ -90,7 +91,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void MetadataObjectTypesTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Ignore ("This test only runs on device (requires camera access)");

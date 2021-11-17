@@ -16,6 +16,7 @@ using ARKit;
 using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 using Vector2 = global::OpenTK.Vector2;
 
@@ -63,7 +64,7 @@ namespace MonoTouchFixtures.ARKit {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

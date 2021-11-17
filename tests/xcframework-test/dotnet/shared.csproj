@@ -33,6 +33,4 @@
     <Compile Include="$(FrameworkTestDirectory)\iOS\XCFrameworkTests.cs" />
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
   </ItemGroup>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

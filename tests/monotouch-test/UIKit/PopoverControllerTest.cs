@@ -9,6 +9,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
@@ -25,7 +26,7 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				return;
 
-			bool ios8 = TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			bool ios8 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverController (vc)) {

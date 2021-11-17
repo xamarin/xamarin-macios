@@ -16,6 +16,7 @@ using ObjCRuntime;
 using MediaToolbox;
 using AudioToolbox;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaToolbox
 {
@@ -29,7 +30,7 @@ namespace MonoTouchFixtures.MediaToolbox
 		[Test]
 		public unsafe void Initialization ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var cb = new MTAudioProcessingTapCallbacks (
 				delegate(MTAudioProcessingTap tap, nint numberFrames, MTAudioProcessingTapFlags flags, AudioBuffers bufferList, out nint numberFramesOut, out MTAudioProcessingTapFlags flagsOut) {

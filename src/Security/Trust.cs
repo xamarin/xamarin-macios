@@ -337,9 +337,9 @@ namespace Security {
 #if !NET
 		[Mac (10,9)]
 #endif
-		public NSData GetExceptions ()
+		public NSData? GetExceptions ()
 		{
-			return new NSData (SecTrustCopyExceptions (GetCheckedHandle ()), false); // inverted boolean?
+			return Runtime.GetNSObject<NSData> (SecTrustCopyExceptions (GetCheckedHandle ()), true);
 		}
 
 #if !NET

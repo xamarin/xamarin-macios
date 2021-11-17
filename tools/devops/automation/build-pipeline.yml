@@ -54,7 +54,6 @@ parameters:
       statusContext: 'VSTS: device tests iOS',
       iOSDeviceDemand: [
         'ios',
-        "Agent.OSVersion -equals '11.6'"
       ]
     },
     {
@@ -68,7 +67,6 @@ parameters:
       statusContext: 'VSTS: device tests tvOS',
       iOSDeviceDemand: [
         'tvos',
-        "Agent.OSVersion -equals '11.6'"
       ]
     }]
 

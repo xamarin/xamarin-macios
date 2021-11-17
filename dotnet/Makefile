@@ -3,7 +3,9 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(DOTNET6_VERSION_BAND)
+# The sdk version band has the last two digits set to 0: https://github.com/dotnet/sdk/blob/22c4860dcb2cf6b123dd641cc4a87a50380759d5/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/SdkDirectoryWorkloadManifestProvider.cs#L52-L53
+MANIFEST_VERSION_BAND=$(shell echo $(DOTNET6_VERSION_BAND) | sed 's/..$$/00/')
+DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(MANIFEST_VERSION_BAND)
 DOTNET_PACKS_PATH=$(DOTNET6_DIR)/packs
 DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET6_DIR)/template-packs
 TMP_PKG_DIR=_pkg
@@ -41,6 +43,9 @@ $(1)_WINDOWS_NUGET_TARGETS = \
 
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
+
+iOS_WINDOWS_NUGET_TARGETS += \
+	$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
 
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
@@ -190,7 +195,7 @@ $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 
 ifdef INCLUDE_IOS
 SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
-SDK_PACKS += $(SDK_PACK_IOS_WINDOWS)
+SDK_PACKS_WINDOWS += $(SDK_PACK_IOS_WINDOWS)
 endif
 
 pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)
@@ -210,7 +215,7 @@ pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) 
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
-TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml $(DOTNET_NUPKG_DIR)/SignList.targets
+TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml $(DOTNET_NUPKG_DIR)/SignList.targets $(SDK_PACKS_WINDOWS)
 
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.
@@ -280,7 +285,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) mv $$@.tmp $$@
 
 # The templates package
-$(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg: $(TEMPLATE_PACK_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg: $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Templates.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Templates.$2/usr/local/share/dotnet/template-packs/
@@ -343,7 +348,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_
 	$$(Q) mv $$@.tmp $$@
 	$$(Q) echo Created $$@
 
-PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip
+WINDOWS_PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsBundle,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
@@ -381,10 +386,10 @@ TARGETS += .stamp-install-workloads
 	fi
 	$(Q) touch $@
 
-TARGETS += $(WORKLOAD_TARGETS)
+TARGETS += $(WORKLOAD_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
 msi: $(MSI_TARGETS)
-package: $(PACKAGE_TARGETS) $(MSI_TARGETS)
+package: $(PACKAGE_TARGETS) $(MSI_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)
@@ -403,4 +408,8 @@ clean-local::
 
 .stamp-workaround-for-maccore-issue-2427: global.json $(TOP)/eng/Versions.props $(LOCAL_WORKLOAD_TARGETS)
 	$(Q) $(DOTNET6) restore package/workaround-for-maccore-issue-2427/restore.csproj /bl:package/workaround-for-maccore-issue-2427/restore.binlog $(MSBUILD_VERBOSITY)
+	$(Q) touch $@
+
+$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
+	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@

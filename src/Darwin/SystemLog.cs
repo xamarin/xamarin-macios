@@ -25,6 +25,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -35,13 +37,13 @@ using System.Collections.Generic;
 namespace Darwin {
 
 	public class SystemLog : DisposableObject {
-		static SystemLog _default;
+		static SystemLog? _default;
 		
 		public static SystemLog Default {
 			get {
-				if (_default == null)
+				if (_default is null)
 					_default = new SystemLog ();
-				return _default;
+				return _default!;
 			}
 		}
 		
@@ -117,7 +119,7 @@ namespace Darwin {
 
 		public int Log (Message msg, string text, params object [] args)
 		{
-			var txt = text == null ? "" : String.Format (text, args);
+			var txt = text is null ? string.Empty : String.Format (text, args);
 			if (txt.IndexOf ('%') != -1)
 				txt = txt.Replace ("%", "%%");
 			return asl_log (Handle, msg.GetHandle (), txt);
@@ -125,8 +127,8 @@ namespace Darwin {
 
 		public int Log (string text)
 		{
-			if (text == null)
-				throw new ArgumentNullException ("text");
+			if (text is null)
+				throw new ArgumentNullException (nameof (text));
 			
 			return asl_log (Handle, IntPtr.Zero, text);
 		}
@@ -136,8 +138,8 @@ namespace Darwin {
 		
 		public int Log (Message msg)
 		{
-			if (msg == null)
-				throw new ArgumentNullException ("msg");
+			if (msg is null)
+				throw new ArgumentNullException (nameof (msg));
 			
 			return asl_send (Handle, msg.Handle);
 		}
@@ -161,13 +163,13 @@ namespace Darwin {
 		
 		public IEnumerable<Message> Search (Message msg)
 		{
-			if (msg == null)
-				throw new ArgumentNullException ("msg");
+			if (msg is null)
+				throw new ArgumentNullException (nameof (msg));
 			var search = asl_search (Handle, msg.Handle);
 			IntPtr mh;
 			
 			while ((mh = aslresponse_next (search)) != IntPtr.Zero)
-				yield return new Message (mh, false);
+				yield return new Message (mh, true);
 
 			aslresponse_free (search);
 		}
@@ -224,13 +226,13 @@ namespace Darwin {
 
 		public string this [string key] {
 			get {
-				if (key == null)
-					throw new ArgumentNullException ("key");
+				if (key is null)
+					throw new ArgumentNullException (nameof (key));
 				return asl_get (Handle, key);
 			}
 			set {
-				if (key == null)
-					throw new ArgumentNullException ("key");
+				if (key is null)
+					throw new ArgumentNullException (nameof (key));
 				asl_set (Handle, key, value);
 			}
 		}
@@ -240,8 +242,8 @@ namespace Darwin {
 		
 		public void Remove (string key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 			asl_unset (Handle, key);
 		}
 		

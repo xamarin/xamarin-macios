@@ -79,6 +79,9 @@
     </Compile>
     <Compile Include="..\..\BaseOptimizeGeneratedCodeTest.cs" />
     <Compile Include="LinkAllTest.cs" />
+    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
     </Compile>
