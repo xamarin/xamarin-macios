@@ -4,4 +4,3 @@
 !extra-enum-value! Managed value 1936747378 for AVAudioSessionPortOverride.Speaker is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 4 for AVAudioSessionCategoryOptions.AllowBluetooth is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 8 for AVAudioSessionCategoryOptions.DefaultToSpeaker is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -11860 for AVError.CreateContentKeyRequestFailed is available for the current platform while the value in the native header is not

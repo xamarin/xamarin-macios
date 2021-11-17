@@ -668,10 +668,14 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
@@ -679,14 +683,19 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
@@ -707,9 +716,13 @@ namespace AudioUnit
 		[iOS (7,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
 #else
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
@@ -717,14 +730,19 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #else
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public UIKit.UIImage? GetHostIcon (float desiredPointSize)

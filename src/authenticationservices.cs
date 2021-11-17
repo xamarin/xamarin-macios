@@ -446,6 +446,7 @@ namespace AuthenticationServices {
 		InvalidResponse = 1002,
 		NotHandled = 1003,
 		Failed = 1004,
+		[NoTV, NoWatch]
 		NotInteractive = 1005,
 	}
 
