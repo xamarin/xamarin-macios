@@ -84,7 +84,7 @@ trigger:
     - msbuild/Xamarin.Localization.MSBuild/README.md
 
 pr:
-  autoCancel: true
+  autoCancel: false
   branches:
     include:
     - main
