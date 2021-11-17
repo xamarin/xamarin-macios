@@ -1,5 +1,10 @@
 TOP=..
-SUBDIRS=mmp mtouch xibuild mlaunch siminstaller
+
+ifdef INCLUDE_MAC
+SUBDIRS+=mmp
+endif
+
+SUBDIRS+=mtouch xibuild mlaunch siminstaller
 
 include $(TOP)/Make.config
 
