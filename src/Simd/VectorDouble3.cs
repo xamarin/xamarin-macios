@@ -13,7 +13,11 @@
 using System;
 using System.Runtime.InteropServices;
 
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NVector3d : IEquatable<NVector3d>
@@ -41,6 +45,26 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if NET
+		public static NVector3d operator *(NVector3d vec, double scale)
+		{
+			vec.X *= scale;
+			vec.Y *= scale;
+			vec.Z *= scale;
+			return vec;
+		}
+
+        	public static NVector3d operator /(NVector3d vec, double scale)
+		{
+			double mult = 1 / scale;
+			vec.X *= mult;
+			vec.Y *= mult;
+			vec.Z *= mult;
+			return vec;
+		}
+#endif // NET
+
+#if !NET
 		public static explicit operator global::OpenTK.Vector3d (NVector3d value)
 		{
 			return new global::OpenTK.Vector3d (value.X, value.Y, value.Z);
@@ -50,6 +74,7 @@ namespace OpenTK
 		{
 			return new NVector3d (value.X, value.Y, value.Z);
 		}
+#endif // !NET
 
 		public override string ToString ()
 		{
@@ -73,5 +98,31 @@ namespace OpenTK
 		{
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}
+
+#if NET
+	        internal double Length =>
+			System.Math.Sqrt (X * X + Y * Y + Z * Z);
+
+		internal double LengthSquared =>
+			X * X + Y * Y + Z * Z;
+
+		internal void Normalize ()
+		{
+			double scale = 1.0 / Length;
+			X *= scale;
+			Y *= scale;
+			Z *= scale;
+		}
+
+		internal static readonly NVector3d UnitX = new NVector3d (1, 0, 0);
+
+		internal static readonly NVector3d UnitY = new NVector3d (0, 1, 0);
+
+		internal static readonly NVector3d UnitZ = new NVector3d (0, 0, 1);
+
+		internal static readonly NVector3d Zero = new NVector3d (0, 0, 0);
+
+		internal static readonly NVector3d One = new NVector3d (1, 1, 1);
+#endif // NET
 	}
 }

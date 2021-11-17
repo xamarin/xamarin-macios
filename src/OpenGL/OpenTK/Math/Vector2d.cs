@@ -25,6 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 
+#if !NET
 namespace OpenTK
 {
     /// <summary>Represents a 2D vector using two double-precision floating-point numbers.</summary>
@@ -1002,3 +1003,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET

@@ -4,7 +4,6 @@
 
 using System;
 using System.ComponentModel;
-using OpenTK;
 using CoreMedia;
 using Foundation;
 using ObjCRuntime;

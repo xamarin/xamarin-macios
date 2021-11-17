@@ -33,14 +33,15 @@ using CoreGraphics;
 using CoreFoundation;
 using ModelIO;
 
-using Vector2 = global::OpenTK.Vector2;
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+#else
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
-using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+#endif // NET 
 
 #if MONOMAC
 #if NET
@@ -86,9 +87,10 @@ namespace GLKit {
 		[Export ("useConstantColor", ArgumentSemantic.Assign)]
 		bool UseConstantColor { get; set;  }
 
+#if !NET
 		[Export ("transform")]
 		GLKEffectPropertyTransform Transform { get;  }
-
+#endif
 		[Export ("light0")]
 		GLKEffectPropertyLight Light0 { get;  }
 
@@ -198,9 +200,11 @@ namespace GLKit {
 		[Export ("quadraticAttenuation", ArgumentSemantic.Assign)]
 		float QuadraticAttenuation { get; set;  } /* GLfloat = float */
 
+#if !NET
 		[NullAllowed] // by default this property is null
 		[Export ("transform", ArgumentSemantic.Retain)]
 		GLKEffectPropertyTransform Transform { get; set;  }
+#endif
 
 		[Export ("enabled", ArgumentSemantic.Assign)]
 		bool Enabled { get; set; }
@@ -247,6 +251,7 @@ namespace GLKit {
 
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
@@ -261,6 +266,7 @@ namespace GLKit {
 		[Export ("projectionMatrix", ArgumentSemantic.Assign)]
 		Matrix4 ProjectionMatrix { [Align (16)] get; set; }
 	}
+#endif
 
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
@@ -341,8 +347,10 @@ namespace GLKit {
 		[Export ("textureCubeMap")]
 		GLKEffectPropertyTexture TextureCubeMap { get;  }
 
+#if !NET
 		[Export ("matrix", ArgumentSemantic.Assign)]
 		Matrix3 Matrix { get; set;  }
+#endif
 	}
 	
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
@@ -365,8 +373,10 @@ namespace GLKit {
 		[Export ("textureCubeMap")]
 		GLKEffectPropertyTexture TextureCubeMap { get;  }
 
+#if !NET
 		[Export ("transform")]
 		GLKEffectPropertyTransform Transform { get;  }
+#endif
 
 		[NullAllowed] // by default this property is null
 		[Export ("label", ArgumentSemantic.Copy)]

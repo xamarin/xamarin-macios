@@ -13,9 +13,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using VectorFloat3 = global::OpenTK.NVector3;
-
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix3 : IEquatable<NMatrix3>
@@ -140,6 +142,7 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if !NET
 		public static explicit operator global::OpenTK.Matrix3 (NMatrix3 value)
 		{
 			return new global::OpenTK.Matrix3 (
@@ -155,6 +158,7 @@ namespace OpenTK
 				value.R1C0, value.R1C1, value.R1C2,
 				value.R2C0, value.R2C1, value.R2C2);
 		}
+#endif // !NET
 
 		public override string ToString ()
 		{

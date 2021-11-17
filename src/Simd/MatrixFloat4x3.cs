@@ -12,9 +12,17 @@
 using System;
 using System.Runtime.InteropServices;
 
+#if NET
+using VectorFloat4=global::System.Numerics.Vector4;
+#else
 using VectorFloat4=global::OpenTK.Vector4;
+#endif
 
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix4x3 : IEquatable<NMatrix4x3>
@@ -106,9 +114,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row0 {
+		public VectorFloat4 Row0 {
 			get {
-				return new Vector4 (M11, M12, M13, M14);
+				return new VectorFloat4 (M11, M12, M13, M14);
 			}
 			set {
 				M11 = value.X;
@@ -118,9 +126,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row1 {
+		public VectorFloat4 Row1 {
 			get {
-				return new Vector4 (M21, M22, M23, M24);
+				return new VectorFloat4 (M21, M22, M23, M24);
 			}
 			set {
 				M21 = value.X;
@@ -130,9 +138,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row2 {
+		public VectorFloat4 Row2 {
 			get {
-				return new Vector4 (M31, M32, M33, M34);
+				return new VectorFloat4 (M31, M32, M33, M34);
 			}
 			set {
 				M31 = value.X;

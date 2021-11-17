@@ -9,9 +9,14 @@ using UIKit;
 using SpriteKit;
 using ObjCRuntime;
 using SceneKit;
-using OpenTK;
 using NUnit.Framework;
 using Xamarin.Utils;
+
+#if NET
+using System.Numerics;
+#else
+using CoreGraphics;
+#endif
 
 namespace MonoTouchFixtures.SpriteKit {
 

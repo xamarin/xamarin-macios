@@ -22,11 +22,20 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
+#if NET
+using System.Numerics;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using VectorFloat3 = global::CoreGraphics.NVector3;
+#else
 using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 using Bindings.Test;
 using NUnit.Framework;
 
@@ -144,11 +153,12 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) M4), obj.MatrixFloat4x4, "7c MatrixFloat4x4");
 			}
 
+#if !NET
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4x4)) {
 				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7' MatrixFloat4x4");
 				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4, "7'b MatrixFloat4x4");
 			}
-
+#endif
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, V4)) {
 				Asserts.AreEqual (V4, obj.Float4Value, "8 Float4Value");
 			}

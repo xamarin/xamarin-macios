@@ -14,7 +14,17 @@
 using System;
 using System.Runtime.InteropServices;
 
+#if NET
+using Vector4d = global::CoreGraphics.NVector4d;
+#else
+using Vector4d = global::OpenTK.Vector4d;
+#endif
+
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix4d : IEquatable<NMatrix4d>
@@ -46,7 +56,7 @@ namespace OpenTK
 			M44 = 1,
 		};
 
-		public NMatrix4d (global::OpenTK.Vector4d row0, global::OpenTK.Vector4d row1, global::OpenTK.Vector4d row2, global::OpenTK.Vector4d row3)
+		public NMatrix4d (Vector4d row0, Vector4d row1, Vector4d row2, Vector4d row3)
 		{
 			M11 = row0.X;
 			M21 = row1.X;
@@ -283,6 +293,7 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if !NET
 		public static explicit operator global::OpenTK.Matrix4d (NMatrix4d value)
 		{
 			return new global::OpenTK.Matrix4d (
@@ -296,7 +307,7 @@ namespace OpenTK
 		{
 			return new NMatrix4d (value.Row0, value.Row1, value.Row2, value.Row3);
 		}
-
+#endif // !NET
 		public override string ToString ()
 		{
 			return

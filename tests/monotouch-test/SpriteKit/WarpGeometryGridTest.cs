@@ -3,8 +3,12 @@
 using System;
 using Foundation;
 using SpriteKit;
-using OpenTK;
 using NUnit.Framework;
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.SpriteKit
 {

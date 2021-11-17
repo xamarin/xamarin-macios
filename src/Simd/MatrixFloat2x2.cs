@@ -13,7 +13,11 @@
 using System;
 using System.Runtime.InteropServices;
 
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix2 : IEquatable<NMatrix2>
@@ -92,6 +96,7 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if !NET
 		public static explicit operator global::OpenTK.Matrix2 (NMatrix2 value)
 		{
 			return new global::OpenTK.Matrix2 (
@@ -105,7 +110,7 @@ namespace OpenTK
 				value.R0C0, value.R0C1,
 				value.R1C0, value.R1C1);
 		}
-
+#endif // !NET
 		public override string ToString ()
 		{
 			return $"({R0C0}, {R0C1})\n({R1C0}, {R1C1})";

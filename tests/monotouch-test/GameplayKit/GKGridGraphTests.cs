@@ -12,11 +12,16 @@
 
 using System;
 using System.Collections.Generic;
-using OpenTK;
 
 using Foundation;
 using GameplayKit;
 using NUnit.Framework;
+
+#if NET
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
+use OpenTK;
+#endif
 
 namespace MonoTouchFixtures.GamePlayKit {
 
@@ -61,13 +66,13 @@ namespace MonoTouchFixtures.GamePlayKit {
 					var tile = maze[i * 10 + j];
 					switch ((TileType)tile) {
 					case TileType.Wall:
-						walls.Add (graph.GetNodeAt (new Vector2i (i, j)));
+						walls.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
 						break;
 					case TileType.Portal:
-						spawnPoints.Add (graph.GetNodeAt (new Vector2i (i, j)));
+						spawnPoints.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
 						break;
 					case TileType.Start:
-						startPosition = graph.GetNodeAt (new Vector2i (i, j));
+						startPosition = graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j));
 						break;
 					default:
 						break;
@@ -104,13 +109,13 @@ namespace MonoTouchFixtures.GamePlayKit {
 					var tile = maze[i * 10 + j];
 					switch ((TileType)tile) {
 					case TileType.Wall:
-						walls.Add (graph.GetNodeAt (new Vector2i (i, j)));
+						walls.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
 						break;
 					case TileType.Portal:
-						spawnPoints.Add (graph.GetNodeAt (new Vector2i (i, j)));
+						spawnPoints.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
 						break;
 					case TileType.Start:
-						startPosition = graph.GetNodeAt (new Vector2i (i, j));
+						startPosition = graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j));
 						break;
 					default:
 						break;

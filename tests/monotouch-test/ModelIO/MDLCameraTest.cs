@@ -20,12 +20,18 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 
+#if NET
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using VectorFloat3 = global::CoreGraphics.NVector3;
+#else
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 using Bindings.Test;
 
@@ -45,6 +51,7 @@ namespace MonoTouchFixtures.ModelIO
 			TestRuntime.AssertXcodeVersion (7, 0);
 		}
 
+#if !NET
 		[Test]
 		public void ProjectionMatrix ()
 		{
@@ -74,6 +81,7 @@ namespace MonoTouchFixtures.ModelIO
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) modifiedProjectionMatrix), CFunctions.GetMatrixFloat4x4 (obj, "projectionMatrix"), 0.0001f, "Second native");
 			}
 		}
+#endif
 	}
 }
 

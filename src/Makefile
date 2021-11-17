@@ -47,6 +47,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET6_BCL_DIR)/System.Net.Security.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Net.ServicePoint.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Net.Sockets.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Numerics.Vectors.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Resources.ResourceManager.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Runtime.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Runtime.CompilerServices.Unsafe.dll \

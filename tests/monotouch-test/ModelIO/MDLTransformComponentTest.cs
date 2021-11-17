@@ -19,12 +19,15 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 
-using MatrixFloat2x2 = global::OpenTK.NMatrix2;
-using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+#if NET
+using System.Numerics;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+#else
+using OpenTK;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
-using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 using Bindings.Test;
 using NUnit.Framework;
@@ -52,7 +55,9 @@ namespace MonoTouchFixtures.ModelIO
 			using (var obj = new MDLTransform ()) {
 				// identity
 				Asserts.AreEqual (Matrix4.Identity, obj.Matrix, "Initial identity");
+#if !NET
 				Asserts.AreEqual (MatrixFloat4x4.Identity, obj.GetMatrix4x4 (), "Initial identity 4x4");
+#endif
 				Asserts.AreEqual (MatrixFloat4x4.Identity, CFunctions.GetMatrixFloat4x4 (obj, "matrix"), "Initial identity native");
 
 				// translate the transform somewhere
@@ -72,6 +77,7 @@ namespace MonoTouchFixtures.ModelIO
 					2, 2, 2, 1
 				), obj.Matrix, "Translated");
 
+#if !NET
 				// The 4x4 version is correct:
 				Asserts.AreEqual (new Matrix4 (
 					1, 0, 0, 2,
@@ -79,6 +85,7 @@ namespace MonoTouchFixtures.ModelIO
 					0, 0, 1, 2,
 					0, 0, 0, 1
 				), obj.GetMatrix4x4 (), "Translated 4x4");
+#endif
 
 				// Let's set the matrix to something (different from the identity matrix)
 				obj.Matrix = m4;
@@ -89,11 +96,13 @@ namespace MonoTouchFixtures.ModelIO
 				// Translate again
 				obj.SetTranslation (new Vector3 (3, 3, 3), 0);
 
+#if !NET
 				// Set the matrix using a 4x4 matrix
 				obj.SetMatrix4x4 (m4x4);
 
 				// And we still get the identity matrix back
 				Asserts.AreEqual (MatrixFloat4x4.Identity, obj.GetMatrix4x4 (), "After set_Matrix 2");
+#endif
 			}
 		}
 
@@ -107,7 +116,9 @@ namespace MonoTouchFixtures.ModelIO
 				var component = (IMDLTransformComponent) obj;
 				// identity
 				Asserts.AreEqual (Matrix4.Identity, component.GetLocalTransform (0), "Initial identity");
+#if !NET
 				Asserts.AreEqual (MatrixFloat4x4.Identity, component.GetLocalTransform4x4 (0), "Initial identity 4x4");
+#endif
 				Asserts.AreEqual (MatrixFloat4x4.Identity, CFunctions.MDLTransformComponent_GetLocalTransform  (component, 0), "Initial identity native");
 
 				// translate the transform somewhere
@@ -127,6 +138,7 @@ namespace MonoTouchFixtures.ModelIO
 					2, 2, 2, 1
 				), component.GetLocalTransform (0), "Translated");
 
+#if !NET
 				// The 4x4 version is correct:
 				Asserts.AreEqual (new Matrix4 (
 					1, 0, 0, 2,
@@ -134,6 +146,7 @@ namespace MonoTouchFixtures.ModelIO
 					0, 0, 1, 2,
 					0, 0, 0, 1
 				), component.GetLocalTransform4x4 (0), "Translated 4x4");
+#endif
 
 				// Let's set the local transform at time 1 to something (different from the identity matrix)
 				component.SetLocalTransform (m4, 1);
@@ -167,6 +180,7 @@ namespace MonoTouchFixtures.ModelIO
 				// Translate again
 				obj.SetTranslation (new Vector3 (3, 3, 3), 0);
 
+#if !NET
 				// Set the local transform using a 4x4 matrix
 				component.SetLocalTransform4x4 (m4x4, 1);
 
@@ -179,6 +193,7 @@ namespace MonoTouchFixtures.ModelIO
 					0, 0, 1, 1.5f,
 					0, 0, 0, 1
 				), component.GetLocalTransform4x4 (0.5), 0.00001f, "AfterSetLocalTransform4x4 at 0.5");
+#endif
 			}
 		}
 
@@ -192,7 +207,9 @@ namespace MonoTouchFixtures.ModelIO
 				m4 = MDLTransform.CreateGlobalTransform (obj, 0);
 				Asserts.AreEqual ((Matrix4) MatrixFloat4x4.Transpose (CFunctions.MDLTransform_CreateGlobalTransform (obj, 0)), m4, "CreateGlobalTransform");
 
+#if !NET
 				m4x4 = MDLTransform.CreateGlobalTransform4x4 (obj, 0);
+#endif
 				Asserts.AreEqual (CFunctions.MDLTransform_CreateGlobalTransform (obj, 0), m4, "CreateGlobalTransform4x4");
 			}
 		}

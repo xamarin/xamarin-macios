@@ -26,6 +26,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
+#if !NET
 namespace OpenTK
 {
     /// <summary>Represents a 4D vector using four single-precision floating-point numbers.</summary>
@@ -956,7 +957,6 @@ namespace OpenTK
                 vec.X * mat.Row0.Z + vec.Y * mat.Row1.Z + vec.Z * mat.Row2.Z + vec.W * mat.Row3.Z,
                 vec.X * mat.Row0.W + vec.Y * mat.Row1.W + vec.Z * mat.Row2.W + vec.W * mat.Row3.W);
         }
-
         /// <summary>
         /// Transforms a vector by a quaternion rotation.
         /// </summary>
@@ -991,7 +991,6 @@ namespace OpenTK
         #endregion
 
         #region Swizzle
-
         /// <summary>
         /// Gets or sets an OpenTK.Vector2 with the X and Y components of this instance.
         /// </summary>
@@ -1212,3 +1211,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif
