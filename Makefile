@@ -177,7 +177,7 @@ git-clean-all:
 	fi; \
 
 ifdef ENABLE_XAMARIN
-SUBDIRS += $(MACCORE_PATH)
+#SUBDIRS += $(MACCORE_PATH)
 endif
 
 #SUBDIRS += tests
