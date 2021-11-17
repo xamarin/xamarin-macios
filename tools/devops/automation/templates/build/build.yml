@@ -8,28 +8,11 @@ steps:
   submodules: recursive
   path: s/xamarin-macios
 
-- checkout: maccore
-  clean: true
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
-
 - checkout: templates
   clean: true
 
 - checkout: release-scripts
   clean: true
-
-- pwsh: |
-    # should we need sudo, no, but someone did something wrong in the images..
-    sudo rm -Rf "$HOME/.git-credentials"
-    git config --global credential.helper store
-    Set-Content -Path "$HOME/.git-credentials" -Value "https://$(GitHub.Token):x-oauth-basic@github.com`n" -NoNewline
-
-    # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
-    cd $(System.DefaultWorkingDirectory)/maccore
-    git remote remove origin
-    git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
-    git remote # don't add -v else we see the pat
-  displayName: 'Clean git mess from VSTS'
 
 - powershell: |
     Write-Host "IsMacOS: ${IsMacOS}"
@@ -44,23 +27,6 @@ steps:
 
     gci env: | format-table -autosize -wrap
   displayName: 'Show Environment'
-
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
-  displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
-  continueOnError: true
-  timeoutInMinutes: 60
-
-- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
-
-- task: xamops.azdevex.provisionator-task.provisionator@2
-  displayName: 'Provision Brew components'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
-    provisioning_extra_args: '-vvvv'
-  timeoutInMinutes: 30
-  enabled: true
 
 # was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
 # that we can call make and generated the provisionator config files.
@@ -84,12 +50,6 @@ steps:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
-
-- bash: |
-    set -x
-    set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
-  displayName: 'Provision simulators'
 
 - bash:
     set -x
@@ -121,14 +81,6 @@ steps:
 - bash: |
     set -x
     set -e
-
-    if [[ "$IsPR" == "True" ]]; then
-      echo "Xamarin private packages NOT configured. Building a PR."
-      CONFIGURE_FLAGS=""
-    else
-      echo "Xamarin private packages configured."
-      CONFIGURE_FLAGS="--enable-xamarin"
-    fi
 
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
     echo "Configuration falgs are '$CONFIGURE_FLAGS'"
