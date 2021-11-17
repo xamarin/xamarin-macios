@@ -117,19 +117,6 @@ schedules:
   always: true
 
 stages:
-
-- stage: governance_checks
-  displayName: 'Governance Checks'
-  dependsOn:
-  - build_packages
-  jobs:
-    - job: governance
-      displayName: 'Governance Checks'
-      pool:
-        vmImage: windows-latest
-      steps:
-      - template: templates/governance-checks.yml
-
 - stage: build_packages
   displayName: 'Build'
   dependsOn: []
