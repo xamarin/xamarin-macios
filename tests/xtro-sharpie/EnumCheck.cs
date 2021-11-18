@@ -243,10 +243,10 @@ namespace Extrospection {
 							log = !managed_unsigned_values.ContainsKey (UInt64.MaxValue);
 							managed_unsigned_values.Remove (UInt64.MaxValue);
 						}
-						if (log) {
-							if (!native_unsigned_values [value].Deprecated && !decl.IsDeprecated ())
-								Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value].Name} = {value} not bound");
-						}
+						if (log)
+							log &= !native_unsigned_values [value].Deprecated && !decl.IsDeprecated ();
+						if (log)
+							Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value].Name} = {value} not bound");
 					} else
 						managed_unsigned_values.Remove (value);
 				}
