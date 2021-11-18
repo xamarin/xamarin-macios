@@ -53,6 +53,7 @@ namespace ObjCRuntime {
 		delegate void initialize_func ();
 		unsafe delegate sbyte *get_sbyteptr_func ();
 
+#if !NET // There's a different implementation for other platforms + .NET macOS in Runtime.cs
 		static volatile bool originalWorkingDirectoryIsSet;
 		static string? originalWorkingDirectory;
 
@@ -76,6 +77,7 @@ namespace ObjCRuntime {
 		{
 			Directory.SetCurrentDirectory (OriginalWorkingDirectory!);
 		}
+#endif // !NET
 
 		static IntPtr runtime_library;
 
