@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Compare (AVMediaType.Video, AVMediaTypes.Video);
 
 			if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9,0))
-				Compare (AVMediaTypes.MetadataObject, AVMediaTypes.MetadataObject);
+				Compare (AVMediaType.MetadataObject, AVMediaTypes.MetadataObject);
 
 			// obsoleted in iOS 6, removed in iOS12
 #if !__MACCATALYST__
