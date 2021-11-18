@@ -97,7 +97,9 @@ steps:
 - pwsh: |
     $summaryName = "TestSummary-$Env:PREFIX.md"
     $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+    if (Test-Path -Path $summaryPath -PathType Leaf) {
+      Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+    }
   displayName: Set TestSummary
   env:
     PREFIX: ${{ parameters.devicePrefix }}
