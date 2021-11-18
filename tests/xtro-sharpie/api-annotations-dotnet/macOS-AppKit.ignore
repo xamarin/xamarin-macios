@@ -4,9 +4,6 @@
 ## Proxy class for NSGraphicsContext internal to AppKit
 !unknown-type! NSPrintPreviewGraphicsContext bound
 
-## 32-bit only, and marked correctly in binding
-!unknown-type! NSMenuView bound
-
 ## In header as old style unnamaed enum
 !unknown-native-enum! NSModalResponse bound
 !unknown-native-enum! NSWindowLevel bound
@@ -60,7 +57,6 @@
 
 ## unsorted
 
-!extra-enum-native! NSEventSubtype
 !extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanel: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanelWithOptions: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::readSelectionFromPasteboard: found
@@ -284,7 +280,6 @@
 !unknown-native-enum! NSColorPanelFlags bound
 !unknown-native-enum! NSComposite bound
 !unknown-native-enum! NSEventModifierMask bound
-!unknown-native-enum! NSEventMouseSubtype bound
 !unknown-native-enum! NSFontPanelMode bound
 !unknown-native-enum! NSFunctionKey bound
 !unknown-native-enum! NSGlyphStorageOptions bound
@@ -293,7 +288,6 @@
 !unknown-native-enum! NSMenuProperty bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSRunResponse bound
-!unknown-native-enum! NSSystemDefinedEvents bound
 !unknown-native-enum! NSTableColumnResizing bound
 !unknown-native-enum! NSTableViewAnimation bound
 !unknown-native-enum! NSTableViewGridStyle bound
@@ -301,7 +295,6 @@
 !unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
 !unknown-native-enum! NSWindowStyle bound
-!wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! NSSpellingState managed 4 vs native 8
 
 ## NSGlyphStorage protocol not bound
@@ -1326,13 +1319,8 @@
 !extra-enum-value! Managed value 3 for NSTickMarkPosition.Trailing not found in native headers
 
 # bound as `const` not enums
-!extra-enum-value! Managed value 1 for NSBoxType.NSBoxSecondary not found in native headers
-!extra-enum-value! Managed value 3 for NSBoxType.NSBoxOldStyle not found in native headers
 !extra-enum-value! Managed value 3 for NSBezelStyle.ThickSquare not found in native headers
 !extra-enum-value! Managed value 4 for NSBezelStyle.ThickerSquare not found in native headers
-
-# deprecated in 10.12, now removed
-!extra-enum-value! Managed value 7 for NSWindowButton.FullScreenButton not found in native headers
 
 # notifications do not respond and were added in a beta, ignoring until we can test they work:
 !missing-field! NSApplicationProtectedDataDidBecomeAvailableNotification not bound
