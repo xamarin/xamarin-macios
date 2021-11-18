@@ -60,6 +60,9 @@ namespace AudioUnit
 #else
 	[SupportedOSPlatform ("ios11.0")]
 #endif
+#if ((WATCH || TVOS) && !NET)
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	public partial class ResourceUsageInfo : DictionaryContainer {
 		static NSString userClientK = new NSString ("iokit.user-client");
 		static NSString globalNameK = new NSString ("mach-lookup.global-name");
@@ -118,6 +121,9 @@ namespace AudioUnit
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 #else
 	[SupportedOSPlatform ("ios11.0")]
+#endif
+#if ((WATCH || TVOS) && !NET)
+	[Obsolete ("This API is not available on this platform.")]
 #endif
 	public partial class AudioComponentInfo : DictionaryContainer {
 		static NSString typeK = new NSString ("type");
