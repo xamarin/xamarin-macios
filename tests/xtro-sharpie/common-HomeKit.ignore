@@ -1,7 +1,3 @@
-## This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
-## We decided not to bind it, as it could be that Apple is just keeping it around because it's needed somewhere else.
-!missing-selector! HMCameraStream::setAudioStreamSetting: not bound
-
 ## unrecognized selector - rdar 33883958: https://trello.com/c/TIlzWzrL
 !missing-selector! HMMutablePresenceEvent::setPresenceEventType: not bound
 !missing-selector! HMMutablePresenceEvent::setPresenceUserType: not bound
@@ -18,7 +14,6 @@
 !missing-null-allowed! 'Foundation.NSString HomeKit.HMCharacteristicMetadata::get__Format()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSString HomeKit.HMCharacteristicMetadata::get__Units()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSTimeZone HomeKit.HMTimerTrigger::get_TimeZone()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUuid[] HomeKit.HMAccessory::get_IdentifiersForBridgedAccessories()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'HomeKit.HMAccessory HomeKit.HMService::get_Accessory()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'HomeKit.HMCharacteristicMetadata HomeKit.HMCharacteristic::get_Metadata()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'HomeKit.HMHome HomeKit.HMHomeManager::get_PrimaryHome()' is missing an [NullAllowed] on return type

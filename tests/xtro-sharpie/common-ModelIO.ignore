@@ -25,9 +25,6 @@
 !missing-protocol-conformance! MDLAsset should conform to NSFastEnumeration
 !missing-protocol-conformance! MDLMaterial should conform to NSFastEnumeration
 
-## deprecated in xcode9 (default one, i.e. `init`, should be identical)
-!missing-selector! MDLTransform::initWithIdentity not bound
-
 # Initial result from new rule missing-release-attribute-on-return-value
 !missing-release-attribute-on-return-value! ModelIO.IMDLMeshBuffer ModelIO.IMDLMeshBufferAllocator::CreateBuffer(Foundation.NSData,ModelIO.MDLMeshBufferType)'s selector's ('newBufferWithData:type:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! ModelIO.IMDLMeshBuffer ModelIO.IMDLMeshBufferAllocator::CreateBuffer(ModelIO.IMDLMeshBufferZone,Foundation.NSData,ModelIO.MDLMeshBufferType)'s selector's ('newBufferFromZone:data:type:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

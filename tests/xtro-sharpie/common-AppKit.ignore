@@ -6,114 +6,24 @@
 ## 42814697 NSViewLayerContentScaleDelegate defined in header but never used
 !missing-protocol! NSViewLayerContentScaleDelegate not bound
 
-## Defined in NSSlider (NSSliderDeprecated)
-!missing-selector! NSSliderCell::setImage: not bound
-
 ## 42781537 Classes fail to conformsToProtocol despite header declaration
 !missing-protocol! NSUserActivityRestoring not bound
 
 ## recent fox top xtro reported additional missing API (to be reviewed)
 !missing-selector! +NSBezierPath::bezierPath not bound
 !missing-selector! +NSCursor::pop not bound
-!missing-selector! +NSInputManager::currentInputManager not bound
 !missing-selector! +NSPDFPanel::panel not bound
-!missing-selector! +NSSound::soundUnfilteredFileTypes not bound
-!missing-selector! +NSSound::soundUnfilteredPasteboardTypes not bound
-!missing-selector! NSBezierPath::cachesBezierPath not bound
 !missing-selector! NSBitmapImageRep::initForIncrementalLoad not bound
-!missing-selector! NSBrowser::acceptsArrowKeys not bound
-!missing-selector! NSBrowser::displayAllColumns not bound
-!missing-selector! NSBrowser::updateScroller not bound
-!missing-selector! NSCell::entryType not bound
 !missing-selector! NSColor::init not bound
-!missing-selector! NSDocument::fileName not bound
-!missing-selector! NSDocumentController::fileNamesFromRunningOpenPanel not bound
-!missing-selector! NSDocumentController::shouldCreateUI not bound
-!missing-selector! NSGraphicsContext::focusStack not bound
-!missing-selector! NSInputManager::image not bound
-!missing-selector! NSInputManager::language not bound
-!missing-selector! NSInputManager::localizedInputManagerName not bound
-!missing-selector! NSInputManager::server not bound
-!missing-selector! NSInputManager::wantsToDelayTextChangeNotifications not bound
-!missing-selector! NSInputManager::wantsToHandleMouseEvents not bound
-!missing-selector! NSInputManager::wantsToInterpretAllKeystrokes not bound
-!missing-selector! NSMenu::attachedMenu not bound
-!missing-selector! NSMenu::contextMenuRepresentation not bound
-!missing-selector! NSMenu::isAttached not bound
-!missing-selector! NSMenu::menuRepresentation not bound
-!missing-selector! NSMenu::sizeToFit not bound
-!missing-selector! NSMenu::tearOffMenuRepresentation not bound
-!missing-selector! NSMenuItem::mnemonic not bound
-!missing-selector! NSMenuItem::mnemonicLocation not bound
-!missing-selector! NSMovie::QTMovie not bound
-!missing-selector! NSObject::accessibilityActionNames not bound
-!missing-selector! NSObject::accessibilityAttributeNames not bound
-!missing-selector! NSObject::accessibilityIsIgnored not bound
-!missing-selector! NSObject::accessibilityParameterizedAttributeNames not bound
-!missing-selector! NSObject::discardEditing not bound
-!missing-selector! NSObject::ignoreModifierKeysWhileDragging not bound
 !missing-selector! NSObjectController::defaultFetchRequest not bound
-!missing-selector! NSOpenGLPixelFormat::attributes not bound
-!missing-selector! NSPageLayout::accessoryView not bound
-!missing-selector! NSPageLayout::readPrintInfo not bound
-!missing-selector! NSPageLayout::writePrintInfo not bound
 !missing-selector! NSPasteboard::readFileWrapper not bound
-!missing-selector! NSPrinter::acceptsBinary not bound
-!missing-selector! NSPrinter::domain not bound
-!missing-selector! NSPrinter::host not bound
-!missing-selector! NSPrinter::isColor not bound
-!missing-selector! NSPrinter::isOutputStackInReverseOrder not bound
-!missing-selector! NSPrinter::note not bound
-!missing-selector! NSPrintOperation::accessoryView not bound
-!missing-selector! NSPrintOperation::jobStyleHint not bound
-!missing-selector! NSPrintOperation::showPanels not bound
-!missing-selector! NSPrintPanel::accessoryView not bound
-!missing-selector! NSPrintPanel::finalWritePrintInfo not bound
-!missing-selector! NSPrintPanel::updateFromPrintInfo not bound
-!missing-selector! NSProgressIndicator::animationDelay not bound
-!missing-selector! NSResponder::interfaceStyle not bound
 !missing-selector! NSSliderCell::drawTickMarks not bound
-!missing-selector! NSSliderCell::image not bound
-!missing-selector! NSSplitView::isPaneSplitter not bound
 !missing-selector! NSSplitViewController::viewDidLoad not bound
-!missing-selector! NSTableColumn::isResizable not bound
-!missing-selector! NSTableView::autoresizesAllColumnsToFit not bound
-!missing-selector! NSTableView::drawsGrid not bound
-!missing-selector! NSTableView::selectedColumnEnumerator not bound
-!missing-selector! NSTableView::selectedRowEnumerator not bound
 !missing-selector! NSTabViewController::viewDidLoad not bound
-!missing-selector! NSWorkspace::checkForRemovableMedia not bound
-!missing-selector! NSWorkspace::fileSystemChanged not bound
-!missing-selector! NSWorkspace::findApplications not bound
-!missing-selector! NSWorkspace::mountNewRemovableMedia not bound
-!missing-selector! NSWorkspace::noteFileSystemChanged not bound
-!missing-selector! NSWorkspace::noteUserDefaultsChanged not bound
-!missing-selector! NSWorkspace::userDefaultsChanged not bound
 
 ## Added in Xcode 10.2 Final but deprecated
-!missing-selector! NSOpenGLView::setWantsBestResolutionOpenGLSurface: not bound
-!missing-selector! NSOpenGLView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
-!missing-selector! NSOpenGLView::wantsBestResolutionOpenGLSurface not bound
-!missing-selector! NSOpenGLView::wantsExtendedDynamicRangeOpenGLSurface not bound
 
 ## Deprecated in Xcode 11
-!missing-selector! NSImageNSImage::cacheDepthMatchesImageDepth not bound
-!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation: not bound
-!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation:fraction: not bound
-!missing-selector! NSImageNSImage::compositeToPoint:operation: not bound
-!missing-selector! NSImageNSImage::compositeToPoint:operation:fraction: not bound
-!missing-selector! NSImageNSImage::dissolveToPoint:fraction: not bound
-!missing-selector! NSImageNSImage::dissolveToPoint:fromRect:fraction: not bound
-!missing-selector! NSImageNSImage::isCachedSeparately not bound
-!missing-selector! NSImageNSImage::isDataRetained not bound
-!missing-selector! NSImageNSImage::lockFocusOnRepresentation: not bound
-!missing-selector! NSImageNSImage::scalesWhenResized not bound
-!missing-selector! NSImageNSImage::setCacheDepthMatchesImageDepth: not bound
-!missing-selector! NSImageNSImage::setCachedSeparately: not bound
-!missing-selector! NSImageNSImage::setDataRetained: not bound
-!missing-selector! NSImageNSImage::setScalesWhenResized: not bound
-!missing-selector! NSMovie::init not bound
-!missing-selector! NSMovie::initWithCoder: not bound
 
 ## unsorted
 
@@ -128,7 +38,6 @@
 !missing-enum! NSFontDescriptorSymbolicTraits not bound
 !missing-enum! NSMediaLibrary not bound
 !missing-enum! NSMenuProperties not bound
-!missing-enum! NSMultibyteGlyphPacking not bound
 !missing-enum! NSPDFPanelOptions not bound
 !missing-enum! NSPaperOrientation not bound
 !missing-enum! NSSplitViewItemCollapseBehavior not bound
@@ -143,7 +52,6 @@
 !missing-field! NSAccessibilityDecimalTabStopMarkerTypeValue not bound
 !missing-field! NSAccessibilityDescendingSortDirectionValue not bound
 !missing-field! NSAccessibilityErrorCodeExceptionInfo not bound
-!missing-field! NSAccessibilityException not bound
 !missing-field! NSAccessibilityFirstLineIndentMarkerTypeValue not bound
 !missing-field! NSAccessibilityHeadIndentMarkerTypeValue not bound
 !missing-field! NSAccessibilityHorizontalOrientationValue not bound
@@ -154,7 +62,6 @@
 !missing-field! NSAccessibilityPicasUnitValue not bound
 !missing-field! NSAccessibilityPointsUnitValue not bound
 !missing-field! NSAccessibilityRightTabStopMarkerTypeValue not bound
-!missing-field! NSAccessibilitySortButtonRole not bound
 !missing-field! NSAccessibilityTailIndentMarkerTypeValue not bound
 !missing-field! NSAccessibilityUnknownMarkerTypeValue not bound
 !missing-field! NSAccessibilityUnknownOrientationValue not bound
@@ -175,7 +82,6 @@
 !missing-field! NSAppKitVersionNumber not bound
 !missing-field! NSAppKitVirtualMemoryException not bound
 !missing-field! NSApplicationDidChangeOcclusionStateNotification not bound
-!missing-field! NSApplicationFileType not bound
 !missing-field! NSArgumentBinding not bound
 !missing-field! NSAttributedStringBinding not bound
 !missing-field! NSBadBitmapParametersException not bound
@@ -218,7 +124,6 @@
 !missing-field! NSDeviceIsScreen not bound
 !missing-field! NSDeviceResolution not bound
 !missing-field! NSDeviceSize not bound
-!missing-field! NSDirectoryFileType not bound
 !missing-field! NSDisplayNameBindingOption not bound
 !missing-field! NSDisplayPatternBindingOption not bound
 !missing-field! NSDisplayPatternTitleBinding not bound
@@ -230,14 +135,12 @@
 !missing-field! NSEditableBinding not bound
 !missing-field! NSEnabledBinding not bound
 !missing-field! NSExcludedKeysBinding not bound
-!missing-field! NSFilesystemFileType not bound
 !missing-field! NSFilterPredicateBinding not bound
 !missing-field! NSFindPanelCaseInsensitiveSearch not bound
 !missing-field! NSFindPanelSearchOptionsPboardType not bound
 !missing-field! NSFindPanelSubstringMatch not bound
 !missing-field! NSFontBinding not bound
 !missing-field! NSFontBoldBinding not bound
-!missing-field! NSFontColorAttribute not bound
 !missing-field! NSFontFamilyNameBinding not bound
 !missing-field! NSFontIdentityMatrix not bound
 !missing-field! NSFontItalicBinding not bound
@@ -259,7 +162,6 @@
 !missing-field! NSImageNameColorPanel not bound
 !missing-field! NSImageNameColumnViewTemplate not bound
 !missing-field! NSImageNameComputer not bound
-!missing-field! NSImageNameDotMac not bound
 !missing-field! NSImageNameEveryone not bound
 !missing-field! NSImageNameFlowViewTemplate not bound
 !missing-field! NSImageNameFolderBurnable not bound
@@ -279,9 +181,7 @@
 !missing-field! NSIncludedKeysBinding not bound
 !missing-field! NSInitialKeyBinding not bound
 !missing-field! NSInitialValueBinding not bound
-!missing-field! NSInkTextPboardType not bound
 !missing-field! NSInsertsNullPlaceholderBindingOption not bound
-!missing-field! NSInterfaceStyleDefault not bound
 !missing-field! NSInvokesSeparatelyWithArrayObjectsBindingOption not bound
 !missing-field! NSIsIndeterminateBinding not bound
 !missing-field! NSLabelBinding not bound
@@ -294,14 +194,9 @@
 !missing-field! NSMinValueBinding not bound
 !missing-field! NSMinWidthBinding not bound
 !missing-field! NSMixedStateImageBinding not bound
-!missing-field! NSMultipleValuesMarker not bound
 !missing-field! NSMultipleValuesPlaceholderBindingOption not bound
 !missing-field! NSNibLoadingException not bound
-!missing-field! NSNibOwner not bound
-!missing-field! NSNibTopLevelObjects not bound
-!missing-field! NSNoSelectionMarker not bound
 !missing-field! NSNoSelectionPlaceholderBindingOption not bound
-!missing-field! NSNotApplicableMarker not bound
 !missing-field! NSNotApplicablePlaceholderBindingOption not bound
 !missing-field! NSNullPlaceholderBindingOption not bound
 !missing-field! NSObservedKeyPathKey not bound
@@ -316,7 +211,6 @@
 !missing-field! NSPasteboardCommunicationException not bound
 !missing-field! NSPasteboardURLReadingContentsConformToTypesKey not bound
 !missing-field! NSPasteboardURLReadingFileURLsOnlyKey not bound
-!missing-field! NSPlainFileType not bound
 !missing-field! NSPositioningRectBinding not bound
 !missing-field! NSPredicateBinding not bound
 !missing-field! NSPredicateFormatBindingOption not bound
@@ -328,17 +222,14 @@
 !missing-field! NSPrintDetailedErrorReporting not bound
 !missing-field! NSPrintFaxNumber not bound
 !missing-field! NSPrintFirstPage not bound
-!missing-field! NSPrintFormName not bound
 !missing-field! NSPrintHeaderAndFooter not bound
 !missing-field! NSPrintHorizontalPagination not bound
 !missing-field! NSPrintHorizontallyCentered not bound
 !missing-field! NSPrintJobDisposition not bound
-!missing-field! NSPrintJobFeatures not bound
 !missing-field! NSPrintJobSavingFileNameExtensionHidden not bound
 !missing-field! NSPrintJobSavingURL not bound
 !missing-field! NSPrintLastPage not bound
 !missing-field! NSPrintLeftMargin not bound
-!missing-field! NSPrintManualFeed not bound
 !missing-field! NSPrintMustCollate not bound
 !missing-field! NSPrintNoPresetsJobStyleHint not bound
 !missing-field! NSPrintOperationExistsException not bound
@@ -346,10 +237,8 @@
 !missing-field! NSPrintPackageException not bound
 !missing-field! NSPrintPagesAcross not bound
 !missing-field! NSPrintPagesDown not bound
-!missing-field! NSPrintPagesPerSheet not bound
 !missing-field! NSPrintPanelAccessorySummaryItemDescriptionKey not bound
 !missing-field! NSPrintPanelAccessorySummaryItemNameKey not bound
-!missing-field! NSPrintPaperFeed not bound
 !missing-field! NSPrintPaperName not bound
 !missing-field! NSPrintPaperSize not bound
 !missing-field! NSPrintPhotoJobStyleHint not bound
@@ -359,7 +248,6 @@
 !missing-field! NSPrintReversePageOrder not bound
 !missing-field! NSPrintRightMargin not bound
 !missing-field! NSPrintSaveJob not bound
-!missing-field! NSPrintSavePath not bound
 !missing-field! NSPrintScalingFactor not bound
 !missing-field! NSPrintSelectionOnly not bound
 !missing-field! NSPrintSpoolJob not bound
@@ -392,7 +280,6 @@
 !missing-field! NSSelectionIndexesBinding not bound
 !missing-field! NSSelectorNameBindingOption not bound
 !missing-field! NSSelectsAllWhenSettingContentBindingOption not bound
-!missing-field! NSShellCommandFileType not bound
 !missing-field! NSSortDescriptorsBinding not bound
 !missing-field! NSSoundPboardType not bound
 !missing-field! NSSpeechCharacterModeProperty not bound
@@ -464,7 +351,6 @@
 !missing-field! NSValueTransformerBindingOption not bound
 !missing-field! NSValueTransformerNameBindingOption not bound
 !missing-field! NSValueURLBinding not bound
-!missing-field! NSViewNoInstrinsicMetric not bound
 !missing-field! NSVisibleBinding not bound
 !missing-field! NSVoiceAge not bound
 !missing-field! NSVoiceDemoText not bound
@@ -474,7 +360,6 @@
 !missing-field! NSVoiceGenderNeuter not bound
 !missing-field! NSVoiceIdentifier not bound
 !missing-field! NSVoiceIndividuallySpokenCharacters not bound
-!missing-field! NSVoiceLanguage not bound
 !missing-field! NSVoiceLocaleIdentifier not bound
 !missing-field! NSVoiceName not bound
 !missing-field! NSVoiceSupportedCharacters not bound
@@ -485,22 +370,10 @@
 !missing-field! NSWindowServerCommunicationException not bound
 !missing-field! NSWordTablesReadException not bound
 !missing-field! NSWordTablesWriteException not bound
-!missing-field! NSWorkspaceCompressOperation not bound
-!missing-field! NSWorkspaceDecompressOperation not bound
-!missing-field! NSWorkspaceDecryptOperation not bound
 !missing-field! NSWorkspaceDesktopImageAllowClippingKey not bound
 !missing-field! NSWorkspaceDesktopImageFillColorKey not bound
 !missing-field! NSWorkspaceDesktopImageScalingKey not bound
-!missing-field! NSWorkspaceEncryptOperation not bound
-!missing-pinvoke! NSAccessibilityRaiseBadArgumentException is not bound
 !missing-pinvoke! NSApplicationLoad is not bound
-!missing-pinvoke! NSBeginAlertSheet is not bound
-!missing-pinvoke! NSBeginCriticalAlertSheet is not bound
-!missing-pinvoke! NSBeginInformationalAlertSheet is not bound
-!missing-pinvoke! NSConvertGlyphsToPackedGlyphs is not bound
-!missing-pinvoke! NSCopyBits is not bound
-!missing-pinvoke! NSCountWindows is not bound
-!missing-pinvoke! NSCountWindowsForContext is not bound
 !missing-pinvoke! NSCreateFileContentsPboardType is not bound
 !missing-pinvoke! NSCreateFilenamePboardType is not bound
 !missing-pinvoke! NSDottedFrameRect is not bound
@@ -508,39 +381,20 @@
 !missing-pinvoke! NSDrawButton is not bound
 !missing-pinvoke! NSDrawColorTiledRects is not bound
 !missing-pinvoke! NSEraseRect is not bound
-!missing-pinvoke! NSGetAlertPanel is not bound
-!missing-pinvoke! NSGetCriticalAlertPanel is not bound
 !missing-pinvoke! NSGetFileType is not bound
 !missing-pinvoke! NSGetFileTypes is not bound
-!missing-pinvoke! NSGetInformationalAlertPanel is not bound
-!missing-pinvoke! NSGetWindowServerMemory is not bound
-!missing-pinvoke! NSHighlightRect is not bound
-!missing-pinvoke! NSInterfaceStyleForKey is not bound
 !missing-pinvoke! NSIsControllerMarker is not bound
-!missing-pinvoke! NSOpenGLGetOption is not bound
-!missing-pinvoke! NSOpenGLGetVersion is not bound
-!missing-pinvoke! NSOpenGLSetOption is not bound
 !missing-pinvoke! NSPerformService is not bound
-!missing-pinvoke! NSReadPixel is not bound
 !missing-pinvoke! NSRectClipList is not bound
 !missing-pinvoke! NSRectFillListUsingOperation is not bound
 !missing-pinvoke! NSRectFillListWithColors is not bound
 !missing-pinvoke! NSRectFillListWithColorsUsingOperation is not bound
 !missing-pinvoke! NSRectFillListWithGrays is not bound
 !missing-pinvoke! NSRegisterServicesProvider is not bound
-!missing-pinvoke! NSReleaseAlertPanel is not bound
-!missing-pinvoke! NSRunAlertPanel is not bound
-!missing-pinvoke! NSRunAlertPanelRelativeToWindow is not bound
-!missing-pinvoke! NSRunCriticalAlertPanel is not bound
-!missing-pinvoke! NSRunCriticalAlertPanelRelativeToWindow is not bound
-!missing-pinvoke! NSRunInformationalAlertPanel is not bound
-!missing-pinvoke! NSRunInformationalAlertPanelRelativeToWindow is not bound
 !missing-pinvoke! NSSetShowsServicesMenuItem is not bound
 !missing-pinvoke! NSShowsServicesMenuItem is not bound
 !missing-pinvoke! NSUnregisterServicesProvider is not bound
 !missing-pinvoke! NSUpdateDynamicServices is not bound
-!missing-pinvoke! NSWindowList is not bound
-!missing-pinvoke! NSWindowListForContext is not bound
 !missing-protocol! NSAnimatablePropertyContainer not bound
 !missing-protocol! NSChangeSpelling not bound
 !missing-protocol! NSColorPickingCustom not bound
@@ -551,12 +405,8 @@
 !missing-protocol! NSUserInterfaceItemSearching not bound
 !missing-selector! +NSBitmapImageRep::getTIFFCompressionTypes:count: not bound
 !missing-selector! +NSBitmapImageRep::representationOfImageRepsInArray:usingType:properties: not bound
-!missing-selector! +NSBundle::loadNibFile:externalNameTable:withZone: not bound
 !missing-selector! +NSFont::fontWithName:matrix: not bound
-!missing-selector! +NSInputManager::cycleToNextInputLanguage: not bound
-!missing-selector! +NSInputManager::cycleToNextInputServerInLanguage: not bound
 !missing-selector! +NSMediaLibraryBrowserController::sharedMediaLibraryBrowserController not bound
-!missing-selector! +NSMenu::setMenuZone: not bound
 !missing-selector! +NSObject::exposeBinding: not bound
 !missing-selector! +NSPDFImageRep::imageRepWithData: not bound
 !missing-selector! +NSPICTImageRep::imageRepWithData: not bound
@@ -564,80 +414,35 @@
 !missing-selector! +NSPasteboard::pasteboardByFilteringFile: not bound
 !missing-selector! +NSPasteboard::pasteboardByFilteringTypesInPasteboard: not bound
 !missing-selector! +NSPasteboard::typesFilterableTo: not bound
-!missing-selector! +NSPrintInfo::setDefaultPrinter: not bound
-!missing-selector! +NSPrintInfo::sizeForPaperName: not bound
-!missing-selector! +NSPrinter::printerWithName:domain:includeUnavailable: not bound
 !missing-selector! +NSScrollView::rulerViewClass not bound
 !missing-selector! +NSScrollView::setRulerViewClass: not bound
 !missing-selector! +NSSet::setWithCollectionViewIndexPath: not bound
 !missing-selector! +NSSet::setWithCollectionViewIndexPaths: not bound
 !missing-selector! NSApplication::activateContextHelpMode: not bound
-!missing-selector! NSApplication::application:printFiles: not bound
-!missing-selector! NSApplication::beginModalSessionForWindow:relativeToWindow: not bound
 !missing-selector! NSApplication::orderedDocuments not bound
 !missing-selector! NSApplication::orderedWindows not bound
 !missing-selector! NSApplication::registerUserInterfaceItemSearchHandler: not bound
-!missing-selector! NSApplication::runModalForWindow:relativeToWindow: not bound
 !missing-selector! NSApplication::runPageLayout: not bound
 !missing-selector! NSApplication::searchString:inUserInterfaceItemString:searchRange:foundRange: not bound
 !missing-selector! NSApplication::showHelp: not bound
 !missing-selector! NSApplication::unregisterUserInterfaceItemSearchHandler: not bound
-!missing-selector! NSBezierPath::setCachesBezierPath: not bound
 !missing-selector! NSBitmapImageRep::getPixel:atX:y: not bound
 !missing-selector! NSBitmapImageRep::setPixel:atX:y: not bound
 !missing-selector! NSBitmapImageRep::setProperty:withValue: not bound
 !missing-selector! NSBitmapImageRep::valueForProperty: not bound
-!missing-selector! NSBrowser::displayColumn: not bound
 !missing-selector! NSBrowser::draggingImageForRowsWithIndexes:inColumn:withEvent:offset: not bound
-!missing-selector! NSBrowser::scrollViaScroller: not bound
-!missing-selector! NSBrowser::setAcceptsArrowKeys: not bound
-!missing-selector! NSBundle::loadNibFile:externalNameTable:withZone: not bound
-!missing-selector! NSButtonCell::gradientType not bound
-!missing-selector! NSButtonCell::setTitleWithMnemonic: not bound
-!missing-selector! NSCell::setEntryType: not bound
-!missing-selector! NSCell::setFloatingPointFormat:left:right: not bound
 !missing-selector! NSCell::setRefusesFirstResponder: not bound
 !missing-selector! NSCollectionView::draggingImageForItemsAtIndexes:withEvent:offset: not bound
 !missing-selector! NSColorSpace::initWithColorSyncProfile: not bound
 !missing-selector! NSComboBox::delegate not bound
 !missing-selector! NSComboBox::setDelegate: not bound
 !missing-selector! NSControl::expansionFrameWithFrame: not bound
-!missing-selector! NSControl::setFloatingPointFormat:left:right: not bound
-!missing-selector! NSDocument::dataRepresentationOfType: not bound
-!missing-selector! NSDocument::fileAttributesToWriteToFile:ofType:saveOperation: not bound
-!missing-selector! NSDocument::fileWrapperRepresentationOfType: not bound
 !missing-selector! NSDocument::handleCloseScriptCommand: not bound
 !missing-selector! NSDocument::handlePrintScriptCommand: not bound
 !missing-selector! NSDocument::handleSaveScriptCommand: not bound
-!missing-selector! NSDocument::initWithContentsOfFile:ofType: not bound
-!missing-selector! NSDocument::initWithContentsOfURL:ofType: not bound
 !missing-selector! NSDocument::lastComponentOfFileName not bound
-!missing-selector! NSDocument::loadDataRepresentation:ofType: not bound
-!missing-selector! NSDocument::loadFileWrapperRepresentation:ofType: not bound
 !missing-selector! NSDocument::objectSpecifier not bound
-!missing-selector! NSDocument::printShowingPrintPanel: not bound
-!missing-selector! NSDocument::readFromFile:ofType: not bound
-!missing-selector! NSDocument::readFromURL:ofType: not bound
-!missing-selector! NSDocument::revertToSavedFromFile:ofType: not bound
-!missing-selector! NSDocument::revertToSavedFromURL:ofType: not bound
-!missing-selector! NSDocument::runModalPageLayoutWithPrintInfo: not bound
-!missing-selector! NSDocument::saveToFile:saveOperation:delegate:didSaveSelector:contextInfo: not bound
-!missing-selector! NSDocument::setFileName: not bound
 !missing-selector! NSDocument::setLastComponentOfFileName: not bound
-!missing-selector! NSDocument::writeToFile:ofType: not bound
-!missing-selector! NSDocument::writeToFile:ofType:originalFile:saveOperation: not bound
-!missing-selector! NSDocument::writeToURL:ofType: not bound
-!missing-selector! NSDocument::writeWithBackupToFile:ofType:saveOperation: not bound
-!missing-selector! NSDocumentController::documentForFileName: not bound
-!missing-selector! NSDocumentController::fileExtensionsFromType: not bound
-!missing-selector! NSDocumentController::makeDocumentWithContentsOfFile:ofType: not bound
-!missing-selector! NSDocumentController::makeDocumentWithContentsOfURL:ofType: not bound
-!missing-selector! NSDocumentController::makeUntitledDocumentOfType: not bound
-!missing-selector! NSDocumentController::openDocumentWithContentsOfFile:display: not bound
-!missing-selector! NSDocumentController::openDocumentWithContentsOfURL:display: not bound
-!missing-selector! NSDocumentController::openUntitledDocumentOfType:display: not bound
-!missing-selector! NSDocumentController::setShouldCreateUI: not bound
-!missing-selector! NSDocumentController::typeFromFileExtension: not bound
 !missing-selector! NSDraggingItem::imageComponentsProvider not bound
 !missing-selector! NSEvent::pressureBehavior not bound
 !missing-selector! NSFont::getAdvancements:forGlyphs:count: not bound
@@ -648,13 +453,7 @@
 !missing-selector! NSFontPanel::worksWhenModal not bound
 !missing-selector! NSGradient::initWithColors:atLocations:colorSpace: not bound
 !missing-selector! NSGradient::initWithColorsAndLocations: not bound
-!missing-selector! NSGraphicsContext::setFocusStack: not bound
 !missing-selector! NSImage::initByReferencingURL: not bound
-!missing-selector! NSInputManager::handleMouseEvent: not bound
-!missing-selector! NSInputManager::initWithName:host: not bound
-!missing-selector! NSInputManager::markedTextAbandoned: not bound
-!missing-selector! NSInputManager::markedTextSelectionChanged:client: not bound
-!missing-selector! NSInputServer::initWithDelegate:name: not bound
 !missing-selector! NSMatrix::sortUsingFunction:context: not bound
 !missing-selector! NSMediaLibraryBrowserController::frame not bound
 !missing-selector! NSMediaLibraryBrowserController::isVisible not bound
@@ -663,61 +462,19 @@
 !missing-selector! NSMediaLibraryBrowserController::setMediaLibraries: not bound
 !missing-selector! NSMediaLibraryBrowserController::setVisible: not bound
 !missing-selector! NSMediaLibraryBrowserController::togglePanel: not bound
-!missing-selector! NSMenu::locationForSubmenu: not bound
-!missing-selector! NSMenu::setContextMenuRepresentation: not bound
-!missing-selector! NSMenu::setMenuRepresentation: not bound
-!missing-selector! NSMenu::setTearOffMenuRepresentation: not bound
 !missing-selector! NSMenu::submenuAction: not bound
-!missing-selector! NSMenuItem::setMnemonicLocation: not bound
 !missing-selector! NSMenuItemCell::setTag: not bound
-!missing-selector! NSMovie::initWithMovie: not bound
 !missing-selector! NSMutableFontCollection::exclusionDescriptors not bound
 !missing-selector! NSMutableFontCollection::queryDescriptors not bound
-!missing-selector! NSNib::instantiateNibWithOwner:topLevelObjects: not bound
-!missing-selector! NSObject::accessibilityActionDescription: not bound
 !missing-selector! NSObject::accessibilityArrayAttributeCount: not bound
 !missing-selector! NSObject::accessibilityArrayAttributeValues:index:maxCount: not bound
-!missing-selector! NSObject::accessibilityAttributeValue: not bound
-!missing-selector! NSObject::accessibilityAttributeValue:forParameter: not bound
 !missing-selector! NSObject::accessibilityFocusedUIElement not bound
 !missing-selector! NSObject::accessibilityHitTest: not bound
 !missing-selector! NSObject::accessibilityIndexOfChild: not bound
-!missing-selector! NSObject::accessibilityIsAttributeSettable: not bound
 !missing-selector! NSObject::accessibilityNotifiesWhenDestroyed not bound
-!missing-selector! NSObject::accessibilityPerformAction: not bound
-!missing-selector! NSObject::accessibilitySetOverrideValue:forAttribute: not bound
-!missing-selector! NSObject::accessibilitySetValue:forAttribute: not bound
-!missing-selector! NSObject::application:delegateHandlesKey: not bound
-!missing-selector! NSObject::changeColor: not bound
-!missing-selector! NSObject::changeFont: not bound
-!missing-selector! NSObject::commitEditingAndReturnError: not bound
-!missing-selector! NSObject::controlTextDidBeginEditing: not bound
-!missing-selector! NSObject::controlTextDidChange: not bound
-!missing-selector! NSObject::controlTextDidEndEditing: not bound
-!missing-selector! NSObject::draggedImage:beganAt: not bound
-!missing-selector! NSObject::draggedImage:endedAt:operation: not bound
-!missing-selector! NSObject::draggedImage:movedTo: not bound
-!missing-selector! NSObject::draggingSourceOperationMaskForLocal: not bound
-!missing-selector! NSObject::fontManager:willIncludeFont: not bound
-!missing-selector! NSObject::layer:shouldInheritContentsScale:fromWindow: not bound
-!missing-selector! NSObject::namesOfPromisedFilesDroppedAtDestination: not bound
-!missing-selector! NSObject::panel:compareFilename:with:caseSensitive: not bound
-!missing-selector! NSObject::panel:directoryDidChange: not bound
-!missing-selector! NSObject::panel:isValidFilename: not bound
-!missing-selector! NSObject::panel:shouldShowFilename: not bound
-!missing-selector! NSObject::pasteboard:provideDataForType: not bound
-!missing-selector! NSObject::pasteboardChangedOwner: not bound
-!missing-selector! NSObject::tableView:writeRows:toPasteboard: not bound
-!missing-selector! NSObject::validateMenuItem: not bound
-!missing-selector! NSObject::view:stringForToolTip:point:userData: not bound
 !missing-selector! NSObjectController::fetchWithRequest:merge:error: not bound
 !missing-selector! NSObjectController::managedObjectContext not bound
 !missing-selector! NSObjectController::setManagedObjectContext: not bound
-!missing-selector! NSOpenGLContext::initWithCGLContextObj: not bound
-!missing-selector! NSOpenGLPixelBuffer::initWithCGLPBufferObj: not bound
-!missing-selector! NSOpenGLPixelFormat::initWithAttributes: not bound
-!missing-selector! NSOpenGLPixelFormat::initWithCGLPixelFormatObj: not bound
-!missing-selector! NSOpenGLPixelFormat::setAttributes: not bound
 !missing-selector! NSOpenPanel::canDownloadUbiquitousContents not bound
 !missing-selector! NSOpenPanel::canResolveUbiquitousConflicts not bound
 !missing-selector! NSOpenPanel::isAccessoryViewDisclosed not bound
@@ -745,11 +502,9 @@
 !missing-selector! NSPICTImageRep::PICTRepresentation not bound
 !missing-selector! NSPICTImageRep::boundingBox not bound
 !missing-selector! NSPICTImageRep::initWithData: not bound
-!missing-selector! NSPageLayout::setAccessoryView: not bound
 !missing-selector! NSPasteboard::readFileContentsType:toFile: not bound
 !missing-selector! NSPasteboard::writeFileContents: not bound
 !missing-selector! NSPasteboard::writeFileWrapper: not bound
-!missing-selector! NSPersistentDocument::configurePersistentStoreCoordinatorForURL:ofType:error: not bound
 !missing-selector! NSPersistentDocument::configurePersistentStoreCoordinatorForURL:ofType:modelConfiguration:storeOptions:error: not bound
 !missing-selector! NSPersistentDocument::managedObjectContext not bound
 !missing-selector! NSPersistentDocument::managedObjectModel not bound
@@ -760,51 +515,21 @@
 !missing-selector! NSPersistentDocument::writeToURL:ofType:forSaveOperation:originalContentsURL:error: not bound
 !missing-selector! NSPrintInfo::takeSettingsFromPDFInfo: not bound
 !missing-selector! NSPrintOperation::PDFPanel not bound
-!missing-selector! NSPrintOperation::setAccessoryView: not bound
-!missing-selector! NSPrintOperation::setJobStyleHint: not bound
 !missing-selector! NSPrintOperation::setPDFPanel: not bound
-!missing-selector! NSPrintOperation::setShowPanels: not bound
-!missing-selector! NSPrintPanel::setAccessoryView: not bound
-!missing-selector! NSPrinter::imageRectForPaper: not bound
-!missing-selector! NSPrinter::isFontAvailable: not bound
-!missing-selector! NSProgressIndicator::animate: not bound
-!missing-selector! NSProgressIndicator::setAnimationDelay: not bound
-!missing-selector! NSResponder::performMnemonic: not bound
 !missing-selector! NSResponder::presentError:modalForWindow:delegate:didPresentSelector:contextInfo: not bound
-!missing-selector! NSResponder::setInterfaceStyle: not bound
 !missing-selector! NSResponder::undoManager not bound
-!missing-selector! NSSavePanel::selectText: not bound
-!missing-selector! NSScroller::setFloatValue:knobProportion: not bound
 !missing-selector! NSSegmentedCell::interiorBackgroundStyleForSegment: not bound
 !missing-selector! NSSegmentedControl::indexOfSelectedItem not bound
 !missing-selector! NSSet::enumerateIndexPathsWithOptions:usingBlock: not bound
-!missing-selector! NSSpellChecker::forgetWord: not bound
-!missing-selector! NSSpellChecker::guessesForWord: not bound
-!missing-selector! NSSplitView::setIsPaneSplitter: not bound
 !missing-selector! NSSplitViewItem::collapseBehavior not bound
 !missing-selector! NSSplitViewItem::setCollapseBehavior: not bound
-!missing-selector! NSTableColumn::setResizable: not bound
-!missing-selector! NSTableView::columnsInRect: not bound
-!missing-selector! NSTableView::dragImageForRows:event:dragImageOffset: not bound
-!missing-selector! NSTableView::selectColumn:byExtendingSelection: not bound
-!missing-selector! NSTableView::selectRow:byExtendingSelection: not bound
-!missing-selector! NSTableView::setAutoresizesAllColumnsToFit: not bound
-!missing-selector! NSTableView::setDrawsGrid: not bound
 !missing-selector! NSTextField::setAutomaticTextCompletionEnabled: not bound
-!missing-selector! NSTextField::setTitleWithMnemonic: not bound
 !missing-selector! NSTextFinder::client not bound
 !missing-selector! NSTextFinder::findBarContainer not bound
 !missing-selector! NSTextFinder::incrementalSearchingShouldDimContentView not bound
 !missing-selector! NSTextFinder::setIncrementalSearchingShouldDimContentView: not bound
 !missing-selector! NSTextView::dragImageForSelectionWithEvent:origin: not bound
 !missing-selector! NSTextView::dragSelectionWithEvent:offset:slideBack: not bound
-!missing-selector! NSTextView::toggleBaseWritingDirection: not bound
-!missing-selector! NSToolbar::fullScreenAccessoryView not bound
-!missing-selector! NSToolbar::fullScreenAccessoryViewMaxHeight not bound
-!missing-selector! NSToolbar::fullScreenAccessoryViewMinHeight not bound
-!missing-selector! NSToolbar::setFullScreenAccessoryView: not bound
-!missing-selector! NSToolbar::setFullScreenAccessoryViewMaxHeight: not bound
-!missing-selector! NSToolbar::setFullScreenAccessoryViewMinHeight: not bound
 !missing-selector! NSTouchBar::itemIdentifiers not bound
 !missing-selector! NSTreeController::selectedObjects not bound
 !missing-selector! NSTreeNode::mutableChildNodes not bound
@@ -823,12 +548,9 @@
 !missing-selector! NSView::rulerView:willMoveMarker:toLocation: not bound
 !missing-selector! NSView::rulerView:willSetClientView: not bound
 !missing-selector! NSView::scrollClipView:toPoint: not bound
-!missing-selector! NSView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:atPoint: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:range:options:baselineOriginProvider: not bound
-!missing-selector! NSView::wantsExtendedDynamicRangeOpenGLSurface not bound
 !missing-selector! NSWindow::dragImage:at:offset:event:pasteboard:source:slideBack: not bound
-!missing-selector! NSWindow::drawers not bound
 !missing-selector! NSWindow::handleCloseScriptCommand: not bound
 !missing-selector! NSWindow::handlePrintScriptCommand: not bound
 !missing-selector! NSWindow::handleSaveScriptCommand: not bound
@@ -844,12 +566,7 @@
 !missing-selector! NSWindow::setOrderedIndex: not bound
 !missing-selector! NSWindow::setTitlebarAccessoryViewControllers: not bound
 !missing-selector! NSWindowController::initWithWindowNibPath:owner: not bound
-!missing-selector! NSWorkspace::openTempFile: not bound
-!missing-selector! NSWorkspace::slideImage:from:to: not bound
-!missing-type! NSInputManager not bound
-!missing-type! NSInputServer not bound
 !missing-type! NSMediaLibraryBrowserController not bound
-!missing-type! NSMovie not bound
 !missing-type! NSPDFInfo not bound
 !missing-type! NSPDFPanel not bound
 !missing-type! NSPICTImageRep not bound

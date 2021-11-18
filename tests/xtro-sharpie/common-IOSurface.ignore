@@ -9,7 +9,6 @@
 !missing-field! kIOSurfaceElementHeight not bound
 !missing-field! kIOSurfaceElementWidth not bound
 !missing-field! kIOSurfaceHeight not bound
-!missing-field! kIOSurfaceIsGlobal not bound
 !missing-field! kIOSurfaceOffset not bound
 !missing-field! kIOSurfacePixelFormat not bound
 !missing-field! kIOSurfacePixelSizeCastingAllowed not bound

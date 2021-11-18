@@ -59,7 +59,3 @@
 !missing-release-attribute-on-return-value! ModelIO.IMDLMeshBuffer GLKit.GLKMeshBufferAllocator::CreateBuffer(System.nuint,ModelIO.MDLMeshBufferType)'s selector's ('newBuffer:type:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! ModelIO.IMDLMeshBufferZone GLKit.GLKMeshBufferAllocator::CreateZone(Foundation.NSNumber[],Foundation.NSNumber[])'s selector's ('newZoneForBuffersWithSize:andType:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! ModelIO.IMDLMeshBufferZone GLKit.GLKMeshBufferAllocator::CreateZone(System.nuint)'s selector's ('newZone:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
-
-## properties are null by default
-!extra-null-allowed! 'System.Void GLKit.GLKEffectPropertyLight::set_Transform(GLKit.GLKEffectPropertyTransform)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void GLKit.GLKView::set_Context(OpenGLES.EAGLContext)' has a extraneous [NullAllowed] on parameter #0
