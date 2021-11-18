@@ -18,5 +18,4 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
-## appended from unclassified file
-## appended from unclassified file
+!extra-enum-value! Managed value 2 for UIActivityIndicatorViewStyle.Gray is available for the current platform while the value in the native header is not

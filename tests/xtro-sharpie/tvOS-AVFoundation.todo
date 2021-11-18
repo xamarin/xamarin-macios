@@ -1,0 +1,2 @@
+!extra-enum-value! Managed value -11872 for AVError.SessionHardwareCostOverage is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value -11873 for AVError.UnsupportedDeviceActiveFormat is available for the current platform while the value in the native header is not

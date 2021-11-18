@@ -1,2 +1,4 @@
 !missing-field! PKPaymentNetworkNanaco not bound
 !missing-field! PKPaymentNetworkWaon not bound
+!extra-enum-value! Managed value 4 for PKPaymentErrorCode.CouponCodeInvalid is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 5 for PKPaymentErrorCode.CouponCodeExpired is available for the current platform while the value in the native header is not
