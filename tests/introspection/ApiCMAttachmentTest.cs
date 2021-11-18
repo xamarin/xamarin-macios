@@ -138,7 +138,11 @@ namespace Introspection {
 				nativeObj = obj;
 			}
 
+#if NET
+			public NativeHandle Handle
+#else
 			public IntPtr Handle
+#endif
 			{
 				get { return nativeObj.Handle; }
 			}
