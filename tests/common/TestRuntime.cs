@@ -163,7 +163,7 @@ partial class TestRuntime
 
 	public static void AssertNotVirtualMachine ()
 	{
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		// enviroment variable set by the CI when running on a VM
 		var vmVendor = Environment.GetEnvironmentVariable ("VM_VENDOR");
 		if (!string.IsNullOrEmpty (vmVendor))
