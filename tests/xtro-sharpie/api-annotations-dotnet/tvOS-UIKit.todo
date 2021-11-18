@@ -18,3 +18,39 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
+!deprecated-attribute-missing! UIApplication::openURL: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIApplication::windows missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIApplicationDelegate::application:didReceiveRemoteNotification: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UICollectionViewDelegate::collectionView:canPerformAction:forItemAtIndexPath:withSender: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UICollectionViewDelegate::collectionView:performAction:forItemAtIndexPath:withSender: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UICollectionViewDelegate::collectionView:shouldShowMenuForItemAtIndexPath: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UICollectionViewDelegate::collectionView:targetIndexPathForMoveFromItemAtIndexPath:toProposedIndexPath: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIFocusGuide::preferredFocusedView missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIFocusGuide::setPreferredFocusedView: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIPopoverController missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIPopoverControllerDelegate::popoverController:willRepositionPopoverToRect:inView: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIPopoverControllerDelegate::popoverControllerDidDismissPopover: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIPopoverControllerDelegate::popoverControllerShouldDismissPopover: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIStoryboardPopoverSegue missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewCell::detailTextLabel missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewCell::imageView missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewCell::textLabel missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewDelegate::tableView:canPerformAction:forRowAtIndexPath:withSender: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewDelegate::tableView:performAction:forRowAtIndexPath:withSender: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewDelegate::tableView:shouldShowMenuForRowAtIndexPath: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewHeaderFooterView::detailTextLabel missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITableViewHeaderFooterView::textLabel missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITextViewDelegate::textView:shouldInteractWithTextAttachment:inRange: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITextViewDelegate::textView:shouldInteractWithURL:inRange: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewController::isModalInPopover missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewController::previewActionItems missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewController::registerForPreviewingWithDelegate:sourceView: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewController::segueForUnwindingToViewController:fromViewController:identifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewController::setModalInPopover: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewController::unregisterForPreviewingWithContext: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewController::viewControllerForUnwindSegueAction:fromViewController:withSender: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewControllerPreviewingDelegate::previewingContext:commitViewController: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIViewControllerPreviewingDelegate::previewingContext:viewControllerForLocation: missing a [Deprecated] attribute
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound

@@ -1,0 +1,1 @@
+!missing-null-allowed! 'AppKit.NSTouchBar AppKit.NSResponder_NSTouchBarProvider::GetTouchBar(AppKit.NSResponder)' is missing an [NullAllowed] on return type

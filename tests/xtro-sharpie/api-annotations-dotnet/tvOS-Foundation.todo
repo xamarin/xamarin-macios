@@ -144,3 +144,11 @@
 !extra-enum-value! Managed value 2 for NSItemProviderRepresentationVisibility.Group is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 2048 for NSUrlBookmarkCreationOptions.WithSecurityScope is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 4096 for NSUrlBookmarkCreationOptions.SecurityScopeAllowOnlyReadAccess is available for the current platform while the value in the native header is not
+!deprecated-attribute-missing! NSDateComponents::setWeek: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSDateComponents::week missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSNetService::resolve missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSProcessInfo::operatingSystem missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSProcessInfo::operatingSystemName missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSURLConnection::initWithRequest:delegate: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSURLConnection::initWithRequest:delegate:startImmediately: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSUserDefaults::persistentDomainNames missing a [Deprecated] attribute
