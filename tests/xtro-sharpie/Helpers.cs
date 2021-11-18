@@ -21,7 +21,9 @@ namespace Extrospection {
 	public static partial class Helpers {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
-		static Dictionary<string,string> map = new Dictionary<string, string> () {
+		static Dictionary<string,string> map { get => IsDotNet ? map_dotnet : map_legacy; }
+
+		static Dictionary<string,string> map_legacy = new Dictionary<string, string> () {
 			{ "AudioChannelBitmap", "AudioChannelBit" },
 			{ "CIRAWDecoderVersion", "CIRawDecoderVersion" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
@@ -70,6 +72,51 @@ namespace Extrospection {
 			{ "NFCISO15693RequestFlag", "RequestFlag" },
 			// not enums
 		};
+
+		static Dictionary<string,string> map_dotnet = new Dictionary<string, string> () {
+			{ "AudioChannelBitmap", "AudioChannelBit" },
+			{ "CIRAWDecoderVersion", "CIRawDecoderVersion" },
+			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
+			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
+			{ "GKErrorCode", "GKError" },
+			{ "HMCharacteristicValueAirParticulateSize", "HMCharacteristicValueAirParticulate" },
+			{ "HMCharacteristicValueLockMechanismLastKnownAction", "HMCharacteristicValueLockMechanism" },
+			{ "HMErrorCode", "HMError" },
+			{ "LAError", "LAStatus" },
+			{ "MCErrorCode", "MCError" },
+			{ "MPMovieMediaTypeMask", "MPMovieMediaType" },
+			{ "NEVPNIKEv2CertificateType", "NEVpnIke2CertificateType" },
+			{ "NEVPNIKEv2DeadPeerDetectionRate", "NEVpnIke2DeadPeerDetectionRate" },
+			{ "NEVPNIKEv2DiffieHellmanGroup", "NEVpnIke2DiffieHellman" },
+			{ "NEVPNIKEv2EncryptionAlgorithm", "NEVpnIke2EncryptionAlgorithm" },
+			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
+			{ "NEDNSProtocol", "NEDnsProtocol"},
+			{ "NEDNSSettingsManagerError", "NEDnsSettingsManagerError"},
+			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
+			{ "NSFileProviderErrorCode", "NSFileProviderError" },
+			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
+			{ "PHLivePhotoEditingErrorCode", "PHLivePhotoEditingError" },
+			{ "RPRecordingErrorCode", "RPRecordingError" },
+			{ "SecTrustResultType", "SecTrustResult" },
+			{ "SKErrorCode", "SKError" },
+			{ "SSReadingListErrorCode", "SSReadingListError" },
+			{ "tls_ciphersuite_group_t", "TlsCipherSuiteGroup" },
+			{ "tls_ciphersuite_t", "TlsCipherSuite" },
+			{ "tls_protocol_version_t", "TlsProtocolVersion" },
+			{ "UIDataDetectorTypes", "UIDataDetectorType" },
+			{ "UIControlEvents", "UIControlEvent" },
+			{ "UIKeyboardHIDUsage", "UIKeyboardHidUsage" },
+			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
+			{ "UITableViewCellStateMask", "UITableViewCellState" },
+			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			{ "MIDIProtocolID", "MidiProtocolId" },
+			{ "MIDICVStatus", "MidiCVStatus" },
+			{ "MIDIMessageType", "MidiMessageType" },
+			{ "MIDISysExStatus", "MidiSysExStatus" },
+			{ "MIDISystemStatus", "MidiSystemStatus" },
+			// not enums
+		};
+
 
 		public static string GetManagedName (string nativeName)
 		{
