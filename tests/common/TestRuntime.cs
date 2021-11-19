@@ -33,6 +33,10 @@ using ObjCRuntime;
 
 using Xamarin.Utils;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 partial class TestRuntime
 {
 
@@ -1245,3 +1249,12 @@ partial class TestRuntime
 		}
 	}
 }
+
+#if NET
+internal static class NativeHandleExtensions {
+	public static string ToString (this NativeHandle @this, string format)
+	{
+		return ((IntPtr) @this).ToString (format);
+	}
+}
+#endif
