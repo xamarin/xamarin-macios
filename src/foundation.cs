@@ -7274,9 +7274,11 @@ namespace Foundation
 		[Export ("countOfBytesClientExpectsToSend")]
 		long CountOfBytesClientExpectsToSend { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[Export ("countOfBytesClientExpectsToReceive")]
-		long CountOfBytesClientExpectsToReceive { get; set; }
+		// FIXME!!!!!!! I AM JUST TESTING BREAKING CHANGE!!
+
+		// [Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		// [Export ("countOfBytesClientExpectsToReceive")]
+		// long CountOfBytesClientExpectsToReceive { get; set; }
 
 	}
 

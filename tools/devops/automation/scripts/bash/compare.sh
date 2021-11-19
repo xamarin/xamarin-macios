@@ -74,6 +74,8 @@ cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
+sed -i 's/href='\''dotnet/href='\''$URL_PREFIX\/dotnet/' $API_URL
+
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON"/*.html | grep data-is-breaking; then
