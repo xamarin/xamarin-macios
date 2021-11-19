@@ -789,6 +789,10 @@ namespace Foundation {
 			case TypeCode.String:
 				return new NSString ((string) obj);
 			default:
+#if NET
+				if (t == typeof (NativeHandle))
+					return NSValue.ValueFromPointer ((NativeHandle) obj);
+#endif
 				if (t == typeof (IntPtr))
 					return NSValue.ValueFromPointer ((IntPtr) obj);
 #if !NO_SYSTEM_DRAWING
