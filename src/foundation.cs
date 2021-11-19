@@ -166,7 +166,7 @@ namespace Foundation
 		nuint Count { get; }
 
 		[Export ("objectAtIndex:")]
-		IntPtr ValueAt (nuint idx);
+		NativeHandle ValueAt (nuint idx);
 
 		[Static]
 		[Internal]
@@ -203,7 +203,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("containsObject:")]
-		bool _Contains (IntPtr anObject);
+		bool _Contains (NativeHandle anObject);
 
 		[Export ("containsObject:")]
 		bool Contains (NSObject anObject);
@@ -211,7 +211,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("indexOfObject:")]
-		nuint _IndexOf (IntPtr anObject);
+		nuint _IndexOf (NativeHandle anObject);
 
 		[Export ("indexOfObject:")]
 		nuint IndexOf (NSObject anObject);
