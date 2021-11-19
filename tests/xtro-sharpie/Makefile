@@ -47,10 +47,10 @@ $(XTVOS_PCH): .stamp-check-sharpie
 
 XMACOS ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll
 XMACOS_ARCH = x86_64
-XMACOS_PCH = macosx$(OSX_SDK_VERSION)-$(XMACOS_ARCH).pch
+XMACOS_PCH = macosx$(MACOS_SDK_VERSION)-$(XMACOS_ARCH).pch
 
 $(XMACOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMACOS_ARCH) -exclude RealityKit -exclude JavaNativeFoundation
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) -exclude RealityKit -exclude JavaNativeFoundation
 
 XMACCATALYST ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll
 XMACCATALYST_GL ?=
@@ -108,11 +108,11 @@ else
 gen-watchos: ; @true
 endif
 
-macos-$(OSX_SDK_VERSION).g.cs: $(XMACOS_PCH)
+macos-$(MACOS_SDK_VERSION).g.cs: $(XMACOS_PCH)
 
 ifdef INCLUDE_MAC
-gen-macos: macos-$(OSX_SDK_VERSION).g.cs .stamp-check-sharpie
-	$(SHARPIE) query -bind $(XMACOS_PCH) > macos-$(OSX_SDK_VERSION).g.cs
+gen-macos: macos-$(MACOS_SDK_VERSION).g.cs .stamp-check-sharpie
+	$(SHARPIE) query -bind $(XMACOS_PCH) > macos-$(MACOS_SDK_VERSION).g.cs
 else
 gen-macos: ; @true
 endif
