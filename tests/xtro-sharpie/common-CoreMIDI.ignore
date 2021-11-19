@@ -20,7 +20,6 @@
 !missing-field! kMIDIPropertyMaxTransmitChannels not bound
 !missing-field! kMIDIPropertyModel not bound
 !missing-field! kMIDIPropertyName not bound
-!missing-field! kMIDIPropertyNameConfiguration not bound
 !missing-field! kMIDIPropertyOffline not bound
 !missing-field! kMIDIPropertyPanDisruptsStereo not bound
 !missing-field! kMIDIPropertyPrivate not bound
@@ -52,7 +51,6 @@
 
 # old apis that have been ignored, please refer to issue https://github.com/xamarin/xamarin-macios/issues/4452
 !missing-pinvoke! MIDIClientCreateWithBlock is not bound
-!missing-pinvoke! MIDIDestinationCreateWithBlock is not bound
 !missing-pinvoke! MIDIDeviceCreate is not bound
 !missing-pinvoke! MIDIDeviceDispose is not bound
 !missing-pinvoke! MIDIDeviceRemoveEntity is not bound
@@ -60,9 +58,6 @@
 !missing-pinvoke! MIDIExternalDeviceCreate is not bound
 !missing-pinvoke! MIDIGetDriverDeviceList is not bound
 !missing-pinvoke! MIDIGetDriverIORunLoop is not bound
-!missing-pinvoke! MIDIInputPortCreateWithBlock is not bound
-!missing-pinvoke! MIDIPacketListAdd is not bound
-!missing-pinvoke! MIDIPacketListInit is not bound
 !missing-pinvoke! MIDISendSysex is not bound
 !missing-pinvoke! MIDISetupAddDevice is not bound
 !missing-pinvoke! MIDISetupAddExternalDevice is not bound

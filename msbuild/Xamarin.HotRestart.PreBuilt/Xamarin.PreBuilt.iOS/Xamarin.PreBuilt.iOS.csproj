@@ -3,6 +3,7 @@
     <TargetFramework>net6.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ProvisioningType>automatic</ProvisioningType>
@@ -12,7 +13,7 @@
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.2" />
+    <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.4" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\HotRestart-LaunchIcon-568h%402x.png" />

@@ -67,6 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Stub.cs" />
+    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
     </Compile>

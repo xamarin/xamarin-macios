@@ -43,7 +43,11 @@ namespace AudioToolbox {
 		Vibrate = 0x00000FFF,
 	}
 
+#if NET
+	public class SystemSound : IDisposable {
+#else
 	public class SystemSound : INativeObject, IDisposable {
+#endif
 #if MONOMAC
 		// TODO:
 #else
@@ -74,12 +78,21 @@ namespace AudioToolbox {
 			Dispose (false);
 		}
 
+#if NET
+		public uint SoundId {
+			get {
+				AssertNotDisposed ();
+				return soundId;
+			}
+		}
+#else
 		public IntPtr Handle {
 			get {
 				AssertNotDisposed ();
 				return (IntPtr) soundId;
 			}
 		}
+#endif
 
 		public bool IsUISound {
 			get {

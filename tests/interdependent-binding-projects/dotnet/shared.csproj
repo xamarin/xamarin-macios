@@ -21,7 +21,6 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <ItemGroup>
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />

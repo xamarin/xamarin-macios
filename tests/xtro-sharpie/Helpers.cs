@@ -209,6 +209,62 @@ namespace Extrospection {
 			return result;
 		}
 
+		public static bool IsDeprecated (this Decl decl)
+		{
+			// there's no doubt we need to ask for the current platform
+			var result = decl.IsDeprecated (Platform);
+
+			// some categories are not decorated (as not available) but they extend types that are
+			if (!result.HasValue) {
+				// first check if we're checking the category itself
+				var category = decl as ObjCCategoryDecl;
+				if (category != null)
+					result = category.ClassInterface.IsDeprecated (Platform);
+
+				if (!result.HasValue) {
+					// then check if we're a method inside a category
+					category = (decl.DeclContext as ObjCCategoryDecl);
+					if (category != null)
+						result = category.ClassInterface.IsDeprecated (Platform);
+				}
+			}
+
+			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
+			// decorated otherwise so we must check again if we do not get a definitve answer
+			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
+				result = decl.IsDeprecated (Platforms.iOS);
+			return result == true;
+		}
+
+		static bool? IsDeprecated (this Decl decl, Platforms platform_value)
+		{
+			var platform = platform_value.ToString ().ToLowerInvariant ();
+			// First check if there are any deprecations
+			foreach (var attr in decl.Attrs) {
+				var avail = attr as AvailabilityAttr;
+				if (avail is null)
+					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
+				if (availName != platform)
+					continue;
+				if (!avail.Deprecated.IsEmpty)
+					return true;
+			}
+			// then check for introduced - there may be both, so we must check *all* attributes for deprecation before checking for introduced
+			foreach (var attr in decl.Attrs) {
+				var avail = attr as AvailabilityAttr;
+				if (avail is null)
+					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
+				if (availName != platform)
+					continue;
+				if (!avail.Introduced.IsEmpty)
+					return false;
+			}
+
+			return null;
+		}
+
 		public static bool IsDesignatedInitializer (this MethodDefinition self)
 		{
 			return self.HasAttribute ("DesignatedInitializerAttribute");

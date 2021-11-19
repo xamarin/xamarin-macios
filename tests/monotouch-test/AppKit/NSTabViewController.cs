@@ -6,6 +6,7 @@ using System.Linq;
 using AppKit;
 using ObjCRuntime;
 using Foundation;
+using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tests
 {
@@ -44,7 +45,7 @@ namespace Xamarin.Mac.Tests
 		public void NSTabViewControllerShouldChangeSegmentedControl ()
 		{
 			// This API was removed in 10.11
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) >= Platform.Mac_10_11)
+			if (TestRuntime.CheckXcodeVersion (7, 0))
 				return;
 
 			var segmentedControl = controller.SegmentedControl;

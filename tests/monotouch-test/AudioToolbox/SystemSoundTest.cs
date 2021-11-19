@@ -15,6 +15,7 @@ using Foundation;
 using AudioToolbox;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AudioToolbox {
 	
@@ -57,7 +58,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void TestCallbackPlaySystem ()
 		{
 			TestRuntime.AssertNotSimulator ();
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
 
@@ -77,7 +78,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void TestCallbackPlayAlert ()
 		{
 			TestRuntime.AssertNotSimulator ();
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
 
@@ -99,11 +100,19 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
 
 			var ss = SystemSound.FromFile (NSUrl.FromFilename (path));
+#if NET
+			Assert.That (ss.SoundId, Is.Not.EqualTo ((uint) 0), "DisposeTest");
+#else
 			Assert.That (ss.Handle, Is.Not.EqualTo (IntPtr.Zero), "DisposeTest");
+#endif
 
 			ss.Dispose ();
 			// Handle prop checks NotDisposed and throws if it is
+#if NET
+			Assert.Throws<ObjectDisposedException> (() => ss.SoundId.ToString (), "DisposeTest");
+#else
 			Assert.Throws<ObjectDisposedException> (() => ss.Handle.ToString (), "DisposeTest");
+#endif
 		}
 	}
 }

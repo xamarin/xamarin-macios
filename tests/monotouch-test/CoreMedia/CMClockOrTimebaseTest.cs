@@ -3,6 +3,7 @@ using Foundation;
 using CoreMedia;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia
 {
@@ -15,7 +16,7 @@ namespace MonoTouchFixtures.CoreMedia
 		[Test]
 		public void RetainReleaseTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var clock = CMClock.HostTimeClock;
 			var timebase = new CMClockOrTimebase (clock.Handle);

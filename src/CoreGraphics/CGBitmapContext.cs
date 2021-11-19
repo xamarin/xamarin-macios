@@ -90,7 +90,7 @@ namespace CoreGraphics {
 		}
 
 		public CGBitmapContext (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGBitmapFlags bitmapInfo)
-			: base (Create (data, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo, out var buffer))
+			: base (Create (data, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo, out var buffer), true)
 		{
 			this.buffer = buffer;
 		}

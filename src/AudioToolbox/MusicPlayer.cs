@@ -72,41 +72,24 @@ namespace AudioToolbox {
 	}
 
 	// MusicPlayer.h
-	public class MusicPlayer : INativeObject, IDisposable {
-		IntPtr handle;
-
+	public class MusicPlayer : DisposableObject {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus NewMusicPlayer (/* MusicPlayer* */ out IntPtr outPlayer);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus DisposeMusicPlayer (/* MusicPlayer */ IntPtr inPlayer);
 							      
-		private MusicPlayer (IntPtr handle) {
-			this.handle = handle;
+		MusicPlayer (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
 		}
 
-		~MusicPlayer ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		protected virtual void Dispose (bool disposing)
 		{
 			currentSequence = null;
-			if (handle != IntPtr.Zero){
-				DisposeMusicPlayer (handle);
-				handle = IntPtr.Zero;
-			}
+			if (Owns && Handle != IntPtr.Zero)
+				DisposeMusicPlayer (Handle);
+			base.Dispose (disposing);
 		}
 
 		static IntPtr Create ()
@@ -118,15 +101,15 @@ namespace AudioToolbox {
 		}
 
 		public MusicPlayer ()
+			: base (Create (), true)
 		{
-			handle = Create ();
 		}
 
 		static public MusicPlayer? Create (out MusicPlayerStatus OSstatus)
 		{
 			OSstatus = NewMusicPlayer (out var handle);
 			if (OSstatus == 0)
-				return new MusicPlayer (handle);
+				return new MusicPlayer (handle, true);
 			return null;
 		}
 

@@ -1,9 +1,6 @@
 ## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! AUAudioUnitBusArray should conform to NSFastEnumeration
 
-## deprecated (even removed in tvOS)
-!missing-pinvoke! AudioFileReadPackets is not bound
-
 ## unsorted
 
 !missing-enum! AudioBytePacketTranslationFlags not bound
@@ -30,8 +27,6 @@
 !missing-pinvoke! AudioUnitRemovePropertyListenerWithUserData is not bound
 !missing-pinvoke! AudioUnitRemoveRenderNotify is not bound
 !missing-pinvoke! AudioUnitReset is not bound
-!missing-pinvoke! AUGraphGetInteractionInfo is not bound
-!missing-pinvoke! AUGraphGetNodeInteractions is not bound
 !missing-pinvoke! CAShowFile is not bound
 !missing-pinvoke! DisposeMusicEventIterator is not bound
 !missing-pinvoke! ExtAudioFileGetPropertyInfo is not bound

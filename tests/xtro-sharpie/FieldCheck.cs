@@ -84,7 +84,8 @@ namespace Extrospection {
 
 			var name = decl.ToString ();
 			if (!fields.TryGetValue (name, out var mr)) {
-				Log.On (framework).Add ($"!missing-field! {name} not bound");
+				if (!decl.IsDeprecated ())
+					Log.On (framework).Add ($"!missing-field! {name} not bound");
 			} else
 				fields.Remove (name);
 		}

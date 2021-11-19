@@ -9,6 +9,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	
@@ -57,7 +58,7 @@ namespace MonoTouchFixtures.UIKit {
 		// if this fails ping lobrien (or doc team) since it means Apple changed the defaults we documented
 		public void LayoutManager ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UITextView tv = new UITextView ()) {
 				var lm = tv.LayoutManager;

@@ -4,24 +4,10 @@
 ## Manually bound and Sealed
 !missing-selector! MPSCNNBinaryConvolution::initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags: not bound
 !missing-selector! MPSCNNBinaryFullyConnected::initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags: not bound
-!missing-selector! MPSCNNNeuronPReLU::initWithDevice:a:count: not bound
 
 # Manually bound variadic selectors
 !missing-selector! +MPSStateResourceList::resourceListWithBufferSizes: not bound
 !missing-selector! +MPSStateResourceList::resourceListWithTextureDescriptors: not bound
-
-## According to header docs the following are deprecated and not binary compatibile,
-## so there is not much point in binding/using these, they only short lived
-## for iOS 11.3 and Mac 10.13.4 and were considered experimental.
-!missing-selector! +MPSKeyedUnarchiver::unarchiveObjectWithData:device: not bound
-!missing-selector! +MPSKeyedUnarchiver::unarchiveObjectWithFile:device: not bound
-!missing-selector! +MPSKeyedUnarchiver::unarchiveTopLevelObjectWithData:device:error: not bound
-!missing-selector! MPSKeyedUnarchiver::initForReadingWithData:device: not bound
-!missing-selector! MPSKeyedUnarchiver::initWithDevice: not bound
-!missing-selector! +MPSNNGraph::graphWithDevice:resultImage: not bound
-!missing-selector! MPSCNNBatchNormalization::reloadDataSource: not bound
-!missing-selector! MPSCNNConvolutionGradient::serializeWeightsAndBiases not bound
-!missing-selector! MPSCNNConvolutionGradient::setSerializeWeightsAndBiases: not bound
 
 ## The DesignatedInitializer is now deprecated in favor of a new one
 !missing-designated-initializer! MPSCNNNeuronELU::initWithDevice:a: is missing an [DesignatedInitializer] attribute

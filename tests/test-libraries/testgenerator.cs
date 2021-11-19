@@ -759,7 +759,7 @@ namespace Bindings.Test
 			w.AppendLine ();
 		}
 		if (v.MinMacOSVersion != null) {
-			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (PlatformName.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
+			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
 			w.AppendLine ();
 		}
 	}
@@ -800,6 +800,7 @@ using NUnit.Framework;
 using Bindings.Test;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -1428,6 +1429,7 @@ using NUnit.Framework;
 using Bindings.Test;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 

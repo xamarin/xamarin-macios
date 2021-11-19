@@ -237,15 +237,11 @@ namespace AudioUnit
 #endif // !COREBUILD
 
 
-	public class AudioComponent : INativeObject {
+	public class AudioComponent : DisposableObject {
 #if !COREBUILD
-		IntPtr handle;
-
-		public IntPtr Handle { get { return handle; } }
-
-		internal AudioComponent (IntPtr handle)
+		internal AudioComponent (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{ 
-			this.handle = handle;
 		}
 			
 		public AudioUnit CreateAudioUnit ()
@@ -257,7 +253,7 @@ namespace AudioUnit
 		{
 			var handle = cmp.GetHandle ();
 			handle = AudioComponentFindNext (handle, ref cd);
-			return  (handle != IntPtr.Zero) ? new AudioComponent (handle) : null;
+			return  (handle != IntPtr.Zero) ? new AudioComponent (handle, false) : null;
 		}
 
 		public static AudioComponent? FindComponent (ref AudioComponentDescription cd)

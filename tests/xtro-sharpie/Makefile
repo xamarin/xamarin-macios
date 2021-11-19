@@ -45,20 +45,20 @@ $(XTVOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) -exclude RealityKit
 
 
-XMAC ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll
-XMAC_ARCH = x86_64
-XMAC_PCH = macosx$(OSX_SDK_VERSION)-$(XMAC_ARCH).pch
+XMACOS ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll
+XMACOS_ARCH = x86_64
+XMACOS_PCH = macosx$(OSX_SDK_VERSION)-$(XMACOS_ARCH).pch
 
-$(XMAC_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH) -exclude RealityKit -exclude JavaNativeFoundation
+$(XMACOS_PCH): .stamp-check-sharpie
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMACOS_ARCH) -exclude RealityKit -exclude JavaNativeFoundation
 
-XCAT ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll
-XCAT_GL ?=
-XCAT_ARCH = x86_64
-XCAT_PCH = ios$(MACCATALYST_SDK_VERSION)-macabi-$(XCAT_ARCH).pch
+XMACCATALYST ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll
+XMACCATALYST_GL ?=
+XMACCATALYST_ARCH = x86_64
+XMACCATALYST_PCH = ios$(MACCATALYST_SDK_VERSION)-macabi-$(XMACCATALYST_ARCH).pch
 
-$(XCAT_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XCAT_ARCH) \
+$(XMACCATALYST_PCH): .stamp-check-sharpie
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
 	-exclude AGL \
 	-exclude CalendarStore \
 	-exclude Carbon \
@@ -108,20 +108,20 @@ else
 gen-watchos: ; @true
 endif
 
-macos-$(OSX_SDK_VERSION).g.cs: $(XMAC_PCH)
+macos-$(OSX_SDK_VERSION).g.cs: $(XMACOS_PCH)
 
 ifdef INCLUDE_MAC
 gen-macos: macos-$(OSX_SDK_VERSION).g.cs .stamp-check-sharpie
-	$(SHARPIE) query -bind $(XMAC_PCH) > macos-$(OSX_SDK_VERSION).g.cs
+	$(SHARPIE) query -bind $(XMACOS_PCH) > macos-$(OSX_SDK_VERSION).g.cs
 else
 gen-macos: ; @true
 endif
 
-maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XCAT_PCH)
+maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XMACCATALYST_PCH)
 
 ifdef INCLUDE_MACCATALYST
 gen-maccatalyst: maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs .stamp-check-sharpie
-	$(SHARPIE) query -bind $(XCAT_PCH) > maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs
+	$(SHARPIE) query -bind $(XMACCATALYST_PCH) > maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs
 else
 gen-maccatalyst: ; @true
 endif
@@ -165,17 +165,17 @@ classify-watchos: ; @true
 endif
 
 ifdef INCLUDE_MAC
-PCH_FILES+=$(XMAC_PCH)
+PCH_FILES+=$(XMACOS_PCH)
 classify-macos:
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
 else
 classify-macos: ; @true
 endif
 
 ifdef INCLUDE_MACCATALYST
-PCH_FILES+=$(XCAT_PCH)
-classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XCAT_PCH)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XCAT_PCH) $(XCAT)
+PCH_FILES+=$(XMACCATALYST_PCH)
+classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH)
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH) $(XMACCATALYST)
 else
 classify-maccatalyst: ; @true
 endif

@@ -19,6 +19,7 @@ using ObjCRuntime;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreBluetooth {
 	
@@ -81,7 +82,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			//known UUID for a heart monitor, more common, we want to find something and make sure we do not crash
 			heartRateMonitorUUID = CBUUID.FromPartial (0x180D);
 			// Required API is available in macOS 10.8, but it doesn't work (hangs in 10.8-10.9, randomly crashes in 10.10) on the bots.
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 			mgrDelegate = new ManagerDelegate ();
 			mgr = new CBCentralManager (mgrDelegate, new DispatchQueue ("com.xamarin.tests." + TestContext.CurrentContext.Test.Name));
 			if (!mgrDelegate.PoweredOnEvent.WaitOne (TimeSpan.FromSeconds (5)))
