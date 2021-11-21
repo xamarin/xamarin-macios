@@ -2,6 +2,7 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
@@ -90,7 +91,7 @@ namespace MonoTouchFixtures.Foundation {
 				case NSCalendarType.IslamicTabular:
 				case NSCalendarType.IslamicUmmAlQura:
 #if __MACOS__
-					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+					if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10))
 						continue;
 #else
 					if (!TestRuntime.CheckXcodeVersion (6, 0))
@@ -220,7 +221,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestAddingByComponents ()
 		{
 			RequiresIos8 ();
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			NSDate now = NSDate.Now;
 			NSDate oneDayFromNow = NSCalendar.CurrentCalendar.DateByAddingUnit (NSCalendarUnit.Day, 1, now, NSCalendarOptions.None);

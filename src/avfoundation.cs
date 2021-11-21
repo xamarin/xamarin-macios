@@ -161,6 +161,7 @@ namespace AVFoundation {
 		[Field ("AVMediaTypeTimecode")]
 		Timecode = 5,
 
+#if !NET
 		[NoTV, NoWatch]
 		[Obsoleted (PlatformName.iOS, 6,0)]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Always 'null'.")]
@@ -169,6 +170,7 @@ namespace AVFoundation {
 		[NoMacCatalyst]
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
 		TimedMetadata = 6,
+#endif
 
 		[Field ("AVMediaTypeMuxed")]
 		Muxed = 7,
@@ -186,7 +188,7 @@ namespace AVFoundation {
 		DepthData = 10,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Use AVMediaTypes enum values")]
 	[NoWatch]
 	[BaseType (typeof (NSObject))][Static]
@@ -227,7 +229,7 @@ namespace AVFoundation {
 		[Field ("AVMediaTypeMetadata")]
 		NSString Metadata { get; }
 	}
-#endif
+#endif // !NET
 
 	[Watch (6,0)]
 	[iOS (9,0), Mac(10,11)]
@@ -10462,7 +10464,7 @@ namespace AVFoundation {
 #endif
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[iOS (8,0), Mac (11, 0)]
+		[iOS (8,0), Mac (10, 14)]
 		[Export ("highResolutionStillImageOutputEnabled")]
 		bool HighResolutionStillImageOutputEnabled { [Bind ("isHighResolutionStillImageOutputEnabled")] get; set; }
 	}

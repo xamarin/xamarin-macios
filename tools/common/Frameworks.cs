@@ -615,10 +615,15 @@ public class Frameworks : Dictionary <string, Framework>
 			catalyst_frameworks.Add ("CoreWlan", "CoreWLAN", 15, 0);
 
 			var min = new Version (13, 0);
+			var v14_0 = new Version (14, 0);
 			var v14_2 = new Version (14, 2);
 			foreach (var f in catalyst_frameworks.Values) {
 				switch (f.Name) {
 				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
+				case "HomeKit":
+					f.Version = v14_0;
+					f.VersionAvailableInSimulator = v14_0;
+					break;
 				case "AddressBook":
 				case "ClassKit":
 				case "UserNotificationsUI":

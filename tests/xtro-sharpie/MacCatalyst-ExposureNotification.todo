@@ -95,7 +95,6 @@
 !missing-selector! ENManager::exposureNotificationEnabled not bound
 !missing-selector! ENManager::exposureNotificationStatus not bound
 !missing-selector! ENManager::getDiagnosisKeysWithCompletionHandler: not bound
-!missing-selector! ENManager::getExposureInfoFromSummary:userExplanation:completionHandler: not bound
 !missing-selector! ENManager::getExposureWindowsFromSummary:completionHandler: not bound
 !missing-selector! ENManager::getTestDiagnosisKeysWithCompletionHandler: not bound
 !missing-selector! ENManager::getUserTraveledWithCompletionHandler: not bound
