@@ -142,5 +142,4 @@
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
 !missing-type! NSPresentationIntent not bound
-## appended from unclassified file
-## appended from unclassified file
+!extra-enum-value! Managed value 1 for NSItemProviderRepresentationVisibility.Team is available for the current platform while the value in the native header is not
