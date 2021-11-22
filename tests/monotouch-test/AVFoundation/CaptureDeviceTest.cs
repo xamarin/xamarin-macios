@@ -11,6 +11,7 @@ namespace MonoTouchFixtures.AVFoundation {
 	[Preserve (AllMembers = true)]
 	public class CaptureDeviceTest {
 
+#if !NET
 		void Compare (NSString constant, AVMediaTypes value)
 		{
 			Assert.That (AVCaptureDevice.GetDefaultDevice (constant), Is.EqualTo (AVCaptureDevice.GetDefaultDevice (value)), value.ToString ());
@@ -45,6 +46,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				Compare (AVMediaType.TimedMetadata, AVMediaTypes.TimedMetadata);
 #endif
 		}
+#endif // !NET
 	}
 }
 #endif

@@ -465,9 +465,6 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>tools\linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="Errors.Designer.cs">
-      <DependentUpon>Errors.resx</DependentUpon>
-    </Compile>
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
       <Link>tools\linker\ScanTypeReferenceStep.cs</Link>
     </Compile>

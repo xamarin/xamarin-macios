@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_PHOTOS && !__TVOS__
+#if HAS_PHOTOS && !__TVOS__ && HAS_UIKIT
 
 using System;
 using System.Linq;

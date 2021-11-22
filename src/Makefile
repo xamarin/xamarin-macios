@@ -623,6 +623,7 @@ $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamari
 		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
+ifdef INCLUDE_MAC
 DOTNET_TARGETS += \
 	$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll \
 	$(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac.dll \
@@ -638,6 +639,8 @@ DOTNET_TARGETS_DIRS += \
 	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0 \
 	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0) \
 
+endif
+
 MAC_VARIANTS_TARGETS = \
 	$(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll \
@@ -645,8 +648,10 @@ MAC_VARIANTS_TARGETS = \
 	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
 
 ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_MAC
 INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
+endif
 endif
 
 MAC_TARGETS_DIRS += \
@@ -731,8 +736,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc: $(TOP)/Make.
 $(MAC_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
+ifdef INCLUDE_MAC
 install-mac: $(MAC_TARGETS)
 all-mac: $(MAC_TARGETS)
+endif
 
 #
 # Xamarin.WatchOS
