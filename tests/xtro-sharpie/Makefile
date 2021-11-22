@@ -141,6 +141,7 @@ report-short:
 
 ifdef INCLUDE_IOS
 PCH_FILES+=$(XIOS_PCH)
+INCLUDED_PLATFORMS+=iOS
 
 classify-ios:
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
@@ -150,6 +151,7 @@ endif
 
 ifdef INCLUDE_TVOS
 PCH_FILES+=$(XTVOS_PCH)
+INCLUDED_PLATFORMS+=tvOS
 
 classify-tvos:
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
@@ -159,6 +161,7 @@ endif
 
 ifdef INCLUDE_WATCH
 PCH_FILES+=$(XWATCHOS_PCH)
+INCLUDED_PLATFORMS+=watchOS
 
 classify-watchos:
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XWATCHOS_PCH) $(XWATCHOS)
@@ -168,6 +171,7 @@ endif
 
 ifdef INCLUDE_MAC
 PCH_FILES+=$(XMACOS_PCH)
+INCLUDED_PLATFORMS+=macOS
 classify-macos:
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACOS_PCH) $(XMACOS)
 else
@@ -176,6 +180,7 @@ endif
 
 ifdef INCLUDE_MACCATALYST
 PCH_FILES+=$(XMACCATALYST_PCH)
+INCLUDED_PLATFORMS+=MacCatalyst
 classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH)
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACCATALYST_PCH) $(XMACCATALYST)
 else
@@ -185,7 +190,7 @@ endif
 classify: build $(PCH_FILES)
 	rm -f $(ANNOTATIONS_DIR)/*.unclassified
 	$(MAKE) -j8 classify-ios classify-tvos classify-watchos classify-macos classify-maccatalyst
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR))
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) $(INCLUDED_PLATFORMS)
 	rm -f $(ANNOTATIONS_DIR)/*.raw
 
 insane:
