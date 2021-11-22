@@ -790,6 +790,7 @@
 			<_AbsolutePublishDir Condition="!$([System.IO.Path]::IsPathRooted ('$(_AbsolutePublishDir)'))">$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\$(PublishDir)'))</_AbsolutePublishDir>
 			<!-- Compute the relative path to the publish directory ('PublishDir' is by default a relative path, but the developer might use an absolute path) -->
 			<_RelativePublishDir>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory),$(_AbsolutePublishDir)))</_RelativePublishDir>
+			<_RelativePublishDir>$([MSBuild]::EnsureTrailingSlash($(_RelativePublishDir)))</_RelativePublishDir>
 			<!-- Compute the relative path of the app bundle relative to the publish directory. The _AppBundlePath is relative to the project directory, so to compute this we need to have both app bundle path and the publish directory as absolute paths first. -->
 			<_RelativeAppBundlePath>$([MSBuild]::MakeRelative($(_AbsolutePublishDir),$(MSBuildProjectDirectory)/$(_AppBundlePath)))</_RelativeAppBundlePath>
 
