@@ -8,6 +8,8 @@ SHARPIE ?= sharpie
 
 XCODE=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
+ANNOTATIONS_DIR=.
+
 all-local::
 
 clean-local::
@@ -132,7 +134,7 @@ wrench: classify
 
 report: build
 	rm -rf report/
-	$(MONO) xtro-report/bin/Debug/xtro-report.exe .
+	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(ANNOTATIONS_DIR) report
 
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
@@ -141,7 +143,7 @@ ifdef INCLUDE_IOS
 PCH_FILES+=$(XIOS_PCH)
 
 classify-ios:
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 else
 classify-ios: ; @true
 endif
@@ -150,7 +152,7 @@ ifdef INCLUDE_TVOS
 PCH_FILES+=$(XTVOS_PCH)
 
 classify-tvos:
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 else
 classify-tvos: ; @true
 endif
@@ -159,7 +161,7 @@ ifdef INCLUDE_WATCH
 PCH_FILES+=$(XWATCHOS_PCH)
 
 classify-watchos:
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XWATCHOS_PCH) $(XWATCHOS)
 else
 classify-watchos: ; @true
 endif
@@ -167,7 +169,7 @@ endif
 ifdef INCLUDE_MAC
 PCH_FILES+=$(XMACOS_PCH)
 classify-macos:
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACOS_PCH) $(XMACOS)
 else
 classify-macos: ; @true
 endif
@@ -175,16 +177,16 @@ endif
 ifdef INCLUDE_MACCATALYST
 PCH_FILES+=$(XMACCATALYST_PCH)
 classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH) $(XMACCATALYST)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACCATALYST_PCH) $(XMACCATALYST)
 else
 classify-maccatalyst: ; @true
 endif
 
 classify: build $(PCH_FILES)
-	rm -f *.unclassified
+	rm -f $(ANNOTATIONS_DIR)/*.unclassified
 	$(MAKE) -j8 classify-ios classify-tvos classify-watchos classify-macos classify-maccatalyst
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe .
-	rm -f *.raw
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR))
+	rm -f $(ANNOTATIONS_DIR)/*.raw
 
 insane:
 	XTRO_SANITY_SKIP=1 make all
