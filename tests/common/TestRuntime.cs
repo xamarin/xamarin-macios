@@ -1019,7 +1019,7 @@ partial class TestRuntime
 			});
 		}
 
-		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video)) {
+		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ())) {
 		case AVAuthorizationStatus.Restricted:
 		case AVAuthorizationStatus.Denied:
 			if (assert_granted)
