@@ -34,6 +34,9 @@
     <Compile Include="..\..\..\..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\..\tools\common\TargetFramework.cs">
       <Link>TargetFramework.cs</Link>
     </Compile>

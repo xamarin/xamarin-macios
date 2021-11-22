@@ -37,10 +37,11 @@ namespace Introspection {
 		protected Version Maximum { get; set; }
 #if NET
 		protected Func<OSPlatformAttribute, bool> Filter { get; set; }
+		protected ApplePlatform Platform { get; set; }
 #else
 		protected Func<AvailabilityBaseAttribute, bool> Filter { get; set; }
+		protected PlatformName Platform { get; set; }
 #endif
-		protected ApplePlatform Platform { get; set; }
 
 		public ApiAvailabilityTest ()
 		{
@@ -294,7 +295,8 @@ namespace Introspection {
 #else
 				// FIXME should be `<=` but that another large change best done in a different PR
 				bool isAvailableBeforeMinimum = false;
-				if ((aa.AvailabilityKind == AvailabilityKind.Introduced) && (aa.Version < Minimum)) {
+				var aaVersion = aa.Version;
+				if ((aa.AvailabilityKind == AvailabilityKind.Introduced) && (aaVersion < Minimum)) {
 					switch (aa.Architecture) {
 					case PlatformArchitecture.All:
 					case PlatformArchitecture.None:
