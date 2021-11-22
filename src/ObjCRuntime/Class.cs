@@ -358,7 +358,7 @@ namespace ObjCRuntime {
 			return -1;
 		}
 
-		internal unsafe static Type? FindType (IntPtr @class, out bool is_custom_type)
+		internal unsafe static Type? FindType (NativeHandle @class, out bool is_custom_type)
 		{
 			var map = Runtime.options->RegistrationMap;
 
