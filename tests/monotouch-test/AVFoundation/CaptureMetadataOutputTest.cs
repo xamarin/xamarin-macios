@@ -96,10 +96,10 @@ namespace MonoTouchFixtures.AVFoundation {
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Ignore ("This test only runs on device (requires camera access)");
 
-			TestRuntime.RequestCameraPermission (AVMediaType.Video, true);
+			TestRuntime.RequestCameraPermission (AVMediaTypes.Video.GetConstant (), true);
 
 			using (var captureSession = new AVCaptureSession ()) {
-				using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
+				using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaTypes.Video.GetConstant ())) {
 
 					NSError error;
 					using (var videoInput = new AVCaptureDeviceInput (videoDevice, out error)) {

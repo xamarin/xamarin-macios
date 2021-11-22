@@ -4256,6 +4256,9 @@ class C {
 			var csproj = Path.Combine (testDir, "framework-test-mac.csproj");
 			var arguments = new string [] {
 				"/p:ArchiveOnBuild=true",
+				"/p:EnableCodeSigning=false",
+				"/p:EnablePackageSigning=false",
+				"/p:_CodeSigningKey=-",
 			};
 			XBuild.BuildXM (csproj, "Release", "x86", arguments: arguments, timeout: TimeSpan.FromMinutes (15));
 			DirectoryAssert.Exists(Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS", "bin", "x86", "Release", "XTest.framework.dSYM"));

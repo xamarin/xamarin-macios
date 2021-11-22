@@ -1,6 +1,4 @@
 ## no point in adding API that are already deprecated to a new platform
-!missing-field! PKPaymentNetworkCarteBancaire not bound
-!missing-field! PKPaymentNetworkCarteBancaires not bound
 !missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: not found
 !missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didSelectPaymentMethod:completion: not found
 !missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didSelectShippingContact:completion: not found
@@ -9,9 +7,6 @@
 !missing-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didSelectPaymentMethod:completion: not found
 !missing-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didSelectShippingContact:completion: not found
 !missing-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didSelectShippingMethod:completion: not found
-!missing-selector! PKPass::paymentPass not bound
-!missing-selector! PKPaymentMethod::paymentPass not bound
-!missing-selector! PKPaymentPass::activationState not bound
 !missing-selector! +PKPassLibrary::isPaymentPassActivationAvailable not bound
 !missing-selector! PKContact::setSupplementarySubLocality: not bound
 !missing-selector! PKContact::supplementarySubLocality not bound
@@ -30,7 +25,6 @@
 
 ## enum only used in API not available on macOS
 !missing-enum! PKAddressField not bound
-!missing-enum! PKPaymentPassActivationState not bound
 !missing-enum! PKDisbursementRequestSchedule not bound
 
 ## all members are decorated but not the type themselves

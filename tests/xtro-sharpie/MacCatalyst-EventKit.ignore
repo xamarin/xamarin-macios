@@ -1,6 +1,3 @@
-# It's in the documentation and headers, but throws a "+[EKCalendar calendarWithEventStore:]: unrecognized selector" exception at runtime
-!missing-selector! +EKCalendar::calendarWithEventStore: not bound
-
 # This is only used as an output in a manual binding so it doesn't need the availability
 !missing-enum! EKAlarmType not bound
 

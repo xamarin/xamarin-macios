@@ -7,10 +7,12 @@
 #
 parameters:
 - name: runTests
+  displayName: Run Simulator Tests
   type: boolean
   default: true
 
 - name: runDeviceTests
+  displayName: Run Device Tests (includes macOS)
   type: boolean
   default: true
 
@@ -19,14 +21,17 @@ parameters:
   default: true 
 
 - name: runSamples
+  displayName: Run Samples
   type: boolean
   default: false
   
 - name: provisionatorChannel
+  displayName: Provisionator channel to use 
   type: string
   default: 'latest'
 
 - name: enableDotnet
+  displayName: Build Dotnet 
   type: boolean
   default: true
 
@@ -45,6 +50,7 @@ parameters:
 # device tests, no more copy paste, just add the new config.
 
 - name: deviceTestsConfigurations
+  displayName: Device test configurations to run
   type: object
   default: [
     {
@@ -75,6 +81,7 @@ parameters:
     }]
 
 - name: macTestsConfigurations
+  displayName: macOS test configurations to run
   type: object
   default: [
     {

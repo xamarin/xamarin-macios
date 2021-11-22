@@ -95,7 +95,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 
 		VTDecompressionSession CreateSession (AVAsset asset)
 		{
-			var videoTracks = asset.TracksWithMediaType (AVMediaType.Video);
+			var videoTracks = asset.TracksWithMediaType (AVMediaTypes.Video.GetConstant ());
 			var track = videoTracks[0];
 			var formatDescriptor = track.FormatDescriptions[0] as CMVideoFormatDescription;
 
