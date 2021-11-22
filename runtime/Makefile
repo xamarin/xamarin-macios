@@ -402,7 +402,7 @@ $(eval $(call LibXamarinTemplate,tvsimulator,TVSIMULATOR,_DEBUG,-debug))
 MAC_ARCHITECTURES = x86_64 arm64
 
 CLANG_ARCH = $(addprefix -arch ,$(MAC_ARCHITECTURES))
-MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION)
 
 MAC_SHIPPED_HEADERS = xamarin/launch.h
 
