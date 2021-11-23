@@ -163,7 +163,7 @@ steps:
       $gists["index"] = $url
 
       # similar dict but for the html links from vsdrops
-      $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/apicomparison/;/"
+      $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/apigeneratordiff/;/"
       $html =  @{
         "iOS" = $apiDiffRoot + "ios-api-diff.html"; 
         "macOS" = $apiDiffRoot + "mac-api-diff.html";

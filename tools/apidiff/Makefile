@@ -620,7 +620,7 @@ dotnet-markdown: ; @true
 dotnet-legacy-markdown: ; @true
 endif
 
-all-markdown: ios-markdown tvos-markdown watchos-markdown macos-markdown maccat-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
+all-markdowns: ios-markdown tvos-markdown watchos-markdown macos-markdown maccat-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
 
 $(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
@@ -660,7 +660,7 @@ endif
 endif
 	$(Q) $(MAKE) $(UNZIP_STAMPS)
 	$(Q) $(MAKE) all -j8
-	$(Q) $(MAKE) all-markdown
+	$(Q) $(MAKE) all-markdowns
 	$(Q) $(CP) api-diff.html index.html
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"

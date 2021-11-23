@@ -245,8 +245,8 @@ fi
 
 # Now create the markdowns for the current build against those references
 echo "${BLUE}Creating Markdowns...${CLEAR}"
-if ! make all-markdown -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
+if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
 	EC=$?
-	report_error_line "${RED}Failed to run apidiff${CLEAR}"
+	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"
 fi
