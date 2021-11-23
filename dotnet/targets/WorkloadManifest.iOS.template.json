@@ -5,7 +5,7 @@
 			"description": ".NET SDK Workload for building @PLATFORM@ applications.",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
-				"microsoft-@PLATFORM@-windows-sdk",
+				"Microsoft.@PLATFORM@.Windows.Sdk.Aliased",
 				"Microsoft.@PLATFORM@.Ref",
 				"Microsoft.@PLATFORM@.Runtime.ios-arm",
 				"Microsoft.@PLATFORM@.Runtime.ios-arm64",
@@ -23,7 +23,7 @@
 			"kind": "sdk",
 			"version": "@VERSION@"
 		},
-		"microsoft-@PLATFORM@-windows-sdk": {
+		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased": {
 			"kind": "sdk",
 			"version": "@VERSION@",
 			"alias-to": {
