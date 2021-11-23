@@ -867,12 +867,8 @@ namespace AppKit {
 #region NSWindow
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : ulong {
-#else
-	public enum NSWindowStyle : int {
-#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
@@ -924,12 +920,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : ulong {
-#else
-	public enum NSWindowNumberListOptions : int {
-#endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
 	}
@@ -1336,12 +1328,8 @@ namespace AppKit {
 #endif // !NET && MONOMAC
 
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : long {
-#else
-	public enum NSTextMovement : int {
-#endif
 		Other = 0,
 		Return = 0x10,
 		Tab = 0x11,
