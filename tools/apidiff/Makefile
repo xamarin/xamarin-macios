@@ -548,11 +548,11 @@ merger.exe: merger.cs
 
 ifdef INCLUDE_IOS
 ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(CURDIR)/diff/xi/Xamarin.iOS/ ios
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(APIDIFF_DIR)/diff/xi/Xamarin.iOS/ ios
 dotnet-ios-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Dotnet $(CURDIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/ dotnet-ios
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/ dotnet-ios
 dotnet-legacy-ios-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Stable.Legacy $(CURDIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/ dotnet-legacy-ios
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/ dotnet-legacy-ios
 else
 ios-markdown: ; @true
 dotnet-ios-markdown: ; @true
@@ -561,11 +561,11 @@ endif
 
 ifdef INCLUDE_TVOS
 tvos-markdown: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(CURDIR)/diff/xi/Xamarin.TVOS/ tvos
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(APIDIFF_DIR)/diff/xi/Xamarin.TVOS/ tvos
 dotnet-tv-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS.Dotnet $(CURDIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/ dotnet-tvos
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/ dotnet-tvos
 dotnet-legacy-tv-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS.Stable.Legacy $(CURDIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/ dotnet-legacy-tvos
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/ dotnet-legacy-tvos
 else
 tvos-markdown: ; @true
 dotnet-tv-markdown: ; @true
@@ -574,21 +574,21 @@ endif
 
 ifdef INCLUDE_WATCH
 watchos-markdown: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(CURDIR)/diff/xi/Xamarin.WatchOS/ watchos
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(APIDIFF_DIR)/diff/xi/Xamarin.WatchOS/ watchos
 else
 watchos-markdown: ; @true
 endif
 
 ifdef INCLUDE_MACCATALYST
 maccat-markdown: merger.exe $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst $(CURDIR)/diff/xi/Xamarin.MacCatalyst/ maccat
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst $(APIDIFF_DIR)/diff/xi/Xamarin.MacCatalyst/ maccat
 dotnet-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Dotnet $(CURDIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/ dotnet-maccatalyst
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/ dotnet-maccatalyst
 dotnet-legacy-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Stable.Legacy $(CURDIR)/diff/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/ dotnet-legacy-maccatalyst
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/ dotnet-legacy-maccatalyst
 ifdef ENABLE_DOTNET
 dotnet-iOS-MacCatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(CURDIR)/diff/dotnet/iOS-MacCatalyst-diff/ dotnet-maccatios
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/ dotnet-maccatios
 else
 dotnet-iOS-MacCatalyst-markdown: ; @true
 endif # ENABLE_DOTNET
@@ -601,11 +601,11 @@ endif
 
 ifdef INCLUDE_MAC
 macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(CURDIR)/diff/xm/Xamarin.Mac/ macos
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(APIDIFF_DIR)/diff/xm/Xamarin.Mac/ macos
 dotnet-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac.Dotnet $(CURDIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/ dotnet-macos
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/ dotnet-macos
 dotnet-legacy-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac.Stable.Legacy $(CURDIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/ dotnet-legacy-macos
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/ dotnet-legacy-macos
 else
 macos-markdown: ; @true
 dotnet-macos-markdown: ; @true
