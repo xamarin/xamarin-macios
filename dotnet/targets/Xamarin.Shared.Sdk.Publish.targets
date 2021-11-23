@@ -4,6 +4,10 @@
 		<PropertyGroup>
 			<BuildIpa Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS'">true</BuildIpa>
 			<CreatePackage Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">true</CreatePackage>
+
+			<!-- Put packages in the publish directory unless asked to do otherwise -->
+			<IpaPackageDir Condition="'$(IpaPackageDir)' == '' And '$(IpaPackagePath)' == ''">$(PublishDir)</IpaPackageDir>
+			<PkgPackageDir Condition="'$(PkgPackageDir)' == '' And '$(PkgPackagePath)' == ''">$(PublishDir)</PkgPackageDir>
 		</PropertyGroup>
 	</Target>
 	<Target Name="Publish" DependsOnTargets="_PrePublish;Build">

@@ -2275,6 +2275,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_CreateInstaller" Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="Codesign;_CompileProductDefinition;_WriteAppManifest">
+		<PropertyGroup>
+			<PkgPackageDir Condition="'$(PkgPackageDir)' == ''">$(TargetDir)</PkgPackageDir>
+		</PropertyGroup>
 		<CreateInstallerPackage
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -2283,7 +2286,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			EnablePackageSigning="$(EnablePackageSigning)"
 			MainAssembly="$(TargetPath)"
 			Name="$(AssemblyName)"
-			OutputDirectory="$(TargetDir)"
+			OutputDirectory="$(PkgPackageDir)"
 			PackageSigningKey="$(PackageSigningKey)"
 			PackagingExtraArgs="$(PackagingExtraArgs)"
 			PkgPackagePath="$(PkgPackagePath)"
