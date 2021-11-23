@@ -66,8 +66,13 @@
     </PropertyGroup>
   </Target>
 
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+    <_IsDotNetSimulatorBuild Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">true</_IsDotNetSimulatorBuild>
+    <_IsDotNetSimulatorBuild Condition="'$(_IsDotNetSimulatorBuild)' == ''">false</_IsDotNetSimulatorBuild>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
-    <ComputedPlatform Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="'$(_IsDotNetSimulatorBuild)' == 'true'">iPhoneSimulator</ComputedPlatform>
     <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 
