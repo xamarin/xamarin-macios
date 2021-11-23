@@ -135,6 +135,7 @@ namespace Xamarin.Bundler {
 
 		public XamarinRuntime XamarinRuntime;
 		public bool? UseMonoFramework;
+		public string RuntimeIdentifier; // Only used for build-time --run-registrar support
 
 		// The bitcode mode to compile to.
 		// This variable does not apply to macOS, because there's no bitcode on macOS.
@@ -369,6 +370,9 @@ namespace Xamarin.Bundler {
 
 		public bool IsDeviceBuild {
 			get {
+				if (!string.IsNullOrEmpty (RuntimeIdentifier))
+					return !IsSimulatorBuild;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -385,6 +389,9 @@ namespace Xamarin.Bundler {
 
 		public bool IsSimulatorBuild {
 			get {
+				if (!string.IsNullOrEmpty (RuntimeIdentifier))
+					return RuntimeIdentifier.IndexOf ("simulator", StringComparison.OrdinalIgnoreCase) >= 0;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
