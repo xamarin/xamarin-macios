@@ -138,10 +138,10 @@ namespace Xamarin.Tests {
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
 			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("EmbeddedResources.Welcome.resources"), "libtest.a");
-			var asm_dir = Path.GetDirectoryName (asm);
-			Assert.That (Path.Combine (asm_dir!, "en-AU", "EmbeddedResources.resources.dll"), Does.Exist, "en-AU");
-			Assert.That (Path.Combine (asm_dir!, "de", "EmbeddedResources.resources.dll"), Does.Exist, "de");
-			Assert.That (Path.Combine (asm_dir!, "es", "EmbeddedResources.resources.dll"), Does.Exist, "es");
+			var asm_dir = Path.GetDirectoryName (asm)!;
+			Assert.That (Path.Combine (asm_dir, "en-AU", "EmbeddedResources.resources.dll"), Does.Exist, "en-AU");
+			Assert.That (Path.Combine (asm_dir, "de", "EmbeddedResources.resources.dll"), Does.Exist, "de");
+			Assert.That (Path.Combine (asm_dir, "es", "EmbeddedResources.resources.dll"), Does.Exist, "es");
 		}
 
 		[TestCase ("iOS")]
@@ -312,15 +312,15 @@ namespace Xamarin.Tests {
 				Assert.That (asm, Does.Exist, "Assembly existence");
 
 				// Verify that the resources have been linked away
-				var asmDir = Path.GetDirectoryName (asm);
+				var asmDir = Path.GetDirectoryName (asm)!;
 				var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for interdependent-binding-projects.dll");
 
-				var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir!, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+				var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				// The native library is removed from the resources by the linker
 				Assert.That (ad1.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test.dll");
 
-				var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir!, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+				var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				// The native library is removed from the resources by the linker
 				Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test2.dll");
 			} finally {
@@ -686,25 +686,39 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")] // https://github.com/xamarin/xamarin-macios/issues/12410
-		public void AppWithXCAssets (ApplePlatform platform, string runtimeIdentifiers)
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator15.0")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos15.0")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator15.0")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "iphoneos15.0")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "iphoneos15.0")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "macosx12.0")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx12.0")] // https://github.com/xamarin/xamarin-macios/issues/12410
+		public void AppWithXCAssets (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion)
+		{
+			// Add the assets before we build the project
+			TestXCAssets (platform, runtimeIdentifiers, sdkVersion, true);
+		}
+
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator15.0")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos15.0")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator15.0")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "iphoneos15.0")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "iphoneos15.0")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "macosx12.0")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx12.0")] // https://github.com/xamarin/xamarin-macios/issues/12410
+		public void AppWithXCAssetsAddedTwice (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion)
+		{
+			// Build the project, add the assets, then build again
+			TestXCAssets (platform, runtimeIdentifiers, sdkVersion, false);
+		}
+
+		public void TestXCAssets (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion, bool startWithAssets)
 		{
 			var project = "AppWithXCAssets";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 
-			DeleteAssets (project_path);
-			CopyAssets (project_path);
-
-			Clean (project_path);
-
-			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+			ConfigureAssets (project_path, runtimeIdentifiers, startWithAssets);
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
@@ -714,7 +728,7 @@ namespace Xamarin.Tests {
 			var assetsCar = Path.Combine (resourcesDirectory, "Assets.car");
 			Assert.That (assetsCar, Does.Exist, "Assets.car");
 
-			var doc = ProcessAssets (assetsCar);
+			var doc = ProcessAssets (assetsCar, sdkVersion);
 			Assert.IsNotNull (doc, "There was an issue processing the asset binary.");
 
 			var foundAssets = FindAssets (doc);
@@ -722,7 +736,7 @@ namespace Xamarin.Tests {
 			// Seems the 2 vectors are not being consumed in MacCatalyst but they still appear in the image Datasets
 			var TotalUniqueAssets = platform == ApplePlatform.MacCatalyst ? 14 : 16;
 
-			Assert.AreEqual (TotalUniqueAssets, foundAssets.Count, $"There were a different number of assets found: {foundAssets.Count}");
+			Assert.AreEqual (TotalUniqueAssets, foundAssets.Count, "Wrong number of assets found");
 			Assert.IsFalse (foundAssets.Contains ("Data.DS_StoreDataTest"), "DS_Store files should not be included.");
 
 			var arm64txt = Path.Combine (resourcesDirectory, "arm64.txt");
@@ -731,6 +745,26 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm64")), File.Exists (arm64txt), "arm64.txt");
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm")), File.Exists (armtxt), "arm.txt");
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
+		}
+
+		void ConfigureAssets (string project_path, string runtimeIdentifiers, bool startWithAssets)
+		{
+			// We either want the assets added before the build, or we will be adding them after the build
+			if (startWithAssets)
+				CopyAssets (project_path);
+			else
+				DeleteAssets (project_path);
+
+			Clean (project_path);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+
+			if (!startWithAssets) {
+				CopyAssets (project_path);
+				// Building the project twice without cleaning in between fails: https://github.com/xamarin/maccore/issues/2530
+				Clean (project_path);
+				DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+			}
 		}
 
 		void DeleteAssets (string project_path)
@@ -748,36 +782,35 @@ namespace Xamarin.Tests {
 		void CopyAssets (string project_path)
 		{
 			DirectoryInfo testingAssetsDir = new DirectoryInfo (Path.Combine (project_path, @"../../TestingAssets"));
-			string xcassetsDir = Path.Combine (project_path, @"../Assets.xcassets");
+			DirectoryInfo xcassetsDir = new DirectoryInfo (Path.Combine (project_path, @"../Assets.xcassets"));
 
-			if (!testingAssetsDir.Exists)
-				Assert.Fail ($"TestingAssets directory does not exist or could not be found: {testingAssetsDir}");
-
-			if (!Directory.Exists (xcassetsDir))
-				CopyDirectoryContents (testingAssetsDir, xcassetsDir);
+			Assert.That (testingAssetsDir, Does.Exist);
+			if (!Directory.Exists (xcassetsDir.FullName))
+				MakeSymlinks (testingAssetsDir.FullName, xcassetsDir.FullName);
+			Assert.That (xcassetsDir, Does.Exist);
 		}
 
-		void CopyDirectoryContents (DirectoryInfo dir, string DestDirectory) {
-			Directory.CreateDirectory (DestDirectory);
-			foreach (FileInfo file in dir.GetFiles ()) {
-				string tempPath = Path.Combine (DestDirectory, file.Name);
-				file.CopyTo (tempPath, false);
-			}
-			foreach (DirectoryInfo subDir in dir.GetDirectories ()){
-				CopyDirectoryContents (subDir, Path.Combine (DestDirectory, subDir.Name));
-			}
+		void MakeSymlinks (string sourceDir, string destDir)
+		{
+			var output = new StringBuilder ();
+			var executable = "ln";
+			var arguments = new string [] { "-s", sourceDir, destDir };
+			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (60)).Result;
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			return;
 		}
 
-		JsonDocument ProcessAssets (string assetsPath) {
+		JsonDocument ProcessAssets (string assetsPath, string sdkVersion) {
 			var output = new StringBuilder ();
 			var executable = "xcrun";
-			var arguments = new string [] { "--sdk", "iphoneos", "assetutil", "--info", assetsPath };
+			var arguments = new string [] { "--sdk", sdkVersion, "assetutil", "--info", assetsPath };
 			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			var s = output.ToString ();
 
 			// This Execution call produces an output with an objc warning. We just want the json below it.
-			if (output.ToString ().StartsWith ("objc"))
-				output.Remove (0, output.ToString ().IndexOf ('\n'));
+			if (s.StartsWith ("objc"))
+				output.Remove (0, s.IndexOf (Environment.NewLine) + 1);
 
 			return JsonDocument.Parse (output.ToString ());
 		}
@@ -829,19 +862,19 @@ namespace Xamarin.Tests {
 		}
 
 		static XCAssetTarget[] XCAssetTargets = {
-			new XCAssetTarget ("Image", "RenditionName", new string [] { "samplejpeg.jpeg", "samplejpg.jpg",
-				"samplepdf.pdf", "samplepng2.png", "spritejpeg.jpeg", "loopsvg.svg" }),
+			new ("Image", "RenditionName", new string [] { "samplejpeg.jpeg", "samplejpg.jpg",
+				"samplepdf.pdf", "samplepng2.png", "spritejpeg.jpeg", "xamlogo.svg" }),
 
-			new XCAssetTarget ("Data", "Name", new string [] { "BmpImageDataTest", "JsonDataTest", "DS_StoreDataTest",
+			new ("Data", "Name", new string [] { "BmpImageDataTest", "JsonDataTest", "DS_StoreDataTest",
 				"DngImageDataTest", "EpsImageDataTest", "TiffImageDataTest" }),
 
-			new XCAssetTarget ("Color", "Name", new string [] { "ColorTest" }),
+			new ("Color", "Name", new string [] { "ColorTest" }),
 
-			new XCAssetTarget ("Contents", "Name", new string [] { "SpritesTest" }),
+			new ("Contents", "Name", new string [] { "SpritesTest" }),
 
-			new XCAssetTarget ("Texture Rendition", "Name", new string [] { "TextureTest" }),
+			new ("Texture Rendition", "Name", new string [] { "TextureTest" }),
 
-			new XCAssetTarget ("Vector", "RenditionName", new string [] { "samplepdf.pdf", "loopsvg.svg" }),
+			new ("Vector", "RenditionName", new string [] { "samplepdf.pdf", "xamlogo.svg" }),
 		};
 
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
