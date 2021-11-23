@@ -412,6 +412,9 @@ function New-GitHubSummaryComment {
         $APIDiff="",
 
         [string]
+        $APIGeneratorDiffJson="",
+
+        [string]
         $APIGeneratorDiff=""
     )
 
@@ -445,6 +448,11 @@ function New-GitHubSummaryComment {
         WriteDiffs $sb $APIDiff
     } else {
         Write-Host "API diff urls have not been provided."
+    }
+    if (-not [string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
+        WriteDiffs $sb $APIGeneratorDiffJson
+    } else {
+        Write-Host "API Generator diff urls have not been provided."
     }
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
         Write-Host "Parsing API diff in path $APIGeneratorDiff"
