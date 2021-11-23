@@ -781,6 +781,8 @@
 			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != ''">true</_RunAotCompiler>
 			<!-- We need it for Mac Catalyst on arm64 -->
 			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">true</_RunAotCompiler>
+			<!-- We need it for iOS/tvOS simulator on arm64 -->
+			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64' Or '$(RuntimeIdentifier)' == 'tvossimulator-arm64'">true</_RunAotCompiler>
 		</PropertyGroup>
 
 		<PropertyGroup>
