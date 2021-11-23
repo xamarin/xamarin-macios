@@ -686,26 +686,26 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator15.0")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos15.0")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator15.0")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "iphoneos15.0")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "iphoneos15.0")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64", "macosx12.0")]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx12.0")] // https://github.com/xamarin/xamarin-macios/issues/12410
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "macosx")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "macosx")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "macosx")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx")] // https://github.com/xamarin/xamarin-macios/issues/12410
 		public void AppWithXCAssets (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion)
 		{
 			// Add the assets before we build the project
 			TestXCAssets (platform, runtimeIdentifiers, sdkVersion, true);
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator15.0")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos15.0")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator15.0")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "iphoneos15.0")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "iphoneos15.0")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64", "macosx12.0")]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx12.0")] // https://github.com/xamarin/xamarin-macios/issues/12410
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "macosx")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "macosx")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "macosx")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx")] // https://github.com/xamarin/xamarin-macios/issues/12410
 		public void AppWithXCAssetsAddedTwice (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion)
 		{
 			// Build the project, add the assets, then build again
@@ -728,7 +728,7 @@ namespace Xamarin.Tests {
 			var assetsCar = Path.Combine (resourcesDirectory, "Assets.car");
 			Assert.That (assetsCar, Does.Exist, "Assets.car");
 
-			var doc = ProcessAssets (assetsCar, sdkVersion);
+			var doc = ProcessAssets (assetsCar, GetFullSdkVersion (sdkVersion));
 			Assert.IsNotNull (doc, "There was an issue processing the asset binary.");
 
 			var foundAssets = FindAssets (doc);
@@ -799,6 +799,14 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 			return;
 		}
+
+		string GetFullSdkVersion (string sdkVersion) => sdkVersion switch {
+			"iphonesimulator" => sdkVersion + Configuration.sdk_version,
+			"iphoneos" => sdkVersion + Configuration.sdk_version,
+			"appletvsimulator" => sdkVersion + Configuration.tvos_sdk_version,
+			"macosx" => sdkVersion + Configuration.macos_sdk_version,
+			_ => throw new ArgumentOutOfRangeException (nameof (sdkVersion), $"Not expected sdkVersion: {sdkVersion}"),
+		};
 
 		JsonDocument ProcessAssets (string assetsPath, string sdkVersion) {
 			var output = new StringBuilder ();
