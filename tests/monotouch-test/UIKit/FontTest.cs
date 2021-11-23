@@ -14,7 +14,7 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class FontTest {
 		
-		bool AssertNotBrokenFontWithSize ()
+		void AssertNotBrokenFontWithSize ()
 		{
 #if __MACCATALYST__ || __MACOS__
 			if (TestRuntime.CheckXcodeVersion (11, 0) && TestRuntime.CheckXcodeVersion (12, 0)) {
