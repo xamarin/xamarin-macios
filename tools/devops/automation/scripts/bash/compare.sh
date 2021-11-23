@@ -75,6 +75,12 @@ cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.md "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
+# Debugging
+echo "*** List files inside ./tools/comparison/apidiff ***"
+ls -R ./tools/comparison/apidiff
+echo "*** List files inside API_COMPARISON ***"
+ls -R $API_COMPARISON
+
 # sed -i 's/href='\''dotnet/href='\''$URL_PREFIX\/dotnet/' $API_URL
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
