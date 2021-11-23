@@ -1446,6 +1446,9 @@ namespace Xamarin.Bundler {
 				if (Platform == ApplePlatform.MacCatalyst)
 					return IsArchEnabled (Abi.ARM64);
 
+				if (IsSimulatorBuild && IsArchEnabled (Abi.ARM64))
+					return true;
+
 				return IsDeviceBuild;
 			}
 
