@@ -155,7 +155,7 @@ report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
 
 report: report/index.html
 
-dotnet-report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
+dotnet-report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-dotnet-classify
 	rm -rf report-dotnet
 	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(DOTNET_ANNOTATIONS_DIR) report-dotnet
 
