@@ -30,7 +30,11 @@ namespace Network {
 	public class NWListener : NativeObject {
 		bool connectionHandlerWasSet = false;
 		object connectionHandlerLock = new object ();
+#if NET
+		internal NWListener (IntPtr handle, bool owns) : base (handle, owns)
+#else
 		public NWListener (IntPtr handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 

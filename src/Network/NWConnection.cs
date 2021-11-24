@@ -50,7 +50,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWConnection : NativeObject {
+#if NET
+		internal NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_connection_t nw_connection_create (nw_endpoint_t endpoint, nw_parameters_t parameters);

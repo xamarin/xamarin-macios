@@ -39,7 +39,7 @@ namespace CoreGraphics {
 
 	// CGDataConsumer.h
 	public partial class CGDataConsumer : NativeObject {
-#if !XAMCORE_4_0
+#if !NET
 		public CGDataConsumer (IntPtr handle)
 			: base (handle, false)
 		{

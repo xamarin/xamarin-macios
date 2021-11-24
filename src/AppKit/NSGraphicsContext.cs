@@ -41,7 +41,7 @@ namespace AppKit {
 		}
 
 		public virtual CGContext GraphicsPort {
-			get { return new CGContext (GraphicsPortHandle); }
+			get { return new CGContext (GraphicsPortHandle, false); }
 		}
 	}
 }

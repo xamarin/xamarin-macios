@@ -20,7 +20,11 @@ namespace Network {
 		public static NWPrivacyContext Default =>
 			new NWPrivacyContext (NWPrivacyContextConstants._DefaultContext, false); 
 
+#if NET
+		internal NWPrivacyContext (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWPrivacyContext (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_privacy_context nw_privacy_context_create (string description);

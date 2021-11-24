@@ -30,7 +30,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWParameters : NativeObject {
+#if NET
+		internal NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		static unsafe BlockLiteral *DEFAULT_CONFIGURATION () => (BlockLiteral *) NWParametersConstants._DefaultConfiguration;
 

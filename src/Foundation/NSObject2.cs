@@ -180,10 +180,21 @@ namespace Foundation {
 			InitializeObject (alloced);
 		}
 		
-		public NSObject (IntPtr handle) : this (handle, false) {
+#if NET
+		protected internal NSObject (IntPtr handle)
+#else
+		public NSObject (IntPtr handle)
+#endif
+			: this (handle, false)
+		{
 		}
 		
-		public NSObject (IntPtr handle, bool alloced) {
+#if NET
+		protected NSObject (IntPtr handle, bool alloced)
+#else
+		public NSObject (IntPtr handle, bool alloced)
+#endif
+		{
 			this.handle = handle;
 			InitializeObject (alloced);
 		}

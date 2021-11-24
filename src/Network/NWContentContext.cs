@@ -31,7 +31,11 @@ namespace Network {
 #endif
 	public class NWContentContext : NativeObject {
 		bool global;
+#if NET
+		internal NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+#else
 		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 

@@ -73,7 +73,7 @@ namespace CoreGraphics {
 		public readonly static CGColorSpace Null = CreateNull ();
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		public CGColorSpace (IntPtr handle)
 			: base (handle, false)
 		{
