@@ -7,3 +7,4 @@
 !missing-enum-value! AVAudioSessionCategoryOptions native value AVAudioSessionCategoryOptionDefaultToSpeaker = 8 not bound
 !missing-enum-value! AVAudioSessionCategoryOptions native value AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers = 17 not bound
 !missing-enum-value! AVAudioSessionPortOverride native value AVAudioSessionPortOverrideSpeaker = 1936747378 not bound
+!extra-enum-value! Managed value -11859 for AVError.RecordingAlreadyInProgress is available for the current platform while the value in the native header is not

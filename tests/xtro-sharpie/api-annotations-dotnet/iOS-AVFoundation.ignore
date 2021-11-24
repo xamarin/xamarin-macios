@@ -3,7 +3,6 @@
 !unknown-native-enum! AVVideoFieldMode bound
 
 ## from iOS 4.0 to 5.1
-!unknown-field! AVMediaTypeTimedMetadata bound
 
 ## no generator support for NSFastEnumeration / https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration

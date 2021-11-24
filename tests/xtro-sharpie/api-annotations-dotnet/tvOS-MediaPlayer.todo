@@ -7,3 +7,5 @@
 !deprecated-attribute-missing! MPVolumeView::setRouteButtonImage:forState: missing a [Deprecated] attribute
 !deprecated-attribute-missing! MPVolumeView::setShowsRouteButton: missing a [Deprecated] attribute
 !deprecated-attribute-missing! MPVolumeView::showsRouteButton missing a [Deprecated] attribute
+!missing-protocol! MPMediaPlayback not bound
+!missing-protocol-conformance! MPMusicPlayerController should conform to MPMediaPlayback

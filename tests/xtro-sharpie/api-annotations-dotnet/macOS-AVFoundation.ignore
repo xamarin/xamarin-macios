@@ -1,6 +1,5 @@
 
 ## from iOS 4.0 to 5.1
-!unknown-field! AVMediaTypeTimedMetadata bound
 
 ## Won't be used as a Delegate protocol so no need to mark this one as abstract
 !incorrect-protocol-member! AVFragmentMinding::isAssociatedWithFragmentMinder is REQUIRED and should be abstract
