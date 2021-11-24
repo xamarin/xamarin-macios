@@ -1,4 +1,0 @@
-!extra-enum-value! Managed value -11 for LAStatus.WatchNotAvailable is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -12 for LAStatus.BiometryNotPaired is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -13 for LAStatus.BiometryDisconnected is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -14 for LAStatus.InvalidDimension is available for the current platform while the value in the native header is not
