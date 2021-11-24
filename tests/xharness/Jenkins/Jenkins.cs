@@ -184,6 +184,7 @@ namespace Xharness.Jenkins {
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro,
 				Timeout = TimeSpan.FromMinutes (15),
+				SupportsParallelExecution = false,
 			};
 
 			var runXtroReporter = new RunXtroTask (this, buildXtroTests, processManager, crashReportSnapshotFactory) {
@@ -203,6 +204,7 @@ namespace Xharness.Jenkins {
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro && !IncludeDotNet,
 				Timeout = TimeSpan.FromMinutes (15),
+				SupportsParallelExecution = false,
 			};
 
 			var runDotNetXtroReporter = new RunXtroTask (this, buildDotNetXtroTests, processManager, crashReportSnapshotFactory) {
