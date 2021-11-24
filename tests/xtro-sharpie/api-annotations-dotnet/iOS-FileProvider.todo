@@ -1,7 +1,0 @@
-!extra-enum-value! Managed value -1006 for NSFileProviderError.VersionOutOfDate is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -1007 for NSFileProviderError.DirectoryNotEmpty is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -2001 for NSFileProviderError.ProviderNotFound is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -2002 for NSFileProviderError.ProviderTranslocated is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -2003 for NSFileProviderError.OlderExtensionVersionRunning is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -2004 for NSFileProviderError.NewerExtensionVersionFound is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -2005 for NSFileProviderError.CannotSynchronize is available for the current platform while the value in the native header is not

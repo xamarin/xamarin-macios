@@ -1,5 +1,3 @@
-!extra-enum-value! Managed value -11872 for AVError.SessionHardwareCostOverage is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value -11873 for AVError.UnsupportedDeviceActiveFormat is available for the current platform while the value in the native header is not
 !deprecated-attribute-missing! AVAsset::naturalSize missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAssetWriter::finishWriting missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVPlayer::allowsAirPlayVideo missing a [Deprecated] attribute
@@ -14,4 +12,3 @@
 !deprecated-attribute-missing! AVPlayerItem::seekToTime:toleranceBefore:toleranceAfter: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVPlayerItem::selectedMediaOptionInMediaSelectionGroup: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVPlayerItemAccessLogEvent::numberOfSegmentsDownloaded missing a [Deprecated] attribute
-!extra-enum-value! Managed value -11860 for AVError.CreateContentKeyRequestFailed is available for the current platform while the value in the native header is not

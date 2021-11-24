@@ -7,7 +7,6 @@
 !extra-enum-value! Managed value 10003 for MTLFeatureSet.macOS_GPUFamily1_v3 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 10004 for MTLFeatureSet.macOS_GPUFamily1_v4 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 10005 for MTLFeatureSet.macOS_GPUFamily2_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 11 for MTLCommandBufferError.DeviceRemoved is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 11 for MTLFeatureSet.iOS_GPUFamily4_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 12 for MTLFeatureSet.iOS_GPUFamily1_v5 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 13 for MTLFeatureSet.iOS_GPUFamily2_v5 is available for the current platform while the value in the native header is not
