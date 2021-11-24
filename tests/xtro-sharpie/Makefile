@@ -17,9 +17,11 @@ clean-local::
 	rm -f *.tmp
 	rm -rf *os*.pch*
 
-bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build: $(wildcard *.cs)
-	$(Q) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore xtro-sharpie.sln
-	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln
+bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin/Debug/xtro-sanity.exe build: .stamp-build
+
+.stamp-build: $(wildcard *.cs)
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln /r /bl:$@.binlog
+	$(Q) touch $@
 
 XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/iOS/Xamarin.iOS.dll
 XIOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
@@ -45,7 +47,6 @@ XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
 
 $(XTVOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) -exclude RealityKit
-
 
 XMACOS ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll
 XMACOS_ARCH = x86_64
@@ -130,68 +131,68 @@ endif
 
 gen-all: gen-ios gen-tvos gen-watchos gen-macos gen-maccatalyst
 
-wrench: classify
+wrench:
+	$(MAKE) -j8 classify
 
-report: build
+report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
 	rm -rf report/
 	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(ANNOTATIONS_DIR) report
+
+report: report/index.html
 
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
 
 ifdef INCLUDE_IOS
-PCH_FILES+=$(XIOS_PCH)
 INCLUDED_PLATFORMS+=iOS
-
-classify-ios:
+CLASSIFY+=.stamp-classify-ios
+.stamp-classify-ios: bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+	rm -f $(ANNOTATIONS_DIR)/iOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
-else
-classify-ios: ; @true
+	$(Q) touch $@
 endif
 
 ifdef INCLUDE_TVOS
-PCH_FILES+=$(XTVOS_PCH)
 INCLUDED_PLATFORMS+=tvOS
-
-classify-tvos:
+CLASSIFY+=.stamp-classify-tvos
+.stamp-classify-tvos: bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+	rm -f $(ANNOTATIONS_DIR)/tvOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
-else
-classify-tvos: ; @true
+	$(Q) touch $@
 endif
 
 ifdef INCLUDE_WATCH
-PCH_FILES+=$(XWATCHOS_PCH)
 INCLUDED_PLATFORMS+=watchOS
-
-classify-watchos:
+CLASSIFY+=.stamp-classify-watchos
+.stamp-classify-watchos: bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
+	rm -f $(ANNOTATIONS_DIR)/watchOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XWATCHOS_PCH) $(XWATCHOS)
-else
-classify-watchos: ; @true
+	$(Q) touch $@
 endif
 
 ifdef INCLUDE_MAC
-PCH_FILES+=$(XMACOS_PCH)
 INCLUDED_PLATFORMS+=macOS
-classify-macos:
+CLASSIFY+=.stamp-classify-macos
+.stamp-classify-macos: bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
+	rm -f $(ANNOTATIONS_DIR)/macOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACOS_PCH) $(XMACOS)
-else
-classify-macos: ; @true
+	$(Q) touch $@
 endif
 
 ifdef INCLUDE_MACCATALYST
-PCH_FILES+=$(XMACCATALYST_PCH)
 INCLUDED_PLATFORMS+=MacCatalyst
-classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH)
+CLASSIFY+=.stamp-classify-maccatalyst
+.stamp-classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH) $(XMACCATALYST)
+	rm -f $(ANNOTATIONS_DIR)/MacCatalyst-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACCATALYST_PCH) $(XMACCATALYST)
-else
-classify-maccatalyst: ; @true
+	$(Q) touch $@
 endif
 
-classify: build $(PCH_FILES)
-	rm -f $(ANNOTATIONS_DIR)/*.unclassified
-	$(MAKE) -j8 classify-ios classify-tvos classify-watchos classify-macos classify-maccatalyst
+.stamp-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(CLASSIFY)
 	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) $(INCLUDED_PLATFORMS)
-	rm -f $(ANNOTATIONS_DIR)/*.raw
+	$(Q) touch $@
+
+classify: .stamp-classify
 
 insane:
 	XTRO_SANITY_SKIP=1 make all
@@ -199,7 +200,7 @@ insane:
 remove-empty:
 	find . -size 0 | xargs git rm
 
-all: classify report
+all: report
 
 .stamp-check-sharpie:
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie
@@ -208,9 +209,13 @@ all: classify report
 remove-empty-files:
 	find . -empty -exec git rm -f {} \;
 
-unclassified2todo:
-	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
-	$(MONO) u2todo.exe
+U2TODO = u2todo/bin/Debug/u2todo.exe
+$(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
+	$(Q) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) /bl:$@.binlog /r
+	$(Q) touch $@
+
+unclassified2todo: $(U2TODO)
+	$(MONO) $(U2TODO)
 	@for filename in $(git status -s | cut -c4- | grep .todo); do \
 		sort -o "$filename" "$filename"; \
 	done
