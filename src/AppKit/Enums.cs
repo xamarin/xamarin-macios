@@ -546,13 +546,10 @@ namespace AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Native]
 	public enum NSKey : ulong {
-#else
-	public enum NSKey : int
-#endif
 		A              = 0x00,
 		S              = 0x01,
 		D              = 0x02,
@@ -671,6 +668,7 @@ namespace AppKit {
 		DownArrow      = 0x7D,
 		UpArrow        = 0x7E
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
