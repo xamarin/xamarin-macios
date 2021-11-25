@@ -1648,6 +1648,13 @@ namespace Xamarin.Bundler {
 			if (UseInterpreter)
 				return true;
 
+			// There are native frameworks which aren't available in the simulator, and we have
+			// bound P/Invokes to those native frameworks. This means that AOT-compiling for
+			// the simulator will fail because the corresponding native functions don't exist.
+			// So default to dlsym for the simulator.
+			if (IsSimulatorBuild && Profile.IsProductAssembly (Path.GetFileNameWithoutExtension (assembly)))
+				return true;
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
