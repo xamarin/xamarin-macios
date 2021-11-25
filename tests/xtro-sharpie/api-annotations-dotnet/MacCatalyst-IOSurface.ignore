@@ -1,0 +1,2 @@
+!missing-pinvoke! IOSurfaceCreateXPCObject is not bound
+!missing-pinvoke! IOSurfaceLookupFromXPCObject is not bound

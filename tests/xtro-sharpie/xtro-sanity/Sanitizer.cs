@@ -244,7 +244,7 @@ namespace Extrospection {
 							break;
 					}
 					if (!found) {
-						Log ($"?unknown-entry? {entry} in 'common-{fx}.ignore'");
+						Log ($"?unknown-entry? {entry} in '{Path.Combine (directory, $"common-{fx}.ignore")}'");
 						failures.Add (entry);
 					}
 				}

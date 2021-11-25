@@ -1,0 +1,3 @@
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsUIVersionNumber not bound
+!missing-field! IntentsUIVersionString not bound
