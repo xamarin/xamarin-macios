@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.UIKit {
 		void AssertNotBrokenFontWithSize ()
 		{
 #if __MACCATALYST__ || __MACOS__
-			if (TestRuntime.CheckXcodeVersion (11, 0) && TestRuntime.CheckXcodeVersion (12, 0)) {
+			if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 0)) {
 				// Yep, GameKit breaks [UIKit fontWithSize] on macOS 10.15...
 				Assert.Ignore ("GameKit breaks UIKIt.FontWithSize on this OS version. Ref: https://github.com/xamarin/maccore/issues/2382");
 			}
