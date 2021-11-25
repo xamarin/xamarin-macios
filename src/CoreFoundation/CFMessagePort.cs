@@ -68,7 +68,7 @@ namespace CoreFoundation {
 
 		static CFMessagePortInvalidationCallBackProxy messageInvalidationCallback = new CFMessagePortInvalidationCallBackProxy (MessagePortInvalidationCallback);
 
-		IntPtr contextHandle = IntPtr.Zero;
+		IntPtr contextHandle;
 
 		public bool IsRemote {
 			get {
@@ -151,7 +151,7 @@ namespace CoreFoundation {
 
 				lock (messagePortContexts) {
 					if (messagePortContexts.ContainsKey (contextHandle))
-						invalidationHandles.Remove (contextHandle);
+						messagePortContexts.Remove (contextHandle);
 				}
 
 				contextHandle = IntPtr.Zero;
