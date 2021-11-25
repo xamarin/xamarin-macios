@@ -1,2 +1,0 @@
-!extra-enum-value! Managed value 128 for NSFileProviderItemCapabilities.ExcludingFromSync is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 64 for NSFileProviderItemCapabilities.Evicting is available for the current platform while the value in the native header is not

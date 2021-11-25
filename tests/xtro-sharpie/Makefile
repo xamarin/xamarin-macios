@@ -59,8 +59,6 @@ XMACOS_RID = osx-x64
 $(XMACOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) -exclude RealityKit -exclude JavaNativeFoundation
 
-XMACCATALYST ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll
-XMACCATALYST_GL ?=
 XMACCATALYST_ARCH = x86_64
 XMACCATALYST_PCH = ios$(MACCATALYST_SDK_VERSION)-macabi-$(XMACCATALYST_ARCH).pch
 XMACCATALYST_RID = maccatalyst-x64
@@ -134,14 +132,7 @@ endif
 
 maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XMACCATALYST_PCH)
 
-ifdef INCLUDE_MACCATALYST
-gen-maccatalyst: maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs .stamp-check-sharpie
-	$(SHARPIE) query -bind $(XMACCATALYST_PCH) > maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs
-else
-gen-maccatalyst: ; @true
-endif
-
-gen-all: gen-ios gen-tvos gen-watchos gen-macos gen-maccatalyst
+gen-all: gen-ios gen-tvos gen-watchos gen-macos
 
 wrench:
 	$(MAKE) -j8 classify
@@ -208,15 +199,6 @@ CLASSIFY+=.stamp-classify-macos
 .stamp-classify-macos: bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
 	rm -f $(ANNOTATIONS_DIR)/macOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACOS_PCH) $(XMACOS)
-	$(Q) touch $@
-endif
-
-ifdef INCLUDE_MACCATALYST
-INCLUDED_PLATFORMS+=MacCatalyst
-CLASSIFY+=.stamp-classify-maccatalyst
-.stamp-classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XMACCATALYST_PCH) $(XMACCATALYST)
-	rm -f $(ANNOTATIONS_DIR)/MacCatalyst-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACCATALYST_PCH) $(XMACCATALYST)
 	$(Q) touch $@
 endif
 
