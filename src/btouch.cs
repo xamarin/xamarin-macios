@@ -42,7 +42,7 @@ using Foundation;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
-public class BindingTouch {
+public class BindingTouch : IDisposable {
 	TargetFramework? target_framework;
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
@@ -59,7 +59,7 @@ public class BindingTouch {
 	public TypeManager TypeManager = new TypeManager ();
 	public Frameworks? Frameworks;
 	public AttributeManager? AttributeManager;
-
+	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
 		get { return ikvm_type_lookup;  }
@@ -195,7 +195,7 @@ public class BindingTouch {
 
 	static int Main2 (string [] args)
 	{
-		var touch = new BindingTouch ();
+		using var touch = new BindingTouch ();
 		return touch.Main3 (args);
 	}
 
@@ -592,6 +592,24 @@ public class BindingTouch {
 			var di = Directory.CreateDirectory (p);
 			return di.FullName;
 		}
+	}
+
+	protected virtual void Dispose (bool disposing)
+	{
+		if (!disposedValue) {
+			if (disposing) {
+				universe?.Dispose ();
+				universe = null;
+			}
+
+			disposedValue = true;
+		}
+	}
+
+	public void Dispose ()
+	{
+		Dispose (disposing: true);
+		GC.SuppressFinalize (this);
 	}
 }
 

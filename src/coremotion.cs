@@ -240,7 +240,7 @@ namespace CoreMotion {
 	[NoWatch]
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CMPedometer' instead.")]
+	[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'CMPedometer' instead.")]
 	interface CMStepCounter {
 
 		[Static]

@@ -1089,7 +1089,7 @@ namespace Registrar {
 		protected abstract ConnectAttribute GetConnectAttribute (TProperty property); // Return null if no attribute is found. Do not consider inherited properties.
 		public abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract IEnumerable<ProtocolMemberAttribute> GetProtocolMemberAttributes (TType type); // Return null if no attributes found. Do not consider base types.
-		protected abstract List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TType obj); // must only return attributes for the current platform.
+		protected virtual Version GetSdkIntroducedVersion (TType obj, out string message) { message = null; return null; } // returns the sdk version when the type was introduced for the current platform (null if all supported versions)
 		protected abstract Version GetSDKVersion ();
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
@@ -1538,62 +1538,54 @@ namespace Registrar {
 
 		void VerifyTypeInSDK (ref List<Exception> exceptions, TType type, ObjCMethod parameterIn = null, ObjCMethod returnTypeOf = null, ObjCProperty propertyTypeOf = null, TType baseTypeOf = null)
 		{
-			var attribs = GetAvailabilityAttributes (type);
-			if (attribs == null || attribs.Count == 0)
+			var sdkVersion = GetSdkIntroducedVersion (type, out var message);
+			if (sdkVersion is null)
 				return;
 
 			Version sdk = GetSDKVersion ();
-			foreach (var attrib in attribs) {
-				// The attributes are already filtered to the current platform.
-				switch (attrib.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					if (attrib.Version <= sdk)
-						break;
+			if (sdkVersion <= sdk)
+				return;
 
-					string msg;
-					string zero = GetTypeFullName (type);
-					string one = string.Empty;
-					string two = PlatformName;
-					string three = sdk.ToString ();
-					string four = attrib.Version.ToString ();
-					string five = string.IsNullOrEmpty (attrib.Message) ? "." : ": '" + attrib.Message + "'.";
-					if (baseTypeOf != null) {
-						msg = Errors.MT4162_BaseType;
-						one = GetTypeFullName (baseTypeOf);
-					} else if (parameterIn != null) {
-						msg = Errors.MT4162_Parameter;
-						one = parameterIn.DescriptiveMethodName;
-					} else if (returnTypeOf != null) {
-						msg = Errors.MT4162_ReturnType;
-						one = returnTypeOf.DescriptiveMethodName;
-					} else if (propertyTypeOf != null) {
-						msg = Errors.MT4162_PropertyType;
-						one = propertyTypeOf.FullName;
-					} else {
-						msg = Errors.MT4162_A;
-					}
-
-					msg = string.Format (msg, zero, one, two, three, four, five);
-
-					Exception ex;
-
-					if (baseTypeOf != null) {
-						ex = CreateException (4162, baseTypeOf, msg);
-					} else if (parameterIn != null) {
-						ex = CreateException (4162, parameterIn, msg);
-					} else if (returnTypeOf != null) {
-						ex = CreateException (4162, returnTypeOf, msg);
-					} else if (propertyTypeOf != null) {
-						ex = CreateException (4162, propertyTypeOf, msg);
-					} else {
-						ex = CreateException (4162, msg);
-					}
-
-					AddException (ref exceptions, ex);
-
-					break;
-				}
+			string msg;
+			string zero = GetTypeFullName (type);
+			string one = string.Empty;
+			string two = PlatformName;
+			string three = sdk.ToString ();
+			string four = sdkVersion.ToString ();
+			string five = string.IsNullOrEmpty (message) ? "." : ": '" + message + "'.";
+			if (baseTypeOf != null) {
+				msg = Errors.MT4162_BaseType;
+				one = GetTypeFullName (baseTypeOf);
+			} else if (parameterIn != null) {
+				msg = Errors.MT4162_Parameter;
+				one = parameterIn.DescriptiveMethodName;
+			} else if (returnTypeOf != null) {
+				msg = Errors.MT4162_ReturnType;
+				one = returnTypeOf.DescriptiveMethodName;
+			} else if (propertyTypeOf != null) {
+				msg = Errors.MT4162_PropertyType;
+				one = propertyTypeOf.FullName;
+			} else {
+				msg = Errors.MT4162_A;
 			}
+
+			msg = string.Format (msg, zero, one, two, three, four, five);
+
+			Exception ex;
+
+			if (baseTypeOf != null) {
+				ex = CreateException (4162, baseTypeOf, msg);
+			} else if (parameterIn != null) {
+				ex = CreateException (4162, parameterIn, msg);
+			} else if (returnTypeOf != null) {
+				ex = CreateException (4162, returnTypeOf, msg);
+			} else if (propertyTypeOf != null) {
+				ex = CreateException (4162, propertyTypeOf, msg);
+			} else {
+				ex = CreateException (4162, msg);
+			}
+
+			AddException (ref exceptions, ex);
 		}
 
 		protected static void AddException (ref List<Exception> exceptions, Exception mex)
@@ -2624,6 +2616,7 @@ namespace Registrar {
 			var typeFullName = GetTypeFullName (type);
 
 			switch (typeFullName) {
+			case "System.UIntPtr":
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";

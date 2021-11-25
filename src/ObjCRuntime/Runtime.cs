@@ -770,7 +770,7 @@ namespace ObjCRuntime {
 			 * This method is called from generated code from the static registrar.
 			 */
 
-			var iface = Class.ResolveTypeTokenReference (iface_token);
+			var iface = Class.ResolveTypeTokenReference (iface_token)!;
 			var type = Class.ResolveTypeTokenReference (implementation_token);
 			return AllocGCHandle (GetINativeObject (ptr, owns, iface, type));
 		}
@@ -1790,8 +1790,14 @@ namespace ObjCRuntime {
 		// This function will try to compare a native UTF8 string to a managed string without creating a temporary managed string for the native UTF8 string.
 		// Currently this only works if the UTF8 string only contains single-byte characters.
 		// If any multi-byte characters are found, the native utf8 string is converted to a managed string, and then normal managed comparison is done.
-		internal static bool StringEquals (IntPtr utf8, string str)
+		internal static bool StringEquals (IntPtr utf8, string? str)
 		{
+			if (str is null)
+				return utf8 == IntPtr.Zero;
+
+			if (utf8 == IntPtr.Zero)
+				return false;
+
 			// The vast majority of strings we compare fall within the single-byte UTF8 range, so optimize for this
 			unsafe {
 				byte* c = (byte*) utf8;
@@ -1988,6 +1994,18 @@ namespace ObjCRuntime {
 		{
 			return (nuint) value;
 		}
+
+#if NET || !MONOMAC // legacy Xamarin.Mac has a different implementation in Runtime.mac.cs
+		public static string? OriginalWorkingDirectory {
+			get {
+				return Marshal.PtrToStringUTF8 (xamarin_get_original_working_directory_path ());
+			}
+		}
+
+		[DllImport ("__Internal")]
+		static extern IntPtr xamarin_get_original_working_directory_path ();
+#endif // NET || !__MACOS__
+
 	}
 	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

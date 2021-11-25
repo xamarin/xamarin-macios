@@ -17,7 +17,6 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <!-- We use configurations like Debug64 and Release64, which doesn't work with the default logic we and .NET have -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">

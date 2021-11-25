@@ -28,9 +28,9 @@ namespace WebKit {
 		[Obsolete ("Use 'CloseAllMediaPresentations (Action completionHandler)' instead.")]
 		public virtual void CloseAllMediaPresentations () {
 #if IOS || __MACCATALYST__
- 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
- 				if (PlatformHelper.CheckSystemVersion (12, 0))
+				if (SystemVersion.CheckmacOS (12, 0))
 #endif
 					CloseAllMediaPresentationsAsync ().Wait();
 				else
@@ -45,9 +45,9 @@ namespace WebKit {
  		public virtual void PauseAllMediaPlayback (Action? completionHandler)
 		{
 #if IOS || __MACCATALYST__
- 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
- 				if (PlatformHelper.CheckSystemVersion (12, 0))
+				if (SystemVersion.CheckmacOS (12, 0))
 #endif
 					_NewPauseAllMediaPlayback (completionHandler);
 				else
@@ -62,9 +62,9 @@ namespace WebKit {
  		public virtual Task PauseAllMediaPlaybackAsync ()
 		{
 #if IOS || __MACCATALYST__
- 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
- 				if (PlatformHelper.CheckSystemVersion (12, 0))
+				if (SystemVersion.CheckmacOS (12, 0))
 #endif
 					return _NewPauseAllMediaPlaybackAsync ();
 				else
@@ -80,9 +80,9 @@ namespace WebKit {
  		public virtual void SuspendAllMediaPlayback (Action? completionHandler)
 		{
 #if IOS || __MACCATALYST__
- 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
- 				if (PlatformHelper.CheckSystemVersion (12, 0))
+				if (SystemVersion.CheckmacOS (12, 0))
 #endif
 					SetAllMediaPlaybackSuspended (true, completionHandler);
 				else
@@ -97,9 +97,9 @@ namespace WebKit {
  		public virtual Task SuspendAllMediaPlaybackAsync ()
 		{
 #if IOS || __MACCATALYST__
- 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
- 				if (PlatformHelper.CheckSystemVersion (12, 0))
+				if (SystemVersion.CheckmacOS (12, 0))
 #endif
 					return SetAllMediaPlaybackSuspendedAsync (true);
 				else
@@ -115,9 +115,9 @@ namespace WebKit {
  		public virtual void ResumeAllMediaPlayback (Action? completionHandler)
 		{
 #if IOS || __MACCATALYST__
- 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
- 				if (PlatformHelper.CheckSystemVersion (12, 0))
+				if (SystemVersion.CheckmacOS (12, 0))
 #endif
 					SetAllMediaPlaybackSuspended (false, completionHandler);
 				else
@@ -132,9 +132,9 @@ namespace WebKit {
  		public virtual Task ResumeAllMediaPlaybackAsync ()
 		{
 #if IOS || __MACCATALYST__
- 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
- 				if (PlatformHelper.CheckSystemVersion (12, 0))
+				if (SystemVersion.CheckmacOS (12, 0))
 #endif
 					return SetAllMediaPlaybackSuspendedAsync (false);
 				else

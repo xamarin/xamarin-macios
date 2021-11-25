@@ -279,7 +279,7 @@ namespace GameplayKit {
 		Class GetClassForGenericArgument (nuint index);
 
 		[iOS (10,0), TV (10,0), Mac (10,12)]
-		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))!")]
 		Type GetTypeForGenericArgument (nuint index);
 	}
 
@@ -627,7 +627,7 @@ namespace GameplayKit {
 		Class GetClassForGenericArgument (nuint index);
 
 		[iOS (10,0), TV (10,0), Mac (10,12)]
-		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))!")]
 		Type GetTypeForGenericArgument (nuint index);
 	}
 
@@ -699,7 +699,7 @@ namespace GameplayKit {
 		Class GetClassForGenericArgument (nuint index);
 
 		[iOS (10,0), TV (10,0), Mac (10,12)]
-		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))!")]
 		Type GetTypeForGenericArgument (nuint index);
 	}
 
@@ -764,7 +764,7 @@ namespace GameplayKit {
 		[Export ("classForGenericArgumentAtIndex:")]
 		Class GetClassForGenericArgument (nuint index);
 
-		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))!")]
 		Type GetTypeForGenericArgument (nuint index);
 	}
 

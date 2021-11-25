@@ -126,12 +126,12 @@ namespace CoreGraphics {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPathEqualToPath (/* CGPathRef */ IntPtr path1, /* CGPathRef */ IntPtr path2);
 
-		public static bool operator == (CGPath path1, CGPath path2)
+		public static bool operator == (CGPath? path1, CGPath? path2)
 		{
 			return Object.Equals (path1, path2);
 		}
 
-		public static bool operator != (CGPath path1, CGPath path2)
+		public static bool operator != (CGPath? path1, CGPath? path2)
 		{
 			return !Object.Equals (path1, path2);
 		}
@@ -506,9 +506,11 @@ namespace CoreGraphics {
 			gch.Free ();
 		}
 
-		static CGPath MakeMutable (IntPtr source)
+		static CGPath MakeMutable (IntPtr source, bool owns)
 		{
 			var mutable = CGPathCreateMutableCopy (source);
+			if (owns)
+				CGPathRelease (source);
 			return new CGPath (mutable, owns: true);
 		}
 
@@ -527,7 +529,7 @@ namespace CoreGraphics {
 
 		public unsafe CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths, nfloat phase)
 		{
-			return MakeMutable (CGPathCreateCopyByDashingPath (Handle, &transform, phase, lengths, lengths is null ? 0 : lengths.Length));
+			return MakeMutable (CGPathCreateCopyByDashingPath (Handle, &transform, phase, lengths, lengths is null ? 0 : lengths.Length), true);
 		}
 
 		public CGPath CopyByDashingPath (nfloat [] lengths)
@@ -538,12 +540,12 @@ namespace CoreGraphics {
 		public unsafe CGPath CopyByDashingPath (nfloat [] lengths, nfloat phase)
 		{
 			var path = CGPathCreateCopyByDashingPath (Handle, null, phase, lengths, lengths is null ? 0 : lengths.Length);
-			return MakeMutable (path);
+			return MakeMutable (path, true);
 		}
 
 		public unsafe CGPath Copy ()
 		{
-			return MakeMutable (Handle);
+			return MakeMutable (Handle, false);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -551,12 +553,12 @@ namespace CoreGraphics {
 
 		public unsafe CGPath CopyByStrokingPath (CGAffineTransform transform, nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, nfloat miterLimit)
 		{
-			return MakeMutable (CGPathCreateCopyByStrokingPath (Handle, &transform, lineWidth, lineCap, lineJoin, miterLimit));
+			return MakeMutable (CGPathCreateCopyByStrokingPath (Handle, &transform, lineWidth, lineCap, lineJoin, miterLimit), true);
 		}
 
 		public unsafe CGPath CopyByStrokingPath (nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, nfloat miterLimit)
 		{
-			return MakeMutable (CGPathCreateCopyByStrokingPath (Handle, null, lineWidth, lineCap, lineJoin, miterLimit));
+			return MakeMutable (CGPathCreateCopyByStrokingPath (Handle, null, lineWidth, lineCap, lineJoin, miterLimit), true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -564,7 +566,7 @@ namespace CoreGraphics {
 
 		public CGPath CopyByTransformingPath (CGAffineTransform transform)
 		{
-			return MakeMutable (CGPathCreateCopyByTransformingPath (Handle, ref transform));
+			return MakeMutable (CGPathCreateCopyByTransformingPath (Handle, ref transform), true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -572,12 +574,12 @@ namespace CoreGraphics {
 
 		static public unsafe CGPath EllipseFromRect (CGRect boundingRect, CGAffineTransform transform)
 		{
-			return MakeMutable (CGPathCreateWithEllipseInRect (boundingRect, &transform));
+			return MakeMutable (CGPathCreateWithEllipseInRect (boundingRect, &transform), true);
 		}
 
 		static public unsafe CGPath EllipseFromRect (CGRect boundingRect)
 		{
-			return MakeMutable (CGPathCreateWithEllipseInRect (boundingRect, null));
+			return MakeMutable (CGPathCreateWithEllipseInRect (boundingRect, null), true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -585,12 +587,12 @@ namespace CoreGraphics {
 
 		static public unsafe CGPath FromRect (CGRect rectangle, CGAffineTransform transform)
 		{
-			return MakeMutable (CGPathCreateWithRect (rectangle, &transform));
+			return MakeMutable (CGPathCreateWithRect (rectangle, &transform), true);
 		}
 
 		static public unsafe CGPath FromRect (CGRect rectangle)
 		{
-			return MakeMutable (CGPathCreateWithRect (rectangle, null));
+			return MakeMutable (CGPathCreateWithRect (rectangle, null), true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -602,7 +604,7 @@ namespace CoreGraphics {
 				throw new ArgumentException (nameof (cornerWidth));
 			if ((cornerHeight < 0) || (2 * cornerHeight > rectangle.Height))
 				throw new ArgumentException (nameof (cornerHeight));
-			return MakeMutable (CGPathCreateWithRoundedRect (rectangle, cornerWidth, cornerHeight, transform));
+			return MakeMutable (CGPathCreateWithRoundedRect (rectangle, cornerWidth, cornerHeight, transform), true);
 		}
 
 #if !NET

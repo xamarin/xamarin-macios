@@ -64,15 +64,15 @@ namespace Network {
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
 
-					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateTcpDefinition ())) {
 						castedOptions = new NWProtocolTcpOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateTlsDefinition ())) {
 						castedOptions = new NWProtocolTlsOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateIPDefinition ())) {
 						castedOptions = new NWProtocolIPOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateWebSocketDefinition ())) {
 						castedOptions = new NWWebSocketOptions (options, owns: false);
 					} 
 
@@ -113,10 +113,10 @@ namespace Network {
 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
-					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateTcpDefinition ())) {
 						castedOptions = new NWProtocolTcpOptions (pHandle, owns: true);
 					}
-					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (pHandle, owns: true);
 					} 
 					if (castedOptions == null) {

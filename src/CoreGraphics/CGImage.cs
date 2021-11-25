@@ -224,7 +224,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		static CGImage? FromHandle (IntPtr handle, bool owns)
+		internal static CGImage? FromHandle (IntPtr handle, bool owns)
 		{
 			if (handle == IntPtr.Zero)
 				return null;

@@ -47,6 +47,7 @@ using PointF = CoreGraphics.CGPoint;
 using CategoryAttribute = ObjCRuntime.CategoryAttribute;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -608,18 +609,23 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNativeEnum ()
 		{
+#if NET
+			var nativeEnumValue = NSWritingDirection.RightToLeft;
+#else
+			var nativeEnumValue = UITextWritingDirection.RightToLeft;
+#endif
 			//public virtual void TestNativeEnum1 (UITextWritingDirection twd)
 			using (var obj = new RegistrarTestClass ()) {
 				if (IntPtr.Size == 4) {
-					Messaging.void_objc_msgSend_int (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) UITextWritingDirection.RightToLeft);
+					Messaging.void_objc_msgSend_int (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) nativeEnumValue);
 				} else {
-					Messaging.void_objc_msgSend_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long)UITextWritingDirection.RightToLeft);
+					Messaging.void_objc_msgSend_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long) nativeEnumValue);
 				}
 
 				if (IntPtr.Size == 4) {
-					Messaging.void_objc_msgSend_int_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) UITextWritingDirection.RightToLeft, 31415, 3141592);
+					Messaging.void_objc_msgSend_int_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) nativeEnumValue, 31415, 3141592);
 				} else {
-					Messaging.void_objc_msgSend_long_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long) UITextWritingDirection.RightToLeft, 31415, 3141592);
+					Messaging.void_objc_msgSend_long_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long) nativeEnumValue, 31415, 3141592);
 				}
 
 				if (IntPtr.Size == 4) {
@@ -950,10 +956,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if !__WATCHOS__ && !MONOMAC
 			[Export ("testNativeEnum1:")]
+#if NET
+			public virtual void TestNativeEnum1 (NSWritingDirection twd)
+			{
+				Assert.That (Enum.GetValues (typeof (NSWritingDirection)), Contains.Item (twd), "TestNativeEnum1");
+			}
+#else
 			public virtual void TestNativeEnum1 (UITextWritingDirection twd)
 			{
 				Assert.That (Enum.GetValues (typeof (UITextWritingDirection)), Contains.Item (twd), "TestNativeEnum1");
 			}
+#endif // NET
 
 			public virtual UIPopoverArrowDirection TestNativeEnum2 {
 				[Export ("testNativeEnum2")]
@@ -967,6 +980,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 
 
+#if NET
+			[Export ("testNativeEnum3:a:b:")]
+			public virtual void TestNativeEnum1 (NSWritingDirection twd, int a, long b)
+			{
+				Assert.That (Enum.GetValues (typeof (NSWritingDirection)), Contains.Item (twd), "TestNativeEnum3");
+				Assert.AreEqual (31415, a, "TestNativeEnum3 a");
+				Assert.AreEqual (3141592, b, "TestNativeEnum3 b");
+			}
+#else
 			[Export ("testNativeEnum3:a:b:")]
 			public virtual void TestNativeEnum1 (UITextWritingDirection twd, int a, long b)
 			{
@@ -974,6 +996,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual (31415, a, "TestNativeEnum3 a");
 				Assert.AreEqual (3141592, b, "TestNativeEnum3 b");
 			}
+#endif // NET
 #endif // !__WATCHOS__
 
 			[Export ("testCGPoint:out:")]
@@ -1418,7 +1441,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNativeObjectArray ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var i1 = new MKPointAnnotation ()) {
 				using (var i2 = new MKPointAnnotation ()) {
@@ -2284,7 +2307,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void VoidPtrToINativeObjectArgument ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 
 			using (var obj = new ABPeoplePickerNavigationControllerDelegateImpl ()) {
 				using (var person = new ABPerson ()) {

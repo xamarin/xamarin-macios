@@ -1,0 +1,2 @@
+## comment mention that "by default this property is null"
+!extra-null-allowed! 'System.Void EventKitUI.EKCalendarChooser::set_SelectedCalendars(Foundation.NSSet)' has a extraneous [NullAllowed] on parameter #0

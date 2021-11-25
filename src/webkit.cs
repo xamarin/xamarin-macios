@@ -2955,7 +2955,7 @@ namespace WebKit {
 		[Export ("type")]
 		string Type { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
@@ -3049,7 +3049,7 @@ namespace WebKit {
 		[Export ("target")]
 		string Target { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
@@ -3164,7 +3164,7 @@ namespace WebKit {
 		[Export ("willValidate")]
 		bool WillValidate { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
@@ -3480,7 +3480,7 @@ namespace WebKit {
 		[Export ("htmlFor")]
 		string HtmlFor { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 	}
@@ -3496,7 +3496,7 @@ namespace WebKit {
 		[Export ("align")]
 		string Align { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 	}

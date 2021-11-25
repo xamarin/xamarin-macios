@@ -1,0 +1,3 @@
+# documentation mention it's macOS specific (might not have been updated for Catalyst or, more likely, does not apply like iOS)
+!missing-selector! MPNowPlayingInfoCenter::playbackState not bound
+!missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound

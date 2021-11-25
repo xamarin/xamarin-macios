@@ -14,7 +14,9 @@ using System;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+#if !NET
 using OpenTK;
+#endif
 #if MONOMAC
 using AppKit;
 using UIViewController = AppKit.NSViewController;
@@ -502,18 +504,34 @@ namespace GameController {
 		Action<GCMotion> ValueChangedHandler { get; set; }
 
 		[Export ("gravity", ArgumentSemantic.Assign)]
+#if NET
+		GCAcceleration Gravity { get; }
+#else
 		Vector3d Gravity { get; }
+#endif
 
 		[Export ("userAcceleration", ArgumentSemantic.Assign)]
+#if NET
+		GCAcceleration UserAcceleration { get; }
+#else
 		Vector3d UserAcceleration { get; }
+#endif
 
 		[TV (11,0)]
 		[Export ("attitude", ArgumentSemantic.Assign)]
+#if NET
+		GCQuaternion Attitude { get; }
+#else
 		Quaterniond Attitude { get; }
+#endif
 
 		[TV (11,0), iOS (11,0), Mac (10,13)]
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
+#if NET
+		GCRotationRate RotationRate { get; }
+#else
 		Vector3d RotationRate { get; }
+#endif
 
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]

@@ -16,7 +16,7 @@ namespace Twitter {
 
 	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
 
-	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
+	[Deprecated (PlatformName.iOS, 6, 0, message: "Use the 'Social' framework.")]
 	[BaseType (typeof (NSObject))]
 	interface TWRequest {
 		
@@ -47,7 +47,7 @@ namespace Twitter {
 		void PerformRequest (TWRequestHandler handler);
 	}
 
-	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
+	[Deprecated (PlatformName.iOS, 6, 0, message: "Use the 'Social' framework.")]
 	[BaseType (typeof (UIViewController))]
 	interface TWTweetComposeViewController {
 		[Export ("initWithNibName:bundle:")]

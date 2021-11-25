@@ -1,0 +1,3 @@
+!extra-enum-value! Managed value 2 for ASWebAuthenticationSessionErrorCode.PresentationContextNotProvided is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 3 for ASWebAuthenticationSessionErrorCode.PresentationContextInvalid is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 1005 for ASAuthorizationError.NotInteractive is available for the current platform while the value in the native header is not
