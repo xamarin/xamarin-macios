@@ -272,7 +272,6 @@
 !unknown-field! NSTableColumn bound
 !unknown-field! NSTextMovement bound
 !unknown-native-enum! NSAlertButtonReturn bound
-!unknown-native-enum! NSAlertType bound
 !unknown-native-enum! NSApplicationLayoutDirection bound
 !unknown-native-enum! NSBackingStore bound
 !unknown-native-enum! NSCellHit bound
@@ -282,9 +281,7 @@
 !unknown-native-enum! NSEventModifierMask bound
 !unknown-native-enum! NSFontPanelMode bound
 !unknown-native-enum! NSFunctionKey bound
-!unknown-native-enum! NSGlyphStorageOptions bound
 !unknown-native-enum! NSImageScale bound
-!unknown-native-enum! NSKey bound
 !unknown-native-enum! NSMenuProperty bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSRunResponse bound

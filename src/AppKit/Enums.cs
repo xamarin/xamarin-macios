@@ -546,13 +546,10 @@ namespace AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Native]
 	public enum NSKey : ulong {
-#else
-	public enum NSKey : int
-#endif
 		A              = 0x00,
 		S              = 0x01,
 		D              = 0x02,
@@ -671,6 +668,7 @@ namespace AppKit {
 		DownArrow      = 0x7D,
 		UpArrow        = 0x7E
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
@@ -1505,19 +1503,17 @@ namespace AppKit {
 		Auto, Fit, Clip
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : ulong {
-#else
-	public enum NSGlyphStorageOptions : int
-#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
@@ -1708,19 +1704,17 @@ namespace AppKit {
 		Default, Regular, Small
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : long {
-#else
-	public enum NSAlertType : int {
-#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
 		DefaultReturn
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]

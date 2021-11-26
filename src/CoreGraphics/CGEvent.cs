@@ -76,7 +76,7 @@ namespace CoreGraphics {
 		{
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public CGEvent (IntPtr handle)
 			: base (handle, false)
 		{

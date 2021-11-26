@@ -29,7 +29,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWProtocolDefinition : NativeObject {
+#if NET
+		internal NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]

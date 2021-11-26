@@ -35,13 +35,19 @@ namespace CoreFoundation {
 
 	public partial class DispatchData : DispatchObject {
 #if !COREBUILD
+#if NET
+		internal DispatchData (IntPtr handle, bool owns) : base (handle, owns)
+#else
 		public DispatchData (IntPtr handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 
+#if !NET
 		public DispatchData (IntPtr handle) : base (handle, false)
 		{
 		}
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_data_create (IntPtr buffer, nuint size, IntPtr dispatchQueue, IntPtr destructor);

@@ -12,13 +12,19 @@ namespace CoreFoundation {
 	
 	public class CFMutableString : CFString {
 
+#if !NET
 		protected CFMutableString (IntPtr handle)
 			: this (handle, false)
 		{
 		}
+#endif
 		
 		[Preserve (Conditional = true)]
+#if NET
+		internal CFMutableString (IntPtr handle, bool owns)
+#else
 		protected CFMutableString (IntPtr handle, bool owns)
+#endif
 			: base (handle, owns)
 		{
 		}

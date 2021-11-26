@@ -27,10 +27,12 @@ namespace VideoToolbox {
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
 
+#if !NET
 		/* invoked by marshallers */
 		protected internal VTCompressionSession (IntPtr handle) : base (handle)
 		{
 		}
+#endif
 
 		[Preserve (Conditional=true)]
 		internal VTCompressionSession (IntPtr handle, bool owns) : base (handle, owns)

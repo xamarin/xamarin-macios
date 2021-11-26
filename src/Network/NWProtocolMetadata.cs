@@ -54,7 +54,11 @@ namespace Network {
 		}
 #endif
 
+#if NET
+		internal NWProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern OS_nw_protocol_definition nw_protocol_metadata_copy_definition (OS_nw_protocol_metadata metadata);

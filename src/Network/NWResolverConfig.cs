@@ -18,7 +18,11 @@ namespace Network {
 #endif
 	public class NWResolverConfig : NativeObject {
 
+#if NET
+		internal NWResolverConfig (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWResolverConfig (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 		
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_resolver_config nw_resolver_config_create_https (OS_nw_endpoint urlEndpoint);
