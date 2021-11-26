@@ -268,7 +268,7 @@ namespace Extrospection {
 
 				if (!valueDecl.IsAvailable ()) {
 					// if the native enum value isn't available, the managed one shouldn't be either
-					if (valueField.IsAvailable ())
+					if (valueField.IsAvailable () && !IsErrorEnum (type))
 						Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{fieldName} is available for the current platform while the value in the native header is not");
 					continue;
 				}
@@ -276,6 +276,25 @@ namespace Extrospection {
 
 			if (native_size != managed_size && !decl.IsDeprecated ())
 				Log.On (framework).Add ($"!wrong-enum-size! {name} managed {managed_size} vs native {native_size}");
+		}
+
+		static bool IsErrorEnum (TypeDefinition type)
+		{
+			if (!type.IsEnum)
+				return false;
+
+			if (type.Name.EndsWith ("Error", StringComparison.Ordinal))
+				return true;
+			if (type.Name.EndsWith ("ErrorCode", StringComparison.Ordinal))
+				return true;
+
+			if (!type.HasCustomAttributes)
+				return false;
+			foreach (var ca in type.CustomAttributes) {
+				if (ca.AttributeType.Name == "ErrorDomainAttribute")
+					return true;
+			}
+			return false;
 		}
 
 		static bool IsExtraZeroValid (string typeName, string valueName)

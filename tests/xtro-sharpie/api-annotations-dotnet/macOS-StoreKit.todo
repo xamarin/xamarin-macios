@@ -1,3 +1,0 @@
-!extra-enum-value! Managed value 16 for SKError.OverlayInvalidConfiguration is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 17 for SKError.OverlayTimeout is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 20 for SKError.OverlayPresentedInBackgroundScene is available for the current platform while the value in the native header is not
