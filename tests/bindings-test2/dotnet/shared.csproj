@@ -7,9 +7,17 @@
     <LangVersion>latest</LangVersion>
     <IsBindingProject>true</IsBindingProject>
 
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <BindingsTest2Directory>$(RootTestsDirectory)\bindings-test2</BindingsTest2Directory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiDefinition.cs" />
@@ -26,6 +34,7 @@
     </Compile>
     <Compile Include="$(BindingsTest2Directory)\BindingTest.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="$(TestLibrariesDirectory)\libtest2.m">
       <Link>libtest2.m</Link>
