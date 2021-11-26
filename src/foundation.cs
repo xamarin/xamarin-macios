@@ -8149,7 +8149,7 @@ namespace Foundation
 		[Export ("setProperty:forKey:")]
 		bool SetProperty ([NullAllowed] NSObject property, NSString key);
 	
-#if XAMCORE_4_0
+#if NET
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, NSString mode);
 
@@ -8162,10 +8162,10 @@ namespace Foundation
 		[Export ("removeFromRunLoop:forMode:")]
 		void Unschedule (NSRunLoop aRunLoop, string mode);
 #endif
-		[Wrap ("Schedule (aRunLoop, mode.GetConstant ())")]
+		[Wrap ("Schedule (aRunLoop, mode.GetConstant ()!)")]
 		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode mode);
 
-		[Wrap ("Unschedule (aRunLoop, mode.GetConstant ())")]
+		[Wrap ("Unschedule (aRunLoop, mode.GetConstant ()!)")]
 		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode mode);
 
 		[Export ("streamStatus")]
@@ -10460,7 +10460,7 @@ namespace Foundation
 		[Protocolize]
 		NSNetServiceDelegate Delegate { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, NSString forMode);
 
@@ -10590,7 +10590,7 @@ namespace Foundation
 		[Protocolize]
 		NSNetServiceBrowserDelegate Delegate { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, NSString forMode);
 
@@ -10606,10 +10606,10 @@ namespace Foundation
 		void Unschedule (NSRunLoop aRunLoop, string forMode);
 #endif
 
-		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ())")]
+		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ()!)")]
 		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
-		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ())")]
+		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ()!)")]
 		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
 		[Export ("searchForBrowsableDomains")]
