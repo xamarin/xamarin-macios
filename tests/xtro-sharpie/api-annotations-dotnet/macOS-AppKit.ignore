@@ -55,6 +55,10 @@
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
 
+# Deprecated
+
+!missing-protocol-member! NSTextViewDelegate::textView:draggedCell:inRect:event: not found
+
 ## unsorted
 
 !extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanel: found
@@ -199,7 +203,6 @@
 !missing-protocol-member! NSTextViewDelegate::textView:clickedOnCell:inRect: not found
 !missing-protocol-member! NSTextViewDelegate::textView:clickedOnLink: not found
 !missing-protocol-member! NSTextViewDelegate::textView:doubleClickedOnCell:inRect: not found
-!missing-protocol-member! NSTextViewDelegate::textView:draggedCell:inRect:event:atIndex: not found
 !missing-protocol-member! NSTextViewDelegate::textView:URLForContentsOfTextAttachment:atIndex: not found
 !missing-protocol-member! NSTextViewDelegate::textView:willShowSharingServicePicker:forItems: not found
 !missing-protocol-member! NSWindowDelegate::customWindowsToEnterFullScreenForWindow:onScreen: not found
