@@ -87,7 +87,7 @@ namespace CoreFoundation {
 			// might be modified by a diff thread. We are going to clone the array and make sure
 			// that Apple does not modify the array while we work with it. That avoids changes
 			// in the index or in the bundles returned.
-			using (var cfBundles = new CFArray (CFBundleGetAllBundles ()))
+			using (var cfBundles = new CFArray (CFBundleGetAllBundles (), false))
 			using (var cfBundlesCopy = cfBundles.Clone () ) {
 				return CFArray.ArrayFromHandleFunc<CFBundle> (cfBundlesCopy.Handle, (handle) => new CFBundle (handle, false), false);
 			}

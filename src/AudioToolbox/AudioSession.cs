@@ -482,7 +482,7 @@ namespace AudioToolbox {
 
 		static AccessoryInfo[] ExtractAccessoryInfo (IntPtr ptr, NSString id, NSString description)
 		{
-			using (var array = new CFArray (ptr)) {
+			using (var array = new CFArray (ptr, false)) {
 				var res = new AccessoryInfo [array.Count];
 				for (int i = 0; i < res.Length; ++i) {
 					var dict = array.GetValue (i);

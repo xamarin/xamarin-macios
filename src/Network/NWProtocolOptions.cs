@@ -30,7 +30,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWProtocolOptions : NativeObject {
+#if NET
+		internal NWProtocolOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWProtocolOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern OS_nw_protocol_definition nw_protocol_options_copy_definition (IntPtr options);

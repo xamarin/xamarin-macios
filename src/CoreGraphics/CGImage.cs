@@ -131,7 +131,7 @@ namespace CoreGraphics {
 	public class CGImage : NativeObject
 	{
 #if !COREBUILD
-#if !XAMCORE_4_0
+#if !NET
 		public CGImage (IntPtr handle)
 			: base (handle, false, verify: false)
 		{
@@ -140,7 +140,7 @@ namespace CoreGraphics {
 
 		[Preserve (Conditional=true)]
 		internal CGImage (IntPtr handle, bool owns)
-#if XAMCORE_4_0
+#if NET
 			: base (handle, owns)
 #else
 			: base (handle, owns, verify: false)

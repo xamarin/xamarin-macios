@@ -196,7 +196,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (ptr, Is.EqualTo (IntPtr.Zero), "#e1");
 			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject5:").Handle, true);
 			Assert.That (ptr, Is.Not.EqualTo (IntPtr.Zero), "#e2");
-			path = new CGPath (ptr);
+			path = Runtime.GetINativeObject<CGPath> (ptr, false);
 			path.AddArc (1, 2, 3, 4, 5, false); // this should crash if we get back a bogus ptr
 		}
 

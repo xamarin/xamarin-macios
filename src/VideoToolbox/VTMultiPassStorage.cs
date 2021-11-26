@@ -29,10 +29,12 @@ namespace VideoToolbox {
 		bool closed;
 		VTStatus closedStatus;
 
+#if !NET
 		protected internal VTMultiPassStorage (IntPtr handle)
 			: base (handle, false)
 		{
 		}
+#endif
 
 		[Preserve (Conditional=true)]
 		internal VTMultiPassStorage (IntPtr handle, bool owns)

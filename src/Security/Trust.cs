@@ -43,7 +43,7 @@ using System.Runtime.Versioning;
 
 namespace Security {
 	public partial class SecTrust : NativeObject {
-#if !XAMCORE_4_0
+#if !NET
 		public SecTrust (IntPtr handle) 
 			: base (handle, false)
 		{

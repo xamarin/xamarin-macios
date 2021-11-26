@@ -27,14 +27,14 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	public sealed class CGEventSource : NativeObject {
-#if !XAMCORE_4_0
+#if !NET
 		public CGEventSource (IntPtr handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		internal CGEventSource (IntPtr handle, bool owns)
 #else
 		public CGEventSource (IntPtr handle, bool owns)
