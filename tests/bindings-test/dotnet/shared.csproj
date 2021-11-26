@@ -33,6 +33,7 @@
   <ItemGroup>
     <NativeReference Include="$(TestLibrariesDirectory)\.libs\libtest.xcframework">
       <Kind>Static</Kind>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
     </NativeReference>
   </ItemGroup>
 
