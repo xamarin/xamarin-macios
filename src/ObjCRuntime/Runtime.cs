@@ -1846,7 +1846,7 @@ namespace ObjCRuntime {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-#if MONOMAC
+#if MONOMAC && !NET
 		public static void ReleaseBlockOnMainThread (IntPtr block)
 		{
 			if (release_block_on_main_thread is null)

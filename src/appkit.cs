@@ -12763,6 +12763,7 @@ namespace AppKit {
 	{
 		[Mac (10, 12, 2)]
 		[Export ("touchBar")]
+		[return: NullAllowed]
 		NSTouchBar GetTouchBar ();
 
 		[Mac (10, 12, 2)]

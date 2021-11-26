@@ -133,6 +133,9 @@
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
