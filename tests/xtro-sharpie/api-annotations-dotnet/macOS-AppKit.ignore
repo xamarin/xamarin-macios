@@ -281,7 +281,6 @@
 !unknown-native-enum! NSEventModifierMask bound
 !unknown-native-enum! NSFontPanelMode bound
 !unknown-native-enum! NSFunctionKey bound
-!unknown-native-enum! NSGlyphStorageOptions bound
 !unknown-native-enum! NSImageScale bound
 !unknown-native-enum! NSMenuProperty bound
 !unknown-native-enum! NSPanelButtonType bound
