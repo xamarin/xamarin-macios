@@ -219,9 +219,8 @@ namespace AVFoundation {
 		AirPlayReceiverRequiresInternet = -11857,
 
 		VideoCompositorFailed = -11858,
-		[NoMac]
+
 		RecordingAlreadyInProgress = -11859,
-		[NoiOS, NoTV, NoWatch]
 		CreateContentKeyRequestFailed = -11860,
 		UnsupportedOutputSettings = -11861,
 		OperationNotAllowed = -11862,
