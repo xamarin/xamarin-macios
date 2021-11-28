@@ -26,7 +26,7 @@ namespace VideoToolbox {
 	[Mac (10,10), iOS (8,0), TV (10,2)]
 #endif
 	public class VTFrameSilo : NativeObject {
-#if !XAMCORE_4_0
+#if !NET
 		protected internal VTFrameSilo (IntPtr handle)
 			: base (handle, false)
 		{

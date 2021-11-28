@@ -52,10 +52,12 @@ namespace CoreFoundation {
 		{
 		}
 
+#if !NET
 		// constructors for use in bindings
 		internal DispatchSource (IntPtr handle) : base (handle, false)
 		{
 		}
+#endif
 
 		// Invoked by subclasses in this file that fully initialize both
 		// queue and handle

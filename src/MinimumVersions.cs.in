@@ -20,7 +20,7 @@ using ObjCRuntime;
 // undecorated API availability falls back to those minimum versions, per platform
 [assembly: SupportedOSPlatform ("ios@DOTNET_MIN_IOS_SDK_VERSION@")]
 [assembly: SupportedOSPlatform ("tvos@DOTNET_MIN_TVOS_SDK_VERSION@")]
-[assembly: SupportedOSPlatform ("macos@DOTNET_MIN_OSX_SDK_VERSION@")]
+[assembly: SupportedOSPlatform ("macos@DOTNET_MIN_MACOS_SDK_VERSION@")]
 [assembly: SupportedOSPlatform ("maccatalyst@DOTNET_MIN_MACCATALYST_SDK_VERSION@")]
 [assembly: UnsupportedOSPlatform ("watchos")]
 

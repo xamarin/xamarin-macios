@@ -29,7 +29,11 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecCertificate2 : NativeObject {
+#if NET
+		internal SecCertificate2 (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public SecCertificate2 (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_certificate_create (IntPtr seccertificateHandle);

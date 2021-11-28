@@ -308,12 +308,6 @@ TARGETS += $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/Xamarin.TVOS.registrar.a
 endif
 endif
 
-ifdef INCLUDE_MACCATALYST
-TARGETS +=	\
-	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/Xamarin.MacCatalyst.registrar.a       \
-
-endif
-
 TARGET_DIRS_DOTNET = \
 	$(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Runtime.$(rid)/runtimes/$(rid)/native)) \
 
@@ -365,9 +359,6 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%.registrar.a: %.registrar.watchos.devi
 	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%.registrar.a: %.registrar.tvos.arm64.a | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
-	$(Q) $(CP) $< $@
-
-$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/%.registrar.a: %.registrar.maccatalyst.x86_64.a | $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib
 	$(Q) $(CP) $< $@
 
 define InstallRegistrar

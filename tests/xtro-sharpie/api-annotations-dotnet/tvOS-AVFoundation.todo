@@ -1,0 +1,14 @@
+!deprecated-attribute-missing! AVAsset::naturalSize missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAssetWriter::finishWriting missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayer::allowsAirPlayVideo missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayer::isAirPlayVideoActive missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayer::isClosedCaptionDisplayEnabled missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayer::setAllowsAirPlayVideo: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayer::setClosedCaptionDisplayEnabled: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayer::setUsesAirPlayVideoWhileAirPlayScreenIsActive: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayer::usesAirPlayVideoWhileAirPlayScreenIsActive missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayerItem::seekToDate: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayerItem::seekToTime: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayerItem::seekToTime:toleranceBefore:toleranceAfter: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayerItem::selectedMediaOptionInMediaSelectionGroup: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVPlayerItemAccessLogEvent::numberOfSegmentsDownloaded missing a [Deprecated] attribute

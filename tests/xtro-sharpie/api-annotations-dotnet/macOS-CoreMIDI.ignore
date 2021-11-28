@@ -1,0 +1,4 @@
+# deprecated pinvokes and not binded.
+!missing-pinvoke! MIDIDriverEnableMonitoring is not bound
+
+!missing-field! kMIDIDriverPropertyUsesSerial not bound

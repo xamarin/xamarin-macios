@@ -68,10 +68,8 @@ namespace CoreFoundation {
 		//
 		[Preserve (Conditional = true)]
 		internal DispatchObject (IntPtr handle, bool owns)
-			: base (handle, owns)
+			: base (handle, owns, verify: true)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException ("handle");
 		}
 
 		internal DispatchObject ()
@@ -182,9 +180,11 @@ namespace CoreFoundation {
 		{
 		}
 
+#if !NET
 		public DispatchQueue (IntPtr handle) : base (handle, false)
 		{
 		}
+#endif
 		
 		public DispatchQueue (string label)
 			: base (dispatch_queue_create (label, IntPtr.Zero), true)

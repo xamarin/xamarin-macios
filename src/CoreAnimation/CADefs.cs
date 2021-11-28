@@ -52,7 +52,7 @@ namespace CoreAnimation {
 		public CGColor CreateColor (IntPtr p)
 #endif
 		{
-			return new CGColor (p);
+			return new CGColor (p, false);
 		}
 		
 		public CGColor [] Colors {

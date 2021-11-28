@@ -19,7 +19,11 @@ namespace Network {
 #endif
 	public class NWQuicMetadata : NWProtocolMetadata {
 
+#if NET
+		internal NWQuicMetadata (IntPtr handle, bool owns) : base (handle, owns) { }
+#else
 		public NWQuicMetadata (IntPtr handle, bool owns) : base (handle, owns) { }
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_quic_get_remote_idle_timeout (OS_nw_protocol_metadata metadata);

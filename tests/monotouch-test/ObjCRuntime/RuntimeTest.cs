@@ -864,5 +864,11 @@ Additional information:
 		{
 			Assert.That (AppDomain.CurrentDomain.BaseDirectory, Is.Not.Null.And.Not.Empty, "AppDomain.CurrentDomain.BaseDirectory");
 		}
+
+		[Test]
+		public void OriginalWorkingDirectoryTest ()
+		{
+			Assert.That (Runtime.OriginalWorkingDirectory, Is.Not.Null.And.Not.Empty, "OriginalWorkingDirectory");
+		}
 	}
 }

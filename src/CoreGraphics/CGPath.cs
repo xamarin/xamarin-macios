@@ -93,7 +93,7 @@ namespace CoreGraphics {
 		{
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public CGPath (IntPtr handle)
 			: base (handle, false)
 		{

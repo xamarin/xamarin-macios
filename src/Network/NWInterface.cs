@@ -29,7 +29,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWInterface : NativeObject {
+#if NET
+		internal NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWInterfaceType nw_interface_get_type (OS_nw_interface iface);

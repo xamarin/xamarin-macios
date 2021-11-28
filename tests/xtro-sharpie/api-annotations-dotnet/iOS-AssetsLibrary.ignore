@@ -1,0 +1,2 @@
+## typedef is used + untyped enum in ALAssetsLibrary.h: typedef NSUInteger ALAssetsGroupType;
+!unknown-native-enum! ALAssetsGroupType bound

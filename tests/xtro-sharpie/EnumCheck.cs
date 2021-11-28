@@ -8,13 +8,15 @@ using Clang.Ast;
 namespace Extrospection {
 
 	class EnumCheck : BaseVisitor {
+		class ManagedValue {
+			public FieldDefinition Field;
+			public EnumConstantDecl Decl;
+		}
 
 		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
 		Dictionary<string,TypeDefinition> obsoleted_enums = new Dictionary<string,TypeDefinition> ();
-		Dictionary<long, FieldDefinition> managed_signed_values = new Dictionary<long, FieldDefinition> ();
-		Dictionary<ulong, FieldDefinition> managed_unsigned_values = new Dictionary<ulong, FieldDefinition> ();
-		Dictionary<long, (string Name, bool Deprecated)> native_signed_values = new Dictionary<long, (string Name, bool Deprecated)> ();
-		Dictionary<ulong, (string Name, bool Deprecated)> native_unsigned_values = new Dictionary<ulong,(string Name, bool Deprecated)> ();
+		Dictionary<object, ManagedValue> managed_values = new Dictionary<object, ManagedValue> ();
+		Dictionary<object, (string Name, EnumConstantDecl Decl)> native_values = new Dictionary<object, (string Name, EnumConstantDecl Decl)> ();
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -175,93 +177,124 @@ namespace Extrospection {
 				throw new NotImplementedException ();
 			}
 
+			native_values.Clear ();
+			managed_values.Clear ();
+
+			// collect all the native enum values
+			var nativeConstant = signed ? (object) 0L : (object) 0UL;
+			foreach (var value in decl.Values) {
+				if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer)) {
+					if (signed) {
+						nativeConstant = integer.SExtValue;
+					} else {
+						nativeConstant = integer.ZExtValue;
+					}
+				}
+
+				if (native_values.TryGetValue (nativeConstant, out var entry)) {
+					// the same constant might be used for multiple values - some deprecated and some not,
+					// only overwrite if the current value isn't deprecated
+					if (!value.IsDeprecated ())
+						native_values [nativeConstant] = new (value.ToString (), value);
+				} else {
+					native_values [nativeConstant] = new (value.ToString (), value);
+				}
+				// assume, sequentially assigned (in case next `value.InitExpr` is null)
+				var t = nativeConstant.GetType ();
+				if (signed) {
+					nativeConstant = 1L + (long) nativeConstant;
+				} else {
+					nativeConstant = 1UL + (ulong) nativeConstant;
+				}
+			}
+
+			// collect all the managed enum values
 			var fields = type.Fields;
-			if (signed) {
-				managed_signed_values.Clear ();
-				native_signed_values.Clear ();
-				foreach (var f in fields) {
-					// skip special `value__`
-					if (f.IsRuntimeSpecialName && !f.IsStatic)
+			foreach (var f in fields) {
+				// skip special `value__`
+				if (f.IsRuntimeSpecialName && !f.IsStatic)
+					continue;
+				if (f.IsObsolete ())
+					continue;
+
+				object managedValue;
+				if (signed) {
+					managedValue = Convert.ToInt64 (f.Constant);
+				} else {
+					managedValue = Convert.ToUInt64 (f.Constant);
+				}
+				managed_values [managedValue] = new ManagedValue { Field = f };
+			}
+
+			foreach (var kvp in native_values) {
+				var value = kvp.Key;
+				var valueDecl = kvp.Value.Decl;
+				var valueName = kvp.Value.Name;
+
+				if (managed_values.TryGetValue (value, out var entry)) {
+					entry.Decl = valueDecl;
+				} else {
+					// only for unsigned (flags) native enums we allow all bits set on 32 bits (UInt32.MaxValue)
+					// to be equal to all bit set on 64 bits (UInt64.MaxValue) since the MaxValue differs between
+					// 32bits (e.g. watchOS) and 64bits (all others) platforms
+					if (!signed && native && (ulong) value == UInt32.MaxValue && managed_values.Remove (UInt64.MaxValue))
 						continue;
-					if (!f.IsObsolete ())
-						managed_signed_values [Convert.ToInt64 (f.Constant)] = f;
+
+					// couldn't find a matching managed enum value for the native enum value
+					// don't report deprecated native enum values (or if the native enum itself is deprecated) as missing
+					if (!valueDecl.IsDeprecated () && !decl.IsDeprecated ())
+						Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {valueName} = {value} not bound");
+				}
+			}
+
+			foreach (var kvp in managed_values) {
+				var value = kvp.Key;
+				var valueField = kvp.Value.Field;
+				var valueDecl = kvp.Value.Decl;
+				var fieldName = valueField.Name;
+
+				// A 0 might be a valid extra value sometimes
+				var isZero = signed ? (long) value == 0 : (ulong) value == 0;
+				if (isZero && IsExtraZeroValid (type.Name, fieldName))
+					continue;
+
+				if (valueDecl is null) {
+					// we have a managed enum value, but no corresponding native value
+					// this is only an issue if the managed enum value is available and not obsoleted
+					if (valueField.IsAvailable () && !valueField.IsObsolete ())
+						Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{fieldName} not found in native headers");
+					continue;
 				}
 
-				long n = 0;
-				foreach (var value in decl.Values) {
-					if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer))
-						n = integer.SExtValue;
-
-					native_signed_values [n] = new (value.ToString (), value.IsDeprecated ());
-					// assume, sequentially assigned (in case next `value.InitExpr` is null)
-					n++;
-				}
-
-				foreach (var value in native_signed_values.Keys) {
-					if (!managed_signed_values.ContainsKey (value)) {
-						if (!native_signed_values [value].Deprecated && !decl.IsDeprecated ())
-							Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_signed_values [value].Name} = {value} not bound");
-					} else
-						managed_signed_values.Remove (value);
-				}
-
-				foreach (var value in managed_signed_values.Keys) {
-					if ((value == 0) && IsExtraZeroValid (type.Name, managed_signed_values [0].Name))
-						continue;
-					// value could be decorated with `[No*]` and those should not be reported
-					if (managed_signed_values [value].IsAvailable ())
-						Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_signed_values [value].Name} not found in native headers");
-				}
-			} else {
-				managed_unsigned_values.Clear ();
-				native_unsigned_values.Clear ();
-				foreach (var f in fields) {
-					// skip special `value__`
-					if (f.IsRuntimeSpecialName && !f.IsStatic)
-						continue;
-					if (!f.IsObsolete ())
-						managed_unsigned_values [Convert.ToUInt64 (f.Constant)] = f;
-				}
-
-				ulong n = 0;
-				foreach (var value in decl.Values) {
-					if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer))
-						n = integer.ZExtValue;
-
-					native_unsigned_values [n] = new (value.ToString (), value.IsDeprecated ());
-					// assume, sequentially assigned (in case next `value.InitExpr` is null)
-					n++;
-				}
-
-				foreach (var value in native_unsigned_values.Keys) {
-					if (!managed_unsigned_values.ContainsKey (value)) {
-						// only for unsigned (flags) native enums we allow all bits set on 32 bits (UInt32.MaxValue)
-						// to be equal to all bit set on 64 bits (UInt64.MaxValue) since the MaxValue differs between
-						// 32bits (e.g. watchOS) and 64bits (all others) platforms
-						var log = true;
-						if (native && (value == UInt32.MaxValue)) {
-							log = !managed_unsigned_values.ContainsKey (UInt64.MaxValue);
-							managed_unsigned_values.Remove (UInt64.MaxValue);
-						}
-						if (log)
-							log &= !native_unsigned_values [value].Deprecated && !decl.IsDeprecated ();
-						if (log)
-							Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value].Name} = {value} not bound");
-					} else
-						managed_unsigned_values.Remove (value);
-				}
-
-				foreach (var value in managed_unsigned_values.Keys) {
-					if ((value == 0) && IsExtraZeroValid (type.Name, managed_unsigned_values [0].Name))
-						continue;
-					// value could be decorated with `[No*]` and those should not be reported
-					if (managed_unsigned_values [value].IsAvailable ())
-						Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_unsigned_values [value].Name} not found in native headers");
+				if (!valueDecl.IsAvailable ()) {
+					// if the native enum value isn't available, the managed one shouldn't be either
+					if (valueField.IsAvailable () && !IsErrorEnum (type))
+						Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{fieldName} is available for the current platform while the value in the native header is not");
+					continue;
 				}
 			}
 
 			if (native_size != managed_size && !decl.IsDeprecated ())
 				Log.On (framework).Add ($"!wrong-enum-size! {name} managed {managed_size} vs native {native_size}");
+		}
+
+		static bool IsErrorEnum (TypeDefinition type)
+		{
+			if (!type.IsEnum)
+				return false;
+
+			if (type.Name.EndsWith ("Error", StringComparison.Ordinal))
+				return true;
+			if (type.Name.EndsWith ("ErrorCode", StringComparison.Ordinal))
+				return true;
+
+			if (!type.HasCustomAttributes)
+				return false;
+			foreach (var ca in type.CustomAttributes) {
+				if (ca.AttributeType.Name == "ErrorDomainAttribute")
+					return true;
+			}
+			return false;
 		}
 
 		static bool IsExtraZeroValid (string typeName, string valueName)

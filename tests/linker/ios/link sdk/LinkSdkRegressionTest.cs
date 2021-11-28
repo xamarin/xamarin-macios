@@ -928,11 +928,9 @@ namespace LinkSdk {
 			var path = TestFolder (Environment.SpecialFolder.Desktop, exists: false);
 #endif
 
-#if __MACOS__
-			var isMac1015 = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15);
-			path = TestFolder (Environment.SpecialFolder.Favorites, supported: isMac1015, exists: isMac1015);
-#elif __MACCATALYST__
-			path = TestFolder (Environment.SpecialFolder.Favorites, exists: true);
+#if __MACOS__ || __MACCATALYST__
+			// The behavior for the Favorites folder changes betwee macOS versions, and it's quite complicated
+			// to get it right, so just skip any checks for this particular folder.
 #else
 			path = TestFolder (Environment.SpecialFolder.Favorites, exists: false);
 #endif
@@ -954,8 +952,8 @@ namespace LinkSdk {
 
 #if __TVOS__
 			path = TestFolder (Environment.SpecialFolder.Fonts, exists: null, supported: true);
-#elif __MACOS__
-			path = TestFolder (Environment.SpecialFolder.Fonts, supported: isMac1015, exists: isMac1015);
+#elif __MACOS__ || __MACCATALYST__
+			// See comment about the Favorites folder, it applies to the Fonts folder as well.
 #else
 			path = TestFolder (Environment.SpecialFolder.Fonts, exists: myExists);
 #endif

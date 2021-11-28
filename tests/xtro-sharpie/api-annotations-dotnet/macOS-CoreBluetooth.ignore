@@ -1,0 +1,5 @@
+## old and different name for CBUUIDCharacteristicValidRangeString, removed in Xcode9 headers (27160443)
+!unknown-field! CBUUIDValidRangeString bound
+
+# not to be added since it is not needed in any API on macOS as of xcode13 beta 3.
+!missing-enum! CBCentralManagerFeature not bound

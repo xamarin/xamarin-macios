@@ -290,11 +290,15 @@ namespace ImageIO {
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CGImageRef */ IntPtr CGImageSourceCreateThumbnailAtIndex (/* CGImageSourceRef */ IntPtr isrc, /* size_t */ nint index, /* CFDictionaryRef */ IntPtr options);
 
-		public CGImage CreateThumbnail (int index, CGImageThumbnailOptions? options)
+		public CGImage? CreateThumbnail (int index, CGImageThumbnailOptions? options)
 		{
 			using (var dict = options?.ToDictionary ()) {
 				var ret = CGImageSourceCreateThumbnailAtIndex (Handle, index, dict.GetHandle ());
+#if NET
+				return CGImage.FromHandle (ret, true);
+#else
 				return new CGImage (ret, true);
+#endif
 			}
 		}
 

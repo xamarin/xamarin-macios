@@ -41,7 +41,7 @@ namespace CoreGraphics {
 	public class CGShading : NativeObject
 	{
 #if !COREBUILD
-#if !XAMCORE_4_0
+#if !NET
 		public CGShading (IntPtr handle)
 			: base (handle, false)
 		{
