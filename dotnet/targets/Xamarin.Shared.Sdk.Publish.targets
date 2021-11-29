@@ -15,7 +15,7 @@
 		     identifier when publishing for a mobile platform (iOS, tvOS), because the default runtime identifier is for the simulator. -->
 		<Error
 			Text="A runtime identifier must be specified in order to publish this project."
-			Condition="'$(_UsingDefaultRuntimeIdentifier)' == 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')"
+			Condition="'$(_XamarinUsingDefaultRuntimeIdentifier)' == 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')"
 		/>
 
 		<!-- It's mandatory to specify a runtime identifier for device when publishing for a mobile platform (iOS, tvOS). -->
