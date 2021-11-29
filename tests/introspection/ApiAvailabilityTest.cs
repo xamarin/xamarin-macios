@@ -29,6 +29,10 @@ using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
+#if !NET
+using ApplePlatform = ObjCRuntime.PlatformName;
+#endif
+
 namespace Introspection {
 
 	public class ApiAvailabilityTest : ApiBaseTest {
@@ -377,8 +381,16 @@ namespace Introspection {
 			var mu = IsUnavailable (m, out var unavailableVersion);
 			if (mu && (ma != null)) {
 				if (availableVersion is not null && unavailableVersion is not null) {
-					if (availableVersion >= unavailableVersion)
-						AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
+					// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
+					// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
+					// instead of a 'greater than or equal' version like we do for the other platforms.
+					if (Platform == ApplePlatform.MacCatalyst) {
+						if (availableVersion > unavailableVersion)
+							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
+					} else {
+						if (availableVersion >= unavailableVersion)
+							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
+					}
 				} else {
 					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked both [Unavailable ({Platform})] and {ma}.");
 				}
@@ -399,8 +411,17 @@ namespace Introspection {
 				var ta = GetAvailable (t, out var availableVersion);
 				if (tu && (ta != null)) {
 					if (availableVersion is not null && unavailableVersion is not null) {
-						if (availableVersion >= unavailableVersion)
-							AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
+						// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
+						// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
+						// instead of a 'greater than or equal' version like we do for the other platforms.
+						if (Platform == ApplePlatform.MacCatalyst) {
+							if (availableVersion > unavailableVersion)
+								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
+
+						} else {
+							if (availableVersion >= unavailableVersion)
+								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
+						}
 					} else {
 						AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}. Available: {availableVersion} Unavailable: {unavailableVersion}");
 					}

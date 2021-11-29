@@ -531,6 +531,7 @@ namespace CloudKit {
 	delegate void CKFetchRecordChangesHandler (CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, NSError operationError);
 
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKFetchRecordZoneChangesOperation' instead.")]
+	[Deprecated (PlatformName.TvOS, 10, 0, message : "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[iOS (8,0), Mac (10,10)]
 	[NoWatch]
