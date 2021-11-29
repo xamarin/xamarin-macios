@@ -14,4 +14,7 @@
 	<assembly fullname="Xamarin.TVOS">
 		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
 	</assembly>
+	<assembly fullname="Xamarin.MacCatalyst">
+		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
+	</assembly>
 </linker>
