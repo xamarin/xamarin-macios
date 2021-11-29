@@ -33,17 +33,10 @@ namespace ObjCRuntime {
 			this.handle = Runtime.GetProtocolForType (type);
 		}
 
-		public Protocol (IntPtr handle)
-		{
-			this.handle = handle;
-		}
-
-#if NET
 		public Protocol (NativeHandle handle)
 		{
 			this.handle = handle;
 		}
-#endif
 
 		[Preserve (Conditional = true)]
 		internal Protocol (NativeHandle handle, bool owns)
