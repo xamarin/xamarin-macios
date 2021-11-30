@@ -414,7 +414,7 @@ MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-reference
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 # DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES_MACCATALYST_IOS),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml)
-DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES_MACCATALYST_IOS),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml) \
+DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml) \
 	$(foreach file,$(DOTNET_LEGACY_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/dotnet/legacy-diff/$(file).xml)
 
 $(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR_iOS)/%.dll $(MONO_API_INFO)
