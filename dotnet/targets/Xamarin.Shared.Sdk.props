@@ -35,6 +35,7 @@
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">tvossimulator-x64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
+		<_XamarinUsingDefaultRuntimeIdentifier>true</_XamarinUsingDefaultRuntimeIdentifier>
 		<!--
 			Workaround/hack:
 
