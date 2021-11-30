@@ -153,28 +153,28 @@ namespace Xamarin.Tests
 		}
 
 #if NET
-		public static bool IsAvailable (this IEnumerable<OSPlatformAttribute> attributes, PlatformInfo targetPlatform)
+		static IEnumerable<(OSPlatformAttribute Attribute, ApplePlatform Platform, Version Version)> ParseAttributes (IEnumerable<OSPlatformAttribute> attributes)
 		{
-			// Sort the attributes so that maccatalyst attributes are processed before ios attributes
-			// This way we can easily fall back to ios for maccatalyst
-			attributes = attributes.OrderBy (v => v.PlatformName.ToLowerInvariant ()).Reverse ();
-
 			foreach (var attr in attributes) {
 				if (!attr.TryParse (out ApplePlatform? platform, out var version))
 					continue;
 
-				if (targetPlatform.Name == ApplePlatform.MacCatalyst) {
-					if (platform != ApplePlatform.iOS && platform != ApplePlatform.MacCatalyst)
-						continue;
-				} else if (platform != targetPlatform.Name) {
-					continue;
-				}
+				yield return new (attr, platform.Value, version);
+			}
+		}
 
-				if (attr is UnsupportedOSPlatformAttribute)
-					return version is not null && targetPlatform.Version < version;
+		public static bool IsAvailable (this IEnumerable<OSPlatformAttribute> attributes, PlatformInfo targetPlatform)
+		{
+			var parsedAttributes = ParseAttributes (attributes);
 
-				if (attr is SupportedOSPlatformAttribute)
-					return version is null || targetPlatform.Version >= version;
+			var available = IsAvailable (parsedAttributes, targetPlatform, targetPlatform.Name);
+			if (available.HasValue)
+				return available.Value;
+
+			if (targetPlatform.Name == ApplePlatform.MacCatalyst) {
+				available = IsAvailable (parsedAttributes, targetPlatform, ApplePlatform.iOS);
+				if (available.HasValue)
+					return available.Value;
 			}
 
 			// Our current attribute logic assumes that no attribute means that an API is available on all versions of that platform.
@@ -186,6 +186,47 @@ namespace Xamarin.Tests
 			// Correct logic:
 			// Only available if there aren't any attributes for other platforms
 			// return attributes.Count () == 0;
+		}
+
+		public static bool? IsAvailable (IEnumerable<(OSPlatformAttribute Attribute, ApplePlatform Platform, Version Version)> attributes, PlatformInfo targetPlatform, ApplePlatform attributePlatform)
+		{
+			// First we check for any unsupported attributes, and only once we know that there aren't any unsupported
+			// attributes, we check for supported attributes. Otherwise we might determine that an API is available
+			// if we check the supported attribute first for OS=3.0 here:
+			//     [SupportedOSPlatform ("1.0")
+			//     [UnsupportedOSPlatform ("2.0")
+			// if we run into the SupportedOSPlatform attribute first.
+			foreach (var parsedAttr in attributes) {
+				var attr = parsedAttr.Attribute;
+				var platform = parsedAttr.Platform;
+				var version = parsedAttr.Version;
+
+				if (platform != attributePlatform)
+					continue;
+
+				if (attr is UnsupportedOSPlatformAttribute) {
+					var isUnsupported = version is not null && targetPlatform.Version >= version;
+					// At this point we can't ascertain that the API is available, only that it's unavailable,
+					// so only return in that case. We need to check the SupportedOSPlatform attributes
+					// to see if the API is available.
+					if (isUnsupported)
+						return false;
+				}
+			}
+
+			foreach (var parsedAttr in attributes) {
+				var attr = parsedAttr.Attribute;
+				var platform = parsedAttr.Platform;
+				var version = parsedAttr.Version;
+
+				if (platform != attributePlatform)
+					continue;
+
+				if (attr is SupportedOSPlatformAttribute)
+					return version is null || targetPlatform.Version >= version;
+			}
+
+			return null;
 		}
 #else
 		public static bool IsAvailable (this IEnumerable<AvailabilityBaseAttribute> attributes, PlatformInfo targetPlatform)
