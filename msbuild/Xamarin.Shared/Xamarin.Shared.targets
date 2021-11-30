@@ -148,8 +148,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
-			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
+			<Output TaskParameter="NativeFrameworks" ItemName="_ResolvedNativeReference" />
 		</ResolveNativeReferences>
+
+		<ItemGroup>
+			<_FrameworkNativeReference Include="@(_ResolvedNativeReference)" Condition="'%(Kind)' == 'Framework'" />
+			<_FileNativeReference Include="@(_ResolvedNativeReference)" Condition="'%(Kind)' == 'Static' Or '%(Kind)' == 'Dynamic'" />
+		</ItemGroup>
 	</Target>
 	
 	<PropertyGroup>
