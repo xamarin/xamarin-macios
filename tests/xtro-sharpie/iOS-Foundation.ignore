@@ -1,4 +1,3 @@
-!missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound
 !missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
 
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
@@ -7,5 +6,3 @@
 
 ## does not exists in iOS as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
-
-# Initial result from new rule missing-null-allowed

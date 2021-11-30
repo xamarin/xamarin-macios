@@ -7,6 +7,7 @@ using Foundation;
 using SceneKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SceneKit {
 
@@ -20,7 +21,7 @@ namespace MonoTouchFixtures.SceneKit {
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 		}
 
 #if !XAMCORE_4_0

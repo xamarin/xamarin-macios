@@ -16,6 +16,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -33,7 +34,7 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.NotNull (stpf.Color, "Color");
 					Assert.Null (stpf.Font, "Font");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
-				} else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
+				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (stpf.Color, "Color");
 					Assert.Null (stpf.Font, "Font");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
@@ -54,7 +55,7 @@ namespace MonoTouchFixtures.UIKit {
 				if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					Assert.NotNull (stpf.Color, "Color");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
-				} else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
+				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (stpf.Color, "Color");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
 				} else {

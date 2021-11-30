@@ -18,6 +18,7 @@ using UIKit;
 using ObjCRuntime;
 using MonoTouchException=ObjCRuntime.RuntimeException;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -163,7 +164,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Fields ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			// just to confirm it's not an NSUrl but an NSString
 			Assert.That (UIDocument.UserActivityDocumentUrlKey.ToString (), Is.EqualTo ("NSUserActivityDocumentURL"), "NSUserActivityDocumentURLKey");
 		}

@@ -7,22 +7,31 @@
 #
 parameters:
 - name: runTests
+  displayName: Run Simulator Tests
   type: boolean
   default: true
 
 - name: runDeviceTests
+  displayName: Run Device Tests (includes macOS)
   type: boolean
   default: true
 
+- name: runGovernanceTests
+  type: boolean
+  default: true 
+
 - name: runSamples
+  displayName: Run Samples
   type: boolean
   default: false
   
 - name: provisionatorChannel
+  displayName: Provisionator channel to use 
   type: string
   default: 'latest'
 
 - name: enableDotnet
+  displayName: Build Dotnet 
   type: boolean
   default: true
 
@@ -41,6 +50,7 @@ parameters:
 # device tests, no more copy paste, just add the new config.
 
 - name: deviceTestsConfigurations
+  displayName: Device test configurations to run
   type: object
   default: [
     {
@@ -54,7 +64,6 @@ parameters:
       statusContext: 'VSTS: device tests iOS',
       iOSDeviceDemand: [
         'ios',
-        "Agent.OSVersion -equals '11.6'"
       ]
     },
     {
@@ -68,11 +77,11 @@ parameters:
       statusContext: 'VSTS: device tests tvOS',
       iOSDeviceDemand: [
         'tvos',
-        "Agent.OSVersion -equals '11.6'"
       ]
     }]
 
 - name: macTestsConfigurations
+  displayName: macOS test configurations to run
   type: object
   default: [
     {
@@ -92,16 +101,6 @@ parameters:
       macPool: 'internal-macos-10.14',
       useImage: true,
       statusContext: 'Mac Mojave (10.14)',
-      demands: [
-        "Agent.OS -equals Darwin",
-      ]
-    },
-    {
-      stageName: 'mac_10_13',
-      displayName: 'Mac High Sierra (10.13)',
-      macPool: 'internal-macos-10.13',
-      useImage: true,
-      statusContext: 'Mac High Sierra (10.13)',
       demands: [
         "Agent.OS -equals Darwin",
       ]
@@ -142,7 +141,7 @@ resources:
   - repository: release-scripts
     type: github
     name: xamarin/release-scripts
-    ref: refs/heads/sign-and-notarized
+    ref: refs/heads/only_codesign
     endpoint: xamarin
 
 variables:
@@ -236,17 +235,18 @@ schedules:
 
 stages:
 
-- stage: governance_checks
-  displayName: 'Governance Checks'
-  dependsOn:
-  - build_packages
-  jobs:
-    - job: governance
-      displayName: 'Governance Checks'
-      pool:
-        vmImage: windows-latest
-      steps:
-      - template: templates/governance-checks.yml
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: governance_checks
+    displayName: 'Governance Checks'
+    dependsOn:
+    - build_packages
+    jobs:
+      - job: governance
+        displayName: 'Governance Checks'
+        pool:
+          vmImage: windows-latest
+        steps:
+        - template: templates/governance-checks.yml
 
 - stage: build_packages
   displayName: 'Build'

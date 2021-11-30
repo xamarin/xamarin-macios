@@ -19,7 +19,7 @@ using CoreGraphics;
 
 namespace MediaPlayer {
 	public partial class MPMediaItemArtwork {
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 		[Obsolete ("Use the (UIImage) constructor instead, iOS9 does not allow creating an empty instance.")]
 		public MPMediaItemArtwork ()
 		{

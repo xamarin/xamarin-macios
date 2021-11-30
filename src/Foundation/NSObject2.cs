@@ -180,10 +180,21 @@ namespace Foundation {
 			InitializeObject (alloced);
 		}
 		
-		public NSObject (IntPtr handle) : this (handle, false) {
+#if NET
+		protected internal NSObject (IntPtr handle)
+#else
+		public NSObject (IntPtr handle)
+#endif
+			: this (handle, false)
+		{
 		}
 		
-		public NSObject (IntPtr handle, bool alloced) {
+#if NET
+		protected NSObject (IntPtr handle, bool alloced)
+#else
+		public NSObject (IntPtr handle, bool alloced)
+#endif
+		{
 			this.handle = handle;
 			InitializeObject (alloced);
 		}
@@ -648,9 +659,9 @@ namespace Foundation {
 		private void InvokeOnMainThread (Selector sel, NSObject obj, bool wait)
 		{
 #if MONOMAC
-			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, sel.Handle, obj == null ? IntPtr.Zero : obj.Handle, wait);
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, sel.Handle, obj.GetHandle (), wait);
 #else
-			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj == null ? IntPtr.Zero : obj.Handle, wait);
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj.GetHandle (), wait);
 #endif
 		}
 		

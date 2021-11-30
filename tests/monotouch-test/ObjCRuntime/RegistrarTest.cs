@@ -47,6 +47,7 @@ using PointF = CoreGraphics.CGPoint;
 using CategoryAttribute = ObjCRuntime.CategoryAttribute;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -195,7 +196,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (ptr, Is.EqualTo (IntPtr.Zero), "#e1");
 			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject5:").Handle, true);
 			Assert.That (ptr, Is.Not.EqualTo (IntPtr.Zero), "#e2");
-			path = new CGPath (ptr);
+			path = Runtime.GetINativeObject<CGPath> (ptr, false);
 			path.AddArc (1, 2, 3, 4, 5, false); // this should crash if we get back a bogus ptr
 		}
 
@@ -1440,7 +1441,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNativeObjectArray ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var i1 = new MKPointAnnotation ()) {
 				using (var i2 = new MKPointAnnotation ()) {
@@ -2306,7 +2307,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void VoidPtrToINativeObjectArgument ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 
 			using (var obj = new ABPeoplePickerNavigationControllerDelegateImpl ()) {
 				using (var person = new ABPerson ()) {

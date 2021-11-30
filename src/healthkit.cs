@@ -141,13 +141,13 @@ namespace HealthKit {
 
 		[NoWatch]
 		[Obsolete ("Use the overload that takes HKAnchoredObjectResultHandler2 instead")]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler completion);
 
 		[NoWatch]
 		[Sealed]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler2 completion);
 
@@ -1020,7 +1020,7 @@ namespace HealthKit {
 		[Export ("UUID", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("source", ArgumentSemantic.Strong)]
 		HKSource Source { get; }
 

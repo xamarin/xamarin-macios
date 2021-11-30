@@ -133,6 +133,18 @@ namespace CoreServices
 		}
 	}
 
+	struct FSEventStreamContext {
+		nint version; /* CFIndex: only valid value is zero */
+		internal IntPtr Info; /* void * __nullable */
+		IntPtr Retain; /* CFAllocatorRetainCallBack __nullable */
+#if NET
+		internal unsafe delegate* unmanaged<IntPtr, void> Release; /* CFAllocatorReleaseCallBack __nullable */
+#else
+		internal FSEventStream.ReleaseContextCallback Release; /* CFAllocatorReleaseCallBack __nullable */
+#endif
+		IntPtr CopyDescription; /* CFAllocatorCopyDescriptionCallBack __nullable */
+	}
+
 	public delegate void FSEventStreamEventsHandler (object sender, FSEventStreamEventsArgs args);
 
 	public sealed class FSEventStreamEventsArgs : EventArgs
@@ -147,8 +159,6 @@ namespace CoreServices
 
 	public class FSEventStream : NativeObject
 	{
-		GCHandle gch;
-
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern void FSEventStreamRetain (IntPtr handle);
 
@@ -165,19 +175,17 @@ namespace CoreServices
 			FSEventStreamRelease (GetCheckedHandle ());
 		}
 
-		protected override void Dispose (bool disposing)
-		{
-			if (gch.IsAllocated)
-				gch.Free ();
-			base.Dispose (disposing);
-		}
-
 		delegate void FSEventStreamCallback (IntPtr handle, IntPtr userData, nint numEvents,
  			IntPtr eventPaths, IntPtr eventFlags, IntPtr eventIds);
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		static extern IntPtr FSEventStreamCreate (IntPtr allocator,
-			FSEventStreamCallback callback, IntPtr context, IntPtr pathsToWatch,
+		unsafe static extern IntPtr FSEventStreamCreate (IntPtr allocator,
+#if NET
+			delegate* unmanaged<IntPtr, IntPtr, nint, IntPtr, IntPtr, IntPtr, void> callback,
+#else
+			FSEventStreamCallback callback,
+#endif
+			ref FSEventStreamContext context, IntPtr pathsToWatch,
 			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
 		public FSEventStream (CFAllocator? allocator, NSArray pathsToWatch,
@@ -186,12 +194,30 @@ namespace CoreServices
 			if (pathsToWatch is null)
 				throw new ArgumentNullException (nameof (pathsToWatch));
 
-			gch = GCHandle.Alloc (this);
+			var gch = GCHandle.Alloc (this);
 
-			var handle = FSEventStreamCreate (
-				allocator.GetHandle (),
-				eventsCallback, GCHandle.ToIntPtr (gch), pathsToWatch.Handle,
-				sinceWhenId, latency.TotalSeconds, flags | (FSEventStreamCreateFlags)0x1 /* UseCFTypes */);
+			var context = default (FSEventStreamContext);
+			context.Info = GCHandle.ToIntPtr (gch);
+#if NET
+			unsafe {
+				context.Release = &FreeGCHandle;
+			}
+#else
+			context.Release = releaseContextCallback;
+#endif
+
+			IntPtr handle;
+			unsafe {
+				handle = FSEventStreamCreate (
+					allocator.GetHandle (),
+#if NET
+					&EventsCallback,
+#else
+					eventsCallback,
+#endif
+					ref context, pathsToWatch.Handle,
+					sinceWhenId, latency.TotalSeconds, flags | (FSEventStreamCreateFlags)0x1 /* UseCFTypes */);
+			}
 
 			InitializeHandle (handle);
 		}
@@ -201,8 +227,24 @@ namespace CoreServices
 		{
 		}
 
+#if !NET
 		static readonly FSEventStreamCallback eventsCallback = EventsCallback;
 
+		static readonly ReleaseContextCallback releaseContextCallback = FreeGCHandle;
+		internal delegate void ReleaseContextCallback (IntPtr info);
+#endif
+
+#if NET
+		[UnmanagedCallersOnly]
+#endif
+		static void FreeGCHandle (IntPtr gchandle)
+		{
+			GCHandle.FromIntPtr (gchandle).Free ();
+		}
+
+#if NET
+		[UnmanagedCallersOnly]
+#endif
 		static void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
 			IntPtr eventPaths, IntPtr eventFlags, IntPtr eventIds)
 		{
@@ -211,7 +253,7 @@ namespace CoreServices
 			}
 
 			var events = new FSEvent[numEvents];
-			var pathArray = new CFArray (eventPaths);
+			var pathArray = new CFArray (eventPaths, false);
 
 			for (int i = 0; i < events.Length; i++) {
 				events[i].Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4);

@@ -45,10 +45,12 @@ namespace CoreFoundation {
 	// interesting bits: https://github.com/opensource-apple/CF/blob/master/CFArray.c
 	public partial class CFArray : NativeObject {
 
+#if !NET
 		internal CFArray (IntPtr handle)
 			: base (handle, false)
 		{
 		}
+#endif
 
 		[Preserve (Conditional = true)]
 		internal CFArray (IntPtr handle, bool owns)

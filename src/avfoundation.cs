@@ -161,6 +161,7 @@ namespace AVFoundation {
 		[Field ("AVMediaTypeTimecode")]
 		Timecode = 5,
 
+#if !NET
 		[NoTV, NoWatch]
 		[Obsoleted (PlatformName.iOS, 6,0)]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Always 'null'.")]
@@ -169,6 +170,7 @@ namespace AVFoundation {
 		[NoMacCatalyst]
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
 		TimedMetadata = 6,
+#endif
 
 		[Field ("AVMediaTypeMuxed")]
 		Muxed = 7,
@@ -186,7 +188,7 @@ namespace AVFoundation {
 		DepthData = 10,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Use AVMediaTypes enum values")]
 	[NoWatch]
 	[BaseType (typeof (NSObject))][Static]
@@ -211,9 +213,9 @@ namespace AVFoundation {
 
 		[NoTV][NoWatch]
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
-		[Availability (Obsoleted = Platform.iOS_6_0)]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Always 'null'.")]
-		[Availability (Obsoleted = Platform.Mac_10_8)]
+		[Obsoleted (PlatformName.iOS, 6,0, message: "Always 'null'.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 8, message: "Always 'null'.")]
 		[NoMacCatalyst]
 		NSString TimedMetadata { get; }
 
@@ -227,7 +229,7 @@ namespace AVFoundation {
 		[Field ("AVMediaTypeMetadata")]
 		NSString Metadata { get; }
 	}
-#endif
+#endif // !NET
 
 	[Watch (6,0)]
 	[iOS (9,0), Mac(10,11)]
@@ -1656,15 +1658,15 @@ namespace AVFoundation {
 		void DecoderError (AVAudioPlayer player, [NullAllowed] NSError error);
 
 #if !MONOMAC
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Export ("audioPlayerBeginInterruption:")]
 		void BeginInterruption (AVAudioPlayer  player);
 	
 		[Export ("audioPlayerEndInterruption:")]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		void EndInterruption (AVAudioPlayer player);
 
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Export ("audioPlayerEndInterruption:withOptions:")]
 		void EndInterruption (AVAudioPlayer player, AVAudioSessionInterruptionFlags flags);
 #endif
@@ -1840,20 +1842,20 @@ namespace AVFoundation {
 		void EncoderError (AVAudioRecorder recorder, [NullAllowed] NSError error);
 
 #if !MONOMAC
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Export ("audioRecorderBeginInterruption:")]
 		void BeginInterruption (AVAudioRecorder  recorder);
 
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Export ("audioRecorderEndInterruption:")]
 		void EndInterruption (AVAudioRecorder  recorder);
 
 		// Deprecated in iOS 6.0 but we have same C# signature as a method that was deprecated in iOS 8.0
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Export ("audioRecorderEndInterruption:withFlags:")]
 		void EndInterruption (AVAudioRecorder recorder, AVAudioSessionInterruptionFlags flags);
 
-		//[Availability (Deprecated = Platform.iOS_8_0)]
+		//[Deprecated (PlatformName.iOS, 8, 0)]
 		//[Export ("audioRecorderEndInterruption:withOptions:")]
 		//void EndInterruption (AVAudioRecorder recorder, AVAudioSessionInterruptionFlags flags);
 #endif
@@ -1899,7 +1901,7 @@ namespace AVFoundation {
 		AVAudioSession SharedInstance ();
 	
 		[NoWatch, NoMac]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		[NoTV]
 		NSObject WeakDelegate { get; set;  }
@@ -1908,7 +1910,7 @@ namespace AVFoundation {
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		[NullAllowed]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
 		[NoTV]
 		AVAudioSessionDelegate Delegate { get; set;  }
 	
@@ -1918,7 +1920,7 @@ namespace AVFoundation {
 
 		[NoTV, NoMac]
 		[Export ("setActive:withFlags:error:")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'SetActive (bool, AVAudioSessionSetActiveOptions, out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'SetActive (bool, AVAudioSessionSetActiveOptions, out NSError)' instead.")]
 		bool SetActive (bool beActive, AVAudioSessionFlags flags, out NSError outError);
 
 		[NoMac]
@@ -1926,7 +1928,7 @@ namespace AVFoundation {
 		bool SetCategory (NSString theCategory, out NSError outError);
 	
 		[NoTV, NoMac]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'SetPreferredSampleRate' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'SetPreferredSampleRate' instead.")]
 		[Export ("setPreferredHardwareSampleRate:error:")]
 		bool SetPreferredHardwareSampleRate (double sampleRate, out NSError outError);
 	
@@ -1948,7 +1950,7 @@ namespace AVFoundation {
 	
 		[NoTV, NoMac]
 		[Export ("preferredHardwareSampleRate")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'PreferredSampleRate' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'PreferredSampleRate' instead.")]
 		double PreferredHardwareSampleRate { get;  }
 	
 		[NoWatch, NoMac]
@@ -1957,22 +1959,22 @@ namespace AVFoundation {
 	
 		[NoTV, NoMac]
 		[Export ("inputIsAvailable")]
-		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
 		bool InputIsAvailable { get;  }
 	
 		[NoTV, NoMac]
 		[Export ("currentHardwareSampleRate")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'SampleRate' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'SampleRate' instead.")]
 		double CurrentHardwareSampleRate { get;  }
 
 		[NoTV, NoMac]
 		[Export ("currentHardwareInputNumberOfChannels")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'InputNumberOfChannels' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'InputNumberOfChannels' instead.")]
 		nint CurrentHardwareInputNumberOfChannels { get;  }
 	
 		[NoTV, NoMac]
 		[Export ("currentHardwareOutputNumberOfChannels")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'OutputNumberOfChannels' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'OutputNumberOfChannels' instead.")]
 		nint CurrentHardwareOutputNumberOfChannels { get;  }
 
 		[NoMac]
@@ -1996,7 +1998,7 @@ namespace AVFoundation {
 		NSString CategoryPlayAndRecord { get; }
 
 		[NoTV][NoWatch][NoMac]
-		[Availability (Deprecated = Platform.iOS_10_0)] // FIXME: Find the new value to use
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Field ("AVAudioSessionCategoryAudioProcessing")]
 		NSString CategoryAudioProcessing { get; }
 
@@ -2998,6 +3000,7 @@ namespace AVFoundation {
 
 		[Export ("naturalSize")]
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		CGSize NaturalSize { get;  }
 
@@ -4046,7 +4049,7 @@ namespace AVFoundation {
 		[Export ("finishLoadingWithResponse:data:redirect:")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message : "Use the 'Response', 'Redirect' properties and the 'AVAssetResourceLoadingDataRequest.Responds' and 'AVAssetResourceLoadingRequest.FinishLoading' methods instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use the 'Response', 'Redirect' properties and the 'AVAssetResourceLoadingDataRequest.Responds' and 'AVAssetResourceLoadingRequest.FinishLoading' methods instead.")]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use the 'Response', 'Redirect' properties and the 'AVAssetResourceLoadingDataRequest.Responds' and 'AVAssetResourceLoadingRequest.FinishLoading' methods instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use the 'Response', 'Redirect' properties and the 'AVAssetResourceLoadingDataRequest.Responds' and 'AVAssetResourceLoadingRequest.FinishLoading' methods instead.")]
 		void FinishLoading ([NullAllowed] NSUrlResponse usingResponse, [NullAllowed] NSData data, [NullAllowed] NSUrlRequest redirect);
 
 		[Export ("finishLoadingWithError:")]
@@ -4223,6 +4226,7 @@ namespace AVFoundation {
 
 		[Export ("finishWriting")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use the asynchronous 'FinishWriting (NSAction completionHandler)' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use the asynchronous 'FinishWriting (NSAction completionHandler)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Use the asynchronous 'FinishWriting (NSAction completionHandler)' instead.")]
 		bool FinishWriting ();
 
@@ -9038,10 +9042,10 @@ namespace AVFoundation {
 		bool SupportsVideoStabilization { [Bind ("isVideoStabilizationSupported")] get;  }
 
 		[Export ("videoStabilizationEnabled")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'ActiveVideoStabilizationMode' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'ActiveVideoStabilizationMode' instead.")]
 		bool VideoStabilizationEnabled { [Bind ("isVideoStabilizationEnabled")] get;  }
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'PreferredVideoStabilizationMode' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PreferredVideoStabilizationMode' instead.")]
 		[Export ("enablesVideoStabilizationWhenAvailable")]
 		bool EnablesVideoStabilizationWhenAvailable { get; set;  }
 
@@ -9339,7 +9343,7 @@ namespace AVFoundation {
 		[Export ("capturesCursor")]
 		bool CapturesCursor { get; set; }
 
-		[Availability (Deprecated=Platform.Mac_10_10, Message="Ignored since 10.10, if you want to get this behavior, use AVCaptureVideoDataOutput and compare the frame contents on your own code.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Ignored since 10.10, if you want to get this behavior, use AVCaptureVideoDataOutput and compare the frame contents on your own code.")]
 		[Export ("removesDuplicateFrames")]
 		bool RemovesDuplicateFrames { get; set; }
 	}
@@ -9362,23 +9366,23 @@ namespace AVFoundation {
 
 #if !MONOMAC
 		[Export ("orientation")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.VideoOrientation' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.VideoOrientation' instead.")]
 		AVCaptureVideoOrientation Orientation { get; set;  }
 
 		[Export ("automaticallyAdjustsMirroring")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.AutomaticallyAdjustsVideoMirroring' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.AutomaticallyAdjustsVideoMirroring' instead.")]
 		bool AutomaticallyAdjustsMirroring { get; set;  }
 
 		[Export ("mirrored")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.VideoMirrored' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.VideoMirrored' instead.")]
 		bool Mirrored { [Bind ("isMirrored")] get; set;  }
 
 		[Export ("isMirroringSupported")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.IsVideoMirroringSupported' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.IsVideoMirroringSupported' instead.")]
 		bool MirroringSupported { get; }
 
 		[Export ("isOrientationSupported")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.IsVideoOrientationSupported' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.IsVideoOrientationSupported' instead.")]
 		bool OrientationSupported { get; }
 
 #endif
@@ -9451,7 +9455,7 @@ namespace AVFoundation {
 		AVVideoSettingsCompressed CompressedVideoSetting { get; set; }
 
 		[Export ("minFrameDuration")]
-		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'AVCaptureConnection.MinVideoFrameDuration' instead.")]
+		[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'AVCaptureConnection.MinVideoFrameDuration' instead.")]
 		CMTime MinFrameDuration { get; set;  }
 
 		[Export ("alwaysDiscardsLateVideoFrames")]
@@ -10462,7 +10466,7 @@ namespace AVFoundation {
 #endif
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[iOS (8,0), Mac (11, 0)]
+		[iOS (8,0), Mac (10, 14)]
 		[Export ("highResolutionStillImageOutputEnabled")]
 		bool HighResolutionStillImageOutputEnabled { [Bind ("isHighResolutionStillImageOutputEnabled")] get; set; }
 	}
@@ -10622,12 +10626,12 @@ namespace AVFoundation {
 		bool SupportsAVCaptureSessionPreset (string preset);
 
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoSettings.FlashMode' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'AVCapturePhotoSettings.FlashMode' instead.")]
 		[Export ("flashMode")]
 		AVCaptureFlashMode FlashMode { get; set;  }
 
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoOutput.SupportedFlashModes' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'AVCapturePhotoOutput.SupportedFlashModes' instead.")]
 		[Export ("isFlashModeSupported:")]
 		bool IsFlashModeSupported (AVCaptureFlashMode flashMode);
 
@@ -10723,7 +10727,7 @@ namespace AVFoundation {
 		bool FlashAvailable { get;  }
 
 		[NoWatch, NoMac]
-		[Availability (Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoOutput.IsFlashScene' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'AVCapturePhotoOutput.IsFlashScene' instead.")]
 		[Export ("isFlashActive")]
 		bool FlashActive { get; }
 
@@ -11274,7 +11278,7 @@ namespace AVFoundation {
 	
 		[NoMac]
 		[Export ("videoStabilizationSupported")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'IsVideoStabilizationModeSupported (AVCaptureVideoStabilizationMode)' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'IsVideoStabilizationModeSupported (AVCaptureVideoStabilizationMode)' instead.")]
 		bool VideoStabilizationSupported { [Bind ("isVideoStabilizationSupported")] get; }
 	
 		[NoMac]
@@ -11488,6 +11492,7 @@ namespace AVFoundation {
 
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[Export ("closedCaptionDisplayEnabled")]
 		bool ClosedCaptionDisplayEnabled { [Bind ("isClosedCaptionDisplayEnabled")] get; set;  }
 
@@ -11548,15 +11553,18 @@ namespace AVFoundation {
 
 #if !MONOMAC
 		// 5.0
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AllowsExternalPlayback' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AllowsExternalPlayback' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'AllowsExternalPlayback' instead.")]
 		[Export ("allowsAirPlayVideo")]
 		bool AllowsAirPlayVideo { get; set;  }
 
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'ExternalPlaybackActive' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'ExternalPlaybackActive' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'ExternalPlaybackActive' instead.")]
 		[Export ("airPlayVideoActive")]
 		bool AirPlayVideoActive { [Bind ("isAirPlayVideoActive")] get;  }
 
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'UsesExternalPlaybackWhileExternalScreenIsActive' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'UsesExternalPlaybackWhileExternalScreenIsActive' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'UsesExternalPlaybackWhileExternalScreenIsActive' instead.")]
 		[Export ("usesAirPlayVideoWhileAirPlayScreenIsActive")]
 		bool UsesAirPlayVideoWhileAirPlayScreenIsActive { get; set;  }
 #endif
@@ -11950,16 +11958,19 @@ namespace AVFoundation {
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Seek (NSDate, AVCompletion)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Seek (NSDate, AVCompletion)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'Seek (NSDate, AVCompletion)' instead.")]
 		[Export ("seekToDate:")]
 		bool Seek (NSDate date);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Seek (CMTime, AVCompletion)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Seek (CMTime, AVCompletion)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'Seek (CMTime, AVCompletion)' instead.")]
 		[Export ("seekToTime:")]
 		void Seek (CMTime time);
 		
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Seek (CMTime, CMTime, CMTime, AVCompletion)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Seek (CMTime, CMTime, CMTime, AVCompletion)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'Seek (CMTime, CMTime, CMTime, AVCompletion)' instead.")]
 		[Export ("seekToTime:toleranceBefore:toleranceAfter:")]
 		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter);
 
@@ -12019,6 +12030,7 @@ namespace AVFoundation {
 
 		[return: NullAllowed]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CurrentMediaSelection' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CurrentMediaSelection' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CurrentMediaSelection' instead.")]
 		[Export ("selectedMediaOptionInMediaSelectionGroup:")]
 		AVMediaSelectionOption SelectedMediaOption (AVMediaSelectionGroup inMediaSelectionGroup);
@@ -12691,6 +12703,7 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	interface AVPlayerItemAccessLogEvent : NSCopying {
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'NumberOfMediaRequests' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NumberOfMediaRequests' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'NumberOfMediaRequests' instead.")]
 		[Export ("numberOfSegmentsDownloaded")]
 		nint SegmentedDownloadedCount { get; }
@@ -13580,7 +13593,7 @@ namespace AVFoundation {
 		[Export ("URLAsset")]
 		AVUrlAsset UrlAsset { get; }
 
-		[Availability (Deprecated = Platform.iOS_10_0)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[NoMacCatalyst, NoMac]
 		[Export ("destinationURL")]
 		NSUrl DestinationUrl { get; }
@@ -13658,7 +13671,7 @@ namespace AVFoundation {
 		[Export ("sessionWithConfiguration:assetDownloadDelegate:delegateQueue:")]
 		AVAssetDownloadUrlSession CreateSession (NSUrlSessionConfiguration configuration, [NullAllowed] IAVAssetDownloadDelegate @delegate, [NullAllowed] NSOperationQueue delegateQueue);
 
-		[Availability (Deprecated = Platform.iOS_10_0, Message="Please use 'GetAssetDownloadTask (AVUrlAsset, string, NSData, NSDictionary<NSString, NSObject>)'.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please use 'GetAssetDownloadTask (AVUrlAsset, string, NSData, NSDictionary<NSString, NSObject>)'.")]
 		[Export ("assetDownloadTaskWithURLAsset:destinationURL:options:")]
 		[return: NullAllowed]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, [NullAllowed] NSDictionary options);

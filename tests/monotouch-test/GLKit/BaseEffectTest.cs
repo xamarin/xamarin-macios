@@ -9,6 +9,7 @@ using GLKit;
 using ObjCRuntime;
 using OpenTK;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GLKit {
 	
@@ -20,7 +21,7 @@ namespace MonoTouchFixtures.GLKit {
 		[Culture ("en")]
 		public void Properties ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var effect = new GLKBaseEffect ();
 			Assert.That (effect.LightModelAmbientColor.ToString (), Is.EqualTo ("(0.2, 0.2, 0.2, 1)"), "LightModelAmbientColor");

@@ -699,7 +699,9 @@ namespace ARKit {
 
 		[iOS (14,5)]
 		[Export ("captureDeviceType")]
-		[return: BindAs (typeof (AVCaptureDeviceType))]
+#if NET
+		[BindAs (typeof (AVCaptureDeviceType))]
+#endif
 		NSString CaptureDeviceType { get; }
 	}
 

@@ -50,7 +50,7 @@ namespace CoreGraphics {
 			cbacks.release = new CGFunctionReleaseCallback (ReleaseCallback);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		internal CGFunction (IntPtr handle)
 			: base (handle, false)
 		{

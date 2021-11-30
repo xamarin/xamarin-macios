@@ -46,9 +46,13 @@ namespace CoreAnimation {
 	}
 
 	public partial class CAGradientLayer {
+#if NET
+		CGColor CreateColor (IntPtr p)
+#else
 		public CGColor CreateColor (IntPtr p)
+#endif
 		{
-			return new CGColor (p);
+			return new CGColor (p, false);
 		}
 		
 		public CGColor [] Colors {

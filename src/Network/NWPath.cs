@@ -27,7 +27,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWPath : NativeObject {
+#if NET
+		internal NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static NWPathStatus nw_path_get_status (IntPtr handle);

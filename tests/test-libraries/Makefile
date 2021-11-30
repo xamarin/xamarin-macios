@@ -187,7 +187,7 @@ $(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-
 $(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=2.0 -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
 endif
 ifdef INCLUDE_MAC
-$(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk))
+$(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACOS_SDK_VERSION).sdk))
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call Template,maccatalyst,MACCATALYST,x86_64 arm64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
@@ -340,8 +340,8 @@ all-local:: .libs/XTest.xcframework
 
 MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
 MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions
-MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g
-MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
+MAC_CFLAGS = -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -Wall -DMONOMAC -g
+MAC_LDFLAGS = -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -framework AppKit
 
 .libs/macos/libtest.%.o: libtest.m $(EXTRA_DEPENDENCIES) | .libs/macos
 	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $<

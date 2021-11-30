@@ -17,6 +17,7 @@ using ObjCRuntime;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaPlayer {
 
@@ -27,8 +28,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 1, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
 
 			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
 			Assert.NotNull (shared.BookmarkCommand, "BookmarkCommand");
@@ -50,8 +51,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared_8 ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
 
 			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
 			Assert.NotNull (shared.ChangeRepeatModeCommand, "ChangeRepeatModeCommand");
@@ -61,8 +62,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared_9 ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
 
 			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
 			Assert.NotNull (shared.EnableLanguageOptionCommand, "EnableLanguageOptionCommand");

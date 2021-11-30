@@ -53,6 +53,7 @@ namespace ObjCRuntime {
 		delegate void initialize_func ();
 		unsafe delegate sbyte *get_sbyteptr_func ();
 
+#if !NET // There's a different implementation for other platforms + .NET macOS in Runtime.cs
 		static volatile bool originalWorkingDirectoryIsSet;
 		static string? originalWorkingDirectory;
 
@@ -76,7 +77,12 @@ namespace ObjCRuntime {
 		{
 			Directory.SetCurrentDirectory (OriginalWorkingDirectory!);
 		}
+#endif // !NET
 
+#if NET
+		[DllImport ("__Internal")]
+		extern static void xamarin_initialize ();
+#else
 		static IntPtr runtime_library;
 
 		internal static T LookupInternalFunction<T> (string name) where T: class
@@ -104,6 +110,7 @@ namespace ObjCRuntime {
 				throw new EntryPointNotFoundException (string.Format ("Could not find the runtime method '{0}'", name));
 			return (T) (object) Marshal.GetDelegateForFunctionPointer (rv, typeof (T));
 		}
+#endif
 
 		internal static void EnsureInitialized ()
 		{
@@ -117,7 +124,11 @@ namespace ObjCRuntime {
 			VerifyMonoVersion ();
 #endif
 
+#if NET
+			xamarin_initialize ();
+#else
 			LookupInternalFunction<initialize_func> ("xamarin_initialize") ();
+#endif
 		}
 
 #if !NET

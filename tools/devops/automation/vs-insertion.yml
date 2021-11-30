@@ -48,58 +48,10 @@ variables:
 # or dependencies (the release pipeline was triggered accordingly.
 #
 stages:
-- stage: prepare_release
-  displayName: Prepare Release
-
-  jobs:
-  # Check - "xamarin-macios (Prepare Release Sign NuGets)"
-  - template: sign-artifacts/jobs/v2.yml@templates
-    parameters:
-      artifactName: package
-      signType: Real
-      usePipelineArtifactTasks: true
-
-  # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
-  - template: nuget-msi-convert/job/v2.yml@templates
-    parameters:
-      yamlResourceName: templates
-      dependsOn: signing
-      artifactName: nuget-signed
-      propsArtifactName: package
-      signType: Real
-
-  # Check - "xamarin-macios (Prepare Release Push NuGets)"
-  - job: push_signed_nugets
-    displayName: Push NuGets
-    dependsOn: nuget_convert
-    variables:
-      skipNugetSecurityAnalysis: true
-    pool:
-      vmImage: macOS-10.15
-
-    steps:
-    - download: macios
-      artifact: nuget-signed
-      patterns: |
-        *.nupkg
-
-    - task: NuGetCommand@2
-      displayName: Publish Nugets to dotnet6
-      inputs:
-        command: push
-        packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
-        nuGetFeedType: external
-        publishFeedCredentials: dnceng-dotnet6
-
-    - download: macios
-      artifact: vs-msi-nugets
-      patterns: |
-        *.nupkg
-
-    - task: NuGetCommand@2
-      displayName: Publish Nugets to dotnet6
-      inputs:
-        command: push
-        packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
-        nuGetFeedType: external
-        publishFeedCredentials: dnceng-dotnet6
+- template: vs-insertion/stage/v1.yml@templates
+  parameters:
+    symbolArtifactName: nuget-signed
+    symbolConversionFilters: '*mlaunch.app*'
+    pushToShippingFeed: true
+    nupkgArtifactName: nuget-signed
+    msiNupkgArtifactName: vs-msi-nugets

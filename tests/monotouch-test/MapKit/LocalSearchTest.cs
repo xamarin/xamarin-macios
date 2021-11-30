@@ -15,6 +15,7 @@ using CoreLocation;
 using MapKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
 	
@@ -24,9 +25,9 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void EmptyRequest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 6, 1, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 6, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 9, 2, throwIfOtherPlatform: false);
 
 			using (var lsr = new MKLocalSearchRequest ())
 			using (MKLocalSearch ls = new MKLocalSearch (lsr)) {

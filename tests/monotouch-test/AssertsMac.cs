@@ -4,6 +4,7 @@ using System.Reflection;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 using ObjCRuntime;
 using Foundation;
@@ -14,13 +15,13 @@ namespace Xamarin.Mac.Tests
 	{
 		public static bool IsAtLeastYosemite {
 			get {
-				return PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) >= Platform.Mac_10_10;
+				return TestRuntime.CheckXcodeVersion (6, 1);
 			}
 		}
 
 		public static bool IsAtLeastElCapitan {
 			get {
-				return PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) >= Platform.Mac_10_11;
+				return TestRuntime.CheckXcodeVersion (7, 0);
 			}
 		}
 
@@ -32,14 +33,12 @@ namespace Xamarin.Mac.Tests
 
 		public static void EnsureMavericks ()
 		{
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_9)
-				Assert.Pass ("This test requires Mavericks. Skipping");
+			TestRuntime.AssertXcodeVersion (6, 0);
 		}
 
 		public static void EnsureMountainLion ()
 		{
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_8)
-				Assert.Pass ("This test requires Mountain Lion. Skipping");
+			// We're always running on at least Mountain Lion
 		}
 
 		public static void Ensure64Bit ()

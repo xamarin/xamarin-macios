@@ -8,6 +8,7 @@ using Foundation;
 using MediaPlayer;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaPlayer {
 
@@ -31,9 +32,9 @@ namespace MonoTouchFixtures.MediaPlayer {
 					Assert.Inconclusive ("This test needs music in the music library on the device.");
 
 				var six_dot_oh = true;
-				var nine_dot_two = TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 2);
-				var ten_dot_oh = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0);
-				var ten_dot_three = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 3);
+				var nine_dot_two = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9, 2);
+				var ten_dot_oh = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 0);
+				var ten_dot_three = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 3);
 
 				foreach (var i in items) {
 					object dummy;

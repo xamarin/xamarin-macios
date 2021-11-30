@@ -19,6 +19,8 @@ using Foundation;
 using UIKit;
 #endif
 
+using Xamarin.Utils;
+
 namespace Xamarin.Tests 
 {
 	public sealed class PlatformInfo
@@ -50,6 +52,20 @@ namespace Xamarin.Tests
 
 			var platformInfo = new PlatformInfo ();
 
+#if NET
+			if (name.StartsWith ("maccatalyst", StringComparison.Ordinal))
+				platformInfo.Name = ApplePlatform.MacCatalyst;
+			else if (name.StartsWith ("mac", StringComparison.Ordinal))
+				platformInfo.Name = ApplePlatform.MacOSX;
+			else if (name.StartsWith ("ios", StringComparison.Ordinal) || name.StartsWith ("iphoneos", StringComparison.Ordinal) || name.StartsWith ("ipados", StringComparison.Ordinal))
+				platformInfo.Name = ApplePlatform.iOS;
+			else if (name.StartsWith ("tvos", StringComparison.Ordinal))
+				platformInfo.Name = ApplePlatform.TVOS;
+			else if (name.StartsWith ("watchos", StringComparison.Ordinal))
+				platformInfo.Name = ApplePlatform.WatchOS;
+			else
+				throw new FormatException ($"Unknown product name: {name}");
+#else
 			if (name.StartsWith ("maccatalyst", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.MacCatalyst;
 			else if (name.StartsWith ("mac", StringComparison.Ordinal))
@@ -62,27 +78,39 @@ namespace Xamarin.Tests
 				platformInfo.Name = PlatformName.WatchOS;
 			else
 				throw new FormatException ($"Unknown product name: {name}");
+#endif
 
 			platformInfo.Version = Version.Parse (version);
 
+#if !NET
 			if (IntPtr.Size == 4)
 				platformInfo.Architecture = PlatformArchitecture.Arch32;
 			else if (IntPtr.Size == 8)
 				platformInfo.Architecture = PlatformArchitecture.Arch64;
+#endif
 
 			return platformInfo;
 		}
 
 		public static readonly PlatformInfo Host = GetHostPlatformInfo ();
 
+#if NET
+		public ApplePlatform Name { get; private set; }
+#else
 		public PlatformName Name { get; private set; }
 		public PlatformArchitecture Architecture { get; private set; }
+#endif
 		public Version Version { get; private set; }
 
+#if NET
+		public bool IsMac => Name == ApplePlatform.MacOSX;
+		public bool IsIos => Name == ApplePlatform.iOS;
+#else
 		public bool IsMac => Name == PlatformName.MacOSX;
 		public bool IsIos => Name == PlatformName.iOS;
 		public bool IsArch32 => Architecture.HasFlag (PlatformArchitecture.Arch32);
 		public bool IsArch64 => Architecture.HasFlag (PlatformArchitecture.Arch64);
+#endif
 
 		PlatformInfo ()
 		{
@@ -91,57 +119,6 @@ namespace Xamarin.Tests
 
 	public static class AvailabilityExtensions
 	{
-#if NET
-		public static AvailabilityBaseAttribute Convert (this OSPlatformAttribute a)
-		{
-			if (a == null)
-				return null;
-
-			PlatformName p;
-			int n = 0;
-			switch (a.PlatformName) {
-			case string dummy when a.PlatformName.StartsWith ("ios"):
-				p = PlatformName.iOS;
-				n = "ios".Length;
-				break;
-			case string dummy when a.PlatformName.StartsWith ("tvos"):
-				p = PlatformName.TvOS;
-				n = "tvos".Length;
-				break;
-			case string dummy when a.PlatformName.StartsWith ("watchos"):
-				p = PlatformName.WatchOS;
-				n = "watchos".Length;
-				break;
-			case string dummy when a.PlatformName.StartsWith ("macos"):
-				p = PlatformName.MacOSX;
-				n = "macos".Length;
-				break;
-			case string dummy when a.PlatformName.StartsWith ("maccatalyst"):
-				p = PlatformName.MacCatalyst;
-				n = "maccatalyst".Length;
-				break;
-			default:
-				return null;
-			}
-			bool versioned = Version.TryParse (a.PlatformName [n..], out var v);
-
-			if (a is SupportedOSPlatformAttribute) {
-				if (!versioned)
-					throw new FormatException (a.PlatformName);
-				return new IntroducedAttribute (p, v.Major, v.Minor);
-			}
-			if (a is UnsupportedOSPlatformAttribute) {
-				// if a version is provided then it means it was deprecated
-				// if no version is provided then it means it's unavailable
-				if (versioned)
-					return new DeprecatedAttribute (p, v.Major, v.Minor);
-				else
-					return new UnavailableAttribute (p);
-			}
-			return null;
-		}
-#endif
-
 		public static bool IsAvailableOnHostPlatform (this ICustomAttributeProvider attributeProvider)
 		{
 			return attributeProvider.IsAvailable (PlatformInfo.Host);
@@ -149,34 +126,68 @@ namespace Xamarin.Tests
 
 		public static bool IsAvailable (this ICustomAttributeProvider attributeProvider, PlatformInfo targetPlatform)
 		{
+			var customAttributes = attributeProvider.GetCustomAttributes (true);
+
 #if NET
-			var list = new List<AvailabilityBaseAttribute> ();
-			foreach (var ca in attributeProvider.GetCustomAttributes (true)) {
-				if (ca is OSPlatformAttribute aa) {
-					var converted = aa.Convert ();
-					if (converted is not null)
-						list.Add (converted);
-				}
-				// FIXME - temporary, while older attributes co-exists (in manual bindings)
-				if (ca is AvailabilityBaseAttribute old)
-					list.Add (old);
-				if (ca is ObsoleteAttribute)
-					return false;
-			}
-			return list.IsAvailable (targetPlatform);
-#else
-			return attributeProvider
-				.GetCustomAttributes (true)
-				.OfType<AvailabilityBaseAttribute> ()
-				.IsAvailable (targetPlatform);
+			customAttributes = customAttributes.ToArray (); // don't iterate twice
+			if (customAttributes.Any (v => v is ObsoleteAttribute))
+				return false;
 #endif
+
+			return customAttributes
+#if NET
+				.OfType<OSPlatformAttribute> ()
+#else
+				.OfType<AvailabilityBaseAttribute> ()
+#endif
+				.IsAvailable (targetPlatform);
 		}
 
+#if NET
+		public static bool IsAvailableOnHostPlatform (this IEnumerable<OSPlatformAttribute> attributes)
+#else
 		public static bool IsAvailableOnHostPlatform (this IEnumerable<AvailabilityBaseAttribute> attributes)
+#endif
 		{
 			return attributes.IsAvailable (PlatformInfo.Host);
 		}
 
+#if NET
+		public static bool IsAvailable (this IEnumerable<OSPlatformAttribute> attributes, PlatformInfo targetPlatform)
+		{
+			// Sort the attributes so that maccatalyst attributes are processed before ios attributes
+			// This way we can easily fall back to ios for maccatalyst
+			attributes = attributes.OrderBy (v => v.PlatformName.ToLowerInvariant ()).Reverse ();
+
+			foreach (var attr in attributes) {
+				if (!attr.TryParse (out ApplePlatform? platform, out var version))
+					continue;
+
+				if (targetPlatform.Name == ApplePlatform.MacCatalyst) {
+					if (platform != ApplePlatform.iOS && platform != ApplePlatform.MacCatalyst)
+						continue;
+				} else if (platform != targetPlatform.Name) {
+					continue;
+				}
+
+				if (attr is UnsupportedOSPlatformAttribute)
+					return version is not null && targetPlatform.Version < version;
+
+				if (attr is SupportedOSPlatformAttribute)
+					return version is null || targetPlatform.Version >= version;
+			}
+
+			// Our current attribute logic assumes that no attribute means that an API is available on all versions of that platform.
+			// This is not correct: the correct logic is that an API is available on a platform if there are no availability attributes
+			// for any other platforms. However, enforcing this here would make a few of our tests fail, so we must keep the incorrect
+			// logic until we've got all the right attributes implemented.
+			return true;
+
+			// Correct logic:
+			// Only available if there aren't any attributes for other platforms
+			// return attributes.Count () == 0;
+		}
+#else
 		public static bool IsAvailable (this IEnumerable<AvailabilityBaseAttribute> attributes, PlatformInfo targetPlatform)
 		{
 			// always "available" from a binding perspective if
@@ -214,5 +225,6 @@ namespace Xamarin.Tests
 
 			return available;
 		}
+#endif
 	}
 }

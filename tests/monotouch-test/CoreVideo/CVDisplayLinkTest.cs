@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 using CoreVideo;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreVideo {
 
@@ -16,7 +17,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void CreateFromDisplayIdValidIdTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 12, 0);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			Assert.DoesNotThrow (() => {
 				using var displayLink = CVDisplayLink.CreateFromDisplayId ((uint) CGDisplay.MainDisplayID);
 				Assert.NotNull (displayLink, "Not null");
@@ -27,7 +28,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void CreateFromDisplayWrongIdTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 12, 0);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			Assert.DoesNotThrow (() => {
 				using var displayLink = CVDisplayLink.CreateFromDisplayId (UInt32.MaxValue);
 				Assert.Null (displayLink, "null");
@@ -37,7 +38,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void CreateFromDisplayIdsTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 12, 0);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			// we might not have more than one display, therefore we will use an array 
 			// with a single one, there is nothing in the docs that say that we cannot do that
 			Assert.DoesNotThrow (() => {
@@ -49,7 +50,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void CreateFromOpenGLMaskTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 12, 0);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			var openGLMask = CGDisplay.GetOpenGLDisplayMask (CGDisplay.MainDisplayID);
 			Assert.DoesNotThrow (() => {
 				using var displayLink = CVDisplayLink.CreateFromOpenGLMask ((uint) openGLMask);
@@ -77,7 +78,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void GetTypeIdTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 12, 0);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			Assert.DoesNotThrow (() => {
 				CVDisplayLink.GetTypeId ();
 			}, "Throws");
@@ -86,7 +87,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void TryTranslateTimeValidTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 12, 0);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			var outTime = new CVTimeStamp {
 				Version = 0,
 				Flags = (1L << 0) | (1L << 1), // kCVTimeStampVideoTimeValid | kCVTimeStampHostTimeValid

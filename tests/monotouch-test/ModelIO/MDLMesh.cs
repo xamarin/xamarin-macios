@@ -18,6 +18,7 @@ using ModelIO;
 using ObjCRuntime;
 using OpenTK;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ModelIO {
 
@@ -156,7 +157,7 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = MDLMesh.CreateCylindroid (1, V2, 3, 1, MDLGeometryType.Triangles, true, null)) {
 				Assert.IsNotNull (obj, "obj");
 #if MONOMAC
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12)) {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
 				} else {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");

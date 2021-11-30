@@ -45,10 +45,13 @@ namespace CoreFoundation {
 		internal DispatchIO (IntPtr handle, bool owns) : base (handle, owns)
 		{
 		}
+
+#if !NET
 		[Preserve (Conditional = true)]
 		internal DispatchIO (IntPtr handle) : this (handle, false)
 		{
 		}
+#endif
 
 		delegate void DispatchReadWrite (IntPtr block, IntPtr dispatchData, int error);
 		static DispatchReadWrite static_DispatchReadWriteHandler = Trampoline_DispatchReadWriteHandler;

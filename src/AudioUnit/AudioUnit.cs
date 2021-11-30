@@ -297,40 +297,21 @@ namespace AudioUnit
 		public EventValuesStruct EventValues;
 	}
 
-	public class AudioUnit : IDisposable, ObjCRuntime.INativeObject
+	public class AudioUnit : DisposableObject
 	{
-#pragma warning disable 649 // Field 'AudioUnit.handle' is never assigned to, and will always have its default value
-		IntPtr handle;
-#pragma warning restore 649
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-#if COREBUILD
-		public void Dispose () { /* FAKE DURING COREBUILD */ }
-#else
+#if !COREBUILD
 		static readonly CallbackShared CreateRenderCallback = RenderCallbackImpl;
 		static readonly CallbackShared CreateInputCallback = InputCallbackImpl;
 
 		GCHandle gcHandle;
 		bool _isPlaying;
-		bool owns;
 
 		Dictionary<uint, RenderDelegate>? renderer;
 		Dictionary<uint, InputDelegate>? inputs;
 
-		internal AudioUnit (IntPtr ptr)
-			: this (ptr, false)
+		internal AudioUnit (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-		}
-
-		internal AudioUnit (IntPtr ptr, bool owns)
-		{
-			handle = ptr;
-			gcHandle = GCHandle.Alloc(this);
-			this.owns = owns;
 		}
 
 		static IntPtr Create (AudioComponent component)
@@ -352,7 +333,7 @@ namespace AudioUnit
 
 		public AudioComponent Component {
 			get {
-				return new AudioComponent (AudioComponentInstanceGetComponent (Handle));
+				return new AudioComponent (AudioComponentInstanceGetComponent (Handle), false);
 			}
 		}
 
@@ -619,6 +600,9 @@ namespace AudioUnit
 
 			renderer [audioUnitElement] = renderDelegate;
 
+			if (!gcHandle.IsAllocated)
+				gcHandle = GCHandle.Alloc (this);
+
 			var cb = new AURenderCallbackStruct ();
 			cb.Proc = CreateRenderCallback;
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
@@ -684,10 +668,14 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
@@ -695,14 +683,19 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
@@ -723,9 +716,13 @@ namespace AudioUnit
 		[iOS (7,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
 #else
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
@@ -733,14 +730,19 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #else
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public UIKit.UIImage? GetHostIcon (float desiredPointSize)
@@ -798,33 +800,19 @@ namespace AudioUnit
 			return AudioUnitScheduleParameters (Handle, inParameterEvent, inNumParamEvents);
 		}
 
-		public void Dispose()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-		
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern int AudioComponentInstanceDispose(IntPtr inInstance);
 
-		protected virtual void Dispose (bool disposing)
+		protected override void Dispose (bool disposing)
 		{
-			if (Handle != IntPtr.Zero) {
-				if (owns) {
-					Stop ();
-					AudioUnitUninitialize (Handle);
-					AudioComponentInstanceDispose (Handle);
-				}
-				gcHandle.Free();
-				handle = IntPtr.Zero;
+			if (Handle != IntPtr.Zero && Owns) {
+				Stop ();
+				AudioUnitUninitialize (Handle);
+				AudioComponentInstanceDispose (Handle);
 			}
-		}
-
-		internal IntPtr GetCheckedHandle ()
-		{
-			if (handle == IntPtr.Zero)
-				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
-			return handle;
+			if (gcHandle.IsAllocated)
+				gcHandle.Free ();
+			base.Dispose (disposing);
 		}
 
 		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentInstanceNew")]
