@@ -68,6 +68,10 @@ fi
 
 mkdir -p "$API_COMPARISON"
 
+# Debugging
+echo $BASH_VERSION
+echo "*** List files inside ./tools/comparison/apidiff ***"
+ls -R ./tools/comparison/apidiff
 
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
@@ -89,9 +93,6 @@ cp ./tools/comparison/apidiff/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCa
 cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/*/ref/net6.0/Xamarin.*.md "$API_COMPARISON"
 
 # Debugging
-echo $BASH_VERSION
-echo "*** List files inside ./tools/comparison/apidiff ***"
-ls -R ./tools/comparison/apidiff
 echo "*** List files inside API_COMPARISON ***"
 ls -R $API_COMPARISON
 
