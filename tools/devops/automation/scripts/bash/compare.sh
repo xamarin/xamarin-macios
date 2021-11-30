@@ -72,10 +72,25 @@ mkdir -p "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
-cp    ./tools/comparison/apidiff/**/Xamarin.*.md "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
+# try to copy and rename the dotnet mds
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/dotnet-ios-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md "$API_COMPARISON"/dotnet-maccatalyst-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/dotnet-macos-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/dotnet-tvos-unknown-unknown.md
+# try to copy and rename the dotnet legacy mds
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/dotnet-legacy-ios-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md "$API_COMPARISON"/dotnet-legacy-maccatalyst-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/dotnet-legacy-macos-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/dotnet-legacy-tvos-unknown-unknown.md
+# # try to copy and rename the dotnet MacCatalyst and iOS mds
+cp ./tools/comparison/apidiff/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md "$API_COMPARISON"/dotnet-maccatios-unknown-unknown.md
+# Also see if this works
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/*/ref/net6.0/Xamarin.*.md "$API_COMPARISON"
+
 # Debugging
+echo $BASH_VERSION
 echo "*** List files inside ./tools/comparison/apidiff ***"
 ls -R ./tools/comparison/apidiff
 echo "*** List files inside API_COMPARISON ***"
