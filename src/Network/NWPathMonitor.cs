@@ -29,7 +29,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWPathMonitor : NativeObject {
+#if NET
+		internal NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();

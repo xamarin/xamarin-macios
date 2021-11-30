@@ -1,0 +1,2 @@
+## removed in Xcode 10 (both headers and libs) but would work on older OS
+!unknown-field! kCFHTTPAuthenticationSchemeOAuth1 bound

@@ -188,7 +188,7 @@ namespace CoreText {
 		public CGColor ForegroundColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ForegroundColor.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor, value);}
 		}
@@ -202,7 +202,7 @@ namespace CoreText {
 				var x = CTStringAttributeKey.BackgroundColor;
 				if (x != null)
 					h = CFDictionary.GetValue (Dictionary.Handle, x.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {
 				var x = CTStringAttributeKey.BackgroundColor;
@@ -228,7 +228,7 @@ namespace CoreText {
 		public CGColor StrokeColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.StrokeColor.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor, value);}
 		}
@@ -294,7 +294,7 @@ namespace CoreText {
 		public CGColor UnderlineColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.UnderlineColor.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.UnderlineColor, value);}
 		}

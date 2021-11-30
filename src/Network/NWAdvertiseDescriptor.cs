@@ -28,7 +28,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWAdvertiseDescriptor : NativeObject {
+#if NET
+		internal NWAdvertiseDescriptor (IntPtr handle, bool owns) : base (handle, owns)
+#else
 		public NWAdvertiseDescriptor (IntPtr handle, bool owns) : base (handle, owns)
+#endif
 		{ }
 
 		[DllImport (Constants.NetworkLibrary)]

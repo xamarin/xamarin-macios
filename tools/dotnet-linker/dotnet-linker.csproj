@@ -98,6 +98,9 @@
     <Compile Include="..\common\PListExtensions.cs">
       <Link>external\tools\common\PListExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
+      <Link>external\tools\common\OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>external\tools\common\StaticRegistrar.cs</Link>
     </Compile>

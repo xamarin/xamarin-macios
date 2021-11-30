@@ -1,0 +1,7 @@
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'Foundation.NSError ScriptingBridge.SBObject::get_LastError()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject ScriptingBridge.SBApplicationDelegate::EventDidFailwithError(System.IntPtr,Foundation.NSError)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject ScriptingBridge.SBObject::get_Get()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject[] ScriptingBridge.SBElementArray::Get()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'ObjCRuntime.Class ScriptingBridge.SBApplication::ClassForScripting(System.String)' is missing an [NullAllowed] on return type

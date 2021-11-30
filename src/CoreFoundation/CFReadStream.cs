@@ -41,7 +41,7 @@ namespace CoreFoundation {
 
 	// CFStream.h
 	public class CFReadStream : CFStream {
-#if !XAMCORE_4_0
+#if !NET
 		public CFReadStream (IntPtr handle)
 			: base (handle, true)
 		{

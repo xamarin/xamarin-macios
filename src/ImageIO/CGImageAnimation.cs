@@ -125,7 +125,7 @@ namespace ImageIO
             {
                 var del = BlockLiteral.GetTarget<CGImageSourceAnimationHandler> (block);
                 if (del != null)
-                    del (index, new CoreGraphics.CGImage (image), out stop);
+                    del (index, new CoreGraphics.CGImage (image, false), out stop);
                 else
                     stop = false;
             }

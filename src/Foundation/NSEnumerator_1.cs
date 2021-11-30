@@ -35,9 +35,11 @@ namespace Foundation {
 	public sealed class NSEnumerator<TKey> : NSEnumerator
 		where TKey : class, INativeObject
 	{
+#if !NET
 		public NSEnumerator ()
 		{
 		}
+#endif
 
 		internal NSEnumerator (IntPtr handle)
 			: base (handle)

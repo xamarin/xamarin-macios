@@ -331,7 +331,7 @@ namespace UIKit {
 		[Export ("textContainerChangedTextView:")]
 		void TextContainerChangedTextView (NSTextContainer container);
 
-#if !XAMCORE_4_0
+#if !NET
 		// This was removed in the headers in the macOS 10.11 SDK
 		[NoiOS][NoTV]
 		[NoMacCatalyst]

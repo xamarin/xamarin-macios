@@ -253,7 +253,7 @@ namespace CoreServices
 			}
 
 			var events = new FSEvent[numEvents];
-			var pathArray = new CFArray (eventPaths);
+			var pathArray = new CFArray (eventPaths, false);
 
 			for (int i = 0; i < events.Length; i++) {
 				events[i].Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4);

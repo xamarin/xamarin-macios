@@ -14,12 +14,20 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class FontTest {
 		
-		[Test]
-#if __MACCATALYST__
-		[Ignore ("https://github.com/xamarin/maccore/issues/2382")]
+		void AssertNotBrokenFontWithSize ()
+		{
+#if __MACCATALYST__ || __MACOS__
+			if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 0)) {
+				// Yep, GameKit breaks [UIKit fontWithSize] on macOS 10.15...
+				Assert.Ignore ("GameKit breaks UIKIt.FontWithSize on this OS version. Ref: https://github.com/xamarin/maccore/issues/2382");
+			}
 #endif
+		}
+
+		[Test]
 		public void WithSize ()
 		{
+			AssertNotBrokenFontWithSize ();
 			var f1 = UIFont.SystemFontOfSize (10).WithSize (20);
 			Assert.AreEqual (f1.PointSize, (nfloat) 20, "#size");
 		}
@@ -161,6 +169,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsNotNull (UIFont.BoldSystemFontOfSize (-4), "BoldSystemFontOfSize");
 			Assert.IsNotNull (UIFont.ItalicSystemFontOfSize (-5), "ItalicSystemFontOfSize");
 
+			AssertNotBrokenFontWithSize ();
 			using (var font = UIFont.SystemFontOfSize (12)) {
 				Assert.IsNotNull (font.WithSize (-6), "WithSize");
 			}

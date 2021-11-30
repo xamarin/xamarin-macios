@@ -2392,14 +2392,14 @@ namespace SceneKit {
 		nint CornerSegmentCount { get; set; }
 	}
 
-#if XAMCORE_4_0
-	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
+#if NET
+	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, ISCNShadable shadable, SCNRenderer renderer);
 #else
 	[Obsolete ("Use 'SCNBufferBindingHandler2' instead.")]
 	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
 
 	delegate void SCNBufferBindingHandler2 (ISCNBufferStream buffer, SCNNode node, ISCNShadable shadable, SCNRenderer renderer);
-#endif
+#endif // NET
 
 	[iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -2422,7 +2422,7 @@ namespace SceneKit {
 		[Export ("fragmentFunctionName")]
 		string FragmentFunctionName { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handleBindingOfBufferNamed:frequency:usingBlock:")]
 		void HandleBinding (string name, SCNBufferFrequency frequency, SCNBufferBindingHandler handler);
@@ -2436,7 +2436,7 @@ namespace SceneKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handleBindingOfBufferNamed:frequency:usingBlock:")]
 		void HandleBinding (string name, SCNBufferFrequency frequency, SCNBufferBindingHandler2 handler);
-#endif
+#endif // NET
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set;  }

@@ -1846,7 +1846,7 @@ namespace ObjCRuntime {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-#if MONOMAC
+#if MONOMAC && !NET
 		public static void ReleaseBlockOnMainThread (IntPtr block)
 		{
 			if (release_block_on_main_thread is null)
@@ -1994,6 +1994,18 @@ namespace ObjCRuntime {
 		{
 			return (nuint) value;
 		}
+
+#if NET || !MONOMAC // legacy Xamarin.Mac has a different implementation in Runtime.mac.cs
+		public static string? OriginalWorkingDirectory {
+			get {
+				return Marshal.PtrToStringUTF8 (xamarin_get_original_working_directory_path ());
+			}
+		}
+
+		[DllImport ("__Internal")]
+		static extern IntPtr xamarin_get_original_working_directory_path ();
+#endif // NET || !__MACOS__
+
 	}
 	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

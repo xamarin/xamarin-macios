@@ -26,7 +26,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWError : NativeObject {
+#if NET
+		internal NWError (IntPtr handle, bool owns) : base (handle, owns)
+#else
 		public NWError (IntPtr handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 

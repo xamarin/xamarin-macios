@@ -47,7 +47,7 @@ namespace CoreFoundation {
 		static CFAllocator? Null_cf;
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload that takes a 'bool owns' parameter instead.")]
 		public CFAllocator (IntPtr handle)
 			: base (handle, true /* backwards compatibility means we have to pass true here as opposed to the general pattern */)
@@ -55,7 +55,7 @@ namespace CoreFoundation {
 		}
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		internal CFAllocator (IntPtr handle, bool owns)
 #else
 		public CFAllocator (IntPtr handle, bool owns)

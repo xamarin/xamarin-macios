@@ -32,7 +32,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWProtocolStack : NativeObject {
+#if NET
+		internal NWProtocolStack (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		public NWProtocolStack (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_protocol_stack_prepend_application_protocol (nw_protocol_stack_t stack, nw_protocol_options_t options);
@@ -64,15 +68,15 @@ namespace Network {
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
 
-					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateTcpDefinition ())) {
 						castedOptions = new NWProtocolTcpOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateTlsDefinition ())) {
 						castedOptions = new NWProtocolTlsOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateIPDefinition ())) {
 						castedOptions = new NWProtocolIPOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateWebSocketDefinition ())) {
 						castedOptions = new NWWebSocketOptions (options, owns: false);
 					} 
 
@@ -113,10 +117,10 @@ namespace Network {
 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
-					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateTcpDefinition ())) {
 						castedOptions = new NWProtocolTcpOptions (pHandle, owns: true);
 					}
-					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (pHandle, owns: true);
 					} 
 					if (castedOptions == null) {

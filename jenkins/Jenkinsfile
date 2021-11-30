@@ -901,7 +901,7 @@ timestamps {
                                         // and calculate all the macOS versions in between (including both end points).
                                         // The trims/splits/toIntegers at the end are to select the minor part of the macOS version number,
                                         // then we just loop from the minor part of the min version to the minor part of the current version.
-                                        def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
+                                        def firstOS = sh (returnStdout: true, script: "grep ^MIN_MACOS_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
                                         def lastOS = sh (returnStdout: true, script: "grep ^MACOS_NUGET_VERSION= '${workspace}/xamarin-macios/Make.versions' | sed -e 's/.*=//' -e 's/.[0-9]*\$//'").trim ().split ("\\.")[1].toInteger ()
                                         def macOSes = []
                                         def excludedOSes = []

@@ -29,8 +29,12 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecIdentity2 : NativeObject {
+#if NET
+		internal SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
+#else
 		internal SecIdentity2 (IntPtr handle) : base (handle, false) {}
 		public SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
+#endif
 
 #if !COREBUILD
 		[DllImport (Constants.SecurityLibrary)]

@@ -26,7 +26,9 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecProtocolMetadata : NativeObject {
+#if !NET
 		internal SecProtocolMetadata (IntPtr handle) : base (handle, false) {}
+#endif
 
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public[tv
