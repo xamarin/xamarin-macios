@@ -196,11 +196,7 @@ namespace Xamarin.Tests
 			//     [SupportedOSPlatform ("1.0")
 			//     [UnsupportedOSPlatform ("2.0")
 			// if we run into the SupportedOSPlatform attribute first.
-			foreach (var parsedAttr in attributes) {
-				var attr = parsedAttr.Attribute;
-				var platform = parsedAttr.Platform;
-				var version = parsedAttr.Version;
-
+			foreach (var (attr, platform, version) in attributes) {
 				if (platform != attributePlatform)
 					continue;
 
@@ -214,11 +210,7 @@ namespace Xamarin.Tests
 				}
 			}
 
-			foreach (var parsedAttr in attributes) {
-				var attr = parsedAttr.Attribute;
-				var platform = parsedAttr.Platform;
-				var version = parsedAttr.Version;
-
+			foreach (var (attr, platform, version) in attributes) {
 				if (platform != attributePlatform)
 					continue;
 
