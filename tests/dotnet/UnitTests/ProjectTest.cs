@@ -769,25 +769,20 @@ namespace Xamarin.Tests {
 
 		void DeleteAssets (string project_path)
 		{
-			string xcassetsDir = Path.Combine (project_path, @"../Assets.xcassets");
-			try {
-				if (Directory.Exists (xcassetsDir))
-					Directory.Delete (xcassetsDir, true);
-			}
-			catch (Exception e){
-				Assert.Fail ($"Deleting Assets.xcassets failed: {e.Message}");
-			}
+			string xcassetsDir = Path.Combine (project_path, "../Assets.xcassets");
+			if (Directory.Exists (xcassetsDir))
+				Directory.Delete (xcassetsDir, true);
 		}
 
 		void CopyAssets (string project_path)
 		{
-			DirectoryInfo testingAssetsDir = new DirectoryInfo (Path.Combine (project_path, @"../../TestingAssets"));
-			DirectoryInfo xcassetsDir = new DirectoryInfo (Path.Combine (project_path, @"../Assets.xcassets"));
+			DirectoryInfo testingAssetsDir = new DirectoryInfo (Path.Combine (project_path, "../../TestingAssets"));
+			DirectoryInfo xcassetsDir = new DirectoryInfo (Path.Combine (project_path, "../Assets.xcassets"));
 
-			Assert.That (testingAssetsDir, Does.Exist);
+			Assert.That (testingAssetsDir, Does.Exist, $"Could not find testingAssetsDir: {testingAssetsDir}");
 			if (!Directory.Exists (xcassetsDir.FullName))
 				MakeSymlinks (testingAssetsDir.FullName, xcassetsDir.FullName);
-			Assert.That (xcassetsDir, Does.Exist);
+			Assert.That (xcassetsDir, Does.Exist, $"Could not find xcassetsDir: {xcassetsDir}");
 		}
 
 		void MakeSymlinks (string sourceDir, string destDir)
@@ -849,11 +844,9 @@ namespace Xamarin.Tests {
 
 		string? GetTarget (JsonElement item, JsonElement assetType, XCAssetTarget target)
 		{
-			if (assetType.ToString () == target.AssetType) {
-				if (item.TryGetProperty (target.CategoryName, out var value)) {
-					if (target.Values.Contains (value.ToString ()))
-						return string.Concat (assetType.ToString (), ".", value.ToString ());
-				}
+			if (assetType.ToString () == target.AssetType && item.TryGetProperty (target.CategoryName, out var value)) {
+				if (target.Values.Contains (value.ToString ()))
+					return string.Concat (assetType.ToString (), ".", value.ToString ());
 			}
 			return null;
 		}
