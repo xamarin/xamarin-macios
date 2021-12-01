@@ -791,7 +791,7 @@ namespace Xamarin.Tests {
 			var executable = "ln";
 			var arguments = new string [] { "-s", sourceDir, destDir };
 			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (60)).Result;
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			Assert.AreEqual (0, rv.ExitCode, $"Creating Symlink Error: {rv.StandardError}. Unexpected ExitCode");
 			return;
 		}
 
@@ -808,7 +808,7 @@ namespace Xamarin.Tests {
 			var executable = "xcrun";
 			var arguments = new string [] { "--sdk", sdkVersion, "assetutil", "--info", assetsPath };
 			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			Assert.AreEqual (0, rv.ExitCode, $"Processing Assets Error: {rv.StandardError}. Unexpected ExitCode");
 			var s = output.ToString ();
 
 			// This Execution call produces an output with an objc warning. We just want the json below it.
