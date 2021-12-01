@@ -1691,6 +1691,7 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithTexture:featureChannels:")]
 		IntPtr Constructor (IMTLTexture texture, nuint featureChannels);
 
+		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("batchRepresentation")]
 		NSArray<MPSImage> BatchRepresentation { get; }
 
