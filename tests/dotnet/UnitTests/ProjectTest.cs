@@ -167,16 +167,16 @@ namespace Xamarin.Tests {
 			Assert.That (ad.MainModule.Resources.Count (), Is.EqualTo (2), "2 resources"); // There are 2 embedded resources by default by the F# compiler.
 		}
 
-		[TestCase ("iOS")]
-		[TestCase ("tvOS")]
-		[TestCase ("macOS")]
-		[TestCase ("MacCatalyst")]
-		public void BuildBindingsTest (string platform)
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void BuildBindingsTest (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var assemblyName = "bindings-test";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
-			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform.AsString ());
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
@@ -194,20 +194,21 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
-			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest.a"), "libtest.a");
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
-		[TestCase ("iOS")]
-		[TestCase ("tvOS")]
-		[TestCase ("macOS")]
-		[TestCase ("MacCatalyst")]
-		public void BuildBindingsTest2 (string platform)
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void BuildBindingsTest2 (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var assemblyName = "bindings-test2";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
-			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform.AsString ());
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
@@ -224,8 +225,9 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
-			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest2.a"), "libtest2.a");
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
 		[TestCase ("iOS", "monotouch")]

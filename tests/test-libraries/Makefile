@@ -336,6 +336,22 @@ XTEST_XCTARGETS += \
 
 all-local:: .libs/XTest.xcframework
 
+LIBTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/libtest.a)
+
+.libs/libtest.xcframework: $(LIBTEST_XCFRAMEWORKS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach lib,$(LIBTEST_XCFRAMEWORKS),-library $(lib)) -output $@
+
+all-local:: .libs/libtest.xcframework
+
+LIBTEST2_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/libtest2.a)
+
+.libs/libtest2.xcframework: $(LIBTEST2_XCFRAMEWORKS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach lib,$(LIBTEST2_XCFRAMEWORKS),-library $(lib)) -output $@
+
+all-local:: .libs/libtest2.xcframework
+
 # Xamarin.Mac
 
 MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)

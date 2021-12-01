@@ -6,6 +6,7 @@
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
     <IsBindingProject>true</IsBindingProject>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
 
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <BindingsTest2Directory>$(RootTestsDirectory)\bindings-test2</BindingsTest2Directory>
@@ -23,15 +24,15 @@
     <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiDefinition.cs" />
     <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiProtocol.cs" />
     <ObjcBindingCoreSource Include="$(BindingsTest2Directory)\StructsAndEnums.cs" />
-    <ObjcBindingNativeLibrary Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest2.a">
-      <Link>libtest2.a</Link>
-    </ObjcBindingNativeLibrary>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(BindingsTest2Directory)\libtest2.linkwith.cs">
-      <DependentUpon>libtest2.a</DependentUpon>
-    </Compile>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\libtest2.xcframework">
+      <Kind>Static</Kind>
+    </NativeReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="$(BindingsTest2Directory)\BindingTest.cs" />
   </ItemGroup>
 
@@ -42,16 +43,17 @@
     <None Include="$(TestLibrariesDirectory)\libtest2.h">
       <Link>libtest2.h</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.m" />
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.h" />
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.cs" />
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\Makefile" />
-    <GeneratedTestOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest2.a" />
+    <None Include="$(TestLibrariesDirectory)\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+    <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest2.xcframework" />
   </ItemGroup>
 
-  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild">
+  <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

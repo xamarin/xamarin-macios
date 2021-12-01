@@ -546,10 +546,15 @@ namespace AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
-#if !NET
+	// This enum is defined as an untyped enum in MacOSX.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
+	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
 	[NoMacCatalyst]
+#if NET
+	public enum NSKey {
+#else
 	[Native]
 	public enum NSKey : ulong {
+#endif
 		A              = 0x00,
 		S              = 0x01,
 		D              = 0x02,
@@ -668,7 +673,6 @@ namespace AppKit {
 		DownArrow      = 0x7D,
 		UpArrow        = 0x7E
 	}
-#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]

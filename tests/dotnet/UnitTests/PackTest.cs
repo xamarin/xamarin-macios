@@ -19,12 +19,12 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
-		public void BindingProject (ApplePlatform platform)
+		public void BindingOldStyle (ApplePlatform platform)
 		{
-			var project = "bindings-test";
+			var project = "BindingOldStyle";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
+			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
