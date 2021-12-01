@@ -78,19 +78,22 @@ cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
+# try to copy and rename the legacy mds
+cp ./tools/comparison/apidiff/diff/xi/Xamarin.iOS/Xamarin.iOS.md "$API_COMPARISON"/generator-ios.md
+cp ./tools/comparison/apidiff/diff/xi/Xamarin.TVOS/Xamarin.TVOS.md "$API_COMPARISON"/generator-tvos.md
+cp ./tools/comparison/apidiff/diff/xi/Xamarin.WatchOS/Xamarin.WatchOS.md "$API_COMPARISON"/generator-watchos.md
+cp ./tools/comparison/apidiff/diff/xm/Xamarin.Mac/Xamarin.Mac.md "$API_COMPARISON"/generator-macos.md
 # try to copy and rename the dotnet mds
-cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/dotnet-ios-unknown-unknown.md
-cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md "$API_COMPARISON"/dotnet-maccatalyst-unknown-unknown.md
-cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/dotnet-macos-unknown-unknown.md
-cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/dotnet-tvos-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/generator-dotnet-ios.md
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md "$API_COMPARISON"/generator-dotnet-maccatalyst.md
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/generator-dotnet-macos.md
+cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/generator-dotnet-tvos.md
 # try to copy and rename the dotnet legacy mds
-cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/dotnet-legacy-ios-unknown-unknown.md
-cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/dotnet-legacy-macos-unknown-unknown.md
-cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/dotnet-legacy-tvos-unknown-unknown.md
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/generator-dotnet-legacy-ios.md
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/generator-dotnet-legacy-macos.md
+cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/generator-dotnet-legacy-tvos.md
 # # try to copy and rename the dotnet MacCatalyst and iOS mds
-cp ./tools/comparison/apidiff/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md "$API_COMPARISON"/dotnet-maccatios-unknown-unknown.md
-# Also see if this works
-cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/*/ref/net6.0/Xamarin.*.md "$API_COMPARISON"
+cp ./tools/comparison/apidiff/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md "$API_COMPARISON"/generator-dotnet-maccatios.md
 
 # Debugging
 echo "*** List files inside API_COMPARISON ***"

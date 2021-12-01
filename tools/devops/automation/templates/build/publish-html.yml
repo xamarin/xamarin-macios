@@ -120,18 +120,18 @@ steps:
 
       $apiDiffRoot = "$Env:STABLE_APID_GENERATOR_DIFF_PATH"
       $filePatterns = @{
-        "iOS" = "^ios-[0-9\-]*\.md$";
-        "macOS" = "^macos-[0-9\-]*\.md$";
-        "tvOS" = "^tvos-[0-9\-]*\.md$";
-        "watchOS" = "^watchos-[0-9\-]*\.md$";
-        "dotnet-iOS" = "^dotnet-ios-[a-zA-Z0-9\-]*\.md$";
-        "dotnet-tvOS" = "^dotnet-tvos-[a-zA-Z0-9\-]*\.md$";
-        "dotnet-MacCatalyst" = "^dotnet-maccatalyst-[a-zA-Z0-9\-]*\.md$";
-        "dotnet-macOS" = "^dotnet-macos-[a-zA-Z0-9\-]*\.md$";
-        "dotnet-legacy-iOS" = "^dotnet-legacy-ios-[a-zA-Z0-9\-]*\.md$";
-        "dotnet-legacy-tvOS" = "^dotnet-legacy-tvos-[a-zA-Z0-9\-]*\.md$";
-        "dotnet-legacy-macOS" = "^dotnet-legacy-macos-[a-zA-Z0-9\-]*\.md$";
-        "dotnet-macCatiOS" = "^dotnet-maccatios-[a-zA-Z0-9\-]*\.md$";
+        "iOS" = "^generator-ios.md$";
+        "macOS" = "^generator-macos.md$";
+        "tvOS" = "^generator-tvos.md$";
+        "watchOS" = "^generator-watchos.md$";
+        "dotnet-iOS" = "^generator-dotnet-ios.md$";
+        "dotnet-tvOS" = "^generator-dotnet-tvos.md$";
+        "dotnet-MacCatalyst" = "^generator-dotnet-maccatalyst.md$";
+        "dotnet-macOS" = "^generator-dotnet-macos.md$";
+        "dotnet-legacy-iOS" = "^generator-dotnet-legacy-ios.md$";
+        "dotnet-legacy-tvOS" = "^generator-dotnet-legacy-tvos.md$";
+        "dotnet-legacy-macOS" = "^generator-dotnet-legacy-macos.md$";
+        "dotnet-macCatiOS" = "^generator-dotnet-maccatios.md$";
       }
 
       [System.Collections.Generic.List[System.Object]]$gistsObj = @()
