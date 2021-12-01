@@ -2,7 +2,6 @@
 <Project>
 	<PropertyGroup>
 		<SignAssembly>true</SignAssembly>
-		<LangVersion>latest</LangVersion>
 
 		<RootTestsDirectory>$(MSBuildThisFileDirectory)\..\..</RootTestsDirectory>
 		<EmbeddedResourcesTestDirectory>$(RootTestsDirectory)\EmbeddedResources</EmbeddedResourcesTestDirectory>

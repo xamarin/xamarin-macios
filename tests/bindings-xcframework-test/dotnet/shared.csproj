@@ -6,7 +6,6 @@
     <NoBindingEmbedding>true</NoBindingEmbedding>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
     <DefineConstants>$(DefineConstants);NET;XCFRAMEWORK;FRAMEWORK_TEST</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>bindingstest</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
