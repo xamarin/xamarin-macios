@@ -228,7 +228,7 @@ namespace Security {
 						if (parameters.PathToSystemPrivilegeTool != null)
 							EncodeString (ref pars.ptrToAuthorization [pars.count++], "system.privilege.admin", parameters.PathToSystemPrivilegeTool);
 						if (parameters.IconPath != null)
-							EncodeString (ref pars.ptrToAuthorization [pars.count++], "prompt", parameters.IconPath);
+							EncodeString (ref pars.ptrToAuthorization [pars.count++], "icon", parameters.IconPath);
 					}
 					if (environment != null || (parameters != null && parameters.Prompt != null)){
 						penv = &env;
