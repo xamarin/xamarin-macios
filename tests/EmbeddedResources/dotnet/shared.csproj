@@ -10,9 +10,7 @@
 		<AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="NUnitLite" Version="3.12.0" />
-	</ItemGroup>
+	<Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
 
 	<ItemGroup>
 		<Compile Include="$(EmbeddedResourcesTestDirectory)\ResourcesTest.cs" />
