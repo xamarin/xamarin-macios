@@ -61,6 +61,16 @@ namespace CoreGraphics {
 			get { return info; }
 		}
 
+		protected override void Retain ()
+		{
+			CGPDFScannerRetain (GetCheckedHandle ());
+		}
+
+		protected override void Release ()
+		{
+			CGPDFScannerRelease (GetCheckedHandle ());
+		}
+
 		protected override void Dispose (bool disposing)
 		{
 			if (gch.IsAllocated)
