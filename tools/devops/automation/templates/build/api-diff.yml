@@ -45,7 +45,7 @@ steps:
 
     ls -R $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff
 
-    make -j8 -C $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff jenkins-api-diff
+    make -j8 -C $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff jenkins-api-diff APIDIFF_DIR="$(Build.SourcesDirectory)/xamarin-macios/tools/apidiff" IOS_DESTDIR="$(Build.SourcesDirectory)/xamarin-macios/_ios-build" MAC_DESTDIR="$(Build.SourcesDirectory)/xamarin-macios/_mac-build" DOTNET_DESTDIR="$(Build.SourcesDirectory)/xamarin-macios/_build"
 
     # remove some files that do not need to be uploaded
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
