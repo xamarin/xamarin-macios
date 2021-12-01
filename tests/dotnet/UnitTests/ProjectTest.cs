@@ -500,10 +500,26 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			// Simulate a crash dump
-			var crashDump = Path.Combine (appPath, "mono_crash.mem.123456.something.blob");
-			File.WriteAllText (crashDump, "A crash dump");
+			File.WriteAllText (Path.Combine (appPath, "mono_crash.mem.123456.something.blob"), "A crash dump");
+			File.WriteAllText (Path.Combine (appPath, "mono_crash.123456.somethingelse.blob"), "A crash dump");
 
 			// Build again
+			DotNet.AssertBuild (project_path, properties);
+
+			// Create a file that isn't a crash report.
+			File.WriteAllText (Path.Combine (appPath, "otherfile.txt"), "A file");
+
+			// Build again - this time it'll fail
+			var rv = DotNet.Build (project_path, properties);
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			Assert.AreEqual (1, warnings.Length, "Warning Count");
+			Assert.AreEqual ("Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/net6.0-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
+
+			// Remove the offending file
+			File.Delete (Path.Combine (appPath, "otherfile.txt"));
+
+			// Build yet again
 			DotNet.AssertBuild (project_path, properties);
 		}
 
