@@ -10,7 +10,6 @@
     <LinkMode>$(MtouchLink)</LinkMode>
     <MtouchExtraArgs>-disable-thread-check "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
     <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link sdk</ThisTestDirectory>
     <UseNativeHttpHandler>false</UseNativeHttpHandler>

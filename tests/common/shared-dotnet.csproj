@@ -45,6 +45,9 @@
 	<PropertyGroup>
 		<!-- Disable the implicit FSharp.Core reference, because sometimes the implicit reference wants a version that isn't available anywhere -->
 		<DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+
+		<!-- There's unsafe code in shared test code, which means pretty much all test suites need unsafe code -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
