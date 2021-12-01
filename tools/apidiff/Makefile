@@ -230,7 +230,7 @@ endif
 endif
 endif # INCLUDE_IOS
 ifdef ENABLE_DOTNET
-API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES_MACCATALYST_IOS),$(APIDIFF_DIR)/dotnet/$(assembly)-api-diff.html)
+API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/dotnet/$(assembly)-api-diff.html)
 # API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/dotnet-Xamarin.iOS-api-diff.html $(APIDIFF_DIR)/dotnet-Xamarin.Mac-api-diff.html $(APIDIFF_DIR)/dotnet-Xamarin.TVOS-api-diff.html $(APIDIFF_DIR)/dotnet-Xamarin.MacCatalyst-api-diff.html
 # API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/dotnet/legacy-diff/$(assembly)-api-diff.html)
 # API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/dotnet-legacy-diff-Xamarin.iOS-api-diff.html $(APIDIFF_DIR)/dotnet-legacy-diff-Xamarin.Mac-api-diff.html $(APIDIFF_DIR)/dotnet-legacy-diff-Xamarin.TVOS-api-diff.html $(APIDIFF_DIR)/dotnet-legacy-diff-Xamarin.MacCatalyst-api-diff.html
