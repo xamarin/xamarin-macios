@@ -4,6 +4,10 @@ using Foundation;
 using ObjCRuntime;
 using AVFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ShazamKit {
 
 	[Native]
@@ -209,7 +213,7 @@ namespace ShazamKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Export ("initWithCatalog:")]
-		IntPtr Constructor (SHCatalog catalog);
+		NativeHandle Constructor (SHCatalog catalog);
 
 		[Export ("matchStreamingBuffer:atTime:")]
 		void Match (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime time);
@@ -225,7 +229,7 @@ namespace ShazamKit {
 	{
 		[Export ("initWithDataRepresentation:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData dataRepresentation, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSData dataRepresentation, [NullAllowed] out NSError error);
 
 		[Export ("duration")]
 		double Duration { get; }

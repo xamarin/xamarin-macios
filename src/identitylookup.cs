@@ -12,6 +12,10 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace IdentityLookup {
 
 	[iOS (11,0)]
@@ -169,7 +173,7 @@ namespace IdentityLookup {
 
 		[Export ("initWithClassificationAction:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ILClassificationAction action);
+		NativeHandle Constructor (ILClassificationAction action);
 	}
 
 	[Abstract]

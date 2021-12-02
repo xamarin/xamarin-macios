@@ -42,6 +42,10 @@ using Foundation;
 
 using CGGlyph = System.UInt16;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	[Flags]
@@ -1481,7 +1485,7 @@ namespace CoreText {
 	}
 
 	public partial class CTFont : NativeObject {
-		internal CTFont (IntPtr handle, bool owns)
+		internal CTFont (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}

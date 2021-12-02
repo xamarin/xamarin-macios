@@ -9,6 +9,10 @@ using JavaScriptCore;
 using ObjCRuntime;
 using UIKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace TVMLKit {
 
 	[TV (9,0)]
@@ -251,7 +255,7 @@ namespace TVMLKit {
 	interface TVApplicationController {
 		[Export ("initWithContext:window:delegate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (TVApplicationControllerContext context, [NullAllowed] UIWindow window, [NullAllowed] ITVApplicationControllerDelegate @delegate);
+		NativeHandle Constructor (TVApplicationControllerContext context, [NullAllowed] UIWindow window, [NullAllowed] ITVApplicationControllerDelegate @delegate);
 
 		[NullAllowed, Export ("window")]
 		UIWindow Window { get; }
@@ -949,7 +953,7 @@ namespace TVMLKit {
 	[DisableDefaultCtor]
 	interface TVPlaybackCustomEventUserInfo : TVPlaybackEventMarshaling {
 		[Export ("initWithProperties:expectsReturnValue:")]
-		IntPtr Constructor ([NullAllowed] NSDictionary<NSString, NSObject> properties, bool expectsReturnValue);
+		NativeHandle Constructor ([NullAllowed] NSDictionary<NSString, NSObject> properties, bool expectsReturnValue);
 
 		[Export ("expectsReturnValue")]
 		bool ExpectsReturnValue { get; set; }
@@ -1074,7 +1078,7 @@ namespace TVMLKit {
 	[DisableDefaultCtor]
 	interface TVPlayer {
 		[Export ("initWithPlayer:")]
-		IntPtr Constructor (AVPlayer player);
+		NativeHandle Constructor (AVPlayer player);
 
 		[Export ("player", ArgumentSemantic.Strong)]
 		AVPlayer Player { get; }
@@ -1156,7 +1160,7 @@ namespace TVMLKit {
 		// inlined from base class
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("viewElement", ArgumentSemantic.Strong)]
 		TVViewElement ViewElement { get; }

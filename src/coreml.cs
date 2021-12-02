@@ -26,6 +26,10 @@ using IMTLDevice = global::Foundation.NSObject;
 using VNImageCropAndScaleOption = global::System.nuint;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -125,7 +129,7 @@ namespace CoreML {
 		NSDictionary<NSString, MLFeatureValue> Dictionary { get; }
 
 		[Export ("initWithDictionary:error:")]
-		IntPtr Constructor (NSDictionary<NSString, NSObject> dictionary, out NSError error);
+		NativeHandle Constructor (NSDictionary<NSString, NSObject> dictionary, out NSError error);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -528,10 +532,10 @@ namespace CoreML {
 		// From MLMultiArray (Creation) Category
 
 		[Export ("initWithShape:dataType:error:")]
-		IntPtr Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, out NSError error);
+		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, out NSError error);
 
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
-		IntPtr Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
+		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
 
 		[NoWatch, NoTV, NoiOS, Mac (12,0)]
 		[Export ("initWithPixelBuffer:shape:")]
@@ -641,7 +645,7 @@ namespace CoreML {
 		// Must be manually inlined in classes implementing this protocol
 		//[Abstract]
 		//[Export ("initWithParameterDictionary:error:")]
-		//IntPtr Constructor (NSDictionary<NSString, NSObject> parameters, [NullAllowed] out NSError error);
+		//NativeHandle Constructor (NSDictionary<NSString, NSObject> parameters, [NullAllowed] out NSError error);
 
 		[Abstract]
 		[Export ("setWeightData:error:")]
@@ -669,10 +673,10 @@ namespace CoreML {
 		IMLFeatureProvider[] Array { get; }
 
 		[Export ("initWithFeatureProviderArray:")]
-		IntPtr Constructor (IMLFeatureProvider[] array);
+		NativeHandle Constructor (IMLFeatureProvider[] array);
 
 		[Export ("initWithDictionary:error:")]
-		IntPtr Constructor (NSDictionary<NSString, NSArray> dictionary, out NSError error);
+		NativeHandle Constructor (NSDictionary<NSString, NSArray> dictionary, out NSError error);
 	}
 
 	interface IMLBatchProvider {}
@@ -697,7 +701,7 @@ namespace CoreML {
 
 		// [Abstract]
 		[Export ("initWithModelDescription:parameterDictionary:error:")]
-		IntPtr Constructor (MLModelDescription modelDescription, NSDictionary<NSString, NSObject> parameters, out NSError error);
+		NativeHandle Constructor (MLModelDescription modelDescription, NSDictionary<NSString, NSObject> parameters, out NSError error);
 
 		[Abstract]
 		[Export ("predictionFromFeatures:options:error:")]
@@ -997,7 +1001,7 @@ namespace CoreML {
 	interface MLUpdateProgressHandlers {
 
 		[Export ("initForEvents:progressHandler:completionHandler:")]
-		IntPtr Constructor (MLUpdateProgressEvent interestedEvents, [NullAllowed] Action<MLUpdateContext> progressHandler, Action<MLUpdateContext> completionHandler);
+		NativeHandle Constructor (MLUpdateProgressEvent interestedEvents, [NullAllowed] Action<MLUpdateContext> progressHandler, Action<MLUpdateContext> completionHandler);
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

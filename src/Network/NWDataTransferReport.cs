@@ -21,6 +21,10 @@ using OS_nw_data_transfer_report=System.IntPtr;
 using OS_nw_connection=System.IntPtr;
 using OS_nw_interface=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -32,7 +36,7 @@ namespace Network {
 #endif
 	public class NWDataTransferReport : NativeObject {
 
-		internal NWDataTransferReport (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWDataTransferReport (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_data_transfer_report nw_connection_create_new_data_transfer_report (OS_nw_connection connection);

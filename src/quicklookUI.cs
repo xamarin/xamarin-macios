@@ -7,6 +7,10 @@ using System;
 using System.ComponentModel;
 using UniformTypeIdentifiers;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace QuickLookUI {
 
 	[Native]
@@ -137,10 +141,10 @@ namespace QuickLookUI {
 	interface QLPreviewView {
 
 		[Export ("initWithFrame:style:")]
-		IntPtr Constructor (CGRect frame, QLPreviewViewStyle style);
+		NativeHandle Constructor (CGRect frame, QLPreviewViewStyle style);
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("previewItem", ArgumentSemantic.Retain)]
 		IQLPreviewItem PreviewItem { get; set; }
@@ -207,7 +211,7 @@ namespace QuickLookUI {
 		UTType ContentType { get; }
 
 		[Export ("initWithData:contentType:")]
-		IntPtr Constructor (NSData data, UTType contentType);
+		NativeHandle Constructor (NSData data, UTType contentType);
 	}
 
 	delegate bool QLPreviewReplyDrawingHandler (CGContext context, QLPreviewReply reply, out NSError error);
@@ -228,16 +232,16 @@ namespace QuickLookUI {
 		string Title { get; set; }
 
 		[Export ("initWithContextSize:isBitmap:drawingBlock:")]
-		IntPtr Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
+		NativeHandle Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
 
 		[Export ("initWithFileURL:")]
-		IntPtr Constructor (NSUrl fileUrl);
+		NativeHandle Constructor (NSUrl fileUrl);
 
 		[Export ("initWithDataOfContentType:contentSize:dataCreationBlock:")]
-		IntPtr Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
+		NativeHandle Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
 
 		// QLPreviewReply_UI
 		[Export ("initForPDFWithPageSize:documentCreationBlock:")]
-		IntPtr Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
+		NativeHandle Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
 	}
 }

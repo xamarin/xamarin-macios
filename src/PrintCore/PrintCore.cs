@@ -20,9 +20,13 @@ using CoreFoundation;
 using PMObject=System.IntPtr;
 using OSStatus=System.Int32;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace PrintCore {
 	public class PMPrintCoreBase : NativeObject {
-		internal PMPrintCoreBase (IntPtr handle, bool owns)
+		internal PMPrintCoreBase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -52,7 +56,7 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreateSession (out IntPtr session);
 
-		internal PMPrintSession (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal PMPrintSession (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		static IntPtr Create ()
 		{
@@ -156,7 +160,7 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreatePrintSettings (out IntPtr session);
 		
-		internal PMPrintSettings (IntPtr handle, bool owns)
+		internal PMPrintSettings (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -315,7 +319,7 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreatePageFormatWithPMPaper (out IntPtr handle, IntPtr paper);
 
-		internal PMPageFormat (IntPtr handle, bool owns): base (handle, owns) {}
+		internal PMPageFormat (NativeHandle handle, bool owns): base (handle, owns) {}
 
 		static IntPtr Create (PMPaper? paper = null)
 		{
@@ -394,7 +398,7 @@ namespace PrintCore {
 	}
 
 	public class PMPaper : PMPrintCoreBase {
-		internal PMPaper (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal PMPaper (NativeHandle handle, bool owns) : base (handle, owns) {}
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPaperGetID (IntPtr handle, out IntPtr str);
 		[DllImport (Constants.PrintCoreLibrary)]
@@ -461,7 +465,7 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static IntPtr PMPrinterCreateFromPrinterID (IntPtr id);
 
-		internal PMPrinter (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal PMPrinter (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		static IntPtr Create ()
 		{

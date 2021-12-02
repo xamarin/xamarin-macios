@@ -20,6 +20,10 @@ using MapKit;
 using Photos;
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace PhotosUI {
 	[NoTV]
 	[iOS (8, 0)]
@@ -67,7 +71,7 @@ namespace PhotosUI {
 
 		// inlined (designated initializer)
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[NoMac]
 		[Static]
@@ -249,25 +253,25 @@ namespace PhotosUI {
 
 		[Export ("initWithProjectType:title:description:image:subtypeDescriptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image, PHProjectTypeDescription[] subtypeDescriptions);
+		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image, PHProjectTypeDescription[] subtypeDescriptions);
 
 		[Export ("initWithProjectType:title:description:image:")]
-		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image);
+		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image);
 
 		[Mac (10,14)]
 		[Export ("initWithProjectType:title:attributedDescription:image:subtypeDescriptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, PHProjectTypeDescription[] subtypeDescriptions);
+		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, PHProjectTypeDescription[] subtypeDescriptions);
 
 		[Mac (10,14)]
 		[Export ("initWithProjectType:title:attributedDescription:image:canProvideSubtypes:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
+		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
 
 		[Mac (10,14)]
 		[Export ("initWithProjectType:title:description:image:canProvideSubtypes:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
+		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
 
 		[Mac (10, 14)]
 		[Export ("canProvideSubtypes")]
@@ -515,7 +519,7 @@ namespace PhotosUI {
 
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PHPickerConfiguration configuration);
+		NativeHandle Constructor (PHPickerConfiguration configuration);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -538,7 +542,7 @@ namespace PhotosUI {
 		PHPickerFilter Filter { get; set; }
 
 		[Export ("initWithPhotoLibrary:")]
-		IntPtr Constructor (PHPhotoLibrary photoLibrary);
+		NativeHandle Constructor (PHPhotoLibrary photoLibrary);
 
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("preselectedAssetIdentifiers", ArgumentSemantic.Copy)]

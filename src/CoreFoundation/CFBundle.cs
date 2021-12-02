@@ -12,6 +12,10 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	public partial class CFBundle : NativeObject {
@@ -33,7 +37,7 @@ namespace CoreFoundation {
 			public string Creator { get; private set; }
 		}
 
-		internal CFBundle (IntPtr handle, bool owns)
+		internal CFBundle (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

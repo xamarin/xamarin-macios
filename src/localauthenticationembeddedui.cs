@@ -14,6 +14,10 @@ using AppKit;
 using CoreGraphics;
 using LocalAuthentication;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace LocalAuthenticationEmbeddedUI {
     
     [NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -21,13 +25,13 @@ namespace LocalAuthenticationEmbeddedUI {
     interface LAAuthenticationView
     {
         [Export ("initWithFrame:")]
-        IntPtr Constructor (CGRect frameRect);
+        NativeHandle Constructor (CGRect frameRect);
 
         [Export ("initWithContext:")]
-        IntPtr Constructor (LAContext context);
+        NativeHandle Constructor (LAContext context);
 
         [Export ("initWithContext:controlSize:")]
-        IntPtr Constructor (LAContext context, NSControlSize controlSize);
+        NativeHandle Constructor (LAContext context, NSControlSize controlSize);
 
         [Export ("context")]
         LAContext Context { get; }

@@ -23,6 +23,10 @@ using NSPrintInfo = Foundation.NSObject;
 using NSPrintOperation = Foundation.NSObject;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace WebKit
 {
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -655,12 +659,12 @@ namespace WebKit
 	interface WKUserScript : NSCopying {
 
 		[Export ("initWithSource:injectionTime:forMainFrameOnly:")]
-		IntPtr Constructor (NSString source, WKUserScriptInjectionTime injectionTime, bool isForMainFrameOnly);
+		NativeHandle Constructor (NSString source, WKUserScriptInjectionTime injectionTime, bool isForMainFrameOnly);
 
 		[Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithSource:injectionTime:forMainFrameOnly:inContentWorld:")]
-		IntPtr Constructor (NSString source, WKUserScriptInjectionTime injectionTime, bool isForMainFrameOnly, WKContentWorld contentWorld);
+		NativeHandle Constructor (NSString source, WKUserScriptInjectionTime injectionTime, bool isForMainFrameOnly, WKContentWorld contentWorld);
 
 		[Export ("source", ArgumentSemantic.Copy)]
 		NSString Source { get; }
@@ -690,13 +694,13 @@ namespace WebKit
 
 		[DesignatedInitializer]
 		[Export ("initWithFrame:configuration:")]
-		IntPtr Constructor (CGRect frame, WKWebViewConfiguration configuration);
+		NativeHandle Constructor (CGRect frame, WKWebViewConfiguration configuration);
 
 		// (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 		// [Unavailable (PlatformName.iOS)]
 		// [Unavailable (PlatformName.MacOSX)]
 		// [Export ("initWithCoder:")]
-		// IntPtr Constructor (NSCoder coder);
+		// NativeHandle Constructor (NSCoder coder);
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		WKWebViewConfiguration Configuration { get; }

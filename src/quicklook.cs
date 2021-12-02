@@ -41,13 +41,17 @@ using System;
 using System.ComponentModel;
 using UniformTypeIdentifiers;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace QuickLook {
 #if !MONOMAC
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events=new Type [] { typeof (QLPreviewControllerDelegate)})]
 	interface QLPreviewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("dataSource", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDataSource { get; set; }
@@ -190,17 +194,17 @@ namespace QuickLook {
 		string Title { get; set; }
 
 		[Export ("initWithContextSize:isBitmap:drawingBlock:")]
-		IntPtr Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
+		NativeHandle Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
 
 		[Export ("initWithFileURL:")]
-		IntPtr Constructor (NSUrl fileUrl);
+		NativeHandle Constructor (NSUrl fileUrl);
 
 		[Export ("initWithDataOfContentType:contentSize:dataCreationBlock:")]
-		IntPtr Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
+		NativeHandle Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
 
 		// QLPreviewReply_UI
 		[Export ("initForPDFWithPageSize:documentCreationBlock:")]
-		IntPtr Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
+		NativeHandle Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -215,7 +219,7 @@ namespace QuickLook {
 		UTType ContentType { get; }
 
 		[Export ("initWithData:contentType:")]
-		IntPtr Constructor (NSData data, UTType contentType);
+		NativeHandle Constructor (NSData data, UTType contentType);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -250,11 +254,11 @@ namespace QuickLook {
 		[Export ("initWithItemsAtURLs:options:")]
 
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl[] urls, [NullAllowed] QLPreviewSceneOptions options);
+		NativeHandle Constructor (NSUrl[] urls, [NullAllowed] QLPreviewSceneOptions options);
 
 		[Export ("initWithUserActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUserActivity userActivity);
+		NativeHandle Constructor (NSUserActivity userActivity);
 	}
 
 	[iOS (11,0)]

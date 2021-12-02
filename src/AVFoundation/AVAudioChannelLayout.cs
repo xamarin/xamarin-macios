@@ -32,7 +32,12 @@ namespace AVFoundation {
 		}
 
 		[DesignatedInitializer]
-		public AVAudioChannelLayout (AudioChannelLayout layout) : this ((nint) CreateLayoutPtr (layout))
+		public AVAudioChannelLayout (AudioChannelLayout layout)
+#if NET
+			: this (CreateLayoutPtr (layout))
+#else
+			: this ((nint) CreateLayoutPtr (layout))
+#endif
 		{
 			Marshal.FreeHGlobal (handleToLayout);
 		}

@@ -19,6 +19,10 @@ using Foundation;
 using CoreMedia;
 using CoreVideo;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoToolbox {
 
 #if NET
@@ -31,13 +35,13 @@ namespace VideoToolbox {
 		GCHandle callbackHandle;
 
 #if !NET
-		protected internal VTDecompressionSession (IntPtr handle) : base (handle)
+		protected internal VTDecompressionSession (NativeHandle handle) : base (handle)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal VTDecompressionSession (IntPtr handle, bool owns) : base (handle, owns)
+		internal VTDecompressionSession (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 

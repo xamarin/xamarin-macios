@@ -32,6 +32,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Run Delegate Callbacks
@@ -175,7 +179,7 @@ namespace CoreText {
 	}
 
 	public class CTRunDelegate : NativeObject, IDisposable {
-		internal CTRunDelegate (IntPtr handle, bool owns)
+		internal CTRunDelegate (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

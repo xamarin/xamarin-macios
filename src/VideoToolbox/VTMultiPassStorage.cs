@@ -18,6 +18,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreMedia;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoToolbox {
 
 #if NET
@@ -30,14 +34,14 @@ namespace VideoToolbox {
 		VTStatus closedStatus;
 
 #if !NET
-		protected internal VTMultiPassStorage (IntPtr handle)
+		protected internal VTMultiPassStorage (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal VTMultiPassStorage (IntPtr handle, bool owns)
+		internal VTMultiPassStorage (NativeHandle handle, bool owns)
 			: base (handle, false)
 		{
 		}

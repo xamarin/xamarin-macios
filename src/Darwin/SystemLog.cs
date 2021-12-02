@@ -34,6 +34,10 @@ using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Darwin {
 
 	public class SystemLog : DisposableObject {
@@ -68,7 +72,7 @@ namespace Darwin {
 		{
 		}
 
-		SystemLog (IntPtr handle, bool owns)
+		SystemLog (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -195,7 +199,7 @@ namespace Darwin {
 			True = 7
 		}
 
-		internal Message (IntPtr handle, bool owns)
+		internal Message (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

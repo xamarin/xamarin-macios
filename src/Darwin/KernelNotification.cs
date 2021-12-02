@@ -33,6 +33,10 @@ using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Darwin {
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -147,7 +151,7 @@ namespace Darwin {
 	public class KernelQueue : IDisposable, INativeObject {
 		int handle;
 
-		public IntPtr Handle { get { return (IntPtr) handle; } }
+		public NativeHandle Handle { get { return (NativeHandle) (IntPtr) handle; } }
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static int /* int */ kqueue ();

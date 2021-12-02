@@ -29,6 +29,10 @@ using UIKit;
 #endif
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreMedia {
 
 #if !NET
@@ -40,7 +44,7 @@ namespace CoreMedia {
 		GCHandle invalidate;
 
 		[Preserve (Conditional=true)]
-		internal CMSampleBuffer (IntPtr handle, bool owns)
+		internal CMSampleBuffer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

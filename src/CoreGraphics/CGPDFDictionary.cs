@@ -36,6 +36,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGPDFDictionary.h
@@ -45,7 +49,7 @@ namespace CoreGraphics {
 		// does not subclass NativeObject (there's no way to retain/release CGPDFObject instances). It's
 		// also why this constructor doesn't have a 'bool owns' parameter: it's always owned by the containing CGPDFDocument.
 #if NET
-		internal CGPDFDictionary (IntPtr handle)
+		internal CGPDFDictionary (NativeHandle handle)
 #else
 		public CGPDFDictionary (IntPtr handle)
 #endif
