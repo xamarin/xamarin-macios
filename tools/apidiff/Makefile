@@ -403,10 +403,6 @@ $(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.Ma
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
-
 $(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
@@ -525,7 +521,7 @@ $(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) --md $@
 
 # Dotnet iOS vs Dotnet MacCatalyst
-$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
 	$(Q) sed -e 's_<assembly name="Xamarin.MacCatalyst" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml > $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.MacCatalyst-as-iOS.xml
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.MacCatalyst-as-iOS.xml $(APIDIFF_IGNORE) --md $@
