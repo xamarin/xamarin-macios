@@ -749,14 +749,14 @@ namespace Xamarin.Tests {
 
 		void ConfigureAssets (string project_path, string runtimeIdentifiers, bool startWithAssets)
 		{
+			// Start off on a clean slate
+			DeleteAssets (project_path);
+
 			// We either want the assets added before the build, or we will be adding them after the build
 			if (startWithAssets)
 				CopyAssets (project_path);
-			else
-				DeleteAssets (project_path);
 
 			Clean (project_path);
-
 			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
 
 			if (!startWithAssets) {
@@ -770,8 +770,8 @@ namespace Xamarin.Tests {
 		void DeleteAssets (string project_path)
 		{
 			string xcassetsDir = Path.Combine (project_path, "../Assets.xcassets");
-			if (Directory.Exists (xcassetsDir))
-				Directory.Delete (xcassetsDir, true);
+			if (File.Exists (xcassetsDir))
+				File.Delete (xcassetsDir);
 		}
 
 		void CopyAssets (string project_path)
@@ -780,8 +780,7 @@ namespace Xamarin.Tests {
 			DirectoryInfo xcassetsDir = new DirectoryInfo (Path.Combine (project_path, "../Assets.xcassets"));
 
 			Assert.That (testingAssetsDir, Does.Exist, $"Could not find testingAssetsDir: {testingAssetsDir}");
-			if (!Directory.Exists (xcassetsDir.FullName))
-				MakeSymlinks (testingAssetsDir.FullName, xcassetsDir.FullName);
+			MakeSymlinks (testingAssetsDir.FullName, xcassetsDir.FullName);
 			Assert.That (xcassetsDir, Does.Exist, $"Could not find xcassetsDir: {xcassetsDir}");
 		}
 
