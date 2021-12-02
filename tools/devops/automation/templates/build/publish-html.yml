@@ -176,7 +176,7 @@ steps:
       $apiGeneratorDiffData = @{
         "gist" = $gists;
         "html" = $html;
-        "result" = $Env:API_GENERATOR_BUILT;
+        "result" = $Env:API_GENERATOR_DIFF_BUILT;
         "message" = $Env:API_GENERATOR_DIFF_STATUS_MESSAGE;
       }
       # write to a file to be used by the comment to parse
