@@ -69,9 +69,10 @@ fi
 mkdir -p "$API_COMPARISON"
 
 # Debugging
-echo $BASH_VERSION
 echo "*** List files inside ./tools/comparison/apidiff ***"
 ls -R ./tools/comparison/apidiff
+echo "*** List files inside ./tools/apidiff ***"
+ls -R ./tools/apidiff
 
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"

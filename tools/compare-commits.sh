@@ -245,8 +245,20 @@ fi
 
 # Now create the markdowns for the current build against those references
 echo "${BLUE}Creating Markdowns...${CLEAR}"
+# debugging
+echo "${BLUE}...ls in ROOT_DIR/tools/apidiff before generating markdowns...${CLEAR}"
+ls -R $ROOT_DIR/tools/apidiff
+echo "${BLUE}...ls in OUTPUT_DIR/apidiff before generating markdowns...${CLEAR}"
+ls -R $OUTPUT_DIR/apidiff
+# FIXME looks like the markdown files are going in ./tools/apidiff instead of ./tools/comparison/apidiff
+# Is line 13 in Makefile messing this up "APIDIFF_DIR=." or is merger.cs?
 if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
 	EC=$?
 	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"
 fi
+#debugging
+echo "${BLUE}...ls in ROOT_DIR/tools/apidiff after generating markdowns...${CLEAR}"
+ls -R $ROOT_DIR/tools/apidiff
+echo "${BLUE}...ls in OUTPUT_DIR/apidiff after generating markdowns...${CLEAR}"
+ls -R $OUTPUT_DIR/apidiff

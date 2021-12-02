@@ -13,7 +13,7 @@ class Merger {
 		return line.Substring (start, end - start);
 	}
 
-	public static void Process (string platform, string path, string os)
+	public static void Process (string platform, string path, string os, string destinationPath)
 	{
 		if (!Directory.Exists (path))
 			throw new DirectoryNotFoundException (path);
@@ -76,22 +76,25 @@ class Merger {
 		headers.WriteLine ($"# {title}");
 		headers.WriteLine ();
 
-		File.WriteAllText (filename, headers.ToString ());
+		var filePath = Path.Combine (destinationPath, filename);
+		File.WriteAllText (filePath, headers.ToString ());
 
 		var alldiffs = content.ToString ();
 		if (alldiffs.Length == 0)
 			alldiffs = "No changes were found between both versions."; // should not happen for releases (versions change)
-		File.AppendAllText (filename, alldiffs);
-		Console.WriteLine ($"@MonkeyWrench: AddFile: {Path.GetFullPath (filename)}");
+		File.AppendAllText (filePath, alldiffs);
+		Console.WriteLine ($"@MonkeyWrench: AddFile: {Path.GetFullPath (filePath)}");
 
-		if (File.Exists ("api-diff.html"))
-			File.AppendAllText ("api-diff.html", $"\n<h2><a href=\"{filename}\">{platform} API diff (markdown)</a></h2>");
+		if (File.Exists ("api-diff.html")){
+			// TODO changing filename to filePath may cause trouble here...
+			File.AppendAllText ("api-diff.html", $"\n<h2><a href=\"{filePath}\">{platform} API diff (markdown)</a></h2>");
+		}
 	}
 
 	public static int Main (string [] args)
 	{
 		try {
-			Process (args [0], args [1], args [2]);
+			Process (args [0], args [1], args [2], args [3]);
 			return 0;
 		} catch (Exception e) {
 			Console.WriteLine (e);
