@@ -4980,7 +4980,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("containsObject:")]
-		bool _Contains (IntPtr id);
+		bool _Contains (NativeHandle id);
 
 		[Export ("containsObject:")]
 		bool Contains (NSObject id);
@@ -5003,7 +5003,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("setByAddingObjectsFromSet:")]
-		IntPtr _SetByAddingObjectsFromSet (IntPtr other);
+		NativeHandle _SetByAddingObjectsFromSet (NativeHandle other);
 
 		[Export ("setByAddingObjectsFromSet:"), Internal]
 		NSSet SetByAddingObjectsFromSet (NSSet other);
@@ -5014,7 +5014,7 @@ namespace Foundation
 		[Internal]
 		[Static]
 		[Export ("setWithArray:")]
-		IntPtr _SetWithArray (IntPtr array);
+		NativeHandle _SetWithArray (NativeHandle array);
 
 #if MACCORE
 		[Mac (10,11)]
