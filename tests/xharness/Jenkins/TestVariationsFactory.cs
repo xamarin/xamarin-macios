@@ -35,11 +35,22 @@ namespace Xharness.Jenkins {
 			var ignore = test.TestProject.Ignore;
 			var mac_supports_arm64 = Harness.CanRunArm64;
 			var arm64_runtime_identifier = string.Empty;
+			var arm64_sim_runtime_identifier = string.Empty;
 
-			if (test.Platform == TestPlatform.Mac) {
+			switch (test.Platform) {
+			case TestPlatform.Mac:
 				arm64_runtime_identifier = "osx-arm64";
-			} else if (test.Platform == TestPlatform.MacCatalyst) {
+				break;
+			case TestPlatform.MacCatalyst:
 				arm64_runtime_identifier = "maccatalyst-arm64";
+				break;
+			case TestPlatform.iOS:
+			case TestPlatform.iOS_Unified:
+				arm64_sim_runtime_identifier = "iossimulator-arm64";
+				break;
+			case TestPlatform.tvOS:
+				arm64_sim_runtime_identifier = "tvossimulator-arm64";
+				break;
 			}
 
 			switch (test.ProjectPlatform) {
@@ -112,8 +123,14 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore ?? !jenkins.IncludeAll };
+
+					if (test.TestProject.IsDotNetProject && mac_supports_arm64)
+						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !mac_supports_arm64 ? true : ignore, RuntimeIdentifier = arm64_sim_runtime_identifier, };
 					break;
 				case "introspection":
+					if (test.TestProject.IsDotNetProject && mac_supports_arm64)
+						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !mac_supports_arm64 ? true : ignore, RuntimeIdentifier = arm64_sim_runtime_identifier, };
+
 					foreach (var target in test.Platform.GetAppRunnerTargets ())
 						yield return new TestData {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
