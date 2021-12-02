@@ -2356,7 +2356,7 @@ namespace CoreText {
 			if (cfArrayRef == IntPtr.Zero)
 				return Array.Empty<CTFontTable> ();
 			return NSArray.ArrayFromHandle (cfArrayRef, v => {
-					return (CTFontTable) (uint) v;
+					return (CTFontTable) (uint) (IntPtr) v;
 			}, true);
 		}
 

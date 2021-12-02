@@ -15,6 +15,10 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace UIKit {
 	public partial class UIAppearance {
 		public override bool Equals (object other)
@@ -45,15 +49,15 @@ namespace UIKit {
 			return !(a == b);
 		}
 
-		static IntPtr[] TypesToPointers (Type[] whenFoundIn)
+		static NativeHandle[] TypesToPointers (Type[] whenFoundIn)
 		{
 #if TVOS
-			IntPtr [] ptrs = new IntPtr [whenFoundIn.Length];
+			var ptrs = new NativeHandle [whenFoundIn.Length];
 #else
 			if (whenFoundIn.Length > 4)
 				throw new ArgumentException ("Only 4 parameters supported currently");
 
-			IntPtr [] ptrs = new IntPtr [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
+			var ptrs = new NativeHandle [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
 #endif
 			for (int i = 0; i < whenFoundIn.Length; i++){
 				if (whenFoundIn [i] == null)
@@ -62,7 +66,7 @@ namespace UIKit {
 					throw new ArgumentException (String.Format ("Type {0} does not derive from NSObject", whenFoundIn [i]));
 
 				var classHandle = Class.GetHandle (whenFoundIn [i]);
-				if (classHandle == IntPtr.Zero)
+				if (classHandle == NativeHandle.Zero)
 					throw new ArgumentException (string.Format ("Could not find the Objective-C class for {0}", whenFoundIn[i].FullName));
 
 				ptrs [i] = classHandle;
@@ -104,7 +108,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IntPtr GetAppearance (IntPtr class_ptr, params Type [] whenFoundIn)
 		{
-			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
+			var ptrs = TypesToPointers (whenFoundIn);
 
 			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
@@ -141,7 +145,7 @@ namespace UIKit {
 			if (traits == null)
 				throw new ArgumentNullException ("traits");
 
-			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
+			var ptrs = TypesToPointers (whenFoundIn);
 
 			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.

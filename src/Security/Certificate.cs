@@ -238,7 +238,7 @@ namespace Security {
 		public NSData? GetPublicKey ()
 		{
 			IntPtr result;
-			using (var oids = NSArray.FromIntPtrs (new IntPtr[] { SecCertificateOIDs.SubjectPublicKey })) {
+			using (var oids = NSArray.FromIntPtrs (new NativeHandle [] { SecCertificateOIDs.SubjectPublicKey })) {
 				result = SecCertificateCopyValues (GetCheckedHandle (), oids.Handle, IntPtr.Zero);
 				if (result == IntPtr.Zero)
 					throw new ArgumentException ("Not a valid certificate");
