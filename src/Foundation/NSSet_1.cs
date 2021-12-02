@@ -30,6 +30,10 @@ using System.Collections.Generic;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	[Register ("NSSet", SkipRegistration = true)]
 	public sealed class NSSet<TKey> : NSSet, IEnumerable<TKey>
@@ -44,7 +48,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSSet (IntPtr handle)
+		internal NSSet (NativeHandle handle)
 			: base (handle)
 		{
 		}

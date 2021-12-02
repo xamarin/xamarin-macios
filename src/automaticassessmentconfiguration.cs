@@ -12,6 +12,10 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AutomaticAssessmentConfiguration {
 
 	[ErrorDomain ("AEAssessmentErrorDomain")]
@@ -106,7 +110,7 @@ namespace AutomaticAssessmentConfiguration {
 		bool Active { [Bind ("isActive")] get; }
 
 		[Export ("initWithConfiguration:")]
-		IntPtr Constructor (AEAssessmentConfiguration configuration);
+		NativeHandle Constructor (AEAssessmentConfiguration configuration);
 
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]

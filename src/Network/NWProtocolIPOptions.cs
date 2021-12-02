@@ -21,6 +21,10 @@ using OS_nw_protocol_definition=System.IntPtr;
 using OS_nw_protocol_options=System.IntPtr;
 using IntPtr=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -31,7 +35,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWProtocolIPOptions : NWProtocolOptions {
-		internal NWProtocolIPOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolIPOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public void SetVersion (NWIPVersion version)
 			=> nw_ip_options_set_version (GetCheckedHandle (), version);

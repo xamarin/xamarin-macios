@@ -28,6 +28,10 @@ using Foundation;
 
 #nullable enable
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 	public partial class Selector : IEquatable<Selector>, INativeObject {
 		internal const string Alloc = "alloc";
@@ -41,10 +45,10 @@ namespace ObjCRuntime {
 		internal const string PerformSelectorWithObjectAfterDelay = "performSelector:withObject:afterDelay:";
 #endif
 
-		IntPtr handle;
+		NativeHandle handle;
 		string? name;
 
-		public Selector (IntPtr sel)
+		public Selector (NativeHandle sel)
 		{
 			if (!sel_isMapped (sel))
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
@@ -55,7 +59,7 @@ namespace ObjCRuntime {
 		// this .ctor is required, like for any INativeObject implementation
 		// even if selectors are not disposable
 		[Preserve (Conditional = true)]
-		internal Selector (IntPtr handle, bool /* unused */ owns)
+		internal Selector (NativeHandle handle, bool /* unused */ owns)
 		{
 			this.handle = handle;
 		}
@@ -66,7 +70,7 @@ namespace ObjCRuntime {
 			handle = GetHandle (name);
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return handle; }
 		}
 
@@ -118,7 +122,7 @@ namespace ObjCRuntime {
 
 		// return null, instead of throwing, if an invalid pointer is used (e.g. IntPtr.Zero)
 		// so this looks better in the debugger watch when no selector is assigned (ref: #10876)
-		public static Selector? FromHandle (IntPtr sel)
+		public static Selector? FromHandle (NativeHandle sel)
 		{
 			if (!sel_isMapped (sel))
 				return null;
@@ -126,7 +130,7 @@ namespace ObjCRuntime {
 			return new Selector (sel, false);
 		}
 
-		public static Selector Register (IntPtr handle)
+		public static Selector Register (NativeHandle handle)
 		{
 			return new Selector (handle);
 		}
@@ -136,6 +140,7 @@ namespace ObjCRuntime {
 		extern static /* const char* */ IntPtr sel_getName (/* SEL */ IntPtr sel);
 
 		// objc/runtime.h
+		// Selector.GetHandle is optimized by the AOT compiler, and the current implementation only supports IntPtr, so we can't switch to NativeHandle quite yet (the AOT compiler crashes).
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint="sel_registerName")]
 		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
 

@@ -41,6 +41,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
 #if !NET
@@ -215,7 +219,7 @@ namespace AddressBook {
 		internal Converter<IntPtr, T> toManaged;
 		internal Converter<T, IntPtr> toNative;
 
-		internal ABMultiValue (IntPtr handle, bool owns)
+		internal ABMultiValue (NativeHandle handle, bool owns)
 			: this (handle, 
 					v => (T) (object) Runtime.GetNSObject (v)!,
 					v => ((INativeObject?) v).GetHandle (), owns)
@@ -224,7 +228,7 @@ namespace AddressBook {
 				throw new InvalidOperationException ("T must be an NSObject!");
 		}
 
-		internal ABMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative, bool owns)
+		internal ABMultiValue (NativeHandle handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative, bool owns)
 			: base (handle, owns)
 		{
 			if (toManaged is null)
@@ -311,12 +315,12 @@ namespace AddressBook {
 #endif
 	public class ABMutableMultiValue<T> : ABMultiValue<T>
 	{
-		internal ABMutableMultiValue (IntPtr handle, bool owns)
+		internal ABMutableMultiValue (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		internal ABMutableMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
+		internal ABMutableMultiValue (NativeHandle handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
 			: base (handle, toManaged, toNative, false)
 		{
 		}

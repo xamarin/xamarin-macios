@@ -18,6 +18,10 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioToolbox {
 
 	// untyped enum (used as an OSStatus in the API) -> MusicPlayer.h
@@ -79,7 +83,7 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus DisposeMusicPlayer (/* MusicPlayer */ IntPtr inPlayer);
 							      
-		MusicPlayer (IntPtr handle, bool owns)
+		MusicPlayer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -47,6 +47,10 @@ using UIImage=AppKit.NSImage;
 #endif
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioUnit
 {
 
@@ -231,7 +235,7 @@ namespace AudioUnit
 
 	public class AudioComponent : DisposableObject {
 #if !COREBUILD
-		internal AudioComponent (IntPtr handle, bool owns)
+		internal AudioComponent (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{ 
 		}

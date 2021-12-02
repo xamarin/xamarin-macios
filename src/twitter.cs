@@ -12,6 +12,10 @@ using UIKit;
 using Twitter;
 using Accounts;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Twitter {
 
 	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
@@ -34,7 +38,7 @@ namespace Twitter {
 		NSDictionary Parameters { get;  }
 
 		[Export ("initWithURL:parameters:requestMethod:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary parameters, TWRequestMethod requestMethod);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary parameters, TWRequestMethod requestMethod);
 
 		[Export ("addMultiPartData:withName:type:")]
 		void AddMultiPartData (NSData data, string name, string type);
@@ -52,7 +56,7 @@ namespace Twitter {
 	interface TWTweetComposeViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("completionHandler")]
 		Action<TWTweetComposeViewControllerResult> CompletionHandler { get; set; }

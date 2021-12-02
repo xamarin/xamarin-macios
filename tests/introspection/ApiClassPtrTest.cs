@@ -17,6 +17,10 @@ using System.Runtime.CompilerServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Introspection {
 
 	public abstract class ApiClassPtrTest : ApiBaseTest {
@@ -82,7 +86,7 @@ namespace Introspection {
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
 					continue;			
-				IntPtr class_ptr = (IntPtr) fi.GetValue (null);
+				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 				IntPtr register_class_ptr = GetClassPtrFromRegister (t);
 
 				Assert.AreEqual (class_ptr, register_class_ptr, "class_ptr and RegisterAttribute are different: " + t.Name);
@@ -99,7 +103,7 @@ namespace Introspection {
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
 					continue;
-				IntPtr class_ptr = (IntPtr)fi.GetValue (null);
+				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 
 				var extendedType = GetExtendedType (t);
 				IntPtr extended_class_ptr;

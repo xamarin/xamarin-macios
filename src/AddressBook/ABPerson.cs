@@ -41,6 +41,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
 #if !NET
@@ -617,12 +621,12 @@ namespace AddressBook {
 		{
 		}
 
-		internal ABPerson (IntPtr handle, bool owns)
+		internal ABPerson (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		internal ABPerson (IntPtr handle, ABAddressBook? addressbook)
+		internal ABPerson (NativeHandle handle, ABAddressBook? addressbook)
 			: base (handle, false)
 		{
 			AddressBook = addressbook;

@@ -27,7 +27,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
 
 		public static bool operator == (UIAppearance a, UIAppearance b)
@@ -125,8 +125,13 @@ namespace UIKit {
 					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
 					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
 			} else {
+#if NET
+				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn),
+					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
+#else
 				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn), 
 					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
+#endif
 			}
 		}
 
@@ -157,7 +162,11 @@ namespace UIKit {
 					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
 					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
 			} else {
+#if NET
+				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn),
+#else
 				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn), 
+#endif
 													 traits.Handle, ptrs [0], ptrs [1], ptrs [2], ptrs [3]);
 			}
 		}

@@ -47,6 +47,10 @@ using Foundation;
 
 using CFIndex = System.nint;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// CFOptionFlags
@@ -719,7 +723,7 @@ namespace CoreFoundation {
 		}
 #endif
 
-		protected CFStream (IntPtr handle, bool owns)
+		protected CFStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

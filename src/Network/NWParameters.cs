@@ -20,6 +20,10 @@ using OS_nw_parameters=System.IntPtr;
 using nw_parameters_attribution_t=System.IntPtr;
 using OS_nw_privacy_context=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -31,9 +35,9 @@ namespace Network {
 #endif
 	public class NWParameters : NativeObject {
 #if NET
-		internal NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWParameters (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWParameters (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 		static unsafe BlockLiteral *DEFAULT_CONFIGURATION () => (BlockLiteral *) NWParametersConstants._DefaultConfiguration;

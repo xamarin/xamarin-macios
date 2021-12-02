@@ -1153,13 +1153,21 @@ namespace ObjCRuntime {
 				msg = "Failed to marshal the Objective-C object 0x{0} (type: {1}). " +
 					"Could not find an existing managed instance for this object, " +
 					"nor was it possible to create a new managed instance " +
+#if NET
+					"(because the type '{2}' does not have a constructor that takes one NativeHandle argument).";
+#else
 					"(because the type '{2}' does not have a constructor that takes one IntPtr argument).";
+#endif
 				break;
 			case MissingCtorResolution.ThrowConstructor2NotFound:
 				msg = "Failed to marshal the Objective-C object 0x{0} (type: {1}). " +
 					"Could not find an existing managed instance for this object, " +
 					"nor was it possible to create a new managed instance " +
+#if NET
+					"(because the type '{2}' does not have a constructor that takes two (NativeHandle, bool) arguments).";
+#else
 					"(because the type '{2}' does not have a constructor that takes two (IntPtr, bool) arguments).";
+#endif
 				break;
 			case MissingCtorResolution.Ignore:
 			default:
@@ -1199,7 +1207,14 @@ namespace ObjCRuntime {
 				return null;
 			}
 
-			return (T) ctor.Invoke (new object[] { ptr });
+			var ctorArguments = new object [1];
+#if NET
+			ctorArguments [0] = new NativeHandle (ptr);
+#else
+			ctorArguments [0] = ptr;
+#endif
+
+			return (T) ctor.Invoke (ctorArguments);
 		}
 
 		// The generic argument T is only used to cast the return value.
@@ -1218,7 +1233,15 @@ namespace ObjCRuntime {
 				return null;
 			}
 
-			return (T?) ctor.Invoke (new object[] { ptr, owns});
+			var ctorArguments = new object [2];
+#if NET
+			ctorArguments [0] = new NativeHandle (ptr);
+#else
+			ctorArguments [0] = ptr;
+#endif
+			ctorArguments [1] = owns;
+
+			return (T?) ctor.Invoke (ctorArguments);
 		}
 
 		static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, NSObject.Flags flags)
@@ -1235,11 +1258,18 @@ namespace ObjCRuntime {
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 1 && param [0].ParameterType == typeof (IntPtr)) {
-					lock (intptr_ctor_cache)
-						intptr_ctor_cache [type] = ctors [i];
-					return ctors [i];
-				}
+				if (param.Length != 1)
+					continue;
+#if NET
+				if (param [0].ParameterType != typeof (NativeHandle))
+#else
+				if (param [0].ParameterType != typeof (IntPtr))
+#endif
+					continue;
+
+				lock (intptr_ctor_cache)
+					intptr_ctor_cache [type] = ctors [i];
+				return ctors [i];
 			}
 			return null;
 		}
@@ -1253,11 +1283,20 @@ namespace ObjCRuntime {
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 2 && param [0].ParameterType == typeof (IntPtr) && param [1].ParameterType == typeof (bool)) {
-					lock (intptr_bool_ctor_cache)
-						intptr_bool_ctor_cache [type] = ctors [i];
-					return ctors [i];
-				}
+				if (param.Length != 2)
+					continue;
+#if NET
+				if (param [0].ParameterType != typeof (NativeHandle))
+#else
+				if (param [0].ParameterType != typeof (IntPtr))
+#endif
+					continue;
+				if (param [1].ParameterType != typeof (bool))
+					continue;
+
+				lock (intptr_bool_ctor_cache)
+					intptr_bool_ctor_cache [type] = ctors [i];
+				return ctors [i];
 			}
 			return null;
 		}

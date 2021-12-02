@@ -38,6 +38,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Paragraph Style Values
@@ -316,7 +320,7 @@ namespace CoreText {
 	}
 
 	public class CTParagraphStyle : NativeObject {
-		internal CTParagraphStyle (IntPtr handle, bool owns)
+		internal CTParagraphStyle (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}
