@@ -445,12 +445,12 @@ function New-GitHubSummaryComment {
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
     if (-not [string]::IsNullOrEmpty($APIDiff)) {
-        WriteDiffs $sb $APIDiff
+        WriteDiffs $sb "API diff" $APIDiff
     } else {
         Write-Host "API diff urls have not been provided."
     }
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
-        WriteDiffs $sb $APIGeneratorDiffJson
+        WriteDiffs $sb "API Current PR diff" $APIGeneratorDiffJson
     } else {
         Write-Host "API Generator diff urls have not been provided."
     }
@@ -565,6 +565,10 @@ function WriteDiffs {
         [System.Text.StringBuilder]
         $sb,
 
+        [Parameter(Mandatory)]
+        [String]
+        $header,
+
         [String]
         $APIDiff
     )
@@ -579,7 +583,7 @@ function WriteDiffs {
         $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
         $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
         if ($hasHtmlLinks -or $hasMDlinks) {
-            $sb.AppendLine("# API diff")
+            $sb.AppendLine("# $header")
             Write-Host "Message is '$($json.message)'"
             $sb.AppendLine($json.message)
 

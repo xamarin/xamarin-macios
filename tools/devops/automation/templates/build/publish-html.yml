@@ -120,10 +120,10 @@ steps:
 
       $apiDiffRoot = "$Env:STABLE_APID_GENERATOR_DIFF_PATH"
       $filePatterns = @{
-        "iOS" = "^ios-[0-9\-]*\.md$";
-        "macOS" = "^macos-[0-9\-]*\.md$";
-        "tvOS" = "^tvos-[0-9\-]*\.md$";
-        "watchOS" = "^watchos-[0-9\-]*\.md$";
+        "iOS" = "^ios-[a-zA-Z0-9\-]*\.md$";
+        "macOS" = "^macos-[a-zA-Z0-9\-]*\.md$";
+        "tvOS" = "^tvos-[a-zA-Z0-9\-]*\.md$";
+        "watchOS" = "^watchos-[a-zA-Z0-9\-]*\.md$";
         "dotnet-iOS" = "^dotnet-ios-[a-zA-Z0-9\-]*\.md$";
         "dotnet-tvOS" = "^dotnet-tvos-[a-zA-Z0-9\-]*\.md$";
         "dotnet-MacCatalyst" = "^dotnet-maccatalyst-[a-zA-Z0-9\-]*\.md$";
@@ -144,14 +144,14 @@ steps:
           $obj = New-GistObjectDefinition -Name $fileName -Path "$apiDiffRoot\$fileName" -Type "markdown"
           $gistsObj.Add($obj)
           # create a gist just for this file 
-          $url = New-GistWithFiles -Description "$key API diff from stable" -Files @($obj)
+          $url = New-GistWithFiles -Description "$key API Generator diffs" -Files @($obj)
           Write-Host "New gist created at $url"
           $gists[$key] = $url
         }
       }
 
       # create a gist with all diffs
-      $url = New-GistWithFiles -Description "API Generator diffs (all platforms)" -Files $gistsObj 
+      $url = New-GistWithFiles -Description "API Generator diffs" -Files $gistsObj 
       $gists["index"] = $url
 
       # similar dict but for the html links from vsdrops
@@ -176,8 +176,8 @@ steps:
       $apiGeneratorDiffData = @{
         "gist" = $gists;
         "html" = $html;
-        "result" = $Env:APIDIFF_BUILT;
-        "message" = $Env:APIDIFF_MESSAGE;
+        "result" = $Env:API_GENERATOR_BUILT;
+        "message" = $Env:API_GENERATOR_DIFF_STATUS_MESSAGE;
       }
       # write to a file to be used by the comment to parse
       $path = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apiGeneratorDiff.json"
