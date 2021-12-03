@@ -40,6 +40,10 @@ using CoreMedia;
 #endif // !WATCH
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Foundation {
@@ -68,7 +72,7 @@ namespace Foundation {
 			return NSArray.ArrayFromHandle<T> (value);
 		}
 
-		protected T[]? GetArray<T> (NSString key, Func<IntPtr, T> creator)
+		protected T[]? GetArray<T> (NSString key, Func<NativeHandle, T> creator)
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
@@ -476,10 +480,10 @@ namespace Foundation {
 	static class DictionaryContainerHelper {
 
 		// helper to avoid the (common pattern)
-		// 	var p = x is null ? IntPtr.Zero : h.Dictionary.Handle;
-		static public IntPtr GetHandle (this DictionaryContainer? self)
+		// 	var p = x is null ? NativeHandle.Zero : h.Dictionary.Handle;
+		static public NativeHandle GetHandle (this DictionaryContainer? self)
 		{
-			return self is null ? IntPtr.Zero : self.Dictionary.Handle;
+			return self is null ? NativeHandle.Zero : self.Dictionary.Handle;
 		}
 
 		// helper to avoid the (common pattern)

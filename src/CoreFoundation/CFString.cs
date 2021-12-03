@@ -128,17 +128,17 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, IntPtr buffer);
 
-		public static IntPtr CreateNative (string? value)
+		public static NativeHandle CreateNative (string? value)
 		{
 			if (value is null)
-				return IntPtr.Zero;
+				return NativeHandle.Zero;
 			
 			return CFStringCreateWithCharacters (IntPtr.Zero, value, value.Length);
 		}
 
-		public static void ReleaseNative (IntPtr handle)
+		public static void ReleaseNative (NativeHandle handle)
 		{
-			if (handle != IntPtr.Zero)
+			if (handle != NativeHandle.Zero)
 				CFObject.CFRelease (handle);
 		}
 
@@ -172,7 +172,7 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Get* returns a CFString
-		public static string? FromHandle (IntPtr handle)
+		public static string? FromHandle (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
@@ -199,7 +199,7 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Copy* returns a CFString
-		public static string? FromHandle (IntPtr handle, bool releaseHandle)
+		public static string? FromHandle (NativeHandle handle, bool releaseHandle)
 		{
 			var s = FromHandle (handle);
 			if (releaseHandle && (handle != IntPtr.Zero))

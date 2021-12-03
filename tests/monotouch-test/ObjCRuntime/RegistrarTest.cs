@@ -4759,7 +4759,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testClassArray:a:b:");
 				var dummyObj = new Class [] { new Class (typeof (NSObject)) };
-				var dummyArray = NSArray.FromIntPtrs (new IntPtr [] { Class.GetHandle (typeof (NSObject)) });
+				var dummyArray = NSArray.FromIntPtrs (new NativeHandle [] { Class.GetHandle (typeof (NSObject)) });
 				Class [] refObj = null;
 				Class [] outObj = null;
 				TestMethod<Class []> test = obj.TestClassArray;
