@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,32 +15,28 @@ using Xharness.Jenkins.TestTasks;
 
 namespace Xharness {
 	public class TestProject {
-		XmlDocument xml;
+		XmlDocument? xml;
 		bool generate_variations = true;
 
 		public TestPlatform TestPlatform;
 		public string Path;
-		public string SolutionPath;
-		public string Name;
+		public string? SolutionPath;
+		public string? Name;
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;
 		public bool IsDotNetProject;
-		public string [] Configurations;
-		public Func<Task> Dependency;
-		public string FailureMessage;
+		public string []? Configurations;
+		public Func<Task>? Dependency;
+		public string? FailureMessage;
 		public bool RestoreNugetsInProject = true;
-		public string MTouchExtraArgs;
+		public string? MTouchExtraArgs;
 		public double TimeoutMultiplier = 1;
 		public bool? Ignore;
 
-		public IEnumerable<TestProject> ProjectReferences;
+		public IEnumerable<TestProject>? ProjectReferences;
 
 		// Optional
-		public MonoNativeInfo MonoNativeInfo { get; set; }
-
-		public TestProject ()
-		{
-		}
+		public MonoNativeInfo? MonoNativeInfo { get; set; }
 
 		public TestProject (string path, bool isExecutableProject = true)
 		{
@@ -60,7 +58,11 @@ namespace Xharness {
 
 		public virtual TestProject Clone ()
 		{
-			TestProject rv = (TestProject) Activator.CreateInstance (GetType ());
+			return CompleteClone (new TestProject (Path, IsExecutableProject));
+		}
+
+		protected virtual TestProject CompleteClone (TestProject rv)
+		{
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
 			rv.IsDotNetProject = IsDotNetProject;
@@ -73,13 +75,6 @@ namespace Xharness {
 			return rv;
 		}
 
-		internal async Task<TestProject> CreateCloneAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory)
-		{
-			var rv = Clone ();
-			await rv.CreateCopyAsync (log, processManager, test, rootDirectory);
-			return rv;
-		}
-
 		public Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory)
 		{
 			var pr = new Dictionary<string, TestProject> ();
@@ -88,7 +83,7 @@ namespace Xharness {
 
 		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
-			var directory = Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
+			var directory = Cache.CreateTemporaryDirectory (test.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));
@@ -244,7 +239,7 @@ namespace Xharness {
 
 		public override string ToString ()
 		{
-			return Name;
+			return Name ?? base.ToString ();
 		}
 	}
 
