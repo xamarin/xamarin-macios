@@ -10,6 +10,10 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 	public class CFType : NativeObject, ICFType {
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFGetTypeID")]
@@ -24,7 +28,7 @@ namespace CoreFoundation {
 		}
 #endif
 
-		internal CFType (IntPtr handle, bool owns)
+		internal CFType (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -20,6 +20,7 @@ namespace Xamarin.Tests {
 		[TestCase (null)]
 		[TestCase ("iossimulator-x86")]
 		[TestCase ("iossimulator-x64")]
+		[TestCase ("iossimulator-arm64")]
 		[TestCase ("ios-arm64")]
 		[TestCase ("ios-arm")]
 		public void BuildMySingleView (string runtimeIdentifier)
@@ -59,6 +60,7 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (null)]
 		[TestCase ("tvossimulator-x64")]
+		[TestCase ("tvossimulator-arm64")]
 		[TestCase ("tvos-arm64")]
 		public void BuildMyTVApp (string runtimeIdentifier)
 		{
@@ -167,16 +169,16 @@ namespace Xamarin.Tests {
 			Assert.That (ad.MainModule.Resources.Count (), Is.EqualTo (2), "2 resources"); // There are 2 embedded resources by default by the F# compiler.
 		}
 
-		[TestCase ("iOS")]
-		[TestCase ("tvOS")]
-		[TestCase ("macOS")]
-		[TestCase ("MacCatalyst")]
-		public void BuildBindingsTest (string platform)
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void BuildBindingsTest (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var assemblyName = "bindings-test";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
-			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform.AsString ());
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
@@ -194,20 +196,21 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
-			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest.a"), "libtest.a");
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
-		[TestCase ("iOS")]
-		[TestCase ("tvOS")]
-		[TestCase ("macOS")]
-		[TestCase ("MacCatalyst")]
-		public void BuildBindingsTest2 (string platform)
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void BuildBindingsTest2 (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var assemblyName = "bindings-test2";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
-			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform.AsString ());
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
@@ -224,8 +227,9 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
-			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest2.a"), "libtest2.a");
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "no embedded resources");
+			var resourceBundle = Path.Combine (project_dir, "bin", "Debug", platform.ToFramework (), assemblyName + ".resources");
+			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
 		[TestCase ("iOS", "monotouch")]
@@ -327,7 +331,9 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x86;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x86;iossimulator-x64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64;tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		public void BuildFatApp (ApplePlatform platform, string runtimeIdentifiers)
@@ -387,9 +393,11 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64;iossimulator-x64;iossimulator-x86")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm;iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-x64;iossimulator-x86")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;tvossimulator-arm64")]
 		public void InvalidRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
@@ -454,12 +462,12 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-x64")] // valid RID in a previous preview (and common mistake)
 		[TestCase (ApplePlatform.iOS, "iossimulator-x84")] // it's x86, not x84
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")] // we don't support this yet
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm")] // we don't support this
 		[TestCase (ApplePlatform.iOS, "helloworld")] // random text
 		[TestCase (ApplePlatform.iOS, "osx-x64")] // valid RID for another platform
 		[TestCase (ApplePlatform.TVOS, "tvos-x64")] // valid RID in a previous preview (and common mistake)
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")] // we don't support this yet
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm")] // we don't support this
 		[TestCase (ApplePlatform.TVOS, "helloworld")] // random text
 		[TestCase (ApplePlatform.TVOS, "osx-x64")] // valid RID for another platform
 		[TestCase (ApplePlatform.MacOSX, "osx-x46")] // it's x64, not x46

@@ -45,6 +45,7 @@ namespace Extrospection {
 					Helpers.Platform = Platforms.tvOS;
 				else if (name.EndsWith (".MacCatalyst", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.MacCatalyst;
+				Helpers.IsDotNet = assemblyName.Contains ("/runtimes/");
 				managed_reader.Load (assemblyName);
 			}
 			managed_reader.Process ();

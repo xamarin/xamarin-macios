@@ -58,6 +58,9 @@
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
 
+# NSKey comes from the Carbon framework
+!unknown-native-enum! NSKey bound
+
 ## unsorted
 
 !extra-enum-native! NSEventSubtype
@@ -289,7 +292,6 @@
 !unknown-native-enum! NSFunctionKey bound
 !unknown-native-enum! NSGlyphStorageOptions bound
 !unknown-native-enum! NSImageScale bound
-!unknown-native-enum! NSKey bound
 !unknown-native-enum! NSMenuProperty bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSRunResponse bound

@@ -3,6 +3,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace OSLog {
 
 	[Watch (8,0), TV (15,0), iOS (15,0), Mac (11,0), MacCatalyst (15,0)]
@@ -217,7 +221,7 @@ namespace OSLog {
 
 		[NoWatch, NoTV, NoiOS, Mac (12,0), MacCatalyst (15,0)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 		
 		[NoWatch, NoTV, NoiOS, MacCatalyst (15,0)]
 		[Static]

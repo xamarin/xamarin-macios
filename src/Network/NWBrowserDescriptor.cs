@@ -18,6 +18,10 @@ using CoreFoundation;
 
 using OS_nw_browse_descriptor=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -29,7 +33,7 @@ namespace Network {
 #endif
 	public class NWBrowserDescriptor: NativeObject {
 
-		internal NWBrowserDescriptor (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWBrowserDescriptor (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string? domain);

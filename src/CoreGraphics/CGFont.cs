@@ -37,6 +37,10 @@ using CoreFoundation;
 
 using CoreText;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGFont.h
@@ -44,7 +48,7 @@ namespace CoreGraphics {
 		{
 #if !COREBUILD
 		[Preserve (Conditional=true)]
-		internal CGFont (IntPtr handle, bool owns)
+		internal CGFont (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

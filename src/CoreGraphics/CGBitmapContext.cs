@@ -34,6 +34,10 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	public class CGBitmapContext : CGContext {
@@ -42,7 +46,7 @@ namespace CoreGraphics {
 		GCHandle buffer;
 		
 		[Preserve (Conditional=true)]
-		internal CGBitmapContext (IntPtr handle, bool owns) : base (handle, owns)
+		internal CGBitmapContext (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 

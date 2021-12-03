@@ -3,11 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>monotouchtest</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AssemblyName>monotouchtest</AssemblyName>
 
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
@@ -203,6 +201,9 @@
   <Target Name="ComputeDefineConstants" BeforeTargets="BeforeBuild">
     <PropertyGroup>
       <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhone'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'tvossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
     </PropertyGroup>
   </Target>
 </Project>

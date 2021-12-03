@@ -41,6 +41,20 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion
 
+		// returns the Mach-O file for the given path:
+		// * for frameworks, returns foo.framework/foo
+		// * for anything else, returns the input path
+		static string? GetActualLibrary (string? path)
+		{
+			if (path is null)
+				return null;
+
+			if (path.EndsWith (".framework", StringComparison.OrdinalIgnoreCase))
+				return Path.Combine (path, Path.GetFileNameWithoutExtension (path));
+
+			return path;
+		}
+
 		public override bool Execute ()
 		{
 			var native_frameworks = new List<ITaskItem> ();
@@ -227,7 +241,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				var library_path = (PString) item ["LibraryPath"];
 				var library_identifier = (PString) item ["LibraryIdentifier"];
-				return Path.Combine (library_identifier, library_path, Path.GetFileNameWithoutExtension (library_path));
+				return GetActualLibrary (Path.Combine (library_identifier, library_path));
 			}
 			return String.Empty;
 		}

@@ -38,6 +38,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Typesetter Values
@@ -106,7 +110,7 @@ namespace CoreText {
 #endregion
 
 	public class CTTypesetter : NativeObject {
-		internal CTTypesetter (IntPtr handle, bool owns)
+		internal CTTypesetter (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}

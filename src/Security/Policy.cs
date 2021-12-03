@@ -36,17 +36,21 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 	public partial class SecPolicy : NativeObject {
-#if !XAMCORE_4_0
-		public SecPolicy (IntPtr handle)
+#if !NET
+		public SecPolicy (NativeHandle handle)
 			: base (handle, false, true)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal SecPolicy (IntPtr handle, bool owns)
+		internal SecPolicy (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}
@@ -102,7 +106,7 @@ namespace Security {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
 	}
 }

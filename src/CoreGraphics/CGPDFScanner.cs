@@ -15,6 +15,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	public class CGPDFScanner : NativeObject {
@@ -45,20 +49,30 @@ namespace CoreGraphics {
 		}
 
 #if !NET
-		public CGPDFScanner (IntPtr handle)
+		public CGPDFScanner (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGPDFScanner (IntPtr handle, bool owns)
+		internal CGPDFScanner (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
 		public object? UserInfo {
 			get { return info; }
+		}
+
+		protected override void Retain ()
+		{
+			CGPDFScannerRetain (GetCheckedHandle ());
+		}
+
+		protected override void Release ()
+		{
+			CGPDFScannerRelease (GetCheckedHandle ());
 		}
 
 		protected override void Dispose (bool disposing)

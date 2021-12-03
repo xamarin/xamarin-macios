@@ -8,18 +8,30 @@ using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MonoTouchFixtures.UIKit {
 	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class FontTest {
 		
-		[Test]
-#if __MACCATALYST__
-		[Ignore ("https://github.com/xamarin/maccore/issues/2382")]
+		void AssertNotBrokenFontWithSize ()
+		{
+#if __MACCATALYST__ || __MACOS__
+			if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 0)) {
+				// Yep, GameKit breaks [UIKit fontWithSize] on macOS 10.15...
+				Assert.Ignore ("GameKit breaks UIKIt.FontWithSize on this OS version. Ref: https://github.com/xamarin/maccore/issues/2382");
+			}
 #endif
+		}
+
+		[Test]
 		public void WithSize ()
 		{
+			AssertNotBrokenFontWithSize ();
 			var f1 = UIFont.SystemFontOfSize (10).WithSize (20);
 			Assert.AreEqual (f1.PointSize, (nfloat) 20, "#size");
 		}
@@ -56,9 +68,9 @@ namespace MonoTouchFixtures.UIKit {
 				// IEquatable<NSObject> is only in unified - otherwise it would be the same call as above
 				Assert.True (f1.Equals (f2), "{0} Equals", api);
 			}
-			Assert.That (f1.Handle, Is.EqualTo (IntPtr.Zero), "{0} 1", api);
+			Assert.That (f1.Handle, Is.EqualTo (NativeHandle.Zero), "{0} 1", api);
 			// without our "fix" that would be the same managed instance (as f1) and the handle would be nil
-			Assert.That (f2.Handle, Is.Not.EqualTo (IntPtr.Zero), "{0} 2", api);
+			Assert.That (f2.Handle, Is.Not.EqualTo (NativeHandle.Zero), "{0} 2", api);
 		}
 
 		[Test]
@@ -161,6 +173,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsNotNull (UIFont.BoldSystemFontOfSize (-4), "BoldSystemFontOfSize");
 			Assert.IsNotNull (UIFont.ItalicSystemFontOfSize (-5), "ItalicSystemFontOfSize");
 
+			AssertNotBrokenFontWithSize ();
 			using (var font = UIFont.SystemFontOfSize (12)) {
 				Assert.IsNotNull (font.WithSize (-6), "WithSize");
 			}

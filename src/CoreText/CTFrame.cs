@@ -36,6 +36,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	[Flags]
@@ -108,7 +112,7 @@ namespace CoreText {
 	}
 
 	public class CTFrame : NativeObject {
-		internal CTFrame (IntPtr handle, bool owns)
+		internal CTFrame (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}

@@ -35,19 +35,23 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGDataConsumer.h
 	public partial class CGDataConsumer : NativeObject {
-#if !XAMCORE_4_0
-		public CGDataConsumer (IntPtr handle)
+#if !NET
+		public CGDataConsumer (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGDataConsumer (IntPtr handle, bool owns)
+		internal CGDataConsumer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -19,6 +19,10 @@ using Foundation;
 using Registrar;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 	public partial class Class : INativeObject
 #if !COREBUILD
@@ -26,7 +30,7 @@ namespace ObjCRuntime {
 #endif
 	{
 #if !COREBUILD
-		IntPtr handle;
+		NativeHandle handle;
 
 		public static bool ThrowOnInitFailure = true;
 
@@ -75,18 +79,25 @@ namespace ObjCRuntime {
 			this.handle = handle;
 		}
 
+#if NET
+		public Class (NativeHandle handle)
+		{
+			this.handle = handle;
+		}
+#endif
+
 		[Preserve (Conditional = true)]
 #if NET
-		internal Class (IntPtr handle, bool owns)
+		internal Class (NativeHandle handle, bool owns)
 #else
-		public Class (IntPtr handle, bool owns)
+		public Class (NativeHandle handle, bool owns)
 #endif
 		{
 			// Class(es) can't be freed, so we ignore the 'owns' parameter.
 			this.handle = handle;
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return this.handle; }
 		}
 
@@ -101,7 +112,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		public static IntPtr GetHandle (string name)
+		public static NativeHandle GetHandle (string name)
 		{
 			return objc_getClass (name);
 		}
@@ -129,11 +140,11 @@ namespace ObjCRuntime {
 		// class (it will be faster than GetHandle, but it will
 		// not compile unless the class in question actually exists
 		// as an ObjectiveC class in the binary).
-		public static IntPtr GetHandleIntrinsic (string name) {
+		public static NativeHandle GetHandleIntrinsic (string name) {
 			return objc_getClass (name);
 		}
 
-		public static IntPtr GetHandle (Type type) {
+		public static NativeHandle GetHandle (Type type) {
 			return GetClassHandle (type);
 		}
 
@@ -347,7 +358,7 @@ namespace ObjCRuntime {
 			return -1;
 		}
 
-		internal unsafe static Type? FindType (IntPtr @class, out bool is_custom_type)
+		internal unsafe static Type? FindType (NativeHandle @class, out bool is_custom_type)
 		{
 			var map = Runtime.options->RegistrationMap;
 

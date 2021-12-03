@@ -22,6 +22,10 @@ using UIViewController = Foundation.NSObject;
 using UIWindow = Foundation.NSObject;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AuthenticationServices {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -161,7 +165,7 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASCredentialServiceIdentifier : NSCopying, NSSecureCoding {
 		[Export ("initWithIdentifier:type:")]
-		IntPtr Constructor (string identifier, ASCredentialServiceIdentifierType type);
+		NativeHandle Constructor (string identifier, ASCredentialServiceIdentifierType type);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -179,7 +183,7 @@ namespace AuthenticationServices {
 	interface ASPasswordCredentialIdentity : NSCopying, NSSecureCoding {
 		[Export ("initWithServiceIdentifier:user:recordIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ASCredentialServiceIdentifier serviceIdentifier, string user, [NullAllowed] string recordIdentifier);
+		NativeHandle Constructor (ASCredentialServiceIdentifier serviceIdentifier, string user, [NullAllowed] string recordIdentifier);
 
 		[Static]
 		[Export ("identityWithServiceIdentifier:user:recordIdentifier:")]
@@ -226,7 +230,7 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASPasswordCredential : NSCopying, NSSecureCoding, ASAuthorizationCredential {
 		[Export ("initWithUser:password:")]
-		IntPtr Constructor (string user, string password);
+		NativeHandle Constructor (string user, string password);
 
 		[Static]
 		[Export ("credentialWithUser:password:")]
@@ -249,7 +253,7 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASWebAuthenticationSession {
 		[Export ("initWithURL:callbackURLScheme:completionHandler:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, ASWebAuthenticationSessionCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, ASWebAuthenticationSessionCompletionHandler completionHandler);
 
 		[Export ("start")]
 		bool Start ();
@@ -407,7 +411,7 @@ namespace AuthenticationServices {
 
 		[Export ("initWithAuthorizationRequests:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ASAuthorizationRequest[] authorizationRequests);
+		NativeHandle Constructor (ASAuthorizationRequest[] authorizationRequests);
 
 		[Export ("authorizationRequests", ArgumentSemantic.Strong)]
 		ASAuthorizationRequest[] AuthorizationRequests { get; }
@@ -708,7 +712,7 @@ namespace AuthenticationServices {
 
 		[Export ("initWithAuthorizationButtonType:authorizationButtonStyle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ASAuthorizationAppleIdButtonType type, ASAuthorizationAppleIdButtonStyle style);
+		NativeHandle Constructor (ASAuthorizationAppleIdButtonType type, ASAuthorizationAppleIdButtonStyle style);
 
 		[NoTV]
 		[Export ("cornerRadius")]
@@ -895,7 +899,7 @@ namespace AuthenticationServices {
 	interface ASAccountAuthenticationModificationReplacePasswordWithSignInWithAppleRequest {
 
 		[Export ("initWithUser:serviceIdentifier:userInfo:")]
-		IntPtr Constructor (string user, ASCredentialServiceIdentifier serviceIdentifier, [NullAllowed] NSDictionary userInfo);
+		NativeHandle Constructor (string user, ASCredentialServiceIdentifier serviceIdentifier, [NullAllowed] NSDictionary userInfo);
 
 		[Export ("user")]
 		string User { get; }
@@ -915,7 +919,7 @@ namespace AuthenticationServices {
 	interface ASAccountAuthenticationModificationUpgradePasswordToStrongPasswordRequest {
 
 		[Export ("initWithUser:serviceIdentifier:userInfo:")]
-		IntPtr Constructor (string user, ASCredentialServiceIdentifier serviceIdentifier, [NullAllowed] NSDictionary userInfo);
+		NativeHandle Constructor (string user, ASCredentialServiceIdentifier serviceIdentifier, [NullAllowed] NSDictionary userInfo);
 
 		[Export ("user")]
 		string User { get; }
@@ -1153,7 +1157,7 @@ namespace AuthenticationServices {
 	{
 		[Export ("initWithCredentialID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData credentialId);
+		NativeHandle Constructor (NSData credentialId);
 	}
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
@@ -1163,7 +1167,7 @@ namespace AuthenticationServices {
 	{
 		[Export ("initWithRelyingPartyIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string relyingPartyIdentifier);
+		NativeHandle Constructor (string relyingPartyIdentifier);
 
 		[Export ("createCredentialRegistrationRequestWithChallenge:name:userID:")]
 		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequest (NSData challenge, string name, NSData userId);
@@ -1181,10 +1185,10 @@ namespace AuthenticationServices {
 	interface ASAuthorizationProviderExtensionAuthorizationResult
 	{
 		[Export ("initWithHTTPAuthorizationHeaders:")]
-		IntPtr Constructor (NSDictionary<NSString, NSString> httpAuthorizationHeaders);
+		NativeHandle Constructor (NSDictionary<NSString, NSString> httpAuthorizationHeaders);
 
 		[Export ("initWithHTTPResponse:httpBody:")]
-		IntPtr Constructor (NSHttpUrlResponse httpResponse, [NullAllowed] NSData httpBody);
+		NativeHandle Constructor (NSHttpUrlResponse httpResponse, [NullAllowed] NSData httpBody);
 
 		[NullAllowed, Export ("httpAuthorizationHeaders", ArgumentSemantic.Assign)]
 		NSDictionary<NSString, NSString> HttpAuthorizationHeaders { get; set; }
@@ -1205,7 +1209,7 @@ namespace AuthenticationServices {
 	interface ASAuthorizationPublicKeyCredentialParameters : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithAlgorithm:")]
-		IntPtr Constructor (ASCoseAlgorithmIdentifier algorithm);
+		NativeHandle Constructor (ASCoseAlgorithmIdentifier algorithm);
 
 		[Export ("algorithm")]
 		ASCoseAlgorithmIdentifier Algorithm { get; }
@@ -1218,7 +1222,7 @@ namespace AuthenticationServices {
 	{
 		[Export ("initWithCredentialID:transports:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData credentialId, [BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]))] NSString[] allowedTransports);
+		NativeHandle Constructor (NSData credentialId, [BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]))] NSString[] allowedTransports);
 
 		[Export ("transports", ArgumentSemantic.Assign)]
 		[BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]))]
@@ -1232,7 +1236,7 @@ namespace AuthenticationServices {
 	{
 		[Export ("initWithRelyingPartyIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string relyingPartyIdentifier);
+		NativeHandle Constructor (string relyingPartyIdentifier);
 
 		[Export ("createCredentialRegistrationRequestWithChallenge:displayName:name:userID:")]
 		ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest Create (NSData challenge, string displayName, string name, NSData userId);

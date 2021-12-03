@@ -19,6 +19,10 @@ using Foundation;
 using CoreMedia;
 using CoreVideo;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoToolbox {		
 
 #if NET
@@ -27,13 +31,15 @@ namespace VideoToolbox {
 	[iOS (8,0), TV (10,2)]
 #endif
 	public class VTSession : NativeObject {
-		protected internal VTSession (IntPtr handle)
+#if !NET
+		protected internal VTSession (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal VTSession (IntPtr handle, bool owns)
+		internal VTSession (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -781,6 +781,8 @@
 			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != ''">true</_RunAotCompiler>
 			<!-- We need it for Mac Catalyst on arm64 -->
 			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">true</_RunAotCompiler>
+			<!-- We need it for iOS/tvOS simulator on arm64 -->
+			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64' Or '$(RuntimeIdentifier)' == 'tvossimulator-arm64'">true</_RunAotCompiler>
 		</PropertyGroup>
 
 		<PropertyGroup>
@@ -1187,12 +1189,9 @@
 		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false'"
 		BeforeTargets="Restore;Build;ResolvedFrameworkReference;ResolveRuntimePackAssets;ProcessFrameworkReferences">
 		<PropertyGroup>
-			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS' And '$(RuntimeIdentifier)' != 'iossimulator-x64' And '$(RuntimeIdentifier)' != 'iossimulator-x86' And '$(RuntimeIdentifier)' != 'ios-arm64' And '$(RuntimeIdentifier)' != 'ios-arm' ">true</_IsInvalidRuntimeIdentifier>
-			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS' And '$(RuntimeIdentifier)' != 'tvossimulator-x64' And '$(RuntimeIdentifier)' != 'tvos-arm64'">true</_IsInvalidRuntimeIdentifier>
-			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS' And '$(RuntimeIdentifier)' != 'osx-x64' And '$(RuntimeIdentifier)' != 'osx-arm64'">true</_IsInvalidRuntimeIdentifier>
-			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(RuntimeIdentifier)' != 'maccatalyst-x64' And '$(RuntimeIdentifier)' != 'maccatalyst-arm64'">true</_IsInvalidRuntimeIdentifier>
+			<_IsValidRuntimeIdentifier Condition="@(_XamarinValidRuntimeIdentifier->WithMetadataValue('Platform', '$(_PlatformName)')->WithMetadataValue('Filename', '$(RuntimeIdentifier)')->Count()) &gt; 0">true</_IsValidRuntimeIdentifier>
 		</PropertyGroup>
-		<Error Condition="'$(_IsInvalidRuntimeIdentifier)' == 'true'" Text="The RuntimeIdentifier '$(RuntimeIdentifier)' is invalid." />
+		<Error Condition="'$(_IsValidRuntimeIdentifier)' != 'true'" Text="The RuntimeIdentifier '$(RuntimeIdentifier)' is invalid." />
 	</Target>
 
 	<!-- Install & Run -->

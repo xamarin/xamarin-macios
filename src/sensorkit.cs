@@ -4,6 +4,10 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace SensorKit {
 
 	// helpers for code generation
@@ -794,10 +798,10 @@ namespace SensorKit {
 	interface SRSensorReader {
 
 		[Export ("initWithSensor:")]
-		IntPtr Constructor (NSString sensor);
+		NativeHandle Constructor (NSString sensor);
 
 		[Wrap ("this (sensor.GetConstant ()!)")]
-		IntPtr Constructor (SRSensor sensor);
+		NativeHandle Constructor (SRSensor sensor);
 
 		[Export ("startRecording")]
 		void StartRecording ();

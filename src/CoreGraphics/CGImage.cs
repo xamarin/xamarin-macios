@@ -36,6 +36,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 #if MONOMAC || __MACCATALYST__
@@ -131,16 +135,16 @@ namespace CoreGraphics {
 	public class CGImage : NativeObject
 	{
 #if !COREBUILD
-#if !XAMCORE_4_0
-		public CGImage (IntPtr handle)
+#if !NET
+		public CGImage (NativeHandle handle)
 			: base (handle, false, verify: false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGImage (IntPtr handle, bool owns)
-#if XAMCORE_4_0
+		internal CGImage (NativeHandle handle, bool owns)
+#if NET
 			: base (handle, owns)
 #else
 			: base (handle, owns, verify: false)
@@ -224,7 +228,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		static CGImage? FromHandle (IntPtr handle, bool owns)
+		internal static CGImage? FromHandle (IntPtr handle, bool owns)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
