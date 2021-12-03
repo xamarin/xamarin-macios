@@ -68,16 +68,24 @@ steps:
         if ($fileName) {
           $obj = New-GistObjectDefinition -Name $fileName -Path "$apiDiffRoot\$fileName" -Type "markdown"
           $gistsObj.Add($obj)
-          # create a gist just for this file 
-          $url = New-GistWithFiles -Description "$key API diff from stable" -Files @($obj)
-          Write-Host "New gist created at $url"
-          $gists[$key] = $url
+          $files = @($obj)
+          if ($files.Length -gt 0) {
+            # create a gist just for this file 
+            $url = New-GistWithFiles -Description "$key API diff from stable" -Files $files
+            Write-Host "New gist created at $url"
+            $gists[$key] = $url
+          } else {
+            Write-Host "Could not create gist for $obj"
+          }
         }
       }
 
-      # create a gist with all diffs
-      $url = New-GistWithFiles -Description "API diff from stable (all platforms)" -Files $gistsObj 
-      $gists["index"] = $url
+
+      if ($gistsObj.Length -gt 0) {
+        # create a gist with all diffs
+        $url = New-GistWithFiles -Description "API diff from stable (all platforms)" -Files $gistsObj 
+        $gists["index"] = $url
+      }
 
       # similar dict but for the html links from vsdrops
       $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/apidiff/;/"
