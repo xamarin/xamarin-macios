@@ -80,9 +80,12 @@ steps:
         }
       }
 
-      # create a gist with all diffs
-      $url = New-GistWithFiles -Description "API diff from stable (all platforms)" -Files $gistsObj 
-      $gists["index"] = $url
+
+      if ($gistsObj.Length -gt 0) {
+        # create a gist with all diffs
+        $url = New-GistWithFiles -Description "API diff from stable (all platforms)" -Files $gistsObj 
+        $gists["index"] = $url
+      }
 
       # similar dict but for the html links from vsdrops
       $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/apidiff/;/"
