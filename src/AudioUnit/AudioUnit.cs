@@ -42,6 +42,10 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioUnit
 {
 #if !COREBUILD
@@ -309,7 +313,7 @@ namespace AudioUnit
 		Dictionary<uint, RenderDelegate>? renderer;
 		Dictionary<uint, InputDelegate>? inputs;
 
-		internal AudioUnit (IntPtr handle, bool owns)
+		internal AudioUnit (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -668,10 +672,14 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
@@ -679,14 +687,19 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
@@ -707,9 +720,13 @@ namespace AudioUnit
 		[iOS (7,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
 #else
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
@@ -717,14 +734,19 @@ namespace AudioUnit
 #if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #else
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public UIKit.UIImage? GetHostIcon (float desiredPointSize)
@@ -835,6 +857,12 @@ namespace AudioUnit
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref IntPtr inData, int inDataSize);
+
+#if NET
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
+							   ref NativeHandle inData, int inDataSize);
+#endif
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
@@ -1004,30 +1032,30 @@ namespace AudioUnit
 	{
 		AURenderEvent *current;
 
-		public IntPtr Handle { get; private set; }
+		public NativeHandle Handle { get; private set; }
 		public bool IsEmpty { get { return Handle == IntPtr.Zero; } }
 		public bool IsAtEnd { get { return current is null; }}
 
-		public AURenderEventEnumerator (IntPtr ptr)
+		public AURenderEventEnumerator (NativeHandle ptr)
 			: this (ptr, false)
 		{
 		}
 
-		internal AURenderEventEnumerator (IntPtr handle, bool owns)
+		internal AURenderEventEnumerator (NativeHandle handle, bool owns)
 		{
 			Handle = handle;
-			current = (AURenderEvent *) handle;
+			current = (AURenderEvent *) (IntPtr) handle;
 		}
 
 		public void Dispose ()
 		{
-			Handle = IntPtr.Zero;
+			Handle = NativeHandle.Zero;
 			current = null;
 		}
 
 		public AURenderEvent * UnsafeFirst {
 			get {
-				return (AURenderEvent*) Handle;
+				return (AURenderEvent*) (IntPtr) Handle;
 			}
 		}
 
@@ -1035,7 +1063,7 @@ namespace AudioUnit
 			get {
 				if (IsEmpty)
 					throw new InvalidOperationException ("Can not get First on AURenderEventEnumerator when empty");
-				return *(AURenderEvent *) Handle;
+				return *(AURenderEvent *) (IntPtr) Handle;
 			}
 		}
 
@@ -1077,7 +1105,7 @@ namespace AudioUnit
 
 		public void /*IEnumerator<AURenderEvent>.*/Reset ()
 		{
-			current = (AURenderEvent *) Handle;
+			current = (AURenderEvent *) (IntPtr) Handle;
 		}
 	}
 #endif // !COREBUILD

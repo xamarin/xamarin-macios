@@ -32,6 +32,10 @@ using UIWindow = Foundation.NSObject;
 #endif // IOS
 #endif // MONOMAC
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace PassKit {
 
 	[Watch (3,0)]
@@ -364,7 +368,7 @@ namespace PassKit {
 	interface PKPaymentAuthorizationViewController {
 		[DesignatedInitializer]
 		[Export ("initWithPaymentRequest:")]
-		IntPtr Constructor (PKPaymentRequest request);
+		NativeHandle Constructor (PKPaymentRequest request);
 
 		[Export ("delegate", ArgumentSemantic.UnsafeUnretained)]
 		[NullAllowed]
@@ -648,14 +652,14 @@ namespace PassKit {
 
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithPass:")]
-		IntPtr Constructor (PKPass pass);
+		NativeHandle Constructor (PKPass pass);
 
 		[iOS (7,0)]
 		[Export ("initWithPasses:")]
-		IntPtr Constructor (PKPass[] pass);
+		NativeHandle Constructor (PKPass[] pass);
 
 		[iOS (8,0)]
 		[Static]
@@ -689,7 +693,7 @@ namespace PassKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NullAllowed, Export ("encryptedPassData", ArgumentSemantic.Copy)]
 		NSData EncryptedPassData { get; set; }
@@ -713,7 +717,7 @@ namespace PassKit {
 	{
 		[DesignatedInitializer]
 		[Export ("initWithEncryptionScheme:")]
-		IntPtr Constructor (NSString encryptionScheme);
+		NativeHandle Constructor (NSString encryptionScheme);
 
 		[Export ("encryptionScheme")]
 		NSString EncryptionScheme { get; }
@@ -766,12 +770,12 @@ namespace PassKit {
 	
 		[DesignatedInitializer]
 		[Export ("initWithRequestConfiguration:delegate:")]
-		IntPtr Constructor (PKAddPaymentPassRequestConfiguration configuration, [NullAllowed] IPKAddPaymentPassViewControllerDelegate viewControllerDelegate);
+		NativeHandle Constructor (PKAddPaymentPassRequestConfiguration configuration, [NullAllowed] IPKAddPaymentPassViewControllerDelegate viewControllerDelegate);
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use the overload accepting a IPKAddPaymentPassViewControllerDelegate")]
 		[Wrap ("this (configuration, (IPKAddPaymentPassViewControllerDelegate) viewControllerDelegate)")]
-		IntPtr Constructor (PKAddPaymentPassRequestConfiguration configuration, PKAddPaymentPassViewControllerDelegate viewControllerDelegate);
+		NativeHandle Constructor (PKAddPaymentPassRequestConfiguration configuration, PKAddPaymentPassViewControllerDelegate viewControllerDelegate);
 #endif
 
 		[Wrap ("WeakDelegate")]
@@ -803,7 +807,7 @@ namespace PassKit {
 	[BaseType (typeof (PKObject))]
 	interface PKPass : NSSecureCoding, NSCopying {
 		[Export ("initWithData:error:")]
-		IntPtr Constructor (NSData data, out NSError error);
+		NativeHandle Constructor (NSData data, out NSError error);
 
 		[Export ("authenticationToken", ArgumentSemantic.Copy)]
 		string AuthenticationToken { get; }
@@ -1052,7 +1056,7 @@ namespace PassKit {
 		[iOS (9,0)]
 		[Export ("initWithPaymentButtonType:paymentButtonStyle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKPaymentButtonType type, PKPaymentButtonStyle style);
+		NativeHandle Constructor (PKPaymentButtonType type, PKPaymentButtonStyle style);
 
 		[iOS (12, 0)]
 		[Export ("cornerRadius")]
@@ -1070,7 +1074,7 @@ namespace PassKit {
 
 		[Export ("initWithAddPassButtonStyle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKAddPassButtonStyle style);
+		NativeHandle Constructor (PKAddPassButtonStyle style);
 
 		[Appearance]
 		[Export ("addPassButtonStyle", ArgumentSemantic.Assign)]
@@ -1114,7 +1118,7 @@ namespace PassKit {
 
 		[Export ("initWithPaymentRequest:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKPaymentRequest request);
+		NativeHandle Constructor (PKPaymentRequest request);
 
 		[Async]
 		[Export ("presentWithCompletion:")]
@@ -1211,7 +1215,7 @@ namespace PassKit {
 	{
 		[Export ("initWithLabel:value:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string label, string value);
+		NativeHandle Constructor (string label, string value);
 
 		[Export ("label")]
 		string Label { get; }
@@ -1316,7 +1320,7 @@ namespace PassKit {
 	interface PKPaymentAuthorizationResult {
 		[Export ("initWithStatus:errors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKPaymentAuthorizationStatus status, [NullAllowed] NSError[] errors);
+		NativeHandle Constructor (PKPaymentAuthorizationStatus status, [NullAllowed] NSError[] errors);
 
 		[Export ("status", ArgumentSemantic.Assign)]
 		PKPaymentAuthorizationStatus Status { get; set; }
@@ -1333,7 +1337,7 @@ namespace PassKit {
 
 		[Export ("initWithPaymentSummaryItems:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+		NativeHandle Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
 
 		[Export ("status", ArgumentSemantic.Assign)]
 		PKPaymentAuthorizationStatus Status { get; set; }
@@ -1354,7 +1358,7 @@ namespace PassKit {
 
 		[Export ("initWithErrors:paymentSummaryItems:shippingMethods:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem[] paymentSummaryItems, PKShippingMethod[] shippingMethods);
+		NativeHandle Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem[] paymentSummaryItems, PKShippingMethod[] shippingMethods);
 
 		[Export ("shippingMethods", ArgumentSemantic.Copy)]
 		PKShippingMethod[] ShippingMethods { get; set; }
@@ -1372,7 +1376,7 @@ namespace PassKit {
 		// inlined
 		[Export ("initWithPaymentSummaryItems:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+		NativeHandle Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
 	}
 
 	[Mac (11,0)]
@@ -1384,7 +1388,7 @@ namespace PassKit {
 		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithErrors:paymentSummaryItems:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem [] paymentSummaryItems);
+		NativeHandle Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem [] paymentSummaryItems);
 
 		[Watch (6,0), iOS (13,0)]
 		[Export ("errors", ArgumentSemantic.Copy)]
@@ -1393,7 +1397,7 @@ namespace PassKit {
 		// inlined
 		[Export ("initWithPaymentSummaryItems:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+		NativeHandle Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
 	}
 
 	[Mac (11,0)]
@@ -1434,7 +1438,7 @@ namespace PassKit {
 	interface PKDisbursementAuthorizationController {
 
 		[Export ("initWithDisbursementRequest:delegate:")]
-		IntPtr Constructor (PKDisbursementRequest disbursementRequest, IPKDisbursementAuthorizationControllerDelegate @delegate);
+		NativeHandle Constructor (PKDisbursementRequest disbursementRequest, IPKDisbursementAuthorizationControllerDelegate @delegate);
 
 		[Wrap ("WeakDelegate")]
 		IPKDisbursementAuthorizationControllerDelegate Delegate { get; }
@@ -1614,7 +1618,7 @@ namespace PassKit {
 		bool CanAddSecureElementPass (PKAddSecureElementPassConfiguration configuration);
 
 		[Export ("initWithConfiguration:delegate:")]
-		IntPtr Constructor (PKAddSecureElementPassConfiguration configuration, [NullAllowed] IPKAddSecureElementPassViewControllerDelegate @delegate);
+		NativeHandle Constructor (PKAddSecureElementPassConfiguration configuration, [NullAllowed] IPKAddSecureElementPassViewControllerDelegate @delegate);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -1633,11 +1637,11 @@ namespace PassKit {
 	interface PKShareablePassMetadata {
 
 		[Export ("initWithProvisioningCredentialIdentifier:cardConfigurationIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:")]
-		IntPtr Constructor (string credentialIdentifier, string cardConfigurationIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription);
+		NativeHandle Constructor (string credentialIdentifier, string cardConfigurationIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription);
 
 		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:accountHash:templateIdentifier:relyingPartyIdentifier:requiresUnifiedAccessCapableDevice:")]
-		IntPtr Constructor (string credentialIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription, string accountHash, string templateIdentifier, string relyingPartyIdentifier, bool requiresUnifiedAccessCapableDevice);
+		NativeHandle Constructor (string credentialIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription, string accountHash, string templateIdentifier, string relyingPartyIdentifier, bool requiresUnifiedAccessCapableDevice);
 
 		[Export ("credentialIdentifier", ArgumentSemantic.Strong)]
 		string CredentialIdentifier { get; }
@@ -1739,7 +1743,7 @@ namespace PassKit {
 	interface PKBarcodeEventMetadataResponse {
 
 		[Export ("initWithPaymentInformation:")]
-		IntPtr Constructor (NSData paymentInformation);
+		NativeHandle Constructor (NSData paymentInformation);
 
 		[Export ("paymentInformation", ArgumentSemantic.Copy)]
 		NSData PaymentInformation { get; set; }
@@ -1794,7 +1798,7 @@ namespace PassKit {
 	interface PKBarcodeEventSignatureResponse {
 
 		[Export ("initWithSignedData:")]
-		IntPtr Constructor (NSData signedData);
+		NativeHandle Constructor (NSData signedData);
 
 		[Export ("signedData", ArgumentSemantic.Copy)]
 		NSData SignedData { get; set; }
@@ -1911,7 +1915,7 @@ namespace PassKit {
 
 		[Export ("initWithIdentifier:title:art:addRequestConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, string title, CGImage art, PKAddPaymentPassRequestConfiguration configuration);
+		NativeHandle Constructor (string identifier, string title, CGImage art, PKAddPaymentPassRequestConfiguration configuration);
 
 		[Export ("addRequestConfiguration")]
 		PKAddPaymentPassRequestConfiguration AddRequestConfiguration { get; }
@@ -1925,7 +1929,7 @@ namespace PassKit {
 	interface PKPaymentMerchantSession {
 
 		[Export ("initWithDictionary:")]
-		IntPtr Constructor (NSDictionary dictionary);
+		NativeHandle Constructor (NSDictionary dictionary);
 	}
 
 	[NoTV]
@@ -1935,7 +1939,7 @@ namespace PassKit {
 	interface PKPaymentRequestMerchantSessionUpdate {
 
 		[Export ("initWithStatus:merchantSession:")]
-		IntPtr Constructor (PKPaymentAuthorizationStatus status, [NullAllowed] PKPaymentMerchantSession session);
+		NativeHandle Constructor (PKPaymentAuthorizationStatus status, [NullAllowed] PKPaymentMerchantSession session);
 
 		[Export ("status", ArgumentSemantic.Assign)]
 		PKPaymentAuthorizationStatus Status { get; set; }
@@ -1951,11 +1955,11 @@ namespace PassKit {
 	{
 		[Export ("initWithPaymentSummaryItems:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+		NativeHandle Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
 
 		[Export ("initWithErrors:paymentSummaryItems:shippingMethods:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem[] paymentSummaryItems, PKShippingMethod[] shippingMethods);
+		NativeHandle Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem[] paymentSummaryItems, PKShippingMethod[] shippingMethods);
 
 		[NullAllowed, Export ("errors", ArgumentSemantic.Copy)]
 		NSError[] Errors { get; set; }
@@ -1984,7 +1988,7 @@ namespace PassKit {
 	{
 		[Export ("initWithStartDateComponents:endDateComponents:")]
 		[return: NullAllowed]
-		IntPtr Constructor (NSDateComponents startDateComponents, NSDateComponents endDateComponents);
+		NativeHandle Constructor (NSDateComponents startDateComponents, NSDateComponents endDateComponents);
 
 		[Export ("startDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents StartDateComponents { get; }

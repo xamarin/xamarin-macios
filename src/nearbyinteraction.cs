@@ -13,6 +13,10 @@ using CoreFoundation;
 using System;
 using Vector3 = global::OpenTK.Vector3;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace NearbyInteraction {
 
 	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
@@ -37,7 +41,7 @@ namespace NearbyInteraction {
 		NIDiscoveryToken PeerDiscoveryToken { get; }
 
 		[Export ("initWithPeerToken:")]
-		IntPtr Constructor (NIDiscoveryToken peerToken);
+		NativeHandle Constructor (NIDiscoveryToken peerToken);
 	}
 
 	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
@@ -135,7 +139,7 @@ namespace NearbyInteraction {
 		NIDiscoveryToken AccessoryDiscoveryToken { get; }
 
 		[Export ("initWithData:error:")]
-		IntPtr Constructor (NSData data, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSData data, [NullAllowed] out NSError error);
 	}
 
 }

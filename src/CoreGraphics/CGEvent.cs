@@ -20,6 +20,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 #if !NET
@@ -77,13 +81,13 @@ namespace CoreGraphics {
 		}
 
 #if !NET
-		public CGEvent (IntPtr handle)
+		public CGEvent (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
-		internal CGEvent (IntPtr handle, bool owns)
+		internal CGEvent (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

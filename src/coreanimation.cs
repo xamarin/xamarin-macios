@@ -50,6 +50,10 @@ using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
@@ -126,7 +130,7 @@ namespace CoreAnimation {
 		CAConstraint Create (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttribute);
 
 		[Export ("initWithAttribute:relativeTo:attribute:scale:offset:")]
-		IntPtr Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
+		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
 #endif
 
@@ -1450,7 +1454,7 @@ namespace CoreAnimation {
 		CAMediaTimingFunction FromControlPoints (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("initWithControlPoints::::")]
-		IntPtr Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
+		NativeHandle Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("getControlPointAtIndex:values:"), Internal]
 		void GetControlPointAtIndex (nint idx, IntPtr /* float[2] */ point);
@@ -1787,7 +1791,7 @@ namespace CoreAnimation {
 	interface CAEmitterBehavior : NSSecureCoding {
 
 		// [Export ("initWithType:")]
-		// IntPtr Constructor (NSString type);
+		// NativeHandle Constructor (NSString type);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }

@@ -165,6 +165,7 @@ void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMet
 unsigned long 	xamarin_objc_type_size (const char *type);
 bool			xamarin_is_class_nsobject (MonoClass *cls);
 bool			xamarin_is_class_inativeobject (MonoClass *cls);
+bool			xamarin_is_class_nativehandle (MonoClass *cls);
 bool			xamarin_is_class_array (MonoClass *cls);
 bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
@@ -266,6 +267,7 @@ id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_i
 MonoType *		xamarin_get_nsnumber_type ();
 MonoType *		xamarin_get_nsvalue_type ();
 MonoClass *		xamarin_get_inativeobject_class ();
+MonoClass *		xamarin_get_nativehandle_class ();
 MonoClass *		xamarin_get_nsobject_class ();
 MonoClass *		xamarin_get_nsstring_class ();
 MonoClass *		xamarin_get_runtime_class ();

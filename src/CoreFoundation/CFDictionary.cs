@@ -35,13 +35,17 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	class CFDictionary : NativeObject {
 		public static IntPtr KeyCallbacks;
 		public static IntPtr ValueCallbacks;
 
-		internal CFDictionary (IntPtr handle, bool owns)
+		internal CFDictionary (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

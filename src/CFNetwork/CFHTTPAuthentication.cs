@@ -16,6 +16,10 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 // CFHTTPAuthentication is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
 namespace CFNetwork {
@@ -24,7 +28,7 @@ namespace CoreServices {
 #endif
 
 	public class CFHTTPAuthentication : CFType {
-		internal CFHTTPAuthentication (IntPtr handle, bool owns)
+		internal CFHTTPAuthentication (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

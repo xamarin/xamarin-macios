@@ -31,6 +31,10 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	[Register ("NSAutoreleasePool", true)]
 	public class NSAutoreleasePool : NSObject
@@ -39,7 +43,7 @@ namespace Foundation {
 #endif
 	{
 #if !COREBUILD
-		public override IntPtr ClassHandle { get { return Class.GetHandle ("NSAutoreleasePool"); } }
+		public override NativeHandle ClassHandle { get { return Class.GetHandle ("NSAutoreleasePool"); } }
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[Export ("init")]

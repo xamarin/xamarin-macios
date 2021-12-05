@@ -36,6 +36,10 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGColor.h
@@ -43,14 +47,14 @@ namespace CoreGraphics {
 	{
 #if !COREBUILD
 #if !NET
-		public CGColor (IntPtr handle)
+		public CGColor (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGColor (IntPtr handle, bool owns)
+		internal CGColor (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

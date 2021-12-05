@@ -41,6 +41,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
 #if !NET
@@ -617,12 +621,12 @@ namespace AddressBook {
 		{
 		}
 
-		internal ABPerson (IntPtr handle, bool owns)
+		internal ABPerson (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		internal ABPerson (IntPtr handle, ABAddressBook? addressbook)
+		internal ABPerson (NativeHandle handle, ABAddressBook? addressbook)
 			: base (handle, false)
 		{
 			AddressBook = addressbook;
@@ -849,7 +853,7 @@ namespace AddressBook {
 			}
 		}
 
-		internal static string ToString (IntPtr value)
+		internal static string ToString (NativeHandle value)
 		{
 			return CFString.FromHandle (value)!;
 		}
@@ -859,9 +863,9 @@ namespace AddressBook {
 			return CreateStringMultiValue (CopyValue (ABPersonPropertyId.Email));
 		}
 
-		static ABMultiValue<string>? CreateStringMultiValue (IntPtr handle)
+		static ABMultiValue<string>? CreateStringMultiValue (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 			return new ABMultiValue<string> (handle, ABPerson.ToString, CFString.CreateNative, true);
 		}
@@ -908,16 +912,16 @@ namespace AddressBook {
 		}
 
 		// Obsolete
-		static ABMultiValue<NSDictionary>? CreateDictionaryMultiValue (IntPtr handle)
+		static ABMultiValue<NSDictionary>? CreateDictionaryMultiValue (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 			return new ABMultiValue<NSDictionary> (handle, true);
 		}
 
-		static ABMultiValue<T>? CreateDictionaryMultiValue<T> (IntPtr handle, Func<NSDictionary, T> factory) where T : DictionaryContainer
+		static ABMultiValue<T>? CreateDictionaryMultiValue<T> (NativeHandle handle, Func<NSDictionary, T> factory) where T : DictionaryContainer
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			return new ABMultiValue<T> (handle,
@@ -931,9 +935,9 @@ namespace AddressBook {
 			return CreateDateMultiValue (CopyValue (ABPersonPropertyId.Date));
 		}
 
-		static ABMultiValue<NSDate>? CreateDateMultiValue (IntPtr handle)
+		static ABMultiValue<NSDate>? CreateDateMultiValue (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 			return new ABMultiValue<NSDate> (handle, true);
 		}
@@ -1083,7 +1087,7 @@ namespace AddressBook {
 			if (people is null)
 				throw new ArgumentNullException (nameof (people));
 
-			var ptrs = new IntPtr [people.Length];
+			var ptrs = new NativeHandle [people.Length];
 			for (int i = 0; i < people.Length; ++i) {
 				ptrs[i] = people[i].Handle;
 			}

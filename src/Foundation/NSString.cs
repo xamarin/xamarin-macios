@@ -32,6 +32,10 @@ using CoreGraphics;
 #endif
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
 #if COREBUILD
@@ -59,7 +63,7 @@ namespace Foundation {
 
 		public static readonly NSString Empty = new NSString (String.Empty);
 
-		internal NSString (IntPtr handle, bool alloced) : base (handle, alloced)
+		internal NSString (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 

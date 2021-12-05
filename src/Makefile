@@ -1343,20 +1343,6 @@ $(PROJECT_DIR)/xammaccatalyst.csproj: xammaccatalyst.tmpl.csproj Makefile $(wild
 $(PROJECT_DIR)/MonoTouch.NUnitLite.maccatalyst.csproj: MonoTouch.NUnitLite.maccatalyst.templ.csproj Makefile touch-unit.sources $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MACCATALYST_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-# Type forwarder assembly from Xamarin.iOS.dll -> Xamarin.MacCatalyst.dll
-
-GENERATE_TYPE_FORWARDERS=generate-type-forwarders/bin/Debug/generate-type-forwarders.exe
-
-$(GENERATE_TYPE_FORWARDERS): $(wildcard generate-type-forwarders/*.cs*) Makefile
-	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-type-forwarders/generate-type-forwarders.csproj $(MSBUILD_VERBOSITY)
-
-$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
-	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $@.tmp $(DOTNET_MIN_MACCATALYST_SDK_VERSION)
-	$(Q) mv $@.tmp $@
-
-$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs
-	$(Q) $(DOTNET6_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618,$(WARNINGS_TO_IGNORE) -unsafe
-
 MACCATALYST_TARGETS_DIRS +=                                                 \
 	$(MACCATALYST_BUILD_DIR)                                                \
 
@@ -1365,10 +1351,8 @@ DOTNET_TARGETS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll \
 	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0/Xamarin.MacCatalyst.dll \
-	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0/Xamarin.iOS.dll \
 	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.dll) \
 	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.pdb) \
-	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.dll) \
 
 DOTNET_TARGETS_DIRS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR) \
@@ -1388,9 +1372,6 @@ $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACC
 	$(Q) $(CP) $< $@
 
 $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.pdb): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.pdb | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
-	$(Q) $(CP) $< $@
-
-$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.dll): $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
 $(MACCATALYST_TARGETS_DIRS):

@@ -35,6 +35,10 @@ using ObjCRuntime;
 using Foundation;
 using OpenGL;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
@@ -42,14 +46,14 @@ namespace CoreVideo {
 		GCHandle callbackHandle;
 		
 #if !NET
-		public CVDisplayLink (IntPtr handle)
+		public CVDisplayLink (NativeHandle handle)
 			: base (handle, false, true)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CVDisplayLink (IntPtr handle, bool owns)
+		internal CVDisplayLink (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

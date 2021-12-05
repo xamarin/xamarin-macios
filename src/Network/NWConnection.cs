@@ -19,6 +19,10 @@ using nw_endpoint_t=System.IntPtr;
 using nw_parameters_t=System.IntPtr;
 using nw_establishment_report_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	//
@@ -51,9 +55,9 @@ namespace Network {
 #endif
 	public class NWConnection : NativeObject {
 #if NET
-		internal NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

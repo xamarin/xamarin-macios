@@ -250,6 +250,10 @@ namespace Xamarin.Bundler {
 				app.XamarinRuntime = rv;
 			}, true /* hidden - this is only for build-time --runregistrar support */);
 
+			options.Add ("rid=", "The runtime identifier we're building for", v => {
+				app.RuntimeIdentifier = v;
+			}, true /* hidden - this is only for build-time --runregistrar support */);
+
 
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());

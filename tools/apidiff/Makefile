@@ -36,18 +36,14 @@ MAC_SRC_ASSEMBLIES     = \
 	4.5/Xamarin.Mac 4.5/OpenTK
 WATCHOS_SRC_ASSEMBLIES = Xamarin.WatchOS/Xamarin.WatchOS Xamarin.WatchOS/MonoTouch.NUnitLite Xamarin.WatchOS/System.Net.Http
 TVOS_SRC_ASSEMBLIES    = Xamarin.TVOS/Xamarin.TVOS Xamarin.TVOS/MonoTouch.Dialog-1 Xamarin.TVOS/MonoTouch.NUnitLite Xamarin.TVOS/OpenTK-1.0 Xamarin.TVOS/System.Net.Http
-MACCATALYST_SRC_ASSEMBLIES = Xamarin.MacCatalyst/Xamarin.MacCatalyst Xamarin.MacCatalyst/Xamarin.iOS
-
 
 IOS_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.iOS/$(file))    $(IOS_SRC_ASSEMBLIES)
 MAC_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.Mac/$(file))     $(MAC_SRC_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(foreach file,$(filter-out Mono.Data.Tds Mono.Security,$(MONO_ASSEMBLIES)),Xamarin.WatchOS/$(file)) $(WATCHOS_SRC_ASSEMBLIES)
 TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    $(TVOS_SRC_ASSEMBLIES)
-MACCATALYST_ASSEMBLIES = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.MacCatalyst/$(file))    $(MACCATALYST_SRC_ASSEMBLIES)
 DOTNET_LEGACY_ASSEMBLIES = Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS \
 	Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac
 DOTNET_ASSEMBLIES = $(DOTNET_LEGACY_ASSEMBLIES) Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst
-DOTNET_ASSEMBLIES_MACCATALYST_IOS = $(DOTNET_ASSEMBLIES) Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS
 
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
 MAC_ARCH_ASSEMBLIES =                       native-64/Xamarin.Mac
@@ -120,7 +116,7 @@ $(APIDIFF_DIR)/tvos-api-diff.html:    $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIF
 $(APIDIFF_DIR)/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html:                 $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.html
 $(APIDIFF_DIR)/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html:               $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.html
 $(APIDIFF_DIR)/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html:               $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.html
-$(APIDIFF_DIR)/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.html $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.html
+$(APIDIFF_DIR)/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.html
 
 # Compare new dotnet vs. stable legacy
 $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml $(MONO_API_HTML)
@@ -184,7 +180,7 @@ endif
 endif
 endif # INCLUDE_IOS
 ifdef ENABLE_DOTNET
-API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES_MACCATALYST_IOS),$(APIDIFF_DIR)/dotnet/$(assembly)-api-diff.html)
+API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/dotnet/$(assembly)-api-diff.html)
 API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_LEGACY_ASSEMBLIES),$(APIDIFF_DIR)/dotnet/legacy-diff/$(assembly)-api-diff.html)
 endif
 
@@ -364,7 +360,7 @@ IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-reference
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
-DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES_MACCATALYST_IOS),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml)
+DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml)
 
 $(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR_iOS)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
@@ -404,10 +400,6 @@ $(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.xml:
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
 $(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
-
-$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
@@ -529,7 +521,7 @@ $(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) --md $@
 
 # Dotnet iOS vs Dotnet MacCatalyst
-$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.iOS.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
 	$(Q) sed -e 's_<assembly name="Xamarin.MacCatalyst" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml > $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.MacCatalyst-as-iOS.xml
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.MacCatalyst-as-iOS.xml $(APIDIFF_IGNORE) --md $@

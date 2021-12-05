@@ -16,6 +16,10 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation
 {
 
@@ -41,15 +45,15 @@ namespace CoreFoundation
 		delegate void CFMachPortCallBack (IntPtr cfmachport, IntPtr msg, nint len, IntPtr context);
 
 #if !NET
-		public CFMachPort (IntPtr handle) : base (handle, false)
+		public CFMachPort (NativeHandle handle) : base (handle, false)
 		{
 		}
 #endif
 
 #if NET
-		internal CFMachPort (IntPtr handle, bool owns)
+		internal CFMachPort (NativeHandle handle, bool owns)
 #else
-		public CFMachPort (IntPtr handle, bool owns)
+		public CFMachPort (NativeHandle handle, bool owns)
 #endif
 			: base (handle, owns)
 		{

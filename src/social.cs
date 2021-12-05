@@ -19,6 +19,10 @@ using UIKit;
 using AppKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Social {
 	[Static]
 	interface SLServiceType {
@@ -96,7 +100,7 @@ namespace Social {
 	interface SLComposeViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("serviceType")]
 		NSString ServiceType { get;  }
@@ -144,7 +148,7 @@ namespace Social {
 	#endif
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("presentationAnimationDidFinish")]
 		void PresentationAnimationDidFinish ();
@@ -214,7 +218,7 @@ namespace Social {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NullAllowed] // by default this property is null
 		[Export ("title")]

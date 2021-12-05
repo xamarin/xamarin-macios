@@ -51,6 +51,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 // Verify/Test Delegate Models
 // Check for missing NullAllowed on all object properties
 // Test methods returning typed arrays in lieu of NSArray
@@ -491,7 +495,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithDestination:")]
-		IntPtr Constructor (PdfDestination destination);
+		NativeHandle Constructor (PdfDestination destination);
 
 		[Export ("destination")]
 		PdfDestination Destination { get; set; }
@@ -503,7 +507,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithName:")]
-		IntPtr Constructor (PdfActionNamedName name);
+		NativeHandle Constructor (PdfActionNamedName name);
 
 		[Export ("name")]
 		PdfActionNamedName Name { get; set; }
@@ -515,7 +519,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithPageIndex:atPoint:fileURL:")]
-		IntPtr Constructor (nint pageIndex, CGPoint point, NSUrl fileUrl);
+		NativeHandle Constructor (nint pageIndex, CGPoint point, NSUrl fileUrl);
 
 		[Export ("pageIndex")]
 		nint PageIndex { get; set; }
@@ -534,7 +538,7 @@ namespace PdfKit {
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 		
 		//NSArray of NSString
 		[Export ("fields"), NullAllowed]
@@ -550,7 +554,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("URL"), NullAllowed]
 		NSUrl Url { get; set; }
@@ -563,17 +567,17 @@ namespace PdfKit {
 		[Mac (10,13)]
 		[Export ("initWithBounds:forType:withProperties:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect bounds, NSString annotationType, [NullAllowed] NSDictionary properties);
+		NativeHandle Constructor (CGRect bounds, NSString annotationType, [NullAllowed] NSDictionary properties);
 
 		[Mac (10,13)]
 		[Wrap ("this (bounds, annotationType.GetConstant ()!, properties)")]
-		IntPtr Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
+		NativeHandle Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[NoMacCatalyst]
 		[Export ("initWithBounds:")]
-		IntPtr Constructor (CGRect bounds);
+		NativeHandle Constructor (CGRect bounds);
 
 		[Export ("page")]
 		[NullAllowed]
@@ -1115,7 +1119,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithPage:atPoint:")]
-		IntPtr Constructor (PdfPage page, CGPoint point);
+		NativeHandle Constructor (PdfPage page, CGPoint point);
 
 		[Export ("page")]
 		[NullAllowed]
@@ -1189,15 +1193,15 @@ namespace PdfKit {
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithData:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("documentURL")]
 		[NullAllowed]
@@ -1469,7 +1473,7 @@ namespace PdfKit {
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("document")]
 		[NullAllowed]
@@ -1517,11 +1521,11 @@ namespace PdfKit {
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithImage:")]
-		IntPtr Constructor (NSImage image);
+		NativeHandle Constructor (NSImage image);
 
 		[Export ("document"), NullAllowed]
 		PdfDocument Document { get; }
@@ -1634,7 +1638,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithDocument:")]
-		IntPtr Constructor (PdfDocument document);
+		NativeHandle Constructor (PdfDocument document);
 
 		[Export ("pages")]
 		PdfPage [] Pages { get; }
@@ -1688,7 +1692,7 @@ namespace PdfKit {
 	interface PdfThumbnailView : NSCoding {
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Field ("PDFThumbnailViewDocumentEditedNotification", "+PDFKit")]
 		[Notification]
@@ -1744,7 +1748,7 @@ namespace PdfKit {
 #endif
 	{
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("document"), NullAllowed]
 		PdfDocument Document { get; set; }

@@ -19,6 +19,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
 #if !NET
@@ -30,10 +34,10 @@ namespace Security {
 #endif
 	public class SecIdentity2 : NativeObject {
 #if NET
-		internal SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		internal SecIdentity2 (IntPtr handle) : base (handle, false) {}
-		public SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal SecIdentity2 (NativeHandle handle) : base (handle, false) {}
+		public SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 #if !COREBUILD

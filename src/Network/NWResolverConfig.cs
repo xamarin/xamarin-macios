@@ -9,6 +9,10 @@ using System.Runtime.Versioning;
 using OS_nw_resolver_config=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr; 
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 	
 #if !NET
@@ -19,9 +23,9 @@ namespace Network {
 	public class NWResolverConfig : NativeObject {
 
 #if NET
-		internal NWResolverConfig (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWResolverConfig (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 		
 		[DllImport (Constants.NetworkLibrary)]
