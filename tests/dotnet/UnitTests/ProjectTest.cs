@@ -770,8 +770,7 @@ namespace Xamarin.Tests {
 		void DeleteAssets (string project_path)
 		{
 			string xcassetsDir = Path.Combine (project_path, "../Assets.xcassets");
-			if (File.Exists (xcassetsDir))
-				File.Delete (xcassetsDir);
+			File.Delete (xcassetsDir);
 		}
 
 		void CopyAssets (string project_path)
