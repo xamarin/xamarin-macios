@@ -229,6 +229,10 @@ namespace Foundation {
 		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
 #endif
 		public void ApplyDifference (NSOrderedCollectionDifference<TKey> difference)
-			=> _ApplyDifference (difference.Handle);
+		{
+			if (difference is null)
+				throw new ArgumentNullException (nameof (difference));
+			_ApplyDifference (difference.Handle);
+		}
 	}
 }

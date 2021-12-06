@@ -588,4 +588,3 @@
 !missing-selector! NSXMLNode::init not bound
 
 # added because the method does the right thing yet it was not marked by apple, there is a test for it
-!extra-null-allowed! 'System.Boolean Foundation.NSHost::Equals(Foundation.NSHost)' has a extraneous [NullAllowed] on parameter #0

@@ -13998,7 +13998,7 @@ namespace Foundation
 		NSHost _FromAddress (string address);
 
 		[Export ("isEqualToHost:")]
-		bool Equals ([NullAllowed] NSHost host);
+		bool Equals (NSHost host);
 
 		[NullAllowed]
 		[Export ("name")]
@@ -14045,9 +14045,7 @@ namespace Foundation
 	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
-#if !__MACCATALYST__
 		[DesignatedInitializer]
-#endif
 		[Export ("initWithCommandDescription:")]
 		IntPtr Constructor (NSScriptCommandDescription cmdDescription);
 

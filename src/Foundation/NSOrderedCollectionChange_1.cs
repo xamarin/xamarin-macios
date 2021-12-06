@@ -19,7 +19,7 @@ namespace Foundation {
 	public sealed partial class NSOrderedCollectionChange<TKey> : NSOrderedCollectionChange
 		where TKey : class, INativeObject {
 
-		public NSOrderedCollectionChange (NSObject anObject, NSCollectionChangeType type, nuint index)
+		public NSOrderedCollectionChange (NSObject? anObject, NSCollectionChangeType type, nuint index)
 			: base (anObject, type, index) {}
 
 		public NSOrderedCollectionChange (NSObject? anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex)

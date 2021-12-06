@@ -4,6 +4,7 @@
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
 !missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
 !missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
+!missing-protocol-conformance! NSOrderedCollectionDifference should conform to NSFastEnumeration
 !missing-protocol-conformance! NSSet should conform to NSFastEnumeration
 
 ## untyped enums (only values, not type name) NSError.h
@@ -1067,8 +1068,6 @@
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKeyPath(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForUndefinedKey(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSOrderedSet::FirstObject()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSOrderedSet::LastObject()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSPropertyListSerialization::PropertyListWithData(Foundation.NSData,Foundation.NSPropertyListReadOptions,Foundation.NSPropertyListFormat&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSPropertyListSerialization::PropertyListWithStream(Foundation.NSInputStream,Foundation.NSPropertyListReadOptions,Foundation.NSPropertyListFormat&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSSet::get_AnyObject()' is missing an [NullAllowed] on return type
@@ -1379,3 +1378,9 @@
 
 ## convenience value (combined flags)
 !extra-enum-value! Managed value 3 for NSKeyValueObservingOptions.OldNew not found in native headers
+
+# complains because a ref can be null, but that is due to the fact that we are having to expose the ref BlockLiteral to
+# do a manual binding
+!extra-null-allowed! 'System.IntPtr Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+!extra-null-allowed! 'System.IntPtr Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.IntPtr Foundation.NSOrderedSet::_GetDifference(Foundation.NSOrderedSet,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
