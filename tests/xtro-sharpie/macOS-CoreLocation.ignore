@@ -4,6 +4,3 @@
 !missing-selector! CLBeaconRegion::initWithUUID:identifier: not bound
 
 # Fixed in XAMCORE_4_0
-!unknown-field! CLLocationPushServiceErrorDomain bound
-!unknown-native-enum! CLLocationPushServiceError bound
-!unknown-protocol! CLLocationPushServiceExtension bound
