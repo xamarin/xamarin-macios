@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>NET;$(DefineConstants)</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>dontlink</RootNamespace>
     <AssemblyName>dont link</AssemblyName>
     <MtouchLink>None</MtouchLink>
@@ -12,7 +11,6 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <ItemGroup>
     <ProjectReference Include="$(RootTestsDirectory)\BundledResources\dotnet\$(_PlatformName)\BundledResources.csproj" />

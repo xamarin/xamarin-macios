@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.CLI;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.Common.Utilities;
@@ -128,7 +129,7 @@ namespace Xharness {
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
 			await sims.LoadDevices (Logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", "Simulator list"), false, false);
-			(simulator, companionSimulator) = await sims.FindSimulators (target, MainLog);
+			(simulator, companionSimulator) = await sims.FindSimulators (target.GetTargetOs (false), MainLog);
 
 			return simulator != null;
 		}
@@ -366,8 +367,8 @@ namespace Xharness {
 
 				MainLog.WriteLine ("Starting test run");
 
-				await testReporter.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
+				var testRunResult = await processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken);
+				await testReporter.CollectSimulatorResult (testRunResult);
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -406,13 +407,13 @@ namespace Xharness {
 
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
 					var aggregatedLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
-					Task<ProcessExecutionResult> runTestTask = processManager.ExecuteCommandAsync (
+					ProcessExecutionResult runTestResults = await processManager.ExecuteCommandAsync (
 						args,
 						aggregatedLog,
 						testReporterTimeout,
 						cancellationToken: testReporter.CancellationToken);
 
-					await testReporter.CollectDeviceResult (runTestTask);
+					await testReporter.CollectDeviceResult (runTestResults);
 				} finally {
 					deviceLogCapturer.StopCapture ();
 					deviceSystemLog.Dispose ();
@@ -425,7 +426,10 @@ namespace Xharness {
 				}
 			}
 
-			listener.Cancel ();
+			if (!listener.StopAsync ().Wait (TimeSpan.FromSeconds (5))) {
+				MainLog.WriteLine ("Failed to stop listener within 5 seconds. Will cancel it.");
+				listener.Cancel ();
+			}
 			listener.Dispose ();
 
 			// close a tunnel if it was created

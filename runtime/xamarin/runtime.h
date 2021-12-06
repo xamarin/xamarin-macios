@@ -165,6 +165,7 @@ void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMet
 unsigned long 	xamarin_objc_type_size (const char *type);
 bool			xamarin_is_class_nsobject (MonoClass *cls);
 bool			xamarin_is_class_inativeobject (MonoClass *cls);
+bool			xamarin_is_class_nativehandle (MonoClass *cls);
 bool			xamarin_is_class_array (MonoClass *cls);
 bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
@@ -218,6 +219,7 @@ void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
 void			xamarin_enable_new_refcount ();
+const char * const	xamarin_get_original_working_directory_path ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -265,6 +267,7 @@ id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_i
 MonoType *		xamarin_get_nsnumber_type ();
 MonoType *		xamarin_get_nsvalue_type ();
 MonoClass *		xamarin_get_inativeobject_class ();
+MonoClass *		xamarin_get_nativehandle_class ();
 MonoClass *		xamarin_get_nsobject_class ();
 MonoClass *		xamarin_get_nsstring_class ();
 MonoClass *		xamarin_get_runtime_class ();

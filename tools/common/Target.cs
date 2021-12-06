@@ -207,7 +207,7 @@ namespace Xamarin.Bundler {
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
 						switch (framework.Name) {
-#if MONOMAC
+#if MONOMAC && !NET
 						case "QTKit":
 							// we already warn in Frameworks.cs Gather method
 							if (!Driver.LinkProhibitedFrameworks)
@@ -242,6 +242,7 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#if !NET
 						case "WatchKit":
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
@@ -249,6 +250,7 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#endif
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
 								if (App.LinkMode != LinkMode.None) {
@@ -775,6 +777,8 @@ namespace Xamarin.Bundler {
 			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {
+				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
+			} else if (app.IsSimulatorBuild && ((abi & Abi.ARM64) == Abi.ARM64)) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			}
 

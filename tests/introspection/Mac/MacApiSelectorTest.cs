@@ -16,6 +16,7 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
 	
@@ -204,6 +205,54 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "startup:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipDeviceController":
+					return true;
+				}
+				break;
+			case "readAttributeFabricIdWithResponseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipGeneralCommissioning":
+					return true;
+				}
+				break;
+			case "removeAllFabrics:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "removeFabric:nodeId:vendorId:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "setFabric:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "loadedTimeRanges":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "URLAsset":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "options":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {
@@ -372,12 +421,14 @@ namespace Introspection {
 						return true;
 					}
 					break;
+#if !NET // NSMenuView does not exist in .NET
 				case "NSMenuView":
 					switch (selectorName) {
 					case "menuBarHeight":
 						return TestRuntime.IsVM; // skip on vms due to hadware problems
 					}
 					break;
+#endif // !NET
 #if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":
@@ -646,7 +697,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "buttonPressed":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1796
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}
@@ -659,7 +710,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "isSyncFailureHidden":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1797
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}

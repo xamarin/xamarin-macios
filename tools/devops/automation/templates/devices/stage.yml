@@ -26,8 +26,8 @@ parameters:
 
 # demand that has to be matched by a bot to be able to run the tests.
 - name: iOSDeviceDemand
-  type: string
-  default: 'xismoke'
+  type: object
+  default: []
 
 - name: useXamarinStorage
   type: boolean

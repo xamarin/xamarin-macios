@@ -3,6 +3,10 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Accessibility {
 
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
@@ -15,11 +19,11 @@ namespace Accessibility {
 
 		[Export ("initWithTitle:categoryOrder:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, string[] categoryOrder);
+		NativeHandle Constructor (string title, string[] categoryOrder);
 
 		[Export ("initWithAttributedTitle:categoryOrder:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSAttributedString attributedTitle, string[] categoryOrder);
+		NativeHandle Constructor (NSAttributedString attributedTitle, string[] categoryOrder);
 	}
 
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
@@ -76,18 +80,18 @@ namespace Accessibility {
 		IAXDataAxisDescriptor[] AdditionalAxes { get; set; }
 
 		[Export ("initWithTitle:summary:xAxisDescriptor:yAxisDescriptor:series:")]
-		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor[] series);
 
 		[Export ("initWithAttributedTitle:summary:xAxisDescriptor:yAxisDescriptor:series:")]
-		IntPtr Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor[] series);
 
 		[Export ("initWithTitle:summary:xAxisDescriptor:yAxisDescriptor:additionalAxes:series:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor[] additionalAxes, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor[] additionalAxes, AXDataSeriesDescriptor[] series);
 
 		[Export ("initWithAttributedTitle:summary:xAxisDescriptor:yAxisDescriptor:additionalAxes:series:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor[] additionalAxes, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor[] additionalAxes, AXDataSeriesDescriptor[] series);
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -175,14 +179,14 @@ namespace Accessibility {
 		NSAttributedString AttributedLabel { get; set; }
 
 		[Export ("initWithX:y:")]
-		IntPtr Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue);
+		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue);
 
 		[Export ("initWithX:y:additionalValues:")]
-		IntPtr Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue[] additionalValues);
+		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue[] additionalValues);
 
 		[Export ("initWithX:y:additionalValues:label:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue[] additionalValues, [NullAllowed] string label);
+		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue[] additionalValues, [NullAllowed] string label);
 	}
 
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
@@ -224,11 +228,11 @@ namespace Accessibility {
 
 		[Export ("initWithName:isContinuous:dataPoints:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, bool isContinuous, AXDataPoint[] dataPoints);
+		NativeHandle Constructor (string name, bool isContinuous, AXDataPoint[] dataPoints);
 
 		[Export ("initWithAttributedName:isContinuous:dataPoints:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSAttributedString attributedName, bool isContinuous, AXDataPoint[] dataPoints);
+		NativeHandle Constructor (NSAttributedString attributedName, bool isContinuous, AXDataPoint[] dataPoints);
 	}
 
 	[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
@@ -307,10 +311,10 @@ namespace Accessibility {
 
 		[Export ("initWithTitle:lowerBound:upperBound:gridlinePositions:valueDescriptionProvider:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, double lowerBound, double upperBound, [NullAllowed] NSNumber[] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
+		NativeHandle Constructor (string title, double lowerBound, double upperBound, [NullAllowed] NSNumber[] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
 
 		[Export ("initWithAttributedTitle:lowerBound:upperBound:gridlinePositions:valueDescriptionProvider:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSAttributedString attributedTitle, double lowerBound, double upperBound, [NullAllowed] NSNumber[] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
+		NativeHandle Constructor (NSAttributedString attributedTitle, double lowerBound, double upperBound, [NullAllowed] NSNumber[] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
 	}
 }

@@ -14,6 +14,7 @@ using Foundation;
 using EventKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
 	
@@ -25,7 +26,7 @@ namespace MonoTouchFixtures.EventKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -56,7 +57,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void Range ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var rem = new EKReminder ()) {
 				// priority is documented to have a range of 0-9 but there's no validation in ObjC

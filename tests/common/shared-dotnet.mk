@@ -27,13 +27,13 @@ reload-and-run:
 	$(Q) $(MAKE) run
 
 build: prepare
-	$(Q) $(DOTNET6) build "/bl:$@-$(BINLOG_TIMESTAMP).binlog" *.csproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
+	$(Q) $(DOTNET6) build "/bl:$@-$(BINLOG_TIMESTAMP).binlog" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
 
 run: prepare
-	$(Q) $(DOTNET6) build "/bl:$@-$(BINLOG_TIMESTAMP).binlog" *.csproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
+	$(Q) $(DOTNET6) build "/bl:$@-$(BINLOG_TIMESTAMP).binlog" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
 
 run-bare:
-	$(Q) ./bin/Debug/net6.0-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)"
+	$(Q) ./bin/Debug/net6.0-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
 
 BINLOGS:=$(wildcard *.binlog)
 diag: prepare

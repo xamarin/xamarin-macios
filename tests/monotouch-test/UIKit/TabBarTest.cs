@@ -10,6 +10,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
@@ -117,7 +118,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (UITabBar tb = new UITabBar ()) {
 				// TintColor is inherited in iOS7 so it won't be null by default
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false))
 					Assert.NotNull (tb.TintColor, "1");
 				else
 					Assert.Null (tb.TintColor, "1");
@@ -129,7 +130,7 @@ namespace MonoTouchFixtures.UIKit {
 				if (TestRuntime.IsTVOS) {
 					// we only care that setting `null` gives us back some default OS value
 					Assert.NotNull (tb.TintColor, "3");
-				} else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
+				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.That (tb.TintColor, Is.Not.EqualTo (UIColor.White), "3");
 				} else
 					Assert.Null (tb.TintColor, "3");
@@ -144,7 +145,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (tb.SelectedImageTintColor, "1");
 				
 				tb.SelectedImageTintColor = UIColor.Black;
-				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 1)) {
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 1)) {
 					// before 7.1 the tintColor would have been accepted
 					Assert.NotNull (tb.SelectedImageTintColor, "2");
 			

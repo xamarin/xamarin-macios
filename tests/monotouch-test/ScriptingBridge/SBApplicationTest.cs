@@ -7,6 +7,10 @@ using ObjCRuntime;
 using Foundation;
 using ScriptingBridge;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Xamarin.Mac.Tests {
 
 	public class MySBApp : SBApplication {
@@ -22,7 +26,7 @@ namespace Xamarin.Mac.Tests {
 
 		protected MySBApp (NSObjectFlag t) : base (t) { }
 
-		protected internal MySBApp (IntPtr handle) : base (handle) { }
+		protected internal MySBApp (NativeHandle handle) : base (handle) { }
 	}
 
 	[TestFixture]

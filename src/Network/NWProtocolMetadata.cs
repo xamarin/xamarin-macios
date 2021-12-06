@@ -21,6 +21,10 @@ using OS_nw_protocol_definition=System.IntPtr;
 using OS_nw_protocol_metadata=System.IntPtr;
 using nw_service_class_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -54,7 +58,11 @@ namespace Network {
 		}
 #endif
 
-		public NWProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+#if NET
+		internal NWProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern OS_nw_protocol_definition nw_protocol_metadata_copy_definition (OS_nw_protocol_metadata metadata);
@@ -84,6 +92,22 @@ namespace Network {
 		internal static extern bool nw_protocol_metadata_is_tcp (OS_nw_protocol_metadata metadata);
 
 		public bool IsTcp => nw_protocol_metadata_is_tcp (GetCheckedHandle ());
+		
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_protocol_metadata_is_quic (OS_nw_protocol_metadata metadata);
+
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public bool IsQuic => nw_protocol_metadata_is_quic (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern IntPtr nw_tls_copy_sec_protocol_metadata (IntPtr handle);

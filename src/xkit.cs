@@ -74,6 +74,10 @@ using View=UIKit.UIView;
 #endif
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #if MONOMAC
 namespace AppKit {
 #else
@@ -307,7 +311,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		// This was removed in the headers in the macOS 10.11 SDK
 		[NoiOS][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'TextStorage' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'TextStorage' instead.")]
 		[Export ("attributedString")]
 		NSAttributedString AttributedString { get; }
 #endif
@@ -331,11 +335,11 @@ namespace UIKit {
 		[Export ("textContainerChangedTextView:")]
 		void TextContainerChangedTextView (NSTextContainer container);
 
-#if !XAMCORE_4_0
+#if !NET
 		// This was removed in the headers in the macOS 10.11 SDK
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("layoutOptions")]
 		NSGlyphStorageOptions LayoutOptions { get; }
 #endif
@@ -400,7 +404,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharacterRange, nint delta, NSRange invalidatedCharacterRange) instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharacterRange, nint delta, NSRange invalidatedCharacterRange) instead).")]
 		[Export ("textStorage:edited:range:changeInLength:invalidatedRange:")]
 		void TextStorageEdited (NSTextStorage str, NSTextStorageEditedFlags editedMask, NSRange newCharRange, nint changeInLength, NSRange invalidatedCharRange);
 #endif
@@ -434,7 +438,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("insertGlyph:atGlyphIndex:characterIndex:")]
 		void InsertGlyph (NSGlyph glyph, nint glyphIndex, nint charIndex);
 #endif
@@ -442,7 +446,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("replaceGlyphAtIndex:withGlyph:")]
 		void ReplaceGlyphAtIndex (nint glyphIndex, NSGlyph newGlyph);
 #endif
@@ -450,7 +454,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("deleteGlyphsInRange:")]
 		void DeleteGlyphs (NSRange glyphRange);
 #endif
@@ -458,7 +462,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("setCharacterIndex:forGlyphAtIndex:")]
 		void SetCharacterIndex (nint charIndex, nint glyphIndex);
 #endif
@@ -466,7 +470,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("setIntAttribute:value:forGlyphAtIndex:")]
 		void SetIntAttribute (nint attributeTag, nint value, nint glyphIndex);
 #endif
@@ -474,7 +478,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'SetGlyphs' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
 		[Export ("invalidateGlyphsOnLayoutInvalidationForGlyphRange:")]
 		void InvalidateGlyphsOnLayoutInvalidation (NSRange glyphRange);
 #endif
@@ -489,10 +493,10 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[Export ("glyphAtIndex:isValidIndex:")]
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'GetCGGlyph' instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		NSGlyph GlyphAtIndex (nint glyphIndex, ref bool isValidIndex);
 #else
- 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
+ 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 		CGGlyph GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
 #endif // MONOMAC
 #endif // !XAMCORE_4_0
@@ -500,10 +504,10 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[Export ("glyphAtIndex:")]
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'GetCGGlyph' instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		NSGlyph GlyphAtIndex (nint glyphIndex);
 #else
- 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
+ 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 		CGGlyph GlyphAtIndex (nuint glyphIndex);
 #endif // MONOMAC
 #endif // !XAMCORE_4_0
@@ -537,7 +541,7 @@ namespace UIKit {
 
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'GetGlyphs' instead).")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetGlyphs' instead).")]
 		[Export ("intAttribute:forGlyphAtIndex:")]
 		nint GetIntAttribute (nint attributeTag, nint glyphIndex);
 #endif
@@ -890,7 +894,7 @@ namespace UIKit {
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Export ("rectArrayForGlyphRange:withinSelectedGlyphRange:inTextContainer:rectCount:")]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		IntPtr GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, IntPtr textContainerHandle, out nuint rectCount);
 
 		[Export ("boundingRectForGlyphRange:inTextContainer:")]
@@ -1111,7 +1115,7 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("substituteFontForFont:")]
 		NSFont SubstituteFontForFont (NSFont originalFont);
 #endif
@@ -1140,7 +1144,7 @@ namespace UIKit {
 
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("glyphGenerator", ArgumentSemantic.Retain)]
 		NSGlyphGenerator GlyphGenerator { get; set; }
 
@@ -1160,7 +1164,7 @@ namespace UIKit {
 		bool BackgroundLayoutEnabled { get; set; }
 
 		[NoiOS][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("usesScreenFonts")]
 		bool UsesScreenFonts { get; set; }
 
@@ -2375,13 +2379,13 @@ namespace UIKit {
 	{
 		[NoiOS][NoTV][NoMacCatalyst]
 		[Export ("initWithFileWrapper:")]
-		IntPtr Constructor (NSFileWrapper fileWrapper);
+		NativeHandle Constructor (NSFileWrapper fileWrapper);
 
 		[Mac (10,11)]
 		[DesignatedInitializer]
 		[Export ("initWithData:ofType:")]
 		[PostGet ("Contents")]
-		IntPtr Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
+		NativeHandle Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
 
 		[Mac (10,11)]
 		[NullAllowed]
@@ -2466,7 +2470,7 @@ namespace UIKit {
 	partial interface NSTextStorage : NSSecureCoding {
 #if MONOMAC && !XAMCORE_4_0
 		[Export ("initWithString:")]
-		IntPtr Constructor (string str);
+		NativeHandle Constructor (string str);
 #endif
 
 		[Export ("layoutManagers")]
@@ -2567,12 +2571,12 @@ namespace UIKit {
 	[Protocol]
 	partial interface NSTextStorageDelegate {
 		[NoiOS][NoTV][NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use WillProcessEditing instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use WillProcessEditing instead.")]
 		[Export ("textStorageWillProcessEditing:")]
 		void TextStorageWillProcessEditing (NSNotification notification);
 
 		[NoiOS][NoTV][NoMacCatalyst]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use DidProcessEditing instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use DidProcessEditing instead.")]
 		[Export ("textStorageDidProcessEditing:")]
 		void TextStorageDidProcessEditing (NSNotification notification);
 
@@ -2862,11 +2866,11 @@ namespace UIKit {
 	interface NSDataAsset : NSCopying
 	{
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("initWithName:bundle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, NSBundle bundle);
+		NativeHandle Constructor (string name, NSBundle bundle);
 
 		[Export ("name")]
 		string Name { get; }
@@ -2908,11 +2912,11 @@ namespace UIKit {
 		[DesignatedInitializer]
 		[Export ("initWithTextAlignment:location:options:")]
 		[PostGet ("Options")]
-		IntPtr Constructor (TextAlignment alignment, nfloat location, NSDictionary options);
+		NativeHandle Constructor (TextAlignment alignment, nfloat location, NSDictionary options);
 
 		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
 		[Export ("initWithType:location:")]
-		IntPtr Constructor (NSTextTabType type, nfloat location);
+		NativeHandle Constructor (NSTextTabType type, nfloat location);
 
 		[Export ("alignment")]
 		TextAlignment Alignment { get; }
@@ -2959,7 +2963,7 @@ namespace UIKit {
 		[NoMac]
 		[DesignatedInitializer]
 		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize size);
+		NativeHandle Constructor (CGSize size);
 
 		[NoiOS][NoMacCatalyst][NoTV]
 		[Export ("initWithContainerSize:"), Internal]
@@ -3027,7 +3031,7 @@ namespace UIKit {
 		NSTextView TextView { get; set; }
 
 		[NoiOS][NoMacCatalyst][NoTV]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use Size instead.")]
 		[Export ("containerSize")]
 		CGSize ContainerSize { get; set; }
 
@@ -3284,7 +3288,7 @@ namespace UIKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -3346,7 +3350,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextContentManager:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSTextContentManager textContentManager);
+		NativeHandle Constructor ([NullAllowed] NSTextContentManager textContentManager);
 
 		[NullAllowed, Export ("textContentManager", ArgumentSemantic.Weak)]
 		NSTextContentManager TextContentManager { get; set; }
@@ -3361,11 +3365,11 @@ namespace UIKit {
 	{
 		[Export ("initWithAttributedString:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSAttributedString attributedString);
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedString);
 
 		[Export ("initWithTextContentManager:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSTextContentManager textContentManager);
+		NativeHandle Constructor ([NullAllowed] NSTextContentManager textContentManager);
 
 		[Export ("attributedString", ArgumentSemantic.Strong)]
 		NSAttributedString AttributedString { get; }
@@ -3384,10 +3388,10 @@ namespace UIKit {
 	{
 		[Export ("initWithAttributedString:range:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSAttributedString attributedString, NSRange range);
+		NativeHandle Constructor (NSAttributedString attributedString, NSRange range);
 
 		[Export ("initWithString:attributes:range:")]
-		IntPtr Constructor (string @string, NSDictionary<NSString, NSObject> attributes, NSRange range);
+		NativeHandle Constructor (string @string, NSDictionary<NSString, NSObject> attributes, NSRange range);
 
 		[Export ("attributedString", ArgumentSemantic.Strong)]
 		NSAttributedString AttributedString { get; }
@@ -3430,7 +3434,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextAttachment:parentView:textLayoutManager:location:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextAttachment textAttachment, [NullAllowed] View parentView, [NullAllowed] NSTextLayoutManager textLayoutManager, INSTextLocation location);
+		NativeHandle Constructor (NSTextAttachment textAttachment, [NullAllowed] View parentView, [NullAllowed] NSTextLayoutManager textLayoutManager, INSTextLocation location);
 
 		[NullAllowed, Export ("textAttachment", ArgumentSemantic.Weak)]
 		NSTextAttachment TextAttachment { get; }
@@ -3461,7 +3465,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextElement:range:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextElement textElement, [NullAllowed] NSTextRange rangeInElement);
+		NativeHandle Constructor (NSTextElement textElement, [NullAllowed] NSTextRange rangeInElement);
 
 		[NullAllowed, Export ("textLayoutManager", ArgumentSemantic.Weak)]
 		NSTextLayoutManager TextLayoutManager { get; }
@@ -3519,10 +3523,10 @@ namespace UIKit {
 	{
 		[Export ("initWithLocation:endLocation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSTextLocation location, [NullAllowed] INSTextLocation endLocation);
+		NativeHandle Constructor (INSTextLocation location, [NullAllowed] INSTextLocation endLocation);
 
 		[Export ("initWithLocation:")]
-		IntPtr Constructor (INSTextLocation location);
+		NativeHandle Constructor (INSTextLocation location);
 
 		[Export ("empty")]
 		bool Empty { [Bind ("isEmpty")] get; }
@@ -3582,7 +3586,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextLayoutManager:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextLayoutManager textLayoutManager);
+		NativeHandle Constructor (NSTextLayoutManager textLayoutManager);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -3636,13 +3640,13 @@ namespace UIKit {
 	{
 		[Export ("initWithRanges:affinity:granularity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextRange[] textRanges, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
+		NativeHandle Constructor (NSTextRange[] textRanges, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
 
 		[Export ("initWithRange:affinity:granularity:")]
-		IntPtr Constructor (NSTextRange range, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
+		NativeHandle Constructor (NSTextRange range, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
 
 		[Export ("initWithLocation:affinity:")]
-		IntPtr Constructor (INSTextLocation location, NSTextSelectionAffinity affinity);
+		NativeHandle Constructor (INSTextLocation location, NSTextSelectionAffinity affinity);
 
 		[Export ("textRanges", ArgumentSemantic.Copy)]
 		NSTextRange[] TextRanges { get; }
@@ -3783,7 +3787,7 @@ namespace UIKit {
 	{
 		[Export ("initWithDataSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSTextSelectionDataSource dataSource);
+		NativeHandle Constructor (INSTextSelectionDataSource dataSource);
 
 		[Wrap ("WeakTextSelectionDataSource")]
 		[NullAllowed]

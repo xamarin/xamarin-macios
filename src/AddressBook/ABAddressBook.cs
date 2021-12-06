@@ -41,6 +41,10 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 #if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
@@ -86,7 +90,7 @@ namespace AddressBook {
 		{
 #if __MACCATALYST__
 			// avoid TypeLoadException if used before macOS 11.x
-			if (!UIKit.UIDevice.CurrentDevice.CheckSystemVersion (14,0))
+			if (!SystemVersion.CheckiOS (14,0))
 				return;
 #endif
 			// ensure we can init. This is needed before iOS6 (as per doc).
@@ -162,7 +166,7 @@ namespace AddressBook {
 			return new ABAddressBook (handle, true);
 		}
 			
-		internal ABAddressBook (IntPtr handle, bool owns)
+		internal ABAddressBook (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 			InitConstants.Init ();
@@ -170,7 +174,7 @@ namespace AddressBook {
 
 		static ABAddressBook ()
 		{
-			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain");
+			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain")!;
 		}
 
 		protected override void Dispose (bool disposing)

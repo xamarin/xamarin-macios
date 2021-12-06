@@ -1,16 +1,7 @@
-!missing-enum! AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions not bound
-!missing-enum! AVCapturePrimaryConstituentDeviceSwitchingBehavior not bound
-!missing-selector! AVCaptureDevice::activePrimaryConstituentDevice not bound
-!missing-selector! AVCaptureDevice::activePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions not bound
-!missing-selector! AVCaptureDevice::activePrimaryConstituentDeviceSwitchingBehavior not bound
-!missing-selector! AVCaptureDevice::fallbackPrimaryConstituentDevices not bound
-!missing-selector! AVCaptureDevice::primaryConstituentDeviceRestrictedSwitchingBehaviorConditions not bound
-!missing-selector! AVCaptureDevice::primaryConstituentDeviceSwitchingBehavior not bound
-!missing-selector! AVCaptureDevice::setFallbackPrimaryConstituentDevices: not bound
-!missing-selector! AVCaptureDevice::setPrimaryConstituentDeviceSwitchingBehavior:restrictedSwitchingBehaviorConditions: not bound
-!missing-selector! AVCaptureDevice::supportedFallbackPrimaryConstituentDevices not bound
-!missing-selector! AVCaptureMovieFileOutput::isPrimaryConstituentDeviceSwitchingBehaviorForRecordingEnabled not bound
-!missing-selector! AVCaptureMovieFileOutput::primaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording not bound
-!missing-selector! AVCaptureMovieFileOutput::primaryConstituentDeviceSwitchingBehaviorForRecording not bound
-!missing-selector! AVCaptureMovieFileOutput::setPrimaryConstituentDeviceSwitchingBehaviorForRecording:restrictedSwitchingBehaviorConditions: not bound
-!missing-selector! AVCaptureMovieFileOutput::setPrimaryConstituentDeviceSwitchingBehaviorForRecordingEnabled: not bound
+!extra-enum-value! Managed value 1 for AVAudioSessionRouteSharingPolicy.LongForm is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 17 for AVAudioSessionCategoryOptions.InterruptSpokenAudioAndMixWithOthers is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 1936747378 for AVAudioSessionPortOverride.Speaker is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 32 for AVAudioSessionCategoryOptions.AllowBluetoothA2DP is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 4 for AVAudioSessionCategoryOptions.AllowBluetooth is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 64 for AVAudioSessionCategoryOptions.AllowAirPlay is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 8 for AVAudioSessionCategoryOptions.DefaultToSpeaker is available for the current platform while the value in the native header is not

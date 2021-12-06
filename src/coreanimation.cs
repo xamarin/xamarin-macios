@@ -50,6 +50,10 @@ using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
@@ -126,7 +130,7 @@ namespace CoreAnimation {
 		CAConstraint Create (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttribute);
 
 		[Export ("initWithAttribute:relativeTo:attribute:scale:offset:")]
-		IntPtr Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
+		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
 #endif
 
@@ -170,9 +174,16 @@ namespace CoreAnimation {
 		[Export ("targetTimestamp")]
 		double TargetTimestamp { get; }
 
+		[Deprecated (PlatformName.iOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.TvOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.WatchOS, 8,0, message: "Use 'PreferredFrameRateRange' property.")]
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 #endif
 
@@ -1126,6 +1137,10 @@ namespace CoreAnimation {
 		SCNAnimationEvent [] AnimationEvents { get; set; }
 
 		#endregion
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 
 	interface ICAAnimationDelegate {}
@@ -1439,7 +1454,7 @@ namespace CoreAnimation {
 		CAMediaTimingFunction FromControlPoints (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("initWithControlPoints::::")]
-		IntPtr Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
+		NativeHandle Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("getControlPointAtIndex:values:"), Internal]
 		void GetControlPointAtIndex (nint idx, IntPtr /* float[2] */ point);
@@ -1776,7 +1791,7 @@ namespace CoreAnimation {
 	interface CAEmitterBehavior : NSSecureCoding {
 
 		// [Export ("initWithType:")]
-		// IntPtr Constructor (NSString type);
+		// NativeHandle Constructor (NSString type);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }

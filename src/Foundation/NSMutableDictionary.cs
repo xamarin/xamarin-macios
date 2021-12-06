@@ -27,12 +27,16 @@ using System.ComponentModel;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
 	public partial class NSMutableDictionary : NSDictionary, IDictionary, IDictionary<NSObject, NSObject> {
 		
 		// some API, like SecItemCopyMatching, returns a retained NSMutableDictionary
-		internal NSMutableDictionary (IntPtr handle, bool owns)
+		internal NSMutableDictionary (NativeHandle handle, bool owns)
 			: base (handle)
 		{
 			if (!owns)

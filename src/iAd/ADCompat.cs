@@ -1,4 +1,4 @@
-#if !XAMCORE_4_0
+#if !NET
 
 using System;
 using System.Runtime.InteropServices;
@@ -12,16 +12,16 @@ using MediaPlayer;
 using ObjCRuntime;
 using UIKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace iAd {
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public class ADBannerView : UIView {
 
 		public class ADBannerViewAppearance : UIViewAppearance {
@@ -35,8 +35,8 @@ namespace iAd {
 		{
 		}
 
-		public unsafe override IntPtr ClassHandle {
-			get { return default (IntPtr); }
+		public unsafe override NativeHandle ClassHandle {
+			get { return default (NativeHandle); }
 		}
 
 		public virtual ADAdType AdType {
@@ -190,11 +190,7 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public class AdErrorEventArgs : EventArgs {
 		public NSError? Error {
 			get { return default (NSError); }
@@ -206,20 +202,12 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public interface IADBannerViewDelegate : INativeObject, IDisposable {
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public static class ADBannerViewDelegate_Extensions {
 
 		public static void AdLoaded (this IADBannerViewDelegate This, ADBannerView banner)
@@ -244,12 +232,8 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public class ADBannerViewDelegate : NSObject, IADBannerViewDelegate, INativeObject, IDisposable {
 
 		public ADBannerViewDelegate ()
@@ -260,7 +244,8 @@ namespace iAd {
 		{
 		}
 
-		protected internal ADBannerViewDelegate (IntPtr handle)
+		protected internal ADBannerViewDelegate (NativeHandle handle)
+			: base (handle)
 		{
 		}
 
@@ -289,61 +274,29 @@ namespace iAd {
 	// some of this API is still provided
 	public partial class ADClient : NSObject {
 
-#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#else
-		[UnsupportedOSPlatform ("ios15.0")]
-#if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public static NSString? ErrorDomain {
 			get { return default (NSString); }
 		}
 
-#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#else
-		[UnsupportedOSPlatform ("ios15.0")]
-#if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public virtual void DetermineAppInstallationAttribution (AttributedToiAdCompletionHandler completionHandler)
 		{
 		}
 
-#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#else
-		[UnsupportedOSPlatform ("ios15.0")]
-#if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public virtual void LookupAdConversionDetails (ADConversionDetails onCompleted)
 		{
 		}
 
-#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#else
-		[UnsupportedOSPlatform ("ios15.0")]
-#if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public virtual Task<ADClientConversionDetailsResult>? LookupAdConversionDetailsAsync()
 		{
 			return default (Task<ADClientConversionDetailsResult>);
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public class ADClientConversionDetailsResult {
 		public NSDate? AppPurchaseDate {
 			get { return default (NSDate); }
@@ -360,19 +313,16 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public class ADInterstitialAd : NSObject {
 
 		protected internal ADInterstitialAd (IntPtr handle)
+			: base (handle)
 		{
 		}
 
-		public unsafe override IntPtr ClassHandle {
+		public unsafe override NativeHandle ClassHandle {
 			get { return default (IntPtr); }
 		}
 
@@ -450,11 +400,7 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public class ADErrorEventArgs : EventArgs {
 		public NSError? Error {
 			get { return default (NSError); }
@@ -466,12 +412,8 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public interface IADInterstitialAdDelegate : INativeObject, IDisposable {
 
 		void AdUnloaded (ADInterstitialAd interstitialAd);
@@ -485,23 +427,15 @@ namespace iAd {
 		void ActionFinished (ADInterstitialAd interstitialAd);
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public static class ADInterstitialAdDelegate_Extensions {
 		public static void WillLoad (this IADInterstitialAdDelegate This, ADInterstitialAd interstitialAd)
 		{
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public abstract class ADInterstitialAdDelegate : NSObject, IADInterstitialAdDelegate, INativeObject, IDisposable {
 
 		protected ADInterstitialAdDelegate ()
@@ -512,7 +446,8 @@ namespace iAd {
 		{
 		}
 
-		protected internal ADInterstitialAdDelegate (IntPtr handle)
+		protected internal ADInterstitialAdDelegate (NativeHandle handle)
+			: base (handle)
 		{
 		}
 
@@ -531,16 +466,12 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 13, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public class ADInterstitialAdPresentationViewController : UIViewController {
 
-		public unsafe override IntPtr ClassHandle {
-			get { return default (IntPtr); }
+		public unsafe override NativeHandle ClassHandle {
+			get { return default (NativeHandle); }
 		}
 
 		public ADInterstitialAdPresentationViewController (NSCoder coder)
@@ -569,12 +500,8 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, PlatformArchitecture.None, null)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public static class IAdAdditions {
 
 		public static bool DisplayingBannerAd (this UIViewController This)
@@ -621,17 +548,11 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Deprecated (PlatformName.iOS, 9, 0, PlatformArchitecture.None, "Use 'iAdPreroll_AVPlayerViewController' instead.")]
 	[Obsoleted (PlatformName.iOS, 12, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public static class IAdPreroll {
 
-#if !NET
 		[Introduced (PlatformName.iOS, 8, 0, PlatformArchitecture.All, null)]
-#endif
 		public static void CancelPreroll (this MPMoviePlayerController This)
 		{
 		}
@@ -641,11 +562,7 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public static class iAdPreroll_AVPlayerViewController {
 
 		public static void CancelPreroll (this AVPlayerViewController This)
@@ -657,11 +574,7 @@ namespace iAd {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public static class ADErrorExtensions {
 
 		public static NSString? GetDomain( this ADError self)
@@ -670,25 +583,17 @@ namespace iAd {
 		}
 	}
 
-#if !NET
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public delegate void ADConversionDetails (NSDate? appPurchaseDate, NSDate? iAdImpressionDate);
 
-#if !NET
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public delegate bool ADPredicate (ADInterstitialAd interstitialAd, bool willLeaveApplication);
 
-#if !NET
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public delegate bool AdAction (ADBannerView banner, bool willLeaveApplication);
 
-#if !NET
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	public delegate void AttributedToiAdCompletionHandler (bool attributedToiAd);
 }
 
-#endif // !XAMCORE_4_0
+#endif // !NET

@@ -7,6 +7,10 @@ using CoreFoundation;
 using OS_nw_group_descriptor=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
@@ -21,7 +25,7 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
 	public class NWMulticastGroup : NativeObject {
-		internal NWMulticastGroup (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWMulticastGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_group_descriptor nw_group_descriptor_create_multicast (OS_nw_endpoint multicast_group);

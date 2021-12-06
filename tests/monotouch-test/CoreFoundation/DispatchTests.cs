@@ -19,8 +19,8 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
-using System.Drawing;
 using System.Threading;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
@@ -167,12 +167,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var qname = "com.apple.root.default-priority";
 #if __IOS__ 
-			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0))
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0))
 				qname = "com.apple.root.default-qos";
 #elif __WATCHOS__ || __TVOS__
 			qname = "com.apple.root.default-qos";
 #elif __MACOS__
-			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10))
 				qname = "com.apple.root.default-qos";
 #endif
 			Assert.That (DispatchQueue.DefaultGlobalQueue.Label, Is.EqualTo (qname), "Default");
@@ -232,7 +232,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void GetGlobalQueue_QualityOfService ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			// values changes in OS versions (and even in arch) but we only want to make sure we get a valid string so the prefix is enough
 			Assert.True (DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default).Label.StartsWith ("com.apple.root."), "Default");

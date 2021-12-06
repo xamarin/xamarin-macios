@@ -19,6 +19,10 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
@@ -26,37 +30,10 @@ namespace CoreVideo {
 #if !NET
 	[iOS (8,0), Mac (12,0), MacCatalyst (15,0)]
 #endif
-	public class CVMetalTexture : INativeObject, IDisposable {
-
-		internal IntPtr handle;
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		~CVMetalTexture ()
+	public class CVMetalTexture : NativeObject {
+		internal CVMetalTexture (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected
-		virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		internal CVMetalTexture (IntPtr handle)
-		{
-			this.handle = handle;
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -74,13 +51,13 @@ namespace CoreVideo {
 
 		public IMTLTexture? Texture {
 			get {
-				return Runtime.GetINativeObject<IMTLTexture> (CVMetalTextureGetTexture (handle), owns: false);
+				return Runtime.GetINativeObject<IMTLTexture> (CVMetalTextureGetTexture (Handle), owns: false);
 			}
 		}
 			
 		public bool IsFlipped {
 			get {
-				return CVMetalTextureIsFlipped (handle);
+				return CVMetalTextureIsFlipped (Handle);
 			}
 		}
 
@@ -93,7 +70,7 @@ namespace CoreVideo {
 
 			unsafe {
 				fixed (float *ll = &lowerLeft[0], lr = &lowerRight [0], ur = &upperRight [0], ul = &upperLeft[0]){
-					CVMetalTextureGetCleanTexCoords (handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
+					CVMetalTextureGetCleanTexCoords (Handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
 				}
 			}
 		}

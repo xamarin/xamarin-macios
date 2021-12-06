@@ -546,12 +546,14 @@ namespace AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
-#if !XAMCORE_4_0
+	// This enum is defined as an untyped enum in MacOSX.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
+	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
 	[NoMacCatalyst]
+#if NET
+	public enum NSKey {
+#else
 	[Native]
 	public enum NSKey : ulong {
-#else
-	public enum NSKey : int
 #endif
 		A              = 0x00,
 		S              = 0x01,
@@ -753,50 +755,58 @@ namespace AppKit {
 		ModeSwitch     = 0xF747
 	}
 
-#if !XAMCORE_4_0 && !__MACCATALYST__
+	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSEventSubtype : ulong {
 #else
 	public enum NSEventSubtype : short {
 #endif
+		/* event subtypes for NSEventTypeAppKitDefined events */
 		WindowExposed = 0,
 		ApplicationActivated = 1,
 		ApplicationDeactivated = 2,
-		[Mac (10,10)]
-		Touch = 3,
 		WindowMoved = 4,
 		ScreenChanged = 8,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This API is not available on this platform.")]
 		AWT = 16,
 #endif
+		/* event subtypes for NSEventTypeSystemDefined events */
+		/* the value is repeated from above */
+		PowerOff = 1,
+
+		/* event subtypes for mouse events */
+		/* the values are repeated from above */
+		MouseEvent = 0, /* NX_SUBTYPE_DEFAULT */
+		TabletPoint = 1, /* NX_SUBTYPE_TABLET_POINT */
+		TabletProximity = 2, /* NX_SUBTYPE_TABLET_PROXIMITY */
+		Touch = 3, /* NX_SUBTYPE_MOUSE_TOUCH */
 	}
 
+#if !NET
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSSystemDefinedEvents : ulong {
-#else
-	public enum NSSystemDefinedEvents : short {
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.PowerOff' instead.")]
 		NSPowerOffEventType = 1
 	}
+#endif // !NET
 
+#if !NET
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSEventMouseSubtype : ulong {
-#else
-	public enum NSEventMouseSubtype : short {
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.MouseEvent' instead.")]
 		Mouse, 
-#if !XAMCORE_4_0
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletPoint' instead.")]
 		TablePoint, 
-#else
-		TabletPoint, 
-#endif
-		TabletProximity, Touch
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletProximity' instead.")]
+		TabletProximity,
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.Touch' instead.")]
+		Touch,
 	}
+#endif // !NET
 	
 #endregion
 
@@ -859,12 +869,8 @@ namespace AppKit {
 #region NSWindow
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : ulong {
-#else
-	public enum NSWindowStyle : int {
-#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
@@ -916,12 +922,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : ulong {
-#else
-	public enum NSWindowNumberListOptions : int {
-#endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
 	}
@@ -1313,11 +1315,9 @@ namespace AppKit {
 		Natural = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC
-	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
-	// properly fix all the API using this.
+#if !NET && MONOMAC
+	// Use Foundation.NSWritingDirection in .NET.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	// [Obsolete ("Use NSWritingDirection in Foundation instead.")]
 	[Flags]
 	[Native]
 	public enum NSWritingDirection : long {
@@ -1327,15 +1327,11 @@ namespace AppKit {
 		[Obsolete ("This API is not available on this platform.")]
 		Override = 2,
 	}
-#endif // !XAMCORE_4_0 && MONOMAC
+#endif // !NET && MONOMAC
 
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : long {
-#else
-	public enum NSTextMovement : int {
-#endif
 		Other = 0,
 		Return = 0x10,
 		Tab = 0x11,
@@ -1511,19 +1507,17 @@ namespace AppKit {
 		Auto, Fit, Clip
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : ulong {
-#else
-	public enum NSGlyphStorageOptions : int
-#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
@@ -1714,19 +1708,17 @@ namespace AppKit {
 		Default, Regular, Small
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : long {
-#else
-	public enum NSAlertType : int {
-#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
 		DefaultReturn
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]

@@ -9,7 +9,6 @@
 
 #if !__TVOS__
 
-using System;
 using Contacts;
 using Foundation;
 using ObjCRuntime;

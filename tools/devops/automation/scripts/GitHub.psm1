@@ -439,7 +439,7 @@ function New-GitHubSummaryComment {
     $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
-        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
     if (-not [string]::IsNullOrEmpty($APIDiff)) {
         WriteDiffs $sb $APIDiff
@@ -576,9 +576,9 @@ function WriteDiffs {
             $sb.AppendLine($json.message)
 
             $commonPlatforms = "iOS", "macOS", "tvOS"
-            $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS" + "macCatiOS" + "macCat");}
+            $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS");}
             $dotnetPlatforms = @{Title="dotnet API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
-            $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-legacy-" + $_});}
+            $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
             $dotnetMaciOSPlatforms = @{Title="dotnet iOS-MacCatalayst API diff"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
             $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
 

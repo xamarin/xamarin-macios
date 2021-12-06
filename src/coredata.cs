@@ -18,6 +18,10 @@ using AppKit;
 using CoreSpotlight;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreData
 {
 	[StrongDictionary ("UserInfoKeys")]
@@ -84,7 +88,7 @@ namespace CoreData
 	interface NSAtomicStore {
 
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
-		IntPtr Constructor ([NullAllowed] NSPersistentStoreCoordinator coordinator, [NullAllowed] string configurationName, NSUrl url, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor ([NullAllowed] NSPersistentStoreCoordinator coordinator, [NullAllowed] string configurationName, NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Export ("load:")]
 		bool Load (out NSError error);
@@ -139,7 +143,7 @@ namespace CoreData
 	interface NSFetchIndexElementDescription : NSCoding, NSCopying
 	{
 		[Export ("initWithProperty:collationType:")]
-		IntPtr Constructor (NSPropertyDescription property, NSFetchIndexElementType collationType);
+		NativeHandle Constructor (NSPropertyDescription property, NSFetchIndexElementType collationType);
 
 		[NullAllowed, Export ("property", ArgumentSemantic.Retain)]
 		NSPropertyDescription Property { get; }
@@ -162,7 +166,7 @@ namespace CoreData
 	interface NSFetchIndexDescription : NSCoding, NSCopying
 	{
 		[Export ("initWithName:elements:")]
-		IntPtr Constructor (string name, [NullAllowed] NSFetchIndexElementDescription[] elements);
+		NativeHandle Constructor (string name, [NullAllowed] NSFetchIndexElementDescription[] elements);
 
 		[Export ("name")]
 		string Name { get; set; }
@@ -183,7 +187,7 @@ namespace CoreData
 	interface NSAtomicStoreCacheNode {
 
 		[Export ("initWithObjectID:")]
-		IntPtr Constructor (NSManagedObjectID moid);
+		NativeHandle Constructor (NSManagedObjectID moid);
 
 		[Export ("objectID", ArgumentSemantic.Strong)]
 		NSManagedObjectID ObjectID { get; }
@@ -440,7 +444,7 @@ namespace CoreData
 		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithExpressionType:")]
-		IntPtr Constructor (NSExpressionType type);
+		NativeHandle Constructor (NSExpressionType type);
 
 		[Static, Export ("expressionForFetch:context:countOnly:")]
 		NSFetchRequestExpression FromFetch (NSExpression fetch, NSExpression context, bool countOnly);
@@ -467,7 +471,7 @@ namespace CoreData
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("entity", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -523,7 +527,7 @@ namespace CoreData
 		NSFetchRequest FromEntityName (string entityName);
 
 		[Export ("initWithEntityName:")]
-		IntPtr Constructor (string entityName);
+		NativeHandle Constructor (string entityName);
 
 		[NullAllowed, Export ("entityName", ArgumentSemantic.Strong)]
 		string EntityName { get; }
@@ -552,7 +556,7 @@ namespace CoreData
 	interface NSFetchedResultsController {
 
 		[Export ("initWithFetchRequest:managedObjectContext:sectionNameKeyPath:cacheName:")]
-		IntPtr Constructor (NSFetchRequest fetchRequest, NSManagedObjectContext context, [NullAllowed] string sectionNameKeyPath, [NullAllowed] string name);
+		NativeHandle Constructor (NSFetchRequest fetchRequest, NSManagedObjectContext context, [NullAllowed] string sectionNameKeyPath, [NullAllowed] string name);
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
@@ -672,7 +676,7 @@ namespace CoreData
 		[Protected]
 #endif
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
-		IntPtr Constructor (NSPersistentStoreCoordinator root, string name, NSUrl url, NSDictionary options);
+		NativeHandle Constructor (NSPersistentStoreCoordinator root, string name, NSUrl url, NSDictionary options);
 
 		[Export ("loadMetadata:")]
 		bool LoadMetadata (out NSError error);
@@ -719,9 +723,9 @@ namespace CoreData
 	interface NSIncrementalStoreNode {
 		[Export ("initWithObjectID:withValues:version:")]
 #if XAMCORE_4_0
-		IntPtr Constructor (NSManagedObjectID objectID, NSDictionary<NSString, NSObject> values, ulong version);
+		NativeHandle Constructor (NSManagedObjectID objectID, NSDictionary<NSString, NSObject> values, ulong version);
 #else 
-		IntPtr Constructor (NSManagedObjectID objectId, NSDictionary values, ulong version);
+		NativeHandle Constructor (NSManagedObjectID objectId, NSDictionary values, ulong version);
 #endif
 
 		[Export ("updateWithValues:version:")]
@@ -749,11 +753,11 @@ namespace CoreData
 	interface NSManagedObject : NSFetchRequestResult {
 		[DesignatedInitializer]
 		[Export ("initWithEntity:insertIntoManagedObjectContext:")]
-		IntPtr Constructor (NSEntityDescription entity, [NullAllowed] NSManagedObjectContext context);
+		NativeHandle Constructor (NSEntityDescription entity, [NullAllowed] NSManagedObjectContext context);
 
 		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
 		[Export ("initWithContext:")]
-		IntPtr Constructor (NSManagedObjectContext moc);
+		NativeHandle Constructor (NSManagedObjectContext moc);
 
 		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
 		[Static]
@@ -935,7 +939,7 @@ namespace CoreData
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 		
 		[NullAllowed] // by default this property is null
 		[Export ("persistentStoreCoordinator", ArgumentSemantic.Retain)]
@@ -1072,7 +1076,7 @@ namespace CoreData
 
 		[DesignatedInitializer]
 		[Export ("initWithConcurrencyType:")]
-		IntPtr Constructor (NSManagedObjectContextConcurrencyType ct);
+		NativeHandle Constructor (NSManagedObjectContextConcurrencyType ct);
 
 		[Export ("performBlock:")]
 		void Perform (/* non null */ Action action);
@@ -1225,7 +1229,7 @@ namespace CoreData
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static, Export ("mergedModelFromBundles:")]
 		[return: NullAllowed]
@@ -1236,7 +1240,7 @@ namespace CoreData
 		NSManagedObjectModel ModelByMergingModels ([NullAllowed] NSManagedObjectModel[] models);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("entitiesByName", ArgumentSemantic.Copy)]
 #if XAMCORE_4_0
@@ -1342,7 +1346,7 @@ namespace CoreData
 		NSMappingModel GetInferredMappingModel (NSManagedObjectModel source, NSManagedObjectModel destination, out NSError error);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor ([NullAllowed] NSUrl url);
+		NativeHandle Constructor ([NullAllowed] NSUrl url);
 
 		[Export ("entityMappings", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -1396,9 +1400,9 @@ namespace CoreData
 		[DesignatedInitializer]
 		[Export ("initWithSource:newVersion:oldVersion:cachedSnapshot:persistedSnapshot:")]
 #if XAMCORE_4_0
-		IntPtr Constructor (NSManagedObject srcObject, nuint newvers, nuint oldvers, [NullAllowed] NSDictionary<NSString, NSObject> cachesnap, [NullAllowed] NSDictionary<NSString, NSObject> persnap);
+		NativeHandle Constructor (NSManagedObject srcObject, nuint newvers, nuint oldvers, [NullAllowed] NSDictionary<NSString, NSObject> cachesnap, [NullAllowed] NSDictionary<NSString, NSObject> persnap);
 #else
-		IntPtr Constructor (NSManagedObject srcObject, nuint newvers, nuint oldvers, [NullAllowed] NSDictionary cachesnap, [NullAllowed] NSDictionary persnap);
+		NativeHandle Constructor (NSManagedObject srcObject, nuint newvers, nuint oldvers, [NullAllowed] NSDictionary cachesnap, [NullAllowed] NSDictionary persnap);
 #endif
 	}
 
@@ -1410,7 +1414,7 @@ namespace CoreData
 
 		[DesignatedInitializer]
 		[Export ("initWithMergeType:")]
-		IntPtr Constructor (NSMergePolicyType ty);
+		NativeHandle Constructor (NSMergePolicyType ty);
 
 		[Export ("resolveConflicts:error:")]
 #if XAMCORE_4_0
@@ -1452,7 +1456,7 @@ namespace CoreData
 	interface NSMigrationManager {
 
 		[Export ("initWithSourceModel:destinationModel:")]
-		IntPtr Constructor (NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
+		NativeHandle Constructor (NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
 
 		[Export ("migrateStoreFromURL:type:options:withMappingModel:toDestinationURL:destinationType:destinationOptions:error:")]
 		bool MigrateStoreFromUrl (NSUrl sourceUrl, string sStoreType, [NullAllowed] NSDictionary sOptions, [NullAllowed] NSMappingModel mappings, NSUrl dUrl, string dStoreType, [NullAllowed] NSDictionary dOptions, out NSError error);
@@ -1680,7 +1684,7 @@ namespace CoreData
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initForStoreWithDescription:coordinator:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSPersistentStoreDescription description, NSPersistentStoreCoordinator psc);
+		NativeHandle Constructor (NSPersistentStoreDescription description, NSPersistentStoreCoordinator psc);
 
 		[Export ("domainIdentifier")]
 		string DomainIdentifier { get; }
@@ -1691,7 +1695,7 @@ namespace CoreData
 		[Deprecated (PlatformName.iOS, 15,0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
 		[Deprecated (PlatformName.MacOSX, 12,0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
 		[Export ("initForStoreWithDescription:model:")]
-		IntPtr Constructor (NSPersistentStoreDescription description, NSManagedObjectModel model);
+		NativeHandle Constructor (NSPersistentStoreDescription description, NSManagedObjectModel model);
 
 		[Export ("attributeSetForObject:")]
 		[return: NullAllowed]
@@ -1755,7 +1759,7 @@ namespace CoreData
 #endif
 		[DesignatedInitializer]
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
-		IntPtr Constructor ([NullAllowed] NSPersistentStoreCoordinator root, [NullAllowed] string name, NSUrl url, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor ([NullAllowed] NSPersistentStoreCoordinator root, [NullAllowed] string name, NSUrl url, [NullAllowed] NSDictionary options);
 		
 		[Export ("loadMetadata:")]
 		bool LoadMetadata (out NSError error);
@@ -1875,7 +1879,7 @@ namespace CoreData
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		// NSPersistentStoreDescription_NSPersistentCloudKitContainerAdditions category
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
@@ -1916,11 +1920,11 @@ namespace CoreData
 		NSPersistentStoreDescription[] PersistentStoreDescriptions { get; set; }
 
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("initWithName:managedObjectModel:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, NSManagedObjectModel model);
+		NativeHandle Constructor (string name, NSManagedObjectModel model);
 
 		[Export ("loadPersistentStoresWithCompletionHandler:")]
 		[Async]
@@ -1989,7 +1993,7 @@ namespace CoreData
 
 		[DesignatedInitializer]
 		[Export ("initWithManagedObjectModel:")]
-		IntPtr Constructor (NSManagedObjectModel model);
+		NativeHandle Constructor (NSManagedObjectModel model);
 
 		[Export ("managedObjectModel", ArgumentSemantic.Strong)]
 		NSManagedObjectModel ManagedObjectModel { get; }
@@ -2050,7 +2054,7 @@ namespace CoreData
 #endif // !WATCH && !TVOS
 
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_5)]
+		[Deprecated (PlatformName.MacOSX, 10, 5)]
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
 		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreWithUrl (NSUrl url, out NSError error);
@@ -2145,17 +2149,17 @@ namespace CoreData
 
 		[NoWatch][NoTV]
 		[Notification]
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreDidImportUbiquitousContentChangesNotification")]
 		NSString DidImportUbiquitousContentChangesNotification { get; }
 
 		[NoWatch][NoTV]
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreUbiquitousContentNameKey")]
 		NSString PersistentStoreUbiquitousContentNameKey { get; }
 
 		[NoWatch][NoTV]
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreUbiquitousContentURLKey")]
 #if XAMCORE_4_0
 		NSString PersistentStoreUbiquitousContentUrlKey { get; }
@@ -2249,7 +2253,8 @@ namespace CoreData
 	interface NSPersistentStoreCoordinatorStoreChangeEventArgs {
 		[NoWatch][NoTV]
 		[Export ("NSPersistentStoreUbiquitousTransitionTypeKey")]
-		[Availability (Introduced = Platform.iOS_7_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
+		[iOS (7, 0)]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		NSPersistentStoreUbiquitousTransitionType EventType { get; }
 	}
 
@@ -2318,7 +2323,7 @@ namespace CoreData
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSAsynchronousFetchRequest {
 		[Export ("initWithFetchRequest:completionBlock:")]
-		IntPtr Constructor (NSFetchRequest request, [NullAllowed] Action<NSAsynchronousFetchResult> completion);
+		NativeHandle Constructor (NSFetchRequest request, [NullAllowed] Action<NSAsynchronousFetchResult> completion);
 
 		[Export ("fetchRequest", ArgumentSemantic.Retain)]
 		NSFetchRequest FetchRequest { get; }
@@ -2435,9 +2440,9 @@ namespace CoreData
 	interface NSSaveChangesRequest {
 		[Export ("initWithInsertedObjects:updatedObjects:deletedObjects:lockedObjects:")]
 #if XAMCORE_4_0
-		IntPtr Constructor ([NullAllowed] NSSet<NSManagedObject> insertedObjects, [NullAllowed] NSSet<NSManagedObject> updatedObjects, [NullAllowed] NSSet<NSManagedObject> deletedObjects, [NullAllowed] NSSet<NSManagedObject> lockedObjects);
+		NativeHandle Constructor ([NullAllowed] NSSet<NSManagedObject> insertedObjects, [NullAllowed] NSSet<NSManagedObject> updatedObjects, [NullAllowed] NSSet<NSManagedObject> deletedObjects, [NullAllowed] NSSet<NSManagedObject> lockedObjects);
 #else
-		IntPtr Constructor ([NullAllowed] NSSet insertedObjects, [NullAllowed] NSSet updatedObjects, [NullAllowed] NSSet deletedObjects, [NullAllowed] NSSet lockedObjects);
+		NativeHandle Constructor ([NullAllowed] NSSet insertedObjects, [NullAllowed] NSSet updatedObjects, [NullAllowed] NSSet deletedObjects, [NullAllowed] NSSet lockedObjects);
 #endif
 
 		[NullAllowed, Export ("insertedObjects", ArgumentSemantic.Strong)]
@@ -2474,11 +2479,11 @@ namespace CoreData
 	interface NSBatchUpdateRequest {
 		[Export ("initWithEntityName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string entityName);
+		NativeHandle Constructor (string entityName);
 
 		[Export ("initWithEntity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSEntityDescription entity);
+		NativeHandle Constructor (NSEntityDescription entity);
 
 		[Export ("entityName")]
 		string EntityName { get; }
@@ -2511,10 +2516,10 @@ namespace CoreData
 	{
 		[Export ("initWithFetchRequest:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSFetchRequest fetch);
+		NativeHandle Constructor (NSFetchRequest fetch);
 
 		[Export ("initWithObjectIDs:")]
-		IntPtr Constructor (NSManagedObjectID[] objects);
+		NativeHandle Constructor (NSManagedObjectID[] objects);
 
 		[Export ("resultType", ArgumentSemantic.Assign)]
 		NSBatchDeleteRequestResultType ResultType { get; set; }
@@ -2540,7 +2545,7 @@ namespace CoreData
 	{
 		[Export ("initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string[] contraint, [NullAllowed] NSManagedObject databaseObject, [NullAllowed] NSDictionary databaseSnapshot, NSManagedObject[] conflictingObjects, NSObject[] conflictingSnapshots);
+		NativeHandle Constructor (string[] contraint, [NullAllowed] NSManagedObject databaseObject, [NullAllowed] NSDictionary databaseSnapshot, NSManagedObject[] conflictingObjects, NSObject[] conflictingSnapshots);
 
 #if MONOMAC
 		[Export ("constraint", ArgumentSemantic.Copy)]
@@ -2595,23 +2600,23 @@ namespace CoreData
 		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use another constructor instead.")]
 		[NoMacCatalyst]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("initWithEntity:dictionaryHandler:")]
-		IntPtr Constructor (NSEntityDescription entity, NSBatchInsertRequestDictionaryHandler handler);
+		NativeHandle Constructor (NSEntityDescription entity, NSBatchInsertRequestDictionaryHandler handler);
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("initWithEntity:managedObjectHandler:")]
-		IntPtr Constructor (NSEntityDescription entity, NSBatchInsertRequestManagedObjectHandler handler);
+		NativeHandle Constructor (NSEntityDescription entity, NSBatchInsertRequestManagedObjectHandler handler);
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("initWithEntityName:dictionaryHandler:")]
-		IntPtr Constructor (string entityName, NSBatchInsertRequestDictionaryHandler handler);
+		NativeHandle Constructor (string entityName, NSBatchInsertRequestDictionaryHandler handler);
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("initWithEntityName:managedObjectHandler:")]
-		IntPtr Constructor (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
+		NativeHandle Constructor (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
 
 		[Export ("entityName")]
 		string EntityName { get; }
@@ -2631,11 +2636,11 @@ namespace CoreData
 
 		[DesignatedInitializer]
 		[Export ("initWithEntityName:objects:")]
-		IntPtr Constructor (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
+		NativeHandle Constructor (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
 
 		[DesignatedInitializer]
 		[Export ("initWithEntity:objects:")]
-		IntPtr Constructor (NSEntityDescription entity, NSDictionary<NSString, NSObject>[] dictionaries);
+		NativeHandle Constructor (NSEntityDescription entity, NSDictionary<NSString, NSObject>[] dictionaries);
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[NullAllowed, Export ("dictionaryHandler", ArgumentSemantic.Copy)]
@@ -2695,7 +2700,7 @@ namespace CoreData
 
 		[Export ("initWithName:managedObjectModel:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, NSManagedObjectModel model);
+		NativeHandle Constructor (string name, NSManagedObjectModel model);
 
 		[Export ("initializeCloudKitSchemaWithOptions:error:")]
 		bool Initialize (NSPersistentCloudKitContainerSchemaInitializationOptions options, [NullAllowed] out NSError error);
@@ -2773,7 +2778,7 @@ namespace CoreData
 
 		[Export ("initWithContainerIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string containerIdentifier);
+		NativeHandle Constructor (string containerIdentifier);
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("databaseScope", ArgumentSemantic.Assign)]

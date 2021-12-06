@@ -41,6 +41,13 @@ namespace Xamarin.Tests {
 			return Execute ("publish", project, properties, true);
 		}
 
+		public static ExecutionResult AssertPublishFailure (string project, Dictionary<string, string> properties = null)
+		{
+			var rv = Execute ("publish", project, properties, false);
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			return rv;
+		}
+
 		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
 		{
 			return Execute ("build", project, properties, true);

@@ -7,6 +7,8 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 #if MONOMAC
 using System;
 using Foundation;
@@ -22,7 +24,7 @@ namespace NetworkExtension {
 #endif
 		public void SetAuthorization (Authorization authorization)
 		{
-			if (authorization == null)
+			if (authorization is null)
 				throw new ArgumentNullException (nameof (authorization));
 
 			_SetAuthorization (authorization.Handle);

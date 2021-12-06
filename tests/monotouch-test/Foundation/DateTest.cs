@@ -8,7 +8,6 @@
 //
 
 using System;
-using System.Net;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;

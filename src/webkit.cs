@@ -29,6 +29,10 @@ using CoreGraphics;
 using ObjCRuntime;
 using JavaScriptCore;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace WebKit {
 
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
@@ -1115,7 +1119,7 @@ namespace WebKit {
 
 		[Sealed] // Just to avoid the duplicate selector error
 		[Export ("initEvent:canBubbleArg:cancelableArg:")]
-		IntPtr Constructor (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
+		NativeHandle Constructor (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
 	}
 
 	// Note: DOMMutationEvent is not bound since it is deprecated
@@ -1132,7 +1136,7 @@ namespace WebKit {
 #endif
 		[Sealed] // Just to avoid the duplicate selector error
 		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
-		IntPtr Constructor (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
+		NativeHandle Constructor (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
 
 		[Export ("orient")]
 		ushort Orient { get; }
@@ -1169,7 +1173,7 @@ namespace WebKit {
 #endif
 		[Sealed] // Just to avoid the duplicate selector error
 		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
-		IntPtr Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
+		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
 
 		[Export ("view", ArgumentSemantic.Retain)]
 		DomAbstractView View { get; }
@@ -1212,11 +1216,11 @@ namespace WebKit {
 
 		[Sealed] // Just to avoid the duplicate selector error
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:")]
-		IntPtr Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
+		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
 
 		[Sealed] // Just to avoid the duplicate selector error
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:")]
-		IntPtr Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
+		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
 		[Export ("getModifierState:")]
 		bool GetModifierState (string keyIdentifier);
@@ -1260,7 +1264,7 @@ namespace WebKit {
 #endif
 		[Sealed] // Just to avoid the duplicate selector error
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
-		IntPtr Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, [Protocolize] DomEventTarget relatedTarget);
+		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, [Protocolize] DomEventTarget relatedTarget);
 
 		[Export ("screenX")]
 		int ScreenX { get; } /* int, not NSInteger */
@@ -1323,7 +1327,7 @@ namespace WebKit {
 #endif
 		[Sealed] // Just to avoid the duplicate selector error
 		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
-		IntPtr Constructor (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
+		NativeHandle Constructor (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
 		[Export ("wheelDeltaX")]
 		int WheelDeltaX { get; } /* int, not NSInteger */
@@ -1662,10 +1666,10 @@ namespace WebKit {
 	[BaseType (typeof (NSObject))]
 	partial interface WebArchive : NSCoding, NSCopying {
 		[Export ("initWithMainResource:subresources:subframeArchives:")]
-		IntPtr Constructor (WebResource mainResource, NSArray subresources, NSArray subframeArchives);
+		NativeHandle Constructor (WebResource mainResource, NSArray subresources, NSArray subframeArchives);
 
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("mainResource")]
 		WebResource MainResource { get; }
@@ -1731,7 +1735,7 @@ namespace WebKit {
 	[BaseType (typeof (NSObject))]
 	partial interface WebDataSource {
 		[Export ("initWithRequest:")]
-		IntPtr Constructor (NSUrlRequest request);
+		NativeHandle Constructor (NSUrlRequest request);
 
 		[Export ("data")]
 		NSData Data { get; }
@@ -1867,7 +1871,7 @@ namespace WebKit {
 	[DisableDefaultCtor] // invalid handle returned
 	partial interface WebFrame {
 		[Export ("initWithName:webFrameView:webView:")]
-		IntPtr Constructor (string name, WebFrameView view, WebView webView);
+		NativeHandle Constructor (string name, WebFrameView view, WebView webView);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1989,7 +1993,7 @@ namespace WebKit {
 	[BaseType (typeof (NSView))]
 	partial interface WebFrameView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("webFrame")]
 		WebFrame WebFrame { get; }
@@ -2059,7 +2063,7 @@ namespace WebKit {
 	[BaseType (typeof (NSObject))]
 	partial interface WebHistoryItem : NSCopying {
 		[Export ("initWithURLString:title:lastVisitedTimeInterval:")]
-		IntPtr Constructor (string urlString, string title, double lastVisitedTimeInterval);
+		NativeHandle Constructor (string urlString, string title, double lastVisitedTimeInterval);
 
 		[Export ("originalURLString")]
 		string OriginalUrlString { get; }
@@ -2143,7 +2147,7 @@ namespace WebKit {
 		WebPreferences StandardPreferences { get; }
 
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -2231,7 +2235,7 @@ namespace WebKit {
 	[BaseType (typeof (NSObject))]
 	partial interface WebResource : NSCoding, NSCopying {
 		[Export ("initWithData:URL:MIMEType:textEncodingName:frameName:")]
-		IntPtr Constructor (NSData data, NSUrl url, string mimeType, string textEncodingName, string frameName);
+		NativeHandle Constructor (NSData data, NSUrl url, string mimeType, string textEncodingName, string frameName);
 
 		[Export ("data")]
 		NSData Data { get; }
@@ -2496,10 +2500,10 @@ namespace WebKit {
 		void RegisterUrlSchemeAsLocal (string scheme);
 
 		[Export ("initWithFrame:frameName:groupName:")]
-		IntPtr Constructor (CGRect frame, [NullAllowed] string frameName, [NullAllowed]string groupName);
+		NativeHandle Constructor (CGRect frame, [NullAllowed] string frameName, [NullAllowed]string groupName);
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("close")]
 		void Close ();
@@ -2955,7 +2959,7 @@ namespace WebKit {
 		[Export ("type")]
 		string Type { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
@@ -3049,7 +3053,7 @@ namespace WebKit {
 		[Export ("target")]
 		string Target { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
@@ -3164,7 +3168,7 @@ namespace WebKit {
 		[Export ("willValidate")]
 		bool WillValidate { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
@@ -3480,7 +3484,7 @@ namespace WebKit {
 		[Export ("htmlFor")]
 		string HtmlFor { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 	}
@@ -3496,7 +3500,7 @@ namespace WebKit {
 		[Export ("align")]
 		string Align { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 	}

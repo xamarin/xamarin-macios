@@ -354,6 +354,9 @@
     <Compile Include="..\common\Execution.cs">
       <Link>tools\common\Execution.cs</Link>
     </Compile>
+    <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
+      <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>tools\common\StaticRegistrar.cs</Link>
     </Compile>

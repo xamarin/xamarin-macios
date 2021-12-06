@@ -17,6 +17,10 @@ using Security;
 using sec_protocol_metadata_t=System.IntPtr;
 using dispatch_queue_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 #if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
@@ -26,11 +30,13 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecProtocolMetadata : NativeObject {
-		internal SecProtocolMetadata (IntPtr handle) : base (handle, false) {}
+#if !NET
+		internal SecProtocolMetadata (NativeHandle handle) : base (handle, false) {}
+#endif
 
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public[tv
-		internal SecProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal SecProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 #if !COREBUILD
 		[DllImport (Constants.SecurityLibrary)]
@@ -125,39 +131,17 @@ namespace Security {
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslCipherSuite sec_protocol_metadata_get_negotiated_ciphersuite (IntPtr handle);
+#endif
 
 #if !NET
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public SslCipherSuite NegotiatedCipherSuite => sec_protocol_metadata_get_negotiated_ciphersuite (GetCheckedHandle ());
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static byte sec_protocol_metadata_get_early_data_accepted (IntPtr handle);

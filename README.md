@@ -33,6 +33,9 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 
 | Version | Xamarin.iOS       | Xamarin.Mac       |
 |---------|-------------------|-------------------|
+| d16.11 (Xcode 13.1) | [15.2.0.1][30]   | [8.2.0.1][33]    |
+| d16.11 (Xcode 13.0) | [15.0.0.6][29]   | N/A              |
+| d16.10              | [14.20.0.24][31] | [7.14.0.27][32]  |
 | d16.9 (Xcode 12.5)  | [14.16.0.5][27]  | [7.10.0.5][28]   |
 | d16.9               | [14.14.2.5][25]  | [7.8.2.5][26]    |
 | d16.8 (Xcode 12.4)  | [14.10.0.4][23]  | [7.4.0.10][24]   |
@@ -91,3 +94,9 @@ Licensed under the [MIT](https://github.com/xamarin/xamarin-macios/blob/main/LIC
 [26]: https://download.visualstudio.microsoft.com/download/pr/03bd1f2d-5b2a-4b65-8a7b-91da84bd241c/ed062e57143e80070fee1366105a30a6/xamarin.mac-7.8.2.5.pkg
 [27]: https://download.visualstudio.microsoft.com/download/pr/e12e515d-da12-410b-acac-dd564a090b60/d0df6c6cfb219ebc3584bccc30e25bc5/xamarin.ios-14.16.0.5.pkg
 [28]: https://download.visualstudio.microsoft.com/download/pr/e12e515d-da12-410b-acac-dd564a090b60/7537c3cefef02568099b29c1aa7e88a9/xamarin.mac-7.10.0.5.pkg
+[29]: https://download.visualstudio.microsoft.com/download/pr/cddb0c4f-a69c-42a3-bb23-085e48d17af4/a8fb52485eb5e99aeb4edcaf35182231/xamarin.ios-15.0.0.6.pkg
+[30]: https://download.visualstudio.microsoft.com/download/pr/b51d2f25-e4e9-4032-9cfa-152f6e4b01c6/3a74b819968b58792f05efaf11f82c3b/xamarin.ios-15.2.0.1.pkg
+[31]: https://download.visualstudio.microsoft.com/download/pr/4725e1ed-6254-4880-a410-c120d95a814c/70aa4394b2bf0636c8bd2bb9db73d759/xamarin.ios-14.20.0.24.pkg
+[32]: https://download.visualstudio.microsoft.com/download/pr/cddb0c4f-a69c-42a3-bb23-085e48d17af4/ca7547ae1b83548823e23a06d9960f47/xamarin.mac-7.14.0.27.pkg
+[33]: https://download.visualstudio.microsoft.com/download/pr/b51d2f25-e4e9-4032-9cfa-152f6e4b01c6/f5d46401aa91c68fe6b9d2f520116331/xamarin.mac-8.2.0.1.pkg
+

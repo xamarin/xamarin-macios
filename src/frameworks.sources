@@ -394,6 +394,7 @@ COREANIMATION_API_SOURCES = \
 	CoreAnimation/CAEnums.cs \
 
 COREANIMATION_CORE_SOURCES = \
+	CoreAnimation/CAFrameRateRange.cs \
 	CoreAnimation/CATransform3D.cs \
 
 COREANIMATION_SOURCES = \
@@ -1259,9 +1260,11 @@ NETWORK_SOURCES = \
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
 	Network/NWMulticastGroup.cs		\
+	Network/NWMultiplexGroup.cs		\
 	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
+	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
@@ -1270,12 +1273,17 @@ NETWORK_SOURCES = \
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
+	Network/NWQuicMetadata.cs			\
+	Network/NWResolutionReport.cs \
+	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \
 	Network/NWTlsMetadata.cs \
 	Network/NWTxtRecord.cs	\
+	Network/NWProtocolQuicOptions.cs	\
 	Network/NWProtocolTcpOptions.cs	\
 	Network/NWProtocolTlsOptions.cs	\
 	Network/NWProtocolUdpOptions.cs	\
+	Network/NWResolutionReport.cs \
 	Network/NWUdpMetadata.cs \
 	Network/NWWebSocketMetadata.cs	\
 	Network/NWWebSocketOptions.cs	\
@@ -1835,9 +1843,11 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/Constants.cs \
+	ObjCRuntime/DisposableObject.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \
+	ObjCRuntime/NativeHandle.cs \
 	ObjCRuntime/ObsoleteConstants.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/PlatformAvailability2.cs \
@@ -1846,6 +1856,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Selector.cs \
+	ObjCRuntime/SystemVersion.cs \
 	ObjCRuntime/ThrowHelper.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
@@ -2300,6 +2311,19 @@ MACCATALYST_FRAMEWORKS = \
 	VideoToolbox \
 	Vision \
 	WKWebKit \
+
+# List frameworks that have been removed in .NET
+
+DOTNET_REMOVED_IOS_FRAMEWORKS = \
+	iAd \
+	WatchKit \
+
+DOTNET_REMOVED_MACOS_FRAMEWORKS = \
+	QTKit \
+
+DOTNET_REMOVED_TVOS_FRAMEWORKS = \
+
+DOTNET_REMOVED_MACCATALYST_FRAMEWORKS = \
 
 #
 # Compute the SOURCES variables.

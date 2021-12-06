@@ -15,6 +15,7 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace Introspection {
 
@@ -74,7 +75,7 @@ namespace Introspection {
 			// 1. is the current SDK target (or a newer one)
 			var sdk = new Version (Constants.SdkVersion);
 #if __WATCHOS__
-			if (!TestRuntime.CheckSystemVersion (PlatformName.WatchOS, sdk.Major, sdk.Minor))
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.WatchOS, sdk.Major, sdk.Minor))
 				return true;
 #elif __IOS__ || __TVOS__
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))

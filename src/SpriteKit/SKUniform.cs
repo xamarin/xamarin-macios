@@ -33,9 +33,9 @@ namespace SpriteKit {
 		{
 			if (!versionCheck.HasValue) {
 #if MONOMAC
-				versionCheck = PlatformHelper.CheckSystemVersion (10, 12);
+				versionCheck = SystemVersion.CheckmacOS (10, 12);
 #elif TVOS || IOS
-				versionCheck = UIKit.UIDevice.CurrentDevice.CheckSystemVersion (10, 0);
+				versionCheck = SystemVersion.CheckiOS (10, 0);
 #else
 				#error Unknown platform
 #endif
