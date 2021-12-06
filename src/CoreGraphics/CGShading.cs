@@ -35,21 +35,25 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGShading.h
 	public class CGShading : NativeObject
 	{
 #if !COREBUILD
-#if !XAMCORE_4_0
-		public CGShading (IntPtr handle)
+#if !NET
+		public CGShading (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGShading (IntPtr handle, bool owns)
+		internal CGShading (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

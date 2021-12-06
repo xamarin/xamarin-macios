@@ -21,6 +21,10 @@ using OS_nw_protocol_metadata=System.IntPtr;
 using OS_nw_ws_response=System.IntPtr;
 using dispatch_queue_t =System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -32,7 +36,7 @@ namespace Network {
 #endif
 	public class NWWebSocketMetadata : NWProtocolMetadata {
 
-		internal NWWebSocketMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWWebSocketMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ws_create_metadata (NWWebSocketOpCode opcode);

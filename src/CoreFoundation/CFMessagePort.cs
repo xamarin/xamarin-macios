@@ -18,6 +18,10 @@ using ObjCRuntime;
 
 using dispatch_queue_t = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// untyped enum from CFMessagePort.h
@@ -68,7 +72,7 @@ namespace CoreFoundation {
 
 		static CFMessagePortInvalidationCallBackProxy messageInvalidationCallback = new CFMessagePortInvalidationCallBackProxy (MessagePortInvalidationCallback);
 
-		IntPtr contextHandle = IntPtr.Zero;
+		IntPtr contextHandle;
 
 		public bool IsRemote {
 			get {
@@ -132,7 +136,7 @@ namespace CoreFoundation {
 		}
 
 		[Preserve (Conditional = true)]
-		internal CFMessagePort (IntPtr handle, bool owns)
+		internal CFMessagePort (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -151,7 +155,7 @@ namespace CoreFoundation {
 
 				lock (messagePortContexts) {
 					if (messagePortContexts.ContainsKey (contextHandle))
-						invalidationHandles.Remove (contextHandle);
+						messagePortContexts.Remove (contextHandle);
 				}
 
 				contextHandle = IntPtr.Zero;

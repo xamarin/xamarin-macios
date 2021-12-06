@@ -34,6 +34,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Text Tab Constants
@@ -80,7 +84,7 @@ namespace CoreText {
 #endregion
 
 	public class CTTextTab : NativeObject {
-		internal CTTextTab (IntPtr handle, bool owns)
+		internal CTTextTab (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}

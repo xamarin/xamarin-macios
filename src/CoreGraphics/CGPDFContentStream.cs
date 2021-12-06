@@ -14,6 +14,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGPDFContentStream.h
@@ -33,14 +37,14 @@ namespace CoreGraphics {
 		extern static void CGPDFContentStreamRelease (/* CGPDFContentStreamRef */ IntPtr cs);
 
 #if !NET
-		public CGPDFContentStream (IntPtr handle)
+		public CGPDFContentStream (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGPDFContentStream (IntPtr handle, bool owns)
+		internal CGPDFContentStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

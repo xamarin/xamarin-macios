@@ -7,6 +7,10 @@ using CoreFoundation;
 using OS_nw_group_descriptor=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
@@ -21,7 +25,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_group_descriptor nw_group_descriptor_create_multiplex (OS_nw_endpoint remoteEndpoint);
 		
-		internal NWMultiplexGroup (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWMultiplexGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWMultiplexGroup (NWEndpoint endpoint) 
 			: base (nw_group_descriptor_create_multiplex (endpoint.GetCheckedHandle ()), true)  { }

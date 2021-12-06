@@ -28,6 +28,10 @@ using ObjCRuntime;
 using Security;
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreWlan {
 
 	[NoMacCatalyst]
@@ -46,6 +50,7 @@ namespace CoreWlan {
 		bool IsEqualToChannel (CWChannel channel);
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 10)]
 	[BaseType (typeof (NSObject))]
@@ -84,10 +89,12 @@ namespace CoreWlan {
 		[Export ("allUser8021XProfiles")]
 		CW8021XProfile[] AllUser8021XProfiles { get; }
 	}
+#endif
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CWConfiguration : NSSecureCoding, NSMutableCopying {
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("rememberedNetworks")]
 		NSSet RememberedNetworks { get; set; }
@@ -115,6 +122,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("requireAdminForIBSSCreation")]
 		bool RequireAdminForIBSSCreation { get; set; }
+#endif
 
 		[Export ("networkProfiles", ArgumentSemantic.Copy)]
 		[Internal]
@@ -133,7 +141,7 @@ namespace CoreWlan {
 		bool RememberJoinedNetworks { get; }
  
 		[Export ("initWithConfiguration:")]
-		IntPtr Constructor (CWConfiguration configuration);
+		NativeHandle Constructor (CWConfiguration configuration);
 
 		[Export ("isEqualToConfiguration:")]
 		bool IsEqualToConfiguration (CWConfiguration configuration);
@@ -171,6 +179,7 @@ namespace CoreWlan {
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CWInterface {
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("supportsWoW")]
 		bool SupportsWow { get; }
@@ -325,6 +334,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("commitConfiguration:error:")]
 		bool CommitConfiguration (CWConfiguration config, out NSError error);
+#endif // !NET
 
 		[Export ("powerOn", ArgumentSemantic.Assign)]
 		bool PowerOn { get; }
@@ -406,7 +416,7 @@ namespace CoreWlan {
 		 
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'CWWiFiClient.FromName' instead.")]
 		[Export ("initWithInterfaceName:")]
-		IntPtr Constructor ([NullAllowed]string name);
+		NativeHandle Constructor ([NullAllowed]string name);
 		 
 		[Export ("setPower:error:")]
 		bool SetPower (bool power, out NSError error);
@@ -459,6 +469,7 @@ namespace CoreWlan {
 		NSSet _ScanForNetworksWithName ([NullAllowed] string networkName, bool includeHidden, [NullAllowed] out NSError error);
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 10)]
@@ -483,10 +494,12 @@ namespace CoreWlan {
 		[Export ("isEqualToProfile:")]
 		bool IsEqualToProfile (CWWirelessProfile profile);
 	}
+#endif // !NET
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CWNetwork : NSSecureCoding, NSCopying {
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[NullAllowed]
 		[Export ("bssidData")]
@@ -523,6 +536,7 @@ namespace CoreWlan {
 		[Deprecated (PlatformName.MacOSX, 10, 7), Obsoleted (PlatformName.MacOSX, 10, 9)]
 		[Export ("wirelessProfile")]
 		CWWirelessProfile WirelessProfile { get; }
+#endif
 
 		[NullAllowed]
 		[Export ("ssid")]
@@ -590,7 +604,7 @@ namespace CoreWlan {
 		NSObject NetworkProfile ();
 
 		[Export ("initWithNetworkProfile:")]
-		IntPtr Constructor (CWNetworkProfile networkProfile);
+		NativeHandle Constructor (CWNetworkProfile networkProfile);
 
 		[Static]
 		[Export ("networkProfileWithNetworkProfile:")]

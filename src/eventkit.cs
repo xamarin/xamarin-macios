@@ -24,6 +24,10 @@ using AppKit;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
@@ -423,9 +427,9 @@ namespace EventKit {
 
 		[Export ("initWithDayOfTheWeek:weekNumber:")]
 #if XAMCORE_4_0
-		IntPtr Constructor (EKWeekday dayOfTheWeek, nint weekNumber);
+		NativeHandle Constructor (EKWeekday dayOfTheWeek, nint weekNumber);
 #else
-		IntPtr Constructor (nint dayOfTheWeek, nint weekNumber);
+		NativeHandle Constructor (nint dayOfTheWeek, nint weekNumber);
 #endif
 	}
 
@@ -481,10 +485,10 @@ namespace EventKit {
 #endif
 
 		[Export ("initRecurrenceWithFrequency:interval:end:")]
-		IntPtr Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceEnd end);
+		NativeHandle Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceEnd end);
 
 		[Export ("initRecurrenceWithFrequency:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:")]
-		IntPtr Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceDayOfWeek [] days, [NullAllowed] NSNumber [] monthDays, [NullAllowed] NSNumber [] months,
+		NativeHandle Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceDayOfWeek [] days, [NullAllowed] NSNumber [] monthDays, [NullAllowed] NSNumber [] months,
 				    [NullAllowed] NSNumber [] weeksOfTheYear, [NullAllowed] NSNumber [] daysOfTheYear, [NullAllowed] NSNumber [] setPositions, [NullAllowed] EKRecurrenceEnd end);
 
 	}
@@ -493,7 +497,7 @@ namespace EventKit {
 	interface EKEventStore {
 		[NoiOS, Mac (10,11), NoWatch, NoMacCatalyst]
 		[Export ("initWithSources:")]
-		IntPtr Constructor (EKSource[] sources);
+		NativeHandle Constructor (EKSource[] sources);
 
 		[Export ("eventStoreIdentifier")]
 		string EventStoreIdentifier { get;  }
@@ -611,7 +615,7 @@ namespace EventKit {
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
-		IntPtr Constructor (EKEntityMask accessToEntityTypes);
+		NativeHandle Constructor (EKEntityMask accessToEntityTypes);
 #endif
 		[Mac (10,11), Watch (5,0), iOS (12,0)]
 		[Export ("delegateSources")]
@@ -665,7 +669,7 @@ namespace EventKit {
 	{
 		[Export ("initWithTitle:URLDescriptors:conferenceDetails:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, EKVirtualConferenceUrlDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
+		NativeHandle Constructor ([NullAllowed] string title, EKVirtualConferenceUrlDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }
@@ -700,7 +704,7 @@ namespace EventKit {
 	{
 		[Export ("initWithTitle:identifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, string identifier);
+		NativeHandle Constructor (string title, string identifier);
 
 		[Export ("title")]
 		string Title { get; }
@@ -716,7 +720,7 @@ namespace EventKit {
 	{
 		[Export ("initWithTitle:URL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, NSUrl url);
+		NativeHandle Constructor ([NullAllowed] string title, NSUrl url);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }

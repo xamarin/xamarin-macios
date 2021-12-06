@@ -13,6 +13,10 @@ using ObjCRuntime;
 using System.ComponentModel;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #if !XAMCORE_4_0
 namespace CarPlay {
 	[Register (SkipRegistration = true)]
@@ -32,11 +36,11 @@ namespace CarPlay {
 
 		protected CPEntity (NSObjectFlag t) => throw new NotSupportedException ();
 
-		protected internal CPEntity (IntPtr handle) => throw new NotSupportedException ();
+		protected internal CPEntity (NativeHandle handle) : base (handle) => throw new NotSupportedException ();
 
 		public virtual void EncodeTo (NSCoder encoder) => throw new NotSupportedException ();
 
-		public override IntPtr ClassHandle => throw new NotSupportedException ();
+		public override NativeHandle ClassHandle => throw new NotSupportedException ();
 	}
 }
 #endif

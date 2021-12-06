@@ -27,6 +27,8 @@
 
 #if !__MACCATALYST__
 
+#nullable enable
+
 using System;
 using Foundation;
 using CoreGraphics;
@@ -35,13 +37,13 @@ namespace AppKit {
 	public partial class NSGraphicsContext {
 		public static NSGraphicsContext FromGraphicsPort (CGContext context, bool initialFlippedState)
 		{
-			if (context == null)
-				throw new ArgumentNullException ("context");
+			if (context is null)
+				throw new ArgumentNullException (nameof (context));
 			return FromGraphicsPort (context.Handle, initialFlippedState);
 		}
 
 		public virtual CGContext GraphicsPort {
-			get { return new CGContext (GraphicsPortHandle); }
+			get { return new CGContext (GraphicsPortHandle, false); }
 		}
 	}
 }

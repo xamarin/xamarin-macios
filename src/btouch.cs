@@ -73,7 +73,7 @@ public class BindingTouch : IDisposable {
 		get { return "bgen"; }
 	}
 
-	bool IsDotNet {
+	internal bool IsDotNet {
 		get { return TargetFramework.IsDotNet; }
 	}
 
@@ -438,6 +438,9 @@ public class BindingTouch : IDisposable {
 			cargs.Add ("-r:" + baselibdll);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (paths);
 			if (nostdlib) {
 				cargs.Add ("-nostdlib");
@@ -559,6 +562,9 @@ public class BindingTouch : IDisposable {
 			cargs.Add ("-out:" + outfile);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (g.GeneratedFiles);
 			cargs.AddRange (core_sources);
 			cargs.AddRange (extra_sources);

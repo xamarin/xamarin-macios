@@ -5,11 +5,9 @@
     <IsBindingProject>true</IsBindingProject>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
     <DefineConstants>$(DefineConstants);NET;FRAMEWORK_TEST</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>bindingstest</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AssemblyName>bindings-framework-test</AssemblyName>
 
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>

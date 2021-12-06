@@ -33,10 +33,14 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	class CFData : NativeObject {
-		internal CFData (IntPtr handle, bool owns)
+		internal CFData (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -36,6 +36,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// untyped enum -> CGPath.h
@@ -93,15 +97,15 @@ namespace CoreGraphics {
 		{
 		}
 
-#if !XAMCORE_4_0
-		public CGPath (IntPtr handle)
+#if !NET
+		public CGPath (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGPath (IntPtr handle, bool owns)
+		internal CGPath (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -13,6 +13,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace IOSurface {
 
 	[Static]
@@ -124,10 +128,10 @@ namespace IOSurface {
 	interface IOSurface : NSSecureCoding
 	{
 		[Internal, Export ("initWithProperties:")]
-		IntPtr Constructor (NSDictionary properties);
+		NativeHandle Constructor (NSDictionary properties);
 
 		[Wrap ("this (properties.GetDictionary ()!)")]
-		IntPtr Constructor (IOSurfaceOptions properties);
+		NativeHandle Constructor (IOSurfaceOptions properties);
 	
 		[Internal, Export ("lockWithOptions:seed:")]
 		int _Lock (IOSurfaceLockOptions options, IntPtr seedPtr);

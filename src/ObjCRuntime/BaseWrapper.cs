@@ -9,11 +9,19 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 
 	public abstract class BaseWrapper : NativeObject {
 
-		public BaseWrapper (IntPtr handle, bool owns)
+#if NET
+		protected BaseWrapper (NativeHandle handle, bool owns)
+#else
+		public BaseWrapper (NativeHandle handle, bool owns)
+#endif
 			: base (handle, owns)
 		{
 		}

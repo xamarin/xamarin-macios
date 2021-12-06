@@ -227,9 +227,14 @@ namespace ObjCRuntime
 				return false;
 
 #if NET
-			if (type.Namespace == "ObjCRuntime" && type.Name == "nfloat") {
-				type_size = is_64_bits ? 8 : 4;
-				return true;
+			if (type.Namespace == "ObjCRuntime") {
+				switch (type.Name) {
+				case "nfloat":
+				case "NativeHandle":
+					type_size = is_64_bits ? 8 : 4;
+					return true;
+				}
+				return false;
 			}
 #endif
 

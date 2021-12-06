@@ -546,12 +546,14 @@ namespace AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
-#if !XAMCORE_4_0
+	// This enum is defined as an untyped enum in MacOSX.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
+	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
 	[NoMacCatalyst]
+#if NET
+	public enum NSKey {
+#else
 	[Native]
 	public enum NSKey : ulong {
-#else
-	public enum NSKey : int
 #endif
 		A              = 0x00,
 		S              = 0x01,
@@ -867,12 +869,8 @@ namespace AppKit {
 #region NSWindow
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : ulong {
-#else
-	public enum NSWindowStyle : int {
-#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
@@ -924,12 +922,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : ulong {
-#else
-	public enum NSWindowNumberListOptions : int {
-#endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
 	}
@@ -1336,12 +1330,8 @@ namespace AppKit {
 #endif // !NET && MONOMAC
 
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : long {
-#else
-	public enum NSTextMovement : int {
-#endif
 		Other = 0,
 		Return = 0x10,
 		Tab = 0x11,
@@ -1517,19 +1507,17 @@ namespace AppKit {
 		Auto, Fit, Clip
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : ulong {
-#else
-	public enum NSGlyphStorageOptions : int
-#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
@@ -1720,19 +1708,17 @@ namespace AppKit {
 		Default, Regular, Small
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : long {
-#else
-	public enum NSAlertType : int {
-#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
 		DefaultReturn
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]

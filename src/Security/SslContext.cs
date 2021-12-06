@@ -21,6 +21,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 #if !NET
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
@@ -473,7 +477,7 @@ namespace Security {
 		{
 			int i = identity is null ? 0 : 1;
 			int n = certificates is null ? 0 : certificates.Count ();
-			var ptrs = new IntPtr [n + i];
+			var ptrs = new NativeHandle [n + i];
 			if (i == 1)
 				ptrs [0] = identity!.Handle;
 			if (certificates is not null) {

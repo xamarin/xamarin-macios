@@ -43,6 +43,10 @@ using Foundation;
 using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioToolbox {
 
 	public enum AudioFileType {  // UInt32 AudioFileTypeID
@@ -561,7 +565,7 @@ namespace AudioToolbox {
 		}
 #endif
 
-		internal AudioFile (IntPtr handle, bool owns)
+		internal AudioFile (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -1703,7 +1703,6 @@ namespace Registrar {
 		bool GetDotNetAvailabilityAttribute (ICustomAttribute ca, ApplePlatform currentPlatform, out Version sdkVersion, out string message)
 		{
 			var caType = ca.AttributeType;
-			var platformName = ApplePlatform.None;
 
 			sdkVersion = null;
 			message = null;
@@ -1717,51 +1716,10 @@ namespace Registrar {
 				throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 			}
 
-			if (string.IsNullOrEmpty (supportedPlatformAndVersion))
+			if (!OSPlatformAttributeExtensions.TryParse (supportedPlatformAndVersion, out ApplePlatform? platformName, out sdkVersion))
 				return false;
-
-			var versionIndex = -1;
-			for (var i = 0; i < supportedPlatformAndVersion.Length; i++) {
-				if (supportedPlatformAndVersion [i] >= '0' && supportedPlatformAndVersion [i] <= '9') {
-					versionIndex = i;
-					break;
-				}
-			}
-			string supportedPlatform;
-			string supportedVersion = null;
-
-			if (versionIndex == -1) {
-				supportedPlatform = supportedPlatformAndVersion;
-			} else {
-				supportedPlatform = supportedPlatformAndVersion.Substring (0, versionIndex);
-				supportedVersion = supportedPlatformAndVersion.Substring (versionIndex);
-			}
-
-			supportedPlatform = supportedPlatform.ToLowerInvariant ();
-			switch (supportedPlatform) {
-			case "ios":
-				platformName = ApplePlatform.iOS;
-				break;
-			case "tvos":
-				platformName = ApplePlatform.TVOS;
-				break;
-			case "macos":
-				platformName = ApplePlatform.MacOSX;
-				break;
-			case "maccatalyst":
-				platformName = ApplePlatform.MacCatalyst;
-				break;
-			case "watchos":
-				platformName = ApplePlatform.WatchOS;
-				break;
-			default:
-				return false;
-			}
 
 			if (platformName != currentPlatform)
-				return false;
-
-			if (!Version.TryParse (supportedVersion, out sdkVersion))
 				return false;
 
 			return true;
@@ -3236,8 +3194,13 @@ namespace Registrar {
 					continue;
 				if (method.Parameters.Count != 2)
 					continue;
-				if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
-					continue;
+				if (Driver.IsDotNet) {
+					if (!method.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
+						continue;
+				} else {
+					if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+						continue;
+				}
 				if (method.Parameters [1].ParameterType.Is ("System", "Boolean"))
 					return true;
 			}

@@ -14,6 +14,10 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #if !MONOMAC
 namespace Messages {
 
@@ -76,7 +80,7 @@ namespace Messages {
 	{
 		// inlined ctor
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[NullAllowed, Export ("activeConversation", ArgumentSemantic.Strong)]
 		MSConversation ActiveConversation { get; }
@@ -185,11 +189,11 @@ namespace Messages {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithSession:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MSSession session);
+		NativeHandle Constructor (MSSession session);
 
 		[NullAllowed, Export ("session")]
 		MSSession Session { get; }
@@ -266,7 +270,7 @@ namespace Messages {
 	{
 		[Export ("initWithContentsOfFileURL:localizedDescription:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl fileUrl, string localizedDescription, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSUrl fileUrl, string localizedDescription, [NullAllowed] out NSError error);
 
 		[Export ("imageFileURL", ArgumentSemantic.Strong)]
 		NSUrl ImageFileUrl { get; }
@@ -281,10 +285,10 @@ namespace Messages {
 	{
 		// inlined ctor
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("initWithFrame:sticker:")]
-		IntPtr Constructor (CGRect frame, [NullAllowed] MSSticker sticker);
+		NativeHandle Constructor (CGRect frame, [NullAllowed] MSSticker sticker);
 
 		[NullAllowed, Export ("sticker", ArgumentSemantic.Strong)]
 		MSSticker Sticker { get; set; }
@@ -324,11 +328,11 @@ namespace Messages {
 	{
 		[Export ("initWithFrame:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("initWithFrame:stickerSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect frame, MSStickerSize stickerSize);
+		NativeHandle Constructor (CGRect frame, MSStickerSize stickerSize);
 
 		[Export ("stickerSize", ArgumentSemantic.Assign)]
 		MSStickerSize StickerSize { get; }
@@ -355,7 +359,7 @@ namespace Messages {
 	{
 		[Export ("initWithStickerSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MSStickerSize stickerSize);
+		NativeHandle Constructor (MSStickerSize stickerSize);
 
 		[Export ("stickerBrowserView", ArgumentSemantic.Strong)]
 		MSStickerBrowserView StickerBrowserView { get; }
@@ -371,7 +375,7 @@ namespace Messages {
 	{
 		[Export ("initWithAlternateLayout:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MSMessageTemplateLayout alternateLayout);
+		NativeHandle Constructor (MSMessageTemplateLayout alternateLayout);
 
 		[Export ("alternateLayout")]
 		MSMessageTemplateLayout AlternateLayout { get; }

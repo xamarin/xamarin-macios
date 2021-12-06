@@ -19,6 +19,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
 #if !NET
@@ -29,8 +33,12 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecIdentity2 : NativeObject {
-		internal SecIdentity2 (IntPtr handle) : base (handle, false) {}
-		public SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
+#if NET
+		internal SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		internal SecIdentity2 (NativeHandle handle) : base (handle, false) {}
+		public SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 #if !COREBUILD
 		[DllImport (Constants.SecurityLibrary)]

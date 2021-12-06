@@ -8,6 +8,10 @@ using Security;
 using OS_nw_protocol_metadata = System.IntPtr;
 using SecProtocolMetadataRef = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
@@ -19,7 +23,11 @@ namespace Network {
 #endif
 	public class NWQuicMetadata : NWProtocolMetadata {
 
-		public NWQuicMetadata (IntPtr handle, bool owns) : base (handle, owns) { }
+#if NET
+		internal NWQuicMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
+#else
+		public NWQuicMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_quic_get_remote_idle_timeout (OS_nw_protocol_metadata metadata);

@@ -18,6 +18,10 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
@@ -38,7 +42,7 @@ namespace CoreVideo {
 			/* CFDictionaryRef __nullable */ IntPtr textureAttributes, 
 			/* CVMetalTextureCacheRef __nullable * __nonnull */ out IntPtr cacheOut);
 
-		internal CVMetalTextureCache (IntPtr handle, bool owns)
+		internal CVMetalTextureCache (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

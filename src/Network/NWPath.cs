@@ -17,6 +17,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -27,7 +31,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWPath : NativeObject {
-		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
+#if NET
+		internal NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static NWPathStatus nw_path_get_status (IntPtr handle);

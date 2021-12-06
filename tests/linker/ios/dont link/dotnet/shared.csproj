@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>NET;$(DefineConstants)</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>dontlink</RootNamespace>
     <AssemblyName>dont link</AssemblyName>
     <MtouchLink>None</MtouchLink>

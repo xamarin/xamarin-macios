@@ -34,6 +34,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	internal static class Adapter {
@@ -74,10 +78,10 @@ namespace CoreText {
 			return ((NSNumber) value).NUIntValue;
 		}
 
-		public static T[] GetNativeArray<T> (NSDictionary dictionary, NSObject key, Converter<IntPtr, T> converter)
+		public static T[] GetNativeArray<T> (NSDictionary dictionary, NSObject key, Converter<NativeHandle, T> converter)
 		{
 			var cfArrayRef = CFDictionary.GetValue (dictionary.Handle, key.Handle);
-			if (cfArrayRef == IntPtr.Zero || CFArray.GetCount (cfArrayRef) == 0)
+			if (cfArrayRef == NativeHandle.Zero || CFArray.GetCount (cfArrayRef) == 0)
 				return new T [0];
 			return NSArray.ArrayFromHandle (cfArrayRef, converter);
 		}
@@ -192,7 +196,7 @@ namespace CoreText {
 		public static void SetNativeValue<T> (NSDictionary dictionary, NSObject key, IEnumerable<T> value)
 			where T : INativeObject
 		{
-			List<IntPtr> v;
+			List<NativeHandle> v;
 			if (value == null || (v = GetHandles (value)).Count == 0) 
 				SetNativeValue (dictionary, key, (INativeObject) null);
 			else 
@@ -200,10 +204,10 @@ namespace CoreText {
 					SetNativeValue (dictionary, key, array);
 		}
 
-		static List<IntPtr> GetHandles<T> (IEnumerable<T> value)
+		static List<NativeHandle> GetHandles<T> (IEnumerable<T> value)
 			where T : INativeObject
 		{
-			var v = new List<IntPtr> ();
+			var v = new List<NativeHandle> ();
 			foreach (var e in value)
 				v.Add (e.Handle);
 			return v;

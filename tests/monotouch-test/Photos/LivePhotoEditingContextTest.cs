@@ -9,6 +9,10 @@ using Photos;
 using CoreGraphics;
 using NUnit.Framework;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MonoTouchFixtures.Photos {
 
 	[TestFixture]
@@ -29,7 +33,7 @@ namespace MonoTouchFixtures.Photos {
 			return null;
 		};
 
-		delegate IntPtr DPHLivePhotoFrameProcessingBlock2 (IntPtr block, IntPtr frame, ref IntPtr error);
+		delegate NativeHandle DPHLivePhotoFrameProcessingBlock2 (IntPtr block, NativeHandle frame, ref NativeHandle error);
 
 #if !MONOMAC
 		// on macOS `initWithLivePhotoEditingInput:` returns `nil` and we throw
@@ -66,13 +70,13 @@ namespace MonoTouchFixtures.Photos {
 				var b = (IntPtr) block;
 
 				// simulate a call that does not produce an error
-				var args = new object [] { b, IntPtr.Zero, IntPtr.Zero };
+				var args = new object [] { b, NativeHandle.Zero, NativeHandle.Zero };
 				error_faker = null;
-				Assert.That (m.Invoke (null, args), Is.EqualTo (IntPtr.Zero), "1");
+				Assert.That (m.Invoke (null, args), Is.EqualTo (NativeHandle.Zero), "1");
 
 				// simulate a call that does produce an error
 				error_faker = new NSError ((NSString) "domain", 42);
-				Assert.That (m.Invoke (null, args), Is.EqualTo (IntPtr.Zero), "2");
+				Assert.That (m.Invoke (null, args), Is.EqualTo (NativeHandle.Zero), "2");
 				Assert.That (args [2], Is.EqualTo (error_faker.Handle), "error");
 			}
 			finally {

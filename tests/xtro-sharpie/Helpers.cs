@@ -21,7 +21,9 @@ namespace Extrospection {
 	public static partial class Helpers {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
-		static Dictionary<string,string> map = new Dictionary<string, string> () {
+		static Dictionary<string,string> map { get => IsDotNet ? map_dotnet : map_legacy; }
+
+		static Dictionary<string,string> map_legacy = new Dictionary<string, string> () {
 			{ "AudioChannelBitmap", "AudioChannelBit" },
 			{ "CIRAWDecoderVersion", "CIRawDecoderVersion" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
@@ -71,6 +73,51 @@ namespace Extrospection {
 			// not enums
 		};
 
+		static Dictionary<string,string> map_dotnet = new Dictionary<string, string> () {
+			{ "AudioChannelBitmap", "AudioChannelBit" },
+			{ "CIRAWDecoderVersion", "CIRawDecoderVersion" },
+			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
+			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
+			{ "GKErrorCode", "GKError" },
+			{ "HMCharacteristicValueAirParticulateSize", "HMCharacteristicValueAirParticulate" },
+			{ "HMCharacteristicValueLockMechanismLastKnownAction", "HMCharacteristicValueLockMechanism" },
+			{ "HMErrorCode", "HMError" },
+			{ "LAError", "LAStatus" },
+			{ "MCErrorCode", "MCError" },
+			{ "MPMovieMediaTypeMask", "MPMovieMediaType" },
+			{ "NEVPNIKEv2CertificateType", "NEVpnIke2CertificateType" },
+			{ "NEVPNIKEv2DeadPeerDetectionRate", "NEVpnIke2DeadPeerDetectionRate" },
+			{ "NEVPNIKEv2DiffieHellmanGroup", "NEVpnIke2DiffieHellman" },
+			{ "NEVPNIKEv2EncryptionAlgorithm", "NEVpnIke2EncryptionAlgorithm" },
+			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
+			{ "NEDNSProtocol", "NEDnsProtocol"},
+			{ "NEDNSSettingsManagerError", "NEDnsSettingsManagerError"},
+			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
+			{ "NSFileProviderErrorCode", "NSFileProviderError" },
+			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
+			{ "PHLivePhotoEditingErrorCode", "PHLivePhotoEditingError" },
+			{ "RPRecordingErrorCode", "RPRecordingError" },
+			{ "SecTrustResultType", "SecTrustResult" },
+			{ "SKErrorCode", "SKError" },
+			{ "SSReadingListErrorCode", "SSReadingListError" },
+			{ "tls_ciphersuite_group_t", "TlsCipherSuiteGroup" },
+			{ "tls_ciphersuite_t", "TlsCipherSuite" },
+			{ "tls_protocol_version_t", "TlsProtocolVersion" },
+			{ "UIDataDetectorTypes", "UIDataDetectorType" },
+			{ "UIControlEvents", "UIControlEvent" },
+			{ "UIKeyboardHIDUsage", "UIKeyboardHidUsage" },
+			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
+			{ "UITableViewCellStateMask", "UITableViewCellState" },
+			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			{ "MIDIProtocolID", "MidiProtocolId" },
+			{ "MIDICVStatus", "MidiCVStatus" },
+			{ "MIDIMessageType", "MidiMessageType" },
+			{ "MIDISysExStatus", "MidiSysExStatus" },
+			{ "MIDISystemStatus", "MidiSystemStatus" },
+			// not enums
+		};
+
+
 		public static string GetManagedName (string nativeName)
 		{
 			map.TryGetValue (nativeName, out var result);
@@ -84,6 +131,7 @@ namespace Extrospection {
 		}
 
 		public static Platforms Platform { get; set; }
+		public static bool IsDotNet { get; set; }
 
 		public static int GetPlatformManagedValue (Platforms platform)
 		{
@@ -152,6 +200,10 @@ namespace Extrospection {
 					if (Platform == Platforms.macOS)
 						return false;
 					break;
+				case "UnsupportedOSPlatformAttribute":
+					if (AttributeHelpers.IsOSPlatformAttribute (ca, Platform))
+						return false;
+					break;
 				}
 			}
 			return true;
@@ -207,6 +259,62 @@ namespace Extrospection {
 					result = true;
 			}
 			return result;
+		}
+
+		public static bool IsDeprecated (this Decl decl)
+		{
+			// there's no doubt we need to ask for the current platform
+			var result = decl.IsDeprecated (Platform);
+
+			// some categories are not decorated (as not available) but they extend types that are
+			if (!result.HasValue) {
+				// first check if we're checking the category itself
+				var category = decl as ObjCCategoryDecl;
+				if (category != null)
+					result = category.ClassInterface.IsDeprecated (Platform);
+
+				if (!result.HasValue) {
+					// then check if we're a method inside a category
+					category = (decl.DeclContext as ObjCCategoryDecl);
+					if (category != null)
+						result = category.ClassInterface.IsDeprecated (Platform);
+				}
+			}
+
+			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
+			// decorated otherwise so we must check again if we do not get a definitve answer
+			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
+				result = decl.IsDeprecated (Platforms.iOS);
+			return result == true;
+		}
+
+		static bool? IsDeprecated (this Decl decl, Platforms platform_value)
+		{
+			var platform = platform_value.ToString ().ToLowerInvariant ();
+			// First check if there are any deprecations
+			foreach (var attr in decl.Attrs) {
+				var avail = attr as AvailabilityAttr;
+				if (avail is null)
+					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
+				if (availName != platform)
+					continue;
+				if (!avail.Deprecated.IsEmpty)
+					return true;
+			}
+			// then check for introduced - there may be both, so we must check *all* attributes for deprecation before checking for introduced
+			foreach (var attr in decl.Attrs) {
+				var avail = attr as AvailabilityAttr;
+				if (avail is null)
+					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
+				if (availName != platform)
+					continue;
+				if (!avail.Introduced.IsEmpty)
+					return false;
+			}
+
+			return null;
 		}
 
 		public static bool IsDesignatedInitializer (this MethodDefinition self)
@@ -492,6 +600,24 @@ namespace Extrospection {
 				return "UnsafeUnretained|Assign";
 
 			return argSem.ToString ();
+		}
+
+		public static string AsPlatformAttributeString (this Platforms platform)
+		{
+			switch (platform) {
+			case Platforms.iOS:
+				return "ios";
+			case Platforms.MacCatalyst:
+				return "maccatalyst";
+			case Platforms.macOS:
+				return "macos";
+			case Platforms.tvOS:
+				return "tvos";
+			case Platforms.watchOS:
+				return "watchos";
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
 		}
 	}
 }

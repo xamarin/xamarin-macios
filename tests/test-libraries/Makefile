@@ -176,10 +176,10 @@ endef
 # 4: platform name
 # 5: min version
 # 6: os
-$(eval $(call Template,iphonesimulator,IOSSIMULATOR,x86 x86_64,iPhoneSimulator,-mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)))
+$(eval $(call Template,iphonesimulator,IOSSIMULATOR,x86 x86_64 arm64,iPhoneSimulator,-mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)))
 $(eval $(call Template,iphoneos,IPHONEOS,armv7 armv7s arm64,iPhoneOS,-miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)))
 ifdef INCLUDE_TVOS
-$(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64,AppleTVSimulator,-mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)))
+$(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64 arm64,AppleTVSimulator,-mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)))
 $(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=9.0 -fembed-bitcode -isysroot $(DEVICETV_SDK)))
 endif
 ifdef INCLUDE_WATCH
@@ -187,7 +187,7 @@ $(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-
 $(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=2.0 -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
 endif
 ifdef INCLUDE_MAC
-$(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk))
+$(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACOS_SDK_VERSION).sdk))
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call Template,maccatalyst,MACCATALYST,x86_64 arm64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
@@ -228,15 +228,15 @@ endif
 define FatFrameworkTemplate
 .libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest: .libs/$(2)/XStaticObjectTest.framework/XStaticObjectTest .libs/$(3)/XStaticObjectTest.framework/XStaticObjectTest | .libs/$(1)
 	$(Q) mkdir -p $$(dir $$@)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh  $$@ $$^
 
 .libs/$(1)/XStaticArTest.framework/XStaticArTest: .libs/$(2)/XStaticArTest.framework/XStaticArTest .libs/$(3)/XStaticArTest.framework/XStaticArTest | .libs/$(1)
 	$(Q) mkdir -p $$(dir $$@)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 .libs/$(1)/XTest.framework$($(4)_BINARY_INFIX)/XTest: .libs/$(2)/XTest.framework$($(4)_BINARY_INFIX)/XTest .libs/$(3)/XTest.framework$($(4)_BINARY_INFIX)/XTest | .libs/$(1)
 	$(Q) mkdir -p $$(dir $$@)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh  $$@ $$^
 
 .libs/$(1)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist: .libs/$(2)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist .libs/$(3)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist
 	$(Q) mkdir -p $$(dir $$@)
@@ -248,13 +248,13 @@ endif
 	$(Q) $(CP) $$< $$@
 
 .libs/$(1)/libtest.a: .libs/$(2)/libtest.a .libs/$(3)/libtest.a | .libs/$(1)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 .libs/$(1)/libtest2.a: .libs/$(2)/libtest2.a .libs/$(3)/libtest2.a | .libs/$(1)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 .libs/$(1)/libtest.dylib: .libs/$(2)/libtest.dylib .libs/$(3)/libtest.dylib | .libs/$(1)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 $(3)_TARGETS += \
 	.libs/$(1)/XTest.framework$($(4)_BINARY_INFIX)/XTest \
@@ -336,12 +336,28 @@ XTEST_XCTARGETS += \
 
 all-local:: .libs/XTest.xcframework
 
+LIBTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/libtest.a)
+
+.libs/libtest.xcframework: $(LIBTEST_XCFRAMEWORKS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach lib,$(LIBTEST_XCFRAMEWORKS),-library $(lib)) -output $@
+
+all-local:: .libs/libtest.xcframework
+
+LIBTEST2_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/libtest2.a)
+
+.libs/libtest2.xcframework: $(LIBTEST2_XCFRAMEWORKS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach lib,$(LIBTEST2_XCFRAMEWORKS),-library $(lib)) -output $@
+
+all-local:: .libs/libtest2.xcframework
+
 # Xamarin.Mac
 
 MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
 MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions
-MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g
-MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
+MAC_CFLAGS = -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -Wall -DMONOMAC -g
+MAC_LDFLAGS = -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -framework AppKit
 
 .libs/macos/libtest.%.o: libtest.m $(EXTRA_DEPENDENCIES) | .libs/macos
 	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $<

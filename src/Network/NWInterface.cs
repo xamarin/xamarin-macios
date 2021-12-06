@@ -19,6 +19,10 @@ using CoreFoundation;
 
 using OS_nw_interface=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -29,7 +33,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWInterface : NativeObject {
-		public NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
+#if NET
+		internal NWInterface (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWInterface (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWInterfaceType nw_interface_get_type (OS_nw_interface iface);

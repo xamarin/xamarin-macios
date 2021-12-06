@@ -30,6 +30,10 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
 	public partial class NSArray {
@@ -217,7 +221,7 @@ namespace Foundation {
 			}
 		}
 
-		static public NSArray FromIntPtrs (IntPtr [] vals)
+		static public NSArray FromIntPtrs (NativeHandle [] vals)
 		{
 			if (vals == null)
 				throw new ArgumentNullException ("vals");
@@ -241,19 +245,23 @@ namespace Foundation {
 	#endif
 		}
 
-		internal static IntPtr GetAtIndex (IntPtr handle, nuint i)
+		internal static NativeHandle GetAtIndex (NativeHandle handle, nuint i)
 		{
+#if NET
+			return Messaging.NativeHandle_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
+#else
 	#if MONOMAC
 			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, selObjectAtIndex_Handle, (UIntPtr) i);
 	#else
 			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
 	#endif
+#endif
 		}
 			
 		[Obsolete ("Use of 'CFArray.StringArrayFromHandle' offers better performance.")]
-		static public string [] StringArrayFromHandle (IntPtr handle)
+		static public string [] StringArrayFromHandle (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -264,9 +272,9 @@ namespace Foundation {
 			return ret;
 		}
 
-		static public T [] ArrayFromHandle<T> (IntPtr handle) where T : class, INativeObject
+		static public T [] ArrayFromHandle<T> (NativeHandle handle) where T : class, INativeObject
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -278,9 +286,9 @@ namespace Foundation {
 			return ret;
 		}
 
-		static public T [] EnumsFromHandle<T> (IntPtr handle) where T : struct, IConvertible
+		static public T [] EnumsFromHandle<T> (NativeHandle handle) where T : struct, IConvertible
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 			if (!typeof (T).IsEnum)
 				throw new ArgumentException ("T must be an enum");
@@ -296,7 +304,7 @@ namespace Foundation {
 
 		static public T [] FromArray<T> (NSArray weakArray) where T : NSObject
 		{
-			if (weakArray == null || weakArray.Handle == IntPtr.Zero)
+			if (weakArray is null || weakArray.Handle == NativeHandle.Zero)
 				return null;
 			try {
 				nuint n = weakArray.Count;
@@ -312,7 +320,7 @@ namespace Foundation {
 
 		static public T [] FromArrayNative<T> (NSArray weakArray) where T : class, INativeObject
 		{
-			if (weakArray == null || weakArray.Handle == IntPtr.Zero)
+			if (weakArray is null || weakArray.Handle == NativeHandle.Zero)
 				return null;
 			try {
 				nuint n = weakArray.Count;
@@ -327,9 +335,9 @@ namespace Foundation {
 		}
 		
 		// Used when we need to provide our constructor
-		static public T [] ArrayFromHandleFunc<T> (IntPtr handle, Func<IntPtr,T> createObject) 
+		static public T [] ArrayFromHandleFunc<T> (NativeHandle handle, Func<NativeHandle,T> createObject) 
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -341,9 +349,9 @@ namespace Foundation {
 			return ret;
 		}
 		
-		static public T [] ArrayFromHandle<T> (IntPtr handle, Converter<IntPtr, T> creator) 
+		static public T [] ArrayFromHandle<T> (NativeHandle handle, Converter<NativeHandle, T> creator)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -355,10 +363,10 @@ namespace Foundation {
 			return ret;
 		}
 
-		static public T [] ArrayFromHandle<T> (IntPtr handle, Converter<IntPtr, T> creator, bool releaseHandle)
+		static public T [] ArrayFromHandle<T> (NativeHandle handle, Converter<NativeHandle, T> creator, bool releaseHandle)
 		{
 			var rv = ArrayFromHandle<T> (handle, creator);
-			if (releaseHandle && handle == IntPtr.Zero)
+			if (releaseHandle && handle == NativeHandle.Zero)
 				NSObject.DangerousRelease (handle);
 			return rv;
 		}
@@ -366,7 +374,7 @@ namespace Foundation {
 		// FIXME: before proving a real `this` indexer we need to clean the issues between
 		// NSObject and INativeObject coexistance across all the API (it can not return T)
 
-		static T UnsafeGetItem<T> (IntPtr handle, nuint index) where T : class, INativeObject
+		static T UnsafeGetItem<T> (NativeHandle handle, nuint index) where T : class, INativeObject
 		{
 			var val = GetAtIndex (handle, index);
 			// A native code could return NSArray with NSNull.Null elements

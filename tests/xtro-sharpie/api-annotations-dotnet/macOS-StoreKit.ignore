@@ -1,0 +1,2 @@
+# delegate do not mention macOS (as unavailable) but the non-delegate type is not (available)
+!missing-protocol! SKCloudServiceSetupViewControllerDelegate not bound

@@ -17,21 +17,18 @@ using AddressBook;
 using System;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBookUI {
 
-#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	[BaseType (typeof (UIViewController))]
 	interface ABNewPersonViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("displayedPerson"), Internal]
 		IntPtr _DisplayedPerson { get; set; }
@@ -61,23 +58,16 @@ namespace AddressBookUI {
 		void DidCompleteWithNewPerson (ABNewPersonViewController controller, [NullAllowed]ABPerson person);
 	}
 
-#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	[BaseType (typeof (UINavigationController))]
 	interface ABPeoplePickerNavigationController : UIAppearance {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithRootViewController:")]
 		[PostGet ("ViewControllers")] // that will PostGet TopViewController and VisibleViewController too
-		IntPtr Constructor (UIViewController rootViewController);
+		NativeHandle Constructor (UIViewController rootViewController);
 
 		[NullAllowed]
 		[Export ("displayedProperties", ArgumentSemantic.Copy), Internal]
@@ -142,7 +132,7 @@ namespace AddressBookUI {
 	interface ABPersonViewController : UIViewControllerRestoration {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("displayedPerson"), Internal]
 		IntPtr _DisplayedPerson {get; set;}
@@ -268,7 +258,7 @@ namespace AddressBookUI {
 	interface ABUnknownPersonViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[NullAllowed] // by default this property is null
 		[Export ("alternateName", ArgumentSemantic.Copy)]
