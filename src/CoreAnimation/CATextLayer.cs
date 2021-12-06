@@ -90,7 +90,7 @@ namespace CoreAnimation {
 				var handle = _Font;
 				nint type = CFType.GetTypeID (handle);
 				if (type == CTFont.GetTypeID ())
-					return new CTFont (handle);
+					return new CTFont (handle, false);
 				else if (type == CGFont.GetTypeID ())
 					return new CGFont (handle, false);
 				else if (type == CFString.GetTypeID ())

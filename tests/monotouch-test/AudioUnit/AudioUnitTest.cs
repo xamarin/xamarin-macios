@@ -4,9 +4,7 @@
 
 #if !__WATCHOS__
 
-using System;
 using NUnit.Framework;
-using System.Runtime.InteropServices;
 
 using Foundation;
 using AudioUnit;

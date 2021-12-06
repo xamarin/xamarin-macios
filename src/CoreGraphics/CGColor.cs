@@ -36,19 +36,25 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGColor.h
 	public class CGColor : NativeObject
 	{
 #if !COREBUILD
-		public CGColor (IntPtr handle)
+#if !NET
+		public CGColor (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal CGColor (IntPtr handle, bool owns)
+		internal CGColor (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

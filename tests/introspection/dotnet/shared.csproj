@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>Introspection</RootNamespace>
     <AssemblyName>introspection</AssemblyName>
     <MtouchLink>None</MtouchLink>
@@ -19,7 +18,6 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
     <Compile Include="$(IntrospectionTestDirectory)\Mac\MacApiCtorInitTest.cs" />
@@ -133,6 +131,9 @@
     </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
     </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>

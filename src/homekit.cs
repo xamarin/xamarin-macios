@@ -6,6 +6,10 @@ using UIKit;
 using System;
 using System.ComponentModel;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #if WATCH
 interface UIView {}
 #endif
@@ -105,7 +109,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		NSUuid Identifier { get; }
 
@@ -129,7 +133,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("identifiersForBridgedAccessories", ArgumentSemantic.Copy)]
 		NSUuid [] IdentifiersForBridgedAccessories { get; }
 
@@ -533,9 +537,9 @@ namespace HomeKit {
 		[DesignatedInitializer]
 		[Export ("initWithCharacteristic:targetValue:")]
 #if XAMCORE_3_0
-		IntPtr Constructor (HMCharacteristic characteristic, INSCopying targetValue);
+		NativeHandle Constructor (HMCharacteristic characteristic, INSCopying targetValue);
 #else
-		IntPtr Constructor (HMCharacteristic characteristic, NSObject targetValue);
+		NativeHandle Constructor (HMCharacteristic characteristic, NSObject targetValue);
 #endif
 
 		[Export ("characteristic", ArgumentSemantic.Retain)]
@@ -738,13 +742,13 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("users")]
 		HMUser [] Users { get; }
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ManageUsers' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ManageUsers' instead.")]
 		[Async]
 		[Export ("addUserWithCompletionHandler:")]
 		void AddUser (Action<HMUser,NSError> completion);
@@ -1012,7 +1016,7 @@ namespace HomeKit {
 		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithName:fireDate:timeZone:recurrence:recurrenceCalendar:")]
-		IntPtr Constructor (string name, NSDate fireDate, [NullAllowed] NSTimeZone timeZone, [NullAllowed] NSDateComponents recurrence, [NullAllowed] NSCalendar recurrenceCalendar);
+		NativeHandle Constructor (string name, NSDate fireDate, [NullAllowed] NSTimeZone timeZone, [NullAllowed] NSDateComponents recurrence, [NullAllowed] NSCalendar recurrenceCalendar);
 
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		NSDate FireDate { get; }
@@ -1210,7 +1214,7 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithCharacteristic:triggerValue:")]
-		IntPtr Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
+		NativeHandle Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
 
 		[Export ("characteristic", ArgumentSemantic.Strong)]
 		HMCharacteristic Characteristic { get; [NotImplemented] set; }
@@ -1254,13 +1258,13 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithName:events:predicate:")]
-		IntPtr Constructor (string name, HMEvent[] events, [NullAllowed] NSPredicate predicate);
+		NativeHandle Constructor (string name, HMEvent[] events, [NullAllowed] NSPredicate predicate);
 
 		[NoTV]
 		[NoWatch]
 		[iOS (11,0)]
 		[Export ("initWithName:events:endEvents:recurrences:predicate:")]
-		IntPtr Constructor (string name, HMEvent[] events, [NullAllowed] HMEvent[] endEvents, [NullAllowed] NSDateComponents[] recurrences, [NullAllowed] NSPredicate predicate);
+		NativeHandle Constructor (string name, HMEvent[] events, [NullAllowed] HMEvent[] endEvents, [NullAllowed] NSDateComponents[] recurrences, [NullAllowed] NSPredicate predicate);
 
 		[Export ("events", ArgumentSemantic.Copy)]
 		HMEvent[] Events { get; }
@@ -1401,7 +1405,7 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithRegion:")]
-		IntPtr Constructor (CLRegion region);
+		NativeHandle Constructor (CLRegion region);
 
 		[NullAllowed, Export ("region", ArgumentSemantic.Strong)]
 		CLRegion Region { get; [NotImplemented] set; }
@@ -1420,7 +1424,7 @@ namespace HomeKit {
 	interface HMMutableLocationEvent {
 
 		[Export ("initWithRegion:")]
-		IntPtr Constructor (CLRegion region);
+		NativeHandle Constructor (CLRegion region);
 
 		[Override]
 		[NullAllowed, Export ("region", ArgumentSemantic.Strong)]
@@ -1434,7 +1438,7 @@ namespace HomeKit {
 	{
 		// inlined ctor
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[NullAllowed, Export ("cameraSource", ArgumentSemantic.Strong)]
 		HMCameraSource CameraSource { get; set; }
@@ -1612,7 +1616,7 @@ namespace HomeKit {
 	interface HMCalendarEvent : NSMutableCopying {
 
 		[Export ("initWithFireDateComponents:")]
-		IntPtr Constructor (NSDateComponents fireDateComponents);
+		NativeHandle Constructor (NSDateComponents fireDateComponents);
 
 		[Export ("fireDateComponents", ArgumentSemantic.Strong)]
 		NSDateComponents FireDateComponents { get; [NotImplemented] set; }
@@ -1624,7 +1628,7 @@ namespace HomeKit {
 	interface HMMutableCalendarEvent {
 
 		[Export ("initWithFireDateComponents:")]
-		IntPtr Constructor (NSDateComponents fireDateComponents);
+		NativeHandle Constructor (NSDateComponents fireDateComponents);
 
 		[Override]
 		[Export ("fireDateComponents", ArgumentSemantic.Strong)]
@@ -1637,7 +1641,7 @@ namespace HomeKit {
 	interface HMMutableCharacteristicEvent : NSMutableCopying {
 
 		[Export ("initWithCharacteristic:triggerValue:")]
-		IntPtr Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
+		NativeHandle Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
 
 		[Override]
 		[Export ("characteristic", ArgumentSemantic.Strong)]
@@ -1654,7 +1658,7 @@ namespace HomeKit {
 	interface HMCharacteristicThresholdRangeEvent : NSMutableCopying {
 
 		[Export ("initWithCharacteristic:thresholdRange:")]
-		IntPtr Constructor (HMCharacteristic characteristic, HMNumberRange thresholdRange);
+		NativeHandle Constructor (HMCharacteristic characteristic, HMNumberRange thresholdRange);
 
 		[Export ("characteristic", ArgumentSemantic.Strong)]
 		HMCharacteristic Characteristic { get; [NotImplemented] set; }
@@ -1669,7 +1673,7 @@ namespace HomeKit {
 	interface HMMutableCharacteristicThresholdRangeEvent {
 
 		[Export ("initWithCharacteristic:thresholdRange:")]
-		IntPtr Constructor (HMCharacteristic characteristic, HMNumberRange thresholdRange);
+		NativeHandle Constructor (HMCharacteristic characteristic, HMNumberRange thresholdRange);
 
 		[Override]
 		[Export ("characteristic", ArgumentSemantic.Strong)]
@@ -1686,7 +1690,7 @@ namespace HomeKit {
 	interface HMDurationEvent : NSMutableCopying {
 
 		[Export ("initWithDuration:")]
-		IntPtr Constructor (double duration);
+		NativeHandle Constructor (double duration);
 
 		[Export ("duration")]
 		double Duration { get; [NotImplemented] set; }
@@ -1698,7 +1702,7 @@ namespace HomeKit {
 	interface HMMutableDurationEvent {
 
 		[Export ("initWithDuration:")]
-		IntPtr Constructor (double duration);
+		NativeHandle Constructor (double duration);
 
 		[Override]
 		[Export ("duration")]
@@ -1734,7 +1738,7 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMAccessoryOwnershipToken {
 		[Export("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 	}
 
 	[iOS (13,0), NoWatch, NoMac, NoTV]
@@ -1801,12 +1805,12 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
 		[Export ("initWithURL:")]
-		IntPtr Constructor ([NullAllowed] NSUrl setupPayloadUrl);
+		NativeHandle Constructor ([NullAllowed] NSUrl setupPayloadUrl);
 		
 		[iOS (13,0)]
 		[Export ("initWithURL:ownershipToken:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
+		NativeHandle Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
@@ -1815,7 +1819,7 @@ namespace HomeKit {
 	interface HMPresenceEvent : NSMutableCopying {
 
 		[Export ("initWithPresenceEventType:presenceUserType:")]
-		IntPtr Constructor (HMPresenceEventType presenceEventType, HMPresenceEventUserType presenceUserType);
+		NativeHandle Constructor (HMPresenceEventType presenceEventType, HMPresenceEventUserType presenceUserType);
 
 		[Export ("presenceEventType")]
 		HMPresenceEventType PresenceEventType { get;  [NotImplemented] set; }
@@ -1847,10 +1851,10 @@ namespace HomeKit {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithSignificantEvent:offset:")]
-		IntPtr Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
+		NativeHandle Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent)!, offset)")]
-		IntPtr Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
+		NativeHandle Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
@@ -1874,10 +1878,10 @@ namespace HomeKit {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithSignificantEvent:offset:")]
-		IntPtr Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
+		NativeHandle Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent)!, offset)")]
-		IntPtr Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
+		NativeHandle Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Override]
@@ -1930,7 +1934,7 @@ namespace HomeKit {
 
 		[Export ("initWithUUID:name:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid uuid, string name);
+		NativeHandle Constructor (NSUuid uuid, string name);
 	}
 
 	delegate void FetchRoomHandler (NSArray<HMChipServiceRoom> rooms, NSError error); 
@@ -1965,7 +1969,7 @@ namespace HomeKit {
 
 		[Export ("initWithUUID:name:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid uuid, string name);
+		NativeHandle Constructor (NSUuid uuid, string name);
 	}
 
 	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
@@ -1974,7 +1978,7 @@ namespace HomeKit {
 	interface HMChipServiceTopology : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithHomes:")]
-		IntPtr Constructor (HMChipServiceHome[] homes);
+		NativeHandle Constructor (HMChipServiceHome[] homes);
 
 		[Export ("homes", ArgumentSemantic.Copy)]
 		HMChipServiceHome[] Homes { get; }

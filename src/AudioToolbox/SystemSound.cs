@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -41,7 +43,11 @@ namespace AudioToolbox {
 		Vibrate = 0x00000FFF,
 	}
 
+#if NET
+	public class SystemSound : IDisposable {
+#else
 	public class SystemSound : INativeObject, IDisposable {
+#endif
 #if MONOMAC
 		// TODO:
 #else
@@ -51,7 +57,7 @@ namespace AudioToolbox {
 		uint soundId;
 		bool ownsHandle;
 
-		Action completionRoutine;
+		Action? completionRoutine;
 		GCHandle gc_handle;
 
 #if !NET
@@ -72,12 +78,21 @@ namespace AudioToolbox {
 			Dispose (false);
 		}
 
+#if NET
+		public uint SoundId {
+			get {
+				AssertNotDisposed ();
+				return soundId;
+			}
+		}
+#else
 		public IntPtr Handle {
 			get {
 				AssertNotDisposed ();
 				return (IntPtr) soundId;
 			}
 		}
+#endif
 
 		public bool IsUISound {
 			get {
@@ -150,7 +165,7 @@ namespace AudioToolbox {
 				gc_handle.Free ();
 			}
 
-			if (completionRoutine != null) {
+			if (completionRoutine is not null) {
 				RemoveSystemSoundCompletion ();
 			}
 
@@ -189,11 +204,10 @@ namespace AudioToolbox {
 		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
 
 		[MonoPInvokeCallback (typeof (TrampolineCallback))]
-		static unsafe void TrampolineAction (IntPtr blockPtr)
+		static void TrampolineAction (IntPtr blockPtr)
 		{
-			var block = (BlockLiteral *) blockPtr;
-			var del = (Action) (block->Target);
-			if (del != null)
+			var del = BlockLiteral.GetTarget<Action> (blockPtr);
+			if (del is not null)
 				del ();
 		}
 
@@ -203,23 +217,18 @@ namespace AudioToolbox {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlayAlertSound (Action onCompletion)
 		{
-			if (onCompletion == null)
+			if (onCompletion is null)
 				throw new ArgumentNullException (nameof (onCompletion));
 			
 			AssertNotDisposed ();
 
-			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_action, onCompletion);
-
-				AudioServicesPlayAlertSoundWithCompletion (soundId, block_ptr_handler);
-
-				block_ptr_handler->CleanupBlock ();
+			var block_handler= new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_action, onCompletion);
+			try {
+				AudioServicesPlayAlertSoundWithCompletion (soundId, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
-
 		}
 
 #if !NET
@@ -227,11 +236,11 @@ namespace AudioToolbox {
 #endif
 		public Task PlayAlertSoundAsync ()
 		{
-                        var tcs = new TaskCompletionSource<bool> ();
-                        PlayAlertSound(() => {
-                                tcs.SetResult (true);
-                        });
-                        return tcs.Task;
+			var tcs = new TaskCompletionSource<bool> ();
+			PlayAlertSound (() => {
+				tcs.SetResult (true);
+			});
+			return tcs.Task;
 		}
 
 #if !NET
@@ -240,20 +249,17 @@ namespace AudioToolbox {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlaySystemSound (Action onCompletion)
 		{
-			if (onCompletion == null)
+			if (onCompletion is null)
 				throw new ArgumentNullException (nameof (onCompletion));
 			
 			AssertNotDisposed ();
-			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_action, onCompletion);
 
-				AudioServicesPlaySystemSoundWithCompletion (soundId, block_ptr_handler);
-
-				block_ptr_handler->CleanupBlock ();
+			var block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_action, onCompletion);
+			try {
+				AudioServicesPlaySystemSoundWithCompletion (soundId, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -262,51 +268,63 @@ namespace AudioToolbox {
 #endif
 		public Task PlaySystemSoundAsync ()
 		{
-                        var tcs = new TaskCompletionSource<bool> ();
-                        PlaySystemSound(() => {
-                                tcs.SetResult (true);
-                        });
-                        return tcs.Task;
+			var tcs = new TaskCompletionSource<bool> ();
+			PlaySystemSound (() => {
+				tcs.SetResult (true);
+			});
+			return tcs.Task;
 		}
 
 #if !NET
 		[iOS (9,0)][Mac (10,11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static unsafe extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, BlockLiteral * inCompletionBlock);
+		static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
 
 #if !NET
 		[iOS (9,0)][Mac (10,11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static unsafe extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, BlockLiteral * inCompletionBlock);
+		static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioServicesError AudioServicesCreateSystemSoundID (IntPtr fileUrl, out uint soundId);
 
-		public SystemSound (NSUrl fileUrl)
+		static uint Create (NSUrl fileUrl)
 		{
-			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out soundId);
+			if (fileUrl is null)
+				throw new ArgumentNullException (nameof (fileUrl));
+
+			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
 			if (error != AudioServicesError.None)
 				throw new InvalidOperationException (string.Format ("Could not create system sound ID for url {0}; error={1}",
 							fileUrl, error));
-			ownsHandle = true;
+			return soundId;
+		}
+
+		public SystemSound (NSUrl fileUrl)
+			: this (Create (fileUrl))
+		{
 		}
 			
-		public static SystemSound FromFile (NSUrl fileUrl)
+		public static SystemSound? FromFile (NSUrl fileUrl)
 		{
-			uint soundId;
-			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out soundId);
+			if (fileUrl is null)
+				throw new ArgumentNullException (nameof (fileUrl));
+
+			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
 			if (error != AudioServicesError.None)
 				return null;
 			return new SystemSound (soundId, true);
 		}
 
-		public static SystemSound FromFile (string filename)
+		public static SystemSound? FromFile (string filename)
 		{
+			if (filename is null)
+				throw new ArgumentNullException (nameof (filename));
+
 			using (var url = new NSUrl (filename)){
-				uint soundId;
-				var error = AudioServicesCreateSystemSoundID (url.Handle, out soundId);
+				var error = AudioServicesCreateSystemSoundID (url.Handle, out var soundId);
 				if (error != AudioServicesError.None)
 					return null;
 				return new SystemSound (soundId, true);
@@ -332,12 +350,13 @@ namespace AudioToolbox {
 		static void SoundCompletionShared (SystemSoundId id, IntPtr clientData)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
-			var ss = (SystemSound) gch.Target;
+			var ss = gch.Target as SystemSound;
 
-			ss.completionRoutine ();
+			if (ss?.completionRoutine is not null)
+				ss.completionRoutine ();
 		}
 
-		public AudioServicesError AddSystemSoundCompletion (Action routine, CFRunLoop runLoop = null)
+		public AudioServicesError AddSystemSoundCompletion (Action routine, CFRunLoop? runLoop = null)
 		{
 			if (gc_handle.IsAllocated)
 				throw new ArgumentException ("Only single completion routine is supported");
@@ -347,7 +366,7 @@ namespace AudioToolbox {
 
 			unsafe {
 				return AudioServicesAddSystemSoundCompletion (soundId,
-			                                              runLoop == null ? IntPtr.Zero : runLoop.Handle,
+			                                              runLoop.GetHandle (),
 			                                              IntPtr.Zero, // runLoopMode should be enum runLoopMode == null ? IntPtr.Zero : runLoopMode.Handle,
 #if NET
 			                                              &SoundCompletionShared,

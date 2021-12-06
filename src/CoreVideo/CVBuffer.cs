@@ -25,12 +25,19 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 #nullable enable
 
@@ -40,63 +47,29 @@ namespace CoreVideo {
 #if !NET
 	[Watch (4,0)]
 #endif
-	public partial class CVBuffer : INativeObject
+	public partial class CVBuffer : NativeObject
+	{
 #if !COREBUILD
-		, IDisposable
-#endif
-		{
-#if !COREBUILD
-		internal IntPtr handle;
-
-		internal CVBuffer ()
-		{
-		}
-
-		internal CVBuffer (IntPtr handle)
-		{
-			if (handle == IntPtr.Zero)
-				throw new Exception ("Invalid parameters to context creation");
-
-			CVBufferRetain (handle);
-			this.handle = handle;
-		}
-
 		[Preserve (Conditional=true)]
-		internal CVBuffer (IntPtr handle, bool owns)
+		internal CVBuffer (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
 		{
-			if (!owns)
-				CVBufferRetain (handle);
-
-			this.handle = handle;
 		}
 
-		~CVBuffer ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVBufferRelease (/* CVBufferRef */ IntPtr buffer);
 		
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CVBufferRef */ IntPtr CVBufferRetain (/* CVBufferRef */ IntPtr buffer);
-		
-		protected virtual void Dispose (bool disposing)
+
+		protected override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CVBufferRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CVBufferRetain (GetCheckedHandle ());
+		}
+
+		protected override void Release ()
+		{
+			CVBufferRelease (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -104,7 +77,7 @@ namespace CoreVideo {
 
 		public void RemoveAllAttachments ()
 		{
-			CVBufferRemoveAllAttachments (handle);
+			CVBufferRemoveAllAttachments (Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -112,10 +85,10 @@ namespace CoreVideo {
 
 		public void RemoveAttachment (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
-			CVBufferRemoveAttachment (handle, key.Handle);
+			CVBufferRemoveAttachment (Handle, key.Handle);
 		}
 
 #if !NET
@@ -151,25 +124,25 @@ namespace CoreVideo {
 		// any CF object can be attached
 		public T? GetAttachment<T> (NSString key, out CVAttachmentMode attachmentMode) where T : class, INativeObject
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 #if IOS || __MACCATALYST__ || TVOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+			if (SystemVersion.CheckiOS (15, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (8, 0))
+			if (SystemVersion.CheckwatchOS (8, 0))
 #endif
-				return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
-			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
+				return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
+			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 		}
 #else
 		public NSObject? GetAttachment (NSString key, out CVAttachmentMode attachmentMode)
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
-			if (PlatformHelper.CheckSystemVersion (12, 0))
-				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
+			if (SystemVersion.CheckmacOS (12, 0))
+				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			else
-				return Runtime.GetNSObject<NSObject> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
+				return Runtime.GetNSObject<NSObject> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 		}
 #endif
 
@@ -202,14 +175,14 @@ namespace CoreVideo {
 		public NSDictionary? GetAttachments (CVAttachmentMode attachmentMode)
 		{
 #if IOS || __MACCATALYST__ || TVOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+			if (SystemVersion.CheckiOS (15, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (8, 0))
+			if (SystemVersion.CheckwatchOS (8, 0))
 #elif MONOMAC
-			if (PlatformHelper.CheckSystemVersion (12, 0))
+			if (SystemVersion.CheckmacOS (12, 0))
 #endif
-				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (handle, attachmentMode), true);
-			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (handle, attachmentMode), false);
+				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
+			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
 		}
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
@@ -218,7 +191,7 @@ namespace CoreVideo {
 			where TKey : class, INativeObject
 			where TValue : class, INativeObject
 		{
-			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (CVBufferGetAttachments (handle, attachmentMode));
+			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (CVBufferGetAttachments (Handle, attachmentMode));
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -226,10 +199,10 @@ namespace CoreVideo {
 
 		public void PropogateAttachments (CVBuffer destinationBuffer)
 		{
-			if (destinationBuffer == null)
-				throw new ArgumentNullException ("destinationBuffer");
+			if (destinationBuffer is null)
+				throw new ArgumentNullException (nameof (destinationBuffer));
 
-			CVBufferPropagateAttachments (handle, destinationBuffer.Handle);
+			CVBufferPropagateAttachments (Handle, destinationBuffer.Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -237,11 +210,11 @@ namespace CoreVideo {
 
 		public void SetAttachment (NSString key, INativeObject @value, CVAttachmentMode attachmentMode)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			if (@value == null)
-				throw new ArgumentNullException ("value");
-			CVBufferSetAttachment (handle, key.Handle, @value.Handle, attachmentMode);
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
+			if (@value is null)
+				throw new ArgumentNullException (nameof (value));
+			CVBufferSetAttachment (Handle, key.Handle, @value.Handle, attachmentMode);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -249,9 +222,9 @@ namespace CoreVideo {
 
 		public void SetAttachments (NSDictionary theAttachments, CVAttachmentMode attachmentMode)
 		{
-			if (theAttachments == null)
-				throw new ArgumentNullException ("theAttachments");
-			CVBufferSetAttachments (handle, theAttachments.Handle, attachmentMode);
+			if (theAttachments is null)
+				throw new ArgumentNullException (nameof (theAttachments));
+			CVBufferSetAttachments (Handle, theAttachments.Handle, attachmentMode);
 		}
 
 #if !NET
@@ -278,7 +251,7 @@ namespace CoreVideo {
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
-			return CVBufferHasAttachment (handle, key.Handle);
+			return CVBufferHasAttachment (Handle, key.Handle);
 		}
 
 #endif // !COREBUILD

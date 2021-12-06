@@ -15,6 +15,10 @@ using Foundation;
 
 #nullable enable
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 	//
 	// The NativeObject class is intended to be a base class for many CoreFoundation
@@ -28,52 +32,28 @@ namespace CoreFoundation {
 	// base class to be reused for other patterns that use other retain/release
 	// systems.
 	//
-	public abstract class NativeObject : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get => handle;
-			protected set => InitializeHandle (value);
-		}
-
+	public abstract class NativeObject : DisposableObject {
 		protected NativeObject ()
 		{
 		}
 
-		protected NativeObject (IntPtr handle, bool owns)
-			: this (handle, owns, false)
+		protected NativeObject (NativeHandle handle, bool owns)
+			: this (handle, owns, true)
 		{
 		}
 
-		protected NativeObject (IntPtr handle, bool owns, bool verify)
+		protected NativeObject (NativeHandle handle, bool owns, bool verify)
+			: base (handle, owns, verify)
 		{
-#if !COREBUILD
-			if (verify && handle == IntPtr.Zero && Class.ThrowOnInitFailure)
-				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
-					"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
-#endif
-
-			Handle = handle;
-			if (!owns)
+			if (!owns && handle != NativeHandle.Zero)
 				Retain ();
 		}
 
-		~NativeObject ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero) {
+			if (Handle != NativeHandle.Zero)
 				Release ();
-				handle = IntPtr.Zero;
-			}
+			base.Dispose (disposing);
 		}
 
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
@@ -83,23 +63,5 @@ namespace CoreFoundation {
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
 		// https://developer.apple.com/documentation/corefoundation/1521153-cfrelease
 		protected virtual void Release () => CFObject.CFRelease (GetCheckedHandle ());
-
-		protected virtual void InitializeHandle (IntPtr handle)
-		{
-#if !COREBUILD
-			if (handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
-				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
-				    "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
-			}
-#endif
-			this.handle = handle;
-		}
-
-		public IntPtr GetCheckedHandle ()
-		{
-			if (handle == IntPtr.Zero)
-				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
-			return handle;
-		}
 	}
 }

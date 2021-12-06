@@ -9,6 +9,7 @@
 		<NativeLibName>ios-fat</NativeLibName>
 		<!-- We need this because we'd otherwise default to the latest OS version we support, and we'll want to execute on earlier versions -->
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
 	</ItemGroup>
@@ -19,6 +20,7 @@
 		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>tvos-fat</NativeLibName>
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
 	</ItemGroup>
@@ -28,6 +30,7 @@
 		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
 		<NativeLibName>macos-fat</NativeLibName>
 		<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 
 	<!-- Logic for Mac Catalyst -->
@@ -35,9 +38,21 @@
 		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>maccatalyst-fat</NativeLibName>
 		<SupportedOSPlatformVersion>13.3</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 
 	<!-- Logic for all test suites -->
+	<PropertyGroup>
+		<!-- Disable the implicit FSharp.Core reference, because sometimes the implicit reference wants a version that isn't available anywhere -->
+		<DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+
+		<!-- There's unsafe code in shared test code, which means pretty much all test suites need unsafe code -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<!-- Always use the latest C# version everywhere -->
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="NUnitLite" Version="3.12.0" />
 		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />

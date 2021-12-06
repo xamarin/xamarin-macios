@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if MONOMAC || __MACCATALYST__
 
 using ObjCRuntime;
@@ -33,6 +35,8 @@ using System;
 using System.Runtime.InteropServices;
 #if NET
 using System.Runtime.Versioning;
+#else
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
@@ -88,9 +92,9 @@ namespace Security {
 	[MacCatalyst (15,0)]
 #endif
 	public class AuthorizationParameters {
-		public string PathToSystemPrivilegeTool;
-		public string Prompt;
-		public string IconPath;
+		public string? PathToSystemPrivilegeTool;
+		public string? Prompt;
+		public string? IconPath;
 	}
 
 #if NET
@@ -99,8 +103,8 @@ namespace Security {
 	[MacCatalyst (15,0)]
 #endif
 	public class AuthorizationEnvironment {
-		public string Username;
-		public string Password;
+		public string? Username;
+		public string? Password;
 		public bool   AddToSharedCredentialPool;
 	}
 
@@ -132,11 +136,7 @@ namespace Security {
 #else
 	[MacCatalyst (15,0)]
 #endif
-	public unsafe class Authorization : INativeObject, IDisposable {
-		IntPtr handle;
-
-		public IntPtr Handle { get { return handle; } }
-		
+	public unsafe class Authorization : DisposableObject {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, out IntPtr auth);
 
@@ -149,14 +149,14 @@ namespace Security {
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string [] args, IntPtr FILEPtr);
+		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string? []? args, IntPtr FILEPtr);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationFree (IntPtr handle, AuthorizationFlags flags);
 		
-		internal Authorization (IntPtr handle)
+		internal Authorization (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
 		}
 
 #if !NET
@@ -167,45 +167,51 @@ namespace Security {
 		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string [] args)
+		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string []? args)
 		{
-			return AuthorizationExecuteWithPrivileges (handle, pathToTool, flags, args, IntPtr.Zero);
+			string?[]? arguments = args!;
+
+			if (arguments is not null) {
+				// The arguments array must be null-terminated, so make sure that's the case
+				if (arguments.Length == 0) {
+					arguments = new string? [] { null };
+				} else if (arguments [arguments.Length - 1] is not null) {
+					var array = new string? [arguments.Length + 1];
+					arguments.CopyTo (array, 0);
+					arguments = array;
+				}
+			}
+
+			return AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, arguments, IntPtr.Zero);
 		}
 
-		public void Dispose ()
+		protected override void Dispose (bool disposing)
 		{
-			GC.SuppressFinalize (this);
-			Dispose (0, true);
-		}
-
-		~Authorization ()
-		{
-			Dispose (0, false);
+			Dispose (0, disposing);
 		}
 		
 		public virtual void Dispose (AuthorizationFlags flags, bool disposing)
 		{
-			if (handle != IntPtr.Zero){
-				AuthorizationFree (handle, flags);
-				handle = IntPtr.Zero;
-			}
+			if (Handle != IntPtr.Zero && Owns)
+				AuthorizationFree (Handle, flags);
+			base.Dispose (disposing);
 		}
 		
-		public static Authorization Create (AuthorizationFlags flags)
+		public static Authorization? Create (AuthorizationFlags flags)
 		{
 			return Create (null, null, flags);
 		}
 		
-		static void EncodeString (ref AuthorizationItem item, string key, string value)
+		static void EncodeString (ref AuthorizationItem item, string key, string? value)
 		{
 			item.name = Marshal.StringToHGlobalAuto (key);
-			if (value != null){
+			if (value is not null) {
 				item.value = Marshal.StringToHGlobalAuto (value);
 				item.valueLen = value.Length;
 			}
 		}
 		
-		public static Authorization Create (AuthorizationParameters parameters, AuthorizationEnvironment environment, AuthorizationFlags flags)
+		public static Authorization? Create (AuthorizationParameters? parameters, AuthorizationEnvironment? environment, AuthorizationFlags flags)
 		{
 			AuthorizationItemSet pars = new AuthorizationItemSet ();
 			AuthorizationItemSet *ppars = null;
@@ -224,7 +230,7 @@ namespace Security {
 						if (parameters.PathToSystemPrivilegeTool != null)
 							EncodeString (ref pars.ptrToAuthorization [pars.count++], "system.privilege.admin", parameters.PathToSystemPrivilegeTool);
 						if (parameters.IconPath != null)
-							EncodeString (ref pars.ptrToAuthorization [pars.count++], "prompt", parameters.IconPath);
+							EncodeString (ref pars.ptrToAuthorization [pars.count++], "icon", parameters.IconPath);
 					}
 					if (environment != null || (parameters != null && parameters.Prompt != null)){
 						penv = &env;
@@ -245,7 +251,7 @@ namespace Security {
 					code = AuthorizationCreate (ppars, penv, flags, out auth);
 					if (code != 0)
 						return null;
-					return new Authorization (auth);
+					return new Authorization (auth, true);
 				}
 			} finally {
 				if (ppars != null){

@@ -11,6 +11,7 @@ using Foundation;
 using CoreMedia;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
 	
@@ -22,7 +23,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void DefaultValues ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var htc = CMClock.HostTimeClock;
 			using (var tb = new CMTimebase (htc)) {
@@ -43,7 +44,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void SetAnchorTime ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				Assert.AreEqual (CMTimebaseError.None, tb.SetAnchorTime (new CMTime (1000000, 200), new CMTime (-1, -2)));
@@ -55,7 +56,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void AddTimer ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				var timer = NSTimer.CreateRepeatingTimer (CMTimebase.VeryLongTimeInterval, delegate { });
@@ -71,7 +72,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void GetMasterTests ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				var masterTB = tb.GetMasterTimebase ();
@@ -92,7 +93,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CopyMasterTests ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				var masterTB = tb.CopyMasterTimebase ();

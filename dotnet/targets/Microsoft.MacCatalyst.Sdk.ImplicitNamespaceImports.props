@@ -23,8 +23,8 @@
 		Ref: https://github.com/dotnet/sdk/issues/19793#issuecomment-900620060
 	-->
 	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst' And '$(Language)' == 'C#' And ('$(ImplicitUsings)' == 'true' or '$(ImplicitUsings)' == 'enable')">
-		<Using Include="CoreGraphics" />
-		<Using Include="Foundation" />
-		<Using Include="UIKit" />
+		<Using Include="CoreGraphics" Platform="MacCatalyst" />
+		<Using Include="Foundation" Platform="MacCatalyst" />
+		<Using Include="UIKit" Platform="MacCatalyst" />
 	</ItemGroup>
 </Project>

@@ -8,6 +8,10 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MonoMacFixtures.AppKit
 {
 	[TestFixture]
@@ -65,9 +69,9 @@ namespace MonoMacFixtures.AppKit
 	}
 
 	class CustomCell : NSCell {
-		public static IntPtr expectedHandle;
+		public static NativeHandle expectedHandle;
 
-		public CustomCell (IntPtr ptr) : base (ptr) { }
+		public CustomCell (NativeHandle ptr) : base (ptr) { }
 		public CustomCell () { }
 
 		[Export ("foo:")]
@@ -79,7 +83,7 @@ namespace MonoMacFixtures.AppKit
 
 	class DerivedCell : CustomCell
 	{
-		public DerivedCell (IntPtr ptr) : base (ptr) { }
+		public DerivedCell (NativeHandle ptr) : base (ptr) { }
 		public DerivedCell () {	}
 
 		public override NSObject Copy (NSZone zone)

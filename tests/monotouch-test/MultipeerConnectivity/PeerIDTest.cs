@@ -14,6 +14,7 @@ using Foundation;
 using MultipeerConnectivity;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MultipeerConnectivity {
 
@@ -25,9 +26,9 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void Defaults ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var peer = new MCPeerID ("MyDisplayName")) {
 				Assert.AreEqual ("MyDisplayName", peer.DisplayName, "DisplayName");
@@ -37,9 +38,9 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void LocalPeer ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var peer = new MCPeerID ("myself")) {
 				Assert.That (peer.DisplayName, Is.EqualTo ("myself"), "DisplayName");

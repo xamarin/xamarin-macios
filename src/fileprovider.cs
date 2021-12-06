@@ -15,6 +15,10 @@ using CoreGraphics;
 using Foundation;
 using UniformTypeIdentifiers;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #if IOS && !XAMCORE_4_0 && !__MACCATALYST__
 using FileProvider;
 
@@ -300,11 +304,11 @@ namespace FileProvider {
 
 		[NoMac]
 		[Export ("initWithIdentifier:displayName:pathRelativeToDocumentStorage:")]
-		IntPtr Constructor (string identifier, string displayName, string pathRelativeToDocumentStorage);
+		NativeHandle Constructor (string identifier, string displayName, string pathRelativeToDocumentStorage);
 
 		[NoiOS]
 		[Export ("initWithIdentifier:displayName:")]
-		IntPtr Constructor (string identifier, string displayName);
+		NativeHandle Constructor (string identifier, string displayName);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -789,13 +793,18 @@ namespace FileProvider {
 	interface NSFileProviderItemVersion {
 
 		[Export ("initWithContentVersion:metadataVersion:")]
-		IntPtr Constructor (NSData contentVersion, NSData metadataVersion);
+		NativeHandle Constructor (NSData contentVersion, NSData metadataVersion);
 
 		[Export ("contentVersion")]
 		NSData ContentVersion { get; }
 
 		[Export ("metadataVersion")]
 		NSData MetadataVersion { get; }
+
+		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+		[Static]
+		[Export ("beforeFirstSyncComponent")]
+		NSData BeforeFirstSyncComponent { get; }
 	}
 
 	[Mac (11,0)]
@@ -971,7 +980,7 @@ namespace FileProvider {
 		/* see Advice above
 		[Abstract]
 		[Export ("initWithDomain:")]
-		IntPtr Constructor (NSFileProviderDomain domain);
+		NativeHandle Constructor (NSFileProviderDomain domain);
 		*/
 
 		[Abstract]

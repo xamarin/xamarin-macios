@@ -815,7 +815,7 @@
 		</value>
 	</data>
   <data name="MX1306" xml:space="preserve">
-		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
+		<value>Nie można zdekompresować pliku "{0}". Przejrzyj dziennik kompilacji, aby uzyskać więcej informacji z poziomu polecenia natywnego "unzip".</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>W odwołaniach brakuje wymaganego zestawu „Xamarin.Mac.dll”

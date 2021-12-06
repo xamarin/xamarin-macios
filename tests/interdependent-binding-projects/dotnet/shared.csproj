@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>interdependentbindingprojects</RootNamespace>
 
     <SignAssembly>true</SignAssembly>
@@ -21,7 +20,6 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <ItemGroup>
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />

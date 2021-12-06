@@ -16,7 +16,12 @@ using AppKit;
 using UIKit;
 #endif
 using CoreGraphics;
+using ObjCRuntime;
 using NUnit.Framework;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 	
@@ -27,7 +32,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		void CheckUnknown (CGColorSpace cs)
 		{
 			Assert.That (cs.Components, Is.EqualTo ((nint) 0), "Unknown-0");
-			Assert.That (cs.Handle, Is.EqualTo (IntPtr.Zero), "Unknown-Handle");
+			Assert.That (cs.Handle, Is.EqualTo (NativeHandle.Zero), "Unknown-Handle");
 			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Unknown), "Unknown-Model");
 			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "Unknown-GetColorTable");
 		}

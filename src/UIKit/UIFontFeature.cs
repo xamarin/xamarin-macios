@@ -16,6 +16,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreText;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace UIKit {
 	public class UIFontFeature : INativeObject {
 		static NSObject [] keys = new NSObject [] { UIFontDescriptor.UIFontFeatureTypeIdentifierKey, UIFontDescriptor.UIFontFeatureSelectorIdentifierKey };
@@ -26,7 +30,7 @@ namespace UIKit {
 		FontFeatureGroup fontFeature;
 		object? fontFeatureValue;  
 
-		IntPtr INativeObject.Handle {
+		NativeHandle INativeObject.Handle {
 			get {
 				return dictionary.Handle;
 			}

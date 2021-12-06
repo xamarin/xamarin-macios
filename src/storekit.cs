@@ -26,6 +26,10 @@ using UIViewController = Foundation.NSObject;
 #endif
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace StoreKit {
 
 	[Watch (6, 2)]
@@ -113,7 +117,7 @@ namespace StoreKit {
 		[NoWatch]
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKPayment CreateFrom (string identifier);
 #endif
 
@@ -156,7 +160,7 @@ namespace StoreKit {
 		[NoWatch]
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
 		[Export ("productIdentifier", ArgumentSemantic.Copy)][New]
@@ -412,7 +416,7 @@ namespace StoreKit {
 
 #if !MONOMAC
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
 		[NullAllowed]
 		[Export ("transactionReceipt")]
 		NSData TransactionReceipt { get; }
@@ -460,10 +464,10 @@ namespace StoreKit {
 	[BaseType (typeof (SKRequest))]
 	interface SKReceiptRefreshRequest {
 		[Export ("initWithReceiptProperties:")]
-		IntPtr Constructor ([NullAllowed] NSDictionary properties);
+		NativeHandle Constructor ([NullAllowed] NSDictionary properties);
 
 		[Wrap ("this (receiptProperties.GetDictionary ())")]
-		IntPtr Constructor ([NullAllowed] SKReceiptProperties receiptProperties);
+		NativeHandle Constructor ([NullAllowed] SKReceiptProperties receiptProperties);
 
 		[NullAllowed]
 		[Export ("receiptProperties")]
@@ -493,7 +497,7 @@ namespace StoreKit {
 	[BaseType (typeof (SKRequest), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKProductsRequestDelegate)})]
 	interface SKProductsRequest {
 		[Export ("initWithProductIdentifiers:")]
-		IntPtr Constructor (NSSet productIdentifiersStringSet);
+		NativeHandle Constructor (NSSet productIdentifiersStringSet);
 		
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed][New]
 		NSObject WeakDelegate { get; set; }
@@ -531,7 +535,7 @@ namespace StoreKit {
 		// SKStoreProductViewController is an OS View Controller which can't be customized
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 #endif
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -947,7 +951,7 @@ namespace StoreKit {
 	[DisableDefaultCtor]
 	interface SKPaymentDiscount {
 		[Export ("initWithIdentifier:keyIdentifier:nonce:signature:timestamp:")]
-		IntPtr Constructor (string identifier, string keyIdentifier, NSUuid nonce, string signature, NSNumber timestamp);
+		NativeHandle Constructor (string identifier, string keyIdentifier, NSUuid nonce, string signature, NSNumber timestamp);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -1069,7 +1073,7 @@ namespace StoreKit {
 	interface SKOverlayAppConfiguration {
 		[Export ("initWithAppIdentifier:position:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string appIdentifier, SKOverlayPosition position);
+		NativeHandle Constructor (string appIdentifier, SKOverlayPosition position);
 
 		[Export ("appIdentifier", ArgumentSemantic.Retain)]
 		string AppIdentifier { get; set; }
@@ -1111,7 +1115,7 @@ namespace StoreKit {
 	interface SKOverlayAppClipConfiguration {
 		[Export ("initWithPosition:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (SKOverlayPosition position);
+		NativeHandle Constructor (SKOverlayPosition position);
 
 		[NullAllowed, Export ("campaignToken", ArgumentSemantic.Retain)]
 		string CampaignToken { get; set; }
@@ -1170,7 +1174,7 @@ namespace StoreKit {
 	interface SKOverlay {
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (SKOverlayConfiguration configuration);
+		NativeHandle Constructor (SKOverlayConfiguration configuration);
 
 		[Export ("presentInScene:")]
 		void PresentInScene (UIWindowScene scene);

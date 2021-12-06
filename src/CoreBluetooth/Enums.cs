@@ -65,7 +65,7 @@ namespace CoreBluetooth {
 		Disconnecting,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	// NSInteger -> CBPeripheralManager.h
 	[Watch (4,0)]
 	[Native]
@@ -75,7 +75,7 @@ namespace CoreBluetooth {
 		Denied,
 		Authorized,
 	}
-#endif
+#endif // !NET
 
 	// NSUInteger -> CBCharacteristic.h
 	[Watch (4,0)]

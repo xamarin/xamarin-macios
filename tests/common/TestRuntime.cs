@@ -31,6 +31,12 @@ using UIKit;
 #endif
 using ObjCRuntime;
 
+using Xamarin.Utils;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 partial class TestRuntime
 {
 
@@ -161,7 +167,7 @@ partial class TestRuntime
 
 	public static void AssertNotVirtualMachine ()
 	{
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		// enviroment variable set by the CI when running on a VM
 		var vmVendor = Environment.GetEnvironmentVariable ("VM_VENDOR");
 		if (!string.IsNullOrEmpty (vmVendor))
@@ -295,6 +301,18 @@ partial class TestRuntime
 				return ChecktvOSSystemVersion (15, 0);
 #elif __IOS__
 				return CheckiOSSystemVersion (15, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (12, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (8, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (15, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (15, 1);
 #elif MONOMAC
 				return CheckMacSystemVersion (12, 0);
 #else
@@ -732,38 +750,40 @@ partial class TestRuntime
 		}
 	}
 
-	public static bool CheckSystemVersion (PlatformName platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	public static bool CheckSystemVersion (ApplePlatform platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 		switch (platform) {
-		case PlatformName.iOS:
+		case ApplePlatform.iOS:
 			return CheckiOSSystemVersion (major, minor, throwIfOtherPlatform);
-		case PlatformName.MacOSX:
+		case ApplePlatform.MacOSX:
 			return CheckMacSystemVersion (major, minor, build, throwIfOtherPlatform);
-		case PlatformName.TvOS:
+		case ApplePlatform.TVOS:
 			return ChecktvOSSystemVersion (major, minor, throwIfOtherPlatform);
-		case PlatformName.WatchOS:
+		case ApplePlatform.WatchOS:
 			return CheckWatchOSSystemVersion (major, minor, throwIfOtherPlatform);
+		case ApplePlatform.MacCatalyst:
+			return CheckMacCatalystSystemVersion (major, minor, throwIfOtherPlatform);
 		default:
 			throw new Exception ($"Unknown platform: {platform}");
 		}
 	}
 
-	public static void AssertSystemVersion (PlatformName platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	public static void AssertSystemVersion (ApplePlatform platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 		switch (platform) {
-		case PlatformName.iOS:
+		case ApplePlatform.iOS:
 			AssertiOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
-		case PlatformName.MacOSX:
+		case ApplePlatform.MacOSX:
 			AssertMacSystemVersion (major, minor, build, throwIfOtherPlatform);
 			break;
-		case PlatformName.TvOS:
+		case ApplePlatform.TVOS:
 			AsserttvOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
-		case PlatformName.WatchOS:
+		case ApplePlatform.WatchOS:
 			AssertWatchOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
-		case PlatformName.MacCatalyst:
+		case ApplePlatform.MacCatalyst:
 			AssertMacCatalystSystemVersion (major, minor, build, throwIfOtherPlatform);
 			break;
 		default:
@@ -1003,7 +1023,7 @@ partial class TestRuntime
 			});
 		}
 
-		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video)) {
+		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ())) {
 		case AVAuthorizationStatus.Restricted:
 		case AVAuthorizationStatus.Denied:
 			if (assert_granted)
@@ -1229,3 +1249,12 @@ partial class TestRuntime
 		}
 	}
 }
+
+#if NET
+internal static class NativeHandleExtensions {
+	public static string ToString (this NativeHandle @this, string format)
+	{
+		return ((IntPtr) @this).ToString (format);
+	}
+}
+#endif

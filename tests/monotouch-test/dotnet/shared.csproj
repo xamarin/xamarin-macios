@@ -3,11 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>monotouchtest</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AssemblyName>monotouchtest</AssemblyName>
 
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
@@ -59,6 +57,9 @@
     </Compile>
     <Compile Include="$(RootTestsDirectory)\common\Extensions.cs">
       <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
     </Compile>
   </ItemGroup>
 
@@ -200,8 +201,9 @@
   <Target Name="ComputeDefineConstants" BeforeTargets="BeforeBuild">
     <PropertyGroup>
       <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhone'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'tvossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
     </PropertyGroup>
   </Target>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

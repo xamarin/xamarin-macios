@@ -39,19 +39,21 @@ using CoreFoundation;
 using Foundation;
 #if NET
 using System.Runtime.Versioning;
+#else
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
 	public partial class SecTrust : NativeObject {
-#if !XAMCORE_4_0
-		public SecTrust (IntPtr handle) 
+#if !NET
+		public SecTrust (NativeHandle handle) 
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal SecTrust (IntPtr handle, bool owns)
+		internal SecTrust (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -235,7 +237,7 @@ namespace Security {
 				if ((index < 0) || (index >= Count))
 					throw new ArgumentOutOfRangeException (nameof (index));
 
-				return new SecCertificate (SecTrustGetCertificateAtIndex (GetCheckedHandle (), index));
+				return new SecCertificate (SecTrustGetCertificateAtIndex (GetCheckedHandle (), index), false);
 			}
 		}
 
@@ -337,9 +339,9 @@ namespace Security {
 #if !NET
 		[Mac (10,9)]
 #endif
-		public NSData GetExceptions ()
+		public NSData? GetExceptions ()
 		{
-			return new NSData (SecTrustCopyExceptions (GetCheckedHandle ()), false); // inverted boolean?
+			return Runtime.GetNSObject<NSData> (SecTrustCopyExceptions (GetCheckedHandle ()), true);
 		}
 
 #if !NET

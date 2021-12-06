@@ -135,6 +135,7 @@ namespace Xamarin.Bundler {
 
 		public XamarinRuntime XamarinRuntime;
 		public bool? UseMonoFramework;
+		public string RuntimeIdentifier; // Only used for build-time --run-registrar support
 
 		// The bitcode mode to compile to.
 		// This variable does not apply to macOS, because there's no bitcode on macOS.
@@ -369,6 +370,9 @@ namespace Xamarin.Bundler {
 
 		public bool IsDeviceBuild {
 			get {
+				if (!string.IsNullOrEmpty (RuntimeIdentifier))
+					return !IsSimulatorBuild;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -385,6 +389,9 @@ namespace Xamarin.Bundler {
 
 		public bool IsSimulatorBuild {
 			get {
+				if (!string.IsNullOrEmpty (RuntimeIdentifier))
+					return RuntimeIdentifier.IndexOf ("simulator", StringComparison.OrdinalIgnoreCase) >= 0;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -938,7 +945,7 @@ namespace Xamarin.Bundler {
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
 					if (lastAssembly == null) {
-						ErrorHelper.CreateWarning (7, Errors.MX0007, rootName);
+						ErrorHelper.Warning (7, Errors.MX0007, rootName);
 						continue;
 					}
 					
@@ -1439,6 +1446,9 @@ namespace Xamarin.Bundler {
 				if (Platform == ApplePlatform.MacCatalyst)
 					return IsArchEnabled (Abi.ARM64);
 
+				if (IsSimulatorBuild && IsArchEnabled (Abi.ARM64))
+					return true;
+
 				return IsDeviceBuild;
 			}
 
@@ -1636,6 +1646,13 @@ namespace Xamarin.Bundler {
 			// etc. We make sure we don't strip away symbols needed for pinvoke calls.
 			// https://github.com/mono/mono/issues/14206
 			if (UseInterpreter)
+				return true;
+
+			// There are native frameworks which aren't available in the simulator, and we have
+			// bound P/Invokes to those native frameworks. This means that AOT-compiling for
+			// the simulator will fail because the corresponding native functions don't exist.
+			// So default to dlsym for the simulator.
+			if (IsSimulatorBuild && Profile.IsProductAssembly (Path.GetFileNameWithoutExtension (assembly)))
 				return true;
 
 			switch (Platform) {

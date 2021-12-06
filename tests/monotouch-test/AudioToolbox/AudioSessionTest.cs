@@ -3,9 +3,7 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC && !XAMCORE_3_0
 
 using System;
-using System.Drawing;
 using Foundation;
-using MediaPlayer;
 using AudioToolbox;
 using ObjCRuntime;
 using NUnit.Framework;

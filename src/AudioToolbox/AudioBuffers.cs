@@ -27,10 +27,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace AudioToolbox
 {
@@ -48,7 +54,7 @@ namespace AudioToolbox
 		public AudioBuffers (IntPtr address, bool owns)
 		{
 			if (address == IntPtr.Zero)
-				throw new ArgumentException ("address");
+				throw new ArgumentException (nameof (address));
 
 			this.address = address;
 			this.owns = owns;
@@ -57,7 +63,7 @@ namespace AudioToolbox
 		public unsafe AudioBuffers (int count)
 		{
 			if (count < 0)
-				throw new ArgumentOutOfRangeException ("count");
+				throw new ArgumentOutOfRangeException (nameof (count));
 
 			//
 			// AudioBufferList is a int + array of AudioBuffer (int + int + intptr).
@@ -94,7 +100,7 @@ namespace AudioToolbox
 		public AudioBuffer this [int index] {
 			get {
 				if (index >= Count)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException (nameof (index));
 
 				//
 				// Decodes
@@ -114,7 +120,7 @@ namespace AudioToolbox
 			}
 			set {
 				if (index >= Count)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException (nameof (index));
 
 				unsafe {
 					byte *baddress = (byte *) address;
@@ -124,7 +130,7 @@ namespace AudioToolbox
 			}
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return address; }
 		}
 
@@ -136,7 +142,7 @@ namespace AudioToolbox
 		public void SetData (int index, IntPtr data)
 		{
 			if (index >= Count)
-				throw new ArgumentOutOfRangeException ("index");
+				throw new ArgumentOutOfRangeException (nameof (index));
 
 			unsafe {
 				byte * baddress = (byte *) address;
@@ -148,7 +154,7 @@ namespace AudioToolbox
 		public void SetData (int index, IntPtr data, int dataByteSize)
 		{
 			if (index >= Count)
-				throw new ArgumentOutOfRangeException ("index");
+				throw new ArgumentOutOfRangeException (nameof (index));
 
 			unsafe {
 				byte *baddress = (byte *) address;

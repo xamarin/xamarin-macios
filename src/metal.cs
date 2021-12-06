@@ -24,6 +24,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Metal {
 
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);
@@ -1726,7 +1730,8 @@ namespace Metal {
 	[iOS (8,0)][Mac (10,11)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLTexture : MTLResource {
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0)]
+		[iOS (8, 0)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Abstract, Export ("rootResource")]
 		IMTLResource RootResource { get; }
 
@@ -1807,6 +1812,13 @@ namespace Metal {
 #endif
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; }
+
+		[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("compressionType")]
+		MTLTextureCompressionType CompressionType { get; }
 
 		[Abstract, Export ("newTextureViewWithPixelFormat:")]
 		[return: NullAllowed]
@@ -1983,6 +1995,10 @@ namespace Metal {
 		[Mac (10,14), iOS (12,0), TV (12,0)]
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; set; }
+
+		[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+		[Export ("compressionType")]
+		MTLTextureCompressionType CompressionType { get; set; }
 
 		[Mac (10, 15), iOS (13, 0), TV (13,0)]
 		[Export ("hazardTrackingMode", ArgumentSemantic.Assign)]
@@ -2435,7 +2451,7 @@ namespace Metal {
 	{
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("setConstantValue:type:atIndex:")]
 		void SetConstantValue (IntPtr value, MTLDataType type, nuint index);
@@ -4430,7 +4446,7 @@ namespace Metal {
 	interface MTLSharedEventListener {
 		[Export ("initWithDispatchQueue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (DispatchQueue dispatchQueue);
+		NativeHandle Constructor (DispatchQueue dispatchQueue);
 
 		[Export ("dispatchQueue")]
 		DispatchQueue DispatchQueue { get; }
@@ -4634,11 +4650,11 @@ namespace Metal {
 
 		[Export ("initWithSampleCount:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MTLSize sampleCount);
+		NativeHandle Constructor (MTLSize sampleCount);
 
 		[Internal]
 		[Export ("initWithSampleCount:horizontal:vertical:")]
-		IntPtr Constructor (MTLSize sampleCount, IntPtr horizontal, IntPtr vertical);
+		NativeHandle Constructor (MTLSize sampleCount, IntPtr horizontal, IntPtr vertical);
 		
 		[MacCatalyst (15,0)]
 		[Internal]
@@ -5625,7 +5641,7 @@ namespace Metal {
 		nuint ArgumentIndex { get; set; }
 
 		[Export ("initWithArgumentIndex:")]
-		IntPtr Constructor (nuint argument);
+		NativeHandle Constructor (nuint argument);
 	}
 
 	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15, 0), NoWatch]
@@ -5646,7 +5662,7 @@ namespace Metal {
 		IMTLFunctionStitchingAttribute[] Attributes { get; set; }
 
 		[Export ("initWithFunctionName:nodes:outputNode:attributes:")]
-		IntPtr Constructor (string functionName, MTLFunctionStitchingFunctionNode[] nodes, [NullAllowed] MTLFunctionStitchingFunctionNode outputNode, IMTLFunctionStitchingAttribute[] attributes);
+		NativeHandle Constructor (string functionName, MTLFunctionStitchingFunctionNode[] nodes, [NullAllowed] MTLFunctionStitchingFunctionNode outputNode, IMTLFunctionStitchingAttribute[] attributes);
 	}
 	
 	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15, 0), NoWatch]
@@ -5664,7 +5680,7 @@ namespace Metal {
 		MTLFunctionStitchingFunctionNode[] ControlDependencies { get; set; }
 
 		[Export ("initWithName:arguments:controlDependencies:")]
-		IntPtr Constructor (string name, IMTLFunctionStitchingNode[] arguments, MTLFunctionStitchingFunctionNode[] controlDependencies);
+		NativeHandle Constructor (string name, IMTLFunctionStitchingNode[] arguments, MTLFunctionStitchingFunctionNode[] controlDependencies);
 	}
 	
 	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15, 0), NoWatch]

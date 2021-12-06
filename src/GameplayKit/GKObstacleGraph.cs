@@ -11,6 +11,10 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace GameplayKit {
 
 	public partial class GKObstacleGraph {
@@ -31,7 +35,7 @@ namespace GameplayKit {
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {
 
 		[Preserve (Conditional = true)]
-		internal GKObstacleGraph (IntPtr handle) : base (handle)
+		internal GKObstacleGraph (NativeHandle handle) : base (handle)
 		{
 		}
 

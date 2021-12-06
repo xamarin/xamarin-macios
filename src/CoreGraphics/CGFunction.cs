@@ -35,6 +35,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGFunction.h
@@ -50,15 +54,15 @@ namespace CoreGraphics {
 			cbacks.release = new CGFunctionReleaseCallback (ReleaseCallback);
 		}
 
-#if !XAMCORE_4_0
-		internal CGFunction (IntPtr handle)
+#if !NET
+		internal CGFunction (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGFunction (IntPtr handle, bool owns)
+		internal CGFunction (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

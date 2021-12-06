@@ -16,6 +16,10 @@ using Security;
 using CoreFoundation;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -26,7 +30,7 @@ namespace Network {
 #endif
 	public class NWUdpMetadata : NWProtocolMetadata {
 
-		internal NWUdpMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWUdpMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWUdpMetadata () : this (nw_udp_create_metadata (), owns: true) {}
 	}

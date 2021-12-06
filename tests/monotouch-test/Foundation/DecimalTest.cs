@@ -7,7 +7,6 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 //
 
-using System;
 using System.Globalization;
 using Foundation;
 using NUnit.Framework;
