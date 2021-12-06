@@ -54,6 +54,15 @@ steps:
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
   timeoutInMinutes: 5
 
+- bash: |
+    set -x
+    set -e
+
+    make -C dotnet "global.json 
+  displayName: 'Generate global.json'
+  continueOnError: false
+  timeoutInMinutes: 5
+
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
