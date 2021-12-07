@@ -69,13 +69,19 @@ fi
 mkdir -p "$API_COMPARISON"
 
 # debugging
-echo "List items inside ./tools/apidiff"
+echo "List items inside ./tools/apidiff before"
 ls -R ./tools/apidiff
-echo "List items inside ./tools/comparison/apidiff"
+echo "List items inside ./tools/comparison/apidiff before"
 ls -R ./tools/comparison/apidiff
 
 # I suspect compare-commits.sh is putting itms inside tools/apidiff instead of tools/comparison/apidiff
-cp -R ./tools/apidiff ./tools/comparison/apidiff
+# But the updated references are currently happening inside tools/comparison/apidiff
+cp -R ./tools/apidiff/ ./tools/comparison/apidiff
+# debugging
+echo "List items inside ./tools/apidiff in the middle"
+ls -R ./tools/apidiff
+echo "List items inside ./tools/comparison/apidiff in the middle"
+ls -R ./tools/comparison/apidiff
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
@@ -83,9 +89,9 @@ cp    ./tools/comparison/apidiff/*.md "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
 # debugging
-echo "List items inside ./tools/apidiff"
+echo "List items inside ./tools/apidiff after all copies"
 ls -R ./tools/apidiff
-echo "List items inside ./tools/comparison/apidiff"
+echo "List items inside ./tools/comparison/apidiff all copies"
 ls -R ./tools/comparison/apidiff
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
