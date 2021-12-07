@@ -47,8 +47,7 @@ steps:
     ls -R $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
 
     # Clear out any files left over from API & Generator comparison
-    cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
-    rm -Rf *.exe *.pdb *.stamp *.zip ./references ./temp dotnet*.md ios*.md mac*.md tv*.md watch*.md *.html ./dotnet ./diff
+    git clean -xfd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
 
     echo "After wiping apidiff"
     ls -R $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/

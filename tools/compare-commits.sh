@@ -244,7 +244,8 @@ if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8; then
 	exit "$EC"
 fi
 
-if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
+# if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
+if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff"; then
 	EC=$?
 	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"
