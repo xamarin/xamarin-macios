@@ -2572,6 +2572,7 @@ public partial class Generator : IMemberGatherer {
 						case "MarshalDirectiveAttribute":
 						case "BindingImplAttribute":
 						case "XpcInterfaceAttribute":
+						case "NativeIntegerAttribute":
 							continue;
 						default:
 							throw new BindingException (1007, true, attr.GetType (), mi.DeclaringType, mi.Name);
@@ -7377,7 +7378,13 @@ public partial class Generator : IMemberGatherer {
 										}
 									}
 
-									print ("return {0}!;", def);
+									if (mi.ReturnType == TypeManager.System_nint) {
+										print ("return ((nint) ({0}));", def);
+									} else if (mi.ReturnType == TypeManager.System_nuint) {
+										print ("return ((nuint) ({0}));", def);
+									} else {
+										print ("return {0}!;", def);
+									}
 								}
 							}
 						}

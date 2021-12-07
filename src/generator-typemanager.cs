@@ -189,11 +189,13 @@ public class TypeManager {
 		System_UInt64 = Lookup (corlib_assembly, "System", "UInt64");
 		System_Void = Lookup (corlib_assembly, "System", "Void");
 
-		System_nint = Lookup (platform_assembly, "System", "nint");
-		System_nuint = Lookup (platform_assembly, "System", "nuint");
 #if NET
+		System_nint = Lookup (corlib_assembly, "System", "IntPtr");
+		System_nuint = Lookup (corlib_assembly, "System", "UIntPtr");
 		System_nfloat = Lookup (platform_assembly, "ObjCRuntime", "nfloat");
 #else
+		System_nint = Lookup (platform_assembly, "System", "nint");
+		System_nuint = Lookup (platform_assembly, "System", "nuint");
 		System_nfloat = Lookup (platform_assembly, "System", "nfloat");
 #endif
 

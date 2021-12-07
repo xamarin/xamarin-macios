@@ -447,6 +447,7 @@ public class AttributeManager
 			switch (attributes [i].GetAttributeType ().FullName) {
 			case "System.Runtime.CompilerServices.NullableAttribute":
 			case "System.Runtime.CompilerServices.NullableContextAttribute":
+			case "System.Runtime.CompilerServices.NativeIntegerAttribute":
 				continue;
 			}
 
