@@ -68,52 +68,23 @@ fi
 
 mkdir -p "$API_COMPARISON"
 
-# Debugging
-echo "*** List files inside ./tools/comparison/apidiff ***"
-ls -R ./tools/comparison/apidiff
-echo "*** List files inside ./tools/apidiff ***"
-ls -R ./tools/apidiff
-
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.md "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
-# # try to copy and rename the legacy mds
-# cp ./tools/comparison/apidiff/diff/xi/Xamarin.iOS/Xamarin.iOS.md "$API_COMPARISON"/generator-ios.md
-# cp ./tools/comparison/apidiff/diff/xi/Xamarin.TVOS/Xamarin.TVOS.md "$API_COMPARISON"/generator-tvos.md
-# cp ./tools/comparison/apidiff/diff/xi/Xamarin.WatchOS/Xamarin.WatchOS.md "$API_COMPARISON"/generator-watchos.md
-# cp ./tools/comparison/apidiff/diff/xm/Xamarin.Mac/Xamarin.Mac.md "$API_COMPARISON"/generator-macos.md
-# # try to copy and rename the dotnet mds
-# cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/generator-dotnet-ios.md
-# cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.md "$API_COMPARISON"/generator-dotnet-maccatalyst.md
-# cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/generator-dotnet-macos.md
-# cp ./tools/comparison/apidiff/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/generator-dotnet-tvos.md
-# # try to copy and rename the dotnet legacy mds
-# cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.md "$API_COMPARISON"/generator-dotnet-legacy-ios.md
-# cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.md "$API_COMPARISON"/generator-dotnet-legacy-macos.md
-# cp ./tools/comparison/apidiff/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.md "$API_COMPARISON"/generator-dotnet-legacy-tvos.md
-# # # try to copy and rename the dotnet MacCatalyst and iOS mds
-# cp ./tools/comparison/apidiff/diff/dotnet/iOS-MacCatalyst-diff/Xamarin.iOS-MacCatalyst.md "$API_COMPARISON"/generator-dotnet-maccatios.md
-
-# Debugging
-echo "*** List files inside API_COMPARISON ***"
-ls -R $API_COMPARISON
-
-# sed -i 's/href='\''dotnet/href='\''$URL_PREFIX\/dotnet/' $API_URL
-
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
-	STATUS_MESSAGE=":white_check_mark: [API Diff (from PR only)](%s) (no change)"
+	STATUS_MESSAGE=":white_check_mark: API Diff (from PR only) (no change)"
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON"/*.html | grep data-is-breaking; then
 	printf ":warning: [API Diff (from PR only)](%s) (:fire: breaking changes :fire:)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
-	STATUS_MESSAGE=":warning: [API Diff (from PR only)](%s) (:fire: breaking changes :fire:)"
+	STATUS_MESSAGE=":warning: API Diff (from PR only) (:fire: breaking changes :fire:)"
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
 else
 	printf ":information_source: [API Diff (from PR only)](%s) (please review changes)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
-	STATUS_MESSAGE=":information_source: [API Diff (from PR only)](%s) (please review changes)"
+	STATUS_MESSAGE=":information_source: API Diff (from PR only) (please review changes)"
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
 fi
 printf "\\n" >> "$WORKSPACE/api-diff-comments.md"

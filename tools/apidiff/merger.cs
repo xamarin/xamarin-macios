@@ -13,7 +13,15 @@ class Merger {
 		return line.Substring (start, end - start);
 	}
 
+	static string DestinationPath = null;
+
 	public static void Process (string platform, string path, string os, string destinationPath)
+	{
+		DestinationPath = destinationPath;
+		Process (platform, path, os);
+	}
+
+	public static void Process (string platform, string path, string os)
 	{
 		if (!Directory.Exists (path))
 			throw new DirectoryNotFoundException (path);
@@ -76,7 +84,7 @@ class Merger {
 		headers.WriteLine ($"# {title}");
 		headers.WriteLine ();
 
-		var filePath = Path.Combine (destinationPath, filename);
+		var filePath = DestinationPath is not null ? Path.Combine (DestinationPath, filename) : filename;
 		File.WriteAllText (filePath, headers.ToString ());
 
 		var alldiffs = content.ToString ();
@@ -94,7 +102,12 @@ class Merger {
 	public static int Main (string [] args)
 	{
 		try {
-			Process (args [0], args [1], args [2], args [3]);
+			// if calling merger.cs form tools/apidiff/Makefile, we want to pass in the destinationPath 'arg [3]'
+			// to make sure diffs go to the correct location
+			if (args.Length < 4)
+				Process (args [0], args [1], args [2]);
+			else
+				Process (args [0], args [1], args [2], args [3]);
 			return 0;
 		} catch (Exception e) {
 			Console.WriteLine (e);

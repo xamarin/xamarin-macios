@@ -192,7 +192,7 @@ mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
 
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
-if ! make update-refs -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
+if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
 	EC=$?
 	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 	exit "$EC"
@@ -237,28 +237,15 @@ git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff
 # Now compare the current build against those references
 echo "${BLUE}Running apidiff...${CLEAR}"
 APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
-if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
+# if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
+if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8; then
 	EC=$?
 	report_error_line "${RED}Failed to run apidiff${CLEAR}"
 	exit "$EC"
 fi
 
-# Now create the markdowns for the current build against those references
-echo "${BLUE}Creating Markdowns...${CLEAR}"
-# debugging
-echo "${BLUE}...ls in ROOT_DIR/tools/apidiff before generating markdowns...${CLEAR}"
-ls -R $ROOT_DIR/tools/apidiff
-echo "${BLUE}...ls in OUTPUT_DIR/apidiff before generating markdowns...${CLEAR}"
-ls -R $OUTPUT_DIR/apidiff
-# FIXME looks like the markdown files are going in ./tools/apidiff instead of ./tools/comparison/apidiff
-# Is line 13 in Makefile messing this up "APIDIFF_DIR=." or is merger.cs?
 if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
 	EC=$?
 	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"
 fi
-#debugging
-echo "${BLUE}...ls in ROOT_DIR/tools/apidiff after generating markdowns...${CLEAR}"
-ls -R $ROOT_DIR/tools/apidiff
-echo "${BLUE}...ls in OUTPUT_DIR/apidiff after generating markdowns...${CLEAR}"
-ls -R $OUTPUT_DIR/apidiff
