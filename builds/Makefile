@@ -125,8 +125,10 @@ endif
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
+		/p:DotNetManifestVersionBand="$(MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
+	$(Q) $(CP) ./downloads/microsoft.net.workload.mono.toolchain.manifest-$(MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET6_VERSION)-osx-x64/sdk-manifests/$(MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
 	$(Q) touch $@
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
