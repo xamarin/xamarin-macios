@@ -205,7 +205,7 @@ namespace CoreText {
 	internal class CTParagraphStyleSpecifierIntPtrsValue : CTParagraphStyleSpecifierValue {
 		CFArray value;
 
-		public CTParagraphStyleSpecifierIntPtrsValue (CTParagraphStyleSpecifier spec, IntPtr[] value)
+		public CTParagraphStyleSpecifierIntPtrsValue (CTParagraphStyleSpecifier spec, NativeHandle[] value)
 			: base (spec)
 		{
 			this.value = CFArray.FromIntPtrs (value);
@@ -297,7 +297,7 @@ namespace CoreText {
 
 		static CTParagraphStyleSpecifierValue CreateValue (CTParagraphStyleSpecifier spec, IEnumerable<CTTextTab> value)
 		{
-			var handles = new List<IntPtr>();
+			var handles = new List<NativeHandle>();
 			foreach (var ts in value)
 				handles.Add (ts.Handle);
 			return new CTParagraphStyleSpecifierIntPtrsValue (spec, handles.ToArray ());

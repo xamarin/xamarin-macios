@@ -150,7 +150,7 @@ namespace AddressBook {
 			get {return self.IsReadOnly;}
 		}
 
-		IntPtr ToIntPtr (T value)
+		NativeHandle ToIntPtr (T value)
 		{
 			var mutable = self as ABMutableMultiValue<T>;
 			if (mutable is null)
@@ -216,8 +216,8 @@ namespace AddressBook {
 #endif
 	public class ABMultiValue<T> : NativeObject, IEnumerable<ABMultiValueEntry<T>>
 	{
-		internal Converter<IntPtr, T> toManaged;
-		internal Converter<T, IntPtr> toNative;
+		internal Converter<NativeHandle, T> toManaged;
+		internal Converter<T, NativeHandle> toNative;
 
 		internal ABMultiValue (NativeHandle handle, bool owns)
 			: this (handle, 
@@ -228,7 +228,7 @@ namespace AddressBook {
 				throw new InvalidOperationException ("T must be an NSObject!");
 		}
 
-		internal ABMultiValue (NativeHandle handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative, bool owns)
+		internal ABMultiValue (NativeHandle handle, Converter<NativeHandle, T> toManaged, Converter<T, NativeHandle> toNative, bool owns)
 			: base (handle, owns)
 		{
 			if (toManaged is null)
@@ -320,7 +320,7 @@ namespace AddressBook {
 		{
 		}
 
-		internal ABMutableMultiValue (NativeHandle handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
+		internal ABMutableMultiValue (NativeHandle handle, Converter<NativeHandle, T> toManaged, Converter<T, NativeHandle> toNative)
 			: base (handle, toManaged, toNative, false)
 		{
 		}

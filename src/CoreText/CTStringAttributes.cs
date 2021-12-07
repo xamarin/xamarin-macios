@@ -42,6 +42,10 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region CFAttributedStringRef AttributeKey Prototypes
@@ -394,13 +398,16 @@ namespace CoreText {
 		// 'Value must be a CFArray of CFNumberRefs' - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
 		public void SetWritingDirection (params CTWritingDirection[] writingDirections)
 		{
-			var ptrs = new IntPtr [writingDirections.Length];
+			var ptrs = new NativeHandle [writingDirections.Length];
+			var numbers = new NSNumber [writingDirections.Length];
 			for (int i = 0; i < writingDirections.Length; ++i) {
-				ptrs[i] = (new NSNumber ((int) writingDirections[i])).Handle;
+				numbers [i] = new NSNumber ((int) writingDirections [i]);
+				ptrs [i] = numbers [i].Handle;
 			}
 
 			var array = CFArray.Create (ptrs);
 			CFMutableDictionary.SetValue (Dictionary.Handle, CTStringAttributeKey.WritingDirection.Handle, array);
+			GC.KeepAlive (numbers); // make sure the numbers aren't freed until we're done with them
 		}
 	}
 }

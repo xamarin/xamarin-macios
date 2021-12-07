@@ -96,16 +96,6 @@ parameters:
       ]
     },
     {
-      stageName: 'mac_10_14',
-      displayName: 'Mac Mojave (10.14)',
-      macPool: 'internal-macos-10.14',
-      useImage: true,
-      statusContext: 'Mac Mojave (10.14)',
-      demands: [
-        "Agent.OS -equals Darwin",
-      ]
-    },
-    {
       stageName: 'mac_11_5_m1',
       displayName: 'M1 - Mac Big Sur (11.5)',
       macPool: 'VSEng-VSMac-Xamarin-Shared',

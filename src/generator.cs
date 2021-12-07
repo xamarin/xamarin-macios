@@ -82,9 +82,9 @@ public static class ReflectionExtensions {
 	}
 
 	//
-	// Returs true if the specified method info or property info is not
+	// Returns true if the specified method info or property info is not
 	// available in the current platform (because it has the attribute
-	// [Unavailable (ThisPlatform) or becasue the shorthand versions
+	// [Unavailable (ThisPlatform) or because the shorthand versions
 	// of [NoiOS] or [NoMac] are applied.
 	//
 	// This needs to merge, because we might have multiple attributes in
