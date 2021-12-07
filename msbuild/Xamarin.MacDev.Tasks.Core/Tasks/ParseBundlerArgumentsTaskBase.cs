@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
+using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class ParseBundlerArgumentsTaskBase : XamarinTask {
 		public string ExtraArgs { get; set; }
@@ -21,6 +24,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public string CustomBundleName { get; set; }
+
+		[Output]
+		public ITaskItem[] CustomLinkFlags { get; set; }
 
 		[Output]
 		public string NoSymbolStrip { get; set; }
@@ -55,6 +61,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				List<string> xml = null;
+				List<string> custom_link_flags = null;
 				var envVariables = new List<ITaskItem> ();
 				var dlsyms = new List<ITaskItem> ();
 
@@ -149,6 +156,16 @@ namespace Xamarin.MacDev.Tasks {
 						// Output is EnableAssemblyILStripping so we enable if --nostrip=false and disable if true
 						NoStrip = ParseBool (value) ? "false" : "true";
 						break;
+					case "gcc_flags": // mtouch uses gcc_flags
+					case "link_flags": // mmp uses link_flags
+						if (!StringUtils.TryParseArguments (value, out var lf, out var ex)) {
+							Log.LogError (MSBStrings.E0189 /* Could not parse the custom linker argument(s) '-{0}': {1} */, $"-{name}={value}", ex.Message);
+							continue;
+						}
+						if (custom_link_flags is null)
+							custom_link_flags = new List<string> ();
+						custom_link_flags.AddRange (lf);
+						break;
 					default:
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
 						break;
@@ -162,6 +179,15 @@ namespace Xamarin.MacDev.Tasks {
 					foreach (var x in xml)
 						defs.Add (new TaskItem (x));
 					XmlDefinitions = defs.ToArray ();
+				}
+
+				if (custom_link_flags is not null) {
+					var defs = new List<ITaskItem> ();
+					if (CustomLinkFlags is not null)
+						defs.AddRange (CustomLinkFlags);
+					foreach (var lf in custom_link_flags)
+						defs.Add (new TaskItem (lf));
+					CustomLinkFlags = defs.ToArray ();
 				}
 
 				if (envVariables.Count > 0) {
