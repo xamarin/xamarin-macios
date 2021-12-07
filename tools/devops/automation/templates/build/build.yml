@@ -439,6 +439,7 @@ steps:
     else
       echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
     fi
+    exit $RC
     
   name: macTestPkg
   displayName: 'Package Xamarin.mac tests'
