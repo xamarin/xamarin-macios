@@ -68,11 +68,25 @@ fi
 
 mkdir -p "$API_COMPARISON"
 
+# debugging
+echo "List items inside ./tools/apidiff"
+ls -R ./tools/apidiff
+echo "List items inside ./tools/comparison/apidiff"
+ls -R ./tools/comparison/apidiff
+
+# I suspect compare-commits.sh is putting itms inside tools/apidiff instead of tools/comparison/apidiff
+cp -R ./tools/apidiff ./tools/comparison/apidiff
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.md "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
+
+# debugging
+echo "List items inside ./tools/apidiff"
+ls -R ./tools/apidiff
+echo "List items inside ./tools/comparison/apidiff"
+ls -R ./tools/comparison/apidiff
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
