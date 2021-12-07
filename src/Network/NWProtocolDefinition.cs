@@ -19,6 +19,10 @@ using CoreFoundation;
 
 using OS_nw_protocol_definition=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -30,9 +34,9 @@ namespace Network {
 #endif
 	public class NWProtocolDefinition : NativeObject {
 #if NET
-		internal NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

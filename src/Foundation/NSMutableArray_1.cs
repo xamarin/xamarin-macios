@@ -28,6 +28,10 @@ using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
 	[Register ("NSMutableArray", SkipRegistration = true)]
@@ -43,7 +47,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSMutableArray (IntPtr handle)
+		internal NSMutableArray (NativeHandle handle)
 			: base (handle)
 		{
 		}

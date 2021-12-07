@@ -34,12 +34,16 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// CFNumber.h
 	partial class CFBoolean : NativeObject {
 		[Preserve (Conditional = true)]
-		internal CFBoolean (IntPtr handle, bool owns)
+		internal CFBoolean (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

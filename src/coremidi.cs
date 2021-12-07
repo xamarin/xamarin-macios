@@ -33,6 +33,10 @@ using ObjCRuntime;
 
 using MidiObjectRef = System.Int32;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreMidi {
 
 	[Mac (11, 0), iOS (14, 0)]
@@ -241,12 +245,12 @@ namespace CoreMidi {
 		NSData ProfileId { get; }
 
 		[Export ("initWithData:name:")]
-		IntPtr Constructor (NSData data, string inName);
+		NativeHandle Constructor (NSData data, string inName);
 
 		[Mac (11, 0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 	}
 
 	[NoWatch, NoTV, Mac (10,14), iOS (12,0)]
@@ -263,12 +267,12 @@ namespace CoreMidi {
 		[Deprecated (PlatformName.iOS, 14, 0, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
 		[Export ("initWithEnabledProfiles:disabledProfiles:")]
-		IntPtr Constructor (MidiCIProfile[] enabled, MidiCIProfile[] disabled);
+		NativeHandle Constructor (MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
 		[Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithChannel:enabledProfiles:disabledProfiles:")]
-		IntPtr Constructor (byte midiChannelNumber, MidiCIProfile[] enabled, MidiCIProfile[] disabled);
+		NativeHandle Constructor (byte midiChannelNumber, MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
 		[Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14,0)]
@@ -314,7 +318,7 @@ namespace CoreMidi {
 		[Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithDiscoveredNode:dataReadyHandler:disconnectHandler:")]
-		IntPtr Constructor (MidiCIDiscoveredNode discoveredNode, Action dataReadyHandler, MidiCISessionDisconnectHandler disconnectHandler);
+		NativeHandle Constructor (MidiCIDiscoveredNode discoveredNode, Action dataReadyHandler, MidiCISessionDisconnectHandler disconnectHandler);
 
 		[Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14,0)]
@@ -377,10 +381,10 @@ namespace CoreMidi {
 
 		[Internal]
 		[Export ("initWithDestination:manufacturer:family:model:revision:")]
-		IntPtr Constructor (MidiObjectRef midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
+		NativeHandle Constructor (MidiObjectRef midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 
 		[Wrap ("this (midiDestination?.Handle ?? throw new ArgumentNullException (nameof (midiDestination)), manufacturer, family, modelNumber, revisionLevel)")]
-		IntPtr Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
+		NativeHandle Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
@@ -469,7 +473,7 @@ namespace CoreMidi {
 		MidiCIDeviceInfo DeviceInfo { get; }
 
 		[Export ("initWithDeviceInfo:profileDelegate:profileStates:supportProperties:")]
-		IntPtr Constructor (MidiCIDeviceInfo deviceInfo, IMidiCIProfileResponderDelegate @delegate, MidiCIProfileState[] profileList, bool propertiesSupported);
+		NativeHandle Constructor (MidiCIDeviceInfo deviceInfo, IMidiCIProfileResponderDelegate @delegate, MidiCIProfileState[] profileList, bool propertiesSupported);
 
 		[Export ("notifyProfile:onChannel:isEnabled:")]
 		bool NotifyProfile (MidiCIProfile profile, byte channel, bool enabledState);

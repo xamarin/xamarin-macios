@@ -17,6 +17,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ImageIO {
 
 #if !NET
@@ -46,14 +50,14 @@ namespace ImageIO {
 #endif
 	public partial class CGImageMetadata : NativeObject {
 #if !NET
-		public CGImageMetadata (IntPtr handle)
+		public CGImageMetadata (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional = true)]
-		internal CGImageMetadata (IntPtr handle, bool owns)
+		internal CGImageMetadata (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

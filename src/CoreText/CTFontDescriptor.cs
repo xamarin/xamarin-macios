@@ -40,6 +40,10 @@ using CoreFoundation;
 using CoreGraphics;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontDescriptor.h
@@ -351,7 +355,7 @@ namespace CoreText {
 	}
 
 	public class CTFontDescriptor : NativeObject {
-		internal CTFontDescriptor (IntPtr handle, bool owns)
+		internal CTFontDescriptor (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}

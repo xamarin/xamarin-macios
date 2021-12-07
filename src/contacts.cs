@@ -12,6 +12,9 @@ using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Contacts {
 
@@ -295,7 +298,7 @@ namespace Contacts {
 		[DesignatedInitializer]
 		[Export ("initWithKeysToFetch:")]
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
-		IntPtr Constructor (NSArray keysToFetch);
+		NativeHandle Constructor (NSArray keysToFetch);
 
 		[NullAllowed]
 		[Export ("predicate", ArgumentSemantic.Copy)]
@@ -400,7 +403,7 @@ namespace Contacts {
 		CNContactRelation FromName (string name);
 
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1756,7 +1759,7 @@ namespace Contacts {
 	interface CNInstantMessageAddress : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		[Export ("initWithUsername:service:")]
-		IntPtr Constructor (string username, string service);
+		NativeHandle Constructor (string username, string service);
 
 		[Export ("username")]
 		string Username { get; }
@@ -1842,7 +1845,7 @@ namespace Contacts {
 		ValueType FromLabel ([NullAllowed] string label, ValueType value);
 
 		[Export ("initWithLabel:value:")]
-		IntPtr Constructor ([NullAllowed] string label, ValueType value);
+		NativeHandle Constructor ([NullAllowed] string label, ValueType value);
 
 		[Export ("labeledValueBySettingLabel:")]
 		ValueType GetLabeledValue ([NullAllowed] string label);
@@ -2065,7 +2068,7 @@ namespace Contacts {
 		CNPhoneNumber PhoneNumberWithStringValue (string stringValue);
 
 		[Export ("initWithStringValue:")]
-		IntPtr Constructor (string stringValue);
+		NativeHandle Constructor (string stringValue);
 
 		[Export ("stringValue")]
 		string StringValue { get; }
@@ -2294,7 +2297,7 @@ namespace Contacts {
 		string Service { get; }
 
 		[Export ("initWithUrlString:username:userIdentifier:service:")]
-		IntPtr Constructor ([NullAllowed] string url, [NullAllowed] string username, [NullAllowed] string userIdentifier, [NullAllowed] string service);
+		NativeHandle Constructor ([NullAllowed] string url, [NullAllowed] string username, [NullAllowed] string userIdentifier, [NullAllowed] string service);
 
 		[Static]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]

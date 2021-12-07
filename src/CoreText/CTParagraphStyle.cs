@@ -38,6 +38,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Paragraph Style Values
@@ -201,7 +205,7 @@ namespace CoreText {
 	internal class CTParagraphStyleSpecifierIntPtrsValue : CTParagraphStyleSpecifierValue {
 		CFArray value;
 
-		public CTParagraphStyleSpecifierIntPtrsValue (CTParagraphStyleSpecifier spec, IntPtr[] value)
+		public CTParagraphStyleSpecifierIntPtrsValue (CTParagraphStyleSpecifier spec, NativeHandle[] value)
 			: base (spec)
 		{
 			this.value = CFArray.FromIntPtrs (value);
@@ -293,7 +297,7 @@ namespace CoreText {
 
 		static CTParagraphStyleSpecifierValue CreateValue (CTParagraphStyleSpecifier spec, IEnumerable<CTTextTab> value)
 		{
-			var handles = new List<IntPtr>();
+			var handles = new List<NativeHandle>();
 			foreach (var ts in value)
 				handles.Add (ts.Handle);
 			return new CTParagraphStyleSpecifierIntPtrsValue (spec, handles.ToArray ());
@@ -316,7 +320,7 @@ namespace CoreText {
 	}
 
 	public class CTParagraphStyle : NativeObject {
-		internal CTParagraphStyle (IntPtr handle, bool owns)
+		internal CTParagraphStyle (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}

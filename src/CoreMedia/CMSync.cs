@@ -14,6 +14,10 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreMedia {
@@ -25,12 +29,12 @@ namespace CoreMedia {
 	public class CMClock : CMClockOrTimebase
 	{
 #if !NET
-		public CMClock (IntPtr handle) : base (handle)
+		public CMClock (NativeHandle handle) : base (handle)
 		{
 		}
 #endif
 
-		internal CMClock (IntPtr handle, bool owns) 
+		internal CMClock (NativeHandle handle, bool owns) 
 			: base (handle, owns)
 		{
 		}
@@ -112,13 +116,13 @@ namespace CoreMedia {
 	public class CMTimebase : CMClockOrTimebase
 	{
 #if !NET
-		public CMTimebase (IntPtr handle)
+		public CMTimebase (NativeHandle handle)
 			: base (handle)
 		{
 		}
 #endif
 
-		private CMTimebase (IntPtr handle, bool owns) 
+		private CMTimebase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -731,13 +735,13 @@ namespace CoreMedia {
 	public class CMClockOrTimebase : NativeObject
 	{
 #if !NET
-		public CMClockOrTimebase (IntPtr handle)
+		public CMClockOrTimebase (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
-		internal CMClockOrTimebase (IntPtr handle, bool owns)
+		internal CMClockOrTimebase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

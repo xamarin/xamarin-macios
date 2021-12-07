@@ -17,6 +17,10 @@ using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
 	public delegate bool NSOrderedCollectionDifferenceEquivalenceTest<TValue> (TValue? first, TValue? second);
@@ -34,7 +38,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSArray (IntPtr handle) : base (handle)
+		internal NSArray (NativeHandle handle) : base (handle)
 		{
 		}
 

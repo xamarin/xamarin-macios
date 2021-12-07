@@ -15,6 +15,10 @@ namespace Xamarin.MacDev.Tasks {
 			get; set;
 		}
 
+		public string IsDotNetSimulatorBuild {
+			get; set;
+		}
+
 		#endregion Inputs
 
 		#region Outputs

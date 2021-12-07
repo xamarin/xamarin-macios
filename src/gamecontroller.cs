@@ -28,6 +28,10 @@ using UIKit;
 using BezierPath = UIKit.UIBezierPath;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace GameController {
 
 	[iOS (7,0)]
@@ -245,10 +249,10 @@ namespace GameController {
 		NSData SnapshotData { get; set; }
 
 		[Export ("initWithSnapshotData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithController:snapshotData:")]
-		IntPtr Constructor (GCController controller, NSData data);
+		NativeHandle Constructor (GCController controller, NSData data);
 	}
 
 	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
@@ -344,10 +348,10 @@ namespace GameController {
 		NSData SnapshotData { get; set; }
 
 		[Export ("initWithSnapshotData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithController:snapshotData:")]
-		IntPtr Constructor (GCController controller, NSData data);
+		NativeHandle Constructor (GCController controller, NSData data);
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -652,10 +656,10 @@ namespace GameController {
 		NSData SnapshotData { get; set; }
 
 		[Export ("initWithSnapshotData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithController:snapshotData:")]
-		IntPtr Constructor (GCController controller, NSData data);
+		NativeHandle Constructor (GCController controller, NSData data);
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -674,7 +678,7 @@ namespace GameController {
 		// inlined ctor
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("controllerUserInteractionEnabled")]
 		bool ControllerUserInteractionEnabled { get; set; }
@@ -687,7 +691,7 @@ namespace GameController {
 	interface GCColor : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithRed:green:blue:")]
-		IntPtr Constructor (float red, float green, float blue);
+		NativeHandle Constructor (float red, float green, float blue);
 
 		[Export ("red")]
 		float Red { get; }
@@ -2071,7 +2075,7 @@ namespace GameController {
 
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (GCVirtualControllerConfiguration configuration);
+		NativeHandle Constructor (GCVirtualControllerConfiguration configuration);
 
 		[Async]
 		[Export ("connectWithReplyHandler:")]

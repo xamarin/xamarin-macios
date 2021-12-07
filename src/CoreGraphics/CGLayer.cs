@@ -35,6 +35,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGLayer.h
@@ -42,7 +46,7 @@ namespace CoreGraphics {
 	{
 #if !COREBUILD
 		[Preserve (Conditional=true)]
-		internal CGLayer (IntPtr handle, bool owns)
+		internal CGLayer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

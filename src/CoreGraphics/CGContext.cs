@@ -36,20 +36,24 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	public class CGContext : NativeObject
 	{
 #if !COREBUILD
 #if !NET
-		public CGContext (IntPtr handle)
+		public CGContext (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGContext (IntPtr handle, bool owns)
+		internal CGContext (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

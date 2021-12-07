@@ -40,6 +40,10 @@ using CoreGraphics;
 
 using CFIndex = System.nint;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	public static class CTFontCollectionOptionKey {
@@ -91,7 +95,7 @@ namespace CoreText {
 	}
 
 	public class CTFontCollection : NativeObject {
-		internal CTFontCollection (IntPtr handle, bool owns)
+		internal CTFontCollection (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}

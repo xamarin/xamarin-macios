@@ -21,6 +21,10 @@ using OS_nw_protocol_definition=System.IntPtr;
 using OS_nw_protocol_metadata=System.IntPtr;
 using nw_service_class_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -55,9 +59,9 @@ namespace Network {
 #endif
 
 #if NET
-		internal NWProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

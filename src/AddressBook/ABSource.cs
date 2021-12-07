@@ -37,6 +37,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 	
 #if !NET
@@ -54,12 +58,12 @@ namespace AddressBook {
 #endif
 #endif
 	public class ABSource : ABRecord {
-		internal ABSource (IntPtr handle, bool owns)
+		internal ABSource (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 		
-		internal ABSource (IntPtr handle, ABAddressBook addressbook)
+		internal ABSource (NativeHandle handle, ABAddressBook addressbook)
 			: base (handle, false)
 		{
 			AddressBook = addressbook;

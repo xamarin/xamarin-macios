@@ -36,19 +36,23 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	public delegate void DispatchIOHandler (DispatchData data, int error);
 
 	public class DispatchIO : DispatchObject {
 		[Preserve (Conditional = true)]
-		internal DispatchIO (IntPtr handle, bool owns) : base (handle, owns)
+		internal DispatchIO (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
 #if !NET
 		[Preserve (Conditional = true)]
-		internal DispatchIO (IntPtr handle) : this (handle, false)
+		internal DispatchIO (NativeHandle handle) : this (handle, false)
 		{
 		}
 #endif
