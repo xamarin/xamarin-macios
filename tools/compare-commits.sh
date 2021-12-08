@@ -191,13 +191,19 @@ mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
 #
 
 #debugging
-echo "listing all items in $ROOT_DIR/tools/apidiff after before refs"
+echo "listing all items in $ROOT_DIR/tools/apidiff before refs"
 ls -R "$ROOT_DIR/tools/apidiff"
+
+#debugging
+echo "List items inside ./tools/comparison/apidiff before refs"
+if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
+    ls -R "$ROOT_DIR/tools/comparison/apidiff"
+fi
 
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
-# if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
-if ! make update-refs -C "$ROOT_DIR/tools/apidiff"; then
+if ! make update-refs -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" V=1; then
+# if ! make update-refs -C "$ROOT_DIR/tools/apidiff" V=1; then
 	EC=$?
 	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 	exit "$EC"
@@ -206,6 +212,12 @@ fi
 #debugging
 echo "listing all items in $ROOT_DIR/tools/apidiff after updating refs"
 ls -R "$ROOT_DIR/tools/apidiff"
+
+#debugging
+echo "List items inside ./tools/comparison/apidiff after updating refs"
+if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
+    ls -R "$ROOT_DIR/tools/comparison/apidiff"
+fi
 
 #
 # Generator diff
@@ -247,7 +259,7 @@ git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff
 echo "${BLUE}Running apidiff...${CLEAR}"
 APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
 # if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
-if ! make all-local -C "$ROOT_DIR/tools/apidiff"; then
+if ! make all-local -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" V=1; then
 	EC=$?
 	report_error_line "${RED}Failed to run apidiff${CLEAR}"
 	exit "$EC"
@@ -257,8 +269,14 @@ fi
 echo "listing all items in $ROOT_DIR/tools/apidiff after all-local"
 ls -R "$ROOT_DIR/tools/apidiff"
 
+#debugging
+echo "List items inside ./tools/comparison/apidiff after local"
+if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
+    ls -R "$ROOT_DIR/tools/comparison/apidiff"
+fi
+
 # if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
-if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff"; then
+if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" V=1; then
 	EC=$?
 	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"
@@ -267,3 +285,9 @@ fi
 #debugging
 echo "listing all items in $ROOT_DIR/tools/apidiff after all-markdowns"
 ls -R "$ROOT_DIR/tools/apidiff"
+
+#debugging
+echo "List items inside ./tools/comparison/apidiff after all-markdowns"
+if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
+    ls -R "$ROOT_DIR/tools/comparison/apidiff"
+fi

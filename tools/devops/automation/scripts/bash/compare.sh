@@ -71,17 +71,24 @@ mkdir -p "$API_COMPARISON"
 # debugging
 echo "List items inside ./tools/apidiff before"
 ls -R ./tools/apidiff
-# echo "List items inside ./tools/comparison/apidiff before"
-# ls -R ./tools/comparison/apidiff
+
+echo "List items inside ./tools/comparison/apidiff before"
+if ls -R ./tools/comparison/apidiff 1> /dev/null 2>&1; then
+    ls -R ./tools/comparison/apidiff
+fi
+
 
 # I suspect compare-commits.sh is putting itms inside tools/apidiff instead of tools/comparison/apidiff
 # But the updated references are currently happening inside tools/comparison/apidiff
-cp -R ./tools/apidiff/ ./tools/comparison/apidiff
+# cp -R ./tools/apidiff/ ./tools/comparison/apidiff
+
 # debugging
 echo "List items inside ./tools/apidiff in the middle"
 ls -R ./tools/apidiff
 echo "List items inside ./tools/comparison/apidiff in the middle"
-ls -R ./tools/comparison/apidiff
+if ls -R ./tools/comparison/apidiff 1> /dev/null 2>&1; then
+    ls -R ./tools/comparison/apidiff
+fi
 
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
@@ -93,7 +100,13 @@ cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 echo "List items inside ./tools/apidiff after all copies"
 ls -R ./tools/apidiff
 echo "List items inside ./tools/comparison/apidiff all copies"
-ls -R ./tools/comparison/apidiff
+if ls -R ./tools/comparison/apidiff 1> /dev/null 2>&1; then
+    ls -R ./tools/comparison/apidiff
+fi
+echo "List items inside API_COMPARISON all copies"
+if ls -R $API_COMPARISON 1> /dev/null 2>&1; then
+    ls -R $API_COMPARISON
+fi
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"

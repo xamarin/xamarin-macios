@@ -7273,11 +7273,12 @@ namespace Foundation
 		[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
 		NSDate EarliestBeginDate { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		// FIXME!!!!!!! I AM JUST TESTING BREAKING CHANGE!!
+
+		// [Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NoiOS, NoMac, NoMacCatalyst, NoTV, NoWatch]
 		[Export ("countOfBytesClientExpectsToSend")]
 		long CountOfBytesClientExpectsToSend { get; set; }
-
-		// FIXME!!!!!!! I AM JUST TESTING BREAKING CHANGE!!
 
 		// [Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		// [Export ("countOfBytesClientExpectsToReceive")]
