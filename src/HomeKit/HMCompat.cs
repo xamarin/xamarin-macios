@@ -30,6 +30,7 @@ namespace HomeKit {
 
 		public HMChipServiceRequestHandler () => throw new InvalidOperationException ();
 		protected HMChipServiceRequestHandler (NSObjectFlag t) => throw new InvalidOperationException ();
+		protected HMChipServiceRequestHandler (IntPtr handle) => throw new InvalidOperationException ();
 
 		public virtual void BeginRequestWithExtensionContext (NSExtensionContext context) => throw new InvalidOperationException ();
 		public virtual void ConfigureAccessory (string accessoryName, HMChipServiceRoom accessoryRoom, Action<NSError> completion) => throw new InvalidOperationException ();
@@ -47,6 +48,7 @@ namespace HomeKit {
 
 		public override IntPtr ClassHandle => throw new InvalidOperationException ();
 
+		protected HMChipServiceTopology (IntPtr handle) => throw new InvalidOperationException ();
 		public HMChipServiceTopology (NSCoder coder) => throw new InvalidOperationException ();
 		protected HMChipServiceTopology (NSObjectFlag t) => throw new InvalidOperationException ();
 		public HMChipServiceTopology (HMChipServiceHome[] homes) => throw new InvalidOperationException ();
@@ -63,6 +65,7 @@ namespace HomeKit {
 
 		public override IntPtr ClassHandle => throw new InvalidOperationException ();
 
+		protected HMChipServiceRoom (IntPtr handle) => throw new InvalidOperationException ();
 		public HMChipServiceRoom (NSCoder coder) => throw new InvalidOperationException ();
 		protected HMChipServiceRoom (NSObjectFlag t) => throw new InvalidOperationException ();
 		public HMChipServiceRoom (NSUuid uuid, string name) => throw new InvalidOperationException ();
@@ -80,6 +83,7 @@ namespace HomeKit {
 
 		public override IntPtr ClassHandle => throw new InvalidOperationException ();
 
+		protected HMChipServiceHome (IntPtr handle) => throw new InvalidOperationException ();
 		public HMChipServiceHome (NSCoder coder) => throw new InvalidOperationException ();
 		protected HMChipServiceHome (NSObjectFlag t) => throw new InvalidOperationException ();
 

@@ -707,7 +707,7 @@ namespace UserNotifications {
 		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,2)]
 		[Static]
 		[Export ("ringtoneSoundNamed:")]
-		UNNotificationSound GetRingtoneSoundNamed (string name);
+		UNNotificationSound GetRingtoneSound (string name);
 
 		[NoWatch, iOS (12,0)]
 		[Static]

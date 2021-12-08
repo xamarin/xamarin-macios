@@ -1806,8 +1806,6 @@ namespace Intents {
 		Unknown = 0,
 		NotSubscribed,
 		Subscribed,
-		[Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-		Voice,
 	}
 
 	[Watch (6,0), TV (14,0), NoMac, iOS (13,0)]

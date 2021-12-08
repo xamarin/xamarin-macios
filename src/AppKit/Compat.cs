@@ -1,4 +1,4 @@
-#if !__MACCATALYST__
+#if !NET
 using System;
 using System.ComponentModel;
 
@@ -7,7 +7,7 @@ using ObjCRuntime;
 
 namespace AppKit {
 	partial class NSMutableParagraphStyle {
-#if !XAMCORE_4_0
+
 		[Obsolete ("Use the 'TextBlocks' property instead.", false)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
@@ -39,16 +39,18 @@ namespace AppKit {
 			}
 			nsa_array.Dispose ();
 		}
-#endif
 	}
 
-#if !XAMCORE_4_0
 	public static class NSFileTypeForHFSTypeCode
 	{
 		public static readonly string ComputerIcon = "root";
 		public static readonly string DesktopIcon = "desk";
 		public static readonly string FinderIcon = "FNDR";
 	}
-#endif
+
+	public partial class NSApplication {
+		public static NSString ProtectedDataWillBecomeUnavailableNotification => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
+		public static NSString ProtectedDataDidBecomeAvailableNotification => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
+	}
 }
-#endif // !__MACCATALYST__
+#endif // !NET

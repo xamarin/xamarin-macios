@@ -128,6 +128,7 @@ namespace CallKit {
 		public CXProvider (CXProviderConfiguration configuration) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 
 		public virtual CXCallAction[] GetPendingCallActions (Class callActionClass, NSUuid callUuid) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
+		public virtual CXCallAction[] GetPendingCallActions<T> (NSUuid callUuid) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		public virtual void Invalidate () => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		public virtual void ReportCall (NSUuid uuid, CXCallUpdate update) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		public virtual void ReportCall (NSUuid uuid, NSDate? dateEnded, CXCallEndedReason endedReason) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
@@ -168,6 +169,7 @@ namespace CallKit {
 		protected CXAnswerCallAction (NSObjectFlag t) : base (t) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		protected internal CXAnswerCallAction (IntPtr handle) : base (handle) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		public CXAnswerCallAction (NSUuid callUuid) : base (callUuid) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
+		public CXAnswerCallAction (NSCoder coder) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 
 		public virtual void Fulfill (NSDate dateConnected) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 	} /* class CXAnswerCallAction */
@@ -195,6 +197,7 @@ namespace CallKit {
 		protected internal CXCallAction (IntPtr handle) : base (handle) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		protected internal CXCallAction () => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		public CXCallAction (NSUuid callUuid) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
+		public CXCallAction (NSCoder coder) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 
 		public virtual NSUuid CallUuid => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 	} /* class CXCallAction */
@@ -206,10 +209,8 @@ namespace CallKit {
 		protected CXCallUpdate (NSObjectFlag t) : base (t) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		protected internal CXCallUpdate (IntPtr handle) : base (handle) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		public CXCallUpdate (NSUuid callUuid) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
+		public CXCallUpdate () => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 
-		[Export ("copyWithZone:")]
-		[return: ReleaseAttribute ()]
-		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
 		public virtual NSObject Copy (NSZone? zone) => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
 		public virtual bool HasVideo {
 			get => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
