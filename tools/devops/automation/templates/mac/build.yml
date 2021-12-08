@@ -142,6 +142,15 @@ steps:
   displayName: 'Nuke Provisionator Tool Cache'
   condition: ${{ parameters.clearProvisionatorCache }}
 
+# sometimes the make that creates the pkgs fails.
+- pwsh:
+    if ($Env:MAC_TESTS_PRESENT -ne "Succeeded") {
+      Set-GitHubStatus -Status "error" -Description "Mac tests were not packaged." -Context "$Env:CONTEXT"
+      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Mac tests were not packaged."
+      Stop-Pipeline
+    } 
+  displayName: Validate tests pacakge
+
 - task: DownloadPipelineArtifact@2
   displayName: Download Mac tests
   inputs:
