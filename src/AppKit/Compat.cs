@@ -47,10 +47,5 @@ namespace AppKit {
 		public static readonly string DesktopIcon = "desk";
 		public static readonly string FinderIcon = "FNDR";
 	}
-
-	public partial class NSApplication {
-		public static NSString ProtectedDataWillBecomeUnavailableNotification => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
-		public static NSString ProtectedDataDidBecomeAvailableNotification => throw new PlatformNotSupportedException (Constants.UnavailableOnMacOS);
-	}
 }
 #endif // !NET
