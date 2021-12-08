@@ -14,6 +14,10 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	[Register (SkipRegistration = true)]
 	public sealed partial class NSArray<TKey> : NSArray, IEnumerable<TKey> 
@@ -27,7 +31,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSArray (IntPtr handle) : base (handle)
+		internal NSArray (NativeHandle handle) : base (handle)
 		{
 		}
 

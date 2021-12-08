@@ -33,6 +33,10 @@ using ObjCRuntime;
 
 using Xamarin.Utils;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 partial class TestRuntime
 {
 
@@ -147,6 +151,16 @@ partial class TestRuntime
 #if !MONOMAC
 		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
 			NUnit.Framework.Assert.Ignore ("This test only runs on device.");
+#endif
+	}
+
+	public static void AssertIfSimulatorThenARM64 ()
+	{
+#if !__MACOS__
+		if (ObjCRuntime.Runtime.Arch != Arch.SIMULATOR)
+			return;
+		if (!IsARM64)
+			NUnit.Framework.Assert.Ignore ("This test does not run simulators that aren't ARM64 simulators.");
 #endif
 	}
 
@@ -1244,4 +1258,44 @@ partial class TestRuntime
 			return !(Type.GetType ("System.__Canon") is null);
 		}
 	}
+
+
+	enum NXByteOrder /* unspecified in header, means most likely int */ {
+		Unknown,
+		LittleEndian,
+		BigEndian,
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	struct NXArchInfo {
+		IntPtr name; // const char *
+		public int CpuType; // cpu_type_t -> integer_t -> int
+		public int CpuSubType; // cpu_subtype_t -> integer_t -> int
+		public NXByteOrder ByteOrder;
+		IntPtr description; // const char *
+
+		public string Name {
+			get { return Marshal.PtrToStringUTF8 (name)!; }
+		}
+
+		public string Description {
+			get { return Marshal.PtrToStringUTF8 (description)!; }
+		}
+	}
+
+	[DllImport (Constants.libSystemLibrary)]
+	static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
+
+	public unsafe static bool IsARM64 {
+		get { return NXGetLocalArchInfo ()->Name.StartsWith ("arm64"); }
+	}
 }
+
+#if NET
+internal static class NativeHandleExtensions {
+	public static string ToString (this NativeHandle @this, string format)
+	{
+		return ((IntPtr) @this).ToString (format);
+	}
+}
+#endif

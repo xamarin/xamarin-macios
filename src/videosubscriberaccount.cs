@@ -17,6 +17,10 @@ using UIViewController = AppKit.NSViewController;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoSubscriberAccount {
 
 	[Native]
@@ -354,7 +358,7 @@ namespace VideoSubscriberAccount {
 	interface VSAccountApplicationProvider {
 
 		[Export ("initWithLocalizedDisplayName:identifier:")]
-		IntPtr Constructor (string localizedDisplayName, string identifier);
+		NativeHandle Constructor (string localizedDisplayName, string identifier);
 
 		[Export ("localizedDisplayName")]
 		string LocalizedDisplayName { get; }

@@ -18,6 +18,10 @@ using System.Runtime.Versioning;
 using CFDictionaryRef=System.IntPtr;
 using CVPixelBufferRef=System.IntPtr; 
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
@@ -31,7 +35,7 @@ namespace CoreVideo {
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
 		[Preserve (Conditional=true)]
-		internal CVPixelBuffer (IntPtr handle, bool owns) : base (handle, owns)
+		internal CVPixelBuffer (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 

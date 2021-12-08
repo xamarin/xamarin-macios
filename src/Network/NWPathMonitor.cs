@@ -19,6 +19,10 @@ using CoreFoundation;
 
 using OS_nw_path_monitor=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -30,9 +34,9 @@ namespace Network {
 #endif
 	public class NWPathMonitor : NativeObject {
 #if NET
-		internal NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

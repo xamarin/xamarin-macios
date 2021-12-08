@@ -35,6 +35,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	public class CGPDFDocument : NativeObject
@@ -47,14 +51,14 @@ namespace CoreGraphics {
 		extern static /* CGPDFDocumentRef */ IntPtr CGPDFDocumentRetain (/* CGPDFDocumentRef */ IntPtr document);
 
 #if !NET
-		public CGPDFDocument (IntPtr handle)
+		public CGPDFDocument (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGPDFDocument (IntPtr handle, bool owns)
+		internal CGPDFDocument (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -8,6 +8,10 @@ using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MonoTouchFixtures.UIKit {
 	
 	[TestFixture]
@@ -64,9 +68,9 @@ namespace MonoTouchFixtures.UIKit {
 				// IEquatable<NSObject> is only in unified - otherwise it would be the same call as above
 				Assert.True (f1.Equals (f2), "{0} Equals", api);
 			}
-			Assert.That (f1.Handle, Is.EqualTo (IntPtr.Zero), "{0} 1", api);
+			Assert.That (f1.Handle, Is.EqualTo (NativeHandle.Zero), "{0} 1", api);
 			// without our "fix" that would be the same managed instance (as f1) and the handle would be nil
-			Assert.That (f2.Handle, Is.Not.EqualTo (IntPtr.Zero), "{0} 2", api);
+			Assert.That (f2.Handle, Is.Not.EqualTo (NativeHandle.Zero), "{0} 2", api);
 		}
 
 		[Test]

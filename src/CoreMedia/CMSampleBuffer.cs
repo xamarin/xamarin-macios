@@ -19,7 +19,11 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if NET
+using OSStatus = System.IntPtr;
+#else
 using OSStatus = System.nint;
+#endif
 
 #if !COREBUILD
 using AudioToolbox;
@@ -27,6 +31,10 @@ using CoreVideo;
 #if !MONOMAC
 using UIKit;
 #endif
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreMedia {
@@ -40,7 +48,7 @@ namespace CoreMedia {
 		GCHandle invalidate;
 
 		[Preserve (Conditional=true)]
-		internal CMSampleBuffer (IntPtr handle, bool owns)
+		internal CMSampleBuffer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

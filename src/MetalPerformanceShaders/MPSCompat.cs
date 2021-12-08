@@ -6,6 +6,10 @@ using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MetalPerformanceShaders {
 
 	public partial class MPSCnnConvolutionTransposeNode {
@@ -63,7 +67,7 @@ namespace MetalPerformanceShaders {
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
-		protected MPSCnnConvolutionState (IntPtr handle) : base (handle)
+		protected MPSCnnConvolutionState (NativeHandle handle) : base (handle)
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Empty stub (not a public API).")]
@@ -83,7 +87,7 @@ namespace MetalPerformanceShaders {
 
 #pragma warning disable CS0809
 		[Obsolete ("Empty stub (not a public API).")]
-		public override IntPtr ClassHandle { get; }
+		public override NativeHandle ClassHandle { get; }
 #pragma warning restore CS0809
 	}
 }

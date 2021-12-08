@@ -15,6 +15,10 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Metal {
@@ -250,9 +254,14 @@ namespace Metal {
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
-			IntPtr errorValue = IntPtr.Zero;
+			var errorValue = NativeHandle.Zero;
 
-			var ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+			IMTLLibrary? ret;
+#if NET
+			ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend_NativeHandle_ref_NativeHandle (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+#else
+			ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+#endif
 			error = Runtime.GetNSObject<NSError> (errorValue);
 
 			return ret;

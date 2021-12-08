@@ -13,6 +13,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MetricKit {
 
 	interface NSUnitDuration : NSUnit { }
@@ -64,7 +68,7 @@ namespace MetricKit {
 
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("bars", ArgumentSemantic.Copy)]
@@ -80,7 +84,7 @@ namespace MetricKit {
 
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("apl", ArgumentSemantic.Copy)]

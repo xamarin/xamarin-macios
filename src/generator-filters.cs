@@ -61,14 +61,16 @@ public partial class Generator {
 		var intptrctor_visibility = filter.IntPtrCtorVisibility;
 		if (intptrctor_visibility == MethodAttributes.PrivateScope) {
 			// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-			if (XamcoreVersion >= 3) {
+			if (BindingTouch.IsDotNet) {
+				intptrctor_visibility = MethodAttributes.FamORAssem;
+			} else if (XamcoreVersion >= 3) {
 				intptrctor_visibility = MethodAttributes.FamORAssem;
 			} else {
 				intptrctor_visibility = MethodAttributes.Public;
 			}
 		}
 		print_generated_code ();
-		print ("{0}{1} (IntPtr handle) : base (handle)", GetVisibility (intptrctor_visibility), type_name);
+		print ("{0}{1} ({2} handle) : base (handle)", GetVisibility (intptrctor_visibility), type_name, NativeHandleType);
 		PrintEmptyBody ();
 
 		// NSObjectFlag constructor - always present (needed to implement NSCoder for subclasses)
@@ -88,14 +90,14 @@ public partial class Generator {
 		indent++;
 		print ("throw new ArgumentNullException (nameof (coder));");
 		indent--;
-		print ("IntPtr h;");
+		print ("{0} h;", NativeHandleType);
 		print ("if (IsDirectBinding) {");
 		indent++;
-		print ("h = global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);");
+		print ("h = global::ObjCRuntime.Messaging.{0}_objc_msgSend_{0} (this.Handle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", NativeHandleType);
 		indent--;
 		print ("} else {");
 		indent++;
-		print ("h = global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);");
+		print ("h = global::ObjCRuntime.Messaging.{0}_objc_msgSendSuper_{0} (this.SuperHandle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", NativeHandleType);
 		indent--;
 		print ("}");
 		print ("InitializeHandle (h, \"initWithCoder:\");");
@@ -294,10 +296,18 @@ public partial class Generator {
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
 			break;
+#if NET
+		case "IntPtr":
+#else
 		case "nint":
+#endif
 			print ("return GetNInt (\"{0}\");", propertyName);
 			break;
+#if NET
+		case "UIntPtr":
+#else
 		case "nuint":
+#endif
 			print ("return GetNUInt (\"{0}\");", propertyName);
 			break;
 		case "string":
@@ -335,10 +345,18 @@ public partial class Generator {
 		case "int":
 			print ("SetInt (\"{0}\", value);", propertyName);
 			break;
+#if NET
+		case "IntPtr":
+#else
 		case "nint":
+#endif
 			print ("SetNInt (\"{0}\", value);", propertyName);
 			break;
+#if NET
+		case "UIntPtr":
+#else
 		case "nuint":
+#endif
 			print ("SetNUInt (\"{0}\", value);", propertyName);
 			break;
 		// NSObject should not be added

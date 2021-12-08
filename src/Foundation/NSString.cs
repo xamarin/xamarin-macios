@@ -32,6 +32,10 @@ using CoreGraphics;
 #endif
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
 #if COREBUILD
@@ -59,11 +63,11 @@ namespace Foundation {
 
 		public static readonly NSString Empty = new NSString (String.Empty);
 
-		internal NSString (IntPtr handle, bool alloced) : base (handle, alloced)
+		internal NSString (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
-		static IntPtr CreateWithCharacters (IntPtr handle, string str, int offset, int length, bool autorelease = false)
+		static NativeHandle CreateWithCharacters (NativeHandle handle, string str, int offset, int length, bool autorelease = false)
 		{
 			unsafe {
 				fixed (char *ptrFirstChar = str) {
@@ -83,28 +87,28 @@ namespace Foundation {
 		}
 
 		[Obsolete ("Use of 'CFString.CreateNative' offers better performance.")]
-		public static IntPtr CreateNative (string str)
+		public static NativeHandle CreateNative (string str)
 		{
 			return CreateNative (str, false);
 		}
 
-		public static IntPtr CreateNative (string str, bool autorelease)
+		public static NativeHandle CreateNative (string str, bool autorelease)
 		{
-			if (str == null)
-				return IntPtr.Zero;
+			if (str is null)
+				return NativeHandle.Zero;
 
 			return CreateNative (str, 0, str.Length, autorelease);
 		}
 
-		public static IntPtr CreateNative (string value, int start, int length)
+		public static NativeHandle CreateNative (string value, int start, int length)
 		{
 			return CreateNative (value, start, length, false);
 		}
 
-		public static IntPtr CreateNative (string value, int start, int length, bool autorelease)
+		public static NativeHandle CreateNative (string value, int start, int length, bool autorelease)
 		{
-			if (value == null)
-				return IntPtr.Zero;
+			if (value is null)
+				return NativeHandle.Zero;
 
 			if (start < 0 || start > value.Length)
 				throw new ArgumentOutOfRangeException (nameof (start));
@@ -121,7 +125,7 @@ namespace Foundation {
 			return CreateWithCharacters (handle, value, start, length, autorelease);
 		}
 
-		public static void ReleaseNative (IntPtr handle)
+		public static void ReleaseNative (NativeHandle handle)
 		{
 			NSObject.DangerousRelease (handle);
 		}
@@ -166,15 +170,15 @@ namespace Foundation {
 		}
 
 		[Obsolete ("Use of 'CFString.FromHandle' offers better performance.")]
-		public static string FromHandle (IntPtr usrhandle)
+		public static string FromHandle (NativeHandle usrhandle)
 		{
 			return FromHandle (usrhandle, false);
 		}
 
 		[Obsolete ("Use of 'CFString.FromHandle' offers better performance.")]
-		public static string FromHandle (IntPtr handle, bool owns)
+		public static string FromHandle (NativeHandle handle, bool owns)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			try {

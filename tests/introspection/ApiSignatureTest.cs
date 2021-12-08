@@ -30,6 +30,10 @@ using System.Linq;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Introspection {
 
 	public abstract class ApiSignatureTest : ApiBaseTest {
@@ -211,7 +215,7 @@ namespace Introspection {
 				FieldInfo fi = null;
 				if (!static_type)
 					fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				IntPtr class_ptr = fi == null ? IntPtr.Zero : (IntPtr) fi.GetValue (null);
+				IntPtr class_ptr = fi == null ? IntPtr.Zero : (IntPtr) (NativeHandle) fi.GetValue (null);
 
 				foreach (MethodBase m in t.GetMethods (Flags)) 
 					CheckMemberSignature (m, t, class_ptr, ref n);

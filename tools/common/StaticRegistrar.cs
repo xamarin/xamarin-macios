@@ -3194,8 +3194,13 @@ namespace Registrar {
 					continue;
 				if (method.Parameters.Count != 2)
 					continue;
-				if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
-					continue;
+				if (Driver.IsDotNet) {
+					if (!method.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
+						continue;
+				} else {
+					if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+						continue;
+				}
 				if (method.Parameters [1].ParameterType.Is ("System", "Boolean"))
 					return true;
 			}
@@ -4454,7 +4459,9 @@ namespace Registrar {
 			case "System.UInt32": return "xamarin_uint_to_nsnumber";
 			case "System.Int64": return "xamarin_long_to_nsnumber";
 			case "System.UInt64": return "xamarin_ulong_to_nsnumber";
+			case "System.IntPtr":
 			case "System.nint": return "xamarin_nint_to_nsnumber";
+			case "System.UIntPtr":
 			case "System.nuint": return "xamarin_nuint_to_nsnumber";
 			case "System.Single": return "xamarin_float_to_nsnumber";
 			case "System.Double": return "xamarin_double_to_nsnumber";
@@ -4480,7 +4487,9 @@ namespace Registrar {
 			case "System.UInt32": nativeType = "uint32_t"; return "xamarin_nsnumber_to_uint";
 			case "System.Int64": nativeType = "int64_t"; return "xamarin_nsnumber_to_long";
 			case "System.UInt64": nativeType = "uint64_t"; return "xamarin_nsnumber_to_ulong";
+			case "System.IntPtr":
 			case "System.nint": nativeType = "NSInteger"; return "xamarin_nsnumber_to_nint";
+			case "System.UIntPtr":
 			case "System.nuint": nativeType = "NSUInteger"; return "xamarin_nsnumber_to_nuint";
 			case "System.Single": nativeType = "float"; return "xamarin_nsnumber_to_float";
 			case "System.Double": nativeType = "double"; return "xamarin_nsnumber_to_double";

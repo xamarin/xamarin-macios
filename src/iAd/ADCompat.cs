@@ -12,6 +12,10 @@ using MediaPlayer;
 using ObjCRuntime;
 using UIKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace iAd {
@@ -31,8 +35,8 @@ namespace iAd {
 		{
 		}
 
-		public unsafe override IntPtr ClassHandle {
-			get { return default (IntPtr); }
+		public unsafe override NativeHandle ClassHandle {
+			get { return default (NativeHandle); }
 		}
 
 		public virtual ADAdType AdType {
@@ -240,7 +244,8 @@ namespace iAd {
 		{
 		}
 
-		protected internal ADBannerViewDelegate (IntPtr handle)
+		protected internal ADBannerViewDelegate (NativeHandle handle)
+			: base (handle)
 		{
 		}
 
@@ -313,10 +318,11 @@ namespace iAd {
 	public class ADInterstitialAd : NSObject {
 
 		protected internal ADInterstitialAd (IntPtr handle)
+			: base (handle)
 		{
 		}
 
-		public unsafe override IntPtr ClassHandle {
+		public unsafe override NativeHandle ClassHandle {
 			get { return default (IntPtr); }
 		}
 
@@ -440,7 +446,8 @@ namespace iAd {
 		{
 		}
 
-		protected internal ADInterstitialAdDelegate (IntPtr handle)
+		protected internal ADInterstitialAdDelegate (NativeHandle handle)
+			: base (handle)
 		{
 		}
 
@@ -463,8 +470,8 @@ namespace iAd {
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	public class ADInterstitialAdPresentationViewController : UIViewController {
 
-		public unsafe override IntPtr ClassHandle {
-			get { return default (IntPtr); }
+		public unsafe override NativeHandle ClassHandle {
+			get { return default (NativeHandle); }
 		}
 
 		public ADInterstitialAdPresentationViewController (NSCoder coder)

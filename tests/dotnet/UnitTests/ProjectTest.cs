@@ -20,6 +20,7 @@ namespace Xamarin.Tests {
 		[TestCase (null)]
 		[TestCase ("iossimulator-x86")]
 		[TestCase ("iossimulator-x64")]
+		[TestCase ("iossimulator-arm64")]
 		[TestCase ("ios-arm64")]
 		[TestCase ("ios-arm")]
 		public void BuildMySingleView (string runtimeIdentifier)
@@ -59,6 +60,7 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (null)]
 		[TestCase ("tvossimulator-x64")]
+		[TestCase ("tvossimulator-arm64")]
 		[TestCase ("tvos-arm64")]
 		public void BuildMyTVApp (string runtimeIdentifier)
 		{
@@ -329,7 +331,9 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x86;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x86;iossimulator-x64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64;tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		public void BuildFatApp (ApplePlatform platform, string runtimeIdentifiers)
@@ -389,9 +393,11 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64;iossimulator-x64;iossimulator-x86")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm;iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-x64;iossimulator-x86")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;tvossimulator-arm64")]
 		public void InvalidRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
@@ -456,12 +462,12 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-x64")] // valid RID in a previous preview (and common mistake)
 		[TestCase (ApplePlatform.iOS, "iossimulator-x84")] // it's x86, not x84
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")] // we don't support this yet
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm")] // we don't support this
 		[TestCase (ApplePlatform.iOS, "helloworld")] // random text
 		[TestCase (ApplePlatform.iOS, "osx-x64")] // valid RID for another platform
 		[TestCase (ApplePlatform.TVOS, "tvos-x64")] // valid RID in a previous preview (and common mistake)
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")] // we don't support this yet
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm")] // we don't support this
 		[TestCase (ApplePlatform.TVOS, "helloworld")] // random text
 		[TestCase (ApplePlatform.TVOS, "osx-x64")] // valid RID for another platform
 		[TestCase (ApplePlatform.MacOSX, "osx-x46")] // it's x64, not x46
@@ -502,10 +508,26 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			// Simulate a crash dump
-			var crashDump = Path.Combine (appPath, "mono_crash.mem.123456.something.blob");
-			File.WriteAllText (crashDump, "A crash dump");
+			File.WriteAllText (Path.Combine (appPath, "mono_crash.mem.123456.something.blob"), "A crash dump");
+			File.WriteAllText (Path.Combine (appPath, "mono_crash.123456.somethingelse.blob"), "A crash dump");
 
 			// Build again
+			DotNet.AssertBuild (project_path, properties);
+
+			// Create a file that isn't a crash report.
+			File.WriteAllText (Path.Combine (appPath, "otherfile.txt"), "A file");
+
+			// Build again - this time it'll fail
+			var rv = DotNet.Build (project_path, properties);
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			Assert.AreEqual (1, warnings.Length, "Warning Count");
+			Assert.AreEqual ("Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/net6.0-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
+
+			// Remove the offending file
+			File.Delete (Path.Combine (appPath, "otherfile.txt"));
+
+			// Build yet again
 			DotNet.AssertBuild (project_path, properties);
 		}
 

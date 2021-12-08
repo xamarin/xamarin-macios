@@ -17,6 +17,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -28,9 +32,9 @@ namespace Network {
 #endif
 	public class NWPath : NativeObject {
 #if NET
-		internal NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
+		public NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

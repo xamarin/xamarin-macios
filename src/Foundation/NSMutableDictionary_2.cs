@@ -30,6 +30,10 @@ using System.ComponentModel;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	[Register ("NSMutableDictionary", SkipRegistration = true)]
 	public sealed partial class NSMutableDictionary<TKey,TValue> : NSMutableDictionary, IDictionary<TKey, TValue> 
@@ -46,7 +50,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSMutableDictionary (IntPtr handle)
+		internal NSMutableDictionary (NativeHandle handle)
 			: base (handle)
 		{
 		}
