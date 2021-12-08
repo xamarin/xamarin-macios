@@ -190,14 +190,22 @@ mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
 #   Then we restore the original hash, and finally we calculate the api diff.
 #
 
+#debugging
+echo "listing all items in $ROOT_DIR/tools/apidiff after before refs"
+ls -R "$ROOT_DIR/tools/apidiff"
+
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
 # if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
-if ! make update-refs -C "$ROOT_DIR/tools/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build; then
+if ! make update-refs -C "$ROOT_DIR/tools/apidiff"; then
 	EC=$?
 	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 	exit "$EC"
 fi
+
+#debugging
+echo "listing all items in $ROOT_DIR/tools/apidiff after updating refs"
+ls -R "$ROOT_DIR/tools/apidiff"
 
 #
 # Generator diff
@@ -239,15 +247,23 @@ git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff
 echo "${BLUE}Running apidiff...${CLEAR}"
 APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
 # if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
-if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build; then
+if ! make all-local -C "$ROOT_DIR/tools/apidiff"; then
 	EC=$?
 	report_error_line "${RED}Failed to run apidiff${CLEAR}"
 	exit "$EC"
 fi
 
+#debugging
+echo "listing all items in $ROOT_DIR/tools/apidiff after all-local"
+ls -R "$ROOT_DIR/tools/apidiff"
+
 # if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
-if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build; then
+if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff"; then
 	EC=$?
 	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"
 fi
+
+#debugging
+echo "listing all items in $ROOT_DIR/tools/apidiff after all-markdowns"
+ls -R "$ROOT_DIR/tools/apidiff"
