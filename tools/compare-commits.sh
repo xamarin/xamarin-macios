@@ -193,7 +193,7 @@ mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
 # if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
-if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8; then
+if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build; then
 	EC=$?
 	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 	exit "$EC"
@@ -239,14 +239,14 @@ git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff
 echo "${BLUE}Running apidiff...${CLEAR}"
 APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
 # if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
-if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8; then
+if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build; then
 	EC=$?
 	report_error_line "${RED}Failed to run apidiff${CLEAR}"
 	exit "$EC"
 fi
 
 # if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
-if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff"; then
+if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build; then
 	EC=$?
 	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"

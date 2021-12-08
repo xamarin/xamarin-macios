@@ -83,15 +83,10 @@ ls -R ./tools/apidiff
 echo "List items inside ./tools/comparison/apidiff in the middle"
 ls -R ./tools/comparison/apidiff
 
-# cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
-# cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
-# cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
-# cp    ./tools/comparison/apidiff/*.md "$API_COMPARISON"
-cp -R ./tools/apidiff/diff "$API_COMPARISON"
-cp -R ./tools/apidiff/dotnet "$API_COMPARISON"
-cp    ./tools/apidiff/*.html "$API_COMPARISON"
-cp    ./tools/apidiff/*.md "$API_COMPARISON"
-
+cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
+cp -R ./tools/comparison/apidiff/dotnet "$API_COMPARISON"
+cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
+cp    ./tools/comparison/apidiff/*.md "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
 # debugging
