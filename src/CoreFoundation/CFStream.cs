@@ -45,7 +45,15 @@ using CoreServices;
 using ObjCRuntime;
 using Foundation;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
@@ -719,7 +727,7 @@ namespace CoreFoundation {
 		}
 #endif
 
-		protected CFStream (IntPtr handle, bool owns)
+		protected CFStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

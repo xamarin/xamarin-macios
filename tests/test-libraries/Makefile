@@ -176,10 +176,10 @@ endef
 # 4: platform name
 # 5: min version
 # 6: os
-$(eval $(call Template,iphonesimulator,IOSSIMULATOR,x86 x86_64,iPhoneSimulator,-mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)))
+$(eval $(call Template,iphonesimulator,IOSSIMULATOR,x86 x86_64 arm64,iPhoneSimulator,-mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)))
 $(eval $(call Template,iphoneos,IPHONEOS,armv7 armv7s arm64,iPhoneOS,-miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)))
 ifdef INCLUDE_TVOS
-$(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64,AppleTVSimulator,-mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)))
+$(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64 arm64,AppleTVSimulator,-mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)))
 $(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=9.0 -fembed-bitcode -isysroot $(DEVICETV_SDK)))
 endif
 ifdef INCLUDE_WATCH
@@ -228,15 +228,15 @@ endif
 define FatFrameworkTemplate
 .libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest: .libs/$(2)/XStaticObjectTest.framework/XStaticObjectTest .libs/$(3)/XStaticObjectTest.framework/XStaticObjectTest | .libs/$(1)
 	$(Q) mkdir -p $$(dir $$@)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh  $$@ $$^
 
 .libs/$(1)/XStaticArTest.framework/XStaticArTest: .libs/$(2)/XStaticArTest.framework/XStaticArTest .libs/$(3)/XStaticArTest.framework/XStaticArTest | .libs/$(1)
 	$(Q) mkdir -p $$(dir $$@)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 .libs/$(1)/XTest.framework$($(4)_BINARY_INFIX)/XTest: .libs/$(2)/XTest.framework$($(4)_BINARY_INFIX)/XTest .libs/$(3)/XTest.framework$($(4)_BINARY_INFIX)/XTest | .libs/$(1)
 	$(Q) mkdir -p $$(dir $$@)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh  $$@ $$^
 
 .libs/$(1)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist: .libs/$(2)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist .libs/$(3)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist
 	$(Q) mkdir -p $$(dir $$@)
@@ -248,13 +248,13 @@ endif
 	$(Q) $(CP) $$< $$@
 
 .libs/$(1)/libtest.a: .libs/$(2)/libtest.a .libs/$(3)/libtest.a | .libs/$(1)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 .libs/$(1)/libtest2.a: .libs/$(2)/libtest2.a .libs/$(3)/libtest2.a | .libs/$(1)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 .libs/$(1)/libtest.dylib: .libs/$(2)/libtest.dylib .libs/$(3)/libtest.dylib | .libs/$(1)
-	$(Q) lipo -create -output $$@ $$^
+	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
 $(3)_TARGETS += \
 	.libs/$(1)/XTest.framework$($(4)_BINARY_INFIX)/XTest \

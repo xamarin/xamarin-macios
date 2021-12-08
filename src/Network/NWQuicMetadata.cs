@@ -8,6 +8,10 @@ using Security;
 using OS_nw_protocol_metadata = System.IntPtr;
 using SecProtocolMetadataRef = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
@@ -20,9 +24,9 @@ namespace Network {
 	public class NWQuicMetadata : NWProtocolMetadata {
 
 #if NET
-		internal NWQuicMetadata (IntPtr handle, bool owns) : base (handle, owns) { }
+		internal NWQuicMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 #else
-		public NWQuicMetadata (IntPtr handle, bool owns) : base (handle, owns) { }
+		public NWQuicMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]

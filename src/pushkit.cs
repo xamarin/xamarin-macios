@@ -3,6 +3,10 @@ using Foundation;
 using CoreFoundation;
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace PushKit 
 {
 	[Watch (6,0)]
@@ -53,7 +57,7 @@ namespace PushKit
 
 		[DesignatedInitializer]
 		[Export ("initWithQueue:")]
-		IntPtr Constructor ([NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed] DispatchQueue queue);
 	}
 	
 	[iOS (8,0)]

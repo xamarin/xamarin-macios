@@ -15,6 +15,10 @@ using ObjCRuntime;
 using Foundation;
 using AppKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace InputMethodKit {
 
 	partial interface IMKGlobal {
@@ -41,10 +45,10 @@ namespace InputMethodKit {
 	partial interface IMKServer : IMKServerProxy {
 
 		[Export ("initWithName:bundleIdentifier:")]
-		IntPtr Constructor (string name, string bundleIdentifier);
+		NativeHandle Constructor (string name, string bundleIdentifier);
 
 		[Export ("initWithName:controllerClass:delegateClass:")]
-		IntPtr Constructor (string name, Class controllerClassId, Class delegateClassId);
+		NativeHandle Constructor (string name, Class controllerClassId, Class delegateClassId);
 
 		[Export ("bundle")]
 		NSBundle Bundle { get; }
@@ -132,7 +136,7 @@ namespace InputMethodKit {
 	partial interface IMKInputController : IMKStateSetting, IMKMouseHandling {
 
 		[Export ("initWithServer:delegate:client:")]
-		IntPtr Constructor (IMKServer server, NSObject delegateObject, NSObject inputClient);
+		NativeHandle Constructor (IMKServer server, NSObject delegateObject, NSObject inputClient);
 
 		[Export ("updateComposition")]
 		void UpdateComposition ();
@@ -187,10 +191,10 @@ namespace InputMethodKit {
 	partial interface IMKCandidates {
 
 		[Export ("initWithServer:panelType:")]
-		IntPtr Constructor (IMKServer server, IMKCandidatePanelType panelType);
+		NativeHandle Constructor (IMKServer server, IMKCandidatePanelType panelType);
 
 		[Export ("initWithServer:panelType:styleType:")]
-		IntPtr Constructor (IMKServer server, IMKCandidatePanelType panelType, IMKStyleType style);
+		NativeHandle Constructor (IMKServer server, IMKCandidatePanelType panelType, IMKStyleType style);
 
 		[Export ("panelType")]
 		IMKCandidatePanelType PanelType { get; set; }

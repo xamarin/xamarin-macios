@@ -745,7 +745,7 @@ namespace CoreImage {
 #endif
 	}
 
-#if MONOMAC && !XAMCORE_3_0
+#if MONOMAC && !XAMCORE_3_0 && !NET
 	[Obsolete ("This type has been renamed to CICmykHalftone.")]
 	public class CICMYKHalftone : CICmykHalftone {
 		public CICMYKHalftone () {}

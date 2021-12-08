@@ -17,6 +17,10 @@ using Foundation;
 using CoreMedia;
 using CoreVideo;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoToolbox {
 
 #if NET
@@ -29,13 +33,13 @@ namespace VideoToolbox {
 
 #if !NET
 		/* invoked by marshallers */
-		protected internal VTCompressionSession (IntPtr handle) : base (handle)
+		protected internal VTCompressionSession (NativeHandle handle) : base (handle)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal VTCompressionSession (IntPtr handle, bool owns) : base (handle, owns)
+		internal VTCompressionSession (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 

@@ -20,7 +20,11 @@ namespace Xamarin.iOS.Tasks
 			if (string.IsNullOrEmpty (TargetArchitectures) || !Enum.TryParse (TargetArchitectures, out architectures))
 				architectures = TargetArchitecture.Default;
 
-			SdkIsSimulator = (architectures & (TargetArchitecture.i386 | TargetArchitecture.x86_64)) != 0;
+			if (!string.IsNullOrEmpty (IsDotNetSimulatorBuild)) {
+				SdkIsSimulator = string.Equals (IsDotNetSimulatorBuild, "true", StringComparison.OrdinalIgnoreCase);
+			} else {
+				SdkIsSimulator = (architectures & (TargetArchitecture.i386 | TargetArchitecture.x86_64)) != 0;
+			}
 
 			return base.Execute ();
 		}

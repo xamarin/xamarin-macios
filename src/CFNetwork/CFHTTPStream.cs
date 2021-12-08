@@ -15,6 +15,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 // CFHttpStream is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
 namespace CFNetwork {
@@ -30,7 +34,7 @@ namespace CoreServices {
 #endif
 	public partial class CFHTTPStream : CFReadStream {
 
-		internal CFHTTPStream (IntPtr handle, bool owns)
+		internal CFHTTPStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

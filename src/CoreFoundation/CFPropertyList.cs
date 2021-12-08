@@ -14,6 +14,10 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation
 {
 	public class CFPropertyList : NativeObject
@@ -35,16 +39,16 @@ namespace CoreFoundation
 		static nint CFNumberTypeID = CFNumberGetTypeID ();
 
 #if NET
-		internal CFPropertyList (IntPtr handle, bool owns)
+		internal CFPropertyList (NativeHandle handle, bool owns)
 #else
-		public CFPropertyList (IntPtr handle, bool owns)
+		public CFPropertyList (NativeHandle handle, bool owns)
 #endif
 			: base (handle, owns)
 		{
 		}
 
 #if !NET
-		public CFPropertyList (IntPtr handle) : this (handle, false)
+		public CFPropertyList (NativeHandle handle) : this (handle, false)
 		{
 		}
 #endif

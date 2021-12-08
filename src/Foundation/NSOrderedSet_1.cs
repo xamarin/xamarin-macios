@@ -13,6 +13,10 @@ using System.Collections;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	[Register ("NSOrderedSet", SkipRegistration = true)]
 	public sealed partial class NSOrderedSet<TKey> : NSOrderedSet, IEnumerable<TKey>
@@ -26,7 +30,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSOrderedSet (IntPtr handle) : base (handle)
+		internal NSOrderedSet (NativeHandle handle) : base (handle)
 		{
 		}
 

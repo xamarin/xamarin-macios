@@ -136,6 +136,9 @@ namespace MonoTouchFixtures.Foundation {
 			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				Assert.Inconclusive ("Requires iOS7 or later");
 
+			// The AppStoreReceiptUrl property may or may not return anything useful on the simulator, so run this only on device.
+			TestRuntime.AssertDevice ();
+
 			// on iOS8 device this now ends with "/StoreKit/sandboxReceipt" 
 			// instead of "/StokeKit/receipt"
 			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Does.EndWith ("eceipt"), "AppStoreReceiptUrl");

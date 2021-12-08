@@ -9,6 +9,10 @@ using OS_nw_protocol_options = System.IntPtr;
 using OS_nw_protocol_metadata = System.IntPtr;
 using SecProtocolOptionsRef = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
@@ -20,7 +24,7 @@ namespace Network {
 #endif
 	public class NWProtocolQuicOptions : NWProtocolOptions {
 
-		internal NWProtocolQuicOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolQuicOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 		
 		public NWProtocolQuicOptions () : this (nw_quic_create_options (), owns: true) {}
 

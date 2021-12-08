@@ -74,6 +74,10 @@ using View=UIKit.UIView;
 #endif
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #if MONOMAC
 namespace AppKit {
 #else
@@ -2375,13 +2379,13 @@ namespace UIKit {
 	{
 		[NoiOS][NoTV][NoMacCatalyst]
 		[Export ("initWithFileWrapper:")]
-		IntPtr Constructor (NSFileWrapper fileWrapper);
+		NativeHandle Constructor (NSFileWrapper fileWrapper);
 
 		[Mac (10,11)]
 		[DesignatedInitializer]
 		[Export ("initWithData:ofType:")]
 		[PostGet ("Contents")]
-		IntPtr Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
+		NativeHandle Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
 
 		[Mac (10,11)]
 		[NullAllowed]
@@ -2466,7 +2470,7 @@ namespace UIKit {
 	partial interface NSTextStorage : NSSecureCoding {
 #if MONOMAC && !XAMCORE_4_0
 		[Export ("initWithString:")]
-		IntPtr Constructor (string str);
+		NativeHandle Constructor (string str);
 #endif
 
 		[Export ("layoutManagers")]
@@ -2862,11 +2866,11 @@ namespace UIKit {
 	interface NSDataAsset : NSCopying
 	{
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("initWithName:bundle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, NSBundle bundle);
+		NativeHandle Constructor (string name, NSBundle bundle);
 
 		[Export ("name")]
 		string Name { get; }
@@ -2908,11 +2912,11 @@ namespace UIKit {
 		[DesignatedInitializer]
 		[Export ("initWithTextAlignment:location:options:")]
 		[PostGet ("Options")]
-		IntPtr Constructor (TextAlignment alignment, nfloat location, NSDictionary options);
+		NativeHandle Constructor (TextAlignment alignment, nfloat location, NSDictionary options);
 
 		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
 		[Export ("initWithType:location:")]
-		IntPtr Constructor (NSTextTabType type, nfloat location);
+		NativeHandle Constructor (NSTextTabType type, nfloat location);
 
 		[Export ("alignment")]
 		TextAlignment Alignment { get; }
@@ -2959,7 +2963,7 @@ namespace UIKit {
 		[NoMac]
 		[DesignatedInitializer]
 		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize size);
+		NativeHandle Constructor (CGSize size);
 
 		[NoiOS][NoMacCatalyst][NoTV]
 		[Export ("initWithContainerSize:"), Internal]
@@ -3284,7 +3288,7 @@ namespace UIKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -3346,7 +3350,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextContentManager:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSTextContentManager textContentManager);
+		NativeHandle Constructor ([NullAllowed] NSTextContentManager textContentManager);
 
 		[NullAllowed, Export ("textContentManager", ArgumentSemantic.Weak)]
 		NSTextContentManager TextContentManager { get; set; }
@@ -3361,11 +3365,11 @@ namespace UIKit {
 	{
 		[Export ("initWithAttributedString:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSAttributedString attributedString);
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedString);
 
 		[Export ("initWithTextContentManager:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSTextContentManager textContentManager);
+		NativeHandle Constructor ([NullAllowed] NSTextContentManager textContentManager);
 
 		[Export ("attributedString", ArgumentSemantic.Strong)]
 		NSAttributedString AttributedString { get; }
@@ -3384,10 +3388,10 @@ namespace UIKit {
 	{
 		[Export ("initWithAttributedString:range:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSAttributedString attributedString, NSRange range);
+		NativeHandle Constructor (NSAttributedString attributedString, NSRange range);
 
 		[Export ("initWithString:attributes:range:")]
-		IntPtr Constructor (string @string, NSDictionary<NSString, NSObject> attributes, NSRange range);
+		NativeHandle Constructor (string @string, NSDictionary<NSString, NSObject> attributes, NSRange range);
 
 		[Export ("attributedString", ArgumentSemantic.Strong)]
 		NSAttributedString AttributedString { get; }
@@ -3430,7 +3434,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextAttachment:parentView:textLayoutManager:location:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextAttachment textAttachment, [NullAllowed] View parentView, [NullAllowed] NSTextLayoutManager textLayoutManager, INSTextLocation location);
+		NativeHandle Constructor (NSTextAttachment textAttachment, [NullAllowed] View parentView, [NullAllowed] NSTextLayoutManager textLayoutManager, INSTextLocation location);
 
 		[NullAllowed, Export ("textAttachment", ArgumentSemantic.Weak)]
 		NSTextAttachment TextAttachment { get; }
@@ -3461,7 +3465,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextElement:range:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextElement textElement, [NullAllowed] NSTextRange rangeInElement);
+		NativeHandle Constructor (NSTextElement textElement, [NullAllowed] NSTextRange rangeInElement);
 
 		[NullAllowed, Export ("textLayoutManager", ArgumentSemantic.Weak)]
 		NSTextLayoutManager TextLayoutManager { get; }
@@ -3519,10 +3523,10 @@ namespace UIKit {
 	{
 		[Export ("initWithLocation:endLocation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSTextLocation location, [NullAllowed] INSTextLocation endLocation);
+		NativeHandle Constructor (INSTextLocation location, [NullAllowed] INSTextLocation endLocation);
 
 		[Export ("initWithLocation:")]
-		IntPtr Constructor (INSTextLocation location);
+		NativeHandle Constructor (INSTextLocation location);
 
 		[Export ("empty")]
 		bool Empty { [Bind ("isEmpty")] get; }
@@ -3582,7 +3586,7 @@ namespace UIKit {
 	{
 		[Export ("initWithTextLayoutManager:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextLayoutManager textLayoutManager);
+		NativeHandle Constructor (NSTextLayoutManager textLayoutManager);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -3636,13 +3640,13 @@ namespace UIKit {
 	{
 		[Export ("initWithRanges:affinity:granularity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextRange[] textRanges, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
+		NativeHandle Constructor (NSTextRange[] textRanges, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
 
 		[Export ("initWithRange:affinity:granularity:")]
-		IntPtr Constructor (NSTextRange range, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
+		NativeHandle Constructor (NSTextRange range, NSTextSelectionAffinity affinity, NSTextSelectionGranularity granularity);
 
 		[Export ("initWithLocation:affinity:")]
-		IntPtr Constructor (INSTextLocation location, NSTextSelectionAffinity affinity);
+		NativeHandle Constructor (INSTextLocation location, NSTextSelectionAffinity affinity);
 
 		[Export ("textRanges", ArgumentSemantic.Copy)]
 		NSTextRange[] TextRanges { get; }
@@ -3783,7 +3787,7 @@ namespace UIKit {
 	{
 		[Export ("initWithDataSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSTextSelectionDataSource dataSource);
+		NativeHandle Constructor (INSTextSelectionDataSource dataSource);
 
 		[Wrap ("WeakTextSelectionDataSource")]
 		[NullAllowed]

@@ -47,11 +47,22 @@ variables:
 # this pipeline is triggered when we want to do a release and uses a release trigger, this means that it does not have conditions (a human accepted it)
 # or dependencies (the release pipeline was triggered accordingly.
 #
-stages:
-- template: vs-insertion/stage/v1.yml@templates
-  parameters:
-    symbolArtifactName: nuget-signed
-    symbolConversionFilters: '*mlaunch.app*'
-    pushToShippingFeed: true
-    nupkgArtifactName: nuget-signed
-    msiNupkgArtifactName: vs-msi-nugets
+jobs:
+- job: create_insert_drop
+  displayName: Create VS Drop and Open PR
+  timeoutInMinutes: 120
+  variables:
+  - name: skipComponentGovernanceDetection
+    value: true
+  - name: skipNugetSecurityAnalysis
+    value: true
+  - group: Xamarin-Secrets
+  pool: VSEng-ReleasePool-1ES
+  steps:
+  - template: vs-insertion/jobs/create_insert_drop/v1.yml@templates
+    parameters:
+      symbolArtifactName: nuget-signed
+      symbolConversionFilters: '*mlaunch.app*'
+      pushToShippingFeed: true
+      nupkgArtifactName: nuget-signed
+      msiNupkgArtifactName: vs-msi-nugets

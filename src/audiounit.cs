@@ -32,6 +32,10 @@ using MediaToolbox;
 using AUViewControllerBase = UIKit.UIViewController;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioUnit {
 	delegate AudioUnitStatus AUInternalRenderBlock (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber, AudioBuffers outputData, AURenderEventEnumerator realtimeEventListHead, [BlockCallback][NullAllowed]AURenderPullInputBlock pullInputBlock);
 	delegate AudioUnitStatus AURenderBlock (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber, AudioBuffers outputData, [BlockCallback][NullAllowed] AURenderPullInputBlock pullInputBlock);
@@ -81,10 +85,10 @@ namespace AudioUnit {
 
 		[Export ("initWithComponentDescription:options:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AudioComponentDescription componentDescription, AudioComponentInstantiationOptions options, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (AudioComponentDescription componentDescription, AudioComponentInstantiationOptions options, [NullAllowed] out NSError outError);
 
 		[Export ("initWithComponentDescription:error:")]
-		IntPtr Constructor (AudioComponentDescription componentDescription, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (AudioComponentDescription componentDescription, [NullAllowed] out NSError outError);
 
 		[Static]
 		[Export ("instantiateWithComponentDescription:options:completionHandler:")]
@@ -400,7 +404,7 @@ namespace AudioUnit {
 	interface AUAudioUnitBus
 	{
 		[Export ("initWithFormat:error:")]
-		IntPtr Constructor (AVAudioFormat format, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (AVAudioFormat format, [NullAllowed] out NSError outError);
 
 		[Export ("format")]
 		AVAudioFormat Format { get; }
@@ -448,10 +452,10 @@ namespace AudioUnit {
 	{
 		[Export ("initWithAudioUnit:busType:busses:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AUAudioUnit owner, AUAudioUnitBusType busType, AUAudioUnitBus[] busArray);
+		NativeHandle Constructor (AUAudioUnit owner, AUAudioUnitBusType busType, AUAudioUnitBus[] busArray);
 
 		[Export ("initWithAudioUnit:busType:")]
-		IntPtr Constructor (AUAudioUnit owner, AUAudioUnitBusType busType);
+		NativeHandle Constructor (AUAudioUnit owner, AUAudioUnitBusType busType);
 
 		[Export ("count")]
 		nuint Count { get; }

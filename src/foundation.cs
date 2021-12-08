@@ -124,6 +124,10 @@ using NSNotificationSuspensionBehavior = Foundation.NSObject;
 using NSNotificationFlags = Foundation.NSObject;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	delegate void NSFilePresenterReacquirer ([BlockCallback] Action reacquirer);
 }
@@ -162,7 +166,7 @@ namespace Foundation
 		nuint Count { get; }
 
 		[Export ("objectAtIndex:")]
-		IntPtr ValueAt (nuint idx);
+		NativeHandle ValueAt (nuint idx);
 
 		[Static]
 		[Internal]
@@ -199,7 +203,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("containsObject:")]
-		bool _Contains (IntPtr anObject);
+		bool _Contains (NativeHandle anObject);
 
 		[Export ("containsObject:")]
 		bool Contains (NSObject anObject);
@@ -207,7 +211,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("indexOfObject:")]
-		nuint _IndexOf (IntPtr anObject);
+		nuint _IndexOf (NativeHandle anObject);
 
 		[Export ("indexOfObject:")]
 		nuint IndexOf (NSObject anObject);
@@ -276,7 +280,7 @@ namespace Foundation
 		bool IsEqual (NSAttributedString other);
 
 		[Export ("initWithString:")]
-		IntPtr Constructor (string str);
+		NativeHandle Constructor (string str);
 
 #if !MONOMAC
 
@@ -298,20 +302,20 @@ namespace Foundation
 #elif TVOS || WATCH
 		[iOS (9,0)]
 		[Export ("initWithURL:options:documentAttributes:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
 
 		[iOS (7,0)]
 		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
-		IntPtr Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[iOS (7,0)]
 		[Export ("initWithData:options:documentAttributes:error:")]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[iOS (7,0)]
 		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
-		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[iOS (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
@@ -333,10 +337,10 @@ namespace Foundation
 		
 		[Export ("initWithString:attributes:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		IntPtr Constructor (string str, [NullAllowed] NSDictionary attributes);
+		NativeHandle Constructor (string str, [NullAllowed] NSDictionary attributes);
 
 		[Export ("initWithAttributedString:")]
-		IntPtr Constructor (NSAttributedString other);
+		NativeHandle Constructor (NSAttributedString other);
 
 		[Export ("enumerateAttributesInRange:options:usingBlock:")]
 		void EnumerateAttributes (NSRange range, NSAttributedStringEnumeration options, NSAttributedRangeCallback callback);
@@ -349,13 +353,13 @@ namespace Foundation
 		CGSize Size { get; }
 
 		[Export ("initWithData:options:documentAttributes:error:")]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary docAttributes, out NSError error);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary docAttributes, out NSError error);
 
 		[Export ("initWithDocFormat:documentAttributes:")]
-		IntPtr Constructor(NSData wordDocFormat, out NSDictionary docAttributes);
+		NativeHandle Constructor(NSData wordDocFormat, out NSDictionary docAttributes);
 
 		[Export ("initWithHTML:baseURL:documentAttributes:")]
-		IntPtr Constructor (NSData htmlData, NSUrl baseUrl, out NSDictionary docAttributes);
+		NativeHandle Constructor (NSData htmlData, NSUrl baseUrl, out NSDictionary docAttributes);
 		
 		[Export ("drawAtPoint:")]
 		void DrawString (CGPoint point);
@@ -367,21 +371,21 @@ namespace Foundation
 		void DrawString (CGRect rect, NSStringDrawingOptions options);	
 
 		[Export ("initWithURL:options:documentAttributes:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, out error)")]
-		IntPtr Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, out error)")]
-		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithPath:documentAttributes:")]
-		IntPtr Constructor (string path, out NSDictionary resultDocumentAttributes);
+		NativeHandle Constructor (string path, out NSDictionary resultDocumentAttributes);
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithURL:documentAttributes:")]
-		IntPtr Constructor (NSUrl url, out NSDictionary resultDocumentAttributes);
+		NativeHandle Constructor (NSUrl url, out NSDictionary resultDocumentAttributes);
 
 		[Internal, Export ("initWithRTF:documentAttributes:")]
 		IntPtr InitWithRtf (NSData data, out NSDictionary resultDocumentAttributes);
@@ -393,13 +397,13 @@ namespace Foundation
 		IntPtr InitWithHTML (NSData data, out NSDictionary resultDocumentAttributes);
 
 		[Export ("initWithHTML:options:documentAttributes:")]
-		IntPtr Constructor (NSData data, [NullAllowed]  NSDictionary options, out NSDictionary resultDocumentAttributes);
+		NativeHandle Constructor (NSData data, [NullAllowed]  NSDictionary options, out NSDictionary resultDocumentAttributes);
 
 		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes)")]
-		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes);
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes);
 
 		[Export ("initWithRTFDFileWrapper:documentAttributes:")]
-		IntPtr Constructor (NSFileWrapper wrapper, out NSDictionary resultDocumentAttributes);
+		NativeHandle Constructor (NSFileWrapper wrapper, out NSDictionary resultDocumentAttributes);
 
 		[Export ("containsAttachments")]
 		bool ContainsAttachments { get; }
@@ -627,10 +631,10 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSCachedUrlResponse : NSCoding, NSSecureCoding, NSCopying {
 		[Export ("initWithResponse:data:userInfo:storagePolicy:")]
-		IntPtr Constructor (NSUrlResponse response, NSData data, [NullAllowed] NSDictionary userInfo, NSUrlCacheStoragePolicy storagePolicy);
+		NativeHandle Constructor (NSUrlResponse response, NSData data, [NullAllowed] NSDictionary userInfo, NSUrlCacheStoragePolicy storagePolicy);
 
 		[Export ("initWithResponse:data:")]
-		IntPtr Constructor (NSUrlResponse response, NSData data);
+		NativeHandle Constructor (NSUrlResponse response, NSData data);
           
 		[Export ("response")]
 		NSUrlResponse Response { get; }
@@ -651,7 +655,7 @@ namespace Foundation
 	interface NSCalendar : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithCalendarIdentifier:")]
-		IntPtr Constructor (NSString identifier);
+		NativeHandle Constructor (NSString identifier);
 
 		[Export ("calendarIdentifier")]
 		string Identifier { get; }
@@ -943,19 +947,19 @@ namespace Foundation
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
-		IntPtr Constructor (string description, string calendarFormat, NSObject locale);
+		NativeHandle Constructor (string description, string calendarFormat, NSObject locale);
 
 		[Export ("initWithString:calendarFormat:")]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
-		IntPtr Constructor (string description, string calendarFormat);
+		NativeHandle Constructor (string description, string calendarFormat);
 
 		[Export ("initWithString:")]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
-		IntPtr Constructor (string description);
+		NativeHandle Constructor (string description);
 
 		[Export ("initWithYear:month:day:hour:minute:second:timeZone:")]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
-		IntPtr Constructor (nint year, nuint month, nuint day, nuint hour, nuint minute, nuint second, [NullAllowed] NSTimeZone aTimeZone);
+		NativeHandle Constructor (nint year, nuint month, nuint day, nuint hour, nuint minute, nuint second, [NullAllowed] NSTimeZone aTimeZone);
 
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("dateByAddingYears:months:days:hours:minutes:seconds:")]
@@ -1379,11 +1383,11 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithLeftExpression:rightExpression:modifier:type:options:")]
-		IntPtr Constructor (NSExpression leftExpression, NSExpression rightExpression, NSComparisonPredicateModifier comparisonModifier, NSPredicateOperatorType operatorType, NSComparisonPredicateOptions comparisonOptions);
+		NativeHandle Constructor (NSExpression leftExpression, NSExpression rightExpression, NSComparisonPredicateModifier comparisonModifier, NSPredicateOperatorType operatorType, NSComparisonPredicateOptions comparisonOptions);
 		
 		[DesignatedInitializer]
 		[Export ("initWithLeftExpression:rightExpression:customSelector:")]
-		IntPtr Constructor (NSExpression leftExpression, NSExpression rightExpression, Selector selector);
+		NativeHandle Constructor (NSExpression leftExpression, NSExpression rightExpression, Selector selector);
 
 		[Export ("predicateOperatorType")]
 		NSPredicateOperatorType PredicateOperatorType { get; }
@@ -1410,7 +1414,7 @@ namespace Foundation
 	interface NSCompoundPredicate : NSCoding {
 		[DesignatedInitializer]
 		[Export ("initWithType:subpredicates:")]
-		IntPtr Constructor (NSCompoundPredicateType type, NSPredicate[] subpredicates);
+		NativeHandle Constructor (NSCompoundPredicateType type, NSPredicate[] subpredicates);
 
 		[Export ("compoundPredicateType")]
 		NSCompoundPredicateType Type { get; }
@@ -1502,11 +1506,11 @@ namespace Foundation
 
 		[iOS (7,0), Mac (10, 9)] // 10.9
 		[Export ("initWithBase64EncodedString:options:")]
-		IntPtr Constructor (string base64String, NSDataBase64DecodingOptions options);
+		NativeHandle Constructor (string base64String, NSDataBase64DecodingOptions options);
 
 		[iOS (7,0), Mac (10, 9)] // 10.9
 		[Export ("initWithBase64EncodedData:options:")]
-		IntPtr Constructor (NSData base64Data, NSDataBase64DecodingOptions options);
+		NativeHandle Constructor (NSData base64Data, NSDataBase64DecodingOptions options);
 
 		[iOS (7,0), Mac (10, 9)] // 10.9
 		[Export ("base64EncodedDataWithOptions:")]
@@ -1522,7 +1526,7 @@ namespace Foundation
 
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("initWithBytesNoCopy:length:deallocator:")]
-		IntPtr Constructor (IntPtr bytes, nuint length, [NullAllowed] Action<IntPtr,nuint> deallocator);
+		NativeHandle Constructor (IntPtr bytes, nuint length, [NullAllowed] Action<IntPtr,nuint> deallocator);
 
 		// NSDataCompression (NSData)
 
@@ -1541,10 +1545,10 @@ namespace Foundation
 	interface NSDataDetector : NSCopying, NSCoding {
 		[DesignatedInitializer]
 		[Export ("initWithTypes:error:")]
-		IntPtr Constructor (NSTextCheckingTypes options, out NSError error);
+		NativeHandle Constructor (NSTextCheckingTypes options, out NSError error);
 
 		[Wrap ("this ((NSTextCheckingTypes) options, out error)")]
-		IntPtr Constructor (NSTextCheckingType options, out NSError error);
+		NativeHandle Constructor (NSTextCheckingType options, out NSError error);
 
 		[Export ("dataDetectorWithTypes:error:"), Static]
 		NSDataDetector Create (NSTextCheckingTypes checkingTypes, out NSError error);
@@ -2126,10 +2130,10 @@ namespace Foundation
 		
 		[DesignatedInitializer]
 		[Export ("initWithFileDescriptor:closeOnDealloc:")]
-		IntPtr Constructor (int /* int, not NSInteger */ fd, bool closeOnDealloc);
+		NativeHandle Constructor (int /* int, not NSInteger */ fd, bool closeOnDealloc);
 		
 		[Export ("initWithFileDescriptor:")]
-		IntPtr Constructor (int /* int, not NSInteger */ fd);
+		NativeHandle Constructor (int /* int, not NSInteger */ fd);
 
 		[Export ("fileDescriptor")]
 		int FileDescriptor { get; } /* int, not NSInteger */
@@ -2301,7 +2305,7 @@ namespace Foundation
 	interface NSCoding {
 		// [Abstract]
 		[Export ("initWithCoder:")]
-		IntPtr Constructor (NSCoder decoder);
+		NativeHandle Constructor (NSCoder decoder);
 
 		[Abstract]
 		[Export ("encodeWithCoder:")]
@@ -2384,7 +2388,7 @@ namespace Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("initRequiringSecureCoding:")]
-		IntPtr Constructor (bool requiresSecureCoding);
+		NativeHandle Constructor (bool requiresSecureCoding);
 
 		// hack so we can decorate the default .ctor with availability attributes
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
@@ -2393,14 +2397,14 @@ namespace Foundation
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[Export ("initForWritingWithMutableData:")]
-		IntPtr Constructor (NSMutableData data);
+		NativeHandle Constructor (NSMutableData data);
 	
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
@@ -2474,7 +2478,7 @@ namespace Foundation
 	interface NSKeyedUnarchiver {
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("initForReadingFromData:error:")]
-		IntPtr Constructor (NSData data, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSData data, [NullAllowed] out NSError error);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
@@ -2506,7 +2510,7 @@ namespace Foundation
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
 		[MarshalNativeExceptions]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 	
 		[Static, Export ("unarchiveObjectWithData:")]
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
@@ -3455,7 +3459,7 @@ namespace Foundation
 		[Mac (10,9)]
 		[DesignatedInitializer]
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("valueForAttribute:")]
 		NSObject ValueForAttribute (string key);
@@ -3513,7 +3517,7 @@ namespace Foundation
 	interface NSMutableArray {
 		[DesignatedInitializer]
 		[Export ("initWithCapacity:")]
-		IntPtr Constructor (nuint capacity);
+		NativeHandle Constructor (nuint capacity);
 
 		[Internal]
 		[Sealed]
@@ -3577,13 +3581,13 @@ namespace Foundation
 	[BaseType (typeof (NSAttributedString))]
 	interface NSMutableAttributedString {
 		[Export ("initWithString:")]
-		IntPtr Constructor (string str);
+		NativeHandle Constructor (string str);
 		
 		[Export ("initWithString:attributes:")]
-		IntPtr Constructor (string str, [NullAllowed] NSDictionary attributes);
+		NativeHandle Constructor (string str, [NullAllowed] NSDictionary attributes);
 
 		[Export ("initWithAttributedString:")]
-		IntPtr Constructor (NSAttributedString other);
+		NativeHandle Constructor (NSAttributedString other);
 
 		[Export ("replaceCharactersInRange:withString:")]
 		void Replace (NSRange range, string newValue);
@@ -3682,7 +3686,7 @@ namespace Foundation
 
 		[Export ("initWithCapacity:")]
 		[PreSnippet ("if (capacity > (ulong) nint.MaxValue) throw new ArgumentOutOfRangeException ();", Optimizable = true)]
-		IntPtr Constructor (nuint capacity);
+		NativeHandle Constructor (nuint capacity);
 
 		[Export ("appendData:")]
 		void AppendData (NSData other);
@@ -3793,7 +3797,7 @@ namespace Foundation
 		[NoWatch, NoTV, NoMac]
 		[iOS (14,0)]
 		[Export ("initWithSRAbsoluteTime:")]
-		IntPtr Constructor (double srAbsoluteTime);
+		NativeHandle Constructor (double srAbsoluteTime);
 
 		[NoWatch, NoTV, NoMac]
 		[iOS (14,0)]
@@ -3845,31 +3849,31 @@ namespace Foundation
 		NSDictionary FromObjectsAndKeysInternal ([NullAllowed] NSArray objects, [NullAllowed] NSArray keys);
 
 		[Export ("initWithDictionary:")]
-		IntPtr Constructor (NSDictionary other);
+		NativeHandle Constructor (NSDictionary other);
 
 		[Export ("initWithDictionary:copyItems:")]
-		IntPtr Constructor (NSDictionary other, bool copyItems);
+		NativeHandle Constructor (NSDictionary other, bool copyItems);
 
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NSMutableDictionary(string)' constructor instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NSMutableDictionary(string)' constructor instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NSMutableDictionary(string)' constructor instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NSMutableDictionary(string)' constructor instead.")]
 		[Export ("initWithContentsOfFile:")]
-		IntPtr Constructor (string fileName);
+		NativeHandle Constructor (string fileName);
 
 		[Export ("initWithObjects:forKeys:"), Internal]
-		IntPtr Constructor (NSArray objects, NSArray keys);
+		NativeHandle Constructor (NSArray objects, NSArray keys);
 
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NSMutableDictionary(NSUrl)' constructor instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NSMutableDictionary(NSUrl)' constructor instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NSMutableDictionary(NSUrl)' constructor instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NSMutableDictionary(NSUrl)' constructor instead.")]
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithContentsOfURL:error:")]
-		IntPtr Constructor (NSUrl url, out NSError error);
+		NativeHandle Constructor (NSUrl url, out NSError error);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
@@ -3967,7 +3971,7 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithDomain:code:userInfo:")]
-		IntPtr Constructor (NSString domain, nint code, [NullAllowed] NSDictionary userInfo);
+		NativeHandle Constructor (NSString domain, nint code, [NullAllowed] NSDictionary userInfo);
 		
 		[Export ("domain")]
 		string Domain { get; }
@@ -4156,7 +4160,7 @@ namespace Foundation
 	interface NSException : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithName:reason:userInfo:")]
-		IntPtr Constructor (string name, string reason, [NullAllowed] NSDictionary userInfo);
+		NativeHandle Constructor (string name, string reason, [NullAllowed] NSDictionary userInfo);
 
 		[Export ("name")]
 		string Name { get; }
@@ -4255,7 +4259,7 @@ namespace Foundation
 		
 		[DesignatedInitializer]
 		[Export ("initWithExpressionType:")]
-		IntPtr Constructor (NSExpressionType type);
+		NativeHandle Constructor (NSExpressionType type);
 
 		[Export ("expressionType")]
 		NSExpressionType ExpressionType { get; }
@@ -4429,7 +4433,7 @@ namespace Foundation
 	interface NSLinguisticTagger {
 		[DesignatedInitializer]
 		[Export ("initWithTagSchemes:options:")]
-		IntPtr Constructor (NSString [] tagSchemes, NSLinguisticTaggerOptions opts);
+		NativeHandle Constructor (NSString [] tagSchemes, NSLinguisticTaggerOptions opts);
 
 		[Export ("tagSchemes")]
 		NSString [] TagSchemes { get; }
@@ -4657,7 +4661,7 @@ namespace Foundation
 		
 		[DesignatedInitializer]
 		[Export ("initWithLocaleIdentifier:")]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("localeIdentifier")]
 		string LocaleIdentifier { get; }
@@ -4791,7 +4795,7 @@ namespace Foundation
 	interface NSRegularExpression : NSCopying, NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithPattern:options:error:")]
-		IntPtr Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
+		NativeHandle Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
 
 		[Static]
 		[Export ("regularExpressionWithPattern:options:error:")]
@@ -4949,10 +4953,10 @@ namespace Foundation
 		NSSet CreateSet ();
 
 		[Export ("initWithSet:")]
-		IntPtr Constructor (NSSet other);
+		NativeHandle Constructor (NSSet other);
 		
 		[Export ("initWithArray:")]
-		IntPtr Constructor (NSArray other);
+		NativeHandle Constructor (NSArray other);
 		
 		[Export ("count")]
 		nuint Count { get; }
@@ -4976,7 +4980,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("containsObject:")]
-		bool _Contains (IntPtr id);
+		bool _Contains (NativeHandle id);
 
 		[Export ("containsObject:")]
 		bool Contains (NSObject id);
@@ -4999,7 +5003,7 @@ namespace Foundation
 		[Internal]
 		[Sealed]
 		[Export ("setByAddingObjectsFromSet:")]
-		IntPtr _SetByAddingObjectsFromSet (IntPtr other);
+		NativeHandle _SetByAddingObjectsFromSet (NativeHandle other);
 
 		[Export ("setByAddingObjectsFromSet:"), Internal]
 		NSSet SetByAddingObjectsFromSet (NSSet other);
@@ -5010,7 +5014,7 @@ namespace Foundation
 		[Internal]
 		[Static]
 		[Export ("setWithArray:")]
-		IntPtr _SetWithArray (IntPtr array);
+		NativeHandle _SetWithArray (NativeHandle array);
 
 #if MACCORE
 		[Mac (10,11)]
@@ -5034,13 +5038,13 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	interface NSSortDescriptor : NSSecureCoding, NSCopying {
 		[Export ("initWithKey:ascending:")]
-		IntPtr Constructor (string key, bool ascending);
+		NativeHandle Constructor (string key, bool ascending);
 
 		[Export ("initWithKey:ascending:selector:")]
-		IntPtr Constructor (string key, bool ascending, [NullAllowed] Selector selector);
+		NativeHandle Constructor (string key, bool ascending, [NullAllowed] Selector selector);
 
 		[Export ("initWithKey:ascending:comparator:")]
-		IntPtr Constructor (string key, bool ascending, NSComparator comparator);
+		NativeHandle Constructor (string key, bool ascending, NSComparator comparator);
 
 		[Export ("key")]
 		string Key { get; }
@@ -5107,11 +5111,11 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithFireDate:interval:target:selector:userInfo:repeats:")]
-		IntPtr Constructor (NSDate date, double seconds, NSObject target, Selector selector, [NullAllowed] NSObject userInfo, bool repeats);
+		NativeHandle Constructor (NSDate date, double seconds, NSObject target, Selector selector, [NullAllowed] NSObject userInfo, bool repeats);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[Export ("initWithFireDate:interval:repeats:block:")]
-		IntPtr Constructor (NSDate date, double seconds, bool repeats, Action<NSTimer> block);
+		NativeHandle Constructor (NSDate date, double seconds, bool repeats, Action<NSTimer> block);
 
 		[Export ("fire")]
 		void Fire ();
@@ -5145,10 +5149,10 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSTimeZone : NSSecureCoding, NSCopying {
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 		
 		[Export ("initWithName:data:")]
-		IntPtr Constructor (string name, NSData data);
+		NativeHandle Constructor (string name, NSData data);
 
 		[Export ("name")]
 		string Name { get; } 
@@ -5306,11 +5310,11 @@ namespace Foundation
 	[DesignatedDefaultCtor]
 	interface NSUuid : NSSecureCoding, NSCopying {
 		[Export ("initWithUUIDString:")]
-		IntPtr Constructor (string str);
+		NativeHandle Constructor (string str);
 
 		// bound manually to keep the managed/native signatures identical
 		//[Export ("initWithUUIDBytes:"), Internal]
-		//IntPtr Constructor (IntPtr bytes, bool unused);
+		//NativeHandle Constructor (IntPtr bytes, bool unused);
 
 		[Export ("getUUIDBytes:"), Internal]
 		void GetUuidBytes (IntPtr uuid);
@@ -5329,7 +5333,7 @@ namespace Foundation
 	{
 		[DesignatedInitializer]
 		[Export ("initWithActivityType:")]
-		IntPtr Constructor (string activityType);
+		NativeHandle Constructor (string activityType);
 
 		[Export ("activityType")]
 		string ActivityType { get; }
@@ -5681,18 +5685,18 @@ namespace Foundation
 		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSUrlComponents' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlComponents' instead.")]
 		[Export ("initWithScheme:host:path:")]
-		IntPtr Constructor (string scheme, string host, string path);
+		NativeHandle Constructor (string scheme, string host, string path);
 
 		[DesignatedInitializer]
 		[Export ("initFileURLWithPath:isDirectory:")]
-		IntPtr Constructor (string path, bool isDir);
+		NativeHandle Constructor (string path, bool isDir);
 
 		[Export ("initWithString:")]
-		IntPtr Constructor (string urlString);
+		NativeHandle Constructor (string urlString);
 
 		[DesignatedInitializer]
 		[Export ("initWithString:relativeToURL:")]
-		IntPtr Constructor (string urlString, NSUrl relativeToUrl);
+		NativeHandle Constructor (string urlString, NSUrl relativeToUrl);
 
 		[Export ("URLWithString:")][Static]
 		NSUrl FromString (string s);
@@ -5803,7 +5807,7 @@ namespace Foundation
 		[DesignatedInitializer]
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("initFileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
-		IntPtr Constructor (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
+		NativeHandle Constructor (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
 
 		[iOS (7,0), Mac (10, 9), Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		NSUrl FromUTF8Pointer (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
@@ -6209,7 +6213,7 @@ namespace Foundation
 		NSData CreateBookmarkData (NSUrlBookmarkCreationOptions options, [NullAllowed] string [] resourceValues, [NullAllowed] NSUrl relativeUrl, out NSError error);
 
 		[Export ("initByResolvingBookmarkData:options:relativeToURL:bookmarkDataIsStale:error:")]
-		IntPtr Constructor (NSData bookmarkData, NSUrlBookmarkResolutionOptions resolutionOptions, [NullAllowed] NSUrl relativeUrl, out bool bookmarkIsStale, out NSError error);
+		NativeHandle Constructor (NSData bookmarkData, NSUrlBookmarkResolutionOptions resolutionOptions, [NullAllowed] NSUrl relativeUrl, out bool bookmarkIsStale, out NSError error);
 
 		[Field ("NSURLPathKey")]
 		NSString PathKey { get; }
@@ -6288,7 +6292,7 @@ namespace Foundation
 		[DesignatedInitializer]
 		[iOS (9,0), Mac(10,11)]
 		[Export ("initFileURLWithPath:isDirectory:relativeToURL:")]
-		IntPtr Constructor (string path, bool isDir, [NullAllowed] NSUrl relativeToUrl);
+		NativeHandle Constructor (string path, bool isDir, [NullAllowed] NSUrl relativeToUrl);
 
 		[iOS (9,0), Mac(10,11)]
 		[Static]
@@ -6418,7 +6422,7 @@ namespace Foundation
 	interface NSUrlQueryItem : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithName:value:")]
-		IntPtr Constructor (string name, string value);
+		NativeHandle Constructor (string name, string value);
 
 		[Export ("name")]
 		string Name { get; }
@@ -6458,11 +6462,11 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6,0, message : "Use the overload that accepts an 'NSUrl' parameter instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message : "Use the overload that accepts an 'NSUrl' parameter instead.")]
 		[Export ("initWithMemoryCapacity:diskCapacity:diskPath:")]
-		IntPtr Constructor (nuint memoryCapacity, nuint diskCapacity, [NullAllowed] string diskPath);
+		NativeHandle Constructor (nuint memoryCapacity, nuint diskCapacity, [NullAllowed] string diskPath);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithMemoryCapacity:diskCapacity:directoryURL:")]
-		IntPtr Constructor (nuint memoryCapacity, nuint diskCapacity, [NullAllowed] NSUrl directoryUrl);
+		NativeHandle Constructor (nuint memoryCapacity, nuint diskCapacity, [NullAllowed] NSUrl directoryUrl);
 
 		[Export ("cachedResponseForRequest:")]
 		NSCachedUrlResponse CachedResponseForRequest (NSUrlRequest request);
@@ -6510,13 +6514,13 @@ namespace Foundation
 	[BaseType (typeof (NSObject), Name="NSURLComponents")]
 	partial interface NSUrlComponents : NSCopying {
 		[Export ("initWithURL:resolvingAgainstBaseURL:")]
-		IntPtr Constructor (NSUrl url, bool resolveAgainstBaseUrl);
+		NativeHandle Constructor (NSUrl url, bool resolveAgainstBaseUrl);
 	
 		[Static, Export ("componentsWithURL:resolvingAgainstBaseURL:")]
 		NSUrlComponents FromUrl (NSUrl url, bool resolvingAgainstBaseUrl);
 	
 		[Export ("initWithString:")]
-		IntPtr Constructor (string urlString);
+		NativeHandle Constructor (string urlString);
 	
 		[Static, Export ("componentsWithString:")]
 		NSUrlComponents FromString (string urlString);
@@ -6634,10 +6638,10 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSUrlAuthenticationChallenge : NSSecureCoding {
 		[Export ("initWithProtectionSpace:proposedCredential:previousFailureCount:failureResponse:error:sender:")]
-		IntPtr Constructor (NSUrlProtectionSpace space, NSUrlCredential credential, nint previousFailureCount, [NullAllowed] NSUrlResponse response, [NullAllowed] NSError error, NSUrlConnection sender);
+		NativeHandle Constructor (NSUrlProtectionSpace space, NSUrlCredential credential, nint previousFailureCount, [NullAllowed] NSUrlResponse response, [NullAllowed] NSError error, NSUrlConnection sender);
 		
 		[Export ("initWithAuthenticationChallenge:sender:")]
-		IntPtr Constructor (NSUrlAuthenticationChallenge  challenge, NSUrlConnection sender);
+		NativeHandle Constructor (NSUrlAuthenticationChallenge  challenge, NSUrlConnection sender);
 	
 		[Export ("protectionSpace")]
 		NSUrlProtectionSpace ProtectionSpace { get; }
@@ -6708,12 +6712,12 @@ namespace Foundation
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		IntPtr Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NativeHandle Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
 	
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:startImmediately:")]
-		IntPtr Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
+		NativeHandle Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
 	
 		[Export ("start")]
 		void Start ();
@@ -6837,13 +6841,13 @@ namespace Foundation
 	interface NSUrlCredential : NSSecureCoding, NSCopying {
 
 		[Export ("initWithTrust:")]
-		IntPtr Constructor (SecTrust trust);
+		NativeHandle Constructor (SecTrust trust);
 
 		[Export ("persistence")]
 		NSUrlCredentialPersistence Persistence { get; }
 
 		[Export ("initWithUser:password:persistence:")]
-		IntPtr Constructor (string user, string password, NSUrlCredentialPersistence persistence);
+		NativeHandle Constructor (string user, string password, NSUrlCredentialPersistence persistence);
 	
 		[Static]
 		[Export ("credentialWithUser:password:persistence:")]
@@ -6860,7 +6864,7 @@ namespace Foundation
 	
 		[Export ("initWithIdentity:certificates:persistence:")]
 		[Internal]
-		IntPtr Constructor (IntPtr identity, IntPtr certificates, NSUrlCredentialPersistence persistance);
+		NativeHandle Constructor (IntPtr identity, IntPtr certificates, NSUrlCredentialPersistence persistance);
 	
 		[Static]
 		[Internal]
@@ -6876,7 +6880,7 @@ namespace Foundation
 	
 		// bound manually to keep the managed/native signatures identical
 		//[Export ("initWithTrust:")]
-		//IntPtr Constructor (IntPtr SecTrustRef_trust, bool ignored);
+		//NativeHandle Constructor (IntPtr SecTrustRef_trust, bool ignored);
 	
 		[Internal]
 		[Static]
@@ -7213,7 +7217,7 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "This type is not meant to be user created.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message:  "This type is not meant to be user created.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("taskIdentifier")]
 		nuint TaskIdentifier { get; }
@@ -7313,7 +7317,7 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'NSURLSession.CreateDataTask' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message:  "Use 'NSURLSession.CreateDataTask' instead.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 	}
 
 	[iOS (7,0)]
@@ -7326,7 +7330,7 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'NSURLSession.CreateUploadTask' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message:  "Use 'NSURLSession.CreateUploadTask' instead.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 	}
 
 	[iOS (7,0)]
@@ -7339,7 +7343,7 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'NSURLSession.CreateDownloadTask' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message:  "Use 'NSURLSession.CreateDownloadTask' instead.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("cancelByProducingResumeData:")]
 		void Cancel (Action<NSData> resumeCallback);
@@ -7862,11 +7866,11 @@ namespace Foundation
 	[BaseType (typeof (NSObject), Name="NSURLRequest")]
 	interface NSUrlRequest : NSSecureCoding, NSMutableCopying {
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:cachePolicy:timeoutInterval:")]
-		IntPtr Constructor (NSUrl url, NSUrlRequestCachePolicy cachePolicy, double timeoutInterval);
+		NativeHandle Constructor (NSUrl url, NSUrlRequestCachePolicy cachePolicy, double timeoutInterval);
 
 		[Export ("requestWithURL:")][Static]
 		NSUrlRequest FromUrl (NSUrl url);
@@ -7949,20 +7953,20 @@ namespace Foundation
 		NSMutableDictionary FromObjectsAndKeysInternal (NSArray objects, NSArray Keys);
 		
 		[Export ("initWithDictionary:")]
-		IntPtr Constructor (NSDictionary other);
+		NativeHandle Constructor (NSDictionary other);
 
 		[Export ("initWithDictionary:copyItems:")]
-		IntPtr Constructor (NSDictionary other, bool copyItems);
+		NativeHandle Constructor (NSDictionary other, bool copyItems);
 
 		[Export ("initWithContentsOfFile:")]
-		IntPtr Constructor (string fileName);
+		NativeHandle Constructor (string fileName);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Internal]
 		[Export ("initWithObjects:forKeys:")]
-		IntPtr Constructor (NSArray objects, NSArray keys);
+		NativeHandle Constructor (NSArray objects, NSArray keys);
 
 		[Export ("removeAllObjects"), Internal]
 		void RemoveAllObjects ();
@@ -7995,14 +7999,14 @@ namespace Foundation
 	[DesignatedDefaultCtor]
 	interface NSMutableSet {
 		[Export ("initWithArray:")]
-		IntPtr Constructor (NSArray other);
+		NativeHandle Constructor (NSArray other);
 
 		[Export ("initWithSet:")]
-		IntPtr Constructor (NSSet other);
+		NativeHandle Constructor (NSSet other);
 		
 		[DesignatedInitializer]
 		[Export ("initWithCapacity:")]
-		IntPtr Constructor (nint capacity);
+		NativeHandle Constructor (nint capacity);
 
 		[Internal]
 		[Sealed]
@@ -8041,10 +8045,10 @@ namespace Foundation
 	[BaseType (typeof (NSUrlRequest), Name="NSMutableURLRequest")]
 	interface NSMutableUrlRequest {
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithURL:cachePolicy:timeoutInterval:")]
-		IntPtr Constructor (NSUrl url, NSUrlRequestCachePolicy cachePolicy, double timeoutInterval);
+		NativeHandle Constructor (NSUrl url, NSUrlRequestCachePolicy cachePolicy, double timeoutInterval);
 
 		[NullAllowed] // by default this property is null
 		[New][Export ("URL")]
@@ -8105,7 +8109,7 @@ namespace Foundation
 	interface NSUrlResponse : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithURL:MIMEType:expectedContentLength:textEncodingName:")]
-		IntPtr Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
+		NativeHandle Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
 
 		[Export ("URL")]
 		NSUrl Url { get; }
@@ -8278,7 +8282,7 @@ namespace Foundation
 		, NSItemProviderReading, NSItemProviderWriting
 	{
 		[Export ("initWithData:encoding:")]
-		IntPtr Constructor (NSData data, NSStringEncoding encoding);
+		NativeHandle Constructor (NSData data, NSStringEncoding encoding);
 #if MONOMAC
 		[Bind ("sizeWithAttributes:")]
 		CGSize StringSize ([NullAllowed] NSDictionary attributedStringAttributes);
@@ -8521,7 +8525,7 @@ namespace Foundation
 	// hack: it seems that generator.cs can't track NSCoding correctly ? maybe because the type is named NSString2 at that time
 	interface NSMutableString : NSCoding {
 		[Export ("initWithCapacity:")]
-		IntPtr Constructor (nint capacity);
+		NativeHandle Constructor (nint capacity);
 
 		[PreSnippet ("Check (index);", Optimizable = true)]
 		[Export ("insertString:atIndex:")]
@@ -8605,15 +8609,15 @@ namespace Foundation
 		bool HasBytesAvailable ();
 	
 		[Export ("initWithFileAtPath:")]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[DesignatedInitializer]
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Static]
 		[Export ("inputStreamWithData:")]
@@ -8681,7 +8685,7 @@ namespace Foundation
 #pragma warning disable 108
 		[Manual]
 		[Export ("conformsToProtocol:")]
-		bool ConformsToProtocol (IntPtr /* Protocol */ aProtocol);
+		bool ConformsToProtocol (NativeHandle /* Protocol */ aProtocol);
 
 		[Manual]
 		[Export ("retain")]
@@ -9039,7 +9043,7 @@ namespace Foundation
 		[Abstract]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("conformsToProtocol:")]
-		bool ConformsToProtocol ([NullAllowed] IntPtr /* Protocol */ aProtocol);
+		bool ConformsToProtocol ([NullAllowed] NativeHandle /* Protocol */ aProtocol);
 
 		[Abstract]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -9221,16 +9225,16 @@ namespace Foundation
 	[DesignatedDefaultCtor]
 	interface NSOrderedSet : NSSecureCoding, NSMutableCopying {
 		[Export ("initWithObject:")]
-		IntPtr Constructor (NSObject start);
+		NativeHandle Constructor (NSObject start);
 
 		[Export ("initWithArray:"), Internal]
-		IntPtr Constructor (NSArray array);
+		NativeHandle Constructor (NSArray array);
 
 		[Export ("initWithSet:")]
-		IntPtr Constructor (NSSet source);
+		NativeHandle Constructor (NSSet source);
 
 		[Export ("initWithOrderedSet:")]
-		IntPtr Constructor (NSOrderedSet source);
+		NativeHandle Constructor (NSOrderedSet source);
 
 		[Export ("count")]
 		nint Count { get; }
@@ -9314,20 +9318,20 @@ namespace Foundation
 	[DesignatedDefaultCtor]
 	interface NSMutableOrderedSet {
 		[Export ("initWithObject:")]
-		IntPtr Constructor (NSObject start);
+		NativeHandle Constructor (NSObject start);
 
 		[Export ("initWithSet:")]
-		IntPtr Constructor (NSSet source);
+		NativeHandle Constructor (NSSet source);
 
 		[Export ("initWithOrderedSet:")]
-		IntPtr Constructor (NSOrderedSet source);
+		NativeHandle Constructor (NSOrderedSet source);
 
 		[DesignatedInitializer]
 		[Export ("initWithCapacity:")]
-		IntPtr Constructor (nint capacity);
+		NativeHandle Constructor (nint capacity);
 
 		[Export ("initWithArray:"), Internal]
-		IntPtr Constructor (NSArray array);
+		NativeHandle Constructor (NSArray array);
 
 		[Export ("unionSet:"), Internal]
 		void UnionSet (NSSet other);
@@ -9474,7 +9478,7 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithDominantScript:languageMap:")]
-		IntPtr Constructor (string dominantScript, [NullAllowed] NSDictionary languageMap);
+		NativeHandle Constructor (string dominantScript, [NullAllowed] NSDictionary languageMap);
 	}
 	
 	[BaseType (typeof (NSStream))]
@@ -9482,16 +9486,16 @@ namespace Foundation
 	interface NSOutputStream {
 		[DesignatedInitializer]
 		[Export ("initToMemory")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("hasSpaceAvailable")]
 		bool HasSpaceAvailable ();
 	
 		//[Export ("initToBuffer:capacity:")]
-		//IntPtr Constructor (uint8_t  buffer, NSUInteger capacity);
+		//NativeHandle Constructor (uint8_t  buffer, NSUInteger capacity);
 
 		[Export ("initToFileAtPath:append:")]
-		IntPtr Constructor (string path, bool shouldAppend);
+		NativeHandle Constructor (string path, bool shouldAppend);
 
 		[Static]
 		[Export ("outputStreamToMemory")]
@@ -9520,7 +9524,7 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSHttpCookie {
 		[Export ("initWithProperties:")]
-		IntPtr Constructor (NSDictionary properties);
+		NativeHandle Constructor (NSDictionary properties);
 
 		[Export ("cookieWithProperties:"), Static]
 		NSHttpCookie CookieFromProperties (NSDictionary properties);
@@ -9685,10 +9689,10 @@ namespace Foundation
 	[BaseType (typeof (NSUrlResponse), Name="NSHTTPURLResponse")]
 	interface NSHttpUrlResponse {
 		[Export ("initWithURL:MIMEType:expectedContentLength:textEncodingName:")]
-		IntPtr Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
+		NativeHandle Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
 
 		[Export ("initWithURL:statusCode:HTTPVersion:headerFields:")]
-		IntPtr Constructor (NSUrl url, nint statusCode, [NullAllowed] string httpVersion, [NullAllowed] NSDictionary headerFields);
+		NativeHandle Constructor (NSUrl url, nint statusCode, [NullAllowed] string httpVersion, [NullAllowed] NSDictionary headerFields);
 		
 		[Export ("statusCode")]
 		nint StatusCode { get; }
@@ -9718,7 +9722,7 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithPath:")]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[Export ("bundleForClass:")][Static]
 		NSBundle FromClass (Class c);
@@ -9853,7 +9857,7 @@ namespace Foundation
 		NSUrl BuiltInPluginsUrl { get; }
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 		
 		[Static, Export ("bundleWithURL:")]
 		NSBundle FromUrl (NSUrl url);
@@ -9916,11 +9920,11 @@ namespace Foundation
 	interface NSBundleResourceRequest : NSProgressReporting
 	{
 		[Export ("initWithTags:")]
-		IntPtr Constructor (NSSet<NSString> tags);
+		NativeHandle Constructor (NSSet<NSString> tags);
 	
 		[Export ("initWithTags:bundle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSSet<NSString> tags, NSBundle bundle);
+		NativeHandle Constructor (NSSet<NSString> tags, NSBundle bundle);
 	
 		[Export ("loadingPriority")]
 		double LoadingPriority { get; set; }
@@ -10029,11 +10033,11 @@ namespace Foundation
 		NSIndexSet FromNSRange (NSRange indexRange);
 		
 		[Export ("initWithIndex:")]
-		IntPtr Constructor (nuint index);
+		NativeHandle Constructor (nuint index);
 
 		[DesignatedInitializer]
 		[Export ("initWithIndexSet:")]
-		IntPtr Constructor (NSIndexSet other);
+		NativeHandle Constructor (NSIndexSet other);
 
 		[Export ("count")]
 		nint Count { get; }
@@ -10124,10 +10128,10 @@ namespace Foundation
 	partial interface NSItemProvider : NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithItem:typeIdentifier:")]
-		IntPtr Constructor ([NullAllowed] NSObject item, string typeIdentifier);
+		NativeHandle Constructor ([NullAllowed] NSObject item, string typeIdentifier);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl fileUrl);
+		NativeHandle Constructor (NSUrl fileUrl);
 
 		[Export ("registeredTypeIdentifiers", ArgumentSemantic.Copy)]
 		string [] RegisteredTypeIdentifiers { get; }
@@ -10219,7 +10223,7 @@ namespace Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithObject:")]
-		IntPtr Constructor (INSItemProviderWriting @object);
+		NativeHandle Constructor (INSItemProviderWriting @object);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("registerObject:visibility:")]
@@ -10415,10 +10419,10 @@ namespace Foundation
 	[BaseType (typeof (NSIndexSet))]
 	interface NSMutableIndexSet : NSSecureCoding {
 		[Export ("initWithIndex:")]
-		IntPtr Constructor (nuint index);
+		NativeHandle Constructor (nuint index);
 
 		[Export ("initWithIndexSet:")]
-		IntPtr Constructor (NSIndexSet other);
+		NativeHandle Constructor (NSIndexSet other);
 
 		[Export ("addIndexes:")]
 		void Add (NSIndexSet other);
@@ -10451,10 +10455,10 @@ namespace Foundation
 	interface NSNetService {
 		[DesignatedInitializer]
 		[Export ("initWithDomain:type:name:port:")]
-		IntPtr Constructor (string domain, string type, string name, int /* int, not NSInteger */ port);
+		NativeHandle Constructor (string domain, string type, string name, int /* int, not NSInteger */ port);
 
 		[Export ("initWithDomain:type:name:")]
-		IntPtr Constructor (string domain, string type, string name);
+		NativeHandle Constructor (string domain, string type, string name);
 		
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -10725,7 +10729,7 @@ namespace Foundation
 
 		[Export ("initWithPath:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[Export ("tryLock")]
 		bool TryLock ();
@@ -10794,7 +10798,7 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithNotificationCenter:")]
-		IntPtr Constructor (NSNotificationCenter notificationCenter);
+		NativeHandle Constructor (NSNotificationCenter notificationCenter);
 
 		[Export ("enqueueNotification:postingStyle:")]
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle);
@@ -11205,61 +11209,61 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithChar:")]
-		IntPtr Constructor (sbyte value);
+		NativeHandle Constructor (sbyte value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithUnsignedChar:")]
-		IntPtr Constructor (byte value);
+		NativeHandle Constructor (byte value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithShort:")]
-		IntPtr Constructor (short value);
+		NativeHandle Constructor (short value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithUnsignedShort:")]
-		IntPtr Constructor (ushort value);
+		NativeHandle Constructor (ushort value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithInt:")]
-		IntPtr Constructor (int /* int, not NSInteger */ value);
+		NativeHandle Constructor (int /* int, not NSInteger */ value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithUnsignedInt:")]
-		IntPtr Constructor (uint /* unsigned int, not NSUInteger */value);
+		NativeHandle Constructor (uint /* unsigned int, not NSUInteger */value);
 	
 		//[Export ("initWithLong:")]
-		//IntPtr Constructor (long value);
+		//NativeHandle Constructor (long value);
 		//
 		//[Export ("initWithUnsignedLong:")]
-		//IntPtr Constructor (ulong value);
+		//NativeHandle Constructor (ulong value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithLongLong:")]
-		IntPtr Constructor (long value);
+		NativeHandle Constructor (long value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithUnsignedLongLong:")]
-		IntPtr Constructor (ulong value);
+		NativeHandle Constructor (ulong value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithFloat:")]
-		IntPtr Constructor (float /* float, not CGFloat */ value);
+		NativeHandle Constructor (float /* float, not CGFloat */ value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithDouble:")]
-		IntPtr Constructor (double value);
+		NativeHandle Constructor (double value);
 	
 		[DesignatedInitializer]
 		[Export ("initWithBool:")]
-		IntPtr Constructor (bool value);
+		NativeHandle Constructor (bool value);
 
 		[DesignatedInitializer]
 		[Export ("initWithInteger:")]
-		IntPtr Constructor (nint value);
+		NativeHandle Constructor (nint value);
 
 		[DesignatedInitializer]
 		[Export ("initWithUnsignedInteger:")]
-		IntPtr Constructor (nuint value);
+		NativeHandle Constructor (nuint value);
 	
 		[Export ("numberWithChar:")][Static]
 		NSNumber FromSByte (sbyte value);
@@ -11522,17 +11526,17 @@ namespace Foundation
 	[BaseType (typeof (NSNumber))]
 	interface NSDecimalNumber : NSSecureCoding {
 		[Export ("initWithMantissa:exponent:isNegative:")]
-		IntPtr Constructor (long mantissa, short exponent, bool isNegative);
+		NativeHandle Constructor (long mantissa, short exponent, bool isNegative);
 		
 		[DesignatedInitializer]
 		[Export ("initWithDecimal:")]
-		IntPtr Constructor (NSDecimal dec);
+		NativeHandle Constructor (NSDecimal dec);
 
 		[Export ("initWithString:")]
-		IntPtr Constructor (string numberValue);
+		NativeHandle Constructor (string numberValue);
 
 		[Export ("initWithString:locale:")]
-		IntPtr Constructor (string numberValue, NSObject locale);
+		NativeHandle Constructor (string numberValue, NSObject locale);
 
 		[Export ("descriptionWithLocale:")]
 		[Override]
@@ -11742,7 +11746,7 @@ namespace Foundation
 #if MONOMAC || __MACCATALYST__
 		[DesignatedInitializer]
 		[Export ("initWithSendPort:receivePort:components:")]
-		IntPtr Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
+		NativeHandle Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
 
 		[Export ("components")]
 		NSArray Components { get; }
@@ -11770,11 +11774,11 @@ namespace Foundation
 	interface NSMachPort {
 		[DesignatedInitializer]
 		[Export ("initWithMachPort:")]
-		IntPtr Constructor (uint /* uint32_t */ machPort);
+		NativeHandle Constructor (uint /* uint32_t */ machPort);
 
 		[DesignatedInitializer]
 		[Export ("initWithMachPort:options:")]
-		IntPtr Constructor (uint /* uint32_t */ machPort, NSMachPortRights options);
+		NativeHandle Constructor (uint /* uint32_t */ machPort, NSMachPortRights options);
 		
 		[Static, Export ("portWithMachPort:")]
 		NSPort FromMachPort (uint /* uint32_t */ port);
@@ -11971,7 +11975,7 @@ namespace Foundation
 	
 		[DesignatedInitializer]
 		[Export ("initWithParent:userInfo:")]
-		IntPtr Constructor ([NullAllowed] NSProgress parentProgress, [NullAllowed] NSDictionary userInfo);
+		NativeHandle Constructor ([NullAllowed] NSProgress parentProgress, [NullAllowed] NSDictionary userInfo);
 	
 		[Export ("becomeCurrentWithPendingUnitCount:")]
 		void BecomeCurrent (long pendingUnitCount);
@@ -12208,12 +12212,12 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithFilePresenter:")]
-		IntPtr Constructor ([NullAllowed] INSFilePresenter filePresenterOrNil);
+		NativeHandle Constructor ([NullAllowed] INSFilePresenter filePresenterOrNil);
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use '.ctor(INSFilePresenter)' instead.")]
 		[Wrap ("this (filePresenterOrNil as INSFilePresenter)")]
-		IntPtr Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
+		NativeHandle Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
 #endif
 
 		[Export ("coordinateReadingItemAtURL:options:error:byAccessor:")]
@@ -12830,23 +12834,23 @@ namespace Foundation
 	interface NSFileWrapper : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithURL:options:error:")]
-		IntPtr Constructor (NSUrl url, NSFileWrapperReadingOptions options, out NSError outError);
+		NativeHandle Constructor (NSUrl url, NSFileWrapperReadingOptions options, out NSError outError);
 
 		[DesignatedInitializer]
 		[Export ("initDirectoryWithFileWrappers:")]
-		IntPtr Constructor (NSDictionary childrenByPreferredName);
+		NativeHandle Constructor (NSDictionary childrenByPreferredName);
 
 		[DesignatedInitializer]
 		[Export ("initRegularFileWithContents:")]
-		IntPtr Constructor (NSData contents);
+		NativeHandle Constructor (NSData contents);
 
 		[DesignatedInitializer]
 		[Export ("initSymbolicLinkWithDestinationURL:")]
-		IntPtr Constructor (NSUrl urlToSymbolicLink);
+		NativeHandle Constructor (NSUrl urlToSymbolicLink);
 
 		// Constructor clash
 		//[Export ("initWithSerializedRepresentation:")]
-		//IntPtr Constructor (NSData serializeRepresentation);
+		//NativeHandle Constructor (NSData serializeRepresentation);
 
 		[Export ("isDirectory")]
 		bool IsDirectory { get; }
@@ -13015,11 +13019,11 @@ namespace Foundation
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		IntPtr Constructor (NSUrlRequest request, NSObject delegate1);
+		NativeHandle Constructor (NSUrlRequest request, NSObject delegate1);
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithResumeData:delegate:path:")]
-		IntPtr Constructor (NSData resumeData, NSObject delegate1, string path);
+		NativeHandle Constructor (NSData resumeData, NSObject delegate1, string path);
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -13126,7 +13130,7 @@ namespace Foundation
 	interface NSUrlProtocol {
 		[DesignatedInitializer]
 		[Export ("initWithRequest:cachedResponse:client:")]
-		IntPtr Constructor (NSUrlRequest request, [NullAllowed] NSCachedUrlResponse cachedResponse, INSUrlProtocolClient client);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed] NSCachedUrlResponse cachedResponse, INSUrlProtocolClient client);
 
 		[Export ("client")]
 		INSUrlProtocolClient Client { get; }
@@ -13187,7 +13191,7 @@ namespace Foundation
 
 //		[iOS (8,0)]
 //		[Export ("initWithTask:cachedResponse:client:")]
-//		IntPtr Constructor (NSUrlSessionTask task, [NullAllowed] NSCachedUrlResponse cachedResponse, INSUrlProtocolClient client);
+//		NativeHandle Constructor (NSUrlSessionTask task, [NullAllowed] NSCachedUrlResponse cachedResponse, INSUrlProtocolClient client);
 //
 //		[iOS (8,0)]
 //		[Export ("task", ArgumentSemantic.Copy)]
@@ -13476,7 +13480,7 @@ namespace Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithCondition:")]
-		IntPtr Constructor (nint condition);
+		NativeHandle Constructor (nint condition);
 
 		[Export ("condition")]
 		nint Condition { get; }
@@ -13630,10 +13634,10 @@ namespace Foundation
 
 		[Export ("initWithStartDate:duration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDate startDate, double duration);
+		NativeHandle Constructor (NSDate startDate, double duration);
 
 		[Export ("initWithStartDate:endDate:")]
-		IntPtr Constructor (NSDate startDate, NSDate endDate);
+		NativeHandle Constructor (NSDate startDate, NSDate endDate);
 
 		[Export ("compare:")]
 		NSComparisonResult Compare (NSDateInterval dateInterval);
@@ -13661,7 +13665,7 @@ namespace Foundation
 
 		[Export ("initWithSymbol:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol);
+		NativeHandle Constructor (string symbol);
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13685,11 +13689,11 @@ namespace Foundation
 		double Constant { get; }
 
 		[Export ("initWithCoefficient:")]
-		IntPtr Constructor (double coefficient);
+		NativeHandle Constructor (double coefficient);
 
 		[Export ("initWithCoefficient:constant:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double coefficient, double constant);
+		NativeHandle Constructor (double coefficient, double constant);
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13700,14 +13704,14 @@ namespace Foundation
 		// Inlined from base type
 		[Export ("initWithSymbol:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol);
+		NativeHandle Constructor (string symbol);
 
 		[Export ("converter", ArgumentSemantic.Copy)]
 		NSUnitConverter Converter { get; }
 
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		// needs to be overriden in suubclasses
 		//	NSInvalidArgumentException Reason: *** You must override baseUnit in your class NSDimension to define its base unit.
@@ -13724,7 +13728,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("kelvin", ArgumentSemantic.Copy)]
@@ -13841,7 +13845,7 @@ namespace Foundation
 		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithCommandDescription:")]
-		IntPtr Constructor (NSScriptCommandDescription cmdDescription);
+		NativeHandle Constructor (NSScriptCommandDescription cmdDescription);
 
 		[Internal]
 		[Static]
@@ -13888,7 +13892,7 @@ namespace Foundation
 		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithSuiteName:commandName:dictionary:")]
-		IntPtr Constructor (NSString suiteName, NSString commandName, NSDictionary commandDeclaration);
+		NativeHandle Constructor (NSString suiteName, NSString commandName, NSDictionary commandDeclaration);
 
 		[Internal]
 		[Export ("appleEventClassCode")]
@@ -13940,7 +13944,7 @@ namespace Foundation
 	[MacCatalyst (13, 0)]
 	interface NSAffineTransform : NSSecureCoding, NSCopying {
 		[Export ("initWithTransform:")]
-		IntPtr Constructor (NSAffineTransform transform);
+		NativeHandle Constructor (NSAffineTransform transform);
 
 		[Export ("translateXBy:yBy:")]
 		void Translate (nfloat deltaX, nfloat deltaY);
@@ -14669,12 +14673,12 @@ namespace Foundation
 		// @required - (instancetype)initWithContentsOfURL:(NSURL *)url error:(NSDictionary **)errorInfo;
 		[DesignatedInitializer]
 		[Export ("initWithContentsOfURL:error:")]
-		IntPtr Constructor (NSUrl url, out NSDictionary errorInfo);
+		NativeHandle Constructor (NSUrl url, out NSDictionary errorInfo);
 
 		// @required - (instancetype)initWithSource:(NSString *)source;
 		[DesignatedInitializer]
 		[Export ("initWithSource:")]
-		IntPtr Constructor (string source);
+		NativeHandle Constructor (string source);
 
 		// @property (readonly, copy) NSString * source;
 		[NullAllowed]
@@ -14735,7 +14739,7 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "This type is not meant to be user created.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message:  "This type is not meant to be user created.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("request", ArgumentSemantic.Copy)]
 		NSUrlRequest Request { get; }
@@ -14879,7 +14883,7 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "This type is not meant to be user created.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message:  "This type is not meant to be user created.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("transactionMetrics", ArgumentSemantic.Copy)]
 		NSUrlSessionTaskTransactionMetrics[] TransactionMetrics { get; }
@@ -14898,7 +14902,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("metersPerSecondSquared", ArgumentSemantic.Copy)]
@@ -14921,7 +14925,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("degrees", ArgumentSemantic.Copy)]
@@ -14960,7 +14964,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("squareMegameters", ArgumentSemantic.Copy)]
@@ -15031,7 +15035,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("gramsPerLiter", ArgumentSemantic.Copy)]
@@ -15058,7 +15062,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("partsPerMillion", ArgumentSemantic.Copy)]
@@ -15077,7 +15081,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("seconds", ArgumentSemantic.Copy)]
@@ -15124,7 +15128,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("coulombs", ArgumentSemantic.Copy)]
@@ -15163,7 +15167,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("megaamperes", ArgumentSemantic.Copy)]
@@ -15198,7 +15202,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 		
 		[Static]
 		[Export ("megavolts", ArgumentSemantic.Copy)]
@@ -15233,7 +15237,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("megaohms", ArgumentSemantic.Copy)]
@@ -15268,7 +15272,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("kilojoules", ArgumentSemantic.Copy)]
@@ -15303,7 +15307,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("terahertz", ArgumentSemantic.Copy)]
@@ -15355,7 +15359,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("litersPer100Kilometers", ArgumentSemantic.Copy)]
@@ -15382,7 +15386,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("megameters", ArgumentSemantic.Copy)]
@@ -15485,7 +15489,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("lux", ArgumentSemantic.Copy)]
@@ -15504,7 +15508,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("kilograms", ArgumentSemantic.Copy)]
@@ -15583,7 +15587,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("terawatts", ArgumentSemantic.Copy)]
@@ -15642,7 +15646,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("newtonsPerMetersSquared", ArgumentSemantic.Copy)]
@@ -15697,7 +15701,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("metersPerSecond", ArgumentSemantic.Copy)]
@@ -15728,7 +15732,7 @@ namespace Foundation
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("megaliters", ArgumentSemantic.Copy)]
@@ -15873,7 +15877,7 @@ namespace Foundation
 
 		[Export ("initWithDoubleValue:unit:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double doubleValue, NSUnit unit);
+		NativeHandle Constructor (double doubleValue, NSUnit unit);
 
 		[Export ("canBeConvertedToUnit:")]
 		bool CanBeConvertedTo (NSUnit unit);
@@ -15917,17 +15921,17 @@ namespace Foundation
 	{
 		[Export ("initWithServiceName:")]
 		[NoiOS][NoWatch][NoTV]
-		IntPtr Constructor (string xpcServiceName);
+		NativeHandle Constructor (string xpcServiceName);
 
 		[Export ("serviceName")]
 		string ServiceName { get; }
 
 		[Export ("initWithMachServiceName:options:")]
 		[NoiOS][NoWatch][NoTV]
-		IntPtr Constructor (string machServiceName, NSXpcConnectionOptions options);
+		NativeHandle Constructor (string machServiceName, NSXpcConnectionOptions options);
 
 		[Export ("initWithListenerEndpoint:")]
-		IntPtr Constructor (NSXpcListenerEndpoint endpoint);
+		NativeHandle Constructor (NSXpcListenerEndpoint endpoint);
 
 		[Export ("endpoint")]
 		NSXpcListenerEndpoint Endpoint { get; }
@@ -16007,7 +16011,7 @@ namespace Foundation
 		[Export ("initWithMachServiceName:")]
 		[DesignatedInitializer]
 		[NoiOS][NoTV][NoWatch]
-		IntPtr Constructor (string machServiceName);
+		NativeHandle Constructor (string machServiceName);
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -16159,12 +16163,12 @@ namespace Foundation
 		// Inlined from base type
 		[Export ("initWithSymbol:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol);
+		NativeHandle Constructor (string symbol);
 
 		// Inlined from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("bytes", ArgumentSemantic.Copy)]
@@ -16321,11 +16325,11 @@ namespace Foundation
 
 		[Export ("initWithData:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithString:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string @string);
+		NativeHandle Constructor (string @string);
 
 		[Export ("type")]
 		NSUrlSessionWebSocketMessageType Type { get; }
@@ -16424,7 +16428,7 @@ namespace Foundation
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("identifier")]
 		string Identifier { get; }

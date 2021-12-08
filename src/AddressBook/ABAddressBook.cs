@@ -41,6 +41,10 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 #if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
@@ -162,7 +166,7 @@ namespace AddressBook {
 			return new ABAddressBook (handle, true);
 		}
 			
-		internal ABAddressBook (IntPtr handle, bool owns)
+		internal ABAddressBook (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 			InitConstants.Init ();

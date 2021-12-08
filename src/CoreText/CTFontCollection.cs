@@ -38,7 +38,15 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreText {
 
@@ -91,7 +99,7 @@ namespace CoreText {
 	}
 
 	public class CTFontCollection : NativeObject {
-		internal CTFontCollection (IntPtr handle, bool owns)
+		internal CTFontCollection (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}

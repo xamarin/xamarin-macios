@@ -12,6 +12,10 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Intents {
 
 #if NET
@@ -26,7 +30,7 @@ namespace Intents {
 	public sealed partial class INIntentResolutionResult<ObjectType> : INIntentResolutionResult
 		where ObjectType : class, INativeObject 
 	{
-		internal INIntentResolutionResult (IntPtr handle) : base (handle)
+		internal INIntentResolutionResult (NativeHandle handle) : base (handle)
 		{
 		}
 	}

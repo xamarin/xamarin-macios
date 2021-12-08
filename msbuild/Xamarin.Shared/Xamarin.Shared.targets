@@ -240,10 +240,20 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 		<Error Condition="'$(_HasOldStyleBindingItems)' == 'true'" Text="Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead." />
 
+		<!-- The 'GetNuGetShortFolderName' task only exists for .NET, so hardcode values for _NuGetShortFolderName for legacy builds -->
+		<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">xamarinios10</_NuGetShortFolderName>
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">xamarintvos10</_NuGetShortFolderName>
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">xamarinwatch10</_NuGetShortFolderName>
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">xamarinmac10</_NuGetShortFolderName>
+		</PropertyGroup>
+
 		<!-- Figure out where to place the binding resources (see references above for more info) -->
 		<GetNuGetShortFolderName
 			TargetFrameworkMoniker="$(TargetFrameworkMoniker)"
-			TargetPlatformMoniker="$(TargetPlatformMoniker)">
+			TargetPlatformMoniker="$(TargetPlatformMoniker)"
+			Condition="'$(_NuGetShortFolderName)' == ''"
+			>
 			<Output TaskParameter="NuGetShortFolderName" PropertyName="_NuGetShortFolderName" />
 		</GetNuGetShortFolderName>
 
@@ -1586,6 +1596,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			IsDotNetSimulatorBuild="$(_IsDotNetSimulatorBuild)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			TargetArchitectures="$(TargetArchitectures)"

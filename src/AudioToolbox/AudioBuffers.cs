@@ -34,6 +34,10 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioToolbox
 {
 	// CoreAudio.framework - CoreAudioTypes.h
@@ -126,7 +130,7 @@ namespace AudioToolbox
 			}
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return address; }
 		}
 

@@ -14,6 +14,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreMedia;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace SoundAnalysis {
 
 	[ErrorDomain ("SNErrorDomain")]
@@ -42,7 +46,7 @@ namespace SoundAnalysis {
 
 		[DesignatedInitializer]
 		[Export ("initWithFormat:")]
-		IntPtr Constructor (AVAudioFormat format);
+		NativeHandle Constructor (AVAudioFormat format);
 
 		[Export ("addRequest:withObserver:error:")]
 		bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
@@ -69,7 +73,7 @@ namespace SoundAnalysis {
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] out NSError error);
 
 		[Export ("addRequest:withObserver:error:")]
 		bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
@@ -129,11 +133,11 @@ namespace SoundAnalysis {
 		double OverlapFactor { get; set; }
 
 		[Export ("initWithMLModel:error:")]
-		IntPtr Constructor (MLModel mlModel, [NullAllowed] out NSError error);
+		NativeHandle Constructor (MLModel mlModel, [NullAllowed] out NSError error);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithClassifierIdentifier:error:")]
-		IntPtr Constructor (string classifierIdentifier, [NullAllowed] out NSError error);
+		NativeHandle Constructor (string classifierIdentifier, [NullAllowed] out NSError error);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("knownClassifications", ArgumentSemantic.Copy)]
@@ -189,10 +193,10 @@ namespace SoundAnalysis {
 	interface SNTimeDurationConstraint /* privately conforms to NSCoding, NSCopying, and NSSecureCoding */
 	{
 		[Export ("initWithEnumeratedDurations:")]
-		IntPtr Constructor ([BindAs (typeof (CMTime[]))] NSValue[] enumeratedDurations);
+		NativeHandle Constructor ([BindAs (typeof (CMTime[]))] NSValue[] enumeratedDurations);
 
 		[Export ("initWithDurationRange:")]
-		IntPtr Constructor (CMTimeRange durationRange);
+		NativeHandle Constructor (CMTimeRange durationRange);
 
 		[Export ("type", ArgumentSemantic.Assign)]
 		SNTimeDurationConstraintType Type { get; }

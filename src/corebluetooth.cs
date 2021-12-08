@@ -14,6 +14,10 @@ using Foundation;
 using System;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreBluetooth {
 
 	[Watch (4,0)]
@@ -128,17 +132,17 @@ namespace CoreBluetooth {
 		
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
 
 		[DesignatedInitializer]
 		[iOS (7,0), Mac (10,9)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
 		[iOS (7,0), Mac (10,9)]
 		[Wrap ("this (centralDelegate, queue, options.GetDictionary ())")]
-		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, CBCentralInitOptions options);
+		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, CBCentralInitOptions options);
 
 		[Export ("scanForPeripheralsWithServices:options:"), Internal]
 		void ScanForPeripherals ([NullAllowed] NSArray serviceUUIDs, [NullAllowed] NSDictionary options);
@@ -437,7 +441,7 @@ namespace CoreBluetooth {
 		[Export ("initWithType:properties:value:permissions:")]
 		[PostGet ("UUID")]
 		[PostGet ("Value")]
-		IntPtr Constructor (CBUUID uuid, CBCharacteristicProperties properties, [NullAllowed] NSData value, CBAttributePermissions permissions);
+		NativeHandle Constructor (CBUUID uuid, CBCharacteristicProperties properties, [NullAllowed] NSData value, CBAttributePermissions permissions);
 
 		[Export ("permissions", ArgumentSemantic.Assign)]
 		CBAttributePermissions Permissions { get; set; }
@@ -486,7 +490,7 @@ namespace CoreBluetooth {
 		[Export ("initWithType:value:")]
 		[PostGet ("UUID")]
 		[PostGet ("Value")]
-		IntPtr Constructor (CBUUID uuid, [NullAllowed] NSObject descriptorValue);
+		NativeHandle Constructor (CBUUID uuid, [NullAllowed] NSObject descriptorValue);
 	}
 
 	[Watch (4,0)]
@@ -686,7 +690,7 @@ namespace CoreBluetooth {
 		[DesignatedInitializer]
 		[Export ("initWithType:primary:")]
 		[PostGet ("UUID")]
-		IntPtr Constructor (CBUUID uuid, bool primary);
+		NativeHandle Constructor (CBUUID uuid, bool primary);
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
 		[Override]
@@ -865,13 +869,13 @@ namespace CoreBluetooth {
 	interface CBPeripheralManager {
 
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV]
 		[NoWatch]
@@ -879,7 +883,7 @@ namespace CoreBluetooth {
 		[iOS (7,0)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
 		[NullAllowed]
 		[Wrap ("WeakDelegate")]

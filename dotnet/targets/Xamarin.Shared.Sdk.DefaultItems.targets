@@ -66,16 +66,21 @@
     </PropertyGroup>
   </Target>
 
+  <PropertyGroup Condition="('$(RuntimeIdentifier)' != '' Or '$(RuntimeIdentifiers)' != '') And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+    <_IsDotNetSimulatorBuild Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">true</_IsDotNetSimulatorBuild>
+    <_IsDotNetSimulatorBuild Condition="'$(_IsDotNetSimulatorBuild)' == ''">false</_IsDotNetSimulatorBuild>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
-    <ComputedPlatform Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="'$(_IsDotNetSimulatorBuild)' == 'true'">iPhoneSimulator</ComputedPlatform>
     <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 
   <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
   <PropertyGroup>
     <!-- Runtime pack identifiers -->
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">iossimulator-x64;ios-arm64;ios-arm;iossimulator-x86</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvossimulator-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">iossimulator-x64;ios-arm64;ios-arm;iossimulator-x86;iossimulator-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvossimulator-x64;tvos-arm64;tvossimulator-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64;osx-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>

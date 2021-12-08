@@ -35,6 +35,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
@@ -47,7 +51,7 @@ namespace CoreVideo {
 	{
 #if !COREBUILD
 		[Preserve (Conditional=true)]
-		internal CVBuffer (IntPtr handle, bool owns)
+		internal CVBuffer (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
 		}

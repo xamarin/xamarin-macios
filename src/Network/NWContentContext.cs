@@ -16,6 +16,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	//
@@ -32,9 +36,9 @@ namespace Network {
 	public class NWContentContext : NativeObject {
 		bool global;
 #if NET
-		internal NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+		internal NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
 #else
-		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+		public NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
 #endif
 		{
 		}

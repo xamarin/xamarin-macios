@@ -38,6 +38,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ImageIO {
 
 #if !COREBUILD
@@ -136,7 +140,7 @@ namespace ImageIO {
 		}
 #endif
 		[Preserve (Conditional=true)]
-		internal CGImageSource (IntPtr handle, bool owns)
+		internal CGImageSource (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

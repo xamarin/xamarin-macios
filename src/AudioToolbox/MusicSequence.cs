@@ -27,6 +27,10 @@ using AudioUnit;
 
 using MidiEndpointRef = System.Int32;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioToolbox {
 
 #if !COREBUILD
@@ -39,7 +43,7 @@ namespace AudioToolbox {
 	public class MusicSequence : DisposableObject
 	{
 #if !COREBUILD
-		internal MusicSequence (IntPtr handle, bool owns)
+		internal MusicSequence (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

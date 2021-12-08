@@ -37,6 +37,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// untyped enum -> CGColorSpace.h
@@ -74,7 +78,7 @@ namespace CoreGraphics {
 #endif
 
 #if !NET
-		public CGColorSpace (IntPtr handle)
+		public CGColorSpace (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
@@ -106,7 +110,7 @@ namespace CoreGraphics {
 		}
 
 		[Preserve (Conditional=true)]
-		internal CGColorSpace (IntPtr handle, bool owns)
+		internal CGColorSpace (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
