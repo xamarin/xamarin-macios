@@ -190,16 +190,6 @@ mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
 #   Then we restore the original hash, and finally we calculate the api diff.
 #
 
-#debugging
-echo "listing all items in $ROOT_DIR/tools/apidiff before refs"
-ls -R "$ROOT_DIR/tools/apidiff"
-
-#debugging
-echo "List items inside ./tools/comparison/apidiff before refs"
-if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
-    ls -R "$ROOT_DIR/tools/comparison/apidiff"
-fi
-
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
 if ! make update-refs -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" V=1; then
@@ -207,16 +197,6 @@ if ! make update-refs -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apid
 	EC=$?
 	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 	exit "$EC"
-fi
-
-#debugging
-echo "listing all items in $ROOT_DIR/tools/apidiff after updating refs"
-ls -R "$ROOT_DIR/tools/apidiff"
-
-#debugging
-echo "List items inside ./tools/comparison/apidiff after updating refs"
-if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
-    ls -R "$ROOT_DIR/tools/comparison/apidiff"
 fi
 
 #
@@ -265,29 +245,10 @@ if ! make all-local -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidif
 	exit "$EC"
 fi
 
-#debugging
-echo "listing all items in $ROOT_DIR/tools/apidiff after all-local"
-ls -R "$ROOT_DIR/tools/apidiff"
-
-#debugging
-echo "List items inside ./tools/comparison/apidiff after local"
-if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
-    ls -R "$ROOT_DIR/tools/comparison/apidiff"
-fi
-
-# if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build"; then
+# Now create the markdowns with these references
+echo "${BLUE}Creating markdowns...${CLEAR}"
 if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$OUTPUT_DIR/apidiff" V=1; then
 	EC=$?
 	report_error_line "${RED}Failed to create markdowns${CLEAR}"
 	exit "$EC"
-fi
-
-#debugging
-echo "listing all items in $ROOT_DIR/tools/apidiff after all-markdowns"
-ls -R "$ROOT_DIR/tools/apidiff"
-
-#debugging
-echo "List items inside ./tools/comparison/apidiff after all-markdowns"
-if ls -R "$ROOT_DIR/tools/comparison/apidiff" 1> /dev/null 2>&1; then
-    ls -R "$ROOT_DIR/tools/comparison/apidiff"
 fi

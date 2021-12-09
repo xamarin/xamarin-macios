@@ -43,29 +43,11 @@ steps:
     }
     trap report_error ERR
 
-    echo "Before wiping apidiff"
-    ls -R $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
-
-    # Clear out any files left over from API & Generator comparison
-    cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
-    rm -Rf *.exe *.pdb *.stamp *.zip *.md *.html ./references ./updated-references ./dotnet ./diff ./temp
-
-    echo "After wiping apidiff"
-    ls -R $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
-
-    # make -j8 -C $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff jenkins-api-diff APIDIFF_DIR="$(Build.SourcesDirectory)/xamarin-macios/tools/apidiff" IOS_DESTDIR="$(Build.SourcesDirectory)/xamarin-macios/_ios-build" MAC_DESTDIR="$(Build.SourcesDirectory)/xamarin-macios/_mac-build" DOTNET_DESTDIR="$(Build.SourcesDirectory)/xamarin-macios/_build"
     make -j8 -C $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff jenkins-api-diff
-
-    echo "After jenkins-api-diff"
-    ls -R $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
 
     # remove some files that do not need to be uploaded
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
-
-    echo "After deleting extra files again"
-    ls -R $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
-
     MESSAGE=":white_check_mark: API Diff from stable"
     echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
     echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]True"
