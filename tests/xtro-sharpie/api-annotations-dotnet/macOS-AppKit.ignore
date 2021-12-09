@@ -1321,7 +1321,3 @@
 # bound as `const` not enums
 !extra-enum-value! Managed value 3 for NSBezelStyle.ThickSquare not found in native headers
 !extra-enum-value! Managed value 4 for NSBezelStyle.ThickerSquare not found in native headers
-
-# notifications do not respond and were added in a beta, ignoring until we can test they work:
-!missing-field! NSApplicationProtectedDataDidBecomeAvailableNotification not bound
-!missing-field! NSApplicationProtectedDataWillBecomeUnavailableNotification not bound
