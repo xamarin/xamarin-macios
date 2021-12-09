@@ -94,7 +94,6 @@ class Merger {
 		Console.WriteLine ($"@MonkeyWrench: AddFile: {Path.GetFullPath (filePath)}");
 
 		if (File.Exists ("api-diff.html")){
-			// TODO changing filename to filePath may cause trouble here...
 			File.AppendAllText ("api-diff.html", $"\n<h2><a href=\"{filePath}\">{platform} API diff (markdown)</a></h2>");
 		}
 	}

@@ -366,8 +366,7 @@ IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-reference
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
-DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml) \
-	$(foreach file,$(DOTNET_LEGACY_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/dotnet/legacy-diff/$(file).xml)
+DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/dotnet/$(file).xml)
 
 $(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR_iOS)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
@@ -386,18 +385,6 @@ $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURREN
 	$(QF_GEN) mono --debug $(MONO_API_INFO) -d $(dir $<) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
 # The dotnet references xmls may come from different hashes, so we need to have separate rules for all of them
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
-
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
-
-$(APIDIFF_DIR)/references/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
-
 $(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
@@ -413,10 +400,6 @@ $(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.Ma
 $(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
-
-$(APIDIFF_DIR)/updated-references/dotnet/legacy-diff/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/legacy-diff/$*)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/dotnet/legacy-diff/$*.xml
 
 $(APIDIFF_DIR)/updated-references/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/$*)
