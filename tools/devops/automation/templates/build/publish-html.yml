@@ -118,7 +118,7 @@ steps:
       $apiDiffData | ConvertTo-Json | Write-Host
       Write-Host "##vso[task.setvariable variable=APIDIFF_JSON_PATH]$path"
     displayName: 'Create API from stable diff gists'
-    timeoutInMinutes: 1
+    timeoutInMinutes: 5
     env:
       GITHUB_TOKEN: $(GitHub.Token)
 
@@ -193,7 +193,7 @@ steps:
       $apiGeneratorDiffData | ConvertTo-Json | Write-Host
       Write-Host "##vso[task.setvariable variable=APIGENERATORDIFF_JSON_PATH]$path"
     displayName: 'Create API from current diff gists'
-    timeoutInMinutes: 1
+    timeoutInMinutes: 5
     env:
       GITHUB_TOKEN: $(GitHub.Token)
 
