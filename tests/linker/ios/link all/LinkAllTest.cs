@@ -16,6 +16,7 @@ using System.Net;
 using System.Net.Security;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
@@ -233,13 +234,18 @@ namespace LinkAll {
 #endif // !__MACOS__
 
 		[Test]
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 		[Availability ()]
 #endif
+#if NET
+		[SupportedOSPlatform ("none")]
+		[UnsupportedOSPlatform ("none)")]
+#else
 		[Introduced (PlatformName.None)]
 		[Deprecated (PlatformName.None)]
 		[Obsoleted (PlatformName.None)]
 		[Unavailable (PlatformName.None)]
+#endif
 		[ThreadSafe]
 		public void RemovedAttributes ()
 		{
@@ -255,6 +261,10 @@ namespace LinkAll {
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ObsoletedAttribute, " + suffix), "ObsoletedAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.UnavailableAttribute, " + suffix), "UnavailableAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ThreadSafeAttribute, " + suffix), "ThreadSafeAttribute");
+#if NET
+			Assert.Null (Helper.GetType ("System.Runtime.Versioning.SupportedOSPlatformAttribute, " + suffix), "SupportedOSPlatformAttribute");
+			Assert.Null (Helper.GetType ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute, " + suffix), "UnsupportedOSPlatformAttribute");
+#endif
 		}
 
 		[Test]
@@ -676,10 +686,17 @@ namespace LinkAll {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos1.0")]
+	[SupportedOSPlatform ("ios1.0")]
+	[SupportedOSPlatform ("tvos1.0")]
+	[SupportedOSPlatform ("maccatalyst1.0")]
+#else
 	[Introduced (PlatformName.MacOSX, 1, 0, PlatformArchitecture.Arch64)]
 	[Introduced (PlatformName.iOS, 1, 0)]
 	[Introduced (PlatformName.TvOS, 1, 0)]
 	[Introduced (PlatformName.WatchOS, 1, 0)]
+#endif
 	[Preserve]
 	public class ClassFromThePast : NSObject
 	{
