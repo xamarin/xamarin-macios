@@ -4052,7 +4052,7 @@ public partial class Generator : IMemberGatherer {
 		bool x64_stret = Stret.X86_64NeedStret (returnType, this);
 		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 
-		if (CurrentPlatform == PlatformName.MacOSX) {
+		if (CurrentPlatform == PlatformName.MacOSX || CurrentPlatform == PlatformName.MacCatalyst) {
 			print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
 			indent++;
 			GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
