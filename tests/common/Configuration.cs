@@ -704,7 +704,9 @@ namespace Xamarin.Tests
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
 		{
-			return GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			// varables with more than one value are wrapped in ', get the var remove the '' and split
+			var variable = GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Trim ('\'');
+			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
