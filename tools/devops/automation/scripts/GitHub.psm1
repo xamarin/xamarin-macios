@@ -452,14 +452,14 @@ function New-GitHubSummaryComment {
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
         WriteDiffs $sb "API Current PR diff" $APIGeneratorDiffJson
     } else {
-        Write-Host "API Generator diff urls have not been provided."
+        Write-Host "API Current PR diff urls have not been provided."
     }
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
-        Write-Host "Parsing API diff in path $APIGeneratorDiff"
+        Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
         if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
             $sb.AppendLine("Path $APIGeneratorDiff was not found!")
         } else {
-            $sb.AppendLine("# API & Generator diff")
+            $sb.AppendLine("# Generator diff")
             $sb.AppendLine("")
             # ugly workaround to get decent new lines
             foreach ($line in Get-Content -Path $APIGeneratorDiff)
@@ -469,7 +469,7 @@ function New-GitHubSummaryComment {
             $sb.AppendLine($apidiffcomments)
         }
     } else {
-        Write-Host "API & Generator diff comments have not been provided."
+        Write-Host "Generator diff comments have not been provided."
     }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
