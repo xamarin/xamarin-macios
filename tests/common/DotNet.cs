@@ -60,6 +60,11 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
+		public static ExecutionResult Build (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("build", project, properties, false);
+		}
+
 		public static ExecutionResult AssertNew (string outputDirectory, string template)
 		{
 			Directory.CreateDirectory (outputDirectory);

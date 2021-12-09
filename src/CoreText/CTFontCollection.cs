@@ -38,7 +38,11 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
