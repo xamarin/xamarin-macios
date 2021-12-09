@@ -1460,9 +1460,11 @@ DOTNET_GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/bin/DotNet/ge
 
 $(GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
 	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-frameworks-constants/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY)
+	$(Q) touch $@ # Running MSBuild doesn't always touch the target, so make sure we do here, otherwise make can end up confused.
 
 $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
 	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-frameworks-constants/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY) /p:Configuration=DotNet
+	$(Q) touch $@ # Running MSBuild doesn't always touch the target, so make sure we do here, otherwise make can end up confused.
 
 # This rule means: generate a Constants.<platform>.generated.cs for the frameworks in the variable <PLATFORM>_FRAMEWORKS
 $(BUILD_DIR)/Constants.%.generated.cs: Makefile $(GENERATE_FRAMEWORKS_CONSTANTS) | $(BUILD_DIR)
