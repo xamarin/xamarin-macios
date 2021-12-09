@@ -58,7 +58,7 @@ steps:
     set -x
     set -e
 
-    make -C dotnet "global.json"
+    make -C tests/dotnet global.json NuGet.config
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Generate global.json'
   continueOnError: false
