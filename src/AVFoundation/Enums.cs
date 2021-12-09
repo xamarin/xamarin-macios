@@ -923,6 +923,10 @@ namespace AVFoundation {
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Field ("AVOutputSettingsPresetHEVC3840x2160WithAlpha")]
 		PresetHevc3840x2160WithAlpha = 14,
+
+		[NoTV, NoWatch, Mac (12,1), NoiOS]
+		[Field ("AVOutputSettingsPresetHEVC7680x4320")]
+		PresetHevc7680x4320 = 15,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

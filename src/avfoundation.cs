@@ -8236,6 +8236,10 @@ namespace AVFoundation {
 		[Field ("AVAssetExportPresetHEVC3840x2160WithAlpha")]
 		NSString PresetHevc3840x2160WithAlpha { get; }
 
+		[NoWatch, NoTV, NoiOS, Mac (12,1)]
+		[Field ("AVAssetExportPresetHEVC7680x4320")]
+		NSString PresetHevc7680x4320 { get; }
+
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Field ("AVAssetExportPresetHEVCHighestQualityWithAlpha")]
 		NSString PresetHevcHighestQualityWithAlpha { get; }

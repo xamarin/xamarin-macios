@@ -1910,21 +1910,19 @@ namespace HomeKit {
 
 	}
 
-	delegate void HMErrorHandler ([NullAllowed] NSError error);
-
-	[iOS (15,0), NoWatch, NoTV, NoMacCatalyst]
+	[iOS (15,2), NoWatch, NoTV, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface HMAccessorySetupManager
 	{
 		[Async]
 		[Export ("addAndSetUpAccessoriesForTopology:completionHandler:")]
-		void AddAndSetUpAccessories (HMChipServiceTopology topology, HMErrorHandler completion);
+		void AddAndSetUpAccessories (HMMatterTopology topology, Action<NSError> completion);
 	}
 
-	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name = "HMCHIPServiceHome")]
+	[iOS (15,2), Watch (8,3), TV (15,2), MacCatalyst (15,2)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HMChipServiceHome : NSCopying, NSSecureCoding
+	interface HMMatterHome : NSCopying, NSSecureCoding
 	{
 		[Export ("uuid", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
@@ -1937,29 +1935,29 @@ namespace HomeKit {
 		NativeHandle Constructor (NSUuid uuid, string name);
 	}
 
-	delegate void FetchRoomHandler (NSArray<HMChipServiceRoom> rooms, NSError error); 
+	delegate void HMFetchRoomHandler (HMMatterRoom [] rooms, NSError error); 
 
-	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name = "HMCHIPServiceRequestHandler")]
-	interface HMChipServiceRequestHandler : NSExtensionRequestHandling
+	[iOS (15,2), Watch (8,3), TV (15,2), MacCatalyst (15,2)]
+	[BaseType (typeof (NSObject))]
+	interface HMMatterRequestHandler : NSExtensionRequestHandling
 	{
 		[Async]
 		[Export ("fetchRoomsInHome:completion:")]
-		void FetchRooms (HMChipServiceHome home, FetchRoomHandler completion);
+		void FetchRooms (HMMatterHome home, HMFetchRoomHandler completion);
 
 		[Async]
 		[Export ("pairAccessoryInHome:onboardingPayload:completion:")]
-		void PairAccessory (HMChipServiceHome home, string onboardingPayload, Action<NSError> completion);
+		void PairAccessory (HMMatterHome home, string onboardingPayload, Action<NSError> completion);
 
 		[Async]
 		[Export ("configureAccessoryWithName:room:completion:")]
-		void ConfigureAccessory (string accessoryName, HMChipServiceRoom accessoryRoom, Action<NSError> completion);
+		void ConfigureAccessory (string accessoryName, HMMatterRoom accessoryRoom, Action<NSError> completion);
 	}
 
-	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name = "HMCHIPServiceRoom")]
+	[iOS (15,2), Watch (8,3), TV (15,2), MacCatalyst (15,2)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HMChipServiceRoom : NSCopying, NSSecureCoding
+	interface HMMatterRoom : NSCopying, NSSecureCoding
 	{
 		[Export ("uuid", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
@@ -1972,16 +1970,16 @@ namespace HomeKit {
 		NativeHandle Constructor (NSUuid uuid, string name);
 	}
 
-	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name = "HMCHIPServiceTopology")]
+	[iOS (15,2), Watch (8,3), TV (15,2), MacCatalyst (15,2)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HMChipServiceTopology : NSCopying, NSSecureCoding
+	interface HMMatterTopology : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithHomes:")]
-		NativeHandle Constructor (HMChipServiceHome[] homes);
+		NativeHandle Constructor (HMMatterHome [] homes);
 
 		[Export ("homes", ArgumentSemantic.Copy)]
-		HMChipServiceHome[] Homes { get; }
+		HMMatterHome [] Homes { get; }
 	}
 
 }
