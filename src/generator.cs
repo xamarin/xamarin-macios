@@ -4053,15 +4053,19 @@ public partial class Generator : IMemberGatherer {
 		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 
 		if (CurrentPlatform == PlatformName.MacOSX || CurrentPlatform == PlatformName.MacCatalyst) {
-			print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
-			indent++;
-			GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
-			indent--;
-			print ("} else {");
-			indent++;
-			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x64_stret);
-			indent--;
-			print ("}");
+			if (x64_stret) {
+				print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
+				indent++;
+				GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
+				indent--;
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x64_stret);
+				indent--;
+				print ("}");
+			} else {
+				GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
+			}
 			return;
 		}
 
