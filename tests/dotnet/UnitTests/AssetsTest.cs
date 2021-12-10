@@ -44,25 +44,12 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithXCAssets";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
-			this.appPath = appPath;
+			project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out appPath);
 			DeleteAssets (project_path);
 		}
 
-		[Test]
-		public void AppWithXCAssets ()
-		{
-			// Add the assets before we build the project
-			TestXCAssets (true);
-		}
-
-		[Test]
-		public void AppWithXCAssetsAddedTwice ()
-		{
-			// Build the project, add the assets, then build again
-			TestXCAssets (false);
-		}
-
+		[TestCase (true)] // Add the XCAssets before the build
+		[TestCase (false)] // Build, add the XCAssets, then build again
 		public void TestXCAssets (bool startWithAssets)
 		{
 			var project = "AppWithXCAssets";
@@ -117,14 +104,14 @@ namespace Xamarin.Tests {
 
 		void DeleteAssets (string project_path)
 		{
-			string xcassetsDir = Path.Combine (project_path, "../Assets.xcassets");
+			var xcassetsDir = Path.Combine (project_path, "../Assets.xcassets");
 			File.Delete (xcassetsDir);
 		}
 
 		void CopyAssets (string project_path)
 		{
-			DirectoryInfo testingAssetsDir = new DirectoryInfo (Path.Combine (project_path, "../../TestingAssets"));
-			DirectoryInfo xcassetsDir = new DirectoryInfo (Path.Combine (project_path, "../Assets.xcassets"));
+			var testingAssetsDir = new DirectoryInfo (Path.Combine (project_path, "../../TestingAssets"));
+			var xcassetsDir = new DirectoryInfo (Path.Combine (project_path, "../Assets.xcassets"));
 
 			Assert.That (testingAssetsDir, Does.Exist, $"Could not find testingAssetsDir: {testingAssetsDir}");
 			MakeSymlinks (testingAssetsDir.FullName, xcassetsDir.FullName);
