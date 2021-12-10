@@ -604,7 +604,7 @@ namespace CoreImage {
 		[return: NullAllowed]
 		NSUrl FilterLocalizedReferenceDocumentation (string filterName);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary classAttributes);
@@ -612,7 +612,7 @@ namespace CoreImage {
 		[iOS(9,0)]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
-#if XAMCORE_4_0
+#if NET
 		void RegisterFilterName (string name, ICIFilterConstructor constructorObject, NSDictionary<NSString, NSObject> classAttributes);
 #else
 		[Advice ("The 'constructorObject' argument must implement 'ICIFilterConstructor'.")]
@@ -1418,6 +1418,8 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CIFilter FilterWithName (string name);
 	}
+
+	interface ICIFilterConstructor {}
 	
 	[Static]
 	[iOS (9,0)]

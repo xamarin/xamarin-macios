@@ -247,6 +247,16 @@ namespace Cecil.Tests {
 						case "AURenderEventEnumerator": // this class shouldn't really be an INativeObject in the first place
 						case "AudioBuffers": // this class shouldn't really be an INativeObject in the first place
 						case "AVAudioChannelLayout": // has a private IntPtr constructor which is a void* in native code (i.e. not a mistake).
+						case "VNVideoProcessorFrameRateCadence": // has a nint (i.e. IntPtr) constructor (framerate) - not a mistake
+						case "NSMutableOrderedSet`1":
+						case "NSMutableOrderedSet": // has a nint (i.e. IntPtr) constructor (capacity) - not a mistake
+						case "NSMutableSet`1":
+						case "NSMutableSet": // has a nint (i.e. IntPtr) constructor (capacity) - not a mistake
+						case "NSMutableString": // has a nint (i.e. IntPtr) constructor (capacity) - not a mistake
+						case "NSNumber": // has a nint (i.e. IntPtr) constructor - not a mistake
+						case "NSConditionLock": // has a nint (i.e. IntPtr) constructor (condition) - not a mistake
+						case "NSScrubberProportionalLayout": // has a nint (i.e. IntPtr) constructor (numberOfVisibleItems) - not a mistake
+						case "NSIndexSet": // has a nuint (i.e. UIntPtr) constructor (index) - not a mistake
 							continue;
 						}
 

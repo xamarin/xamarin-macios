@@ -1509,9 +1509,17 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 		func = to_managed ? (void *) xamarin_nsnumber_to_double : (void *) xamarin_double_to_nsnumber;
 	} else if (!strcmp (fullname, "System.Boolean")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_bool : (void *) xamarin_bool_to_nsnumber;
+#if DOTNET
+	} else if (!strcmp (fullname, "System.IntPtr")) {
+#else
 	} else if (!strcmp (fullname, "System.nint")) {
+#endif
 		func = to_managed ? (void *) xamarin_nsnumber_to_nint : (void *) xamarin_nint_to_nsnumber;
+#if DOTNET
+	} else if (!strcmp (fullname, "System.UIntPtr")) {
+#else
 	} else if (!strcmp (fullname, "System.nuint")) {
+#endif
 		func = to_managed ? (void *) xamarin_nsnumber_to_nuint : (void *) xamarin_nuint_to_nsnumber;
 #if DOTNET
 	} else if (!strcmp (fullname, "ObjCRuntime.nfloat")) {
