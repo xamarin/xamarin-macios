@@ -61,7 +61,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				List<string> xml = null;
-				List<string> custom_link_flags = null;
+				List<string> customLinkFlags = null;
 				var envVariables = new List<ITaskItem> ();
 				var dlsyms = new List<ITaskItem> ();
 
@@ -162,9 +162,9 @@ namespace Xamarin.MacDev.Tasks {
 							Log.LogError (MSBStrings.E0189 /* Could not parse the custom linker argument(s) '-{0}': {1} */, $"-{name}={value}", ex.Message);
 							continue;
 						}
-						if (custom_link_flags is null)
-							custom_link_flags = new List<string> ();
-						custom_link_flags.AddRange (lf);
+						if (customLinkFlags is null)
+							customLinkFlags = new List<string> ();
+						customLinkFlags.AddRange (lf);
 						break;
 					default:
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
@@ -181,11 +181,11 @@ namespace Xamarin.MacDev.Tasks {
 					XmlDefinitions = defs.ToArray ();
 				}
 
-				if (custom_link_flags is not null) {
+				if (customLinkFlags is not null) {
 					var defs = new List<ITaskItem> ();
 					if (CustomLinkFlags is not null)
 						defs.AddRange (CustomLinkFlags);
-					foreach (var lf in custom_link_flags)
+					foreach (var lf in customLinkFlags)
 						defs.Add (new TaskItem (lf));
 					CustomLinkFlags = defs.ToArray ();
 				}
