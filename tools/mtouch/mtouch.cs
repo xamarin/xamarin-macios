@@ -316,7 +316,7 @@ namespace Xamarin.Bundler
 				return false;
 
 			//Custom gcc flags requires us to build template.m
-			if (app.UserGccFlags?.Count > 0)
+			if (app.CustomLinkFlags?.Count > 0)
 				return false;
 
 			// Setting environment variables is done in the generated main.m, so we can't symlink in this case.
@@ -424,11 +424,7 @@ namespace Xamarin.Bundler
 			{ "r|ref=", "Add an assembly to the resolver [DEPRECATED, use --reference instead]", v => app.References.Add (v), true /* Hide: this option is deprecated in favor of the shared --reference option instead */ },
 			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
 				{
-					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
-						throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "-gcc-flags=" + v, ex.Message);
-					if (app.UserGccFlags == null)
-						app.UserGccFlags = new List<string> ();
-					app.UserGccFlags.AddRange (gcc_flags);
+					app.ParseCustomLinkFlags (v, "gcc_flags");
 				}
 			},
 			{ "framework=", "Link with the specified framework. This can either be a system framework (like 'UIKit'), or it can be a path to a custom framework ('/path/to/My.framework'). In the latter case the entire 'My.framework' directory is copied into the app as well.", (v) => app.Frameworks.Add (v) },
