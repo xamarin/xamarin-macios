@@ -58,6 +58,7 @@ steps:
     set -x
     set -e
 
+    make global6.json
     make -C tests/dotnet global.json NuGet.config
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Generate global.json'
