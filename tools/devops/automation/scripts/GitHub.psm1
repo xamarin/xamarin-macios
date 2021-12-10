@@ -444,15 +444,17 @@ function New-GitHubSummaryComment {
         # we did generate an index with the files in vsdrops
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
-    if (-not [string]::IsNullOrEmpty($APIDiff)) {
-        WriteDiffs $sb "API diff" $APIDiff
+    $diffHeader = "API diff"
+    $currentPRHeader = "API Current PR diff"
+    if ([string]::IsNullOrEmpty($APIDiff)) {
+        $sb.AppendLine("API diff urls have not been provided.")
     } else {
-        Write-Host "API diff urls have not been provided."
+        WriteDiffs $sb $diffHeader $APIDiff
     }
-    if (-not [string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
-        WriteDiffs $sb "API Current PR diff" $APIGeneratorDiffJson
+    if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
+        $sb.AppendLine("API Current PR diff urls have not been provided.")
     } else {
-        Write-Host "API Current PR diff urls have not been provided."
+        WriteDiffs $sb $currentPRHeader $APIGeneratorDiffJson
     }
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
         Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
@@ -469,7 +471,7 @@ function New-GitHubSummaryComment {
             $sb.AppendLine($apidiffcomments)
         }
     } else {
-        Write-Host "Generator diff comments have not been provided."
+        $sb.AppendLine("Generator diff comments have not been provided.")
     }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"

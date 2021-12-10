@@ -13,18 +13,13 @@ class Merger {
 		return line.Substring (start, end - start);
 	}
 
-	static string DestinationPath = null;
-
-	public static void Process (string platform, string path, string os, string destinationPath)
-	{
-		DestinationPath = destinationPath;
-		Process (platform, path, os);
-	}
-
-	public static void Process (string platform, string path, string os)
+	public static void Process (string platform, string path, string os, string? destinationPath = null)
 	{
 		if (!Directory.Exists (path))
 			throw new DirectoryNotFoundException (path);
+
+		if (destinationPath is not null && !Directory.Exists (destinationPath))
+			throw new DirectoryNotFoundException (destinationPath);
 
 		var content = new StringWriter ();
 		var files = Directory.GetFileSystemEntries (path, "*.md");
@@ -93,9 +88,8 @@ class Merger {
 		File.AppendAllText (filePath, alldiffs);
 		Console.WriteLine ($"@MonkeyWrench: AddFile: {Path.GetFullPath (filePath)}");
 
-		if (File.Exists ("api-diff.html")){
+		if (File.Exists ("api-diff.html"))
 			File.AppendAllText ("api-diff.html", $"\n<h2><a href=\"{filePath}\">{platform} API diff (markdown)</a></h2>");
-		}
 	}
 
 	public static int Main (string [] args)
@@ -103,10 +97,7 @@ class Merger {
 		try {
 			// if calling merger.cs form tools/apidiff/Makefile, we want to pass in the destinationPath 'arg [3]'
 			// to make sure diffs go to the correct location
-			if (args.Length < 4)
-				Process (args [0], args [1], args [2]);
-			else
-				Process (args [0], args [1], args [2], args [3]);
+			Process (args [0], args [1], args [2], args.Length > 3 ? args [3] : null);
 			return 0;
 		} catch (Exception e) {
 			Console.WriteLine (e);
