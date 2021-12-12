@@ -31,6 +31,12 @@
 <#@ template language="C#v3.5" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
+
+#if NET
+#define SKIP_nint
+#define SKIP_nuint
+#endif
+
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -66,6 +72,7 @@ namespace ObjCRuntime
 namespace System
 #endif
 {
+#if !SKIP_<#= type.NSName #>
 	[Serializable]
 	[DebuggerDisplay ("{v,nq}")]
 	public unsafe struct <#= type.NSName #> : IFormattable, IConvertible, IComparable, IComparable<<#= type.NSName #>>, IEquatable <<#= type.NSName #>>
@@ -439,5 +446,6 @@ namespace System
 				Marshal.WriteIntPtr (destination, i * <#= type.NSName #>.Size, (IntPtr)source [i + startIndex]);
 		}
 	}
+#endif // !SKIP_<#= type.NSName #>
 }
 <# } #>

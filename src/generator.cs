@@ -82,9 +82,9 @@ public static class ReflectionExtensions {
 	}
 
 	//
-	// Returs true if the specified method info or property info is not
+	// Returns true if the specified method info or property info is not
 	// available in the current platform (because it has the attribute
-	// [Unavailable (ThisPlatform) or becasue the shorthand versions
+	// [Unavailable (ThisPlatform) or because the shorthand versions
 	// of [NoiOS] or [NoMac] are applied.
 	//
 	// This needs to merge, because we might have multiple attributes in
@@ -2572,6 +2572,7 @@ public partial class Generator : IMemberGatherer {
 						case "MarshalDirectiveAttribute":
 						case "BindingImplAttribute":
 						case "XpcInterfaceAttribute":
+						case "NativeIntegerAttribute":
 							continue;
 						default:
 							throw new BindingException (1007, true, attr.GetType (), mi.DeclaringType, mi.Name);
@@ -4051,16 +4052,20 @@ public partial class Generator : IMemberGatherer {
 		bool x64_stret = Stret.X86_64NeedStret (returnType, this);
 		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 
-		if (CurrentPlatform == PlatformName.MacOSX) {
-			print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
-			indent++;
-			GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
-			indent--;
-			print ("} else {");
-			indent++;
-			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x64_stret);
-			indent--;
-			print ("}");
+		if (CurrentPlatform == PlatformName.MacOSX || CurrentPlatform == PlatformName.MacCatalyst) {
+			if (x64_stret) {
+				print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
+				indent++;
+				GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
+				indent--;
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x64_stret);
+				indent--;
+				print ("}");
+			} else {
+				GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
+			}
 			return;
 		}
 
@@ -7377,7 +7382,13 @@ public partial class Generator : IMemberGatherer {
 										}
 									}
 
-									print ("return {0}!;", def);
+									if (mi.ReturnType == TypeManager.System_nint) {
+										print ("return ((nint) ({0}));", def);
+									} else if (mi.ReturnType == TypeManager.System_nuint) {
+										print ("return ((nuint) ({0}));", def);
+									} else {
+										print ("return {0}!;", def);
+									}
 								}
 							}
 						}

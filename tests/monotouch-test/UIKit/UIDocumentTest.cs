@@ -99,6 +99,10 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Save ()
 		{
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
 			using (NSUrl url = NSUrl.FromFilename (GetFileName ())) {
 				doc = new MyDocument (url);
 				doc.Save (url, UIDocumentSaveOperation.ForCreating, OperationHandler);

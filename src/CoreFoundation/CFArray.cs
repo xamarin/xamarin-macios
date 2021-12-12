@@ -34,7 +34,11 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
 using CFArrayRef = System.IntPtr;
 using CFAllocatorRef = System.IntPtr;
 

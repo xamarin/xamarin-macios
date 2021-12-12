@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 
 using CoreFoundation;
@@ -5522,10 +5523,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public interface ISomeDelegate : INativeObject, IDisposable
 	{
 	}
+#if NET
+	[SupportedOSPlatform ("macos100.0")]
+	[SupportedOSPlatform ("ios100.0")]
+	[SupportedOSPlatform ("tvos100.0")]
+	[SupportedOSPlatform ("maccatalyst100.0")]
+#else
 	[Introduced (PlatformName.MacOSX, 100, 0)]
 	[Introduced (PlatformName.iOS, 100, 0)]
 	[Introduced (PlatformName.TvOS, 100, 0)]
 	[Introduced (PlatformName.WatchOS, 100, 0)]
+#endif
 	public class FutureClass : NSObject
 	{
 	}

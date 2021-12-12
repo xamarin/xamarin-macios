@@ -296,10 +296,18 @@ public partial class Generator {
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
 			break;
+#if NET
+		case "IntPtr":
+#else
 		case "nint":
+#endif
 			print ("return GetNInt (\"{0}\");", propertyName);
 			break;
+#if NET
+		case "UIntPtr":
+#else
 		case "nuint":
+#endif
 			print ("return GetNUInt (\"{0}\");", propertyName);
 			break;
 		case "string":
@@ -337,10 +345,18 @@ public partial class Generator {
 		case "int":
 			print ("SetInt (\"{0}\", value);", propertyName);
 			break;
+#if NET
+		case "IntPtr":
+#else
 		case "nint":
+#endif
 			print ("SetNInt (\"{0}\", value);", propertyName);
 			break;
+#if NET
+		case "UIntPtr":
+#else
 		case "nuint":
+#endif
 			print ("SetNUInt (\"{0}\", value);", propertyName);
 			break;
 		// NSObject should not be added
