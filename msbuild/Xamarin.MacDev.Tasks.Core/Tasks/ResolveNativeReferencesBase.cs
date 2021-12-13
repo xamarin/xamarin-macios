@@ -96,68 +96,12 @@ namespace Xamarin.MacDev.Tasks {
 				foreach (var r in References) {
 					// look for sidecar's manifest
 					var resources = Path.ChangeExtension (r.ItemSpec, ".resources");
-					if (!Directory.Exists (resources)) {
-						// if we don't have a sidecar, we might have a zipped sidecar
-						var zipPath = resources + ".zip";
-						if (!File.Exists (zipPath))
-							continue;
-
-						// Yes! we have a zipped sidecar
-						var path = Path.Combine (IntermediateOutputPath, Path.GetFileName (resources));
-						var arguments = new [] {
-							"-u",
-							"-o",
-							"-d",
-							path,
-							zipPath,
-						};
-						ExecuteAsync ("/usr/bin/unzip", arguments).Wait ();
-						resources = path;
-					}
-					var manifest = Path.Combine (resources, "manifest");
-					if (!File.Exists (manifest)) {
-						Log.LogWarning (MSBStrings.W7087 /* Expected a 'manifest' file in the directory {0} */, resources);
-						continue;
-					}
-
-					XmlDocument document = new XmlDocument ();
-					document.LoadWithoutNetworkAccess (manifest);
-					foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
-						ITaskItem t;
-						var name = referenceNode.Attributes ["Name"].Value;
-						switch (Path.GetExtension (name)) {
-						case ".xcframework":
-							var resolved = ResolveXCFramework (Path.Combine (resources, name));
-							if (resolved == null)
-								return false;
-							t = new TaskItem (resolved);
-							t.SetMetadata ("Kind", "Framework");
-							t.SetMetadata ("Name", resolved);
-							break;
-						case ".framework":
-							t = new TaskItem (Path.Combine (resources, name));
-							t.SetMetadata ("Kind", "Framework");
-							break;
-						case ".dylib": // macOS
-							t = new TaskItem (Path.Combine (resources, name));
-							t.SetMetadata ("Kind", "Dynamic");
-							break;
-						default:
-							t = r;
-							break;
-						}
-
-						// defaults
-						t.SetMetadata ("ForceLoad", "False");
-						t.SetMetadata ("NeedsGccExceptionHandling", "False");
-						t.SetMetadata ("IsCxx", "False");
-						t.SetMetadata ("SmartLink", "True");
-
-						// values from manifest, overriding defaults if provided
-						foreach (XmlNode attribute in referenceNode.ChildNodes)
-							t.SetMetadata (attribute.Name, attribute.InnerText);
-
-						native_frameworks.Add (t);
+					if (Directory.Exists (resources)) {
+						ProcessSidecar (r, resources, native_frameworks);
+					} else {
+						resources = resources + ".zip";
+						if (File.Exists (resources))
+							ProcessSidecar (r, resources, native_frameworks);
 					}
 				}
 			}
@@ -165,6 +109,69 @@ namespace Xamarin.MacDev.Tasks {
 			NativeFrameworks = native_frameworks.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		void ProcessSidecar (ITaskItem r, string resources, List<ITaskItem> native_frameworks)
+		{
+			// Check if we have a zipped sidecar, and if so, extract it before we keep processing
+			if (resources.EndsWith (".zip", StringComparison.OrdinalIgnoreCase)) {
+				var path = Path.Combine (IntermediateOutputPath, Path.GetFileName (resources));
+				var arguments = new [] {
+							"-u",
+							"-o",
+							"-d",
+							path,
+							resources,
+						};
+				ExecuteAsync ("/usr/bin/unzip", arguments).Wait ();
+				resources = path;
+			}
+
+			var manifest = Path.Combine (resources, "manifest");
+			if (!File.Exists (manifest)) {
+				Log.LogWarning (MSBStrings.W7087 /* Expected a 'manifest' file in the directory {0} */, resources);
+				return;
+			}
+
+			XmlDocument document = new XmlDocument ();
+			document.LoadWithoutNetworkAccess (manifest);
+			foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
+				ITaskItem t;
+				var name = referenceNode.Attributes ["Name"].Value;
+				switch (Path.GetExtension (name)) {
+				case ".xcframework":
+					var resolved = ResolveXCFramework (Path.Combine (resources, name));
+					if (resolved == null)
+						return;
+					t = new TaskItem (resolved);
+					t.SetMetadata ("Kind", "Framework");
+					t.SetMetadata ("Name", resolved);
+					break;
+				case ".framework":
+					t = new TaskItem (Path.Combine (resources, name));
+					t.SetMetadata ("Kind", "Framework");
+					break;
+				case ".dylib": // macOS
+					t = new TaskItem (Path.Combine (resources, name));
+					t.SetMetadata ("Kind", "Dynamic");
+					break;
+				default:
+					t = r;
+					break;
+				}
+
+				// defaults
+				t.SetMetadata ("ForceLoad", "False");
+				t.SetMetadata ("NeedsGccExceptionHandling", "False");
+				t.SetMetadata ("IsCxx", "False");
+				t.SetMetadata ("SmartLink", "True");
+
+				// values from manifest, overriding defaults if provided
+				foreach (XmlNode attribute in referenceNode.ChildNodes)
+					t.SetMetadata (attribute.Name, attribute.InnerText);
+
+				native_frameworks.Add (t);
+			}
 		}
 
 		protected string? ResolveXCFramework (string xcframework)
