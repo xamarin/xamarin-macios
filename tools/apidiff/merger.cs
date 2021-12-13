@@ -4,6 +4,8 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
+#nullable enable
+
 class Merger {
 
 	static string GetVersion (string line)
@@ -29,7 +31,7 @@ class Merger {
 		bool lookForVersion = false;
 		foreach (var file in files) {
 			// skip everything before and including title (single #) from each file, we already have one
-			string foundTitle = null;
+			string? foundTitle = null;
 			foreach (var line in File.ReadAllLines (file)) {
 				if (foundTitle != null) {
 					content.WriteLine (line);
@@ -56,7 +58,7 @@ class Merger {
 
 		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#file-name
 		var filename = $"{os}-{from}-{to}".Replace ('.', '-').ToLowerInvariant () + ".md";
-		byte[] digest = null;
+		byte[]? digest = null;
 		using (var md = SHA256.Create ())
 			digest = md.ComputeHash (Encoding.UTF8.GetBytes (filename));
 		// (not cryptographically) unique (but good enough) for each filename - so document remains with the same id when it's updated/regenerated
@@ -79,7 +81,7 @@ class Merger {
 		headers.WriteLine ($"# {title}");
 		headers.WriteLine ();
 
-		var filePath = DestinationPath is not null ? Path.Combine (DestinationPath, filename) : filename;
+		var filePath = destinationPath is not null ? Path.Combine (destinationPath, filename) : filename;
 		File.WriteAllText (filePath, headers.ToString ());
 
 		var alldiffs = content.ToString ();
