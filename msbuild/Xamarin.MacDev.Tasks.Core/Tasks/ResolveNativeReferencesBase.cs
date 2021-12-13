@@ -64,24 +64,26 @@ namespace Xamarin.MacDev.Tasks {
 				foreach (var nr in NativeReferences) {
 					var name = nr.ItemSpec;
 					switch (Path.GetExtension (name)) {
-					// '.' is used to represent a file (instead of the directory)
+					// '.' can be used to represent a file (instead of the directory)
 					case "":
 						name = Path.GetDirectoryName (name);
-						if (Path.GetExtension (name) == ".xcframework") {
-							var resolved = ResolveXCFramework (name);
-							if (resolved == null)
-								return false;
-							var t = new TaskItem (resolved);
-							t.SetMetadata ("Kind", "Framework");
-							t.SetMetadata ("Name", resolved);
+						if (Path.GetExtension (name) == ".xcframework")
+							goto case ".xcframework";
+						break;
+					case ".xcframework":
+						var resolved = ResolveXCFramework (name);
+						if (resolved == null)
+							return false;
+						var t = new TaskItem (resolved);
+						t.SetMetadata ("Kind", "Framework");
+						t.SetMetadata ("Name", resolved);
 
-							// add some metadata from the original item
-							var addToAppBundle = nr.GetMetadata ("AddToAppBundle");
-							if (!string.IsNullOrEmpty (addToAppBundle))
-								t.SetMetadata ("AddToAppBundle", addToAppBundle);
+						// add some metadata from the original item
+						var addToAppBundle = nr.GetMetadata ("AddToAppBundle");
+						if (!string.IsNullOrEmpty (addToAppBundle))
+							t.SetMetadata ("AddToAppBundle", addToAppBundle);
 
-							native_frameworks.Add (t);
-						}
+						native_frameworks.Add (t);
 						break;
 					case ".framework":
 						native_frameworks.Add (nr);
