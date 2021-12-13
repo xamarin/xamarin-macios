@@ -5589,6 +5589,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			throw new NotImplementedException ();
 		}
+
+#if NET
+		public void PresentAfter (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void AddPresentedHandler (Action<global::Metal.IMTLDrawable> block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public double PresentedTime { get => throw new NotImplementedException (); }
+
+		public nuint DrawableId { get => throw new NotImplementedException (); }
+#endif
 	}
 #if !__TVOS__ // MetalPerformanceShaders isn't available in the tvOS simulator either
 	class MetalPerformanceShadersTypesInTheSimulator : NSObject, global::MetalPerformanceShaders.IMPSDeviceProvider {
