@@ -110,6 +110,10 @@ $(eval $(call FixMacCatalystAssembly,System.Net.Http))
 
 ifdef CUSTOM_DOTNET
 DOWNLOAD_DOTNET_VERSION=$(CUSTOM_DOTNET_VERSION)
+else
+ifneq ($(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION),)
+DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
+endif
 endif
 
 .stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
@@ -121,8 +125,10 @@ endif
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
+		/p:DotNetManifestVersionBand="$(MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
+	$(Q) $(CP) ./downloads/microsoft.net.workload.mono.toolchain.manifest-$(MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET6_VERSION)-osx-x64/sdk-manifests/$(MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
 	$(Q) touch $@
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages

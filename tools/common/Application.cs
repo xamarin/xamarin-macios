@@ -78,6 +78,7 @@ namespace Xamarin.Bundler {
 
 		public DlsymOptions DlsymOptions;
 		public List<Tuple<string, bool>> DlsymAssemblies;
+		public List<string> CustomLinkFlags;
 
 		public string CompilerPath;
 
@@ -496,6 +497,15 @@ namespace Xamarin.Bundler {
 			get {
 				return Optimizations.RemoveDynamicRegistrar != true;
 			}
+		}
+
+		public void ParseCustomLinkFlags (string value, string value_name)
+		{
+			if (!StringUtils.TryParseArguments (value, out var lf, out var ex))
+				throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"-{value_name}={value}", ex.Message);
+			if (CustomLinkFlags is null)
+				CustomLinkFlags = new List<string> ();
+			CustomLinkFlags.AddRange (lf);
 		}
 
 		public void ParseInterpreter (string value)

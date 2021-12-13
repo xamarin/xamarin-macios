@@ -905,7 +905,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = "-a'-b"; // 1 single quote
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
-				mtouch.AssertError (26, "Could not parse the command line argument '--gcc-flags=-a'-b': No matching quote found.");
+				mtouch.AssertError (26, "Could not parse the command line argument '--gcc_flags=-a'-b': No matching quote found.");
 			}
 		}
 
@@ -919,7 +919,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = gcc_flags;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (26, $"Could not parse the command line argument '--gcc-flags={gcc_flags}': {error}.");
+				mtouch.AssertError (26, $"Could not parse the command line argument '--gcc_flags={gcc_flags}': {error}.");
 			}
 		}
 
