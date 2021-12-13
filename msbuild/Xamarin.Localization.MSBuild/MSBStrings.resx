@@ -1357,4 +1357,8 @@
         <value>File '{0}' is not a valid framework: {1}</value>
     </data>
 
+    <data name="W7093" xml:space="preserve">
+        <value>The binding resource package {0} does not exist.</value>
+    </data>
+
 </root>

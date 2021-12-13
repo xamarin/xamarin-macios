@@ -2582,5 +2582,14 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("W7091", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The binding resource package {0} does not exist..
+        /// </summary>
+        public static string W7093 {
+            get {
+                return ResourceManager.GetString("W7093", resourceCulture);
+            }
+        }
     }
 }

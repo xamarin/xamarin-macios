@@ -29,6 +29,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem []? References { get; set; }
 
+		public ITaskItem []? BindingResourcePackages { get; set; }
+
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
@@ -106,6 +108,13 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
+			// or even just plain binding packages
+			if (BindingResourcePackages is not null) {
+				foreach (var bp in BindingResourcePackages) {
+					ProcessSidecar (bp, bp.ItemSpec, native_frameworks);
+				}
+			}
+
 			NativeFrameworks = native_frameworks.ToArray ();
 
 			return !Log.HasLoggedErrors;
@@ -125,6 +134,11 @@ namespace Xamarin.MacDev.Tasks {
 						};
 				ExecuteAsync ("/usr/bin/unzip", arguments).Wait ();
 				resources = path;
+			}
+
+			if (!Directory.Exists (resources)) {
+				Log.LogWarning (MSBStrings.W7093 /* The binding resource package {0} does not exist. */, resources);
+				return;
 			}
 
 			var manifest = Path.Combine (resources, "manifest");
