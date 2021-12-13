@@ -13,12 +13,12 @@ class Merger {
 		return line.Substring (start, end - start);
 	}
 
-	public static void Process (string platform, string path, string os, string? destinationPath = null)
+	public static void Process (string platform, string path, string os, string? destinationPath)
 	{
 		if (!Directory.Exists (path))
 			throw new DirectoryNotFoundException (path);
 
-		if (destinationPath is not null && !Directory.Exists (destinationPath))
+		if (!Directory.Exists (destinationPath))
 			throw new DirectoryNotFoundException (destinationPath);
 
 		var content = new StringWriter ();
@@ -95,7 +95,7 @@ class Merger {
 	public static int Main (string [] args)
 	{
 		try {
-			// if calling merger.cs form tools/apidiff/Makefile, we want to pass in the destinationPath 'arg [3]'
+			// if calling merger.cs from tools/apidiff/Makefile, we want to pass in the destinationPath 'arg [3]'
 			// to make sure diffs go to the correct location
 			Process (args [0], args [1], args [2], args.Length > 3 ? args [3] : null);
 			return 0;
