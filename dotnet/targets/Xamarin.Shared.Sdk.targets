@@ -596,6 +596,20 @@
 				<SourceDirectory>%(RootDir)%(Directory)</SourceDirectory>
 			</_FrameworkToPublish>
 		</ItemGroup>
+
+		<!-- Figure out which frameworks are really dynamic libraries, and only publish those -->
+		<FilterStaticFrameworks
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			FrameworkToPublish="@(_FrameworkToPublish)"
+		>
+			<Output TaskParameter="FrameworkToPublish" ItemName="_FilteredFrameworkToPublish" />
+		</FilterStaticFrameworks>
+
+		<ItemGroup>
+			<_FrameworkToPublish Remove="@(_FrameworkToPublish)" />
+			<_FrameworkToPublish Include="@(_FilteredFrameworkToPublish)" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CopyFrameworksToBundle"

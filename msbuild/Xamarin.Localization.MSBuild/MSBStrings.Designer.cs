@@ -1940,6 +1940,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; is not a valid framework: {1}.
+        /// </summary>
+        public static string E7092 {
+            get {
+                return ResourceManager.GetString("E7092", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {
@@ -2553,6 +2562,15 @@ namespace Xamarin.Localization.MSBuild {
         public static string W7087 {
             get {
                 return ResourceManager.GetString("W7087", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The framework {0} is a framework of static libraries, and will not be copied to the app..
+        /// </summary>
+        public static string W7091 {
+            get {
+                return ResourceManager.GetString("W7091", resourceCulture);
             }
         }
     }
