@@ -48,6 +48,12 @@ namespace Xamarin.Tests {
 			DeleteAssets (project_path);
 		}
 
+		[TearDown]
+		public void Cleanup ()
+		{
+			DeleteAssets (project_path);
+		}
+
 		[TestCase (true)] // Add the XCAssets before the build
 		[TestCase (false)] // Build, add the XCAssets, then build again
 		public void TestXCAssets (bool startWithAssets)
@@ -125,7 +131,6 @@ namespace Xamarin.Tests {
 			var arguments = new string [] { "-s", sourceDir, destDir };
 			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (60)).Result;
 			Assert.AreEqual (0, rv.ExitCode, $"Creating Symlink Error: {rv.StandardError}. Unexpected ExitCode");
-			return;
 		}
 
 		string GetFullSdkVersion (string sdkVersion) => sdkVersion switch {
