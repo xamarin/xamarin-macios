@@ -555,7 +555,6 @@
 !unknown-field! NSExtensionJavaScriptFinalizeArgumentKey bound
 !unknown-field! NSMetadataQueryLocalDocumentsScope bound
 !unknown-native-enum! NSNotificationFlags bound
-!unknown-native-enum! NSTextWritingDirection bound
 
 ## found after xtro fix
 !missing-selector! +NSAffineTransform::transform not bound
