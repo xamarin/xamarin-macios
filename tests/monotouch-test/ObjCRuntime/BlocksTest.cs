@@ -102,7 +102,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			Assert.Throws<ArgumentNullException> (() => block.SetupBlock (null, userDelegate), "null trampoline");
 
-#if !DEVICE && !MONOMAC && !AOT
+#if !DEVICE && !MONOMAC && !AOT && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR) {
 				// These checks only occur in the simulator
 				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidBlockTrampolines, userDelegate), "instance trampoline");

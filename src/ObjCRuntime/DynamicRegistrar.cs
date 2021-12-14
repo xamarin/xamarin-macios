@@ -130,7 +130,7 @@ namespace Registrar {
 
 		protected override bool IsSimulatorOrDesktop {
 			get {
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 				return true;
 #else
 				return Runtime.Arch == Arch.SIMULATOR;

@@ -2458,6 +2458,7 @@ xamarin_compute_trusted_platform_assemblies ()
 	const char *bundle_path = xamarin_get_bundle_path ();
 
 	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *exes = [NSMutableArray array];
 	NSMutableArray<NSString *> *directories = [NSMutableArray array];
 	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
 	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
@@ -2485,10 +2486,13 @@ xamarin_compute_trusted_platform_assemblies ()
 			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
 				[files addObject: [dir stringByAppendingPathComponent: name]];
 			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
-				[files addObject: [dir stringByAppendingPathComponent: name]];
+				[exes addObject: [dir stringByAppendingPathComponent: name]];
 			}
 		}
 	}
+
+	// Any .exe files must be at the end, due to https://github.com/dotnet/runtime/issues/62735
+	[files addObjectsFromArray: exes];
 
 	// Join them all together with a colon separating them
 	NSString *joined = [files componentsJoinedByString: @":"];

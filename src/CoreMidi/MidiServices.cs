@@ -804,15 +804,17 @@ namespace CoreMidi {
 			/*
 			 * IMPORTANT:
 			 *     On Intel and PowerPC, MIDIPacket is unaligned.
-			 *     On ARM, MIDIPacket must be 4-byte aligned.
+			 *     On ARM/ARM64, MIDIPacket must be 4-byte aligned.
 			 */
-#if !MONOMAC
-			if (ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.DEVICE) {
+			var aligned = Runtime.IsARM64CallingConvention;
+#if !MONOMAC && !__MACCATALYST__
+			aligned |= ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.DEVICE;
+#endif
+			if (aligned) {
 				// align to 4 bytes.
 				payload_length += 10;
 				return ((payload_length + 3) & (~3));
 			}
-#endif
 			return 10 + payload_length;
 		}
 
