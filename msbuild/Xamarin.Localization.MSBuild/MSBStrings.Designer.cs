@@ -1107,6 +1107,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not parse the custom linker argument(s) &apos;-{0}&apos;: {1}.
+        /// </summary>
+        public static string E0189 {
+            get {
+                return ResourceManager.GetString("E0189", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not resolve host IPs for WiFi debugger settings.
         ///        .
         /// </summary>
