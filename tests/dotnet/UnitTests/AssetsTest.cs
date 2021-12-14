@@ -2,16 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Diagnostics;
 using System.Text.Json;
-
-using Mono.Cecil;
 using NUnit.Framework;
 using Xamarin.Utils;
-using Xamarin.Tests;
-using Xamarin.MacDev;
 
 #nullable enable
 
@@ -85,7 +79,7 @@ namespace Xamarin.Tests {
 			var TotalUniqueAssets = platform == ApplePlatform.MacCatalyst ? 14 : 16;
 
 			Assert.AreEqual (TotalUniqueAssets, foundAssets.Count, "Wrong number of assets found");
-			Assert.IsFalse (foundAssets.Contains ("Data.DS_StoreDataTest"), "DS_Store files should not be included.");
+			Assert.That (foundAssets, Has.No.Member ("Data.DS_StoreDataTest"), "DS_Store files should not be included.");
 
 			var arm64txt = Path.Combine (resourcesDirectory, "arm64.txt");
 			var armtxt = Path.Combine (resourcesDirectory, "arm.txt");
