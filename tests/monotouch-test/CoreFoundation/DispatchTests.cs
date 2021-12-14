@@ -27,17 +27,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DispatchTests {
-		
-		static bool RunningOnSnowLeopard {
-			get {
-#if !MONOMAC
-				if (Runtime.Arch == Arch.DEVICE)
-					return false;
-#endif
-				return !File.Exists ("/usr/lib/system/libsystem_kernel.dylib");
-			}
-		}
-
 #if !MONOMAC // UIKitThreadAccessException and NSStringDrawing.WeakDrawString don't exist on mac
 		[Test]
 		public void MainQueueDispatch ()
@@ -45,9 +34,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
@@ -103,9 +89,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
@@ -215,8 +198,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void Main ()
 		{
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("Shows corruption (missing first 4 chars) when executed the iOS simulator on Snow Leopard");
 			Assert.That (DispatchQueue.MainQueue.Label, Is.EqualTo ("com.apple.main-thread"), "Main");
 		}
 
@@ -263,9 +244,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
@@ -320,9 +298,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
