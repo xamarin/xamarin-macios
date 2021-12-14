@@ -39,7 +39,7 @@ namespace Xamarin.Tests {
 		readonly string runtimeIdentifiers;
 		readonly string sdkVersion;
 		readonly bool isStartingWithAssets;
-		string project_path = string.Empty;
+		string projectPath = string.Empty;
 		string appPath = string.Empty;
 
 		public AssetsTest (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion, bool isStartingWithAssets)
@@ -55,14 +55,14 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithXCAssets";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out appPath);
-			ConfigureAssets (project_path, runtimeIdentifiers, isStartingWithAssets);
+			projectPath = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out appPath);
+			ConfigureAssets ();
 		}
 
 		[TearDown]
 		public void Cleanup ()
 		{
-			DeleteAssets (project_path);
+			DeleteAssets ();
 		}
 
 		[Test]
@@ -76,7 +76,7 @@ namespace Xamarin.Tests {
 			var assetsCar = Path.Combine (resourcesDirectory, "Assets.car");
 			Assert.That (assetsCar, Does.Exist, "Assets.car");
 
-			var doc = ProcessAssets (assetsCar, GetFullSdkVersion (sdkVersion));
+			var doc = ProcessAssets (assetsCar, GetFullSdkVersion ());
 			Assert.IsNotNull (doc, "There was an issue processing the asset binary.");
 
 			var foundAssets = FindAssets (doc);
@@ -95,33 +95,33 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
-		void ConfigureAssets (string project_path, string runtimeIdentifiers, bool startWithAssets)
+		void ConfigureAssets ()
 		{
 			// We either want the assets added before the build, or we will be adding them after the build
-			if (startWithAssets)
-				CopyAssets (project_path);
+			if (isStartingWithAssets)
+				CopyAssets ();
 
-			Clean (project_path);
+			Clean (projectPath);
 
-			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
-			if (!startWithAssets) {
-				CopyAssets (project_path);
+			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
+			if (!isStartingWithAssets) {
+				CopyAssets ();
 				// Building the project twice without cleaning in between fails: https://github.com/xamarin/maccore/issues/2530
-				Clean (project_path);
-				DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+				Clean (projectPath);
+				DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			}
 		}
 
-		void DeleteAssets (string project_path)
+		void DeleteAssets ()
 		{
-			var xcassetsDir = Path.Combine (project_path, "../Assets.xcassets");
+			var xcassetsDir = Path.Combine (projectPath, "../Assets.xcassets");
 			File.Delete (xcassetsDir);
 		}
 
-		void CopyAssets (string project_path)
+		void CopyAssets ()
 		{
-			var testingAssetsDir = new DirectoryInfo (Path.Combine (project_path, "../../TestingAssets"));
-			var xcassetsDir = new DirectoryInfo (Path.Combine (project_path, "../Assets.xcassets"));
+			var testingAssetsDir = new DirectoryInfo (Path.Combine (projectPath, "../../TestingAssets"));
+			var xcassetsDir = new DirectoryInfo (Path.Combine (projectPath, "../Assets.xcassets"));
 
 			Assert.That (testingAssetsDir, Does.Exist, $"Could not find testingAssetsDir: {testingAssetsDir}");
 			MakeSymlinks (testingAssetsDir.FullName, xcassetsDir.FullName);
@@ -137,7 +137,7 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (0, rv.ExitCode, $"Creating Symlink Error: {rv.StandardError}. Unexpected ExitCode");
 		}
 
-		string GetFullSdkVersion (string sdkVersion) => sdkVersion switch {
+		string GetFullSdkVersion () => sdkVersion switch {
 			"iphonesimulator" => sdkVersion + Configuration.sdk_version,
 			"iphoneos" => sdkVersion + Configuration.sdk_version,
 			"appletvsimulator" => sdkVersion + Configuration.tvos_sdk_version,
