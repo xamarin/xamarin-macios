@@ -148,9 +148,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Ignore ("crash on the bots, run fines locally on sim")]
 		public void NSUrl_Subclass ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Inconclusive ("will crash runner application after test execution");
-			
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
 			if (File.Exists (file))
 				File.Delete (file);
