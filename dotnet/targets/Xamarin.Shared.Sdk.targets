@@ -1210,7 +1210,7 @@
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
-			AppManifestPath="$(_AppBundleManifest)"
+			AppManifestPath="$(_AppBundleManifestPath)"
 			DeviceName="$(_DeviceName)"
 			InstallApp="$(_AppBundlePath)"
 			MlaunchPath="$(_MlaunchPath)"
@@ -1237,7 +1237,7 @@
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
-			AppManifestPath="$(_AppBundleManifest)"
+			AppManifestPath="$(_AppBundleManifestPath)"
 			CaptureOutput="$(_MlaunchCaptureOutput)"
 			DeviceName="$(_DeviceName)"
 			LaunchApp="$(_AppBundlePath)"
