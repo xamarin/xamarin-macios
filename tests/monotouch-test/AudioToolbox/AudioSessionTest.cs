@@ -26,10 +26,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var input = AudioSession.InputRoute;
 			
 			Assert.That (Enum.IsDefined (typeof (AudioSessionInputRouteKind), input), "InputRoute");
-			if (Runtime.Arch == Arch.DEVICE) {
-				// Apparently my iPad2 doesn't have microphone ?!?
-				//Assert.That (input != AudioSessionInputRouteKind.None, "All known devices has microphones");
-			}
 			
 			var outputs = AudioSession.OutputRoutes;
 			if (outputs != null) {
