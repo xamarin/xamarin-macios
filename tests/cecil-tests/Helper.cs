@@ -65,6 +65,45 @@ namespace Cecil.Tests {
 			yield break;
 		}
 
+		public static IEnumerable<PropertyDefinition> FilterProperties (AssemblyDefinition assembly, Func<PropertyDefinition, bool>? filter)
+		{
+			foreach (var module in assembly.Modules) {
+				foreach (var type in module.Types) {
+					foreach (var property in FilterProperties (type, filter))
+						yield return property;
+				}
+			}
+			yield break;
+		}
+
+		static IEnumerable<PropertyDefinition> FilterProperties (TypeDefinition type, Func<PropertyDefinition, bool>? filter)
+		{
+			if (type.HasProperties) {
+				foreach (var property in type.Properties) {
+					if ((filter == null) || filter (property))
+						yield return property;
+				}
+			}
+			if (type.HasNestedTypes) {
+				foreach (var nested in type.NestedTypes) {
+					foreach (var property in FilterProperties (nested, filter))
+						yield return property;
+				}
+			}
+			yield break;
+		}
+
+		public static IEnumerable<TypeDefinition> FilterTypes (AssemblyDefinition assembly, Func<TypeDefinition, bool>? filter)
+		{
+			foreach (var module in assembly.Modules) {
+				foreach (var type in module.Types) {
+					if ((filter == null) || filter (type))
+						yield return type;
+				}
+			}
+			yield break;
+		}
+
 		public static string GetBCLDirectory (string assembly)
 		{
 			var rv = string.Empty;
