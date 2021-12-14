@@ -6,7 +6,6 @@
     <RootNamespace>trimmode_copy</RootNamespace>
     <AssemblyName>trimmode copy</AssemblyName>
     <ApplicationTitle>TrimMode Copy</ApplicationTitle>
-    <ApplicationId>com.xamarin.trimmode_copy</ApplicationId>
     <TrimMode>copy</TrimMode>
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\dont link</ThisTestDirectory>

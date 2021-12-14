@@ -6,7 +6,6 @@
     <RootNamespace>trimmode_link</RootNamespace>
     <AssemblyName>trimmode link</AssemblyName>
     <ApplicationTitle>TrimMode Link</ApplicationTitle>
-    <ApplicationId>com.xamarin.trimmode_link</ApplicationId>
     <TrimMode>link</TrimMode>
     <MtouchExtraArgs>-disable-thread-check "--dlsym:-trimmode link" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
     <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
