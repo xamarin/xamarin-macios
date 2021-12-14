@@ -17,26 +17,37 @@ using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 
-	[TestFixture (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator")]
-	[TestFixture (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos")]
-	[TestFixture (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator")]
-	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-x64", "macosx")]
-	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "macosx")]
-	[TestFixture (ApplePlatform.MacOSX, "osx-x64", "macosx")]
-	[TestFixture (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx")] // https://github.com/xamarin/xamarin-macios/issues/12410
+	// Add the XCAssets before the build
+	[TestFixture (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator", true)]
+	[TestFixture (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos", true)]
+	[TestFixture (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator", true)]
+	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-x64", "macosx", true)]
+	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "macosx", true)]
+	[TestFixture (ApplePlatform.MacOSX, "osx-x64", "macosx", true)]
+	[TestFixture (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx", true)] // https://github.com/xamarin/xamarin-macios/issues/12410
+	// Build, add the XCAssets, then build again
+	[TestFixture (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator", false)]
+	[TestFixture (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos", false)]
+	[TestFixture (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator", false)]
+	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-x64", "macosx", false)]
+	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "macosx", false)]
+	[TestFixture (ApplePlatform.MacOSX, "osx-x64", "macosx", false)]
+	[TestFixture (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx", false)] // https://github.com/xamarin/xamarin-macios/issues/12410
 	public class AssetsTest : TestBaseClass {
 
 		readonly ApplePlatform platform;
 		readonly string runtimeIdentifiers;
 		readonly string sdkVersion;
+		readonly bool isStartingWithAssets;
 		string project_path = string.Empty;
 		string appPath = string.Empty;
 
-		public AssetsTest (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion)
+		public AssetsTest (ApplePlatform platform, string runtimeIdentifiers, string sdkVersion, bool isStartingWithAssets)
 		{
 			this.platform = platform;
 			this.runtimeIdentifiers = runtimeIdentifiers;
 			this.sdkVersion = sdkVersion;
+			this.isStartingWithAssets = isStartingWithAssets;
 		}
 
 		[SetUp]
@@ -45,7 +56,7 @@ namespace Xamarin.Tests {
 			var project = "AppWithXCAssets";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out appPath);
-			DeleteAssets (project_path);
+			ConfigureAssets (project_path, runtimeIdentifiers, isStartingWithAssets);
 		}
 
 		[TearDown]
@@ -54,16 +65,9 @@ namespace Xamarin.Tests {
 			DeleteAssets (project_path);
 		}
 
-		[TestCase (true)] // Add the XCAssets before the build
-		[TestCase (false)] // Build, add the XCAssets, then build again
-		public void TestXCAssets (bool startWithAssets)
+		[Test]
+		public void TestXCAssets ()
 		{
-			var project = "AppWithXCAssets";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
-
-			ConfigureAssets (project_path, runtimeIdentifiers, startWithAssets);
-
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			DotNetProjectTest.ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
