@@ -6,6 +6,12 @@
 # https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
 #
 parameters:
+
+- name: provisionatorChannel
+  displayName: Provisionator channel to use 
+  type: string
+  default: 'latest'
+
 - name: runTests
   displayName: Run Simulator Tests
   type: boolean
@@ -25,11 +31,6 @@ parameters:
   type: boolean
   default: false
   
-- name: provisionatorChannel
-  displayName: Provisionator channel to use 
-  type: string
-  default: 'latest'
-
 - name: enableDotnet
   displayName: Build Dotnet 
   type: boolean
