@@ -650,12 +650,14 @@
 		<PropertyGroup>
 			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
 		</PropertyGroup>
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StrippedAssemblyDirectory)" />
 		<ItemGroup>
 			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll'">
-				<OutputPath>$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
+				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' != ''">$(_StrippedAssemblyDirectory)\%(ResolvedFileToPublish.DestinationSubPath)</OutputPath>
+				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' == ''">$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
 			</_AssembliesToBeStripped>
+			<_AssemblyDirsToCreate Include="@(_AssembliesToBeStripped->'%(OutputPath)%(Directory)'->Distinct())"/>
 		</ItemGroup>
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="@(_AssemblyDirsToCreate)" />
 		<Xamarin.MacDev.Tasks.ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)">
 			<Output TaskParameter="StrippedAssemblies" ItemName="_StrippedAssemblies" />
 		</Xamarin.MacDev.Tasks.ILStrip>
