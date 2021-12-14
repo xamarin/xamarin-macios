@@ -22,6 +22,10 @@ namespace Xamarin.MacDev.Tasks {
 					var item = list [i];
 					var frameworkExecutablePath = item.ItemSpec;
 					try {
+						if (frameworkExecutablePath.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && Directory.Exists (frameworkExecutablePath)) {
+							frameworkExecutablePath = Path.Combine (frameworkExecutablePath, Path.GetFileNameWithoutExtension (frameworkExecutablePath));
+						}
+
 						if (MachO.IsDynamicFramework (frameworkExecutablePath))
 							continue;
 					} catch (Exception e) {
