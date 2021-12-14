@@ -20,7 +20,7 @@ class Merger {
 		if (!Directory.Exists (path))
 			throw new DirectoryNotFoundException (path);
 
-		if (!Directory.Exists (destinationPath))
+		if (destinationPath is not null && !Directory.Exists (destinationPath))
 			throw new DirectoryNotFoundException (destinationPath);
 
 		var content = new StringWriter ();
