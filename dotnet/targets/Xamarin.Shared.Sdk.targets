@@ -433,6 +433,7 @@
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
 				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
+				@(_CustomLinkFlags -> 'CustomLinkFlags=%(Identity)')
 				EnableSGenConc=$(EnableSGenConc)
 				@(_BundlerEnvironmentVariables -> 'EnvironmentVariable=%(Identity)=%(Value)')
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
@@ -689,6 +690,10 @@
 		<!-- Load _AssemblyLinkerFlags -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_AssemblyLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssemblyLinkerFlags.items')">
 			<Output TaskParameter="Items" ItemName="_AssemblyLinkerFlags" />
+		</ReadItemsFromFile>
+		<!-- Load _MainLinkerFlags -->
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainLinkerFlags.items')">
+			<Output TaskParameter="Items" ItemName="_MainLinkerFlags" />
 		</ReadItemsFromFile>
 		<!-- Load _BindingLibraryFrameworks -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
@@ -1060,7 +1065,7 @@
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			FrameworkRPath="$(_EmbeddedFrameworksRPath)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
-			LinkerFlags="@(_AssemblyLinkerFlags);@(_ReferencesLinkerFlags);@(_MainLinkerFlags)"
+			LinkerFlags="@(_AssemblyLinkerFlags);@(_ReferencesLinkerFlags);@(_MainLinkerFlags);@(_CustomLinkFlags)"
 			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			NativeReferences="@(_FileNativeReference);@(_FrameworkNativeReference)"

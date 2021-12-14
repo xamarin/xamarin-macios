@@ -27,43 +27,6 @@ namespace MonoTouchFixtures.SpriteKit
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
-
-#if !MONOMAC
-			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				object dummy;
-				using (var obj = new SKUniform ("name")) {
-					dummy = obj.Name;
-					dummy = obj.UniformType;
-					dummy = obj.TextureValue;
-					dummy = obj.FloatValue;
-					dummy = obj.FloatVector2Value;
-					dummy = obj.FloatVector3Value;
-					dummy = obj.FloatVector4Value;
-					dummy = obj.FloatMatrix2Value;
-					dummy = obj.FloatMatrix3Value;
-					dummy = obj.FloatMatrix4Value;
-				}
-				using (var obj = new SKUniform ("name", SKTexture.FromImageNamed ("basn3p08.png"))) {
-				}
-				using (var obj = new SKUniform ("name", 1.0f)) {
-				}
-				using (var obj = new SKUniform ("name", Vector2.Zero)) {
-				}
-				using (var obj = new SKUniform ("name", Vector3.Zero)) {
-				}
-				using (var obj = new SKUniform ("name", Vector4.Zero)) {
-				}
-				using (var obj = new SKUniform ("name", Matrix2.Identity)) {
-				}
-				using (var obj = new SKUniform ("name", Matrix3.Identity)) {
-				}
-				using (var obj = new SKUniform ("name", Matrix4.Identity)) {
-				}
-			}
-#endif
 		}
 
 		[Test]

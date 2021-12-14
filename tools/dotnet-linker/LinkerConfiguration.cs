@@ -119,6 +119,9 @@ namespace Xamarin.Linker {
 				case "CacheDirectory":
 					CacheDirectory = value;
 					break;
+				case "CustomLinkFlags":
+					Application.ParseCustomLinkFlags (value, "gcc_flags");
+					break;
 				case "Debug":
 					Application.EnableDebug = string.Equals (value, "true", StringComparison.OrdinalIgnoreCase);
 					break;
