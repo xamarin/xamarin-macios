@@ -718,7 +718,7 @@ namespace Xamarin.Tests {
 			var project = "AppWithResources";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var projectPath = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var projectPath = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out _);
 			Clean (projectPath);
 
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
