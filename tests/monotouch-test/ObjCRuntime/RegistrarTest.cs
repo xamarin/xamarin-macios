@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 
 using CoreFoundation;
@@ -5522,10 +5523,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public interface ISomeDelegate : INativeObject, IDisposable
 	{
 	}
+#if NET
+	[SupportedOSPlatform ("macos100.0")]
+	[SupportedOSPlatform ("ios100.0")]
+	[SupportedOSPlatform ("tvos100.0")]
+	[SupportedOSPlatform ("maccatalyst100.0")]
+#else
 	[Introduced (PlatformName.MacOSX, 100, 0)]
 	[Introduced (PlatformName.iOS, 100, 0)]
 	[Introduced (PlatformName.TvOS, 100, 0)]
 	[Introduced (PlatformName.WatchOS, 100, 0)]
+#endif
 	public class FutureClass : NSObject
 	{
 	}
@@ -5581,6 +5589,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			throw new NotImplementedException ();
 		}
+
+#if NET
+		public void PresentAfter (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void AddPresentedHandler (Action<global::Metal.IMTLDrawable> block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public double PresentedTime { get => throw new NotImplementedException (); }
+
+		public nuint DrawableId { get => throw new NotImplementedException (); }
+#endif
 	}
 #if !__TVOS__ // MetalPerformanceShaders isn't available in the tvOS simulator either
 	class MetalPerformanceShadersTypesInTheSimulator : NSObject, global::MetalPerformanceShaders.IMPSDeviceProvider {

@@ -44,6 +44,16 @@ namespace Xamarin.Linker {
 				}
 			}
 			Configuration.WriteOutputForMSBuild ("_AssemblyLinkerFlags", linkerFlags);
+
+			if (Configuration.Application.CustomLinkFlags?.Count > 0)
+				Configuration.Application.DeadStrip = false;
+
+			var mainLinkerFlags = new List<MSBuildItem> ();
+			if (Configuration.Application.DeadStrip) {
+				mainLinkerFlags.Add (new MSBuildItem { Include = "-dead_strip" });
+			}
+			Configuration.WriteOutputForMSBuild ("_AssemblyLinkerFlags", mainLinkerFlags);
+
 		}
 	}
 }

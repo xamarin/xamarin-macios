@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Text;
 
 //
 // All the attributes in this file are compiled into two binaries:
@@ -852,3 +853,330 @@ public class DefaultEnumValueAttribute : Attribute {
 [AttributeUsage (AttributeTargets.Method)]
 public class NoMethodAttribute : Attribute {
 }
+
+#if NET
+public enum PlatformName : byte {
+	None,
+	MacOSX,
+	iOS,
+	WatchOS,
+	TvOS,
+	MacCatalyst,
+}
+
+public enum AvailabilityKind {
+	Introduced,
+	Deprecated,
+	Obsoleted,
+	Unavailable,
+}
+
+[AttributeUsage (
+	AttributeTargets.Assembly |
+	AttributeTargets.Class |
+	AttributeTargets.Constructor |
+	AttributeTargets.Delegate |
+	AttributeTargets.Enum |
+	AttributeTargets.Event |
+	AttributeTargets.Field |
+	AttributeTargets.Interface |
+	AttributeTargets.Method |
+	AttributeTargets.Property |
+	AttributeTargets.Struct,
+	AllowMultiple = true
+)]
+public abstract class AvailabilityBaseAttribute : Attribute {
+	public AvailabilityKind AvailabilityKind { get; private set; }
+	public PlatformName Platform { get; private set; }
+	public Version Version { get; private set; }
+	public string Message { get; private set; }
+
+	internal AvailabilityBaseAttribute ()
+	{
+	}
+
+	internal AvailabilityBaseAttribute (
+		AvailabilityKind availabilityKind,
+		PlatformName platform,
+		Version version,
+		string message)
+	{
+		AvailabilityKind = availabilityKind;
+		Platform = platform;
+		Version = version;
+		Message = message;
+	}
+
+	public override string ToString ()
+	{
+		var builder = new StringBuilder ();
+		switch (AvailabilityKind) {
+		case AvailabilityKind.Introduced:
+			builder.Append ("[SupportedOSPlatform (\"");
+			break;
+		case AvailabilityKind.Obsoleted:
+			switch (Platform) {
+			case PlatformName.iOS:
+				builder.AppendLine ("#if __IOS__");
+				break;
+			case PlatformName.TvOS:
+				builder.AppendLine ("#if __TVOS__");
+				break;
+			case PlatformName.WatchOS:
+				builder.AppendLine ("#if __WATCHOS__");
+				break;
+			case PlatformName.MacOSX:
+				builder.AppendLine ("#if __MACOS__");
+				break;
+			case PlatformName.MacCatalyst:
+				builder.AppendLine ("#if __MACCATALYST__");
+				break;
+			default:
+				throw new NotSupportedException ($"Unknown platform: {Platform}");
+			}
+			builder.Append ("[Obsolete (\"Starting with ");
+			break;
+		case AvailabilityKind.Deprecated:
+		case AvailabilityKind.Unavailable:
+			builder.Append ("[UnsupportedOSPlatform (\"");
+			break;
+		}
+
+		switch (Platform) {
+		case PlatformName.iOS:
+			builder.Append ("ios");
+			break;
+		case PlatformName.TvOS:
+			builder.Append ("tvos");
+			break;
+		case PlatformName.WatchOS:
+			builder.Append ("watchos");
+			break;
+		case PlatformName.MacOSX:
+			builder.Append ("macos"); // no 'x'
+			break;
+		case PlatformName.MacCatalyst:
+			builder.Append ("maccatalyst");
+			break;
+		default:
+			throw new NotSupportedException ($"Unknown platform: {Platform}");
+		}
+
+		if (Version != null)
+			builder.Append (Version.ToString (Version.Build >= 0 ? 3 : 2));
+
+		switch (AvailabilityKind) {
+		case AvailabilityKind.Obsoleted:
+			if (!String.IsNullOrEmpty (Message))
+				builder.Append (' ').Append (Message);
+			else
+				builder.Append ('.'); // intro check messages to they end with a '.'
+										// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
+			builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
+			builder.Append ("#endif");
+			break;
+		case AvailabilityKind.Introduced:
+		case AvailabilityKind.Deprecated:
+		case AvailabilityKind.Unavailable:
+			builder.Append ("\")]");
+			break;
+		}
+		return builder.ToString ();
+	}
+}
+
+public class IntroducedAttribute : AvailabilityBaseAttribute {
+	public IntroducedAttribute (PlatformName platform, string message = null)
+		: base (AvailabilityKind.Introduced, platform, null, message)
+	{
+	}
+
+	public IntroducedAttribute (PlatformName platform, int majorVersion, int minorVersion, string message = null)
+		: base (AvailabilityKind.Introduced, platform, new Version (majorVersion, minorVersion), message)
+	{
+	}
+
+	public IntroducedAttribute (PlatformName platform, int majorVersion, int minorVersion, int subminorVersion, string message = null)
+		: base (AvailabilityKind.Introduced, platform, new Version (majorVersion, minorVersion, subminorVersion), message)
+	{
+	}
+}
+
+public sealed class DeprecatedAttribute : AvailabilityBaseAttribute {
+	public DeprecatedAttribute (PlatformName platform, string message = null)
+		: base (AvailabilityKind.Deprecated, platform, null, message)
+	{
+	}
+
+	public DeprecatedAttribute (PlatformName platform, int majorVersion, int minorVersion, string message = null)
+		: base (AvailabilityKind.Deprecated, platform, new Version (majorVersion, minorVersion), message)
+	{
+	}
+
+	public DeprecatedAttribute (PlatformName platform, int majorVersion, int minorVersion, int subminorVersion, string message = null)
+		: base (AvailabilityKind.Deprecated, platform, new Version (majorVersion, minorVersion, subminorVersion), message)
+	{
+	}
+}
+
+public sealed class ObsoletedAttribute : AvailabilityBaseAttribute {
+	public ObsoletedAttribute (PlatformName platform, string message = null)
+		: base (AvailabilityKind.Obsoleted, platform, null, message)
+	{
+	}
+
+	public ObsoletedAttribute (PlatformName platform, int majorVersion, int minorVersion, string message = null)
+		: base (AvailabilityKind.Obsoleted, platform, new Version (majorVersion, minorVersion), message)
+	{
+	}
+
+	public ObsoletedAttribute (PlatformName platform, int majorVersion, int minorVersion, int subminorVersion, string message = null)
+		: base (AvailabilityKind.Obsoleted, platform, new Version (majorVersion, minorVersion, subminorVersion), message)
+	{
+	}
+}
+
+public class UnavailableAttribute : AvailabilityBaseAttribute {
+	public UnavailableAttribute (PlatformName platform, string message = null)
+		: base (AvailabilityKind.Unavailable, platform, null, message)
+	{
+	}
+}
+
+public sealed class TVAttribute : IntroducedAttribute {
+	public TVAttribute (byte major, byte minor)
+		: base (PlatformName.TvOS, (int) major, (int) minor)
+	{
+	}
+
+	public TVAttribute (byte major, byte minor, byte subminor)
+		: base (PlatformName.TvOS, (int) major, (int) minor, subminor)
+	{
+	}
+}
+
+public sealed class WatchAttribute : IntroducedAttribute {
+	public WatchAttribute (byte major, byte minor)
+		: base (PlatformName.WatchOS, (int) major, (int) minor)
+	{
+	}
+
+	public WatchAttribute (byte major, byte minor, byte subminor)
+		: base (PlatformName.WatchOS, (int) major, (int) minor, subminor)
+	{
+	}
+}
+
+public sealed class MacCatalystAttribute : IntroducedAttribute {
+	public MacCatalystAttribute (byte major, byte minor)
+		: base (PlatformName.MacCatalyst, (int) major, (int) minor)
+	{
+	}
+
+	public MacCatalystAttribute (byte major, byte minor, byte subminor)
+		: base (PlatformName.MacCatalyst, (int) major, (int) minor, subminor)
+	{
+	}
+}
+
+public sealed class NoMacAttribute : UnavailableAttribute {
+	public NoMacAttribute ()
+		: base (PlatformName.MacOSX)
+	{
+	}
+}
+
+public sealed class NoiOSAttribute : UnavailableAttribute {
+	public NoiOSAttribute ()
+		: base (PlatformName.iOS)
+	{
+	}
+}
+
+public sealed class NoWatchAttribute : UnavailableAttribute {
+	public NoWatchAttribute ()
+		: base (PlatformName.WatchOS)
+	{
+	}
+}
+
+public sealed class NoTVAttribute : UnavailableAttribute {
+	public NoTVAttribute ()
+		: base (PlatformName.TvOS)
+	{
+	}
+}
+
+public sealed class NoMacCatalystAttribute : UnavailableAttribute {
+	public NoMacCatalystAttribute ()
+		: base (PlatformName.MacCatalyst)
+	{
+	}
+}
+
+enum Platform : ulong {
+	None = 0x0,
+	// Processed in generator-attribute-manager.cs
+	//            0xT000000000MMmmss
+	iOS_Version = 0x0000000000ffffff,
+	iOS_2_0 = 0x0000000000020000,
+	iOS_2_2 = 0x0000000000020200,
+	iOS_3_0 = 0x0000000000030000,
+	iOS_3_1 = 0x0000000000030100,
+	iOS_3_2 = 0x0000000000030200,
+	iOS_4_0 = 0x0000000000040000,
+	iOS_4_1 = 0x0000000000040100,
+	iOS_4_2 = 0x0000000000040200,
+	iOS_4_3 = 0x0000000000040300,
+	iOS_5_0 = 0x0000000000050000,
+	iOS_5_1 = 0x0000000000050100,
+	iOS_6_0 = 0x0000000000060000,
+	iOS_6_1 = 0x0000000000060100,
+	iOS_7_0 = 0x0000000000070000,
+	iOS_7_1 = 0x0000000000070100,
+	iOS_8_0 = 0x0000000000080000,
+	iOS_8_1 = 0x0000000000080100,
+	iOS_8_2 = 0x0000000000080200,
+	iOS_8_3 = 0x0000000000080300,
+	iOS_8_4 = 0x0000000000080400,
+	iOS_9_0 = 0x0000000000090000,
+	iOS_9_1 = 0x0000000000090100,
+	iOS_9_2 = 0x0000000000090200,
+	iOS_9_3 = 0x0000000000090300,
+	iOS_10_0 = 0x00000000000a0000,
+	iOS_11_0 = 0x00000000000b0000,
+
+	//            0xT000000000MMmmss
+	Mac_Version = 0x1000000000ffffff,
+	Mac_10_0 = 0x1000000000000000,
+	Mac_10_1 = 0x1000000000010000,
+	Mac_10_2 = 0x1000000000020000,
+	Mac_10_3 = 0x1000000000030000,
+	Mac_10_4 = 0x1000000000040000,
+	Mac_10_5 = 0x1000000000050000,
+	Mac_10_6 = 0x1000000000060000,
+	Mac_10_7 = 0x1000000000070000,
+	Mac_10_8 = 0x1000000000080000,
+	Mac_10_9 = 0x1000000000090000,
+	Mac_10_10 = 0x10000000000a0000,
+	Mac_10_10_3 = 0x10000000000a0300,
+	Mac_10_11 = 0x10000000000b0000,
+	Mac_10_11_3 = 0x10000000000b0300,
+	Mac_10_12 = 0x10000000000c0000,
+	Mac_10_13 = 0x10000000000d0000,
+	Mac_10_14 = 0x10000000000e0000,
+
+	//              0xT000000000MMmmss
+	Watch_Version = 0x2000000000ffffff,
+	Watch_1_0 = 0x2000000000010000,
+	Watch_2_0 = 0x2000000000020000,
+	Watch_3_0 = 0x2000000000030000,
+	Watch_4_0 = 0x2000000000040000,
+
+	//             0xT000000000MMmmss
+	TV_Version = 0x3000000000ffffff,
+	TV_9_0 = 0x3000000000090000,
+	TV_10_0 = 0x30000000000a0000,
+	TV_11_0 = 0x30000000000b0000,
+}
+#endif // NET
