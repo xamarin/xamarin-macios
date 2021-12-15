@@ -29,7 +29,6 @@ namespace Xamarin.Linker {
 		public bool InvariantGlobalization { get; private set; }
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
-		public LinkMode LinkMode => Application.LinkMode;
 		public string PartialStaticRegistrarLibrary { get; set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
@@ -106,6 +105,9 @@ namespace Xamarin.Linker {
 					continue;
 
 				switch (key) {
+				case "AreAnyAssembliesTrimmed":
+					Application.AreAnyAssembliesTrimmed = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
 				case "AssemblyName":
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
@@ -164,11 +166,6 @@ namespace Xamarin.Linker {
 					break;
 				case "LibXamarinLinkMode":
 					Application.LibXamarinLinkMode = ParseLinkMode (value, key);
-					break;
-				case "LinkMode":
-					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
-						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
-					Application.LinkMode = lm;
 					break;
 				case "MarshalManagedExceptionMode":
 					if (!string.IsNullOrEmpty (value)) {
@@ -367,6 +364,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
+				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
@@ -380,7 +378,6 @@ namespace Xamarin.Linker {
 				foreach (var fw in FrameworkAssemblies.OrderBy (v => v))
 					Console.WriteLine ($"        {fw}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
-				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
 				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
 				Console.WriteLine ($"    {Application.MonoLibraries.Count} mono libraries:");
