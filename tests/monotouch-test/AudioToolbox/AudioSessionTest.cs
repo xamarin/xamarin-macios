@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 					Assert.That (Enum.IsDefined (typeof (AudioSessionOutputRouteKind), output), "Output: " + output.ToString ());
 			}
 			
-			if (Runtime.Arch == Arch.DEVICE) {
+			if (TestRuntime.IsDevice) {
 				Assert.That (outputs != null && outputs.Length > 0, "All known devices have at least speakers #1");
 				Assert.That (outputs [0] != AudioSessionOutputRouteKind.None, "All known devices have at least speakers #2");
 			}

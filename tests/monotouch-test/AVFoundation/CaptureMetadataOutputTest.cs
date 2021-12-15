@@ -92,10 +92,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void MetadataObjectTypesTest ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
-
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This test only runs on device (requires camera access)");
-
+			TestRuntime.AssertDevice ("This test only runs on device (requires camera access)");
 			TestRuntime.RequestCameraPermission (AVMediaTypes.Video.GetConstant (), true);
 
 			using (var captureSession = new AVCaptureSession ()) {
@@ -122,7 +119,7 @@ namespace MonoTouchFixtures.AVFoundation {
 									if (!TestRuntime.CheckXcodeVersion (11, 0))
 										continue;
 									// xcode 12 beta 1 on device
-									if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
+									if (TestRuntime.IsDevice && TestRuntime.CheckXcodeVersion (12, 0))
 										continue;
 									break;
 								}

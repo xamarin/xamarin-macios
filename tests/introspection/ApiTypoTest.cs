@@ -1083,14 +1083,14 @@ namespace Introspection
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
 					// Xcode 12 beta 2 does not ship these framework/headers for the simulators
-					if (Runtime.Arch == Arch.DEVICE)
+					if (TestRuntime.IsDevice)
 						Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
 #if __TVOS__
 				case "MetalPerformanceShadersLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						break;
 					goto default;
 #endif
@@ -1102,7 +1102,7 @@ namespace Introspection
 							if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
 								continue;
 							// Phone works unless Xcode 12 on simulator
-							if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+							if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0))
 								continue;
 						}
 #endif
