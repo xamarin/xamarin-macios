@@ -174,18 +174,14 @@ partial class TestRuntime
 
 	public static void AssertNotSimulator (string message = "This test does not work in the simulator.")
 	{
-#if !__MACOS__ && !__MACCATALYST__
-		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
+		if (IsSimulator)
 			NUnit.Framework.Assert.Ignore (message);
-#endif
 	}
 
 	public static void AssertSimulator (string message = "This test only works in the simulator.")
 	{
-#if !__MACOS__ && !__MACCATALYST__
-		if (ObjCRuntime.Runtime.Arch != Arch.SIMULATOR)
+		if (!IsSimulator)
 			NUnit.Framework.Assert.Ignore (message);
-#endif
 	}
 
 	public static void AssertSimulatorOrDesktop (string message = "This test only works in the simulator or on the desktop.")

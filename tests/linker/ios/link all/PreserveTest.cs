@@ -105,7 +105,7 @@ namespace LinkAll.Attributes {
 		public void Runtime_RegisterEntryAssembly ()
 		{
 #if NET
-			TestRuntime.AssertNotDevice ("https://github.com/xamarin/xamarin-macios/issues/10457");
+			TestRuntime.AssertSimulator ("https://github.com/xamarin/xamarin-macios/issues/10457");
 #endif
 
 			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
