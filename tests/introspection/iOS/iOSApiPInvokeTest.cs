@@ -26,7 +26,7 @@ namespace Introspection {
 
 		protected override bool Skip (string symbolName)
 		{
-			bool simulator = Runtime.Arch == Arch.SIMULATOR;
+			var simulator = TestRuntime.IsSimulatorOrDesktop;
 			switch (symbolName) {
 			// Metal support inside simulator is only available in recent iOS9 SDK
 #if !__WATCHOS__
@@ -86,7 +86,7 @@ namespace Introspection {
 			// 2. on the real target for Xamarin.iOS.dll/monotouch.dll
 			//    as the simulator miss some libraries and symbols
 			//    but the rest of the BCL is fine to test
-			return (a == typeof (NSObject).Assembly && (Runtime.Arch == Arch.SIMULATOR));
+			return (a == typeof (NSObject).Assembly && TestRuntime.IsSimulatorOrDesktop);
 		}
 
 		[Test]

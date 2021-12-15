@@ -102,7 +102,25 @@ namespace Xamarin.Bundler {
 		}
 
 		// Linker config
+#if !NET
 		public LinkMode LinkMode = LinkMode.Full;
+#endif
+		bool? are_any_assemblies_trimmed;
+		public bool AreAnyAssembliesTrimmed {
+			get {
+				if (are_any_assemblies_trimmed.HasValue)
+					return are_any_assemblies_trimmed.Value;
+#if NET
+				// This shouldn't happen, we should always set AreAnyAssembliesTrimmed to some value for .NET.
+				throw ErrorHelper.CreateError (99, "A custom LinkMode value is not supported for .NET");
+#else
+				return LinkMode != LinkMode.None;
+#endif
+			}
+			set {
+				are_any_assemblies_trimmed = value;
+			}
+		}
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
 		public I18nAssemblies I18n;
@@ -328,9 +346,9 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
 				case ApplePlatform.MacCatalyst:
-					return LinkMode == LinkMode.None;
+					return !AreAnyAssembliesTrimmed;
 				case ApplePlatform.MacOSX:
-					return Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
+					return Registrar == RegistrarMode.Static && !AreAnyAssembliesTrimmed;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}

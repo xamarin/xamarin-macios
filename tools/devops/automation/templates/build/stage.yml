@@ -181,6 +181,7 @@ jobs:
     APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
     API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+    API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
   pool:
     vmImage: 'windows-latest'

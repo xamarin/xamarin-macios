@@ -16,6 +16,8 @@ using CoreGraphics;
 using CoreMedia;
 using CoreVideo;
 
+#nullable enable
+
 namespace VideoToolbox {
 
 #if NET
@@ -33,22 +35,16 @@ namespace VideoToolbox {
 		// intentionally not exposing the (NSDictionary options) argument
 		// since header docs indicate that there are no options available
 		// as of 9.0/10.11 and to always pass NULL
-		public static VTStatus ToCGImage (this CVPixelBuffer pixelBuffer, out CGImage image)
+		public static VTStatus ToCGImage (this CVPixelBuffer pixelBuffer, out CGImage? image)
 		{
-			if (pixelBuffer == null)
-				throw new ArgumentNullException ("pixelBuffer");
-			if (pixelBuffer.Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CVPixelBuffer");
+			if (pixelBuffer is null)
+				throw new ArgumentNullException (nameof (pixelBuffer));
 
-			image = null;
-
-			IntPtr imagePtr;
-			var ret = VTCreateCGImageFromCVPixelBuffer (pixelBuffer.Handle,
+			var ret = VTCreateCGImageFromCVPixelBuffer (pixelBuffer.GetCheckedHandle (),
 				IntPtr.Zero, // no options as of 9.0/10.11 - always pass NULL
-				out imagePtr);
+				out var imagePtr);
 
-			if (imagePtr != IntPtr.Zero)
-				image = Runtime.GetINativeObject<CGImage> (imagePtr, true); // This is already retained CM_RETURNS_RETAINED_PARAMETER
+			image = Runtime.GetINativeObject<CGImage> (imagePtr, true); // This is already retained CM_RETURNS_RETAINED_PARAMETER
 
 			return ret;
 		}
