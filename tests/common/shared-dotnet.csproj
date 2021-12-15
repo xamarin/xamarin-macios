@@ -16,7 +16,6 @@
 
 	<!-- Logic for tvOS -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
 		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>tvos-fat</NativeLibName>
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
@@ -51,6 +50,9 @@
 
 		<!-- Always use the latest C# version everywhere -->
 		<LangVersion>latest</LangVersion>
+
+		<!-- XAMCORE_3_0 is always defined for .NET -->
+		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
