@@ -152,6 +152,8 @@ steps:
       Stop-Pipeline
     } 
   displayName: Validate tests pacakge
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
 
 - task: DownloadPipelineArtifact@2
   displayName: Download Mac tests
