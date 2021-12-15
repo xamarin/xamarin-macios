@@ -722,7 +722,7 @@ namespace Xamarin.Tests {
 			Clean (projectPath);
 
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
-			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers), FailThisTest: true);
+			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 		}
 
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)

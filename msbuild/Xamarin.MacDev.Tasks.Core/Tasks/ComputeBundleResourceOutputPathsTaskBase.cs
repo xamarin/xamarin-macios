@@ -41,7 +41,7 @@ namespace Xamarin.MacDev.Tasks
 					var logicalName = item.GetMetadata ("LogicalName");
 					// if logicalName is null or empty, use the filename
 					if (string.IsNullOrEmpty (logicalName))
-						logicalName = Path.GetFileName (item);
+						logicalName = Path.GetFileName (item.GetMetadata ("FullPath"));
 					var outputPath = item.GetMetadata ("OutputPath");
 					IList<string> tags;
 					string hash;
