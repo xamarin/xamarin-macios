@@ -422,7 +422,7 @@ namespace Metal {
 	}
 #endif
 
-#if !TVOS || !XAMCORE_4_0
+#if !TVOS || !NET
 
 #if NET
 	[SupportedOSPlatform ("ios14.0")]
@@ -432,7 +432,7 @@ namespace Metal {
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Mac (11,0), iOS (14,0), NoTV]
 #endif
-#if TVOS && !XAMCORE_4_0
+#if TVOS && !NET
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]

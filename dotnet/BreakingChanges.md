@@ -41,3 +41,10 @@ without this type change would be impossible to expose correctly.
 
 There are implicit conversions between `System.IntPtr` and
 `ObjCRuntime.NativeHandle`, so most code should compile without changes.
+
+## The ObjCRuntime.Arch enum and the Runtime.Arch property have been removed.
+
+These APIs are used to determine whether we're executing in the simulator or
+on a device. Neither apply to a Mac Catalyst app, so they've been removed.
+
+Any code that these APIs will have to be ported to not use these APIs.

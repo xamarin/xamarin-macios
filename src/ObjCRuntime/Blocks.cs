@@ -163,7 +163,7 @@ namespace ObjCRuntime {
 			if (trampoline == null)
 				throw new ArgumentNullException (nameof (trampoline));
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			// Check that:
 			// * The trampoline is static
 			// * The trampoline's method has a [MonoPInvokeCallback] attribute

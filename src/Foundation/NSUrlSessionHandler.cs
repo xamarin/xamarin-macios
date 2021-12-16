@@ -532,7 +532,7 @@ namespace Foundation {
 
 #if NET
 		// Properties that will be called by the default HttpClientHandler
-		public bool AutomaticDecompression {
+		public DecompressionMethods AutomaticDecompression {
 			get => throw new PlatformNotSupportedException ();
 			set => throw new PlatformNotSupportedException ();
 		}

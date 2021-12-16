@@ -1017,9 +1017,10 @@ public struct FooF { public NSObject Obj; }
 	{
 	}
 
-	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All)]
-	[Introduced (PlatformName.TvOS, 99, 0, 0, PlatformArchitecture.All)]
-	[Introduced (PlatformName.WatchOS, 99, 0, 0, PlatformArchitecture.All)]
+	[SupportedOSPlatform (""ios99.0"")]
+	[SupportedOSPlatform (""tvos99.0"")]
+	[SupportedOSPlatform (""macos99.0"")]
+	[SupportedOSPlatform (""maccatalyst99.0"")]
 	public enum FutureEnum {
 	}
 ";
