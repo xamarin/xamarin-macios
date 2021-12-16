@@ -41,8 +41,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void GetName_DLS_SimOnly ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Use local file system (need a smaller sample)");
+			TestRuntime.AssertNotDevice ("Use local file system (need a smaller sample)");
 
 			using (NSUrl url = new NSUrl (local_dls)) {
 				Assert.That (SoundBank.GetName (url), Is.EqualTo ("QuickTime Music Synthesizer  "), "Name");
@@ -68,8 +67,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void GetInstrumentInfo_DLS_SimOnly ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Use local file system (need a smaller sample)");
+			TestRuntime.AssertNotDevice ("Use local file system (need a smaller sample)");
 
 			using (NSUrl url = new NSUrl (local_dls)) {
 				var info = SoundBank.GetInstrumentInfo (url);

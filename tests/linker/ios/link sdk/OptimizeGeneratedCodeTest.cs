@@ -31,7 +31,7 @@ namespace Linker.Shared {
 		{
 			var button = new UIButton ();
 			button.TouchCancel += delegate {
-				if (Runtime.Arch == Arch.SIMULATOR) {
+				if (TestRuntime.IsSimulatorOrDesktop) {
 					// kaboom
 				}
 			};
@@ -45,7 +45,7 @@ namespace Linker.Shared {
 		{
 			var button = new UIButton ();
 			button.TouchCancel += delegate {
-				if (Runtime.Arch == Arch.SIMULATOR) {
+				if (TestRuntime.IsSimulatorOrDesktop) {
 					// kaboom
 				}
 			};

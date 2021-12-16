@@ -21,6 +21,14 @@ namespace Xamarin.Linker.Steps {
 					break;
 				}
 				break;
+			case "System.Runtime.Versioning":
+				switch (attr_type.Name) {
+				case "SupportedOSPlatformAttribute":
+				case "UnsupportedOSPlatformAttribute":
+					LinkContext.StoreCustomAttribute (provider, attribute, "Availability");
+					break;
+				}
+				break;
 			}
 
 			if (store)

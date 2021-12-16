@@ -157,7 +157,7 @@ namespace Xamarin.Bundler {
 
 		public void ValidateAssembliesBeforeLink ()
 		{
-			if (App.LinkMode != LinkMode.None) {
+			if (App.AreAnyAssembliesTrimmed) {
 				foreach (Assembly assembly in Assemblies) {
 					if ((assembly.AssemblyDefinition.MainModule.Attributes & ModuleAttributes.ILOnly) == 0)
 						throw ErrorHelper.CreateError (2014, Errors.MT2014, assembly.AssemblyDefinition.MainModule.FileName);
@@ -253,7 +253,7 @@ namespace Xamarin.Bundler {
 #endif
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
-								if (App.LinkMode != LinkMode.None) {
+								if (App.AreAnyAssembliesTrimmed) {
 									ErrorHelper.Warning (5223, Errors.MX5223, framework.Name, App.PlatformName);
 								} else {
 									Driver.Log (3, Errors.MX5223, framework.Name, App.PlatformName);

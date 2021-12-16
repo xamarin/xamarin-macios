@@ -105,10 +105,7 @@ namespace LinkAll.Attributes {
 		public void Runtime_RegisterEntryAssembly ()
 		{
 #if NET
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-#endif
-				Assert.Ignore ("https://github.com/xamarin/xamarin-macios/issues/10457");
+			TestRuntime.AssertSimulator ("https://github.com/xamarin/xamarin-macios/issues/10457");
 #endif
 
 			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
@@ -118,7 +115,7 @@ namespace LinkAll.Attributes {
 #if __MACOS__
 			var expectedNull = true;
 #else
-			var expectedNull = Runtime.Arch == Arch.DEVICE;
+			var expectedNull = TestRuntime.IsDevice;
 #endif
 			Assert.That (method == null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
 		}

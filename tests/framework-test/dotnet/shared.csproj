@@ -5,7 +5,7 @@
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
     <RootNamespace>frameworktest</RootNamespace>
 
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
     <FrameworkTestDirectory>$(RootTestsDirectory)\framework-test</FrameworkTestDirectory>
 
