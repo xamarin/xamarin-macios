@@ -29,9 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(MonoTouchTestDirectory)/dotnet/$(_PlatformName)/Info.plist">
-      <LogicalName>Info.plist</LogicalName>
-    </None>
     <None Include="$(MonoTouchTestDirectory)\Entitlements.plist" />
     <None Include="$(MonoTouchTestDirectory)\app.config" />
     <None Include="$(MonoTouchTestDirectory)\EmptyNib.xib" />
