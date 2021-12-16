@@ -674,8 +674,9 @@ namespace AppKit {
 		UpArrow        = 0x7E
 	}
 
-#if !XAMCORE_4_0
+	// This is an untyped enum in AppKit's NSEvent.h
 	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSFunctionKey : ulong {
 #else
