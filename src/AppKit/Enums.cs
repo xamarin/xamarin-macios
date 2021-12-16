@@ -2182,12 +2182,8 @@ namespace AppKit {
 	}
 	
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertButtonReturn : long {
-#else
-	public enum NSAlertButtonReturn : int {
-#endif
 		First = 1000,
 		Second = 1001,
 		Third = 1002,
@@ -2695,12 +2691,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSFontPanelMode : ulong {
-#else
-	public enum NSFontPanelMode : int {
-#endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
 		CollectionMask = 1 << 2,
