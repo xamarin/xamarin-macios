@@ -347,6 +347,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string XamarinCatalystDll {
+			get {
+				return Path.Combine (mt_root, "lib", "mono", "Xamarin.MacCatalyst", "Xamarin.MacCatalyst.dll");
+			}
+		}
+
 		public static string XamarinWatchOSDll {
 			get {
 				return Path.Combine (mt_root, "lib", "mono", "Xamarin.WatchOS", "Xamarin.WatchOS.dll");
@@ -617,6 +623,8 @@ namespace Xamarin.Tests
 			switch (profile) {
 			case Profile.iOS:
 				return XamarinIOSDll;
+			case Profile.macOSSystem: // MacCatalyst
+				return XamarinCatalystDll;
 			case Profile.tvOS:
 				return XamarinTVOSDll;
 			case Profile.watchOS:
@@ -661,6 +669,8 @@ namespace Xamarin.Tests
 			switch (targetFramework.Platform) {
 			case ApplePlatform.iOS:
 				return XamarinIOSDll;
+			case ApplePlatform.MacCatalyst:
+				return XamarinCatalystDll;
 			case ApplePlatform.TVOS:
 				return XamarinTVOSDll;
 			case ApplePlatform.WatchOS:

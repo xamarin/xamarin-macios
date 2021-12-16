@@ -121,6 +121,9 @@ namespace Cecil.Tests {
 			case "Xamarin.Mac.dll":
 				rv = Path.GetDirectoryName (assembly);
 				break;
+			case "Xamarin.MacCatalyst.dll":
+				rv = Path.GetDirectoryName (Configuration.XamarinCatalystDll);
+				break;
 			default:
 				throw new NotImplementedException (assembly);
 			}
