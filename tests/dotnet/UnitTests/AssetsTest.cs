@@ -76,10 +76,8 @@ namespace Xamarin.Tests {
 			var foundAssets = FindAssets (doc);
 
 			// Seems the 2 vectors are not being consumed in MacCatalyst but they still appear in the image Datasets
-			var TotalUniqueAssets = platform == ApplePlatform.MacCatalyst ? 14 : 16;
-
-			Assert.AreEqual (TotalUniqueAssets, foundAssets.Count, "Wrong number of assets found");
-			Assert.That (foundAssets, Has.No.Member ("Data.DS_StoreDataTest"), "DS_Store files should not be included.");
+			var expectedAssets = platform == ApplePlatform.MacCatalyst ? ExpectedAssetsMacCatalyst : ExpectedAssets;
+			Assert.AreEqual (expectedAssets, foundAssets, "Incorrect assets");
 
 			var arm64txt = Path.Combine (resourcesDirectory, "arm64.txt");
 			var armtxt = Path.Combine (resourcesDirectory, "arm.txt");
@@ -149,10 +147,10 @@ namespace Xamarin.Tests {
 			var s = output.ToString ();
 
 			// This Execution call produces an output with an objc warning. We just want the json below it.
-			if (s.StartsWith ("objc"))
-				output.Remove (0, s.IndexOf (Environment.NewLine) + 1);
+			if (s.StartsWith ("objc", StringComparison.Ordinal))
+				s = s.Substring (s.IndexOf (Environment.NewLine) + 1);
 
-			return JsonDocument.Parse (output.ToString ());
+			return JsonDocument.Parse (s);
 		}
 
 		HashSet<string> FindAssets (JsonDocument doc)
@@ -188,6 +186,28 @@ namespace Xamarin.Tests {
 			}
 			return null;
 		}
+
+		static readonly HashSet<string> ExpectedAssetsMacCatalyst = new HashSet<string> () {
+			"Color.ColorTest",
+			"Contents.SpritesTest",
+			"Data.BmpImageDataTest",
+			"Data.DngImageDataTest",
+			"Data.EpsImageDataTest",
+			"Data.JsonDataTest",
+			"Data.TiffImageDataTest",
+			"Image.samplejpeg.jpeg",
+			"Image.samplejpg.jpg",
+			"Image.samplepdf.pdf",
+			"Image.samplepng2.png",
+			"Image.spritejpeg.jpeg",
+			"Image.xamlogo.svg",
+			"Texture Rendition.TextureTest",
+		};
+
+		static readonly HashSet<string> ExpectedAssets = new HashSet<string> (ExpectedAssetsMacCatalyst) {
+			"Vector.samplepdf.pdf",
+			"Vector.xamlogo.svg",
+		};
 
 		class XCAssetTarget {
 			public string AssetType { get; set; }
