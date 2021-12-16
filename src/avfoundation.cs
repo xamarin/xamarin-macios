@@ -381,6 +381,10 @@ namespace AVFoundation {
 		[Field ("AVMediaCharacteristicContainsHDRVideo")]
 		ContainsHdrVideo = 16,
 
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVMediaCharacteristicContainsAlphaChannel")]
+		ContainsAlphaChannel = 17,
+
 	}
 
 #if !NET
@@ -445,6 +449,8 @@ namespace AVFoundation {
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Field ("AVMediaCharacteristicContainsAlphaChannel")]
 		NSString ContainsAlphaChannel { get; }
+
+		// Do not add more fields here, add them to the AVMediaCharacteristics enum instead.
 	}
 #endif
 
