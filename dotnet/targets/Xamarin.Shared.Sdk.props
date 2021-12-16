@@ -53,6 +53,10 @@
 			Ref: https://github.com/dotnet/runtime/issues/54406
 		-->
 		<SelfContained>true</SelfContained>
+	</PropertyGroup>
+
+	<!-- We're never using any app hosts -->
+	<PropertyGroup>
 		<_RuntimeIdentifierUsesAppHost>false</_RuntimeIdentifierUsesAppHost>
 		<UseAppHost>false</UseAppHost>
 	</PropertyGroup>
