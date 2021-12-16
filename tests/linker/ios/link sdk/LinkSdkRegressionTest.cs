@@ -202,7 +202,7 @@ namespace LinkSdk {
 #if !__MACOS__
 			// we want to ensure we can get the constants without authorization (on iOS 6.0+) so this application
 			// needs to be unauthorized (in settings.app). Note: authorization checks only occurs on devices
-			if ((Runtime.Arch == Arch.DEVICE) && UIDevice.CurrentDevice.CheckSystemVersion (6,0)) {
+			if (TestRuntime.IsDevice && UIDevice.CurrentDevice.CheckSystemVersion (6,0)) {
 				Assert.That (ABAddressBook.GetAuthorizationStatus (), Is.Not.EqualTo (ABAuthorizationStatus.Authorized),
 					"Please deny access to contacts for this this application (it's important for this test)");
 			}
@@ -344,11 +344,7 @@ namespace LinkSdk {
 		public void Bug1790_TimeZoneInfo_Local ()
 		{
 			// the simulator has complete file access but the device won't have - i.e. we can't depend on it
-#if __MACOS__
-			var hasFileAccess = true;
-#else
-			var hasFileAccess = Runtime.Arch == Arch.SIMULATOR;
-#endif
+			var hasFileAccess = TestRuntime.IsSimulatorOrDesktop;
 			Assert.That (File.Exists ("/etc/localtime"), Is.EqualTo (hasFileAccess), "/etc/localtime");
 			Assert.NotNull (TimeZoneInfo.Local, "Local");
 			// should not throw a TimeZoneNotFoundException on devices
@@ -372,10 +368,6 @@ namespace LinkSdk {
 				Thread.Sleep (values [number]);
 				//Console.WriteLine (number);
 			});
-#if !__MACOS__
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
-#endif
 		}
 		
 		[Test]
@@ -883,12 +875,8 @@ namespace LinkSdk {
 			var home = Environment.GetEnvironmentVariable ("HOME");
 #endif
 
-#if __MACOS__
-			bool device = false;
-#else
 			// note: this test is more interesting on devices because of the sandbox they have
-			bool device = Runtime.Arch == Arch.DEVICE;
-#endif
+			var device = TestRuntime.IsDevice;
 
 			// some stuff we do not support (return String.Empty for the path)
 			TestFolder (Environment.SpecialFolder.Programs, supported: false);
@@ -1005,7 +993,7 @@ namespace LinkSdk {
 #if __MACOS__
 			Assert.That (path, Is.EqualTo (home), "UserProfile");
 #else
-			if (Runtime.Arch == Arch.DEVICE) {
+			if (TestRuntime.IsDevice) {
 				if (isExtension)
 					Assert.That (path, Does.StartWith ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
 #if !__WATCHOS__

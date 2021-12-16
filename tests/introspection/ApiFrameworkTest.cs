@@ -12,11 +12,7 @@ using ObjCRuntime;
 public class Application {
 	public bool IsSimulatorBuild {
 		get {
-#if __IOS__
-			return Runtime.Arch == Arch.SIMULATOR;
-#else
-			return true;
-#endif
+			return TestRuntime.IsSimulator;
 		}
 	}
 }
@@ -148,8 +144,7 @@ namespace Introspection {
 		[Test]
 		public void Simlauncher ()
 		{
-			if (Runtime.Arch != Arch.SIMULATOR)
-				Assert.Ignore ("Only needed on simulator");
+			TestRuntime.AssertSimulator ("Only needed on simulator");
 
 			var all = GetFrameworks ();
 

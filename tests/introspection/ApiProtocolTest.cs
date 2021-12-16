@@ -556,7 +556,7 @@ namespace Introspection {
 					if (!supports) {
 #if __IOS__
 						// broken in xcode 12 beta 1 simulator (only)
-						if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12,0)) {
+						if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12,0)) {
 							switch (type.Name) {
 							case "ARFaceGeometry":
 							case "ARPlaneGeometry":
@@ -658,7 +658,7 @@ namespace Introspection {
 					case "SKRenderer":
 						// was not possible in iOS 11.4 (current minimum) simulator
 						if (!TestRuntime.CheckXcodeVersion (12,0)) {
-							if (Runtime.Arch == Arch.SIMULATOR)
+							if (TestRuntime.IsSimulatorOrDesktop)
 								continue;
 						}
 						break;
