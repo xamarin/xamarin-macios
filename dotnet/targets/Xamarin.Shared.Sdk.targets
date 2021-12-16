@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FilterStaticFrameworks" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -609,6 +610,20 @@
 				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename).framework</TargetDirectory>
 				<SourceDirectory>%(RootDir)%(Directory)</SourceDirectory>
 			</_FrameworkToPublish>
+		</ItemGroup>
+
+		<!-- Figure out which frameworks are really dynamic libraries, and only publish those -->
+		<FilterStaticFrameworks
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			FrameworkToPublish="@(_FrameworkToPublish)"
+		>
+			<Output TaskParameter="FrameworkToPublish" ItemName="_FilteredFrameworkToPublish" />
+		</FilterStaticFrameworks>
+
+		<ItemGroup>
+			<_FrameworkToPublish Remove="@(_FrameworkToPublish)" />
+			<_FrameworkToPublish Include="@(_FilteredFrameworkToPublish)" />
 		</ItemGroup>
 	</Target>
 
