@@ -266,6 +266,8 @@ namespace Xharness {
 				new { ProjectPath = Path.Combine ("linker", "ios", "dont link"), IsFSharp = false, Configurations = debugAndRelease, },
 				new { ProjectPath = Path.Combine ("linker", "ios", "link sdk"), IsFSharp = false, Configurations = debugAndRelease, },
 				new { ProjectPath = Path.Combine ("linker", "ios", "link all"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { ProjectPath = Path.Combine ("linker", "ios", "trimmode copy"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { ProjectPath = Path.Combine ("linker", "ios", "trimmode link"), IsFSharp = false, Configurations = debugAndRelease, },
 				new { ProjectPath = "fsharp", IsFSharp = true, Configurations = noConfigurations, },
 				new { ProjectPath = "framework-test", IsFSharp = false, Configurations = noConfigurations, },
 				new { ProjectPath = "interdependent-binding-projects", IsFSharp = false, Configurations = noConfigurations, },

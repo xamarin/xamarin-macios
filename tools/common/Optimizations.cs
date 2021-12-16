@@ -198,7 +198,7 @@ namespace Xamarin.Bundler
 					}
 					goto default; // also requires the linker
 				default:
-					if (app.LinkMode == LinkMode.None) {
+					if (!app.AreAnyAssembliesTrimmed) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003_B, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 					}
@@ -267,7 +267,7 @@ namespace Xamarin.Bundler
 				} else if (StaticBlockToDelegateLookup != true) {
 					// Can't remove the dynamic registrar unless also generating static lookup of block-to-delegates in the static registrar.
 					RemoveDynamicRegistrar = false;
-				} else if (app.Registrar != RegistrarMode.Static || app.LinkMode == LinkMode.None) {
+				} else if (app.Registrar != RegistrarMode.Static || !app.AreAnyAssembliesTrimmed) {
 					// Both the linker and the static registrar are also required
 					RemoveDynamicRegistrar = false;
 				} else {

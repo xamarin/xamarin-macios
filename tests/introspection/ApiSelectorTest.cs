@@ -195,21 +195,21 @@ namespace Introspection {
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "ARBodyTrackingConfiguration":
 			case "ARGeoTrackingConfiguration":
 			switch (selectorName) {
 				case "supportsAppClipCodeTracking": // Only available on device
-					return Runtime.Arch == Arch.SIMULATOR;
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			case "CSImportExtension":
 				switch (selectorName) {
 				case "beginRequestWithExtensionContext:": 
 				case "updateAttributes:forFileAtURL:error:":
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -217,7 +217,7 @@ namespace Introspection {
 			case "HKQuery":
 				switch (selectorName) {
 				case "predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:": // not available in the sim
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -822,7 +822,7 @@ namespace Introspection {
 				case "defaultBody2DSkeletonDefinition":
 				case "defaultBody3DSkeletonDefinition":
 					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					break;
 				}

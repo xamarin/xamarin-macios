@@ -35,14 +35,6 @@ namespace MonoTouchFixtures.SpriteKit {
 			GC.KeepAlive (Class.GetHandle (typeof(SCNRenderer)));
 
 			using (var node = new SK3DNode ()) {
-#if !MONOMAC
-				if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
-					// 32-bit simulator returns 0,0,0 the first time
-					// this is executed for some reason, so just
-					// ignore that.
-					node.ProjectPoint (new Vector3 (4, 5, 6));
-				}
-#endif
 				var v = node.ProjectPoint (new Vector3 (1, 2, 3));
 				Assert.AreEqual (1, v.X, "#x1");
 				Assert.AreEqual (2, v.Y, "#y1");
@@ -61,14 +53,6 @@ namespace MonoTouchFixtures.SpriteKit {
 #endif
 
 			using (var node = new SK3DNode ()) {
-#if !MONOMAC
-				if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
-					// 32-bit simulator returns 0,0,0 the first time
-					// this is executed for some reason, so just
-					// ignore that.
-					node.UnprojectPoint (new Vector3 (4, 5, 6));
-				}
-#endif
 				var v = node.UnprojectPoint (new Vector3 (1, 2, 3));
 				Assert.AreEqual (1, v.X, "#x1");
 				Assert.AreEqual (2, v.Y, "#y1");

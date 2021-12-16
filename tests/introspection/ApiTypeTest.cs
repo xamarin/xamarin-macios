@@ -26,7 +26,7 @@ namespace Introspection {
 			case "DeviceCheck":
 				// we can't call the `NFCNdefReaderSession.ReadingAvailable` API on 32bits (PlatformNotSupportedException)
 				// and if we call it then the .cctor is executed and we get the same failures :()
-				return ((IntPtr.Size == 4) || (Runtime.Arch == Arch.SIMULATOR));
+				return ((IntPtr.Size == 4) || TestRuntime.IsSimulatorOrDesktop);
 #endif
 			default:
 				return false;

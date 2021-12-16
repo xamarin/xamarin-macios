@@ -460,7 +460,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ApplicationVersion="$(ApplicationVersion)"
 			ApplicationDisplayVersion="$(ApplicationDisplayVersion)"
 			AppBundleName="$(_AppBundleName)"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(AppBundleManifest)"
 			AssemblyName="$(AssemblyName)"
 			CompiledAppManifest="$(_TemporaryAppManifest)"
 			Debug="$(_BundlerDebug)"
@@ -527,18 +527,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_WriteAppManifestDependsOn>
 	</PropertyGroup>
 
-	<!-- This target will create the $(_AppBundleManifest) file - any task that takes $(_AppBundleManifest) must depend on this target -->
+	<!-- This target will create the $(_AppBundleManifestPath) file - any task that takes $(_AppBundleManifestPath) must depend on this target -->
 	<Target Name="_WriteAppManifest"
 		Condition="'$(_CreateAppManifest)' == 'true'"
 		DependsOnTargets="$(_WriteAppManifestDependsOn)"
 		Inputs="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
-		Outputs="$(_AppBundleManifest)"
+		Outputs="$(_AppBundleManifestPath)"
 		>
 
 		<WriteAppManifest
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleManifest="$(_AppBundleManifest)"
+			AppBundleManifest="$(_AppBundleManifestPath)"
 			AppManifests="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
 			>
 		</WriteAppManifest>
@@ -1297,33 +1297,33 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			Ref: https://bugzilla.xamarin.com/show_bug.cgi?id=34736
 		-->
-		<FindItemWithLogicalName
+		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == ''"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(None)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
-		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(BundleResource)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
-		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(Content)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
-		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
+		<Error Condition="'$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
 		<PropertyGroup>
-			<_AppBundleManifest>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifest>
+			<_AppBundleManifestPath>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifestPath>
 			<!-- We should only write out a compiled app manifest if we're creating an app bundle -->
 			<_CreateAppManifest>$(_CanOutputAppBundle)</_CreateAppManifest>
 			<_TemporaryAppManifest>$(DeviceSpecificIntermediateOutputPath)AppManifest.plist</_TemporaryAppManifest>
@@ -1658,6 +1658,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Verbosity="$(_BundlerVerbosity)"
 			>
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
+			<Output TaskParameter="CustomLinkFlags" ItemName="_CustomLinkFlags" />
 			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
 			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
@@ -2281,7 +2282,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<CompileProductDefinition
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundleManifest)"
+			AppManifest="$(_AppBundleManifestPath)"
 			OutputDirectory="$(IntermediateOutputPath)"
 			ProductDefinition="$(ProductDefinition)"
 			TargetArchitectures="$(TargetArchitectures)"
@@ -2298,7 +2299,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
-			AppManifest="$(_AppBundleManifest)"
+			AppManifest="$(_AppBundleManifestPath)"
 			EnablePackageSigning="$(EnablePackageSigning)"
 			MainAssembly="$(TargetPath)"
 			Name="$(AssemblyName)"

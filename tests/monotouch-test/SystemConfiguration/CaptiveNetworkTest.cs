@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void Fields ()
 		{
-			if (Runtime.Arch == Arch.SIMULATOR) {
+			if (TestRuntime.IsSimulatorOrDesktop) {
 				// Fails (NullReferenceException) on iOS6 simulator
 				TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			}
