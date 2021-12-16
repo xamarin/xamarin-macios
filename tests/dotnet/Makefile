@@ -37,6 +37,7 @@ all-local:: $(TARGETS)
 reload: $(TARGETS)
 	$(Q) $(MAKE) -C $(TOP) -j8 all
 	$(Q) $(MAKE) -C $(TOP) -j8 install
+	$(Q) $(DOTNET6) build-server shutdown # make sure msbuild picks up any new task assemblies we built
 
 compare compare-size: $(TARGETS)
 	rm -rf packages
