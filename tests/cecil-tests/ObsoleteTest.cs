@@ -19,7 +19,7 @@ namespace Cecil.Tests {
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly == null) {
 				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return; // just to help nullability
+				return;
 			}
 			Console.WriteLine(assemblyPath);
 
@@ -46,7 +46,6 @@ namespace Cecil.Tests {
 
 			// TODO: Events?
 
-			Console.WriteLine (found.Count);
 			Assert.That (found, Is.Empty, string.Join (Environment.NewLine, found));
 		}
 
@@ -56,11 +55,7 @@ namespace Cecil.Tests {
 
 		bool HasObsoleteAttribute (IEnumerable<CustomAttribute> attributes) => attributes.Any (a => IsObsoleteAttribute (a));
 
-		bool IsObsoleteAttribute (CustomAttribute attribute)
-		{
-			return attribute.AttributeType.Name == "Obsolete" ||
-				(attribute.AttributeType.Name == "ObsoleteAttribute");
-		}
+		bool IsObsoleteAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "Obsolete" || (attribute.AttributeType.Name == "ObsoleteAttribute");
 
 		bool ShouldTest (MemberReference member)
 		{
