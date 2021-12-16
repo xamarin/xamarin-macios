@@ -89,6 +89,9 @@ namespace Xamarin.Tests {
 
 		void ConfigureAssets ()
 		{
+			// Just in case the test was canceled mid-run, we want to make sure we remove the symlink to avoid circular references
+			DeleteAssets ();
+
 			// We either want the assets added before the build, or we will be adding them after the build
 			if (isStartingWithAssets)
 				CopyAssets ();
@@ -98,8 +101,6 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			if (!isStartingWithAssets) {
 				CopyAssets ();
-				// Building the project twice without cleaning in between fails: https://github.com/xamarin/maccore/issues/2530
-				Clean (projectPath);
 				DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			}
 		}
