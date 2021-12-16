@@ -1119,7 +1119,7 @@
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrl(Foundation.NSSearchPathDirectory,Foundation.NSSearchPathDomain,Foundation.NSUrl,System.Boolean,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForPublishingUbiquitousItem(Foundation.NSUrl,Foundation.NSDate&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForUbiquityContainer(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSFilePresenter::get_PresentedItemURL()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSUrl Foundation.NSFilePresenter::get_PresentedItemUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileVersion::ReplaceItem(Foundation.NSUrl,Foundation.NSFileVersionReplacingOptions,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileWrapper::get_SymbolicLinkDestinationURL()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSHttpCookie::get_CommentUrl()' is missing an [NullAllowed] on return type

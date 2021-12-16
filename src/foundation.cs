@@ -4017,7 +4017,7 @@ namespace Foundation
 		[Field ("NSURLErrorDomain")]
 		NSString NSUrlErrorDomain { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[NoWatch]
 #else
 		[Obsoleted (PlatformName.WatchOS, 7,0)]
@@ -6993,7 +6993,7 @@ namespace Foundation
 		[Static, Export ("sessionWithConfiguration:delegate:delegateQueue:")]
 		NSUrlSession FromWeakConfiguration (NSUrlSessionConfiguration configuration, [NullAllowed] NSObject weakDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 	
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
 		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
@@ -10751,7 +10751,7 @@ namespace Foundation
 	interface NSDistributedNotificationCenter {
 		[Static]
 		[Export ("defaultCenter")]
-#if XAMCORE_4_0
+#if NET
 		NSDistributedNotificationCenter DefaultCenter { get; }
 #else
 		NSDistributedNotificationCenter GetDefaultCenter ();
@@ -10805,7 +10805,7 @@ namespace Foundation
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle);
 
 		[Export ("enqueueNotification:postingStyle:coalesceMask:forModes:")]
-#if !XAMCORE_4_0
+#if !NET
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, [NullAllowed] string [] modes);
 #else
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, [NullAllowed] NSString [] modes);
@@ -11075,7 +11075,7 @@ namespace Foundation
 		[return: NullAllowed]
 		NSObject ReverseTransformedValue ([NullAllowed] NSObject value);
 
-#if IOS && !XAMCORE_4_0
+#if IOS && !NET
 		[iOS (9, 3)]
 		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
@@ -12215,7 +12215,7 @@ namespace Foundation
 		[Export ("initWithFilePresenter:")]
 		NativeHandle Constructor ([NullAllowed] INSFilePresenter filePresenterOrNil);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use '.ctor(INSFilePresenter)' instead.")]
 		[Wrap ("this (filePresenterOrNil as INSFilePresenter)")]
 		NativeHandle Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
@@ -12233,7 +12233,7 @@ namespace Foundation
 		[Export ("coordinateWritingItemAtURL:options:writingItemAtURL:options:error:byAccessor:")]
 		void CoordinateWriteWrite (NSUrl writingURL, NSFileCoordinatorWritingOptions writingOptions, NSUrl writingURL2, NSFileCoordinatorWritingOptions writingOptions2, out NSError error, /* non null */ NSFileCoordinatorWorkerRW writeWriteWorker);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CoordinateBatch' instead.")]
 		[Wrap ("CoordinateBatch (readingURLs, readingOptions, writingURLs, writingOptions, out error, batchHandler)", IsVirtual = true)]
 		void CoordinateBatc (NSUrl [] readingURLs, NSFileCoordinatorReadingOptions readingOptions, NSUrl [] writingURLs, NSFileCoordinatorWritingOptions writingOptions, out NSError error, /* non null */ Action batchHandler);
@@ -12669,7 +12669,7 @@ namespace Foundation
 	partial interface NSFilePresenter {
 		[Abstract]
 		[Export ("presentedItemURL", ArgumentSemantic.Retain)]
-#if XAMCORE_4_0
+#if NET
 		NSUrl PresentedItemUrl { get; }
 #else
 		NSUrl PresentedItemURL { get; }
@@ -12677,7 +12677,7 @@ namespace Foundation
 
 		[Abstract]
 		[Export ("presentedItemOperationQueue", ArgumentSemantic.Retain)]
-#if XAMCORE_4_0
+#if NET
 		NSOperationQueue PresentedItemOperationQueue { get; }
 #else
 		NSOperationQueue PesentedItemOperationQueue { get; }
@@ -14499,7 +14499,7 @@ namespace Foundation
 		[Export ("terminationReason")]
 		NSTaskTerminationReason TerminationReason { get; }
 
-#if !XAMCORE_4_0 && MONOMAC
+#if !NET && MONOMAC
 		[Field ("NSTaskDidTerminateNotification")]
 		NSString NSTaskDidTerminateNotification { get; }
 #endif
