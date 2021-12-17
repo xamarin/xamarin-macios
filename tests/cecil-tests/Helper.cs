@@ -80,7 +80,7 @@ namespace Cecil.Tests {
 		{
 			if (type.HasProperties) {
 				foreach (var property in type.Properties) {
-					if ((filter == null) || filter (property))
+					if ((filter is null) || filter (property))
 						yield return property;
 				}
 			}
@@ -97,7 +97,7 @@ namespace Cecil.Tests {
 		{
 			foreach (var module in assembly.Modules) {
 				foreach (var type in module.Types) {
-					if ((filter == null) || filter (type))
+					if ((filter is null) || filter (type))
 						yield return type;
 				}
 			}
@@ -147,7 +147,7 @@ namespace Cecil.Tests {
 			}
 		}
 
-		public static IEnumerable Net6PlatformAssemblies {
+		public static IEnumerable NetPlatformAssemblies {
 			get {
 				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot (), "Microsoft.iOS.Ref", "ref", "net6.0", "Xamarin.iOS.dll"));
 				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot (), "Microsoft.tvOS.Ref", "ref", "net6.0", "Xamarin.TVOS.dll"));
