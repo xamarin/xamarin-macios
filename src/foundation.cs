@@ -4819,14 +4819,14 @@ namespace Foundation
 		[Export ("enumerateMatchesInString:options:range:usingBlock:")]
 		void EnumerateMatches (NSString str, NSMatchingOptions options, NSRange range, NSMatchEnumerator enumerator);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetMatches2' instead, this method has the wrong return type.")]
 		[Export ("matchesInString:options:range:")]
 		NSString [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
 #endif
 
 		[Export ("matchesInString:options:range:")]
-#if XAMCORE_4_0
+#if NET
 		NSTextCheckingResult [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
 #else
 		[Sealed]
