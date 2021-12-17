@@ -6950,7 +6950,7 @@ namespace Foundation
 		
 	}
 
-#if XAMCORE_4_0
+#if NET
 	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
 #elif XAMCORE_3_0
 	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
@@ -7039,15 +7039,15 @@ namespace Foundation
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
-#elif XAMCORE_4_0
-		// Fixed version (breaking change) only for XAMCORE_4_0
+#elif NET
+		// Fixed version (breaking change) only for NET
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
 #endif
 
-#if !XAMCORE_4_0
-		// Workaround, not needed for XAMCORE_4_0+
+#if !NET
+		// Workaround, not needed for NET+
 		[Sealed]
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks2")]
