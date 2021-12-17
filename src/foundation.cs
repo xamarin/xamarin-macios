@@ -11041,10 +11041,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-#if !MONOMAC || !XAMCORE_4_0
-	// there were some, partial bindings in foundation-desktop.cs which did not define it as abstract for XM :(
 	[Abstract] // Apple docs: NSValueTransformer is an abstract class...
-#endif
 	interface NSValueTransformer {
 		[Static]
 		[Export ("setValueTransformer:forName:")]
