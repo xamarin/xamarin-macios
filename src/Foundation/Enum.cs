@@ -820,8 +820,8 @@ namespace Foundation  {
 		LongestEffectiveRangeNotRequired = 1 << 20
 	}
 
-#if XAMCORE_4_0 || !MONOMAC
-	// macOS has defined this in AppKit as well, but starting with XAMCORE_4_0 we're going
+#if NET || !MONOMAC
+	// macOS has defined this in AppKit as well, but starting with .NET we're going
 	// to use this one only.
 	[Native]
 	public enum NSUnderlineStyle : long {
