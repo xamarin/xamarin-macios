@@ -77,7 +77,7 @@ namespace Foundation  {
 
 #if MONOMAC || !XAMCORE_3_0
 
-#if !XAMCORE_4_0
+#if !NET
 	[Native]
 	public enum NSBundleExecutableArchitecture : long {
 #else

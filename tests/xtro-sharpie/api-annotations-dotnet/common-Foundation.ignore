@@ -38,9 +38,6 @@
 !missing-selector! NSNumber::initWithLong: not bound
 !missing-selector! NSNumber::initWithUnsignedLong: not bound
 
-## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
-!unknown-native-enum! NSBundleExecutableArchitecture bound
-
 ## collections - many are special
 !missing-type! NSCountedSet not bound
 !missing-selector! NSCountedSet::addObject: not bound
