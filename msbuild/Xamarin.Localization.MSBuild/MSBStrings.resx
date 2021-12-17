@@ -1347,4 +1347,14 @@
         <value>Expected a 'manifest' file in the directory {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
+
+    <data name="W7091" xml:space="preserve">
+        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+    </data>
+
+    <!-- This is the same as MT0140 -->
+    <data name="E7092" xml:space="preserve">
+        <value>File '{0}' is not a valid framework: {1}</value>
+    </data>
+
 </root>
