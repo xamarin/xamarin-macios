@@ -4,11 +4,6 @@
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
 
-# Apple docs: Deprecated in iOS 3.2
-!unknown-field! UIKeyboardBoundsUserInfoKey bound
-!unknown-field! UIKeyboardCenterBeginUserInfoKey bound
-!unknown-field! UIKeyboardCenterEndUserInfoKey bound
-
 # from docs: Important: UIActionSheetDelegate is deprecated in iOS 8.
 !missing-protocol-conformance! UIDocumentInteractionController should conform to UIActionSheetDelegate
 
@@ -24,10 +19,6 @@
 ## Special case from UIAccessibilityAction. We added it (completly) on UIResponser but magic tap is also available on app delegate according to docs
 ## See comments is uikit.cs for more info
 !extra-protocol-member! unexpected selector UIApplicationDelegate::accessibilityPerformMagicTap found
-
-## Obsoleted selectors in very early versions of iOS (3.0) and removed in XAMCORE_3_0
-!extra-protocol-member! unexpected selector UITableViewDelegate::tableView:accessoryTypeForRowWithIndexPath: found
-!extra-protocol-member! unexpected selector UIImagePickerControllerDelegate::imagePickerController:didFinishPickingImage:editingInfo: found
 
 # fixed in XAMCORE_4_0 - API break
 !incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
