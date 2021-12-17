@@ -143,7 +143,7 @@ namespace Xharness {
 					process.StartInfo.Arguments = "ls-files";
 					process.StartInfo.WorkingDirectory = test_dir;
 					var stdout = new MemoryLog () { Timestamp = false };
-					var result = await processManager.RunAsync (process, stdout, stdout, stdout, timeout: TimeSpan.FromSeconds (15));
+					var result = await processManager.RunAsync (process, stdout, stdout, stdout, timeout: TimeSpan.FromSeconds (60));
 					if (!result.Succeeded)
 						throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
 
