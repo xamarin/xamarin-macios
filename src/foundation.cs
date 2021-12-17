@@ -2410,7 +2410,7 @@ namespace Foundation
 		[Static]
 		[Export ("archivedDataWithRootObject:requiringSecureCoding:error:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSData GetArchivedData (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
 #else
 		NSData ArchivedDataWithRootObject (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
@@ -2422,7 +2422,7 @@ namespace Foundation
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archivedDataWithRootObject:")]
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		NSData GetArchivedData (NSObject root);
 #else
 		NSData ArchivedDataWithRootObject (NSObject root);
