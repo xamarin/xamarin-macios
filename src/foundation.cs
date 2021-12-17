@@ -140,7 +140,7 @@ namespace Foundation
 
 	delegate bool NSEnumerateErrorHandler (NSUrl url, NSError error);
 	delegate void NSMetadataQueryEnumerationCallback (NSObject result, nuint idx, ref bool stop);
-#if XAMCORE_4_0
+#if NET
 	delegate void NSItemProviderCompletionHandler (INSSecureCoding item, NSError error);
 #else
 	delegate void NSItemProviderCompletionHandler (NSObject itemBeingLoaded, NSError error);
