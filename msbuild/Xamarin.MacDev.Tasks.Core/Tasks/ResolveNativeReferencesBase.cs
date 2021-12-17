@@ -162,7 +162,7 @@ namespace Xamarin.MacDev.Tasks {
 					t.SetMetadata ("Name", resolved);
 					break;
 				case ".framework":
-					t = new TaskItem (Path.Combine (resources, name));
+					t = new TaskItem (Path.Combine (resources, name, Path.GetFileNameWithoutExtension (name)));
 					t.SetMetadata ("Kind", "Framework");
 					break;
 				case ".dylib": // macOS
