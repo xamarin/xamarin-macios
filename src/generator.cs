@@ -6385,7 +6385,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		} else if (BindThirdPartyLibrary) {
 			// User should provide a LibraryName
-			throw new BindingException (1042, true);
+			throw ErrorHelper.CreateError (1042, /* Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal") */ type.FullName + "." + propertyName);
 		} else {
 			library_name = type.Namespace;
 		}
