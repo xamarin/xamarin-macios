@@ -9490,10 +9490,19 @@ namespace AVFoundation {
 		[Export ("alwaysDiscardsLateVideoFrames")]
 		bool AlwaysDiscardsLateVideoFrames { get; set;  }
 
-		[Export ("setSampleBufferDelegate:queue:")]
 #if !NET
+		[Obsolete ("Use overload accepting a 'IAVCaptureVideoDataOutputSampleBufferDelegate'.")]
+		[Export ("setSampleBufferDelegate:queue:")]
+		[PostGet ("SampleBufferDelegate")]
+		[PostGet ("SampleBufferCallbackQueue")]
+		void SetSampleBufferDelegate ([NullAllowed] AVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackQueue);
+#endif
+
+		[Export ("setSampleBufferDelegate:queue:")]
+#if NET
 		void SetSampleBufferDelegate ([NullAllowed] IAVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackQueue);
 #else
+		[Sealed]
 		void SetSampleBufferDelegateQueue ([NullAllowed] IAVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackQueue);
 #endif
 
