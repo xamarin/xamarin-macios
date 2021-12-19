@@ -205,14 +205,6 @@
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UINavigationBar::GetTitleTextAttributes() should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UIBarItem::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UISegmentedControl::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
-
-## manually bound (better, stronger signature) on `[setS|s]copeBarButtonTitleTextAttributes:forState:` which is decorated with `UI_APPEARANCE_SELECTOR`
-!extra-ui-appearance-support! System.Void UIKit.UISearchBar::SetScopeBarButtonTitle(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 
 ## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_LargeTitleTextAttributes() should NOT be decorated with [Appearance]

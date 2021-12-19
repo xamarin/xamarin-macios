@@ -282,6 +282,11 @@ namespace Xamarin.MacDev.Tasks {
 					BundlePath = fullInput,
 					SpecificSubdirectory = specificSubdirectory,
 				};
+				// Remove any files inside directories which are symlinks (we only need to process the symlink itself)
+				var symlinkDirectories = files.Where (v => PathUtils.IsSymlink (v) && Directory.Exists (v));
+				if (symlinkDirectories.Any ()) {
+					files = files.Where (file => !symlinkDirectories.Any (dir => file.StartsWith (dir + Path.DirectorySeparatorChar))).ToArray ();
+				}
 				foreach (var file in files) {
 					var relativePath = file.Substring (fullInput.Length + 1);
 					var entry = new Entry {
@@ -442,11 +447,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		FileType GetFileType (string path)
 		{
-			if (Directory.Exists (path))
-				return FileType.Directory;
-
 			if (PathUtils.IsSymlink (path))
 				return FileType.Symlink;
+
+			if (Directory.Exists (path))
+				return FileType.Directory;
 
 			if (path.EndsWith (".exe", StringComparison.Ordinal) || path.EndsWith (".dll", StringComparison.Ordinal))
 				return FileType.PEAssembly;

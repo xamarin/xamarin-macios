@@ -46,8 +46,7 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				Assert.Inconclusive ("Requires iPad");
 			
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("ObjectiveC exception crash on devices - bug #3980");
+			TestRuntime.AssertNotDevice ("ObjectiveC exception crash on devices - bug #3980");
 			
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
@@ -85,8 +84,7 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				Assert.Inconclusive ("Requires iPad");
 
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("ObjectiveC exception crash on devices - bug #3980");
+			TestRuntime.AssertNotDevice ("ObjectiveC exception crash on devices - bug #3980");
 			
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))

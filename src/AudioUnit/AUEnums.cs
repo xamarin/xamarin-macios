@@ -172,7 +172,7 @@ namespace AudioUnit
 		System = 0,
 	}
 
-#if !XAMCORE_3_0 || MONOMAC
+#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 	public enum AudioObjectPropertySelector : uint
 	{
 		PropertyDevices = 1684370979, // 'dev#'

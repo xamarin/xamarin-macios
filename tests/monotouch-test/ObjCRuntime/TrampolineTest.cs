@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[Preserve (AllMembers = true)]
 	public class TrampolineTest {
 		public static readonly nfloat pi = 3.14159f;
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		public static bool IsX64 { get { return IntPtr.Size == 8 && !IsArm64CallingConvention; } }
 		public static bool IsX86 { get { return IntPtr.Size == 4; } }
 #else
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public static bool IsArm64 { get { return IntPtr.Size == 8 && IsArm64CallingConvention; } }
 		public static bool IsArm32 {
 			get {
-#if __WATCHOS__ || __MACOS__
+#if __WATCHOS__ || __MACOS__ || __MACCATALYST__
 				return false;
 #else
 				return IntPtr.Size == 4 && Runtime.Arch == Arch.DEVICE;

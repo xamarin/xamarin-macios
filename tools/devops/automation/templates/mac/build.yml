@@ -152,6 +152,8 @@ steps:
       Stop-Pipeline
     } 
   displayName: Validate tests pacakge
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
 
 - task: DownloadPipelineArtifact@2
   displayName: Download Mac tests
@@ -226,4 +228,4 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
-    continueOnError: true
+  continueOnError: true

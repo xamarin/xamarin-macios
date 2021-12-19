@@ -151,7 +151,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		void CallProperty (IntPtr receiver, string selector, ref int called_var, string id, bool expectFailure = false)
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch == Arch.DEVICE && expectFailure) {
 				Console.WriteLine ("Skipping '{0}', it's expected to throw a 'Selector not found exception', but on device it seems to crash instead", selector);
 				return;
@@ -5589,6 +5589,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			throw new NotImplementedException ();
 		}
+
+#if NET
+		public void PresentAfter (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void AddPresentedHandler (Action<global::Metal.IMTLDrawable> block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public double PresentedTime { get => throw new NotImplementedException (); }
+
+		public nuint DrawableId { get => throw new NotImplementedException (); }
+#endif
 	}
 #if !__TVOS__ // MetalPerformanceShaders isn't available in the tvOS simulator either
 	class MetalPerformanceShadersTypesInTheSimulator : NSObject, global::MetalPerformanceShaders.IMPSDeviceProvider {

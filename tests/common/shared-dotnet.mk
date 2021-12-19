@@ -17,6 +17,7 @@ reload:
 	$(Q) $(MAKE) -C $(TOP) -j8 all
 	$(Q) $(MAKE) -C $(TOP) -j8 install
 	$(Q) git clean -xfdq
+	$(Q) $(DOTNET6) build-server shutdown # make sure msbuild picks up any new task assemblies we built
 
 reload-and-build:
 	$(Q) $(MAKE) reload

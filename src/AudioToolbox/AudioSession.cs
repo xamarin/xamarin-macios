@@ -255,7 +255,11 @@ namespace AudioToolbox {
 		static NSString OutputDestinationKey_Description;
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
+#if NET
+		unsafe extern static OSStatus AudioSessionInitialize(IntPtr cfRunLoop, IntPtr cfstr_runMode, delegate* unmanaged<IntPtr, uint, void> listener, IntPtr userData);
+#else
 		extern static OSStatus AudioSessionInitialize(IntPtr cfRunLoop, IntPtr cfstr_runMode, InterruptionListener listener, IntPtr userData);
+#endif
 
 		public static void Initialize ()
 		{
@@ -265,7 +269,14 @@ namespace AudioToolbox {
 		public static void Initialize (CFRunLoop runLoop, string runMode)
 		{
 			CFString s = runMode == null ? null : new CFString (runMode);
+#if NET
+			int k;
+			unsafe {
+				k = AudioSessionInitialize (runLoop.GetHandle (), s.GetHandle (), &Interruption, IntPtr.Zero);
+			}
+#else
 			int k = AudioSessionInitialize (runLoop == null ? IntPtr.Zero : runLoop.Handle, s == null ? IntPtr.Zero : s.Handle, Interruption, IntPtr.Zero);
+#endif
 			if (k != 0 && k != (int)AudioSessionErrors.AlreadyInitialized)
 				throw new AudioSessionException (k);
 			
@@ -303,9 +314,15 @@ namespace AudioToolbox {
 			initialized = true;
 		}
 
+#if !NET
 		delegate void InterruptionListener (IntPtr userData, uint state);
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (InterruptionListener))]
+#endif
 		static void Interruption (IntPtr userData, uint state)
 		{
 			EventHandler h;
@@ -731,10 +748,16 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		delegate void _PropertyListener (IntPtr userData, AudioSessionProperty prop, int size, IntPtr data);
+#endif
 		public delegate void PropertyListener (AudioSessionProperty prop, int size, IntPtr data);
 		
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (_PropertyListener))]
+#endif
 		static void Listener (IntPtr userData, AudioSessionProperty prop, int size, IntPtr data)
 		{
 			ArrayList a = (ArrayList) listeners [prop];
@@ -749,7 +772,11 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
+#if NET
+		unsafe extern static AudioSessionErrors AudioSessionAddPropertyListener(AudioSessionProperty id, delegate* unmanaged<IntPtr, AudioSessionProperty, int, IntPtr, void> inProc, IntPtr userData);
+#else
 		extern static AudioSessionErrors AudioSessionAddPropertyListener(AudioSessionProperty id, _PropertyListener inProc, IntPtr userData);
+#endif
 
 		static Hashtable listeners;
 
@@ -768,7 +795,13 @@ namespace AudioToolbox {
 			a.Add (listener);
 
 			if (a.Count == 1) {
+#if NET
+				unsafe {
+					return AudioSessionAddPropertyListener (property, &Listener, IntPtr.Zero);
+				}
+#else
 				return AudioSessionAddPropertyListener (property, Listener, IntPtr.Zero);
+#endif
 			}
 
 			return AudioSessionErrors.None;

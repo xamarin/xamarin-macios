@@ -287,9 +287,15 @@ namespace MonoTouchFixtures.Metal {
 			var url = "file://" + metallib_path;
 			url = url.Replace (" ", "%20"); // url encode!
 			using (var library = device.CreateLibrary (new NSUrl (url), out var error)) {
+#if NET
+				// Looks like creating a library with a url always fails: https://forums.developer.apple.com/thread/110416
+				Assert.IsNotNull (library, "CreateLibrary (NSUrl, NSError): Null");
+				Assert.IsNull (error, "CreateLibrary (NSUrl, NSError): NonNull error");
+#else
 				// Looks like creating a library with a url always fails: https://forums.developer.apple.com/thread/110416
 				Assert.IsNull (library, "CreateLibrary (NSUrl, NSError): Null");
 				Assert.IsNotNull (error, "CreateLibrary (NSUrl, NSError): NonNull error");
+#endif
 			}
 
 			using (var library = device.CreateArgumentEncoder (new MTLArgumentDescriptor [] { new MTLArgumentDescriptor () { DataType = MTLDataType.Int } })) {
