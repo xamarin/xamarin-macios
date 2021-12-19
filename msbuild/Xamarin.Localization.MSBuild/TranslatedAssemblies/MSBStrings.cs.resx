@@ -716,6 +716,9 @@
   <data name="E0188" xml:space="preserve">
         <value>Nepovedlo se namapovat verzi Mac Catalystu {0} na odpovídající verzi macOS. Platné verze Mac Catalystu jsou: {1}</value>
     </data>
+  <data name="E0189" xml:space="preserve">
+        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Nepovedlo se přeložit IP adresy hostitele pro nastavení ladicího programu Wi-Fi.
         </value>
@@ -1081,5 +1084,12 @@
   <data name="W7087" xml:space="preserve">
         <value>V adresáři {0} byl očekáván soubor manifestu.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>File '{0}' is not a valid framework: {1}</value>
     </data>
 </root>
