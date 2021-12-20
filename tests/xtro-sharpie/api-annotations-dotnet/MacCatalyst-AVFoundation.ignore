@@ -32,5 +32,5 @@
 ## deprecated in all Mac Catalyst versions we support, and there's a viable alternative to use instead.
 !missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withFlags: not found
 
-## this API is to have cute Objective-C syntax for something that's (according to the docs) identical to what another method do (which we've bound).
+## this API is to have cute Objective-C syntax for something that's (according to the docs) identical to what another method does (which we've bound).
 !missing-selector! AVCaptureSynchronizedDataCollection::objectForKeyedSubscript: not bound
