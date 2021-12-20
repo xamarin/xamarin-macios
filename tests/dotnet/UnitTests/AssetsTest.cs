@@ -101,6 +101,8 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			if (!isStartingWithAssets) {
 				CopyAssets ();
+				// Building again without cleaning skips compiling the new assets: https://github.com/xamarin/maccore/issues/2534
+				Clean (projectPath);
 				DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			}
 		}
