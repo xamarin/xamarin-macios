@@ -1379,3 +1379,7 @@
 
 ## convenience value (combined flags)
 !extra-enum-value! Managed value 3 for NSKeyValueObservingOptions.OldNew not found in native headers
+
+## these are implemented in a way that xtro doesn't see
+!missing-selector! NSAppleEventDescriptor::initListDescriptor not bound
+!missing-selector! NSAppleEventDescriptor::initRecordDescriptor not bound
