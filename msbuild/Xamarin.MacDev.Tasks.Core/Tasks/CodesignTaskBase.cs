@@ -22,31 +22,40 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Inputs
 
+		// Can also be specified per resource using the 'CodesignStampPath' metadata
 		public string StampPath { get; set; }
 
-		[Required]
+		// Can also be specified per resource using the 'CodesignAllocate' metadata
 		public string CodesignAllocate { get; set; }
 
+		// Can also be specified per resource using the 'CodesignDisableTimestamp' metadata
 		public bool DisableTimestamp { get; set; }
 
+		// Can also be specified per resource using the 'CodesignEntitlements' metadata
 		public string Entitlements { get; set; }
 
+		// Can also be specified per resource using the 'CodesignKeychain' metadata
 		public string Keychain { get; set; }
 
 		[Required]
 		public ITaskItem[] Resources { get; set; }
 
+		// Can also be specified per resource using the 'CodesignResourceRules' metadata
 		public string ResourceRules { get; set; }
 
-		[Required]
+		// Can also be specified per resource using the 'CodesignSigningKey' metadata
 		public string SigningKey { get; set; }
 
+		// Can also be specified per resource using the 'CodesignExtraArgs' metadata
 		public string ExtraArgs { get; set; }
 
+		// Can also be specified per resource using the 'CodesignDeep' metadata (yes, the naming difference is correct and due to historical reasons)
 		public bool IsAppExtension { get; set; }
 
+		// Can also be specified per resource using the 'CodesignUseHardenedRuntime' metadata
 		public bool UseHardenedRuntime { get; set; }
-		
+
+		// Can also be specified per resource using the 'CodesignUseSecureTimestamp' metadata
 		public bool UseSecureTimestamp { get; set; }
 
 		public string ToolExe {
@@ -81,12 +90,23 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var path = item.ItemSpec;
 			var app = path.LastIndexOf (".app/");
-			return Path.Combine (StampPath, path.Substring (app + ".app/".Length));
+			return Path.Combine (GetCodesignStampPath (item), path.Substring (app + ".app/".Length));
+		}
+
+		string GetCodesignStampPath (ITaskItem item)
+		{
+			return GetNonEmptyStringOrFallback (item, "CodesignStampPath", StampPath);
+		}
+
+		string GetCodesignAllocate (ITaskItem item)
+		{
+			return GetNonEmptyStringOrFallback (item, "CodesignAllocate", CodesignAllocate, "CodesignAllocate", required: true);
 		}
 
 		bool NeedsCodesign (ITaskItem item)
 		{
-			if (string.IsNullOrEmpty (StampPath))
+			var stampPath = GetCodesignStampPath (item);
+			if (string.IsNullOrEmpty (stampPath))
 				return true;
 
 			var output = GetOutputPath (item);
@@ -100,23 +120,50 @@ namespace Xamarin.MacDev.Tasks
 			return false;
 		}
 
+		bool ParseBoolean (ITaskItem item, string metadataName, bool fallbackValue)
+		{
+			var metadataValue = item.GetMetadata (metadataName);
+			if (string.IsNullOrEmpty (metadataValue))
+				return fallbackValue;
+			return string.Equals (metadataValue, "true", StringComparison.OrdinalIgnoreCase);
+		}
+
+		string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string fallbackName = null, bool required = false)
+		{
+			var metadataValue = item.GetMetadata (metadataName);
+			if (!string.IsNullOrEmpty (metadataValue))
+				return metadataValue;
+			if (required && string.IsNullOrEmpty (fallbackValue))
+				Log.LogError (MSBStrings.E7085 /* The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}. */, "Codesign", fallbackName, metadataName, item.ItemSpec);
+			return fallbackValue;
+		}
+
 		IList<string> GenerateCommandLineArguments (ITaskItem item)
 		{
 			var args = new List<string> ();
+			var isDeep = ParseBoolean (item, "CodesignDeep", IsAppExtension);
+			var useHardenedRuntime = ParseBoolean (item, "CodesignUseHardenedRuntime", UseHardenedRuntime);
+			var useSecureTimestamp = ParseBoolean (item, "CodesignUseSecureTimestamp", UseSecureTimestamp);
+			var disableTimestamp = ParseBoolean (item, "CodesignDisableTimestamp", DisableTimestamp);
+			var signingKey = GetNonEmptyStringOrFallback (item, "CodesignSigningKey", SigningKey, "SigningKey", required: true);
+			var keychain = GetNonEmptyStringOrFallback (item, "CodesignKeychain", Keychain);
+			var resourceRules = GetNonEmptyStringOrFallback (item, "CodesignResourceRules", ResourceRules);
+			var entitlements = GetNonEmptyStringOrFallback (item, "CodesignEntitlements", Entitlements);
+			var extraArgs = GetNonEmptyStringOrFallback (item, "CodesignExtraArgs", ExtraArgs);
 
 			args.Add ("-v");
 			args.Add ("--force");
 
-			if (IsAppExtension)
+			if (isDeep)
 				args.Add ("--deep");
 
-			if (UseHardenedRuntime) {
+			if (useHardenedRuntime) {
 				args.Add ("-o");
 				args.Add ("runtime");
 			}
 
-			if (UseSecureTimestamp) {
-				if (DisableTimestamp) {
+			if (useSecureTimestamp) {
+				if (disableTimestamp) {
 					// Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
 					Log.LogWarning (MSBStrings.W0176, "UseSecureTimestamp", "DisableTimestamp");
 				}
@@ -125,25 +172,25 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
-			args.Add (SigningKey);
+			args.Add (signingKey);
 
-			if (!string.IsNullOrEmpty (Keychain)) {
+			if (!string.IsNullOrEmpty (keychain)) {
 				args.Add ("--keychain");
-				args.Add (Path.GetFullPath (Keychain));
+				args.Add (Path.GetFullPath (keychain));
 			}
 
-			if (!string.IsNullOrEmpty (ResourceRules)) {
+			if (!string.IsNullOrEmpty (resourceRules)) {
 				args.Add ("--resource-rules");
-				args.Add (Path.GetFullPath (ResourceRules));
+				args.Add (Path.GetFullPath (resourceRules));
 			}
 
-			if (!string.IsNullOrEmpty (Entitlements)) {
+			if (!string.IsNullOrEmpty (entitlements)) {
 				args.Add ("--entitlements");
-				args.Add (Path.GetFullPath (Entitlements));
+				args.Add (Path.GetFullPath (entitlements));
 			}
 
-			if (!string.IsNullOrEmpty (ExtraArgs))
-				args.Add (ExtraArgs);
+			if (!string.IsNullOrEmpty (extraArgs))
+				args.Add (extraArgs);
 
 			// signing a framework and a file inside a framework is not *always* identical
 			// on macOS apps {item.ItemSpec} can be a symlink to `Versions/Current/{item.ItemSpec}`
@@ -166,7 +213,7 @@ namespace Xamarin.MacDev.Tasks
 			var fileName = GetFullPathToTool ();
 			var arguments = GenerateCommandLineArguments (item);
 			var environment = new Dictionary<string, string> () {
-				{ "CODESIGN_ALLOCATE", CodesignAllocate },
+				{ "CODESIGN_ALLOCATE", GetCodesignAllocate (item) },
 			};
 			var rv = ExecuteAsync (fileName, arguments, null, environment, mergeOutput: false).Result;
 			var exitCode = rv.ExitCode;
@@ -181,7 +228,7 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogError (MSBStrings.E0004, item.ItemSpec, errors);
 				else
 					Log.LogError (MSBStrings.E0005, item.ItemSpec);
-			} else if (!string.IsNullOrEmpty (StampPath)) {
+			} else if (!string.IsNullOrEmpty (GetCodesignStampPath (item))) {
 				var outputPath = GetOutputPath (item);
 				Directory.CreateDirectory (Path.GetDirectoryName (outputPath));
 				File.WriteAllText (outputPath, string.Empty);
