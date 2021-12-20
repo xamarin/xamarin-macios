@@ -532,8 +532,6 @@
 !missing-null-allowed! 'AppKit.NSText AppKit.NSControl::get_CurrentEditor()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSText AppKit.NSWindow::FieldEditor(System.Boolean,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::get_ExtraLineFragmentTextContainer()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::GetTextContainer(System.UIntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::GetTextContainer(System.UIntPtr,System.IntPtr,System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSTypesetter::get_CurrentTextContainer()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer[] AppKit.NSTypesetter::get_TextContainers()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextInputContext AppKit.NSTextInputContext::get_CurrentInputContext()' is missing an [NullAllowed] on return type
@@ -627,7 +625,6 @@
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSCollectionViewLayoutInvalidationContext::get_InvalidatedSupplementaryIndexPaths()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSDocument::FileAttributesToWrite(Foundation.NSUrl,System.String,AppKit.NSSaveOperationType,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSGraphicsContext::get_Attributes()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary AppKit.NSLayoutManagerDelegate::ShouldUseTemporaryAttributes(AppKit.NSLayoutManager,Foundation.NSDictionary,System.Boolean,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSRuleEditorDelegate::PredicateParts(AppKit.NSRuleEditor,Foundation.NSObject,Foundation.NSObject,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTableView::get_RegisteredNibsByIdentifier()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTrackingArea::get_UserInfo()' is missing an [NullAllowed] on return type
@@ -968,7 +965,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::FindString(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::OpenHelpAnchor(System.String,System.String)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AppKit.NSLayoutManagerDelegate::LayoutCompleted(AppKit.NSLayoutManager,AppKit.NSTextContainer,System.Boolean)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_CriticalFillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_FillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_WarningFillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
