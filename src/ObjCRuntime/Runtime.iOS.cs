@@ -54,7 +54,7 @@ namespace ObjCRuntime {
 			UIApplication.Initialize ();
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// This method is documented to be for diagnostic purposes only,
 		// and should not be considered stable API.
 		[EditorBrowsable (EditorBrowsableState.Never)]
