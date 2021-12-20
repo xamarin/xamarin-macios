@@ -1163,13 +1163,6 @@ public partial class Generator : IMemberGatherer {
 				return "UIntPtr";
 		}
 
-		if (mai.Type.Namespace == "System") {
-			if (mai.Type.Name == "nint")
-				return "IntPtr";
-			if (mai.Type.Name == "nuint")
-				return "UIntPtr";
-		}
-
 		if (IsNativeType (mai.Type))
 			return PrimitiveType (mai.Type, formatted);
 
