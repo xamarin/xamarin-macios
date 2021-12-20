@@ -26,6 +26,10 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Introspection {
 
 	public abstract class ApiSelectorTest : ApiBaseTest {
@@ -191,21 +195,21 @@ namespace Introspection {
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "ARBodyTrackingConfiguration":
 			case "ARGeoTrackingConfiguration":
 			switch (selectorName) {
 				case "supportsAppClipCodeTracking": // Only available on device
-					return Runtime.Arch == Arch.SIMULATOR;
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			case "CSImportExtension":
 				switch (selectorName) {
 				case "beginRequestWithExtensionContext:": 
 				case "updateAttributes:forFileAtURL:error:":
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -213,7 +217,7 @@ namespace Introspection {
 			case "HKQuery":
 				switch (selectorName) {
 				case "predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:": // not available in the sim
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -818,7 +822,7 @@ namespace Introspection {
 				case "defaultBody2DSkeletonDefinition":
 				case "defaultBody3DSkeletonDefinition":
 					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					break;
 				}
@@ -952,7 +956,11 @@ namespace Introspection {
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 			if (fi == null)
 				return IntPtr.Zero; // e.g. *Delegate
+#if NET
+			return (NativeHandle) fi.GetValue (null);
+#else
 			return (IntPtr) fi.GetValue (null);
+#endif
 		}
 
 		[Test]
@@ -1131,7 +1139,7 @@ namespace Introspection {
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
 					continue; // e.g. *Delegate
-				IntPtr class_ptr = (IntPtr) fi.GetValue (null);
+				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 				
 				foreach (var m in t.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
 					if (SkipDueToAttribute (m))

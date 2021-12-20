@@ -1,5 +1,0 @@
-## API prohibited on iOS since Xcode 10
-!missing-selector! HMHome::removeUser:completionHandler: not bound
-
-## xcode11 marks it (in tvOS headers only!?!) as deprecated
-!missing-selector! HMAddAccessoryRequest::requiresOwnershipToken not bound

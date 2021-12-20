@@ -10,6 +10,10 @@ using Network;
 using OS_nw_parameters = System.IntPtr;
 using OS_nw_interface = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace NetworkExtension {
 
 	// Just to satisfy the core dll contract, the right type will be used on the generated file
@@ -97,7 +101,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[Native]
 	enum NEFilterManagerGrade : long {
 		Firewall = 1,
@@ -113,7 +117,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[Native]
 	enum NENetworkRuleProtocol : long {
 		Any = 0,
@@ -122,7 +126,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[Native]
 	enum NEFilterPacketProviderVerdict : long {
 		Allow = 0,
@@ -140,7 +144,7 @@ namespace NetworkExtension {
 		Statistics = 4,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (10,15,4), MacCatalyst (15,0)]
+	[NoWatch, NoTV, NoiOS, Mac (10,15,4), NoMacCatalyst]
 	[Native]
 	enum NEFilterReportFrequency : long {
 		None,
@@ -149,7 +153,7 @@ namespace NetworkExtension {
 		High,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (10,15,5), MacCatalyst (15,0)]
+	[NoWatch, NoTV, NoiOS, Mac (10,15,5), NoMacCatalyst]
 	[Native]
 	public enum NEFilterDataAttribute : long {
 		HasIpHeader = 1,
@@ -200,7 +204,7 @@ namespace NetworkExtension {
 
 		[NoWatch, NoTV, Mac (10,15,4), iOS (13,4)]
 		NWInterface NetworkInterface {
-			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, false)")]
+			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, false)!")]
 			get;
 			[Wrap ("WeakNetworkInterface = value.GetHandle ()")]
 			set;
@@ -300,11 +304,11 @@ namespace NetworkExtension {
 	interface NEAppRule : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithSigningIdentifier:")]
-		IntPtr Constructor (string signingIdentifier);
+		NativeHandle Constructor (string signingIdentifier);
 
 		[NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
 		[Export ("initWithSigningIdentifier:designatedRequirement:")]
-		IntPtr Constructor (string signingIdentifier, string designatedRequirement);
+		NativeHandle Constructor (string signingIdentifier, string designatedRequirement);
 
 		[NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
 		[Export ("matchDesignatedRequirement")]
@@ -331,7 +335,7 @@ namespace NetworkExtension {
 	interface NEDnsSettings : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithServers:")]
-		IntPtr Constructor (string[] servers);
+		NativeHandle Constructor (string[] servers);
 	
 		[Export ("servers")]
 		string[] Servers { get; }
@@ -435,16 +439,16 @@ namespace NetworkExtension {
 		[Export ("handleRulesChanged")]
 		void HandleRulesChanged ();
 
-		[NoiOS, MacCatalyst (15,0)]
+		[NoiOS, NoMacCatalyst]
 		[Export ("applySettings:completionHandler:")]
 		[Async]
 		void ApplySettings ([NullAllowed] NEFilterSettings settings, Action<NSError> completionHandler);
 
-		[NoiOS, MacCatalyst (15,0)]
+		[NoiOS, NoMacCatalyst]
 		[Export ("resumeFlow:withVerdict:")]
 		void ResumeFlow (NEFilterFlow flow, NEFilterVerdict verdict);
 
-		[NoWatch, NoTV, NoiOS, Mac (10,15,4), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4), NoMacCatalyst]
 		[Export ("updateFlow:usingVerdict:forDirection:")]
 		void UpdateFlow (NEFilterSocketFlow flow, NEFilterDataVerdict verdict, NETrafficDirection direction);
 	}
@@ -454,7 +458,7 @@ namespace NetworkExtension {
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterDataVerdict : NSSecureCoding, NSCopying
 	{
-		[NoWatch, NoTV, NoiOS, Mac (10,15,4), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4), NoMacCatalyst]
 		[Export ("statisticsReportFrequency", ArgumentSemantic.Assign)]
 		NEFilterReportFrequency StatisticsReportFrequency { get; set; }
 
@@ -553,7 +557,7 @@ namespace NetworkExtension {
 		NSString ConfigurationDidChangeNotification { get; }
 
 		[NoiOS]
-		[Mac (10,15), MacCatalyst (15,0)]
+		[Mac (10,15), NoMacCatalyst]
 		[Export ("grade", ArgumentSemantic.Assign)]
 		NEFilterManagerGrade Grade { get; set; }
 
@@ -568,7 +572,7 @@ namespace NetworkExtension {
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterNewFlowVerdict : NSSecureCoding, NSCopying
 	{
-		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4), NoMacCatalyst]
 		[Export ("statisticsReportFrequency", ArgumentSemantic.Assign)]
 		NEFilterReportFrequency StatisticsReportFrequency { get; set; }
 
@@ -846,7 +850,7 @@ namespace NetworkExtension {
 	interface NEIPv4Route : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithDestinationAddress:subnetMask:")]
-		IntPtr Constructor (string address, string subnetMask);
+		NativeHandle Constructor (string address, string subnetMask);
 	
 		[Export ("destinationAddress")]
 		string DestinationAddress { get; }
@@ -868,7 +872,7 @@ namespace NetworkExtension {
 	interface NEIPv6Route : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithDestinationAddress:networkPrefixLength:")]
-		IntPtr Constructor (string address, NSNumber networkPrefixLength);
+		NativeHandle Constructor (string address, NSNumber networkPrefixLength);
 	
 		[Export ("destinationAddress")]
 		string DestinationAddress { get; }
@@ -890,7 +894,7 @@ namespace NetworkExtension {
 	interface NEIPv4Settings : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithAddresses:subnetMasks:")]
-		IntPtr Constructor (string[] addresses, string[] subnetMasks);
+		NativeHandle Constructor (string[] addresses, string[] subnetMasks);
 	
 		[Export ("addresses")]
 		string[] Addresses { get; }
@@ -911,7 +915,7 @@ namespace NetworkExtension {
 	interface NEIPv6Settings : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithAddresses:networkPrefixLengths:")]
-		IntPtr Constructor (string[] addresses, NSNumber[] networkPrefixLengths);
+		NativeHandle Constructor (string[] addresses, NSNumber[] networkPrefixLengths);
 	
 		[Export ("addresses")]
 		string[] Addresses { get; }
@@ -1002,7 +1006,7 @@ namespace NetworkExtension {
 	interface NEProxyServer : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithAddress:port:")]
-		IntPtr Constructor (string address, nint port);
+		NativeHandle Constructor (string address, nint port);
 	
 		[Export ("address")]
 		string Address { get; }
@@ -1026,7 +1030,7 @@ namespace NetworkExtension {
 	interface NETunnelNetworkSettings : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithTunnelRemoteAddress:")]
-		IntPtr Constructor (string address);
+		NativeHandle Constructor (string address);
 	
 		[Export ("tunnelRemoteAddress")]
 		string TunnelRemoteAddress { get; }
@@ -1454,7 +1458,7 @@ namespace NetworkExtension {
 	interface NEEvaluateConnectionRule : NSSecureCoding, NSCopying {
 
 		[Export ("initWithMatchDomains:andAction:")]
-		IntPtr Constructor (string [] domains, NEEvaluateConnectionRuleAction action);
+		NativeHandle Constructor (string [] domains, NEEvaluateConnectionRuleAction action);
 
 		[Export ("action")]
 		NEEvaluateConnectionRuleAction Action { get; }
@@ -1537,7 +1541,7 @@ namespace NetworkExtension {
 	interface NWTcpConnection
 	{
 		[Export ("initWithUpgradeForConnection:")]
-		IntPtr Constructor (NWTcpConnection connection);
+		NativeHandle Constructor (NWTcpConnection connection);
 	
 		[Export ("state")]
 		NWTcpConnectionState State { get; }
@@ -1629,7 +1633,7 @@ namespace NetworkExtension {
 	interface NWUdpSession
 	{
 		[Export ("initWithUpgradeForSession:")]
-		IntPtr Constructor (NWUdpSession session);
+		NativeHandle Constructor (NWUdpSession session);
 	
 		[Export ("state")]
 		NWUdpSessionState State { get; }
@@ -1760,7 +1764,7 @@ namespace NetworkExtension {
 	[DisableDefaultCtor]
 	interface NEPacketTunnelNetworkSettings {
 		[Export ("initWithTunnelRemoteAddress:")]
-		IntPtr Constructor (string address);
+		NativeHandle Constructor (string address);
 
 		[Export ("IPv4Settings", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -1850,7 +1854,7 @@ namespace NetworkExtension {
 	[BaseType (typeof (NSObject))]
 	interface NEPacket : NSCopying, NSSecureCoding {
 		[Export ("initWithData:protocolFamily:")]
-		IntPtr Constructor (NSData data, /* sa_family_t */ byte protocolFamily);
+		NativeHandle Constructor (NSData data, /* sa_family_t */ byte protocolFamily);
 
 		[Export ("data", ArgumentSemantic.Copy)]
 		NSData Data { get; }
@@ -1962,7 +1966,7 @@ namespace NetworkExtension {
 		string [] MccAndMncs { get; set; }
 
 		[Export ("initWithDomainName:roamingEnabled:")]
-		IntPtr Constructor (string domainName, bool roamingEnabled);
+		NativeHandle Constructor (string domainName, bool roamingEnabled);
 	}
 
 	[iOS (11,0), NoMac]
@@ -2024,10 +2028,10 @@ namespace NetworkExtension {
 		IntPtr initWithSsid (string ssid, string passphrase, bool isWep);
 
 		[Export ("initWithSSID:eapSettings:")]
-		IntPtr Constructor (string ssid, NEHotspotEapSettings eapSettings);
+		NativeHandle Constructor (string ssid, NEHotspotEapSettings eapSettings);
 
 		[Export ("initWithHS20Settings:eapSettings:")]
-		IntPtr Constructor (NEHotspotHS20Settings hs20Settings, NEHotspotEapSettings eapSettings);
+		NativeHandle Constructor (NEHotspotHS20Settings hs20Settings, NEHotspotEapSettings eapSettings);
 	
 		[Internal]
 		[iOS (13,0)]
@@ -2072,19 +2076,19 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NENetworkRule : NSSecureCoding, NSCopying {
 
 		[Export ("initWithDestinationNetwork:prefix:protocol:")]
-		IntPtr Constructor (NWHostEndpoint networkEndpoint, nuint destinationPrefix, NENetworkRuleProtocol protocol);
+		NativeHandle Constructor (NWHostEndpoint networkEndpoint, nuint destinationPrefix, NENetworkRuleProtocol protocol);
 
 		[Export ("initWithDestinationHost:protocol:")]
-		IntPtr Constructor (NWHostEndpoint hostEndpoint, NENetworkRuleProtocol protocol);
+		NativeHandle Constructor (NWHostEndpoint hostEndpoint, NENetworkRuleProtocol protocol);
 
 		[Export ("initWithRemoteNetwork:remotePrefix:localNetwork:localPrefix:protocol:direction:")]
-		IntPtr Constructor ([NullAllowed] NWHostEndpoint remoteNetwork, nuint remotePrefix, [NullAllowed] NWHostEndpoint localNetwork, nuint localPrefix, NENetworkRuleProtocol protocol, NETrafficDirection direction);
+		NativeHandle Constructor ([NullAllowed] NWHostEndpoint remoteNetwork, nuint remotePrefix, [NullAllowed] NWHostEndpoint localNetwork, nuint localPrefix, NENetworkRuleProtocol protocol, NETrafficDirection direction);
 
 		[NullAllowed, Export ("matchRemoteEndpoint")]
 		NWHostEndpoint MatchRemoteEndpoint { get; }
@@ -2106,13 +2110,13 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEFilterRule : NSSecureCoding, NSCopying {
 
 		[Export ("initWithNetworkRule:action:")]
-		IntPtr Constructor (NENetworkRule networkRule, NEFilterAction action);
+		NativeHandle Constructor (NENetworkRule networkRule, NEFilterAction action);
 
 		[Export ("networkRule", ArgumentSemantic.Copy)]
 		NENetworkRule NetworkRule { get; }
@@ -2122,13 +2126,13 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEFilterSettings : NSSecureCoding, NSCopying {
 
 		[Export ("initWithRules:defaultAction:")]
-		IntPtr Constructor (NEFilterRule[] rules, NEFilterAction defaultAction);
+		NativeHandle Constructor (NEFilterRule[] rules, NEFilterAction defaultAction);
 
 		[Export ("rules", ArgumentSemantic.Copy)]
 		NEFilterRule[] Rules { get; }
@@ -2138,7 +2142,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NEFilterPacketContext {
 	}
@@ -2148,7 +2152,7 @@ namespace NetworkExtension {
 	delegate NEFilterPacketProviderVerdict NEFilterPacketHandler (NEFilterPacketContext context, IntPtr @interface, NETrafficDirection directiom, IntPtr packetBytes, nuint packetLength);
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NEFilterProvider))]
 	[DisableDefaultCtor] // returns `nil`
 	interface NEFilterPacketProvider {
@@ -2163,7 +2167,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NEVpnManager))]
 	[DisableDefaultCtor]
 	interface NETransparentProxyManager {
@@ -2175,7 +2179,7 @@ namespace NetworkExtension {
 	}
 
 	[NoiOS]
-	[Mac (10,15), MacCatalyst (15,0)]
+	[Mac (10,15), NoMacCatalyst]
 	[BaseType (typeof (NETunnelNetworkSettings))]
 	interface NETransparentProxyNetworkSettings {
 
@@ -2337,7 +2341,7 @@ namespace NetworkExtension {
 		void DidReceiveIncomingCall (NEAppPushManager manager, NSDictionary userInfo);
 	}
 
-	[Mac (11,0), MacCatalyst (15,0)]
+	[Mac (11,0), NoMacCatalyst]
 	[NoiOS][NoTV][NoWatch]
 	[BaseType (typeof (NEAppProxyProvider))]
 	[DisableDefaultCtor] // `init` returns `nil`

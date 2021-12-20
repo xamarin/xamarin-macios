@@ -17,6 +17,12 @@ using Foundation;
 using CoreMedia;
 using CoreVideo;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace VideoToolbox {
 
 #if NET
@@ -27,27 +33,18 @@ namespace VideoToolbox {
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
 
+#if !NET
 		/* invoked by marshallers */
-		protected internal VTCompressionSession (IntPtr handle) : base (handle)
+		protected internal VTCompressionSession (NativeHandle handle) : base (handle)
 		{
 		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal VTCompressionSession (IntPtr handle, bool owns) : base (handle, owns)
+		internal VTCompressionSession (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
-		~VTCompressionSession ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-		
 		protected override void Dispose (bool disposing)
 		{
 			if (Handle != IntPtr.Zero)
@@ -60,26 +57,27 @@ namespace VideoToolbox {
 		}
 
 		// sourceFrame: It seems it's only used as a parameter to be passed into EncodeFrame so no need to strong type it
-		public delegate void VTCompressionOutputCallback (/* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags flags, CMSampleBuffer buffer);
+		public delegate void VTCompressionOutputCallback (/* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags flags, CMSampleBuffer? buffer);
+#if !NET
 		delegate void CompressionOutputCallback (/* void* CM_NULLABLE */ IntPtr outputCallbackClosure, /* void* CM_NULLABLE */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags infoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr cmSampleBufferPtr);
 
-		#region Legacy code start
 		//
 		// Here for legacy code, which would only work under duress (user had to manually ref the CMSampleBuffer on the callback)
 		//
-		static CompressionOutputCallback _static_CompressionOutputCallback;
+		static CompressionOutputCallback? _static_CompressionOutputCallback;
 		static CompressionOutputCallback static_CompressionOutputCallback {
 			get {
-				if (_static_CompressionOutputCallback == null)
+				if (_static_CompressionOutputCallback is null)
 					_static_CompressionOutputCallback = new CompressionOutputCallback (CompressionCallback);
 				return _static_CompressionOutputCallback;
 			}
 		}
+#endif
 
 		static void CompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr, bool owns)
 		{
 			var gch = GCHandle.FromIntPtr (outputCallbackClosure);
-			var func = (VTCompressionOutputCallback) gch.Target;
+			var func = (VTCompressionOutputCallback) gch.Target!;
 			if (cmSampleBufferPtr == IntPtr.Zero) {
 				func (sourceFrame, status, infoFlags, null);
 			} else {
@@ -88,8 +86,12 @@ namespace VideoToolbox {
 			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CompressionOutputCallback))]
+#endif
 #endif
 		static void CompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr)
 		{
@@ -97,27 +99,39 @@ namespace VideoToolbox {
 		}
 
 		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(int,int,CMVideoCodecType,VTCompressionOutputCallback,VTVideoEncoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
-		public static VTCompressionSession Create (int width, int height, CMVideoCodecType codecType,
+		public static VTCompressionSession? Create (int width, int height, CMVideoCodecType codecType,
 			VTCompressionOutputCallback compressionOutputCallback,
-			VTVideoEncoderSpecification encoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
-			NSDictionary sourceImageBufferAttributes = null)
+			VTVideoEncoderSpecification? encoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
+			NSDictionary? sourceImageBufferAttributes = null)
 		{
+#if NET
+			unsafe {
+				return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes, &NewCompressionCallback);
+			}
+#else
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes, static_newCompressionOutputCallback);
+#endif
 		}
-		// End region of legacy code
-		#endregion
 
-		static CompressionOutputCallback _static_newCompressionOutputCallback;
+#if !NET
+		// End region of legacy code
+
+		static CompressionOutputCallback? _static_newCompressionOutputCallback;
 		static CompressionOutputCallback static_newCompressionOutputCallback {
 			get {
-				if (_static_newCompressionOutputCallback == null)
+				if (_static_newCompressionOutputCallback is null)
 					_static_newCompressionOutputCallback = new CompressionOutputCallback (NewCompressionCallback);
 				return _static_newCompressionOutputCallback;
 			}
 		}
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CompressionOutputCallback))]
+#endif
 #endif
 		static void NewCompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr)
 		{
@@ -125,7 +139,7 @@ namespace VideoToolbox {
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static VTStatus VTCompressionSessionCreate (
+		unsafe extern static VTStatus VTCompressionSessionCreate (
 			/* CFAllocatorRef */ IntPtr allocator, /* can be null */
 			/* int32_t */ int width,
 			/* int32_t */ int height,
@@ -133,46 +147,59 @@ namespace VideoToolbox {
 			/* CFDictionaryRef */ IntPtr dictionaryEncoderSpecification, /* can be null */
 			/* CFDictionaryRef */ IntPtr dictionarySourceImageBufferAttributes, /* can be null */
 			/* CFDictionaryRef */ IntPtr compressedDataAllocator, /* can be null */
-			/* VTCompressionOutputCallback */ CompressionOutputCallback outputCallback,
+#if NET
+			/* VTCompressionOutputCallback */ delegate* unmanaged</* void* CM_NULLABLE */ IntPtr, /* void* CM_NULLABLE */ IntPtr, /* OSStatus */ VTStatus, VTEncodeInfoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr, void> outputCallback,
+#else
+			/* VTCompressionOutputCallback */ CompressionOutputCallback? outputCallback,
+#endif
 			/* void* */ IntPtr outputCallbackClosure,
 			/* VTCompressionSessionRef* */ out IntPtr compressionSessionOut);
 
 #if false // Disabling for now until we have some tests on this
 		[Mac (10,11), iOS (9,0)]
-		public static VTCompressionSession Create (int width, int height, CMVideoCodecType codecType,
-			VTVideoEncoderSpecification encoderSpecification = null,
-			NSDictionary sourceImageBufferAttributes = null)
+		public static VTCompressionSession? Create (int width, int height, CMVideoCodecType codecType,
+			VTVideoEncoderSpecification? encoderSpecification = null,
+			NSDictionary? sourceImageBufferAttributes = null)
 		{
 			return Create (width, height, codecType, null,
 				encoderSpecification, sourceImageBufferAttributes);
 		}
 #endif
-		public static VTCompressionSession Create (int width, int height, CMVideoCodecType codecType,
+		public static VTCompressionSession? Create (int width, int height, CMVideoCodecType codecType,
 			VTCompressionOutputCallback compressionOutputCallback,
-			VTVideoEncoderSpecification encoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
-			CVPixelBufferAttributes sourceImageBufferAttributes)
+			VTVideoEncoderSpecification? encoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
+			CVPixelBufferAttributes? sourceImageBufferAttributes)
 		{
+#if NET
+			unsafe {
+				return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, &CompressionCallback);
+			}
+#else
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, static_CompressionOutputCallback);
+#endif
 		}
 
-		static VTCompressionSession Create (int width, int height, CMVideoCodecType codecType,
+		unsafe static VTCompressionSession? Create (int width, int height, CMVideoCodecType codecType,
 			VTCompressionOutputCallback compressionOutputCallback,
-			VTVideoEncoderSpecification encoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
-		        NSDictionary sourceImageBufferAttributes, CompressionOutputCallback staticCback) // Undocumented options, probably always null
+			VTVideoEncoderSpecification? encoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
+		        NSDictionary? sourceImageBufferAttributes, // Undocumented options, probably always null
+#if NET
+		        delegate* unmanaged</* void* CM_NULLABLE */ IntPtr, /* void* CM_NULLABLE */ IntPtr, /* OSStatus */ VTStatus, VTEncodeInfoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr, void> staticCback)
+#else
+		        CompressionOutputCallback staticCback)
+#endif
 		{
 			var callbackHandle = default (GCHandle);
-			if (compressionOutputCallback != null)
+			if (compressionOutputCallback is not null)
 				callbackHandle = GCHandle.Alloc (compressionOutputCallback);
 
-			IntPtr ret;
-
 			var result = VTCompressionSessionCreate (IntPtr.Zero, width, height, codecType,
-				encoderSpecification != null ? encoderSpecification.Dictionary.Handle : IntPtr.Zero,
-				sourceImageBufferAttributes != null ? sourceImageBufferAttributes.Handle : IntPtr.Zero,
+				encoderSpecification.GetHandle (),
+				sourceImageBufferAttributes.GetHandle (),
 				IntPtr.Zero,
 				callbackHandle.IsAllocated ? (staticCback) : null,
 				GCHandle.ToIntPtr (callbackHandle),
-	            out ret);
+	            out var ret);
 
 			if (result == VTStatus.Ok && ret != IntPtr.Zero)
 				return new VTCompressionSession (ret, true) {
@@ -191,12 +218,9 @@ namespace VideoToolbox {
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static IntPtr /* cvpixelbufferpoolref */ VTCompressionSessionGetPixelBufferPool (IntPtr handle);
 
-		public CVPixelBufferPool GetPixelBufferPool ()
+		public CVPixelBufferPool? GetPixelBufferPool ()
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-
-			var ret = VTCompressionSessionGetPixelBufferPool (Handle);
+			var ret = VTCompressionSessionGetPixelBufferPool (GetCheckedHandle ());
 
 			if (ret != IntPtr.Zero) 
 				return new CVPixelBufferPool (ret, false);
@@ -215,10 +239,7 @@ namespace VideoToolbox {
 #endif
 		public VTStatus PrepareToEncodeFrames ()
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-			
-			return VTCompressionSessionPrepareToEncodeFrames (Handle);
+			return VTCompressionSessionPrepareToEncodeFrames (GetCheckedHandle ());
 		}
 		
 		[DllImport (Constants.VideoToolboxLibrary)]
@@ -234,27 +255,25 @@ namespace VideoToolbox {
 		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestampe, CMTime duration, 
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
+			if (imageBuffer is null)
+				throw new ArgumentNullException (nameof (imageBuffer));
 			
-			return VTCompressionSessionEncodeFrame (Handle, imageBuffer.Handle, presentationTimestampe, duration,
-				frameProperties == null ? IntPtr.Zero : frameProperties.Handle,
+			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestampe, duration,
+				frameProperties.GetHandle (),
 				sourceFrame, out infoFlags);
 		}		
 
 #if false // Disabling for now until we have some tests on this
 		[Mac (10,11), iOS (9,0)]
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static unsafe VTStatus VTCompressionSessionEncodeFrameWithOutputHandler (
+		extern static VTStatus VTCompressionSessionEncodeFrameWithOutputHandler (
 			/* VTCompressionSessionRef */ IntPtr session,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
 			/* CMTime */ CMTime presentation,
 			/* CMTime */ CMTime duration, // can ve CMTime.Invalid
 			/* CFDictionaryRef */ IntPtr dict, // can be null, undocumented options
 			/* VTEncodeInfoFlags */ out VTEncodeInfoFlags flags,
-			/* VTCompressionOutputHandler */ BlockLiteral *outputHandler);
+			/* VTCompressionOutputHandler */ ref BlockLiteral outputHandler);
 
 		public delegate void VTCompressionOutputHandler (VTStatus status, VTEncodeInfoFlags infoFlags, CMSampleBuffer sampleBuffer);
 
@@ -268,7 +287,7 @@ namespace VideoToolbox {
 			VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr sampleBuffer)
 		{
 			var del = (VTCompressionOutputHandler)(block->Target);
-			if (del != null)
+			if (del is not null)
 				del (status, infoFlags, new CMSampleBuffer (sampleBuffer));
 		}
 
@@ -277,26 +296,21 @@ namespace VideoToolbox {
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags,
 			VTCompressionOutputHandler outputHandler)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
-			if (outputHandler == null)
-				throw new ArgumentNullException ("outputHandler");
+			if (imageBuffer is null)
+				throw new ArgumentNullException ((imageBuffer));
+			if (outputHandler is null)
+				throw new ArgumentNullException (nameof (outputHandler));
 
-			unsafe {
-				var block = new BlockLiteral ();
-				var blockPtr = &block;
-				block.SetupBlockUnsafe (compressionOutputHandlerTrampoline, outputHandler);
+			var block = new BlockLiteral ();
+			block.SetupBlockUnsafe (compressionOutputHandlerTrampoline, outputHandler);
 
-				try {
-					return VTCompressionSessionEncodeFrameWithOutputHandler (Handle,
-						imageBuffer.Handle, presentationTimestamp, duration,
-						frameProperties == null ? IntPtr.Zero : frameProperties.Handle,
-						out infoFlags, blockPtr);
-				} finally {
-					blockPtr->CleanupBlock ();
-				}
+			try {
+				return VTCompressionSessionEncodeFrameWithOutputHandler (GetCheckedHandle (),
+					imageBuffer.Handle, presentationTimestamp, duration,
+					frameProperties.GetHandle (),
+					out infoFlags, ref block);
+			} finally {
+				block.CleanupBlock ();
 			}
 		}
 #endif
@@ -305,9 +319,7 @@ namespace VideoToolbox {
 
 		public VTStatus CompleteFrames (CMTime completeUntilPresentationTimeStamp)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-			return VTCompressionSessionCompleteFrames (Handle, completeUntilPresentationTimeStamp);
+			return VTCompressionSessionCompleteFrames (GetCheckedHandle (), completeUntilPresentationTimeStamp);
 		}
 
 #if !NET
@@ -321,9 +333,7 @@ namespace VideoToolbox {
 #endif
 		public VTStatus BeginPass (VTCompressionSessionOptionFlags flags)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-			return VTCompressionSessionBeginPass (Handle, flags, IntPtr.Zero);
+			return VTCompressionSessionBeginPass (GetCheckedHandle (), flags, IntPtr.Zero);
 		}
 
 #if !NET
@@ -343,11 +353,7 @@ namespace VideoToolbox {
 #endif
 		public VTStatus EndPass (out bool furtherPassesRequested)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-
-			byte b;
-			var result = VTCompressionSessionEndPass (Handle, out b, IntPtr.Zero);
+			var result = VTCompressionSessionEndPass (GetCheckedHandle (), out var b, IntPtr.Zero);
 			furtherPassesRequested = b != 0;
 			return result;
 		}
@@ -355,10 +361,7 @@ namespace VideoToolbox {
 		// Like EndPass, but this will be the final pass, so the encoder will skip the evaluation.
 		public VTStatus EndPassAsFinal ()
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-
-			return VTCompressionSessionEndPass (Handle, IntPtr.Zero, IntPtr.Zero);
+			return VTCompressionSessionEndPass (GetCheckedHandle (), IntPtr.Zero, IntPtr.Zero);
 		}
 
 #if !NET
@@ -373,13 +376,9 @@ namespace VideoToolbox {
 #if !NET
 		[Mac (10,10)]
 #endif
-		public VTStatus GetTimeRangesForNextPass (out CMTimeRange [] timeRanges)
+		public VTStatus GetTimeRangesForNextPass (out CMTimeRange []? timeRanges)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-			IntPtr target;
-			int count;
-			var v = VTCompressionSessionGetTimeRangesForNextPass (Handle, out count, out target);
+			var v = VTCompressionSessionGetTimeRangesForNextPass (GetCheckedHandle (), out var count, out var target);
 			if (v != VTStatus.Ok) {
 				timeRanges = null;
 				return v;
@@ -395,12 +394,10 @@ namespace VideoToolbox {
 
 		public VTStatus SetCompressionProperties (VTCompressionProperties options)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("CompressionSession");
-			if (options == null)
-				throw new ArgumentNullException ("options");
+			if (options is null)
+				throw new ArgumentNullException (nameof (options));
 
-			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
+			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
 		}
 	}	
 }

@@ -24,16 +24,26 @@
 // Copyright 2013 Xamarin, Inc. All rights reserved.
 //
 
+#if NET
+#define OBJCRUNTIME_nfloat
+#endif
+
 <#@ template language="C#v3.5" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
+
+#if NET
+#define SKIP_nint
+#define SKIP_nuint
+#endif
+
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace System
-{
+using ObjCRuntime;
+
 <#
 	foreach (var type in new [] {
 		new { NSName = "nint", CilName32 = "Int32", CilName64 = "Int64", IsIntegerType = true },
@@ -56,6 +66,13 @@ namespace System
 			binops.Add ("^");
 		}
 #>
+#if OBJCRUNTIME_<#= type.NSName #>
+namespace ObjCRuntime
+#else
+namespace System
+#endif
+{
+#if !SKIP_<#= type.NSName #>
 	[Serializable]
 	[DebuggerDisplay ("{v,nq}")]
 	public unsafe struct <#= type.NSName #> : IFormattable, IConvertible, IComparable, IComparable<<#= type.NSName #>>, IEquatable <<#= type.NSName #>>
@@ -133,10 +150,10 @@ namespace System
 				break;
 			}
 
-			if (fromType == "IntPtr") {
+			if (fromType == "IntPtr" || fromType == "UIntPtr") {
 				Write ("*(({0} *)&v)", Cast (arch));
-			} else if (toType == "IntPtr") {
-				Write ("*((IntPtr *)&v.v)");
+			} else if (toType == "IntPtr" || toType == "UIntPtr") {
+				Write ("*(({0} *)&v.v)", toType);
 			} else {
 				Write ("({0})", Cast (arch));
 
@@ -206,6 +223,8 @@ namespace System
 		Imp ("nuint", "nfloat");
 		Exp ("IntPtr", "nuint");
 		Exp ("nuint", "IntPtr");
+		Exp ("UIntPtr", "nuint");
+		Exp ("nuint", "UIntPtr");
 		Exp ("sbyte", "nuint");
 		Exp ("nuint", "sbyte");
 		Imp ("byte", "nuint");
@@ -427,5 +446,6 @@ namespace System
 				Marshal.WriteIntPtr (destination, i * <#= type.NSName #>.Size, (IntPtr)source [i + startIndex]);
 		}
 	}
-<# } #>
+#endif // !SKIP_<#= type.NSName #>
 }
+<# } #>

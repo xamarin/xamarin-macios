@@ -38,14 +38,14 @@ namespace Introspection {
 			case "GameController":
 			case "MonoTouch.GameController":
 			case "MLCompute": // xcode 12 beta 3
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 
 			case "CoreAudioKit":
 			case "MonoTouch.CoreAudioKit":
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 			case "Chip":
@@ -55,7 +55,7 @@ namespace Introspection {
 			case "MonoTouch.MetalPerformanceShaders":
 			case "Phase":
 			case "ThreadNetwork":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			// Xcode 9
@@ -64,7 +64,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "DeviceCheck":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 
@@ -83,7 +83,7 @@ namespace Introspection {
 #endif // HAS_WATCHCONNECTIVITY
 			case "ShazamKit":
 				// ShazamKit is not fully supported in the simulator
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			}
@@ -99,14 +99,19 @@ namespace Introspection {
 
 			// Metal is not available on the simulator
 			case "CAMetalLayer":
-				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 			case "SKRenderer":
-				return (Runtime.Arch == Arch.SIMULATOR);
+				return TestRuntime.IsSimulatorOrDesktop;
 
 			// iOS 10 - this type can only be instantiated on devices, but the selectors are forwarded
 			//  to a MTLHeapDescriptorInternal and don't respond - so we'll add unit tests for them
 			case "MTLHeapDescriptor":
-				return Runtime.Arch == Arch.DEVICE;
+			case "MTLLinkedFunctions":
+			case "MTLRenderPipelineDescriptor":
+			case "MTLTileRenderPipelineDescriptor":
+			case "MTLRasterizationRateLayerDescriptor":
+			case "MTLRasterizationRateMapDescriptor":
+				return TestRuntime.IsSimulatorOrDesktop;
 #if __WATCHOS__
 				// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
 			case "INPersonResolutionResult":
@@ -289,7 +294,7 @@ namespace Introspection {
 			case "CIContext":
 				switch (name) {
 				case "render:toIOSurface:bounds:colorSpace:":
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
@@ -304,7 +309,7 @@ namespace Introspection {
 					if (TestRuntime.CheckXcodeVersion (11, 0))
 						break;
 					// did not work on simulator before iOS 13 (shortcut logic)
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
@@ -315,7 +320,7 @@ namespace Introspection {
 			case "CIRenderDestination":
 				switch (name) {
 				case "initWithIOSurface:":
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
@@ -329,7 +334,7 @@ namespace Introspection {
 				case "texImageIOSurface:target:internalFormat:width:height:format:type:plane:":
 				case "setTessellator:":
 				case "tessellator":
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
@@ -388,7 +393,7 @@ namespace Introspection {
 				switch (name) {
 				case "isAutoFocusEnabled":
 				case "setAutoFocusEnabled:":
-					if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+					if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0))
 						return true;
 					break;
 				}
@@ -396,7 +401,7 @@ namespace Introspection {
 			case "ARReferenceImage":
 				switch (name) {
 				case "copyWithZone:":
-					if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+					if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0))
 						return true;
 					break;
 				}
@@ -765,7 +770,7 @@ namespace Introspection {
 
 			// on iOS8.0 this does not work on the simulator (but works on devices)
 			case "language":
-				if (declaredType.Name == "AVSpeechSynthesisVoice" && TestRuntime.CheckXcodeVersion (6, 0) && Runtime.Arch == Arch.SIMULATOR)
+				if (declaredType.Name == "AVSpeechSynthesisVoice" && TestRuntime.CheckXcodeVersion (6, 0) && TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 
@@ -790,7 +795,7 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "SCNRenderer":
 				case "SCNView":
-					return Runtime.Arch == Arch.SIMULATOR;
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 
@@ -862,7 +867,7 @@ namespace Introspection {
 					if (TestRuntime.CheckXcodeVersion (11, 0))
 						break;
 					// did not work on simulator before iOS 13 (shortcut logic)
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))

@@ -9,7 +9,6 @@
 
 #if !__WATCHOS__
 
-using System;
 using Foundation;
 using CoreAnimation;
 using CoreGraphics;

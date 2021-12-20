@@ -24,6 +24,10 @@ using AppKit;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
@@ -53,7 +57,7 @@ namespace EventKit {
 #if !MONOMAC
 		// Never made avaialble on MonoMac
 		[Export ("UUID")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'CalendarItemIdentifier' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'CalendarItemIdentifier' instead.")]
 		string UUID { get;  }
 #endif
 
@@ -141,7 +145,7 @@ namespace EventKit {
 
 #if !MONOMAC
 		[Export ("calendars")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'GetCalendars (EKEntityType)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'GetCalendars (EKEntityType)' instead.")]
 		NSSet Calendars { get;  }
 #endif
 
@@ -252,7 +256,7 @@ namespace EventKit {
 
 #if !MONOMAC
 		[NoMacCatalyst] // It's in the documentation and headers, but throws a "+[EKCalendar calendarWithEventStore:]: unrecognized selector" exception at runtime
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'Create (EKEntityType, EKEventStore)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'Create (EKEntityType, EKEventStore)' instead.")]
 		[Static, Export ("calendarWithEventStore:")]
 		EKCalendar FromEventStore (EKEventStore eventStore);
 #endif
@@ -315,12 +319,12 @@ namespace EventKit {
 		NSDate OccurrenceDate { get; }
 
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Replaced by 'BirthdayContactIdentifier'.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Replaced by 'BirthdayContactIdentifier'.")]
 		[NullAllowed]
 		[Export ("birthdayPersonUniqueID")]
 		string BirthdayPersonUniqueID { get; }
 #else
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'BirthdayContactIdentifier'.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Replaced by 'BirthdayContactIdentifier'.")]
 		[Export ("birthdayPersonID")]
 		nint BirthdayPersonID { get;  }
 #endif
@@ -356,7 +360,7 @@ namespace EventKit {
 //		ABPerson GetPerson (ABAddressBook addressBook);
 #else
 #if !WATCH
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContactPredicate'.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Replaced by 'ContactPredicate'.")]
 		[MacCatalyst (14,0)]
 		[return: NullAllowed]
 		[Export ("ABRecordWithAddressBook:")]
@@ -423,9 +427,9 @@ namespace EventKit {
 
 		[Export ("initWithDayOfTheWeek:weekNumber:")]
 #if XAMCORE_4_0
-		IntPtr Constructor (EKWeekday dayOfTheWeek, nint weekNumber);
+		NativeHandle Constructor (EKWeekday dayOfTheWeek, nint weekNumber);
 #else
-		IntPtr Constructor (nint dayOfTheWeek, nint weekNumber);
+		NativeHandle Constructor (nint dayOfTheWeek, nint weekNumber);
 #endif
 	}
 
@@ -481,10 +485,10 @@ namespace EventKit {
 #endif
 
 		[Export ("initRecurrenceWithFrequency:interval:end:")]
-		IntPtr Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceEnd end);
+		NativeHandle Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceEnd end);
 
 		[Export ("initRecurrenceWithFrequency:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:")]
-		IntPtr Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceDayOfWeek [] days, [NullAllowed] NSNumber [] monthDays, [NullAllowed] NSNumber [] months,
+		NativeHandle Constructor (EKRecurrenceFrequency type, nint interval, [NullAllowed] EKRecurrenceDayOfWeek [] days, [NullAllowed] NSNumber [] monthDays, [NullAllowed] NSNumber [] months,
 				    [NullAllowed] NSNumber [] weeksOfTheYear, [NullAllowed] NSNumber [] daysOfTheYear, [NullAllowed] NSNumber [] setPositions, [NullAllowed] EKRecurrenceEnd end);
 
 	}
@@ -493,14 +497,14 @@ namespace EventKit {
 	interface EKEventStore {
 		[NoiOS, Mac (10,11), NoWatch, NoMacCatalyst]
 		[Export ("initWithSources:")]
-		IntPtr Constructor (EKSource[] sources);
+		NativeHandle Constructor (EKSource[] sources);
 
 		[Export ("eventStoreIdentifier")]
 		string EventStoreIdentifier { get;  }
 
 #if !MONOMAC
 		[Export ("calendars")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'GetCalendars' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'GetCalendars' instead.")]
 		EKCalendar [] Calendars { get;  }
 #endif
 
@@ -611,7 +615,7 @@ namespace EventKit {
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
-		IntPtr Constructor (EKEntityMask accessToEntityTypes);
+		NativeHandle Constructor (EKEntityMask accessToEntityTypes);
 #endif
 		[Mac (10,11), Watch (5,0), iOS (12,0)]
 		[Export ("delegateSources")]
@@ -665,7 +669,7 @@ namespace EventKit {
 	{
 		[Export ("initWithTitle:URLDescriptors:conferenceDetails:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, EKVirtualConferenceUrlDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
+		NativeHandle Constructor ([NullAllowed] string title, EKVirtualConferenceUrlDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }
@@ -700,7 +704,7 @@ namespace EventKit {
 	{
 		[Export ("initWithTitle:identifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, string identifier);
+		NativeHandle Constructor (string title, string identifier);
 
 		[Export ("title")]
 		string Title { get; }
@@ -716,7 +720,7 @@ namespace EventKit {
 	{
 		[Export ("initWithTitle:URL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, NSUrl url);
+		NativeHandle Constructor ([NullAllowed] string title, NSUrl url);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }

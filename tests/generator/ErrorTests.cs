@@ -130,6 +130,18 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1042 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("bi1042.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.ProcessEnums = true;
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1042, "Missing '[Field (LibraryName=value)]' for BindingTests.Tools.DoorOpener (e.g.\"__Internal\")");
+		}
+
+		[Test]
 		public void BI1046 ()
 		{
 			var bgen = new BGenTool ();

@@ -7,6 +7,8 @@
 // Copyright 2012-2015 Xamarin Inc. (http://www.xamarin.com)
 //
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -14,6 +16,10 @@ using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 // CFHost is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
@@ -43,35 +49,10 @@ namespace CoreServices {
 	[Obsolete ("Starting with macos12.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-	class CFHost : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		CFHost (IntPtr handle)
+	class CFHost : NativeObject {
+		internal CFHost (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-		}
-
-		~CFHost ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -82,7 +63,7 @@ namespace CoreServices {
 		{
 			// CFSocketAddress will throw the ANE
 			using (var data = new CFSocketAddress (endpoint))
-				return new CFHost (CFHostCreateWithAddress (IntPtr.Zero, data.Handle));
+				return new CFHost (CFHostCreateWithAddress (IntPtr.Zero, data.Handle), true);
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -93,7 +74,7 @@ namespace CoreServices {
 		{
 			// CFString will throw the ANE
 			using (var ptr = new CFString (name))
-				return new CFHost (CFHostCreateWithName (IntPtr.Zero, ptr.Handle));
+				return new CFHost (CFHostCreateWithName (IntPtr.Zero, ptr.Handle), true);
 		}
 	}
 }

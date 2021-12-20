@@ -3,14 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>monotouchtest</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AssemblyName>monotouchtest</AssemblyName>
 
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
     <MonoTouchTestDirectory>$(RootTestsDirectory)\monotouch-test</MonoTouchTestDirectory>
 
@@ -25,20 +23,12 @@
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
 
   <ItemGroup>
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
-    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
-    <PackageReference Include="System.Json" Version="4.7.1" />
-
     <ProjectReference Include="$(RootTestsDirectory)\EmbeddedResources\dotnet\$(_PlatformName)\EmbeddedResources.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\fsharplibrary\dotnet\$(_PlatformName)\fsharplibrary.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(MonoTouchTestDirectory)/dotnet/$(_PlatformName)/Info.plist">
-      <LogicalName>Info.plist</LogicalName>
-    </None>
     <None Include="$(MonoTouchTestDirectory)\Entitlements.plist" />
     <None Include="$(MonoTouchTestDirectory)\app.config" />
     <None Include="$(MonoTouchTestDirectory)\EmptyNib.xib" />
@@ -64,6 +54,9 @@
     </Compile>
     <Compile Include="$(RootTestsDirectory)\common\Extensions.cs">
       <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
     </Compile>
   </ItemGroup>
 
@@ -205,8 +198,9 @@
   <Target Name="ComputeDefineConstants" BeforeTargets="BeforeBuild">
     <PropertyGroup>
       <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhone'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'tvossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
     </PropertyGroup>
   </Target>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

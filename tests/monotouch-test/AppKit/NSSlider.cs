@@ -5,6 +5,7 @@ using System;
 using AppKit;
 using ObjCRuntime;
 using Foundation;
+using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tests
 {
@@ -15,8 +16,7 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSSlider_VertialTests()
 		{
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_12)
-				return;
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			NSSlider slider = new NSSlider ();
 			var isVert = slider.IsVertical;

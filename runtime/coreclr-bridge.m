@@ -1093,6 +1093,12 @@ xamarin_is_class_inativeobject (MonoClass *cls)
 }
 
 bool
+xamarin_is_class_nativehandle (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_ObjCRuntime_NativeHandle);
+}
+
+bool
 xamarin_is_class_array (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_Array);

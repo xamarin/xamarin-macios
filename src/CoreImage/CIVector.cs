@@ -57,9 +57,9 @@ namespace CoreImage {
 			fixed (nfloat *ptr = values) {
 				var handle = IntPtr.Zero;
 				if (IsDirectBinding) {
-					handle = Messaging.IntPtr_objc_msgSend_IntPtr_nint (Handle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, count);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Handle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, (IntPtr) count);
 				} else {
-					handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr_nint (SuperHandle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, count);
+					handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr_IntPtr (SuperHandle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, (IntPtr) count);
 				}
 				InitializeHandle (handle, "initWithValues:count:");
 			}

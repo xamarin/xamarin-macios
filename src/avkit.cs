@@ -38,6 +38,10 @@ using UIAction = Foundation.NSObject;
 using UIMenuElement = Foundation.NSObject;
 #endif // !MONOMAC
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AVKit {
 	[TV (14, 0)]
 	[iOS (9,0)]
@@ -54,12 +58,12 @@ namespace AVKit {
 		bool IsPictureInPictureSupported { get; }
 	
 		[Export ("initWithPlayerLayer:")]
-		IntPtr Constructor (AVPlayerLayer playerLayer);
+		NativeHandle Constructor (AVPlayerLayer playerLayer);
 
 		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithContentSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVPictureInPictureControllerContentSource contentSource);
+		NativeHandle Constructor (AVPictureInPictureControllerContentSource contentSource);
 	
 		[Export ("playerLayer")]
 		AVPlayerLayer PlayerLayer { get; }
@@ -161,7 +165,7 @@ namespace AVKit {
 	interface AVPlayerViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[NullAllowed] // by default this property is null
 		[Export ("player", ArgumentSemantic.Retain)]
@@ -466,7 +470,7 @@ namespace AVKit {
 	[BaseType (typeof (NSView))]
 	interface AVPlayerView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[NullAllowed]
 		[Export ("player")]
@@ -581,7 +585,7 @@ namespace AVKit {
 	[BaseType (typeof (NSView))]
 	interface AVCaptureView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("session"), NullAllowed]
 		AVCaptureSession Session { get; }
@@ -621,7 +625,7 @@ namespace AVKit {
 	interface AVInterstitialTimeRange : NSCopying, NSSecureCoding {
 		[Export ("initWithTimeRange:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CMTimeRange timeRange);
+		NativeHandle Constructor (CMTimeRange timeRange);
 
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
@@ -634,11 +638,11 @@ namespace AVKit {
 	interface AVNavigationMarkersGroup {
 		[Export ("initWithTitle:timedNavigationMarkers:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, AVTimedMetadataGroup[] navigationMarkers);
+		NativeHandle Constructor ([NullAllowed] string title, AVTimedMetadataGroup[] navigationMarkers);
 
 		[Export ("initWithTitle:dateRangeNavigationMarkers:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, AVDateRangeMetadataGroup[] navigationMarkers);
+		NativeHandle Constructor ([NullAllowed] string title, AVDateRangeMetadataGroup[] navigationMarkers);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }
@@ -657,7 +661,7 @@ namespace AVKit {
 	{
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 		
 		[NullAllowed, Export ("contentProposal")]
 		AVContentProposal ContentProposal { get; }
@@ -717,7 +721,7 @@ namespace AVKit {
 	interface AVRoutePickerView {
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Wrap ("WeakDelegate", IsVirtual = true)]
 		[NullAllowed]
@@ -730,8 +734,8 @@ namespace AVKit {
 		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
 		UIColor ActiveTintColor { get; set; }
 
-		[NoiOS]
-		[NoMac, NoWatch, MacCatalyst (15,0)]
+		[NoiOS, NoMac, NoWatch, NoMacCatalyst]
+		[TV (11,0)]
 		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
 		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
 
@@ -757,8 +761,8 @@ namespace AVKit {
 		AVPlayer Player { get; set; }
 	}
 
-	[NoMac]
-	[TV (11,0), NoiOS, MacCatalyst (15,0)]
+	[NoiOS, NoMac, NoWatch, NoMacCatalyst]
+	[TV (11,0)]
 	[Native]
 	public enum AVRoutePickerViewButtonStyle : long {
 		System,
@@ -826,7 +830,7 @@ namespace AVKit {
 	interface AVPictureInPictureVideoCallViewController {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -835,7 +839,7 @@ namespace AVKit {
 	interface AVPictureInPictureControllerContentSource
 	{
 		[Export ("initWithPlayerLayer:")]
-		IntPtr Constructor (AVPlayerLayer playerLayer);
+		NativeHandle Constructor (AVPlayerLayer playerLayer);
 
 		[NullAllowed, Export ("playerLayer")]
 		AVPlayerLayer PlayerLayer { get; }
@@ -844,7 +848,7 @@ namespace AVKit {
 		[NoWatch, NoTV, NoMac]
 		[NoMacCatalyst] // doc as available, intro fails on macOS 12 beta 6
 		[Export ("initWithActiveVideoCallSourceView:contentViewController:")]
-		IntPtr Constructor (UIView sourceView, AVPictureInPictureVideoCallViewController contentViewController);
+		NativeHandle Constructor (UIView sourceView, AVPictureInPictureVideoCallViewController contentViewController);
 
 		[NullAllowed]
 		[NoWatch, NoTV, NoMac]
@@ -859,7 +863,7 @@ namespace AVKit {
 
 		// interface AVPictureInPictureControllerContentSource_AVSampleBufferDisplayLayerSupport
 		[Export ("initWithSampleBufferDisplayLayer:playbackDelegate:")]
-		IntPtr Constructor (AVSampleBufferDisplayLayer sampleBufferDisplayLayer, IAVPictureInPictureSampleBufferPlaybackDelegate playbackDelegate);
+		NativeHandle Constructor (AVSampleBufferDisplayLayer sampleBufferDisplayLayer, IAVPictureInPictureSampleBufferPlaybackDelegate playbackDelegate);
 
 		[NullAllowed, Export ("sampleBufferDisplayLayer")]
 		AVSampleBufferDisplayLayer SampleBufferDisplayLayer { get; }

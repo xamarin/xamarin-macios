@@ -24,11 +24,11 @@ namespace ARKit {
 #else
 		[SupportedOSPlatform ("ios14.0")]
 #endif
-		public static NSString CreateJointName (NSString recognizedPointKey)
+		public static NSString? CreateJointName (NSString recognizedPointKey)
 		{
-			if (recognizedPointKey == null)
+			if (recognizedPointKey is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (recognizedPointKey));
-			return (NSString) Runtime.GetNSObject (ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle));
+			return Runtime.GetNSObject<NSString> (ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle));
 		}
 	}
 }

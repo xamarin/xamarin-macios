@@ -366,26 +366,25 @@ xamarin_get_managed_object_for_ptr_fast (id self, GCHandle *exception_gchandle)
 	return mobj;
 }
 
-void xamarin_framework_peer_lock ()
+// See comments in the following methods to explain the logic here:
+// xamarin_marshal_return_value_impl in trampolines.m
+// xamarin_release_managed_ref in runtime.m
+void xamarin_framework_peer_waypoint ()
 {
 	// COOP: CHECK
 	MONO_ASSERT_GC_UNSAFE;
-	
+
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&framework_peer_release_lock);
+	pthread_mutex_unlock (&framework_peer_release_lock);
 	MONO_EXIT_GC_SAFE;
 }
 
-// Same as xamarin_framework_peer_lock, except the current mode should be GC Safe.
-void xamarin_framework_peer_lock_safe ()
+// Same as xamarin_framework_peer_waypoint, except the current mode should be GC Safe.
+void xamarin_framework_peer_waypoint_safe ()
 {
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
-
 	pthread_mutex_lock (&framework_peer_release_lock);
-}
-
-void xamarin_framework_peer_unlock ()
-{
 	pthread_mutex_unlock (&framework_peer_release_lock);
 }
 
@@ -699,6 +698,15 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 		return;
 	}
 	
+#if DOTNET
+	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
+	"Could not find an existing managed instance for this object, "
+	"nor was it possible to create a new managed instance "
+	"(because the type '%s' does not have a constructor that takes one NativeHandle argument).\n"
+	"Additional information:\n"
+	"\tSelector: %s\n"
+	"\tMethod: %s\n";
+#else
 	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
 	"Could not find an existing managed instance for this object, "
 	"nor was it possible to create a new managed instance "
@@ -706,6 +714,7 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	"Additional information:\n"
 	"\tSelector: %s\n"
 	"\tMethod: %s\n";
+#endif
 	
 	char *method_full_name = mono_method_full_name (method, TRUE);
 	char *type_name = xamarin_lookup_managed_type_name ([self class], exception_gchandle);
@@ -1860,7 +1869,7 @@ xamarin_release_managed_ref (id self, bool user_type)
 		set_flags_safe (self, (enum XamarinGCHandleFlags) (get_flags_safe (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
 		//
-		// This lock is needed so that we can safely call retainCount in the
+		// This waypoint (lock+unlock) is needed so that we can safely call retainCount in the
 		// toggleref callback.
 		//
 		// The race is between the following actions (given a managed object Z):
@@ -1925,8 +1934,8 @@ xamarin_release_managed_ref (id self, bool user_type)
 		//
 		//    This is https://github.com/xamarin/xamarin-macios/issues/3943
 		//
-		xamarin_framework_peer_lock_safe ();
-		xamarin_framework_peer_unlock ();
+		// See also comment in xamarin_marshal_return_value_impl
+		xamarin_framework_peer_waypoint_safe ();
 	}
 
 	[self release];
@@ -2449,6 +2458,7 @@ xamarin_compute_trusted_platform_assemblies ()
 	const char *bundle_path = xamarin_get_bundle_path ();
 
 	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *exes = [NSMutableArray array];
 	NSMutableArray<NSString *> *directories = [NSMutableArray array];
 	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
 	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
@@ -2476,10 +2486,13 @@ xamarin_compute_trusted_platform_assemblies ()
 			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
 				[files addObject: [dir stringByAppendingPathComponent: name]];
 			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
-				[files addObject: [dir stringByAppendingPathComponent: name]];
+				[exes addObject: [dir stringByAppendingPathComponent: name]];
 			}
 		}
 	}
+
+	// Any .exe files must be at the end, due to https://github.com/dotnet/runtime/issues/62735
+	[files addObjectsFromArray: exes];
 
 	// Join them all together with a colon separating them
 	NSString *joined = [files componentsJoinedByString: @":"];

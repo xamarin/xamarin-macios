@@ -15,11 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: 'Debug context'
-        run: echo "$GITHUB_CONTEXT"
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-
       - name: 'Add remotes'
         run: |
           git remote add public "http://$Env:GITHUB_TOKEN@github.com/xamarin/xamarin-macios.git"

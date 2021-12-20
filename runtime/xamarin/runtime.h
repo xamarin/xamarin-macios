@@ -165,6 +165,7 @@ void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMet
 unsigned long 	xamarin_objc_type_size (const char *type);
 bool			xamarin_is_class_nsobject (MonoClass *cls);
 bool			xamarin_is_class_inativeobject (MonoClass *cls);
+bool			xamarin_is_class_nativehandle (MonoClass *cls);
 bool			xamarin_is_class_array (MonoClass *cls);
 bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
@@ -190,9 +191,8 @@ void *			xamarin_calloc (size_t size);
 void			xamarin_free (void *ptr);
 MonoMethod *	xamarin_get_reflection_method_method (MonoReflectionMethod *method);
 MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gchandle);
-void			xamarin_framework_peer_lock ();
-void			xamarin_framework_peer_lock_safe ();
-void			xamarin_framework_peer_unlock ();
+void			xamarin_framework_peer_waypoint ();
+void			xamarin_framework_peer_waypoint_safe ();
 bool			xamarin_file_exists (const char *path);
 MonoAssembly *	xamarin_open_and_register (const char *path, GCHandle *exception_gchandle);
 void			xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data);
@@ -219,6 +219,7 @@ void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
 void			xamarin_enable_new_refcount ();
+const char * const	xamarin_get_original_working_directory_path ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -266,6 +267,7 @@ id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_i
 MonoType *		xamarin_get_nsnumber_type ();
 MonoType *		xamarin_get_nsvalue_type ();
 MonoClass *		xamarin_get_inativeobject_class ();
+MonoClass *		xamarin_get_nativehandle_class ();
 MonoClass *		xamarin_get_nsobject_class ();
 MonoClass *		xamarin_get_nsstring_class ();
 MonoClass *		xamarin_get_runtime_class ();

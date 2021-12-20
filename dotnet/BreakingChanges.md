@@ -1,0 +1,50 @@
+# Breaking changes in .NET
+
+## System.nfloat moved to ObjCRuntime.nfloat
+
+The `nfloat` type moved from the `System` namespace to the `ObjCRuntime` namespace.
+
+* Code that references the `nfloat` type might not compile unless the `ObjCRuntime` namespace is imported.
+
+  Fix: add `using ObjCRuntime` to the file in question.
+
+* Code that references the full typename, `System.nfloat` won't compile.
+
+  Fix: use `ObjCRuntime.nfloat` instead.
+
+## System.NMath moved to ObjCRuntime.NMath
+
+The `NMath` type moved from the `System` namespace to the `ObjCRuntime` namespace.
+
+* Code that uses the `NMath` type won't compile unless the `ObjCRuntime` namespace is imported.
+
+  Fix: add `using ObjCRuntime` to the file in question.
+
+## NSObject.Handle and INativeObject.Handle changed type from System.IntPtr to ObjCRuntime.NativeHandle
+
+The `NSObject.Handle` and `INativeObject.Handle` properties changed type from
+`System.IntPtr` to `ObjCRuntime.NativeHandle`. This also means that numerous
+other parameters and return values change type in the same way; most important
+are the constructors that previously took a `System.IntPtr`, or
+`System.IntPtr` + `bool`. Both variants now take a `ObjCRuntime.NativeHandle`
+instead.
+
+This is so that we can support API that take native-sized integers (`nint` /
+`nuint` - which map to `System.[U]IntPtr`) while at the same time have a
+different overload that takes a handle.
+
+The most common examples are constructors - all `NSObject` subclasses have a
+constructor that (now) take a single `ObjCRuntime.NativeHandle` parameter, and
+some types also need to expose a constructor that take a native-sized integer.
+For instance `NSMutableString` has a `nint capacity` constructor, which
+without this type change would be impossible to expose correctly.
+
+There are implicit conversions between `System.IntPtr` and
+`ObjCRuntime.NativeHandle`, so most code should compile without changes.
+
+## The ObjCRuntime.Arch enum and the Runtime.Arch property have been removed.
+
+These APIs are used to determine whether we're executing in the simulator or
+on a device. Neither apply to a Mac Catalyst app, so they've been removed.
+
+Any code that these APIs will have to be ported to not use these APIs.

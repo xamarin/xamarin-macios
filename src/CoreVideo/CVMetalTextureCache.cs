@@ -18,39 +18,22 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
 
 #if !NET
 	[iOS (8,0), Mac (10,15), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
-	public partial class CVMetalTextureCache : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		~CVMetalTextureCache ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
+	public partial class CVMetalTextureCache : NativeObject {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static int /* CVReturn = int32_t */ CVMetalTextureCacheCreate (
 			/* CFAllocatorRef __nullable */ IntPtr allocator, 
@@ -59,68 +42,63 @@ namespace CoreVideo {
 			/* CFDictionaryRef __nullable */ IntPtr textureAttributes, 
 			/* CVMetalTextureCacheRef __nullable * __nonnull */ out IntPtr cacheOut);
 
-		CVMetalTextureCache (IntPtr handle)
+		internal CVMetalTextureCache (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-		}
-		
-		public CVMetalTextureCache (IMTLDevice metalDevice)
-		{
-			if (metalDevice == null)
-				throw new ArgumentNullException ("metalDevice");
-			
-			if (CVMetalTextureCacheCreate (IntPtr.Zero,
-						       IntPtr.Zero, /* change one day to support cache attributes */
-						       metalDevice.Handle,
-						       IntPtr.Zero, /* change one day to support texture attribuets */
-						       out handle) == 0)
-				return;
-			
-			throw new Exception ("Could not create the texture cache");
 		}
 
-		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice)
+		static IntPtr Create (IMTLDevice metalDevice, CVMetalTextureAttributes? textureAttributes)
 		{
-			if (metalDevice == null)
-				throw new ArgumentNullException ("metalDevice");
-			IntPtr handle;
-			if (CVMetalTextureCacheCreate (IntPtr.Zero,
-						       IntPtr.Zero, /* change one day to support cache attributes */
-						       metalDevice.Handle,
-						       IntPtr.Zero, /* change one day to support texture attribuets */
-						       out handle) == 0)
-				return new CVMetalTextureCache (handle);
-			return null;
-		}
-
-		public CVMetalTextureCache (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
-		{
-			if (metalDevice == null)
+			if (metalDevice is null)
 				throw new ArgumentNullException (nameof (metalDevice));
 
 			CVReturn err = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
 								metalDevice.Handle,
-								textureAttributes?.Dictionary.Handle ?? IntPtr.Zero,
-								out handle);
+								textureAttributes.GetHandle (),
+								out var handle);
 			if (err == CVReturn.Success)
-				return;
+				return handle;
 
 			throw new Exception ($"Could not create the texture cache, Reason: {err}.");
 		}
 
-		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes, out CVReturn creationErr)
+		public CVMetalTextureCache (IMTLDevice metalDevice)
+			: base (Create (metalDevice, null), true)
 		{
-			if (metalDevice == null)
+		}
+
+		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice)
+		{
+			if (metalDevice is null)
+				throw new ArgumentNullException (nameof (metalDevice));
+			IntPtr handle;
+			if (CVMetalTextureCacheCreate (IntPtr.Zero,
+						       IntPtr.Zero, /* change one day to support cache attributes */
+						       metalDevice.Handle,
+						       IntPtr.Zero, /* change one day to support texture attribuets */
+						       out handle) == 0)
+				return new CVMetalTextureCache (handle, true);
+			return null;
+		}
+
+		public CVMetalTextureCache (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
+			: base (Create (metalDevice, textureAttributes), true)
+		{
+		}
+
+		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes? textureAttributes, out CVReturn creationErr)
+		{
+			if (metalDevice is null)
 				throw new ArgumentNullException (nameof (metalDevice));
 			IntPtr handle;
 			creationErr = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
 								metalDevice.Handle,
-								textureAttributes?.Dictionary.Handle ?? IntPtr.Zero,
+								textureAttributes.GetHandle (),
 								out handle);
 			if (creationErr == CVReturn.Success)
-				return new CVMetalTextureCache (handle);
+				return new CVMetalTextureCache (handle, true);
 			return null;
 		}
 
@@ -132,13 +110,13 @@ namespace CoreVideo {
 
 		public CVMetalTexture? TextureFromImage (CVImageBuffer imageBuffer, MTLPixelFormat format, nint width, nint height, nint planeIndex, out CVReturn errorCode)
 		{
-			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
+			if (imageBuffer is null)
+				throw new ArgumentNullException (nameof (imageBuffer));
 			
 			IntPtr texture;
 			errorCode = CVMetalTextureCacheCreateTextureFromImage (
 				allocator:    IntPtr.Zero,
-				textureCache: handle, /* textureCache dict, one day we might add it */
+				textureCache: Handle, /* textureCache dict, one day we might add it */
 				sourceImage:  imageBuffer.Handle,
 				textureAttr:  IntPtr.Zero,
 				format:       (nuint) (ulong) format,
@@ -148,7 +126,7 @@ namespace CoreVideo {
 				textureOut:   out texture);
 			if (errorCode != 0)
 				return null;
-			return new CVMetalTexture (texture);
+			return new CVMetalTexture (texture, true);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -157,7 +135,7 @@ namespace CoreVideo {
 
 		public void Flush (CVOptionFlags flags)
 		{
-			CVMetalTextureCacheFlush (handle, flags);
+			CVMetalTextureCacheFlush (Handle, flags);
 		}
 			
 		[DllImport (Constants.CoreVideoLibrary)]

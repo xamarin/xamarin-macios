@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>NET;$(DefineConstants)</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>linkall</RootNamespace>
     <AssemblyName>link all</AssemblyName>
     <MtouchLink>Full</MtouchLink>
@@ -11,13 +10,11 @@
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
     <MtouchExtraArgs Condition="$(Configuration.Contains('Debug'))">$(MtouchExtraArgs) --optimize=-remove-uithread-checks</MtouchExtraArgs>
     <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <!-- We use configurations like Debug64 and Release64, which doesn't work with the default logic we and .NET have -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
@@ -30,10 +27,6 @@
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Composition" Version="4.7.0" />
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
-    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
-    <PackageReference Include="System.Json" Version="4.7.1" />
     <ProjectReference Include="$(RootTestsDirectory)\BundledResources\dotnet\$(_PlatformName)\BundledResources.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
   </ItemGroup>

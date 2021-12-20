@@ -67,7 +67,7 @@ namespace Xharness.Jenkins.TestTasks {
 					testTask.ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				testTask.FailureMessage = BuildTask.FailureMessage;
-				if (BuildTask.KnownFailure.HasValue)
+				if (BuildTask.KnownFailure is not null)
 					testTask.KnownFailure = BuildTask.KnownFailure;
 				if (generateXmlFailures && BuildTask.BuildLog != null && File.Exists (BuildTask.BuildLog.FullPath)) {
 					try {

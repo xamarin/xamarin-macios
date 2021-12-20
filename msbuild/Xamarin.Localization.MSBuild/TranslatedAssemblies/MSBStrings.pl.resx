@@ -711,10 +711,10 @@
         <value>Podana ścieżka archiwum nie pochodzi z prawidłowego pliku archiwum (.xcarchive). Ścieżka archiwum: „{0}”</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Nie można zmapować wersji systemu macOS {0} na odpowiadającą jej wersję aplikacji Mac Catalyst. Prawidłowe wersje systemu macOS: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Nie można zmapować wersji aplikacji Mac Catalyst {0} na odpowiadającą jej wersję systemu macOS. Prawidłowe wersje systemu Mac Catalyst: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Nie można rozpoznać adresów IP hosta dla ustawień debugera WiFi.
@@ -1054,7 +1054,7 @@
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>Wartość {0} w polu info.plist ({1}) nie jest zgodna z wartością SupportedOSPlatformVersion ({2}) w pliku projektu (jeśli w pliku projektu nie ma wartości SupportedOSPlatformVersion, przyjęto wartość domyślną). Zmień wartość w polu info.plist, aby była zgodna z wartością SupportedOSPlatformVersion, lub usuń wartość w polu info.plist (i dodaj wartość SupportedOSPlatformVersion do pliku projektu, jeśli jeszcze nie istnieje).</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>Wszystkie pliki czcionek muszą znajdować się w tym samym katalogu w zbiorze aplikacji. Następujące pliki czcionek mają różne katalogi docelowe w zbiorze aplikacji:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>Katalog docelowy to {0}</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Tworzenie skompresowanego pakietu zasobów powiązania, ponieważ występują dowiązania symboliczne w danych wejściowych.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>Wartość "{0}" jest nieprawidłowa dla właściwości kompresji. Prawidłowe wartości to "true", "false" lub "auto".</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>W katalogu {0} oczekiwano pliku "manifest".</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

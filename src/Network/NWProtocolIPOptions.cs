@@ -18,7 +18,12 @@ using Foundation;
 using CoreFoundation;
 using Security;
 using OS_nw_protocol_definition=System.IntPtr;
+using OS_nw_protocol_options=System.IntPtr;
 using IntPtr=System.IntPtr;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
@@ -30,7 +35,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWProtocolIPOptions : NWProtocolOptions {
-		internal NWProtocolIPOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolIPOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public void SetVersion (NWIPVersion version)
 			=> nw_ip_options_set_version (GetCheckedHandle (), version);
@@ -49,5 +54,21 @@ namespace Network {
 
 		public void SetIPLocalAddressPreference (NWIPLocalAddressPreference localAddressPreference)
 			=> nw_ip_options_set_local_address_preference (GetCheckedHandle (), localAddressPreference);
+		
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif	
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_ip_options_set_disable_multicast_loopback (OS_nw_protocol_options options,  [MarshalAs (UnmanagedType.I1)] bool disableMulticastLoopback);
+
+#if !NET
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif	
+		public void DisableMulticastLoopback (bool disable)
+			=> nw_ip_options_set_disable_multicast_loopback (GetCheckedHandle (), disable);
 	}
 }

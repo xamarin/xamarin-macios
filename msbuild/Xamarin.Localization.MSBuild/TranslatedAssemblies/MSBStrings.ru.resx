@@ -711,10 +711,10 @@
         <value>Указанный путь к архиву ведет к недопустимому файлу архива (XCARCHIVE). Путь к архиву: "{0}".</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Не удалось сопоставить версию macOS {0} с соответствующей версией Mac Catalyst. Допустимые версии macOS: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Не удалось сопоставить версию Mac Catalyst {0} с соответствующей версией macOS. Допустимые версии Mac Catalyst: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Не удалось разрешить IP-адреса узлов для параметров отладчика Wi-Fi.
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>Все файлы шрифтов должны находиться в одном каталоге с пакетом приложений. Следующие файлы шрифтов имеют разные целевые каталоги в пакете приложений:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>Целевой каталог: {0}</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Создается сжатый пакет ресурсов привязки, так как во входных данных присутствуют символические ссылки.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>Значение "{0}" недопустимо для свойства Compress. Допустимые значения: true, false или auto.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>Ожидался файл manifest в каталоге {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

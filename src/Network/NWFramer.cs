@@ -25,6 +25,10 @@ using OS_nw_protocol_options=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using OS_nw_parameters=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, [MarshalAs (UnmanagedType.I1)] bool isCompleted);
@@ -38,7 +42,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWFramer : NativeObject {
-		internal NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWFramer (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -305,7 +309,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_options nw_framer_create_options (OS_nw_protocol_definition framer_definition);
 
-		public static T CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
+		public static T? CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));

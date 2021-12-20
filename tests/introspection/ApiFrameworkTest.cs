@@ -12,11 +12,7 @@ using ObjCRuntime;
 public class Application {
 	public bool IsSimulatorBuild {
 		get {
-#if __IOS__
-			return Runtime.Arch == Arch.SIMULATOR;
-#else
-			return true;
-#endif
+			return TestRuntime.IsSimulator;
 		}
 	}
 }
@@ -58,7 +54,9 @@ namespace Introspection {
 			// Some CF* types that requires CFNetwork which we always link with
 			// ref: tools/common/CompilerFlags.cs
 			case "CoreServices":
+#if !NET
 			case "WatchKit": // Apple removed WatchKit from iOS
+#endif
 				return true;
 #elif __TVOS__ && !XAMCORE_4_0
 			// mistakes (can't be fixed without breaking binary compatibility)
@@ -142,12 +140,11 @@ namespace Introspection {
 			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 
-#if __IOS__ && !__MACCATALYST__
+#if __IOS__ && !__MACCATALYST__ && !NET
 		[Test]
 		public void Simlauncher ()
 		{
-			if (Runtime.Arch != Arch.SIMULATOR)
-				Assert.Ignore ("Only needed on simulator");
+			TestRuntime.AssertSimulator ("Only needed on simulator");
 
 			var all = GetFrameworks ();
 
@@ -200,6 +197,8 @@ namespace Introspection {
 				}
 
 			}
+
+			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 #endif
 	}

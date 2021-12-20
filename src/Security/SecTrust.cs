@@ -46,7 +46,7 @@ namespace Security {
 		public SecPolicy[] GetPolicies ()
 		{
 			IntPtr p = IntPtr.Zero;
-			SecStatusCode result = SecTrustCopyPolicies (handle, ref p);
+			SecStatusCode result = SecTrustCopyPolicies (Handle, ref p);
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 			return NSArray.ArrayFromHandle<SecPolicy> (p);
@@ -58,7 +58,7 @@ namespace Security {
 		// the API accept the handle for a single policy or an array of them
 		void SetPolicies (IntPtr policy)
 		{
-			SecStatusCode result = SecTrustSetPolicies (handle, policy);
+			SecStatusCode result = SecTrustSetPolicies (Handle, policy);
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 		}
@@ -106,13 +106,13 @@ namespace Security {
 		public bool NetworkFetchAllowed {
 			get {
 				bool value;
-				SecStatusCode result = SecTrustGetNetworkFetchAllowed (handle, out value);
+				SecStatusCode result = SecTrustGetNetworkFetchAllowed (Handle, out value);
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
 				return value;
 			}
 			set {
-				SecStatusCode result = SecTrustSetNetworkFetchAllowed (handle, value);
+				SecStatusCode result = SecTrustSetNetworkFetchAllowed (Handle, value);
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
 			}
@@ -130,7 +130,7 @@ namespace Security {
 		public SecCertificate[] GetCustomAnchorCertificates  ()
 		{
 			IntPtr p;
-			SecStatusCode result = SecTrustCopyCustomAnchorCertificates (handle, out p);
+			SecStatusCode result = SecTrustCopyCustomAnchorCertificates (Handle, out p);
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 			return NSArray.ArrayFromHandle<SecCertificate> (p);
@@ -167,7 +167,7 @@ namespace Security {
 		{
 			var del = BlockLiteral.GetTarget<SecTrustCallback> (block);
 			if (del != null) {
-				var t = trust == IntPtr.Zero ? null : new SecTrust (trust);
+				var t = trust == IntPtr.Zero ? null : new SecTrust (trust, false);
 				del (t, trustResult);
 			}
 		}
@@ -205,7 +205,7 @@ namespace Security {
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
 				block_handler.SetupBlockUnsafe (evaluate, handler);
-				return SecTrustEvaluateAsync (handle, queue.Handle, ref block_handler);
+				return SecTrustEvaluateAsync (Handle, queue.Handle, ref block_handler);
 			}
 			finally {
 				block_handler.CleanupBlock ();
@@ -230,7 +230,7 @@ namespace Security {
 		{
 			var del = BlockLiteral.GetTarget<SecTrustWithErrorCallback> (block);
 			if (del != null) {
-				var t = trust == IntPtr.Zero ? null : new SecTrust (trust);
+				var t = trust == IntPtr.Zero ? null : new SecTrust (trust, false);
 				var e = error == IntPtr.Zero ? null : new NSError (error);
 				del (t, result, e);
 			}
@@ -255,7 +255,7 @@ namespace Security {
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
 				block_handler.SetupBlockUnsafe (evaluate_error, handler);
-				return SecTrustEvaluateAsyncWithError (handle, queue.Handle, ref block_handler);
+				return SecTrustEvaluateAsyncWithError (Handle, queue.Handle, ref block_handler);
 			}
 			finally {
 				block_handler.CleanupBlock ();
@@ -274,7 +274,7 @@ namespace Security {
 		public SecTrustResult GetTrustResult ()
 		{
 			SecTrustResult trust_result;
-			SecStatusCode result = SecTrustGetTrustResult (handle, out trust_result);
+			SecStatusCode result = SecTrustGetTrustResult (Handle, out trust_result);
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 			return trust_result;
@@ -300,7 +300,7 @@ namespace Security {
 #endif
 		public bool Evaluate (out NSError error)
 		{
-			var result = SecTrustEvaluateWithError (handle, out var err);
+			var result = SecTrustEvaluateWithError (Handle, out var err);
 			error = err == IntPtr.Zero ? null : new NSError (err);
 			return result;
 		}
@@ -316,7 +316,7 @@ namespace Security {
 #endif
 		public NSDictionary GetResult ()
 		{
-			return new NSDictionary (SecTrustCopyResult (handle), true);
+			return new NSDictionary (SecTrustCopyResult (Handle), true);
 		}
 
 #if !NET
@@ -331,7 +331,7 @@ namespace Security {
 #endif
 		void SetOCSPResponse (IntPtr ocsp)
 		{
-			SecStatusCode result = SecTrustSetOCSPResponse (handle, ocsp);
+			SecStatusCode result = SecTrustSetOCSPResponse (Handle, ocsp);
 			if (result != SecStatusCode.Success)
 				throw new InvalidOperationException (result.ToString ());
 		}
@@ -396,10 +396,10 @@ namespace Security {
 		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
 		{
 			if (sct == null)
-				return SecTrustSetSignedCertificateTimestamps (handle, IntPtr.Zero);
+				return SecTrustSetSignedCertificateTimestamps (Handle, IntPtr.Zero);
 
 			using (var array = NSArray.FromNSObjects (sct.ToArray ()))
-				return SecTrustSetSignedCertificateTimestamps (handle, array.Handle);
+				return SecTrustSetSignedCertificateTimestamps (Handle, array.Handle);
 		}
 
 #if !NET
@@ -414,7 +414,7 @@ namespace Security {
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (NSArray<NSData> sct)
 		{
-			return SecTrustSetSignedCertificateTimestamps (handle, sct.GetHandle ());
+			return SecTrustSetSignedCertificateTimestamps (Handle, sct.GetHandle ());
 		}
 	}
 }

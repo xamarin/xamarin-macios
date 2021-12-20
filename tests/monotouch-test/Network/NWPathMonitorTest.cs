@@ -1,6 +1,7 @@
 #if !__WATCHOS__
 using System;
 using System.Threading;
+
 using Network;
 using CoreFoundation;
 using Foundation;
@@ -110,6 +111,15 @@ namespace monotouchtest.Network
 			monitor?.Dispose ();
 		}
 
+
+		[Test]
+		public void ProhibitInterfaceTypeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				monitor.ProhibitInterfaceType (NWInterfaceType.Wifi);
+			});
+		}
 	}
 }
 #endif

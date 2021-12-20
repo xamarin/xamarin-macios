@@ -119,7 +119,12 @@ steps:
 
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
     } else {
-      $tags.Add("ciBuild")
+      if ($tags.Contains("cronjob")) {
+        # debug so that we do know why we do not have ciBuild
+        Write-Host "Skipping the tag 'ciBuild' because we are dealing with a translation build."
+      } else  {
+        $tags.Add("ciBuild")
+      }
       # set the name of the branch under build
       $tags.Add("$($configuration.BuildSourceBranchName)")
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"

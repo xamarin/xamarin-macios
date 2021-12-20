@@ -18,6 +18,7 @@ using SystemConfiguration;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SystemConfiguration {
 
@@ -29,9 +30,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void Fields ()
 		{
-			if (Runtime.Arch == Arch.SIMULATOR) {
+			if (TestRuntime.IsSimulatorOrDesktop) {
 				// Fails (NullReferenceException) on iOS6 simulator
-				TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+				TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			}
 
 #if __TVOS__
@@ -110,7 +111,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void MarkPortalOnline ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 
 #if __TVOS__
@@ -133,7 +134,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void MarkPortalOffline ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 #if __TVOS__
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOffline ("xamxam"));
@@ -155,7 +156,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void SetSupportedSSIDs ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 #if MONOMAC || __MACCATALYST__
 			bool supported = true;

@@ -25,6 +25,7 @@ using UIKit;
 using PlatformException=Foundation.MonoTouchException;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
@@ -82,7 +83,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 			var hasSecAccessControl = TestRuntime.CheckXcodeVersion (6, 0);
 #if __MACOS__
-			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10))
 				hasSecAccessControl = false;
 #endif
 			if (hasSecAccessControl) {

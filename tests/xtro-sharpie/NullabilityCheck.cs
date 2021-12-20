@@ -114,6 +114,10 @@ namespace Extrospection {
 			if (!decl.IsAvailable () || !(decl.DeclContext as Decl).IsAvailable ())
 				return;
 
+			// don't process deprecated methods (or types)
+			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
+				return;
+
 			var method = GetMethod (decl);
 			// don't report missing nullability on types that are not bound - that's a different problem
 			if (method == null)

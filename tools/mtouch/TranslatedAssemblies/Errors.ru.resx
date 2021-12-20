@@ -742,10 +742,10 @@
 		<value>Не выполняется связывание с платформой {0} (ссылается на ссылку на модуль в {1}), так как она недоступна на текущей платформе ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Не удалось сопоставить версию Mac Catalyst {0} с соответствующей версией macOS. Допустимые версии Mac Catalyst: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Не удалось сопоставить версию macOS {0} с соответствующей версией Mac Catalyst. Допустимые версии macOS: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>Параметр '{0}' не может иметь значение '{1}' при использовании CoreCLR.</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>Библиотека привязки "{0}" содержит пользовательскую платформу ({0}), но для внедренных пользовательских платформ требуется iOS 8.0 (версия целевого объекта развертывания — {1}). Укажите в файле Info.plist целевой объект развертывания версии не ниже 8.0.
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Не удалось распаковать файл "{0}". Дополнительные сведения о собственной команде unzip см. в журнале сборки.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>В ссылках отсутствует требуемая сборка "Xamarin.Mac.dll".

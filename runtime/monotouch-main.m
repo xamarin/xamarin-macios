@@ -31,6 +31,14 @@
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
+static char original_working_directory_path [MAXPATHLEN];
+
+const char * const
+xamarin_get_original_working_directory_path ()
+{
+	return original_working_directory_path;
+}
+
 #if !defined (CORECLR_RUNTIME)
 unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
@@ -270,6 +278,10 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 	MonoAssembly *assembly;
 	GCHandle exception_gchandle = NULL;
+
+	// Get the original working directory, and store it somewhere.
+	if (getcwd (original_working_directory_path, sizeof (original_working_directory_path)) == NULL)
+		original_working_directory_path [0] = '\0';
 
 	// For legacy Xamarin.Mac, we used to chdir to $appdir/Contents/Resources (I'm not sure where this comes from, earliest commit I could find was this: https://github.com/xamarin/maccore/commit/20045dd7f85cb038cea673a9281bb6131711069c)
 	// For mobile platforms, we chdir to $appdir

@@ -4,17 +4,21 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
-using System.Reflection;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 	public partial class Protocol : INativeObject {
 #if !COREBUILD
-		IntPtr handle;
+		NativeHandle handle;
 
 		public Protocol (string name)
 		{
@@ -29,25 +33,25 @@ namespace ObjCRuntime {
 			this.handle = Runtime.GetProtocolForType (type);
 		}
 
-		public Protocol (IntPtr handle)
+		public Protocol (NativeHandle handle)
 		{
 			this.handle = handle;
 		}
 
 		[Preserve (Conditional = true)]
-		internal Protocol (IntPtr handle, bool owns)
+		internal Protocol (NativeHandle handle, bool owns)
 		{
 			// protocols can't be freed, so we ignore the 'owns' parameter.
 			this.handle = handle;
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return this.handle; }
 		}
 
-		public string Name {
+		public string? Name {
 			get {
-				IntPtr ptr = protocol_getName (this.handle);
+				IntPtr ptr = protocol_getName (Handle);
 				return Marshal.PtrToStringAuto (ptr);
 			}
 		}
@@ -58,7 +62,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
-		internal extern static IntPtr objc_getProtocol (string name);
+		internal extern static IntPtr objc_getProtocol (string? name);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static IntPtr objc_allocateProtocol (string name);

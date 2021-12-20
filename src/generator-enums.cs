@@ -205,7 +205,7 @@ public partial class Generator {
 				}
 				print ("}");
 			}
-			print ("return (NSString) Runtime.GetNSObject (ptr);");
+			print ("return (NSString?) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
 			

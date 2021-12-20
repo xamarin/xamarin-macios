@@ -99,7 +99,7 @@ namespace MonoTouchFixtures.AudioUnit {
 
 			using (var aug = Runtime.GetINativeObject<AUGraph> (ret, true)) {
 				Assert.NotNull (aug, "CreateTest");
-				Assert.That (aug.Handle, Is.EqualTo (ret), "Handle");
+				Assert.That ((IntPtr) aug.Handle, Is.EqualTo (ret), "Handle");
 
 				// Make sure it is a working instance
 				aug.Open ();

@@ -711,10 +711,10 @@
         <value>Poskytnutá cesta k archivu nepochází z platného souboru archivu (.xcarchive). Cesta k archivu: {0}</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+        <value>Nepovedlo se namapovat verzi macOS {0} na odpovídající verzi Mac Catalystu. Platné verze macOS jsou: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+        <value>Nepovedlo se namapovat verzi Mac Catalystu {0} na odpovídající verzi macOS. Platné verze Mac Catalystu jsou: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Nepovedlo se přeložit IP adresy hostitele pro nastavení ladicího programu Wi-Fi.
@@ -1054,7 +1054,7 @@
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>Hodnota {0} v Info.plist ({1}) se neshoduje s hodnotou SupportedOSPlatformVersion ({2}) v souboru projektu (pokud v souboru projektu není žádná SupportedOSPlatformVersion, předpokládá se výchozí hodnota). Buď změňte hodnotu v Info.plist tak, aby se shodovala s hodnotou SupportedOSPlatformVersion, nebo odeberte hodnotu v Info.plist (a přidejte hodnotu SupportedOSPlatformVersion do souboru projektu, pokud ještě neexistuje).</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
@@ -1062,13 +1062,24 @@
         </comment>
     </data>
   <data name="E7083" xml:space="preserve">
-        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <value>Všechny soubory písem se musí nacházet ve stejném adresáři v sadě prostředků aplikace. Následující soubory písem mají v sadě prostředků aplikace různé cílové adresáře:</value>
         <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
     </data>
   <data name="E7084" xml:space="preserve">
-        <value>The target directory is {0}</value>
+        <value>Cílový adresář je {0}.</value>
         <comment>See E7082 as well.
             {0}: the target directory (in the app bundle) for the font file
         </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Vytváření balíčku prostředků komprimované vazby, protože ve vstupu jsou symbolické odkazy.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>Hodnota {0} není pro vlastnost Compress platná. Platné hodnoty: true, false nebo auto.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>V adresáři {0} byl očekáván soubor manifestu.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
 </root>

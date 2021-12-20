@@ -8,6 +8,10 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AVFoundation {
 #if !XAMCORE_4_0
 	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
@@ -35,14 +39,14 @@ namespace AVFoundation {
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
 	{
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (); } }
+		public override NativeHandle ClassHandle { get { throw new PlatformNotSupportedException (); } }
 
 		protected AVCaptureDataOutputSynchronizer (NSObjectFlag t) : base (t)
 		{
 			throw new PlatformNotSupportedException ();
 		}
 
-		protected internal AVCaptureDataOutputSynchronizer (IntPtr handle) : base (handle)
+		protected internal AVCaptureDataOutputSynchronizer (NativeHandle handle) : base (handle)
 		{
 			throw new PlatformNotSupportedException ();
 		}
@@ -102,7 +106,7 @@ namespace AVFoundation {
 			throw new PlatformNotSupportedException ();
 		}
 
-		protected internal AVCaptureDataOutputSynchronizerDelegate (IntPtr handle) : base (handle)
+		protected internal AVCaptureDataOutputSynchronizerDelegate (NativeHandle handle) : base (handle)
 		{
 			throw new PlatformNotSupportedException ();
 		}
@@ -234,7 +238,8 @@ namespace AVFoundation {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadDelegate (IntPtr handle)
+		protected internal AVAssetDownloadDelegate (NativeHandle handle)
+			: base (handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -329,7 +334,7 @@ namespace AVFoundation {
 #endif
 	public class AVAssetDownloadTask : NSUrlSessionTask {
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
@@ -384,7 +389,7 @@ namespace AVFoundation {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadTask (IntPtr handle)
+		protected internal AVAssetDownloadTask (NativeHandle handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -405,14 +410,14 @@ namespace AVFoundation {
 			}
 		}
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadUrlSession (IntPtr handle) : base (handle)
+		protected internal AVAssetDownloadUrlSession (NativeHandle handle) : base (handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -606,7 +611,7 @@ namespace AVFoundation {
 		
 		public virtual AVPlayerInterstitialEvent[] InterstitialEvents => throw new NotImplementedException ();
 
-		public override IntPtr ClassHandle => throw new NotImplementedException ();
+		public override NativeHandle ClassHandle => throw new NotImplementedException ();
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -614,7 +619,7 @@ namespace AVFoundation {
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVPlayerInterstitialEventObserver (IntPtr handle) : base (handle) => throw new NotImplementedException ();
+		protected internal AVPlayerInterstitialEventObserver (NativeHandle handle) : base (handle) => throw new NotImplementedException ();
 
 		[DesignatedInitializer]
 		[BindingImpl (BindingImplOptions.Optimizable)]

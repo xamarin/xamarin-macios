@@ -13,6 +13,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CallKit {
 
 	[iOS (10, 0), NoMac]
@@ -123,7 +127,7 @@ namespace CallKit {
 
 		[Export ("initWithType:value:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CXHandleType type, string value);
+		NativeHandle Constructor (CXHandleType type, string value);
 
 		[Export ("isEqualToHandle:")]
 		bool IsEqual (CXHandle handle);
@@ -136,7 +140,7 @@ namespace CallKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }
@@ -161,7 +165,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid);
+		NativeHandle Constructor (NSUuid callUuid);
 
 		[Export ("fulfillWithDateConnected:")]
 		void Fulfill (NSDate dateConnected);
@@ -201,7 +205,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid);
+		NativeHandle Constructor (NSUuid callUuid);
 	}
 
 	[iOS (10, 0), Mac (11, 0)]
@@ -210,7 +214,7 @@ namespace CallKit {
 
 		[Export ("initWithQueue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (DispatchQueue queue);
+		NativeHandle Constructor (DispatchQueue queue);
 
 		[Export ("callObserver", ArgumentSemantic.Strong)]
 		CXCallObserver CallObserver { get; }
@@ -364,7 +368,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid);
+		NativeHandle Constructor (NSUuid callUuid);
 
 		[Export ("fulfillWithDateEnded:")]
 		void Fulfill (NSDate dateEnded);
@@ -377,7 +381,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:digits:type:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, string digits, CXPlayDtmfCallActionType type);
+		NativeHandle Constructor (NSUuid callUuid, string digits, CXPlayDtmfCallActionType type);
 
 		[Export ("digits")]
 		string Digits { get; set; }
@@ -443,7 +447,7 @@ namespace CallKit {
 
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CXProviderConfiguration configuration);
+		NativeHandle Constructor (CXProviderConfiguration configuration);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] ICXProviderDelegate aDelegate, [NullAllowed] DispatchQueue queue);
@@ -520,13 +524,13 @@ namespace CallKit {
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the default constructor instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the default constructor instead.")]
 		[Export ("initWithLocalizedName:")]
-		IntPtr Constructor (string localizedName);
+		NativeHandle Constructor (string localizedName);
 
 		[iOS (14, 0)]
 		[MacCatalyst (14,0)]
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 	}
 
 	[iOS (10, 0), Mac (11, 0)]
@@ -536,7 +540,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:callUUIDToGroupWith:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, [NullAllowed] NSUuid callUuidToGroupWith);
+		NativeHandle Constructor (NSUuid callUuid, [NullAllowed] NSUuid callUuidToGroupWith);
 
 		[NullAllowed, Export ("callUUIDToGroupWith", ArgumentSemantic.Copy)]
 		NSUuid CallUuidToGroupWith { get; set; }
@@ -549,7 +553,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:onHold:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, bool onHold);
+		NativeHandle Constructor (NSUuid callUuid, bool onHold);
 
 		[Export ("onHold")]
 		bool OnHold { [Bind ("isOnHold")] get; set; }
@@ -562,7 +566,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:muted:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, bool muted);
+		NativeHandle Constructor (NSUuid callUuid, bool muted);
 
 		[Export ("muted")]
 		bool Muted { [Bind ("isMuted")] get; set; }
@@ -577,7 +581,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:handle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, CXHandle callHandle);
+		NativeHandle Constructor (NSUuid callUuid, CXHandle callHandle);
 
 		[Export ("handle", ArgumentSemantic.Copy)]
 		CXHandle CallHandle { get; set; }
@@ -599,10 +603,10 @@ namespace CallKit {
 
 		[Export ("initWithActions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CXAction[] actions);
+		NativeHandle Constructor (CXAction[] actions);
 
 		[Export ("initWithAction:")]
-		IntPtr Constructor (CXAction action);
+		NativeHandle Constructor (CXAction action);
 
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }

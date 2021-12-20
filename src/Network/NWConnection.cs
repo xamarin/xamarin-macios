@@ -19,6 +19,10 @@ using nw_endpoint_t=System.IntPtr;
 using nw_parameters_t=System.IntPtr;
 using nw_establishment_report_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	//
@@ -50,7 +54,11 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWConnection : NativeObject {
-		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
+#if NET
+		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_connection_t nw_connection_create (nw_endpoint_t endpoint, nw_parameters_t parameters);
@@ -548,9 +556,9 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		public T GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
+		public T? GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
 		{
-			if (definition == null)
+			if (definition is null)
 				throw new ArgumentNullException (nameof (definition));
 
 			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);

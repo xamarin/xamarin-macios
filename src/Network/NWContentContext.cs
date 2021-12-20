@@ -16,6 +16,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	//
@@ -31,7 +35,11 @@ namespace Network {
 #endif
 	public class NWContentContext : NativeObject {
 		bool global;
-		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+#if NET
+		internal NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
+#else
+		public NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 
@@ -135,9 +143,9 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		public T GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
+		public T? GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
 		{
-			if (protocolDefinition == null)
+			if (protocolDefinition is null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);

@@ -24,6 +24,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -34,16 +36,20 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ImageIO {
 
 	public partial class CGImageDestinationOptions
 	{
-		CGColor destinationBackgroundColor;
-		public CGColor DestinationBackgroundColor {
+		CGColor? destinationBackgroundColor;
+		public CGColor? DestinationBackgroundColor {
 			get { return destinationBackgroundColor; }
 			set {
 				destinationBackgroundColor = value;
-				(Dictionary as NSMutableDictionary).LowlevelSetObject (destinationBackgroundColor.Handle, CGImageDestinationOptionsKeys.BackgroundColor.Handle);
+				(Dictionary as NSMutableDictionary)?.LowlevelSetObject (destinationBackgroundColor.GetHandle (), CGImageDestinationOptionsKeys.BackgroundColor.Handle);
 			}
 		}
 
@@ -58,7 +64,7 @@ namespace ImageIO {
 #if !NET
 		[iOS (7,0)]
 #endif
-		public CGImageMetadata Metadata { get; set; }
+		public CGImageMetadata? Metadata { get; set; }
 
 #if !NET
 		[iOS (7,0)]
@@ -91,7 +97,7 @@ namespace ImageIO {
 			var dict = new NSMutableDictionary ();
 
 			// new in iOS 7 and 10.8
-			if (Metadata != null) {
+			if (Metadata is not null) {
 				dict.LowlevelSetObject (Metadata.Handle, kMetadata);
 				// default are false
 				if (MergeMetadata)
@@ -119,7 +125,7 @@ namespace ImageIO {
 
 	public partial class CGImageAuxiliaryDataInfo {
 
-		public CGImageMetadata Metadata {
+		public CGImageMetadata? Metadata {
 			get {
 				return GetNativeValue<CGImageMetadata> (CGImageAuxiliaryDataInfoKeys.MetadataKey);
 			}
@@ -129,58 +135,30 @@ namespace ImageIO {
 		}
 	}
 
-	public class CGImageDestination : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		// invoked by marshallers
-		internal CGImageDestination (IntPtr handle) : this (handle, false)
+	public class CGImageDestination : NativeObject {
+#if !NET
+		internal CGImageDestination (NativeHandle handle)
+			: base (handle, false)
 		{
-			this.handle = handle;
 		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal CGImageDestination (IntPtr handle, bool owns)
+		internal CGImageDestination (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
 		}
 
-		~CGImageDestination ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-				
 		[DllImport (Constants.ImageIOLibrary, EntryPoint="CGImageDestinationGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 		
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CFArrayRef __nonnull */ IntPtr CGImageDestinationCopyTypeIdentifiers ();
 
-		public static string [] TypeIdentifiers {
+		public static string? []? TypeIdentifiers {
 			get {
 				var handle = CGImageDestinationCopyTypeIdentifiers ();
-				var array = CFArray.StringArrayFromHandle (handle);
-				CFObject.CFRelease (handle);
-				return array;
+				return CFArray.StringArrayFromHandle (handle, true);
 			}
 		}
 
@@ -189,21 +167,21 @@ namespace ImageIO {
 			/* CGDataConsumerRef __nonnull */ IntPtr consumer, /* CFStringRef __nonnull */ IntPtr type,
 			/* size_t */ nint count, /* CFDictionaryRef __nullable */ IntPtr options);
 
-		public static CGImageDestination Create (CGDataConsumer consumer, string typeIdentifier, int imageCount, CGImageDestinationOptions options = null)
+		public static CGImageDestination? Create (CGDataConsumer consumer, string typeIdentifier, int imageCount, CGImageDestinationOptions? options = null)
 		{
-			if (consumer == null)
-				throw new ArgumentNullException ("consumer");
-			if (typeIdentifier == null)
-				throw new ArgumentNullException ("typeIdentifier");
+			if (consumer is null)
+				throw new ArgumentNullException (nameof (consumer));
+			if (typeIdentifier is null)
+				throw new ArgumentNullException (nameof (typeIdentifier));
 
-			var dict = options == null ? null : options.ToDictionary ();
-			var typeId = NSString.CreateNative (typeIdentifier);
-			IntPtr p = CGImageDestinationCreateWithDataConsumer (consumer.Handle, typeId, imageCount, dict == null ? IntPtr.Zero : dict.Handle);
-			NSString.ReleaseNative (typeId);
-			var ret = p == IntPtr.Zero ? null : new CGImageDestination (p, true);
-			if (dict != null)
-				dict.Dispose ();
-			return ret;
+			using var dict = options?.ToDictionary ();
+			var typeId = CFString.CreateNative (typeIdentifier);
+			try {
+				IntPtr p = CGImageDestinationCreateWithDataConsumer (consumer.Handle, typeId, imageCount, dict.GetHandle ());
+				return p == IntPtr.Zero ? null : new CGImageDestination (p, true);
+			} finally {
+				CFString.ReleaseNative (typeId);
+			}
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
@@ -211,21 +189,21 @@ namespace ImageIO {
 			/* CFMutableDataRef __nonnull */ IntPtr data, /* CFStringRef __nonnull */ IntPtr stringType, 
 			/* size_t */ nint count, /* CFDictionaryRef __nullable */ IntPtr options);
 
-		public static CGImageDestination Create (NSMutableData data, string typeIdentifier, int imageCount, CGImageDestinationOptions options = null)
+		public static CGImageDestination? Create (NSMutableData data, string typeIdentifier, int imageCount, CGImageDestinationOptions? options = null)
 		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
-			if (typeIdentifier == null)
-				throw new ArgumentNullException ("typeIdentifier");
+			if (data is null)
+				throw new ArgumentNullException (nameof (data));
+			if (typeIdentifier is null)
+				throw new ArgumentNullException (nameof (typeIdentifier));
 
-			var dict = options == null ? null : options.ToDictionary ();
-			var typeId = NSString.CreateNative (typeIdentifier);
-			IntPtr p = CGImageDestinationCreateWithData (data.Handle, typeId, imageCount, dict == null ? IntPtr.Zero : dict.Handle);
-			NSString.ReleaseNative (typeId);
-			var ret = p == IntPtr.Zero ? null : new CGImageDestination (p, true);
-			if (dict != null)
-				dict.Dispose ();
-			return ret;
+			using var dict = options?.ToDictionary ();
+			var typeId = CFString.CreateNative (typeIdentifier);
+			try {
+				IntPtr p = CGImageDestinationCreateWithData (data.Handle, typeId, imageCount, dict.GetHandle ());
+				return p == IntPtr.Zero ? null : new CGImageDestination (p, true);
+			} finally {
+				CFString.ReleaseNative (typeId);
+			}
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
@@ -233,27 +211,29 @@ namespace ImageIO {
 			/* CFURLRef __nonnull */ IntPtr url, /* CFStringRef __nonnull */ IntPtr stringType,
 			/* size_t */ nint count, /* CFDictionaryRef __nullable */ IntPtr options);
 
-		public static CGImageDestination Create (NSUrl url, string typeIdentifier, int imageCount)
+		public static CGImageDestination? Create (NSUrl url, string typeIdentifier, int imageCount)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
-			if (typeIdentifier == null)
-				throw new ArgumentNullException ("typeIdentifier");
+			if (url is null)
+				throw new ArgumentNullException (nameof (url));
+			if (typeIdentifier is null)
+				throw new ArgumentNullException (nameof (typeIdentifier));
 
-			var typeId = NSString.CreateNative (typeIdentifier);
-			IntPtr p = CGImageDestinationCreateWithURL (url.Handle, typeId, imageCount, IntPtr.Zero);
-			NSString.ReleaseNative (typeId);
-			var ret = p == IntPtr.Zero ? null : new CGImageDestination (p, true);
-			return ret;
+			var typeId = CFString.CreateNative (typeIdentifier);
+			try {
+				IntPtr p = CGImageDestinationCreateWithURL (url.Handle, typeId, imageCount, IntPtr.Zero);
+				return p == IntPtr.Zero ? null : new CGImageDestination (p, true);
+			} finally {
+				CFString.ReleaseNative (typeId);
+			}
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageDestinationSetProperties (/* CGImageDestinationRef __nonnull */ IntPtr idst,
 			/* CFDictionaryRef __nullable */ IntPtr properties);
 
-		public void SetProperties (NSDictionary properties)
+		public void SetProperties (NSDictionary? properties)
 		{
-			CGImageDestinationSetProperties (handle, properties == null ? IntPtr.Zero : properties.Handle);
+			CGImageDestinationSetProperties (Handle, properties.GetHandle ());
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
@@ -261,23 +241,21 @@ namespace ImageIO {
 			/* CGImageRef __nonnull */ IntPtr image,
 			/* CFDictionaryRef __nullable */ IntPtr properties);
 
-		public void AddImage (CGImage image, CGImageDestinationOptions options = null)
+		public void AddImage (CGImage image, CGImageDestinationOptions? options = null)
 		{
-			if (image == null)
-				throw new ArgumentNullException ("image");
+			if (image is null)
+				throw new ArgumentNullException (nameof (image));
 
-			var dict = options == null ? null : options.ToDictionary ();
-			CGImageDestinationAddImage (handle, image.Handle, dict == null ? IntPtr.Zero : dict.Handle);
-			if (dict != null)
-				dict.Dispose ();
+			using var dict = options?.ToDictionary ();
+			CGImageDestinationAddImage (Handle, image.Handle, dict.GetHandle ());
 		}
 
-		public void AddImage (CGImage image, NSDictionary properties)
+		public void AddImage (CGImage image, NSDictionary? properties)
 		{
-			if (image == null)
-				throw new ArgumentNullException ("image");
+			if (image is null)
+				throw new ArgumentNullException (nameof (image));
 			
-			CGImageDestinationAddImage (handle, image.Handle, properties == null ? IntPtr.Zero : properties.Handle);
+			CGImageDestinationAddImage (Handle, image.Handle, properties.GetHandle ());
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
@@ -285,23 +263,21 @@ namespace ImageIO {
 			/* CGImageSourceRef __nonnull */ IntPtr sourceHandle, /* size_t */ nint index, 
 			/* CFDictionaryRef __nullable */ IntPtr properties);
 
-		public void AddImage (CGImageSource source, int index, CGImageDestinationOptions options = null)
+		public void AddImage (CGImageSource source, int index, CGImageDestinationOptions? options = null)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
+			if (source is null)
+				throw new ArgumentNullException (nameof (source));
 
-			var dict = options == null ? null : options.ToDictionary ();
-			CGImageDestinationAddImageFromSource (handle, source.Handle, index, dict == null ? IntPtr.Zero : dict.Handle);
-			if (dict != null)
-				dict.Dispose ();
+			using var dict = options?.ToDictionary ();
+			CGImageDestinationAddImageFromSource (Handle, source.Handle, index, dict.GetHandle ());
 		}
 
-		public void AddImage (CGImageSource source, int index, NSDictionary properties)
+		public void AddImage (CGImageSource source, int index, NSDictionary? properties)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
+			if (source is null)
+				throw new ArgumentNullException (nameof (source));
 			
-			CGImageDestinationAddImageFromSource (handle, source.Handle, index, properties == null ? IntPtr.Zero : properties.Handle);
+			CGImageDestinationAddImageFromSource (Handle, source.Handle, index, properties.GetHandle ());
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
@@ -310,7 +286,7 @@ namespace ImageIO {
 
 		public bool Close ()
 		{
-			var success = CGImageDestinationFinalize (handle);
+			var success = CGImageDestinationFinalize (Handle);
 			Dispose ();
 			return success;
 		}
@@ -327,30 +303,20 @@ namespace ImageIO {
 #if !NET
 		[iOS (7,0)]
 #endif
-		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary options)
+		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary? options)
 		{
-			if (image == null)
-				throw new ArgumentNullException ("image");
-			IntPtr m = meta == null ? IntPtr.Zero : meta.Handle;
-			IntPtr o = options == null ? IntPtr.Zero : options.Handle;
-			CGImageDestinationAddImageAndMetadata (handle, image.Handle, m, o);
+			if (image is null)
+				throw new ArgumentNullException (nameof (image));
+			CGImageDestinationAddImageAndMetadata (Handle, image.Handle, meta.GetHandle (), options.GetHandle ());
 		}
 
 #if !NET
 		[iOS (7,0)]
 #endif
-		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, CGImageDestinationOptions options)
+		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, CGImageDestinationOptions? options)
 		{
-			NSDictionary o = null;
-			if (options != null)
-				o = options.ToDictionary ();
-			try {
-				AddImageAndMetadata (image, meta, o);
-			}
-			finally {
-				if (options != null)
-					o.Dispose ();
-			}
+			using var o = options?.ToDictionary ();
+			AddImageAndMetadata (image, meta, o);
 		}
 
 #if !NET
@@ -366,32 +332,22 @@ namespace ImageIO {
 #if !NET
 		[iOS (7,0)]
 #endif
-		public bool CopyImageSource (CGImageSource image, NSDictionary options, out NSError error)
+		public bool CopyImageSource (CGImageSource image, NSDictionary? options, out NSError? error)
 		{
-			if (image == null)
-				throw new ArgumentNullException ("image");
-			IntPtr err;
-			IntPtr o = options == null ? IntPtr.Zero : options.Handle;
-			bool result = CGImageDestinationCopyImageSource (handle, image.Handle, o, out err);
-			error = err == IntPtr.Zero ? null : new NSError (err);
+			if (image is null)
+				throw new ArgumentNullException (nameof (image));
+			var result = CGImageDestinationCopyImageSource (Handle, image.Handle, options.GetHandle (), out var err);
+			error = Runtime.GetNSObject<NSError> (err);
 			return result;
 		}
 
 #if !NET
 		[iOS (7,0)]
 #endif
-		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions options, out NSError error)
+		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions? options, out NSError? error)
 		{
-			NSDictionary o = null;
-			if (options != null)
-				o = options.ToDictionary ();
-			try {
-				return CopyImageSource (image, o, out error);
-			}
-			finally {
-				if (options != null)
-					o.Dispose ();
-			}
+			using var o = options?.ToDictionary ();
+			return CopyImageSource (image, o, out error);
 		}
 
 #if !NET
@@ -409,7 +365,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 #endif
-		public void AddAuxiliaryDataInfo (CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
+		public void AddAuxiliaryDataInfo (CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo? auxiliaryDataInfo)
 		{
 			using (var dict = auxiliaryDataInfo?.Dictionary) {
 				CGImageDestinationAddAuxiliaryDataInfo (Handle, auxiliaryImageDataType.GetConstant ().GetHandle (), dict.GetHandle ());

@@ -8,17 +8,21 @@
  *    Miguel de Icaza
  */
 
+#nullable enable
+
 #if MONOMAC || __MACCATALYST__
 
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-#if !NO_SYSTEM_DRAWING
-using System.Drawing;
-#endif
+
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreGraphics {
 
@@ -27,77 +31,81 @@ namespace CoreGraphics {
 #else
 	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
-	public sealed class CGEvent : IDisposable, INativeObject {
+	public sealed class CGEvent : NativeObject {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventTapCreate (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 
-		public static CFMachPort CreateTap (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
+		public static CFMachPort? CreateTap (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
 			var r = CGEventTapCreate (location, place, options, mask, cback, data);
 			if (r == IntPtr.Zero)
 				return null;
-			return new CFMachPort (r);
+			return new CFMachPort (r, true);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 		
-		public static CFMachPort CreateTap (IntPtr processSerialNumber, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
+		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
 			var r = CGEventTapCreateForPSN (processSerialNumber, location, place, options, mask, cback, data);
 			if (r == IntPtr.Zero)
 				return null;
-			return new CFMachPort (r);
+			return new CFMachPort (r, true);
 		}
-		
-		IntPtr handle;
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreateFromData (IntPtr allocator, IntPtr nsdataSource);
 
-		public CGEvent (NSData source) 
+		static IntPtr Create (NSData source)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
+			if (source is null)
+				throw new ArgumentNullException (nameof (source));
 
-			handle = CGEventCreateFromData (IntPtr.Zero, source.Handle);
+			return CGEventCreateFromData (IntPtr.Zero, source.Handle);
+		}
+
+		public CGEvent (NSData source) 
+			: base (Create (source), true)
+		{
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreate (IntPtr eventSourceHandle);
 		
-		public CGEvent (CGEventSource eventSource)
-		{
-			handle = CGEventCreate (eventSource == null ? IntPtr.Zero : eventSource.Handle);
-		}
-
-		public CGEvent (IntPtr handle) : this (handle, false)
+		public CGEvent (CGEventSource? eventSource)
+			: base (CGEventCreate (eventSource.GetHandle ()), true)
 		{
 		}
 
-		internal CGEvent (IntPtr handle, bool ownsHandle)
+#if !NET
+		public CGEvent (NativeHandle handle)
+			: base (handle, false)
 		{
-			if (!ownsHandle)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
+		}
+#endif
+
+		internal CGEvent (NativeHandle handle, bool owns)
+			: base (handle, owns)
+		{
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreateMouseEvent(IntPtr source, CGEventType mouseType, CGPoint mouseCursorPosition, CGMouseButton mouseButton);
 			
-		public CGEvent (CGEventSource source, CGEventType mouseType, CGPoint mouseCursorPosition, CGMouseButton mouseButton)
+		public CGEvent (CGEventSource? source, CGEventType mouseType, CGPoint mouseCursorPosition, CGMouseButton mouseButton)
+			: base (CGEventCreateMouseEvent (source.GetHandle (), mouseType, mouseCursorPosition, mouseButton), true)
 		{
-			handle = CGEventCreateMouseEvent (source == null ? IntPtr.Zero : source.Handle, mouseType, mouseCursorPosition, mouseButton);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreateKeyboardEvent (IntPtr source, ushort virtualKey, [MarshalAs (UnmanagedType.I1)] bool keyDown);
 
-		public CGEvent (CGEventSource source, ushort virtualKey, bool keyDown)
+		public CGEvent (CGEventSource? source, ushort virtualKey, bool keyDown)
+			: base (CGEventCreateKeyboardEvent (source.GetHandle (), virtualKey, keyDown), true)
 		{
-			handle = CGEventCreateKeyboardEvent (source == null ? IntPtr.Zero : source.Handle, virtualKey, keyDown);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -109,11 +117,13 @@ namespace CoreGraphics {
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreateScrollWheelEvent (IntPtr source, CGScrollEventUnit units, uint /* uint32_t */ wheelCount, int /* uint32_t */ wheel1, int /* uint32_t */ wheel2, int /* uint32_t */ wheel3);
 
-		public CGEvent (CGEventSource source, CGScrollEventUnit units, params int []  wheel)
+		// This implementation doesn't work correctly on ARM64: https://github.com/xamarin/xamarin-macios/issues/13121
+		static IntPtr Create (CGEventSource? source, CGScrollEventUnit units, params int [] wheel)
 		{
-			IntPtr shandle = source == null ? IntPtr.Zero : source.Handle;
-			
-			switch (wheel.Length){
+			IntPtr handle;
+			IntPtr shandle = source.GetHandle ();
+
+			switch (wheel.Length) {
 			case 0:
 				throw new ArgumentException ("At least one wheel must be provided");
 			case 1:
@@ -128,31 +138,12 @@ namespace CoreGraphics {
 			default:
 				throw new ArgumentException ("Only one to three wheels are supported on this constructor");
 			}
-		}
-	
-		~CGEvent ()
-		{
-			Dispose (false);
+			return handle;
 		}
 
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-		public void Dispose ()
+		public CGEvent (CGEventSource source, CGScrollEventUnit units, params int []  wheel)
+			: base (Create (source, units, wheel), true)
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -160,23 +151,23 @@ namespace CoreGraphics {
 
 		public CGEvent Copy ()
 		{
-			return new CGEvent (CGEventCreateCopy (handle), true);
+			return new CGEvent (CGEventCreateCopy (Handle), true);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreateData (IntPtr allocator, IntPtr handle);
 
-		public NSData ToData ()
+		public NSData? ToData ()
 		{
-			return new NSData (CGEventCreateData (IntPtr.Zero, handle));
+			return Runtime.GetNSObject<NSData> (CGEventCreateData (IntPtr.Zero, Handle));
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreateSourceFromEvent (IntPtr evthandle);
 
-		public CGEventSource CreateEventSource ()
+		public CGEventSource? CreateEventSource ()
 		{
-			var esh = CGEventCreateSourceFromEvent (handle);
+			var esh = CGEventCreateSourceFromEvent (Handle);
 			if (esh == IntPtr.Zero)
 				return null;
 			return new CGEventSource (esh, true);
@@ -191,10 +182,10 @@ namespace CoreGraphics {
 
 		public CGPoint Location {
 			get {
-				return CGEventGetLocation (handle);
+				return CGEventGetLocation (Handle);
 			}
 			set {
-				CGEventSetLocation (handle, value);
+				CGEventSetLocation (Handle, value);
 			}
 		}
 
@@ -203,7 +194,7 @@ namespace CoreGraphics {
 
 		public CGPoint UnflippedLocation {
 			get {
-				return CGEventGetUnflippedLocation (handle);
+				return CGEventGetUnflippedLocation (Handle);
 			}
 		}
 
@@ -217,10 +208,10 @@ namespace CoreGraphics {
 
 		public CGEventFlags Flags {
 			get {
-				return GetFlags (handle);
+				return GetFlags (Handle);
 			}
 			set {
-				CGEventSetFlags (handle, value);
+				CGEventSetFlags (Handle, value);
 			}
 		}
 
@@ -232,54 +223,54 @@ namespace CoreGraphics {
 
 		internal long GetLong (CGEventField eventField)
 		{
-			return GetLong (handle, (CGEventField) eventField);
+			return GetLong (Handle, eventField);
 		}
 
 		public long MouseEventNumber {
 			get {
-				return GetLong (handle, CGEventField.MouseEventNumber);
+				return GetLong (Handle, CGEventField.MouseEventNumber);
 			}
 		}
 
 		public long MouseEventClickState {
 			get {
-				return GetLong (handle, CGEventField.MouseEventClickState);
+				return GetLong (Handle, CGEventField.MouseEventClickState);
 			}
 		}
 
 		public double MouseEventPressure {
 			get {
-				return GetDouble (handle, CGEventField.MouseEventPressure);
+				return GetDouble (Handle, CGEventField.MouseEventPressure);
 			}
 		}
 
 		public long MouseEventButtonNumber {
 			get {
-				return GetLong (handle, CGEventField.MouseEventButtonNumber);
+				return GetLong (Handle, CGEventField.MouseEventButtonNumber);
 			}
 		}
 
 		public long MouseEventDeltaX {
 			get {
-				return GetLong (handle, CGEventField.MouseEventDeltaX);
+				return GetLong (Handle, CGEventField.MouseEventDeltaX);
 			}
 		}
 
 		public long MouseEventDeltaY {
 			get {
-				return GetLong (handle, CGEventField.MouseEventDeltaY);
+				return GetLong (Handle, CGEventField.MouseEventDeltaY);
 			}
 		}
 
 		public bool MouseEventInstantMouser {
 			get {
-				return GetLong (handle, CGEventField.MouseEventButtonNumber) != 0;
+				return GetLong (Handle, CGEventField.MouseEventButtonNumber) != 0;
 			}
 		}
 
 		public long MouseEventSubtype {
 			get {
-				return GetLong (handle, CGEventField.MouseEventSubtype);
+				return GetLong (Handle, CGEventField.MouseEventSubtype);
 			}
 		}
 
@@ -288,9 +279,9 @@ namespace CoreGraphics {
        
 		public void SetEventSource (CGEventSource eventSource)
 		{
-			if (eventSource == null)
-				throw new ArgumentNullException ("eventSource");
-			CGEventSetSource (handle, eventSource.Handle);
+			if (eventSource is null)
+				throw new ArgumentNullException (nameof (eventSource));
+			CGEventSetSource (Handle, eventSource.Handle);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -301,10 +292,10 @@ namespace CoreGraphics {
 		
 		public CGEventType EventType {
 			get {
-				return CGEventGetType (handle);
+				return CGEventGetType (Handle);
 			}
 			set {
-				CGEventSetType (handle, value);
+				CGEventSetType (Handle, value);
 			}
 		}
 
@@ -319,20 +310,20 @@ namespace CoreGraphics {
 		[Obsolete ("Use 'Timestamp' instead.")]
 		public ulong Timestampe {
 			get {
-				return CGEventGetTimestamp (handle);
+				return CGEventGetTimestamp (Handle);
 			}
 			set {
-				CGEventSetTimestamp (handle, value);
+				CGEventSetTimestamp (Handle, value);
 			}
 		}
 #endif
 
 		public ulong Timestamp {
 			get {
-				return CGEventGetTimestamp (handle);
+				return CGEventGetTimestamp (Handle);
 			}
 			set {
-				CGEventSetTimestamp (handle, value);
+				CGEventSetTimestamp (Handle, value);
 			}
 		}
 
@@ -341,15 +332,15 @@ namespace CoreGraphics {
 
 		public static void TapEnable (CFMachPort machPort)
 		{
-			if (machPort == null)
-				throw new ArgumentNullException ("machPort");
+			if (machPort is null)
+				throw new ArgumentNullException (nameof (machPort));
 			CGEventTapEnable (machPort.Handle, true);
 		}
 
 		public static void TapDisable (CFMachPort machPort)
 		{
-			if (machPort == null)
-				throw new ArgumentNullException ("machPort");
+			if (machPort is null)
+				throw new ArgumentNullException (nameof (machPort));
 			CGEventTapEnable (machPort.Handle, false);
 		}
 
@@ -359,8 +350,8 @@ namespace CoreGraphics {
 
 		public static bool IsTapEnabled (CFMachPort machPort)
 		{
-			if (machPort == null)
-				throw new ArgumentNullException ("machPort");
+			if (machPort is null)
+				throw new ArgumentNullException (nameof (machPort));
 			return CGEventTapIsEnabled (machPort.Handle);
 		}
 
@@ -370,18 +361,18 @@ namespace CoreGraphics {
 		public unsafe string GetUnicodeString ()
 		{
 			char *buffer = stackalloc char [40];
-		        nuint actual;
-			
-			CGEventKeyboardGetUnicodeString (handle, 40, out actual, buffer);
+			CGEventKeyboardGetUnicodeString (Handle, 40, out var actual, buffer);
 			return new String (buffer, 0, (int) actual);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		unsafe extern static void CGEventKeyboardSetUnicodeString (IntPtr handle, nuint len,  [MarshalAs(UnmanagedType.LPWStr)] string buffer);
 
-		public unsafe void SetUnicodeString (string value)
+		public void SetUnicodeString (string value)
 		{
-			CGEventKeyboardSetUnicodeString (handle, (nuint) value.Length, value);
+			if (value is null)
+				throw new ArgumentNullException (nameof (value));
+			CGEventKeyboardSetUnicodeString (Handle, (nuint) value.Length, value);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -389,8 +380,8 @@ namespace CoreGraphics {
 
 		public static void TapPostEven (IntPtr tapProxyEvent, CGEvent evt)
 		{
-			if (evt == null)
-				throw new ArgumentNullException ("evt");
+			if (evt is null)
+				throw new ArgumentNullException (nameof (evt));
 			
 			CGEventTapPostEvent (tapProxyEvent, evt.Handle);
 		}
@@ -400,8 +391,8 @@ namespace CoreGraphics {
 
 		public static void Post (CGEvent evt, CGEventTapLocation location)
 		{
-			if (evt == null)
-				throw new ArgumentNullException ("evt");
+			if (evt is null)
+				throw new ArgumentNullException (nameof (evt));
 			
 			CGEventPost (location, evt.Handle);
 		}
@@ -411,12 +402,11 @@ namespace CoreGraphics {
 
 		public static void PostToPSN (CGEvent evt, IntPtr processSerialNumber)
 		{
-			if (evt == null)
-				throw new ArgumentNullException ("evt");
+			if (evt is null)
+				throw new ArgumentNullException (nameof (evt));
 			
 			CGEventPostToPSN (processSerialNumber, evt.Handle);
 		}
-
 		
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		unsafe extern static int /* CGError = int32_t */ CGGetEventTapList (
@@ -424,7 +414,7 @@ namespace CoreGraphics {
 			CGEventTapInformation *tapList,
 			out uint /* uint32_t* */ eventTapCount);
 
-		public unsafe CGEventTapInformation [] GetEventTapList ()
+		public unsafe CGEventTapInformation []? GetEventTapList ()
 		{
 			uint count;
 			if (CGGetEventTapList (0, null, out count) != 0)

@@ -16,6 +16,10 @@ using AppKit;
 using UIImage = AppKit.NSImage;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Photos
 {
 	[iOS (8,0)]
@@ -25,7 +29,7 @@ namespace Photos
 	interface PHAdjustmentData : NSCoding, NSSecureCoding {
 
 		[Export ("initWithFormatIdentifier:formatVersion:data:")]
-		IntPtr Constructor (string formatIdentifier, string formatVersion, NSData data);
+		NativeHandle Constructor (string formatIdentifier, string formatVersion, NSData data);
 
 		[Export ("formatIdentifier", ArgumentSemantic.Copy)]
 		string FormatIdentifier { get; }
@@ -767,7 +771,7 @@ namespace Photos
 		[Export ("fullSizeImageOrientation")]
 		CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0, Message="Use 'AudiovisualAsset' property instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AudiovisualAsset' property instead.")]
 		[NoMac]
 		[NullAllowed, Export ("avAsset", ArgumentSemantic.Strong)]
 		AVAsset AvAsset { get; }
@@ -793,10 +797,10 @@ namespace Photos
 	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
 
 		[Export ("initWithContentEditingInput:")]
-		IntPtr Constructor (PHContentEditingInput contentEditingInput);
+		NativeHandle Constructor (PHContentEditingInput contentEditingInput);
 
 		[Export ("initWithPlaceholderForCreatedAsset:")]
-		IntPtr Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
+		NativeHandle Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
 
 		[NullAllowed] // by default this property is null
 		[Export ("adjustmentData", ArgumentSemantic.Strong)]
@@ -1277,7 +1281,7 @@ namespace Photos
 	interface PHLivePhotoEditingContext {
 		[Export ("initWithLivePhotoEditingInput:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PHContentEditingInput livePhotoInput);
+		NativeHandle Constructor (PHContentEditingInput livePhotoInput);
 
 		[Export ("fullSizeImage")]
 		CIImage FullSizeImage { get; }
@@ -1404,7 +1408,7 @@ namespace Photos
 	interface PHProjectChangeRequest {
 
 		[Export ("initWithProject:")]
-		IntPtr Constructor (PHProject project);
+		NativeHandle Constructor (PHProject project);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -1442,7 +1446,7 @@ namespace Photos
 		string StringValue { get; }
 
 		[Export ("initWithStringValue:")]
-		IntPtr Constructor (string stringValue);
+		NativeHandle Constructor (string stringValue);
 	}
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]

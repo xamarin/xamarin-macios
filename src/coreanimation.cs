@@ -50,6 +50,10 @@ using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
@@ -91,7 +95,7 @@ namespace CoreAnimation {
 
 	interface ICAMediaTiming {}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	[BaseType (typeof (NSObject))]
 	interface CAConstraintLayoutManager : NSCoding {
 		[Static]
@@ -126,10 +130,11 @@ namespace CoreAnimation {
 		CAConstraint Create (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttribute);
 
 		[Export ("initWithAttribute:relativeTo:attribute:scale:offset:")]
-		IntPtr Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
+		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
-	
-#else
+#endif
+
+#if !MONOMAC
 	[BaseType (typeof (NSObject))]
 	interface CADisplayLink {
 		[Export ("displayLinkWithTarget:selector:")][Static]
@@ -169,9 +174,16 @@ namespace CoreAnimation {
 		[Export ("targetTimestamp")]
 		double TargetTimestamp { get; }
 
+		[Deprecated (PlatformName.iOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.TvOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.WatchOS, 8,0, message: "Use 'PreferredFrameRateRange' property.")]
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 #endif
 
@@ -184,6 +196,7 @@ namespace CoreAnimation {
 		[Field ("kCAContentsFormatRGBA16Float")]
 		Rgba16Float,
 	}
+
 
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();", Optimizable = true)]
@@ -310,7 +323,7 @@ namespace CoreAnimation {
 		[Export ("contents", ArgumentSemantic.Strong)][Internal][Sealed]
 		IntPtr _Contents { get; set; }
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[Export ("layoutManager", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSObject LayoutManager { get; set; }
@@ -533,7 +546,7 @@ namespace CoreAnimation {
 		[Export ("minificationFilterBias")]
 		float MinificationFilterBias { get; set; } /* float, not CGFloat */
 
-#if MONOMAC
+#if MONOMAC  || __MACCATALYST__
 		[Export ("autoresizingMask")]
 		CAAutoresizingMask AutoresizingMask { get; set; }
 
@@ -618,7 +631,7 @@ namespace CoreAnimation {
 		CAMetalLayer Layer { get; }
 	}
 
-	[iOS (8,0)][Mac (10,11)]
+	[iOS (8,0)][Mac (10,11)][MacCatalyst (13,0)]
 	[BaseType (typeof (CALayer))]
 	interface CAMetalLayer {
 		[NullAllowed] // by default this property is null
@@ -643,6 +656,7 @@ namespace CoreAnimation {
 
 		[NoWatch][NoTV][NoiOS]
 		[Mac (10,13)]
+		[MacCatalyst (13,0)]
 		[Export ("displaySyncEnabled")]
 		bool DisplaySyncEnabled { get; set; }
 
@@ -668,6 +682,7 @@ namespace CoreAnimation {
 
 		[NoWatch][NoiOS][NoTV]
 		[Mac (10,15)]
+		[MacCatalyst (13,0)]
 		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
 		CAEdrMetadata EdrMetadata { get; set; }
 	}
@@ -1122,6 +1137,10 @@ namespace CoreAnimation {
 		SCNAnimationEvent [] AnimationEvents { get; set; }
 
 		#endregion
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 
 	interface ICAAnimationDelegate {}
@@ -1435,7 +1454,7 @@ namespace CoreAnimation {
 		CAMediaTimingFunction FromControlPoints (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("initWithControlPoints::::")]
-		IntPtr Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
+		NativeHandle Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("getControlPointAtIndex:values:"), Internal]
 		void GetControlPointAtIndex (nint idx, IntPtr /* float[2] */ point);
@@ -1772,7 +1791,7 @@ namespace CoreAnimation {
 	interface CAEmitterBehavior : NSSecureCoding {
 
 		// [Export ("initWithType:")]
-		// IntPtr Constructor (NSString type);
+		// NativeHandle Constructor (NSString type);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -1887,8 +1906,10 @@ namespace CoreAnimation {
 		[Export ("setDestination:")]
 		void SetDestination (IMTLTexture tex);
 	}
+#endif
 
 	[NoWatch][NoiOS][NoTV]
+	[MacCatalyst (13,1)]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
 	[DisableDefaultCtor]
@@ -1906,5 +1927,4 @@ namespace CoreAnimation {
 		[Export ("HLGMetadata", ArgumentSemantic.Retain)]
 		CAEdrMetadata HlgMetadata { get; }
 	}
-#endif
 }

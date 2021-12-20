@@ -28,6 +28,10 @@ using NSWindowController = Foundation.NSObject;
 using NSViewController = Foundation.NSObject;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreAudioKit {
 	[NoiOS]
 	[Mac (10,11)]
@@ -43,14 +47,14 @@ namespace CoreAudioKit {
 	interface AUViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
 	[iOS (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface AUAudioUnitViewConfiguration : NSSecureCoding {
 		[Export ("initWithWidth:height:hostHasController:")]
-		IntPtr Constructor (nfloat width, nfloat height, bool hostHasController);
+		NativeHandle Constructor (nfloat width, nfloat height, bool hostHasController);
 
 		[Export ("width")]
 		nfloat Width { get; }
@@ -96,10 +100,10 @@ namespace CoreAudioKit {
 		bool ShowsExpertParameters { get; set; }
 
 		[Export ("initWithAudioUnit:")]
-		IntPtr Constructor (AudioUnit.AudioUnit au);
+		NativeHandle Constructor (AudioUnit.AudioUnit au);
 
 		[Export ("initWithAudioUnit:displayFlags:")]
-		IntPtr Constructor (AudioUnit.AudioUnit au, AUGenericViewDisplayFlags inFlags);
+		NativeHandle Constructor (AudioUnit.AudioUnit au, AUGenericViewDisplayFlags inFlags);
 	}
 
 	[NoiOS]
@@ -122,7 +126,7 @@ namespace CoreAudioKit {
 	interface CABtleMidiWindowController {
 
 		[Export ("initWithWindow:")]
-		IntPtr Constructor ([NullAllowed] NSWindow window);
+		NativeHandle Constructor ([NullAllowed] NSWindow window);
 	}
 
 	[NoiOS]
@@ -131,7 +135,7 @@ namespace CoreAudioKit {
 	interface CAInterDeviceAudioViewController {
 
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 	}
 
 	[NoiOS]
@@ -141,7 +145,7 @@ namespace CoreAudioKit {
 	interface CANetworkBrowserWindowController {
 
 		[Export ("initWithWindow:")]
-		IntPtr Constructor ([NullAllowed] NSWindow window);
+		NativeHandle Constructor ([NullAllowed] NSWindow window);
 
 		[Static]
 		[Export ("isAVBSupported")]
@@ -155,11 +159,11 @@ namespace CoreAudioKit {
 	interface CABTMidiCentralViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[iOS (8,3)]
 		[Export ("initWithStyle:")]
-		IntPtr Constructor (UITableViewStyle withStyle);
+		NativeHandle Constructor (UITableViewStyle withStyle);
 	}
 
 	[iOS (8,0)]
@@ -167,7 +171,7 @@ namespace CoreAudioKit {
 	interface CABTMidiLocalPeripheralViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
 	[iOS (8,0)]
@@ -176,7 +180,7 @@ namespace CoreAudioKit {
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioSwitcherView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect bounds);
+		NativeHandle Constructor (CGRect bounds);
 		
 		[Export ("showingAppNames")]
 		bool ShowingAppNames { [Bind ("isShowingAppNames")] get; set; }
@@ -194,7 +198,7 @@ namespace CoreAudioKit {
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioTransportView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect bounds);
+		NativeHandle Constructor (CGRect bounds);
 		
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }

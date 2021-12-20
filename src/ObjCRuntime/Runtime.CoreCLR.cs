@@ -45,6 +45,7 @@ namespace ObjCRuntime {
 			Foundation_NSString,
 			Foundation_NSValue,
 			ObjCRuntime_INativeObject,
+			ObjCRuntime_NativeHandle,
 		}
 
 		// Keep in sync with XamarinExceptionType in main.h
@@ -232,6 +233,9 @@ namespace ObjCRuntime {
 				break;
 			case TypeLookup.ObjCRuntime_INativeObject:
 				rv = typeof (ObjCRuntime.INativeObject).IsAssignableFrom (type);
+				break;
+			case TypeLookup.ObjCRuntime_NativeHandle:
+				rv = typeof (ObjCRuntime.NativeHandle).IsAssignableFrom (type);
 				break;
 			default:
 				throw new ArgumentOutOfRangeException (nameof (type));

@@ -34,13 +34,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Microsoft.Build.Tasks.WriteLinesToFile" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.iOS-specific tasks. Some of these are duplicated with the Xamarin.Mac ones below, and should eventually be re-namespaced to be in Xamarin.MacDev -->
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectAssetPacks" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectITunesArtwork" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectITunesSourceFiles" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CompileAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CompileEntitlements" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CompileITunesMetadata" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CompileSceneKitAssets" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CreateAssetPack" AssemblyFile="$(_TaskAssemblyName)" />
@@ -63,10 +60,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.WriteAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.Mac-specific tasks. Some of these are duplicated with the Xamarin.iOS ones above, and should eventually be re-namespaced to be in Xamarin.MacDev -->
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileEntitlements" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileSceneKitAssets" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CreateEmbeddedResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSdkLocations" AssemblyFile="$(_TaskAssemblyName)" />
@@ -81,9 +75,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.AOTCompile" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectFrameworks" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileEntitlements" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
@@ -151,15 +148,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
-			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
+			<Output TaskParameter="NativeFrameworks" ItemName="_ResolvedNativeReference" />
 		</ResolveNativeReferences>
+
+		<ItemGroup>
+			<_FrameworkNativeReference Include="@(_ResolvedNativeReference)" Condition="'%(Kind)' == 'Framework'" />
+			<_FileNativeReference Include="@(_ResolvedNativeReference)" Condition="'%(Kind)' == 'Static' Or '%(Kind)' == 'Dynamic'" />
+		</ItemGroup>
 	</Target>
 	
 	<PropertyGroup>
-		<BindingResourcePath>$(ProjectDir)$(OutputPath)$(AssemblyName).resources</BindingResourcePath>
+		<BindingResourcePath>$(OutputPath)$(AssemblyName).resources</BindingResourcePath>
 	</PropertyGroup>
 
-	<Target Name="_CreateBindingResourcePackage" Condition="'$(DesignTimeBuild)' != 'true'"
+	<Target Name="_CreateBindingResourcePackage"
+		Condition="'$(DesignTimeBuild)' != 'true' And '$(NoBindingEmbedding)' == 'true'"
 		DependsOnTargets="_ExpandNativeReferences"
 		Inputs="$(MSBuildAllProjects);$(MSBuildProjectFullPath);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary);@(_FrameworkNativeReference);@(_FileNativeReference)"
 		Outputs="$(BindingResourcePath).stamp">
@@ -175,7 +178,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<CompressBindingResourcePackage Condition="'$(UsingAppleNETSdk)' != 'true'">false</CompressBindingResourcePackage>
 		</PropertyGroup>
 
-		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true' And '$(NoBindingEmbedding)' == 'true' And '$(SkipBindingResourcePackage)' != 'true'"
+		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			NativeReferences="@(NativeReference)"
 			BindingResourcePath="$(BindingResourcePath)"
@@ -183,6 +186,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			>
 		</CreateBindingResourcePackage>
+
+		<MakeDir
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
+		/>
 
 		<Touch
 			SessionId="$(BuildSessionId)"
@@ -192,6 +201,78 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
+	</Target>
+
+	<!--
+		Binding projects may include NativeReference items, which makes the 'pack' target want to include a Native.$(AssemblyName).manifest into the NuGet,
+		which obviously fails because we don't create such a file. So let's remove that file.
+
+		Ref: https://github.com/dotnet/msbuild/blob/3a1e456fe227f3e2b190b434578844c31e8bcb4a/src/Tasks/Microsoft.Common.CurrentVersion.targets#L6111-L6118
+		Ref: https://github.com/dotnet/msbuild/issues/4584
+	-->
+	<PropertyGroup>
+		<GenerateNuspecDependsOn>
+			$(GenerateNuspecDependsOn);
+			_RemoveNativeManifestFromPack;
+		</GenerateNuspecDependsOn>
+	</PropertyGroup>
+	<Target Name="_RemoveNativeManifestFromPack">
+		<ItemGroup>
+			<_BuildOutputInPackage Remove="@(_BuildOutputInPackage)" Condition="'%(Filename)%(Extension)' == '$(_DeploymentTargetApplicationManifestFileName)'" />
+		</ItemGroup>
+	</Target>
+
+	<!--
+		Add any binding resource packages to the nupkg
+
+		Ref: https://github.com/dotnet/sdk/issues/14042#issuecomment-716868311
+		Ref: https://github.com/NuGet/Home/issues/10063#issuecomment-713083004
+		Ref: https://github.com/xamarin/xamarin-android/blob/681887ebdbd192ce7ce1cd02221d4939599ba762/src/Xamarin.Android.Build.Tasks/Microsoft.Android.Sdk/targets/Microsoft.Android.Sdk.AndroidLibraries.targets#L86-L99
+	-->
+	<PropertyGroup>
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeBindingResourcesInNuGetPackage</TargetsForTfmSpecificContentInPackage>
+	</PropertyGroup>
+	<Target Name="_IncludeBindingResourcesInNuGetPackage"
+		Condition="'$(IsMacEnabled)' == 'true' And '$(IncludeBuildOutput)' != 'false'"
+	>
+		<PropertyGroup>
+			<_HasOldStyleBindingItems Condition="@(ObjcBindingNativeLibrary->Count()) > 0">true</_HasOldStyleBindingItems>
+		</PropertyGroup>
+		<Error Condition="'$(_HasOldStyleBindingItems)' == 'true'" Text="Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead." />
+
+		<!-- The 'GetNuGetShortFolderName' task only exists for .NET, so hardcode values for _NuGetShortFolderName for legacy builds -->
+		<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">xamarinios10</_NuGetShortFolderName>
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">xamarintvos10</_NuGetShortFolderName>
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">xamarinwatch10</_NuGetShortFolderName>
+			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">xamarinmac10</_NuGetShortFolderName>
+		</PropertyGroup>
+
+		<!-- Figure out where to place the binding resources (see references above for more info) -->
+		<GetNuGetShortFolderName
+			TargetFrameworkMoniker="$(TargetFrameworkMoniker)"
+			TargetPlatformMoniker="$(TargetPlatformMoniker)"
+			Condition="'$(_NuGetShortFolderName)' == ''"
+			>
+			<Output TaskParameter="NuGetShortFolderName" PropertyName="_NuGetShortFolderName" />
+		</GetNuGetShortFolderName>
+
+		<!-- The binding project may either produce a 'MyBindingProject.resources' directory, or a compressed 'MyBindingProject.resources.zip' version -->
+		<PropertyGroup>
+			<_AppleBindingResourceBasePath>$(TargetDir)$(TargetName).resources</_AppleBindingResourceBasePath>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- Add all the files that might exist in any binding resource packages -->
+			<_AppleBindingResource Include="$(_AppleBindingResourceBasePath)\**\*" PackagePath="lib\$(_NuGetShortFolderName)\$(TargetName).resources" />
+			<!-- Add any compressed files that might exist as well -->
+			<_AppleBindingResource Include="$(_AppleBindingResourceBasePath).zip" PackagePath="lib\$(_NuGetShortFolderName)" Condition="Exists('$(_AppleBindingResourceBasePath).zip')" />
+		</ItemGroup>
+
+		<!-- Add what we found to the NuGet -->
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="@(_AppleBindingResource)" />
+		</ItemGroup>
 	</Target>
 
 	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so nuke via RemoveDir -->
@@ -223,7 +304,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).mSYM;@(_DebugSymbolDir)" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true' Or '$(_PlatformName)' == 'macOS'" Files="$(DeviceSpecificOutputPath)dsym.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="(('$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true') Or '$(_PlatformName)' == 'macOS')" Files="$(DeviceSpecificOutputPath)dsym.items" />
 	</Target>
 
 	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
@@ -379,7 +460,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ApplicationVersion="$(ApplicationVersion)"
 			ApplicationDisplayVersion="$(ApplicationDisplayVersion)"
 			AppBundleName="$(_AppBundleName)"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(AppBundleManifest)"
 			AssemblyName="$(AssemblyName)"
 			CompiledAppManifest="$(_TemporaryAppManifest)"
 			Debug="$(_BundlerDebug)"
@@ -446,18 +527,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_WriteAppManifestDependsOn>
 	</PropertyGroup>
 
-	<!-- This target will create the $(_AppBundleManifest) file - any task that takes $(_AppBundleManifest) must depend on this target -->
+	<!-- This target will create the $(_AppBundleManifestPath) file - any task that takes $(_AppBundleManifestPath) must depend on this target -->
 	<Target Name="_WriteAppManifest"
 		Condition="'$(_CreateAppManifest)' == 'true'"
 		DependsOnTargets="$(_WriteAppManifestDependsOn)"
 		Inputs="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
-		Outputs="$(_AppBundleManifest)"
+		Outputs="$(_AppBundleManifestPath)"
 		>
 
 		<WriteAppManifest
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleManifest="$(_AppBundleManifest)"
+			AppBundleManifest="$(_AppBundleManifestPath)"
 			AppManifests="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
 			>
 		</WriteAppManifest>
@@ -1216,33 +1297,33 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			Ref: https://bugzilla.xamarin.com/show_bug.cgi?id=34736
 		-->
-		<FindItemWithLogicalName
+		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == ''"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(None)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
-		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(BundleResource)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
-		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(Content)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
-		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
+		<Error Condition="'$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
 		<PropertyGroup>
-			<_AppBundleManifest>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifest>
+			<_AppBundleManifestPath>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifestPath>
 			<!-- We should only write out a compiled app manifest if we're creating an app bundle -->
 			<_CreateAppManifest>$(_CanOutputAppBundle)</_CreateAppManifest>
 			<_TemporaryAppManifest>$(DeviceSpecificIntermediateOutputPath)AppManifest.plist</_TemporaryAppManifest>
@@ -1515,6 +1596,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			IsDotNetSimulatorBuild="$(_IsDotNetSimulatorBuild)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			TargetArchitectures="$(TargetArchitectures)"
@@ -1576,6 +1658,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Verbosity="$(_BundlerVerbosity)"
 			>
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
+			<Output TaskParameter="CustomLinkFlags" ItemName="_CustomLinkFlags" />
 			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
 			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
@@ -1586,6 +1669,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Registrar" PropertyName="_BundlerRegistrar" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
+			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />
 		</ParseBundlerArguments>
 
 		<PropertyGroup>
@@ -1621,6 +1705,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			$(_CodesignNativeLibrariesDependsOn);
 			_DetectSigningIdentity;
 			_CompileToNative;
+			_PlaceAppExtensions;
 		</_CodesignNativeLibrariesDependsOn>
 	</PropertyGroup>
 
@@ -1644,7 +1729,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ItemGroup Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">
 			<_CodesignNativeLibrary
 				Include="$(_AppBundlePath)\**\*.dylib;$(_AppBundlePath)\**\*.metallib"
-				Exclude="$(_AppBundlePath)\Watch\**;$(_AppBundlePath)\PlugIns\**"
+				Exclude="$(_AppBundlePath)\Watch\**;$(_AppExtensionRoot)\PlugIns\**"
 				/>
 		</ItemGroup>
 
@@ -1673,7 +1758,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
-			Resource="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.Filename)%(_ResolvedAppExtensionReferences.Extension)"
+			Resource="$(_AppExtensionRoot)PlugIns\%(_ResolvedAppExtensionReferences.Filename)%(_ResolvedAppExtensionReferences.Extension)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 		</CodesignVerify>
 
@@ -1684,6 +1770,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
 			Resource="$(AppBundleDir)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 		</CodesignVerify>
 	</Target>
@@ -1928,8 +2015,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_GenerateAppExtensionDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false'"
-		DependsOnTargets="_ParseBundlerArguments;_CompileToNative;_ReadAppExtensionDebugSymbolProperties"
-		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
+		DependsOnTargets="_ParseBundlerArguments;_CompileToNative;_ReadAppExtensionDebugSymbolProperties;_PlaceAppExtensions"
+		Inputs="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
 		Outputs="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM\Contents\Info.plist">
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM" />
@@ -1938,10 +2025,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoDSymUtil)' == 'false'"
-			AppBundleDir="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)"
+			AppBundleDir="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)"
 			Architectures="%(_AppExtensionDebugSymbolProperties.CompiledArchitectures)"
 			DSymDir="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM"
-			Executable="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
+			Executable="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
 			ToolExe="$(DSymUtilExe)"
 			ToolPath="$(DSymUtilPath)"
 		>
@@ -1951,7 +2038,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoSymbolStrip)' == 'false'"
-			Executable="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
+			Executable="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
 			IsFramework="false"
 			SymbolFile="%(_AppExtensionDebugSymbolProperties.SymbolsList)"
 		>
@@ -1988,39 +2075,44 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Ditto>
 	</Target>
 
-	<Target Name="_GenerateFrameworkDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks"
+	<Target Name="_CalculateFrameworkDebugSymbolPath" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks">
+		<ItemGroup>
+			<_Frameworks>
+				<_Destination>$(AppBundleDir)\..\%(Filename).framework.dSYM</_Destination>
+			</_Frameworks>
+			<_Frameworks>
+				<_DestinationExists>$([System.IO.File]::Exists('%(_Destination)'))</_DestinationExists>
+			</_Frameworks>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_GenerateFrameworkDebugSymbols" Condition="(('$(_PlatformName)' == 'macOS') Or (('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false') and '$(IsMacEnabled)' == 'true'))" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks;_CalculateFrameworkDebugSymbolPath"
 		Inputs="%(_Frameworks.Identity)"
-		Outputs="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM\Contents\Info.plist"
+		Outputs="%(_Frameworks._Destination)\Contents\Info.plist"
 		>
 
-		<PropertyGroup>
-			<_Destination>$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM</_Destination>
-		</PropertyGroup>
+		<!-- Due to MSB4116 we can not check _DestinationExists in the condition for this target, thus all tasks must check it themselves -->
 
-		<!-- if the user framework does not provide it's own dSYM then we try to build one -->
-		<ItemGroup Condition="'$(IsMacEnabled)' == 'true' And !Exists (_Destination)">
-			<!-- run dsymutil on embedded frameworks -->
-			<DSymUtil
-				SessionId="$(BuildSessionId)"
-				Condition="'$(_NoDSymUtil)' == 'false'"
-				AppBundleDir="$(AppBundleDir)"
-				Architectures=""
-				DSymDir="$(_Destination)"
-				Executable="%(_Frameworks.Identity)"
-				ToolExe="$(DSymUtilExe)"
-				ToolPath="$(DSymUtilPath)">
-			</DSymUtil>
+		<!-- run dsymutil on embedded frameworks -->
+		<DSymUtil
+			SessionId="$(BuildSessionId)"
+			Condition="'$(_NoDSymUtil)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
+			AppBundleDir="$(AppBundleDir)"
+			Architectures=""
+			DSymDir="%(_Frameworks._Destination)"
+			Executable="%(_Frameworks.Identity)"
+			ToolExe="$(DSymUtilExe)"
+			ToolPath="$(DSymUtilPath)">
+		</DSymUtil>
 
-			<!-- strip embedded frameworks -->
-			<SymbolStrip
-				SessionId="$(BuildSessionId)"
-				Condition="'$(_NoSymbolStrip)' == 'false'"
-				Executable="%(_Frameworks.Identity)"
-				IsFramework="true"
-				SymbolFile=""
-			>
-			</SymbolStrip>
-		</ItemGroup>
+		<!-- strip embedded frameworks -->
+		<SymbolStrip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(_NoSymbolStrip)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
+			Executable="%(_Frameworks.Identity)"
+			IsFramework="true"
+			SymbolFile="">
+		</SymbolStrip>
 
 		<!-- _GenerateDebugSymbols will run spotlight to index the dSYMs -->
 	</Target>
@@ -2063,7 +2155,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_GenerateDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;_GenerateFrameworkDebugSymbols;_GenerateAppExtensionDebugSymbols;_PrepareDebugSymbolGeneration"
+	<PropertyGroup>
+		<GenerateDebugSymbolsDependsOn>
+			_CompileToNative;
+			_ParseBundlerArguments;
+			_CalculateFrameworkDebugSymbolPath;
+			_GenerateFrameworkDebugSymbols;
+			_GenerateAppExtensionDebugSymbols;
+			_PrepareDebugSymbolGeneration
+		</GenerateDebugSymbolsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_GenerateDebugSymbols" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="$(GenerateDebugSymbolsDependsOn)"
 		Inputs="$(_NativeExecutable)" Outputs="$(AppBundleDir).dSYM\Contents\Info.plist">
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Directories="$(AppBundleDir).dSYM" />
@@ -2179,7 +2282,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<CompileProductDefinition
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundleManifest)"
+			AppManifest="$(_AppBundleManifestPath)"
 			OutputDirectory="$(IntermediateOutputPath)"
 			ProductDefinition="$(ProductDefinition)"
 			TargetArchitectures="$(TargetArchitectures)"
@@ -2188,16 +2291,19 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileProductDefinition>
 	</Target>
 
-	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition;_WriteAppManifest">
+	<Target Name="_CreateInstaller" Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="Codesign;_CompileProductDefinition;_WriteAppManifest">
+		<PropertyGroup>
+			<PkgPackageDir Condition="'$(PkgPackageDir)' == ''">$(TargetDir)</PkgPackageDir>
+		</PropertyGroup>
 		<CreateInstallerPackage
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
-			AppManifest="$(_AppBundleManifest)"
+			AppManifest="$(_AppBundleManifestPath)"
 			EnablePackageSigning="$(EnablePackageSigning)"
 			MainAssembly="$(TargetPath)"
 			Name="$(AssemblyName)"
-			OutputDirectory="$(TargetDir)"
+			OutputDirectory="$(PkgPackageDir)"
 			PackageSigningKey="$(PackageSigningKey)"
 			PackagingExtraArgs="$(PackagingExtraArgs)"
 			PkgPackagePath="$(PkgPackagePath)"
@@ -2228,7 +2334,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
 
 	<!-- Xamarin.ImplicitFacade.targets will detect if we need to add an implicit reference to netstandard.dll -->
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.ImplicitFacade.targets" Condition="!('$(_PlatformName)' == 'macOS' And '$(TargetFrameworkName)' == 'System')"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.ImplicitFacade.targets" Condition="!('$(_PlatformName)' == 'macOS' And '$(TargetFrameworkName)' == 'System') And '$(UsingAppleNETSdk)' != 'true'"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.Stubs.targets" />
 

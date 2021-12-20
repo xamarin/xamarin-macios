@@ -5,6 +5,10 @@ using ObjCRuntime;
 using AVFoundation;
 using AppKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MailKit {
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
 	[Native]
@@ -39,6 +43,15 @@ namespace MailKit {
 		Sending = 2,
 	}
 
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+	[Native]
+	public enum MEMessageEncryptionState : long
+	{
+		Unknown = 0,
+		NotEncrypted = 1,
+		Encrypted = 2,
+	}
+
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -46,6 +59,9 @@ namespace MailKit {
 	{
 		[Export ("state", ArgumentSemantic.Assign)]
 		MEMessageState State { get; }
+
+		[Export ("encryptionState", ArgumentSemantic.Assign)]
+		MEMessageEncryptionState EncryptionState { get; }
 
 		[Export ("subject")]
 		string Subject { get; }
@@ -83,6 +99,21 @@ namespace MailKit {
 		NSData RawData { get; }
 	}
 
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+	[Native]
+	public enum MEMessageActionFlag : long
+	{
+		None,
+		DefaultColor,
+		Red,
+		Orange,
+		Yellow,
+		Green,
+		Blue,
+		Purple,
+		Gray,
+	}
+
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -108,19 +139,13 @@ namespace MailKit {
 		[Export ("markAsUnreadAction")]
 		MEMessageAction MarkAsUnread { get; }
 
-#if false // does not respond (nor work in ObjC) with macOS 12 beta 6
 		[Static]
-		[Export ("flagAction")]
-		MEMessageAction Flag { get; }
+		[Export ("flagActionWithFlag:")]
+		MEMessageAction SetFlagAction (MEMessageActionFlag flag);
 
 		[Static]
-		[Export ("unflagAction")]
-		MEMessageAction Unflag { get; }
-
-		[Static]
-		[Export ("setColorActionWithColor:")]
-		MEMessageAction SetColor (MEMessageActionMessageColor color);
-#endif
+		[Export ("setBackgroundColorActionWithColor:")]
+		MEMessageAction SetBackgroundColorAction (MEMessageActionMessageColor color);
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -148,7 +173,7 @@ namespace MailKit {
 	{
 		[Export ("initWithEncodedMessage:signingError:encryptionError:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] MEEncodedOutgoingMessage encodedMessage, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError);
+		NativeHandle Constructor ([NullAllowed] MEEncodedOutgoingMessage encodedMessage, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError);
 
 		[NullAllowed, Export ("encodedMessage", ArgumentSemantic.Copy)]
 		MEEncodedOutgoingMessage EncodedMessage { get; }
@@ -166,10 +191,10 @@ namespace MailKit {
 	interface MEMessageSecurityInformation : NSSecureCoding
 	{
 		[Export ("initWithSigners:isEncrypted:signingError:encryptionError:")]
-		IntPtr Constructor (MEMessageSigner[] signers, bool isEncrypted, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError);
+		NativeHandle Constructor (MEMessageSigner[] signers, bool isEncrypted, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError);
 
 		[Export ("initWithSigners:isEncrypted:signingError:encryptionError:shouldBlockRemoteContent:localizedRemoteContentBlockingReason:")]
-		IntPtr Constructor (MEMessageSigner[] signers, bool isEncrypted, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError, bool shouldBlockRemoteContent, [NullAllowed] string localizedRemoteContentBlockingReason);
+		NativeHandle Constructor (MEMessageSigner[] signers, bool isEncrypted, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError, bool shouldBlockRemoteContent, [NullAllowed] string localizedRemoteContentBlockingReason);
 
 		[Export ("signers", ArgumentSemantic.Strong)]
 		MEMessageSigner[] Signers { get; }
@@ -196,7 +221,7 @@ namespace MailKit {
 	interface MEMessageSigner : NSSecureCoding
 	{
 		[Export ("initWithEmailAddresses:signatureLabel:context:")]
-		IntPtr Constructor (MEEmailAddress[] emailAddresses, string label, [NullAllowed] NSData context);
+		NativeHandle Constructor (MEEmailAddress[] emailAddresses, string label, [NullAllowed] NSData context);
 
 		[Export ("emailAddresses", ArgumentSemantic.Copy)]
 		MEEmailAddress[] EmailAddresses { get; }
@@ -214,7 +239,7 @@ namespace MailKit {
 	interface MEOutgoingMessageEncodingStatus : NSSecureCoding
 	{
 		[Export ("initWithCanSign:canEncrypt:securityError:addressesFailingEncryption:")]
-		IntPtr Constructor (bool canSign, bool canEncrypt, [NullAllowed] NSError securityError, MEEmailAddress[] addressesFailingEncryption);
+		NativeHandle Constructor (bool canSign, bool canEncrypt, [NullAllowed] NSError securityError, MEEmailAddress[] addressesFailingEncryption);
 
 		[Export ("canSign")]
 		bool CanSign { get; }
@@ -259,6 +284,9 @@ namespace MailKit {
 		[Export ("mailMessage", ArgumentSemantic.Strong)]
 		MEMessage MailMessage { get; }
 
+		[Export ("composeContext", ArgumentSemantic.Strong)]
+		MEComposeContext ComposeContext { get; }
+
 		[Export ("reloadSession")]
 		void ReloadSession ();
 	}
@@ -268,14 +296,23 @@ namespace MailKit {
 	[DisableDefaultCtor]
 	interface MEDecodedMessage : NSSecureCoding
 	{
-		[Export ("initWithData:securityInformation:")]
-		IntPtr Constructor ([NullAllowed] NSData rawData, MEMessageSecurityInformation securityInformation);
-
 		[NullAllowed, Export ("rawData", ArgumentSemantic.Copy)]
 		NSData RawData { get; }
 
 		[Export ("securityInformation", ArgumentSemantic.Strong)]
 		MEMessageSecurityInformation SecurityInformation { get; }
+
+		[NullAllowed, Export ("context")]
+		NSData Context { get; }
+
+		[NullAllowed, Export ("banner")]
+		MEDecodedMessageBanner Banner { get; }
+
+		[Export ("initWithData:securityInformation:context:")]
+		NativeHandle Constructor ([NullAllowed] NSData rawData, MEMessageSecurityInformation securityInformation, [NullAllowed] NSData context);
+
+		[Export ("initWithData:securityInformation:context:banner:")]
+		NativeHandle Constructor ([NullAllowed] NSData rawData, MEMessageSecurityInformation securityInformation, [NullAllowed] NSData context, [NullAllowed] MEDecodedMessageBanner banner);
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -283,7 +320,7 @@ namespace MailKit {
 	interface MEEncodedOutgoingMessage : NSSecureCoding
 	{
 		[Export ("initWithRawData:isSigned:isEncrypted:")]
-		IntPtr Constructor (NSData rawData, bool isSigned, bool isEncrypted);
+		NativeHandle Constructor (NSData rawData, bool isSigned, bool isEncrypted);
 
 		[Export ("rawData", ArgumentSemantic.Copy)]
 		NSData RawData { get; }
@@ -301,7 +338,7 @@ namespace MailKit {
 	interface MEEmailAddress : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithRawString:")]
-		IntPtr Constructor (string rawString);
+		NativeHandle Constructor (string rawString);
 
 		[Export ("rawString")]
 		string RawString { get; }
@@ -395,12 +432,21 @@ namespace MailKit {
 	interface MEMessageEncoder
 	{
 		[Abstract]
-		[Export ("getEncodingStatusForMessage:completionHandler:")]
-		void GetEncodingStatus (MEMessage message, Action<MEOutgoingMessageEncodingStatus> completionHandler);
+		[Export ("getEncodingStatusForMessage:composeContext:completionHandler:")]
+		void GetEncodingStatus (MEMessage message, MEComposeContext composeContext, Action<MEOutgoingMessageEncodingStatus> completionHandler);
 
 		[Abstract]
-		[Export ("encodeMessage:shouldSign:shouldEncrypt:completionHandler:")]
-		void EncodeMessage (MEMessage message, bool shouldSign, bool shouldEncrypt, Action<MEMessageEncodingResult> completionHandler);
+		[Export ("encodeMessage:composeContext:completionHandler:")]
+		void EncodeMessage (MEMessage message, MEComposeContext composeContext, Action<MEMessageEncodingResult> completionHandler);
+	}
+
+	[ErrorDomain ("MEMessageSecurityErrorDomain")]
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+	[Native]
+	public enum MEMessageSecurityErrorCode : long
+	{
+		EncodingError = 0,
+		DecodingError = 1,
 	}
 
 	interface IMEMessageSecurityHandler {}
@@ -413,6 +459,15 @@ namespace MailKit {
 		[Export ("extensionViewControllerForMessageSigners:")]
 		[return: NullAllowed]
 		MEExtensionViewController GetExtensionViewController (MEMessageSigner[] messageSigners);
+
+		[Abstract]
+		[Export ("extensionViewControllerForMessageContext:")]
+		[return: NullAllowed]
+		MEExtensionViewController GetExtensionViewController (NSData messageContext);
+
+		[Abstract]
+		[Export ("primaryActionClickedForMessageContext:completionHandler:")]
+		void SetPrimaryActionClicked (NSData messageContext, Action<MEExtensionViewController> completionHandler);
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -423,7 +478,7 @@ namespace MailKit {
 		[DesignatedInitializer]
 		[Protected]
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 	}
 
 	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
@@ -434,5 +489,64 @@ namespace MailKit {
 		[Static]
 		[Export ("reloadContentBlockerWithIdentifier:completionHandler:")]
 		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);
+
+		[Static]
+		[Export ("reloadVisibleMessagesWithCompletionHandler:")]
+		void ReloadVisibleMessages ([NullAllowed] Action<NSError> completionHandler);
+	}
+
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+	[Native]
+	public enum MEComposeUserAction : long
+	{
+		NewMessage = 1,
+		Reply = 2,
+		ReplyAll = 3,
+		Forward = 4,
+	}
+
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MEComposeContext
+	{
+		[Export ("contextID", ArgumentSemantic.Strong)]
+		NSUuid ContextId { get; }
+
+		[NullAllowed, Export ("originalMessage", ArgumentSemantic.Strong)]
+		MEMessage OriginalMessage { get; }
+
+		[Export ("action")]
+		MEComposeUserAction Action { get; }
+
+		[Export ("isEncrypted")]
+		bool IsEncrypted { get; }
+
+		[Export ("shouldEncrypt")]
+		bool ShouldEncrypt { get; }
+
+		[Export ("isSigned")]
+		bool IsSigned { get; }
+
+		[Export ("shouldSign")]
+		bool ShouldSign { get; }
+	}
+
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MEDecodedMessageBanner : NSSecureCoding, NSCopying
+	{
+		[Export ("title", ArgumentSemantic.Strong)]
+		string Title { get; }
+
+		[Export ("primaryActionTitle", ArgumentSemantic.Strong)]
+		string PrimaryActionTitle { get; }
+
+		[Export ("dismissable")]
+		bool Dismissable { [Bind ("isDismissable")] get; }
+
+		[Export ("initWithTitle:primaryActionTitle:dismissable:")]
+		IntPtr Constructor (string title, string primaryActionTitle, bool dismissable);
 	}
 }

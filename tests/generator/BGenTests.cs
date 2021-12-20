@@ -207,8 +207,13 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 
+#if NET
+			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalInProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#else
 			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalInProperty.Shared getter");
 			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#endif
 		}
 
 		[Test]
@@ -749,6 +754,23 @@ namespace GeneratorTests
 			bgen.ApiDefinitions = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum.cs") }.ToList ();
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
+		}
+
+		[Test]
+		public void DelegateWithINativeObjectReturnType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/delegate-with-inativeobject-return-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("ObjCRuntime", "Trampolines").NestedTypes.First (v => v.Name == "DMyHandler");
+			Assert.NotNull (type, "DMyHandler");
+			var method = type.Methods.First (v => v.Name == "Invoke");
+#if NET
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", method.ReturnType.FullName, "Return type");
+#else
+			Assert.AreEqual ("System.IntPtr", method.ReturnType.FullName, "Return type");
+#endif
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
