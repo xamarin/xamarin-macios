@@ -5,6 +5,6 @@
     <MicrosoftNETILLinkTasksPackageVersion>6.0.100-1.21519.4</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>6.0.1-mauipre.1.21602.7</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>6.0.1-mauipre.1.21616.2</MicrosoftNETCoreAppRefPackageVersion>
   </PropertyGroup>
 </Project>
