@@ -417,7 +417,7 @@ namespace Xamarin.Tests
 
 		static string GetRefNuGetName (TargetFramework targetFramework)
 		{
-			return targetFramework.Platform.ToString();
+			return targetFramework.Platform.ToString ();
 		}
 
 		static string GetRefNuGetName (ApplePlatform platform)
@@ -432,7 +432,7 @@ namespace Xamarin.Tests
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Ref";
 			default:
-				throw new InvalidOperationException (platform.ToString());
+				throw new InvalidOperationException (platform.ToString ());
 			}
 		}
 
