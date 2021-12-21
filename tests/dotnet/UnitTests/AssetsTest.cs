@@ -89,20 +89,15 @@ namespace Xamarin.Tests {
 
 		void ConfigureAssets ()
 		{
-			// Just in case the test was canceled mid-run, we want to make sure we remove the symlink to avoid circular references
-			DeleteAssets ();
+			Clean (projectPath);
 
 			// We either want the assets added before the build, or we will be adding them after the build
 			if (isStartingWithAssets)
 				CopyAssets ();
 
-			Clean (projectPath);
-
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			if (!isStartingWithAssets) {
 				CopyAssets ();
-				// Building again without cleaning skips compiling the new assets: https://github.com/xamarin/maccore/issues/2534
-				Clean (projectPath);
 				DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			}
 		}
@@ -121,6 +116,9 @@ namespace Xamarin.Tests {
 			Assert.That (testingAssetsDir, Does.Exist, $"Could not find testingAssetsDir: {testingAssetsDir}");
 			MakeSymlinks (testingAssetsDir.FullName, xcassetsDir.FullName);
 			Assert.That (xcassetsDir, Does.Exist, $"Could not find xcassetsDir: {xcassetsDir}");
+
+			// update timestamps on all symlink files so msbuild spots them as new additions
+			ProcessUpdateSymlink (xcassetsDir.FullName);
 		}
 
 		void MakeSymlinks (string sourceDir, string destDir)
@@ -139,6 +137,17 @@ namespace Xamarin.Tests {
 			"macosx" => sdkVersion + Configuration.macos_sdk_version,
 			_ => throw new ArgumentOutOfRangeException (nameof (sdkVersion), $"Not expected sdkVersion: {sdkVersion}"),
 		};
+
+		// msbuild will only update the assets if they are newer than the outputs from previous build
+		// so we will touch all the files the symlink points to in order to give them newer modified times
+		void ProcessUpdateSymlink (string xcassetsDir)
+		{
+			var output = new StringBuilder ();
+			var executable = "find";
+			var arguments = new string [] { "-L", xcassetsDir, "-maxdepth", "5", "-mindepth", "0", "-exec", "touch", "{}", "+" };
+			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
+			Assert.AreEqual (0, rv.ExitCode, $"Processing Update Symlink Error: {rv.StandardError}. Unexpected ExitCode");
+		}
 
 		JsonDocument ProcessAssets (string assetsPath, string sdkVersion)
 		{
@@ -241,4 +250,3 @@ namespace Xamarin.Tests {
 		};
 	}
 }
-
