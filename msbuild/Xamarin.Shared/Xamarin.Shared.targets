@@ -1730,7 +1730,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_EmbedProvisionProfile;
 			_CodesignNativeLibraries;
 			_CollectFrameworks;
-			_CodesignFrameworks;
 			_ReadAppExtensionCodesignProperties;
 			_CodesignAppExtensions;
 			_PrepareCodesignAppExtension;
@@ -1792,22 +1791,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				/>
 		</ItemGroup>
 
-		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_CodesignDisableTimestamp)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			IsAppExtension="$(IsAppExtension)"
-			Keychain="$(CodesignKeychain)"
-			Resources="@(_CodesignNativeLibrary)"
-			SigningKey="$(_LibraryCodeSigningKey)"
-			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			UseSecureTimestamp="$(UseHardenedRuntime)"
-			>
-		</Codesign>
+		<ItemGroup>
+			<_CodesignItems Include="@(_CodesignNativeLibrary)">
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<CodesignDeep>$(IsAppExtension)</CodesignDeep>
+				<CodesignDisableTimestamp>$(_CodesignDisableTimestamp)</CodesignDisableTimestamp>
+				<!-- CodesignEntitlements -->
+				<CodesignExtraArgs>$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
+				<!-- CodesignResourceRules -->
+				<CodesignSigningKey>$(_LibraryCodeSigningKey)</CodesignSigningKey>
+				<CodesignStampPath>$(DeviceSpecificIntermediateOutputPath)codesign\</CodesignStampPath>
+				<!-- CodesignUseHardenedRuntime-->
+				<CodesignUseSecureTimestamp>$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
+			</_CodesignItems>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="_CodesignAppBundle">
@@ -1837,6 +1835,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<PropertyGroup>
 		<_CollectFrameworksDependsOn>
 			$(_CollectFrameworksDependsOn);
+			_DetectSigningIdentity;
 			_CompileToNative;
 		</_CollectFrameworksDependsOn>
 	</PropertyGroup>
@@ -1869,31 +1868,20 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_FrameworkCodeSigningKey Condition="'$(_FrameworkCodeSigningKey)' == ''">-</_FrameworkCodeSigningKey>
 		</PropertyGroup>
 
-		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_CodesignDisableTimestamp)"
-			Keychain="$(CodesignKeychain)"
-			Resources="@(_Frameworks)"
-			SigningKey="$(_FrameworkCodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			UseSecureTimestamp="$(UseHardenedRuntime)"
-			>
-		</Codesign>
-
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)codesign" />
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
+		<ItemGroup>
+			<_CodesignItems Include="@(Frameworks)">
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<!-- CodesignDeep -->
+				<CodesignDisableTimestamp>$(_CodesignDisableTimestamp)</CodesignDisableTimestamp>
+				<!-- CodesignEntitlements -->
+				<CodesignExtraArgs>$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
+				<!-- CodesignResourceRules -->
+				<CodesignSigningKey>$(_FrameworkCodeSigningKey)</CodesignSigningKey>
+				<!-- CodesignUseHardenedRuntime -->
+				<CodesignUseSecureTimestamp>$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
+			</_CodesignItems>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_ReadAppExtensionCodesignProperties">
@@ -1902,10 +1890,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
-	<Target Name="_CodesignAppExtensions" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
+	<Target Name="_CodesignAppExtensions"
+		Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
 		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
-		Inputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
-		Outputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
+		>
 
 		<PropertyGroup>
 			<_CodesignAppExtensionsLibraryPath>$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
@@ -1919,47 +1907,37 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			</_CodesignAppExtensionsLibrary>
 		</ItemGroup>
 
-		<Codesign
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			Resources="@(_CodesignAppExtensionsLibrary)"
-			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
-			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
-			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
-			SigningKey="%(_AppExtensionCodesignProperties.LibrarySigningKey)"
-			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
-			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
-			>
-		</Codesign>
+		<ItemGroup>
+			<_CodesignItems Include="@(_CodesignAppExtensionsLibrary)" Condition="'%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''">
+				<CodesignAllocate>%(_AppExtensionCodesignProperties.CodesignAllocate)</CodesignAllocate>
+				<!-- CodesignDeep -->
+				<CodesignDisableTimestamp>%(_AppExtensionCodesignProperties.DisableTimestamp)</CodesignDisableTimestamp>
+				<!-- CodesignEntitlements -->
+				<CodesignExtraArgs>%(_AppExtensionCodesignProperties.ExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain>%(_AppExtensionCodesignProperties.Keychain)</CodesignKeychain>
+				<!-- CodesignResourceRules -->
+				<CodesignSigningKey>%(_AppExtensionCodesignProperties.LibrarySigningKey)</CodesignSigningKey>
+				<CodesignStampPath>$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)</CodesignStampPath>
+				<!-- CodesignUseHardenedRuntime -->
+				<!-- CodesignUseSecureTimestamp -->
+			</_CodesignItems>
+		</ItemGroup>
 
-		<Codesign
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != ''"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
-			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
-			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
-			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
-			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
-			Resources="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)"
-			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
-			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
-			>
-		</Codesign>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And ('$(_CanOutputAppBundle)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != '') And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
-			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist"
-		/>
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources')"
-			Files="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources"
-		/>
+		<ItemGroup>
+			<_CodesignItems Include="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)" Condition="'%(_AppExtensionCodesignProperties.SigningKey)' != ''">
+				<CodesignAllocate>%(_AppExtensionCodesignProperties.CodesignAllocate)</CodesignAllocate>
+				<!-- CodesignDeep -->
+				<CodesignDisableTimestamp>%(_AppExtensionCodesignProperties.DisableTimestamp)</CodesignDisableTimestamp>
+				<CodesignEntitlements>%(_AppExtensionCodesignProperties.Entitlements)</CodesignEntitlements>
+				<CodesignExtraArgs>%(_AppExtensionCodesignProperties.ExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain>%(_AppExtensionCodesignProperties.Keychain)</CodesignKeychain>
+				<CodesignResourceRules>%(_AppExtensionCodesignProperties.ResourceRules)</CodesignResourceRules>
+				<CodesignSigningKey>%(_AppExtensionCodesignProperties.SigningKey)</CodesignSigningKey>
+				<!-- CodesignStampPath -->
+				<!-- CodesignUseHardenedRuntime -->
+				<!-- CodesignUseSecureTimestamp -->
+			</_CodesignItems>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
@@ -2050,22 +2028,28 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' != 'macOS'">$(_CompiledCodesignEntitlements)</_AppBundleCodesignEntitlements>
 		</PropertyGroup>
 
+		<ItemGroup>
+			<_CodesignItems Include="$(AppBundleDir)">
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<CodesignDeep>$(IsAppExtension)</CodesignDeep>
+				<CodesignDisableTimestamp>$(_CodesignDisableTimestamp)</CodesignDisableTimestamp>
+				<CodesignEntitlements>$(_AppBundleCodesignEntitlements)</CodesignEntitlements>
+				<CodesignExtraArgs>$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
+				<CodesignResourceRules>$(_PreparedResourceRules)</CodesignResourceRules>
+				<CodesignSigningKey>$(_CodeSigningKey)</CodesignSigningKey>
+				<!-- CodesignStampPath -->
+				<CodesignUseHardenedRuntime>$(UseHardenedRuntime)</CodesignUseHardenedRuntime>
+				<CodesignUseSecureTimestamp>$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
+			</_CodesignItems>
+		</ItemGroup>
+
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_CodesignDisableTimestamp)"
-			Entitlements="$(_AppBundleCodesignEntitlements)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			IsAppExtension="$(IsAppExtension)"
-			Keychain="$(CodesignKeychain)"
-			ResourceRules="$(_PreparedResourceRules)"
-			Resources="$(AppBundleDir)"
-			SigningKey="$(_CodeSigningKey)"
+			Resources="@(_CodesignItems)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
-			UseHardenedRuntime="$(UseHardenedRuntime)"
-			UseSecureTimestamp="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 
