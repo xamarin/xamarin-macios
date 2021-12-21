@@ -8139,14 +8139,14 @@ namespace Foundation
 		[Protocolize]
 		NSStreamDelegate Delegate { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Protected]
 		[Export ("propertyForKey:")]
 		NSObject GetProperty (NSString key);
 	
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Protected]
@@ -8628,10 +8628,12 @@ namespace Foundation
 		[Export ("inputStreamWithURL:")]
 		NSInputStream FromUrl (NSUrl url);
 
-#if XAMCORE_4_0
+#if NET
+		[Protected]
 		[Export ("propertyForKey:"), Override]
 		NSObject GetProperty (NSString key);
 
+		[Protected]
 		[Export ("setProperty:forKey:"), Override]
 		bool SetProperty ([NullAllowed] NSObject property, NSString key);
 
@@ -9506,10 +9508,12 @@ namespace Foundation
 		[Export ("outputStreamToFileAtPath:append:")]
 		NSOutputStream CreateFile (string path, bool shouldAppend);
 
-#if XAMCORE_4_0
+#if NET
+		[Protected]
 		[Export ("propertyForKey:"), Override]
 		NSObject GetProperty (NSString key);
 
+		[Protected]
 		[Export ("setProperty:forKey:"), Override]
 		bool SetProperty ([NullAllowed] NSObject property, NSString key);
 

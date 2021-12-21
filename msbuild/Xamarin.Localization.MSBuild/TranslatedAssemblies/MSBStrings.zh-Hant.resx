@@ -716,6 +716,9 @@
   <data name="E0188" xml:space="preserve">
         <value>無法將 Mac Catalyst 版本 {0} 對應至 macOS 版本。有效的 Mac Catalyst 版本為: {1}</value>
     </data>
+  <data name="E0189" xml:space="preserve">
+        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>無法解析 WiFi 偵錯工具設定的主機 IP。
         </value>
@@ -1081,5 +1084,12 @@
   <data name="W7087" xml:space="preserve">
         <value>目錄 {0} 中必須有「資訊清單檔」。</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>File '{0}' is not a valid framework: {1}</value>
     </data>
 </root>

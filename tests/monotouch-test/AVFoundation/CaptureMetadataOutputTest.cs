@@ -96,7 +96,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			TestRuntime.RequestCameraPermission (AVMediaTypes.Video.GetConstant (), true);
 
 			using (var captureSession = new AVCaptureSession ()) {
-				using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaTypes.Video.GetConstant ())) {
+				using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
 
 					NSError error;
 					using (var videoInput = new AVCaptureDeviceInput (videoDevice, out error)) {

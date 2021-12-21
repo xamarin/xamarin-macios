@@ -6051,12 +6051,14 @@ public partial class Generator : IMemberGatherer {
 				var getter = pi.GetGetMethod ();
 				if (getter != null) {
 					PrintAttributes (pi, preserve:true, advice:true);
-					GenerateMethod (type, getter, false, null, false, false, true, attrib.ToGetter(pi).Selector);
+					var ba = GetBindAttribute (getter);
+					GenerateMethod (type, getter, false, null, false, false, true, ba?.Selector ?? attrib.ToGetter (pi).Selector);
 				}
 				var setter = pi.GetSetMethod ();
 				if (setter != null) {
 					PrintAttributes (pi, preserve:true, advice:true);
-					GenerateMethod (type, setter, false, null, false, false, true, attrib.ToSetter(pi).Selector);
+					var ba = GetBindAttribute (setter);
+					GenerateMethod (type, setter, false, null, false, false, true, ba?.Selector ?? attrib.ToSetter (pi).Selector);
 				}
 			}
 			indent--;
