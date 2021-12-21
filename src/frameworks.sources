@@ -1469,6 +1469,7 @@ SCENEKIT_API_SOURCES = \
 
 SCENEKIT_CORE_SOURCES = \
 	SceneKit/SCNMatrix4.cs \
+	SceneKit/SCNMatrix4_dotnet.cs \
 	SceneKit/SCNQuaternion.cs \
 	SceneKit/SCNVector3.cs \
 	SceneKit/SCNVector4.cs \
