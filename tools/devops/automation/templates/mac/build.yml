@@ -80,7 +80,7 @@ steps:
     Import-Module ./GitHub.psm1
     if ( -not (Test-HDFreeSpace -Size 5)) {
       Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
-      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
+      New-GitHubComment -Header "Tests failed catastrophically on macOS $Env:CONTEXT." -Emoji ":fire:" -Description "Test package was not found."
       Stop-Pipeline
     } else {
       Set-GitHubStatus -Status "pending" -Description "Tests $Env:CONTEXT on VSTS have been started." -Context "$Env:CONTEXT"
@@ -148,7 +148,12 @@ steps:
 
     if ($Env:MAC_TESTS_PRESENT -ne "Succeeded") {
       Set-GitHubStatus -Status "error" -Description "Mac tests were not packaged." -Context "$Env:CONTEXT"
-      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Mac tests were not packaged."
+
+      $header="Tests failed catastrophically on $Env:CONTEXT" 
+      $description="Mac tests were not packaged."
+      $message="Tests could not be executed becuase the mac tests .zip was not found."
+
+      New-GithubComment -Header $header -Description $description -Message $message -Emoji ":fire:"
       Stop-Pipeline
     } 
   displayName: Validate tests pacakge
