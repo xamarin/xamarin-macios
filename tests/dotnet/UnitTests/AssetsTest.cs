@@ -139,12 +139,17 @@ namespace Xamarin.Tests {
 		};
 
 		// msbuild will only update the assets if they are newer than the outputs from previous build
-		// so we will touch all the files the symlink points to in order to give them newer modified times
+		// so we will touch the first (non-DS_Store) file the symlink points to in order to give them newer modified times
 		void ProcessUpdateSymlink (string xcassetsDir)
 		{
 			var output = new StringBuilder ();
-			var executable = "find";
-			var arguments = new string [] { "-L", xcassetsDir, "-maxdepth", "5", "-mindepth", "0", "-exec", "touch", "{}", "+" };
+			var assets = Directory.EnumerateFiles (xcassetsDir, "*.*", SearchOption.AllDirectories).ToArray ();
+
+			// assets first value is a .DS_Store file that work trigger MSBuild recompile so we want the second value
+			Assert.Greater (assets.Length, 1);
+
+			var executable = "touch";
+			var arguments = new string [] { assets[1] };
 			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
 			Assert.AreEqual (0, rv.ExitCode, $"Processing Update Symlink Error: {rv.StandardError}. Unexpected ExitCode");
 		}
