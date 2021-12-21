@@ -1903,17 +1903,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_CodesignAppExtensions" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
 		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
-		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
-		Outputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
+		Inputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
+		Outputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
 
 		<PropertyGroup>
-			<_CodesignAppExtensionsLibraryPath>$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
+			<_CodesignAppExtensionsLibraryPath>$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
 		</PropertyGroup>
 
 		<ItemGroup>
 			<_CodesignAppExtensionsLibrary
 				Include="$(_CodesignAppExtensionsLibraryPath)**\*.dylib;$(_CodesignAppExtensionsLibraryPath)**\*.metallib"
-				Exclude="$(_CodesignAppExtensionsLibraryPath)Watch\**;$(_CodesignAppExtensionsLibraryPath)PlugIns\**"
+				Exclude="$(_CodesignAppExtensionsLibraryPath)Watch\**;$(_CodesignAppExtensionsLibraryPath)$(_AppPlugInsRelativePath)\**"
 				>
 			</_CodesignAppExtensionsLibrary>
 		</ItemGroup>
@@ -1943,7 +1943,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
 			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
 			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
-			Resources="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			Resources="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)"
 			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
 			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
 			>
@@ -1956,8 +1956,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		/>
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources')"
-			Files="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources')"
+			Files="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources"
 		/>
 	</Target>
 
