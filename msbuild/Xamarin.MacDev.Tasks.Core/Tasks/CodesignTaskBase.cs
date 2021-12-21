@@ -241,15 +241,107 @@ namespace Xamarin.MacDev.Tasks
 				return true;
 
 			var codesignedFiles = new List<ITaskItem> ();
-			var resourcesToSign = Resources.Where (v => NeedsCodesign (v));
+			var resourcesToSign = Resources.Where (v => NeedsCodesign (v)).ToArray ();
 
-			Parallel.ForEach (resourcesToSign, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
-				Codesign (item);
+			// 1. Rewrite requests to sign executables inside frameworks to sign the framework itself
+			//    signing a framework and a file inside a framework is not *always* identical
+			//    on macOS apps {item.ItemSpec} can be a symlink to `Versions/Current/{item.ItemSpec}`
+			//    and `Current` also a symlink to `A`... and `_CodeSignature` will be found there
+			// 2. Resolve symlinks in the input.
+			// 3. Make sure we're working with full paths.
+			// All this makes it easier to sort and split the input files into buckets that can be codesigned together,
+			// while also not codesigning directories before files inside them.
+			foreach (var res in resourcesToSign) {
+				var path = res.ItemSpec;
+				var parent = Path.GetDirectoryName (path);
 
-				var files = GetCodesignedFiles (item);
-				lock (codesignedFiles)
-					codesignedFiles.AddRange (files);
-			});
+				// so do not don't sign `A.framework/A`, sign `A.framework` which will always sign the *bundle*
+				if (Path.GetExtension (parent) == ".framework" && Path.GetFileName (path) == Path.GetFileNameWithoutExtension (parent))
+					path = parent;
+
+				path = PathUtils.ResolveSymbolicLinks (path);
+				path = Path.GetFullPath (path);
+
+				res.ItemSpec = path;
+			}
+
+			// first sort all the items by path length, longest path first.
+			resourcesToSign = resourcesToSign.OrderBy (v => v.ItemSpec.Length).Reverse ().ToArray ();
+
+			// Then we need to split the input into buckets, where everything in a bucket can be signed in parallel
+			// (i.e. no item in a bucket depends on any other item in the bucket being signed first).
+			// any such items must go into a different bucket. The bucket themselves are also sorted, where
+			// we have to sign the first bucket first, and so on.
+			// Since we've sorted by path length, we know that if we find a directory, we won't find any containing
+			// files from that directory later.
+			var buckets = new List<List<ITaskItem>> ();
+			for (var i = 0; i < resourcesToSign.Length; i++) {
+				var res = resourcesToSign [i];
+				// All files can go into the first bucket.
+				if (File.Exists (res.ItemSpec)) {
+					if (buckets.Count == 0)
+						buckets.Add (new List<ITaskItem> ());
+					var bucket = buckets [0];
+					bucket.Add (res);
+					continue;
+				}
+
+				if (Directory.Exists (res.ItemSpec)) {
+					var dir = res.ItemSpec;
+
+					// Add the directory separator, so we can do easy substring matches
+					if (dir.Length > 0 && dir [dir.Length - 1] != Path.DirectorySeparatorChar)
+						dir += Path.DirectorySeparatorChar;
+
+					// This is a directory, which can contain other files or directories that must be signed first
+					// If this item is a containing directory for any of the items in a bucket, then we need to
+					// add this item to the next bucket. So we go through the buckets in reverse order.
+					var added = false;
+					for (var b = buckets.Count - 1; b >= 0; b--) {
+						var bucket = buckets [b];
+						var anyContainingFile = bucket.Any (v => v.ItemSpec.StartsWith (dir, StringComparison.OrdinalIgnoreCase));
+						if (anyContainingFile) {
+							if (b + 1 >= buckets.Count)
+								buckets.Add (new List<ITaskItem> ());
+							buckets [b + 1].Add (res);
+							added = true;
+							break;
+						}
+					}
+					if (!added) {
+						// This directory doesn't contain any other signed files, so we can add it to the first bucket.
+						if (buckets.Count == 0)
+							buckets.Add (new List<ITaskItem> ());
+						var bucket = buckets [0];
+						bucket.Add (res);
+					}
+					continue;
+				}
+
+				Log.LogWarning ("Unable to sign '{0}': file or directory not found.", res.ItemSpec);
+			}
+
+#if false
+			Log.LogWarning ("Codesigning {0} buckets", buckets.Count);
+			for (var b = 0; b < buckets.Count; b++) {
+				var bucket = buckets [b];
+				Log.LogWarning ($"    Bucket #{b + 1} contains {bucket.Count} items:");
+				foreach (var item in bucket) {
+					Log.LogWarning ($"        {item.ItemSpec}");
+				}
+			}
+#endif
+
+			for (var b = 0; b < buckets.Count; b++) {
+				var bucket = buckets [b];
+				Parallel.ForEach (bucket, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
+					Codesign (item);
+
+					var files = GetCodesignedFiles (item);
+					lock (codesignedFiles)
+						codesignedFiles.AddRange (files);
+				});
+			}
 
 			CodesignedFiles = codesignedFiles.ToArray ();
 
