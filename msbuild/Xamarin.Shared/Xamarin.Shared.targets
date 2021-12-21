@@ -1734,6 +1734,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_ReadAppExtensionCodesignProperties;
 			_CodesignAppExtensions;
 			_PrepareCodesignAppExtension;
+			_CalculateCodesignAppBundleInputs;
 		</_CodesignAppBundleDependsOn>
 
 		<CoreCodesignDependsOn>
@@ -2021,6 +2022,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			IncludeMetadata="true"
 			Overwrite="true"
 		/>
+	</Target>
+
+	<Target Name="_CalculateCodesignAppBundleInputs" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
+		<ItemGroup>
+			<_CodesignAppBundleInputs Include="$(_AppBundlePath)**\*.*" Exclude="$(_AppBundlePath)_CodeSignature\CodeResources" />
+		</ItemGroup>
 	</Target>
 
 	<!-- LinkMode -->
