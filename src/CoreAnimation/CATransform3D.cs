@@ -20,17 +20,73 @@ namespace CoreAnimation {
 	// CATransform3D.h
 	[StructLayout(LayoutKind.Sequential)]
 	public struct CATransform3D {
-		public nfloat m11, m12, m13, m14;
-		public nfloat m21, m22, m23, m24;
-		public nfloat m31, m32, m33, m34;
-		public nfloat m41, m42, m43, m44;
+#if NET
+		public nfloat M11, M12, M13, M14;
+		public nfloat M21, M22, M23, M24;
+		public nfloat M31, M32, M33, M34;
+		public nfloat M41, M42, M43, M44;
+#else
+		[Obsolete ("Use 'M11' instead.")]
+		public nfloat m11;
+		[Obsolete ("Use 'M12' instead.")]
+		public nfloat m12;
+		[Obsolete ("Use 'M13' instead.")]
+		public nfloat m13;
+		[Obsolete ("Use 'M14' instead.")]
+		public nfloat m14;
+		[Obsolete ("Use 'M21' instead.")]
+		public nfloat m21;
+		[Obsolete ("Use 'M22' instead.")]
+		public nfloat m22;
+		[Obsolete ("Use 'M23' instead.")]
+		public nfloat m23;
+		[Obsolete ("Use 'M24' instead.")]
+		public nfloat m24;
+		[Obsolete ("Use 'M31' instead.")]
+		public nfloat m31;
+		[Obsolete ("Use 'M32' instead.")]
+		public nfloat m32;
+		[Obsolete ("Use 'M33' instead.")]
+		public nfloat m33;
+		[Obsolete ("Use 'M34' instead.")]
+		public nfloat m34;
+		[Obsolete ("Use 'M41' instead.")]
+		public nfloat m41;
+		[Obsolete ("Use 'M42' instead.")]
+		public nfloat m42;
+		[Obsolete ("Use 'M43' instead.")]
+		public nfloat m43;
+		[Obsolete ("Use 'M44' instead.")]
+		public nfloat m44;
+
+		public nfloat M11 { get => m11; set => m11 = value; }
+		public nfloat M12 { get => m12; set => m12 = value; }
+		public nfloat M13 { get => m13; set => m13 = value; }
+		public nfloat M14 { get => m14; set => m14 = value; }
+		public nfloat M21 { get => m21; set => m21 = value; }
+		public nfloat M22 { get => m22; set => m22 = value; }
+		public nfloat M23 { get => m23; set => m23 = value; }
+		public nfloat M24 { get => m24; set => m24 = value; }
+		public nfloat M31 { get => m31; set => m31 = value; }
+		public nfloat M32 { get => m32; set => m32 = value; }
+		public nfloat M33 { get => m33; set => m33 = value; }
+		public nfloat M34 { get => m34; set => m34 = value; }
+		public nfloat M41 { get => m41; set => m41 = value; }
+		public nfloat M42 { get => m42; set => m42 = value; }
+		public nfloat M43 { get => m43; set => m43 = value; }
+		public nfloat M44 { get => m44; set => m44 = value; }
+#endif
 
 		static public readonly CATransform3D Identity;
 
 		static CATransform3D ()
 		{
 			Identity = new CATransform3D ();
+#if NET
+			Identity.M11 = Identity.M22 = Identity.M33 = Identity.M44 = 1f;
+#else
 			Identity.m11 = Identity.m22 = Identity.m33 = Identity.m44 = 1f;
+#endif
 		}
 		
 		[DllImport(Constants.QuartzLibrary)]
@@ -62,8 +118,13 @@ namespace CoreAnimation {
 		public override int GetHashCode ()
 		{
 			unsafe {
+#if NET
+				int code = (int) M11;
+				fixed (nfloat *fp = &M11){
+#else
 				int code = (int) m11;
 				fixed (nfloat *fp = &m11){
+#endif
 					int *ip = (int *) fp;
 					for (int i = 1; i < 4 * IntPtr.Size; i++){
 						code = code ^ ip [i];
@@ -80,9 +141,15 @@ namespace CoreAnimation {
 		{
 			//return CATransform3DMakeTranslation (tx, ty, tz);
 			CATransform3D r = Identity;
+#if NET
+			r.M41 = tx;
+			r.M42 = ty;
+			r.M43 = tz;
+#else
 			r.m41 = tx;
 			r.m42 = ty;
 			r.m43 = tz;
+#endif
 
 			return r;
 		}
@@ -93,9 +160,15 @@ namespace CoreAnimation {
 		public static CATransform3D MakeScale (nfloat sx, nfloat sy, nfloat sz)
 		{
 			CATransform3D r = Identity;
+#if NET
+			r.M11 = sx;
+			r.M22 = sy;
+			r.M33 = sz;
+#else
 			r.m11 = sx;
 			r.m22 = sy;
 			r.m33 = sz;
+#endif
 
 			return r;
 		}
@@ -174,10 +247,17 @@ namespace CoreAnimation {
 		public override string ToString ()
 		{
 			return String.Format ("[{0} {1} {2} {3}; {4} {5} {6} {7}; {8} {9} {10} {11}; {12} {13} {14} {15}]",
+#if NET
+					      M11, M12, M13, M14,
+					      M21, M22, M23, M24,
+					      M31, M32, M33, M34,
+					      M41, M42, M43, M44);
+#else
 					      m11, m12, m13, m14,
 					      m21, m22, m23, m24,
 					      m31, m32, m33, m34,
 					      m41, m42, m43, m44);
+#endif
 		}
 	}
 }
