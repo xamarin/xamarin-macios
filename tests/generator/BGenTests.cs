@@ -773,6 +773,37 @@ namespace GeneratorTests
 #endif
 		}
 
+		[Test]
+		public void ProtocolBindProperty ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/protocol-bind-property.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocol_Extensions");
+			Assert.NotNull (type, "MyProtocol_Extensions");
+
+			var method = type.Methods.First (v => v.Name == "GetOptionalProperty");
+			var ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isOptionalProperty", (string) ldstr.Operand, "isOptionalProperty");
+
+
+			method = type.Methods.First (v => v.Name == "SetOptionalProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setOptionalProperty:", (string) ldstr.Operand, "setOptionalProperty");
+
+			type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocolWrapper");
+			Assert.NotNull (type, "MyProtocolWrapper");
+
+			method = type.Methods.First (v => v.Name == "get_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isAbstractProperty", (string) ldstr.Operand, "isAbstractProperty");
+
+			method = type.Methods.First (v => v.Name == "set_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setAbstractProperty:", (string) ldstr.Operand, "setAbstractProperty");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

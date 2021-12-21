@@ -9,7 +9,7 @@ namespace monotouchtest.AVFoundation
 	[Preserve (AllMembers = true)]
 	public class AVPlayerLooperTest
 	{
-#if !XAMCORE_4_0
+#if !NET
 		public void TestLoopingEnabled ()
 		{
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "Hand.wav");

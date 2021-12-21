@@ -996,5 +996,32 @@ namespace Xamarin.Tests
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
 		}
+
+		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
+		{
+			string dir;
+
+			switch (platform) {
+			case ApplePlatform.iOS:
+				dir = simulator.Value ? "iphonesimulator" : "iphoneos";
+				break;
+			case ApplePlatform.MacOSX:
+				dir = "macos";
+				break;
+			case ApplePlatform.WatchOS:
+				dir = simulator.Value ? "watchsimulator" : "watchos";
+				break;
+			case ApplePlatform.TVOS:
+				dir = simulator.Value ? "tvsimulator" : "tvos";
+				break;
+			case ApplePlatform.MacCatalyst:
+				dir = "maccatalyst";
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+
+			return Path.Combine (SourceRoot, "tests", "test-libraries", ".libs", dir);
+		}
 	}
 }
