@@ -59,11 +59,10 @@ namespace Cecil.Tests {
 		{
 			var ns = member.FullName.Split ('.') [0];
 
+			// Skipping all namespaces until issue https://github.com/xamarin/xamarin-macios/issues/13621 is fixed
 			switch (ns) {
-			//case "Metal":
-			//	return true;
 			default:
-				return false;
+				return true;
 			}
 		}
 	}
