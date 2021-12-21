@@ -1163,13 +1163,6 @@ public partial class Generator : IMemberGatherer {
 				return "UIntPtr";
 		}
 
-		if (mai.Type.Namespace == "System") {
-			if (mai.Type.Name == "nint")
-				return "IntPtr";
-			if (mai.Type.Name == "nuint")
-				return "UIntPtr";
-		}
-
 		if (IsNativeType (mai.Type))
 			return PrimitiveType (mai.Type, formatted);
 
@@ -6385,7 +6378,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		} else if (BindThirdPartyLibrary) {
 			// User should provide a LibraryName
-			throw new BindingException (1042, true);
+			throw ErrorHelper.CreateError (1042, /* Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal") */ type.FullName + "." + propertyName);
 		} else {
 			library_name = type.Namespace;
 		}

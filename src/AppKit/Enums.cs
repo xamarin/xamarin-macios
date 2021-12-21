@@ -2174,25 +2174,16 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-#if XAMCORE_4_0
-	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
-	public enum NSOpenGLProfile : long {
-#else
 	public enum NSOpenGLProfile : int {
-#endif
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
 		Version4_1Core  = 0x4100
 	}
 	
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertButtonReturn : long {
-#else
-	public enum NSAlertButtonReturn : int {
-#endif
 		First = 1000,
 		Second = 1001,
 		Third = 1002,
@@ -2700,12 +2691,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSFontPanelMode : ulong {
-#else
-	public enum NSFontPanelMode : int {
-#endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
 		CollectionMask = 1 << 2,
