@@ -1062,8 +1062,6 @@
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
-			<!-- Link with static libraries from NativeReference items ((xc)frameworks are handled in the _ComputeFrameworkFilesToPublish target, and dynamic libraries are handled in the _ComputeDynamicLibrariesToPublish target) -->
-			<_XamarinMainLibraries Include="@(_FileNativeReference)" />
 
 			<!-- The frameworks we need to link with (both weakly and normally) -->
 			<_NativeExecutableFrameworks Include="@(_LinkerFrameworks)" />
@@ -1078,6 +1076,7 @@
 			<!-- Here we must add all the files that should make us (re-)link the executable -->
 			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
 			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
+			<_LinkNativeExecutableInputs Include="@(_FileNativeReference)" />
 		</ItemGroup>
 	</Target>
 

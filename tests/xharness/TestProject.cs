@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
@@ -81,6 +82,29 @@ namespace Xharness {
 			return CreateCopyAsync (log, processManager, test, rootDirectory, pr);
 		}
 
+		static SemaphoreSlim ls_files_semaphore = new SemaphoreSlim (1);
+
+		async Task<string[]> ListFilesAsync (ILog log, string test_dir, IProcessManager processManager)
+		{
+			var acquired = await ls_files_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
+			try {
+				if (!acquired)
+					log.WriteLine ($"Unable to acquire lock to run 'git ls-files {test_dir}' in 5 minutes; will try to run anyway.");
+				using var process = new Process ();
+				process.StartInfo.FileName = "git";
+				process.StartInfo.Arguments = "ls-files";
+				process.StartInfo.WorkingDirectory = test_dir;
+				var stdout = new MemoryLog () { Timestamp = false };
+				var result = await processManager.RunAsync (process, stdout, stdout, stdout, timeout: TimeSpan.FromSeconds (60));
+				if (!result.Succeeded)
+					throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
+				return stdout.ToString ().Split ('\n');
+			} finally {
+				if (acquired)
+					ls_files_semaphore.Release ();
+			}
+		}
+
 		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
 			var directory = Cache.CreateTemporaryDirectory (test.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
@@ -97,38 +121,8 @@ namespace Xharness {
 			var variableSubstitution = new Dictionary<string, string> ();
 			variableSubstitution.Add ("RootTestsDirectory", rootDirectory);
 
-			// Find Import nodes that point to a shared code file, load that shared file and inject it here.
-			var nodes = doc.SelectNodes ("//*[local-name() = 'Import']");
-			foreach (XmlNode node in nodes) {
-				if (node == null)
-					continue;
-
-				var project = node.Attributes ["Project"].Value;
-				if (project != "../shared.csproj" && project != "../shared.fsproj")
-					continue;
-
-				if (TestPlatform == TestPlatform.None)
-					throw new InvalidOperationException  ($"The project '{original_path}' did not set the TestPlatform property.");
-
-				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
-				// Check for variables that won't work correctly if the shared code is moved to a different file
-				var xml = File.ReadAllText (sharedProjectPath);
-				if (xml.Contains ("$(MSBuildThis"))
-					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code: {sharedProjectPath}");
-
-				var import = new XmlDocument ();
-				import.LoadXmlWithoutNetworkAccess (xml);
-				var importNodes = import.SelectSingleNode ("/Project").ChildNodes;
-				var previousNode = node;
-				foreach (XmlNode importNode in importNodes) {
-					var importedNode = doc.ImportNode (importNode, true);
-					previousNode.ParentNode.InsertAfter (importedNode, previousNode);
-					previousNode = importedNode;
-				}
-				node.ParentNode.RemoveChild (node);
-
-				variableSubstitution.Add ("_PlatformName", TestPlatform.ToPlatformName ());
-				variableSubstitution = doc.CollectAndEvaluateTopLevelProperties (variableSubstitution);
+			lock (GetType ()) {
+				InlineSharedImports (doc, original_path, variableSubstitution, rootDirectory);
 			}
 
 			doc.ResolveAllPaths (original_path, variableSubstitution);
@@ -167,17 +161,7 @@ namespace Xharness {
 					// because the cloned project is stored in a very different directory.
 					var test_dir = System.IO.Path.GetDirectoryName (original_path);
 
-					// Get all the files in the project directory from git
-					using var process = new Process ();
-					process.StartInfo.FileName = "git";
-					process.StartInfo.Arguments = "ls-files";
-					process.StartInfo.WorkingDirectory = test_dir;
-					var stdout = new MemoryLog () { Timestamp = false };
-					var result = await processManager.RunAsync (process, stdout, stdout, stdout, timeout: TimeSpan.FromSeconds (15));
-					if (!result.Succeeded)
-						throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
-
-					var files = stdout.ToString ().Split ('\n');
+					var files = await ListFilesAsync (log, test_dir, processManager);
 					foreach (var file in files) {
 						var ext = System.IO.Path.GetExtension (file);
 						var full_path = System.IO.Path.Combine (test_dir, file);
@@ -235,6 +219,49 @@ namespace Xharness {
 			this.ProjectReferences = projectReferences;
 
 			doc.Save (Path);
+		}
+
+		void InlineSharedImports (XmlDocument doc, string original_path, Dictionary<string, string> variableSubstitution, string rootDirectory)
+		{
+			// Find Import nodes that point to a shared code file, load that shared file and inject it here.
+			var nodes = doc.SelectNodes ("//*[local-name() = 'Import']");
+			foreach (XmlNode node in nodes) {
+				if (node is null)
+					continue;
+
+				var project = node.Attributes ["Project"].Value.Replace ('\\', '/');
+				var projectName = System.IO.Path.GetFileName (project);
+				if (projectName != "shared.csproj" && projectName != "shared.fsproj" && projectName != "shared-dotnet.csproj")
+					continue;
+
+				if (TestPlatform == TestPlatform.None)
+					throw new InvalidOperationException ($"The project '{original_path}' did not set the TestPlatform property.");
+
+				project = project.Replace ("$(RootTestsDirectory)", rootDirectory);
+
+				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
+				// Check for variables that won't work correctly if the shared code is moved to a different file
+				var xml = File.ReadAllText (sharedProjectPath);
+				xml = xml.Replace ("$(MSBuildThisFileDirectory)", System.IO.Path.GetDirectoryName (sharedProjectPath));
+				if (xml.Contains ("$(MSBuildThis"))
+					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code: {sharedProjectPath}");
+
+				var import = new XmlDocument ();
+				import.LoadXmlWithoutNetworkAccess (xml);
+				// Inline any shared imports in the inlined shared import too
+				InlineSharedImports (import, sharedProjectPath, variableSubstitution, rootDirectory);
+				var importNodes = import.SelectSingleNode ("/Project").ChildNodes;
+				var previousNode = node;
+				foreach (XmlNode importNode in importNodes) {
+					var importedNode = doc.ImportNode (importNode, true);
+					previousNode.ParentNode.InsertAfter (importedNode, previousNode);
+					previousNode = importedNode;
+				}
+				node.ParentNode.RemoveChild (node);
+
+				variableSubstitution ["_PlatformName"] = TestPlatform.ToPlatformName ();
+				variableSubstitution = doc.CollectAndEvaluateTopLevelProperties (variableSubstitution);
+			}
 		}
 
 		public override string ToString ()
