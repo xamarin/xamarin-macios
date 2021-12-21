@@ -1247,7 +1247,6 @@ MACCATALYST_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THA
 
 MACCATALYST_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_BUILD_DIR)/Constants.cs    \
-	$(BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(DOTNET_BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)    \

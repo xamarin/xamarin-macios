@@ -3828,7 +3828,7 @@ namespace UIKit {
 
 	[Model]
 	[Protocol]
-#if XAMCORE_3_0
+#if XAMCORE_3_0 && !NET
 	// bind like UITableViewDelegate to avoid generating duplicate code
 	// it's an API break (binary, source should be fine)
 	[BaseType (typeof (UIScrollViewDelegate))]
