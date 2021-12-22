@@ -2381,13 +2381,21 @@ namespace WebKit {
 #endif
 
 		[Export ("webView:dragDestinationActionMaskForDraggingInfo:"), DelegateName ("DragDestinationGetActionMask"), DefaultValue (0)]
+#if NET
+		WebDragDestinationAction UIGetDragDestinationActionMask (WebView webView, NSDraggingInfo draggingInfo);
+#else
 		NSEventModifierMask UIGetDragDestinationActionMask (WebView webView, NSDraggingInfo draggingInfo);
+#endif
 
 		[Export ("webView:willPerformDragDestinationAction:forDraggingInfo:"), EventArgs ("WebViewDrag")]
 		void UIWillPerformDragDestination (WebView webView, WebDragDestinationAction action, NSDraggingInfo draggingInfo);
 
 		[Export ("webView:dragSourceActionMaskForPoint:"), DelegateName ("DragSourceGetActionMask"), DefaultValue (0)]
+#if NET
+		WebDragSourceAction UIDragSourceActionMask (WebView webView, CGPoint point);
+#else
 		NSEventModifierMask UIDragSourceActionMask (WebView webView, CGPoint point);
+#endif
 
 		[Export ("webView:willPerformDragSourceAction:fromPoint:withPasteboard:"), EventArgs ("WebViewPerformDrag")]
 		void UIWillPerformDragSource (WebView webView, WebDragSourceAction action, CGPoint sourcePoint, NSPasteboard pasteboard);
