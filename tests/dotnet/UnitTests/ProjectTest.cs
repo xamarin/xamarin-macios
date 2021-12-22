@@ -431,7 +431,7 @@ namespace Xamarin.Tests {
 			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
 			Assert.That (appPath, Does.Exist, "There is an .app");
 			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
-			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Exist, "Xamarin.iOS.dll is in the bundle");
+			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Not.Exist, "Xamarin.iOS.dll is in the bundle");
 		}
 
 		[Test]
