@@ -6150,41 +6150,59 @@ namespace UIKit {
 		void SetAngleAndMagnitude (nfloat angle, nfloat magnitude);
 	}
 
+#if !NET
 	// HACK: those members are not *required* in ObjC but we made them
 	// abstract to have them inlined in UITextField and UITextView
 	// Even more confusing it that respondToSelecttor return NO on them
 	// even if it works in _real_ life (compare unit and introspection tests)
+#endif
 	[Protocol]
 	interface UITextInputTraits {
+#if !NET
 		[Abstract]
+#endif
 		[Export ("autocapitalizationType")]
 		UITextAutocapitalizationType AutocapitalizationType { get; set; }
 	
+#if !NET
 		[Abstract]
+#endif
 		[Export ("autocorrectionType")]
 		UITextAutocorrectionType AutocorrectionType { get; set;  }
 	
+#if !NET
 		[Abstract]
+#endif
 		[Export ("keyboardType")]
 		UIKeyboardType KeyboardType { get; set;  }
 	
+#if !NET
 		[Abstract]
+#endif
 		[Export ("keyboardAppearance")]
 		UIKeyboardAppearance KeyboardAppearance { get; set;  }
 	
+#if !NET
 		[Abstract]
+#endif
 		[Export ("returnKeyType")]
 		UIReturnKeyType ReturnKeyType { get; set;  }
 	
+#if !NET
 		[Abstract]
+#endif
 		[Export ("enablesReturnKeyAutomatically")]
 		bool EnablesReturnKeyAutomatically { get; set;  }
 	
+#if !NET
 		[Abstract]
+#endif
 		[Export ("secureTextEntry")]
 		bool SecureTextEntry { [Bind ("isSecureTextEntry")] get; set;  }
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("spellCheckingType")]
 		UITextSpellCheckingType SpellCheckingType { get; set; }
 
