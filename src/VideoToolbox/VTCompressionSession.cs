@@ -247,13 +247,13 @@ namespace VideoToolbox {
 			/* void* */ IntPtr sourceFrame, 
 			/* VTEncodeInfoFlags */ out VTEncodeInfoFlags flags);
 
-		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestampe, CMTime duration, 
+		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (imageBuffer is null)
 				throw new ArgumentNullException (nameof (imageBuffer));
 			
-			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestampe, duration,
+			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestamp, duration,
 				frameProperties.GetHandle (),
 				sourceFrame, out infoFlags);
 		}		
