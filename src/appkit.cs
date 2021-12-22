@@ -20712,7 +20712,11 @@ namespace AppKit {
 	
 		[Export ("windowController")]
 		[NullAllowed]
+#if NET
+		NSWindowController WindowController { get; set; }
+#else
 		NSObject WindowController { get; set; }
+#endif
 	
 		[Export ("isSheet")]
 		bool IsSheet { get; }
