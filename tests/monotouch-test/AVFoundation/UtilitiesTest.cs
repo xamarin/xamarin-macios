@@ -40,6 +40,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		}
 	}
 
+#if __MACOS__ || !NET
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVStructTest {
@@ -56,6 +57,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorChunkInfo)), Is.EqualTo (IntPtr.Size == 8 ? 16 : 12), "AVSampleCursorChunkInfo Size");
 		}
 	}
+#endif // __MACOS__ || !NET
 }
 	
 #endif // !__WATCHOS__

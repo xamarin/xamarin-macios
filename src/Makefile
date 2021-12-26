@@ -1247,7 +1247,6 @@ MACCATALYST_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THA
 
 MACCATALYST_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_BUILD_DIR)/Constants.cs    \
-	$(BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(DOTNET_BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)    \
@@ -1296,7 +1295,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Subs
 
 ### .NET ###
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp | $(MACCATALYST_DOTNET_BUILD_DIR)
+$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll: $(MACCATALYST_CORE_SOURCES) frameworks.sources Makefile $(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) \
 		$(MACCATALYST_WARNINGS_TO_FIX) \

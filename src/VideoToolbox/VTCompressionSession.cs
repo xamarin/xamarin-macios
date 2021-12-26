@@ -86,19 +86,16 @@ namespace VideoToolbox {
 			}
 		}
 
-#if NET
-		[UnmanagedCallersOnly]
-#else
+#if !NET
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CompressionOutputCallback))]
-#endif
 #endif
 		static void CompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr)
 		{
 			CompressionCallback (outputCallbackClosure, sourceFrame, status, infoFlags, cmSampleBufferPtr, true);
 		}
+#endif // !NET
 
-		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(int,int,CMVideoCodecType,VTCompressionOutputCallback,VTVideoEncoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
 		public static VTCompressionSession? Create (int width, int height, CMVideoCodecType codecType,
 			VTCompressionOutputCallback compressionOutputCallback,
 			VTVideoEncoderSpecification? encoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
@@ -171,9 +168,7 @@ namespace VideoToolbox {
 			CVPixelBufferAttributes? sourceImageBufferAttributes)
 		{
 #if NET
-			unsafe {
-				return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, &CompressionCallback);
-			}
+			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes?.Dictionary);
 #else
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, static_CompressionOutputCallback);
 #endif
@@ -252,13 +247,13 @@ namespace VideoToolbox {
 			/* void* */ IntPtr sourceFrame, 
 			/* VTEncodeInfoFlags */ out VTEncodeInfoFlags flags);
 
-		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestampe, CMTime duration, 
+		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (imageBuffer is null)
 				throw new ArgumentNullException (nameof (imageBuffer));
 			
-			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestampe, duration,
+			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestamp, duration,
 				frameProperties.GetHandle (),
 				sourceFrame, out infoFlags);
 		}		
