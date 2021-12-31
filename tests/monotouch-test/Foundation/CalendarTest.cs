@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
@@ -229,11 +229,15 @@ namespace MonoTouchFixtures.Foundation {
 
 			var todayDayNumber = NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Day, NSDate.Now);
 			NSDate todayPlusADay = NSCalendar.CurrentCalendar.DateBySettingUnit (NSCalendarUnit.Day, todayDayNumber + 1, now, NSCalendarOptions.None);
-			if (todayPlusADay == null) {
+			if (todayPlusADay is null) { // Work on the last day of a month
 				var todayMonthNumber = NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Month, now);
 				todayPlusADay = NSCalendar.CurrentCalendar.DateBySettingUnit (NSCalendarUnit.Month, todayMonthNumber + 1, now, NSCalendarOptions.None);
 			}
-			Assert.IsTrue (NSCalendar.CurrentCalendar.IsEqualToUnitGranularity (Tomorrow, todayPlusADay, NSCalendarUnit.Day | NSCalendarUnit.Month), "DateBySettingUnit - One day from now should be tomorrow");
+			if (todayPlusADay is null) { // Work on the last day of a year
+				var todayYearNumber = NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Year, now);
+				todayPlusADay = NSCalendar.CurrentCalendar.DateBySettingUnit (NSCalendarUnit.Year, todayYearNumber + 1, now, NSCalendarOptions.None);
+			}
+			Assert.IsTrue (NSCalendar.CurrentCalendar.IsEqualToUnitGranularity (Tomorrow, todayPlusADay, NSCalendarUnit.Day | NSCalendarUnit.Month | NSCalendarUnit.Year), "DateBySettingUnit - One day from now should be tomorrow");
 		}
 
 		[Test]
