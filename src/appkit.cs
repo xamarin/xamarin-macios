@@ -484,7 +484,6 @@ namespace AppKit {
 	}
 
 
-	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSApplicationDelegate) })]
 	[DisableDefaultCtor] // An uncaught exception was raised: Creating more than one Application
 	interface NSApplication : NSAccessibilityElementProtocol, NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibility, NSAppearanceCustomization {
@@ -912,7 +911,6 @@ namespace AppKit {
 	delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
 //#endif
 	
-	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -14891,7 +14889,6 @@ namespace AppKit {
 		void DidReattachViews (NSStackView stackView, NSView [] views);
 	}
 
-	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSStatusBar {
 		[Static, Export ("systemStatusBar")]
@@ -14911,7 +14908,6 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
-	[NoMacCatalyst]
 	[BaseType (typeof (NSButton))]
 	interface NSStatusBarButton {
 		[Export ("initWithFrame:")]
@@ -14921,7 +14917,6 @@ namespace AppKit {
 		bool AppearsDisabled { get; set; }
 	}
 	
-	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[PrivateDefaultCtor]
 	partial interface NSStatusItem {
@@ -15458,7 +15453,6 @@ namespace AppKit {
 		void NoteClientStringWillChange ();
 	}
 
-	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder))]
 	partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
 		[DesignatedInitializer]
@@ -20193,7 +20187,6 @@ namespace AppKit {
 
 	delegate void NSWindowTrackEventsMatchingCompletionHandler (NSEvent evt, ref bool stop);
 	
-	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSWindowDelegate)})]
 	[DisableDefaultCtor]
 	partial interface NSWindow : NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility, NSMenuItemValidation, NSUserInterfaceValidations {
