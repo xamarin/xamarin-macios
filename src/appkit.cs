@@ -10062,7 +10062,7 @@ namespace AppKit {
 
 	}
 
-	 // Also defined in foundation.cs, use that declaration instead
+	[NoMacCatalyst] // Also defined in foundation.cs, use that declaration instead
 	[ThreadSafe]
 	[Mac (10,11)]
 	[BaseType (typeof(NSObject))]
@@ -10078,7 +10078,7 @@ namespace AppKit {
 		CGRect TotalBounds { get; }
 	}
 
-	 // Also defined in uikit.cs, use that declaration instead
+	[NoMacCatalyst] // Also defined in uikit.cs, use that declaration instead
 	[ThreadSafe]
 	[Category, BaseType (typeof (NSString))]
 	interface NSStringDrawing_NSString {
