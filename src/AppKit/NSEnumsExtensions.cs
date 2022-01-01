@@ -10,7 +10,6 @@ using ObjCRuntime;
 
 namespace AppKit {
 
-#if !__MACCATALYST__
 	public static class NSImageResizingModeExtensions {
 		public static nint ToNative (NSImageResizingMode value)
 		{
@@ -82,6 +81,5 @@ namespace AppKit {
 			return (NSTextAlignment) (ulong) value;
 		}
 	}
-#endif // !__MACCATALYST__
 }
 

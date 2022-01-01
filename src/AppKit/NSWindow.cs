@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !__MACCATALYST__
-
 using System;
 using CoreFoundation;
 using Foundation;
@@ -120,4 +118,3 @@ namespace AppKit {
 		
 	}
 }
-#endif // !__MACCATALYST__
