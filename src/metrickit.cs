@@ -225,6 +225,10 @@ namespace MetricKit {
 
 		[Export ("histogrammedApplicationResumeTime", ArgumentSemantic.Strong)]
 		MXHistogram<NSUnitDuration> HistogrammedApplicationResumeTime { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (15,2), MacCatalyst (15,2)]
+		[Export ("histogrammedOptimizedTimeToFirstDraw", ArgumentSemantic.Strong)]
+		MXHistogram<NSUnitDuration> HistogrammedOptimizedTimeToFirstDraw { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]

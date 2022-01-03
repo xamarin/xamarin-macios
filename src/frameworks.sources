@@ -318,6 +318,7 @@ BUSINESSCHAT_SOURCES = \
 # CallKit
 
 CALLKIT_SOURCES = \
+	CallKit/CXCompat.cs \
 	CallKit/CXProvider.cs \
 
 # CarPlay
@@ -943,6 +944,7 @@ HOMEKIT_SOURCES = \
 	HomeKit/HMCharacteristic.cs \
 	HomeKit/HMCharacteristicMetadata.cs \
 	HomeKit/HMCharacteristicProperties.cs \
+	HomeKit/HMCompat.cs \
 	HomeKit/HMEventTrigger.cs \
 	HomeKit/HMHome.cs \
 	HomeKit/HMService.cs \

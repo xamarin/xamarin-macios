@@ -53,3 +53,9 @@
 !missing-selector! VNRequest::setRevision: not bound
 ## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
 !missing-selector! VNRequest::init not bound
+
+# Not really needed anymore, this old(?) unbound APIs got replaced
+
+# API introduced and deprecated at the same time in Xcode 12
+
+# Existing enums with name changes relevant only to Swift

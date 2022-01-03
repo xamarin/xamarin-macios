@@ -1335,7 +1335,3 @@
 
 # deprecated in 10.12, now removed
 !extra-enum-value! Managed value 7 for NSWindowButton.FullScreenButton not found in native headers
-
-# notifications do not respond and were added in a beta, ignoring until we can test they work:
-!missing-field! NSApplicationProtectedDataDidBecomeAvailableNotification not bound
-!missing-field! NSApplicationProtectedDataWillBecomeUnavailableNotification not bound

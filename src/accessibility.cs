@@ -317,4 +317,35 @@ namespace Accessibility {
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSAttributedString attributedTitle, double lowerBound, double upperBound, [NullAllowed] NSNumber[] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
 	}
+
+	[Watch (8,3), TV (15,2), Mac (12,1), iOS (15,2), MacCatalyst (15,2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AXBrailleMap : NSCopying, NSSecureCoding {
+
+		[Export ("dimensions")]
+		CGSize Dimensions { get; }
+
+		[Export ("setHeight:atPoint:")]
+		void SetHeight (float status, CGPoint point);
+
+		[Export ("heightAtPoint:")]
+		float GetHeight (CGPoint point);
+
+		[Export ("presentImage:")]
+		void Present (CGImage image);
+	}
+
+	[Watch (8,3), TV (15,2), Mac (12,1), iOS (15,2), MacCatalyst (15,2)]
+	[Protocol]
+	interface AXBrailleMapRenderer {
+
+		[Abstract]
+		[Export ("accessibilityBrailleMapRenderRegion", ArgumentSemantic.Assign)]
+		CGRect AccessibilityBrailleMapRenderRegion { get; set; }
+
+		[Abstract]
+		[Export ("accessibilityBrailleMapRenderer", ArgumentSemantic.Copy)]
+		Action<AXBrailleMap> AccessibilityBrailleMapRenderer { get; set; }
+	}
 }

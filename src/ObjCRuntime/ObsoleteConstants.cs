@@ -21,5 +21,9 @@ namespace ObjCRuntime {
 
 		internal const string iAdRemoved = "The iAd framework has been removed from iOS.";
 
+		internal const string UnavailableOnMacOS = "This type is not available on macOS.";
+
+		internal const string UnavailableOnThisPlatform = "This type is not available on this Platform.";
+
 	}
 }
