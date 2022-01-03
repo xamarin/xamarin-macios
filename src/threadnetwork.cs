@@ -6,7 +6,7 @@ using System;
 
 namespace ThreadNetwork {
 
-	[iOS (15,0)]
+	[iOS (15,0), NoMac, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface THClient
 	{
@@ -35,7 +35,7 @@ namespace ThreadNetwork {
 		void RetrieveCredentialsForExtendedPanId (NSData extendedPanId, Action<THCredentials, NSError> completion);
 	}
 
-	[iOS (15,0)]
+	[iOS (15,0), NoMac, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface THCredentials : NSSecureCoding

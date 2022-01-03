@@ -813,14 +813,13 @@ namespace AppKit {
 		[Notification, Field ("NSApplicationDidChangeScreenParametersNotification")]
 		NSString DidChangeScreenParametersNotification { get; }
 
-		// https://github.com/xamarin/xamarin-macios/issues/13185
-		// [Mac (12,0)]
-		// [Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
-		// NSString ProtectedDataWillBecomeUnavailableNotification { get; }
+		[Notification, Mac (12,1)]
+		[Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
+		NSString ProtectedDataWillBecomeUnavailableNotification { get; }
 
-		// [Mac (12,0)]
-		// [Field ("NSApplicationProtectedDataDidBecomeAvailableNotification")]
-		// NSString ProtectedDataDidBecomeAvailableNotification { get; }
+		[Notification, Mac (12,1)]
+		[Field ("NSApplicationProtectedDataDidBecomeAvailableNotification")]
+		NSString ProtectedDataDidBecomeAvailableNotification { get; }
 
 		[Field ("NSApplicationLaunchIsDefaultLaunchKey")]
 		NSString LaunchIsDefaultLaunchKey  { get; }
