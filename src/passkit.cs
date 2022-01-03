@@ -236,6 +236,10 @@ namespace PassKit {
 
 		[Field ("PKPassLibrarySerialNumberUserInfoKey")]
 		NSString SerialNumber { get; }
+
+		[Watch (8,3), iOS (15,2), Mac (12,1), MacCatalyst (15,2)]
+		[Field ("PKPassLibraryRecoveredPassesUserInfoKey")]
+		NSString RecoveredPasses { get; }
 	}
 
 	[Watch (3,0)]
