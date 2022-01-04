@@ -47,7 +47,10 @@ namespace MonoTouchFixtures.UIKit {
 				}
 				if (TestRuntime.CheckXcodeVersion (13, 0)) {
 #if !__TVOS__ 
-					Assert.That (tf.TypingAttributes, Is.Empty, "default 13.0");
+					if (TestRuntime.CheckXcodeVersion (13, 2))
+						Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 13.2");
+					else
+						Assert.That (tf.TypingAttributes, Is.Empty, "default 13.0");
 #else
 					Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 13.0");
 #endif
@@ -63,7 +66,10 @@ namespace MonoTouchFixtures.UIKit {
 				tf.TypingAttributes = new NSDictionary ();
 				if (TestRuntime.CheckXcodeVersion (13, 0)) {
 #if !__TVOS__
-					Assert.That (tf.TypingAttributes, Is.Empty, "empty 13.0");
+					if (TestRuntime.CheckXcodeVersion (13, 2))
+						Assert.That (tf.TypingAttributes, Is.Not.Empty, "empty 13.2");
+					else
+						Assert.That (tf.TypingAttributes, Is.Empty, "empty 13.0");
 #else
 					Assert.That (tf.TypingAttributes, Is.Not.Empty, "empty 13.0");
 #endif
