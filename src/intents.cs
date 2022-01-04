@@ -11917,6 +11917,10 @@ namespace Intents {
 
 		[NullAllowed, Export ("fileURL", ArgumentSemantic.Strong)]
 		NSUrl FileUrl { get; }
+
+		[Watch (8,3), Mac (12,1), iOS (15,2)]
+		[Export ("removedOnCompletion")]
+		bool RemovedOnCompletion { get; set; }
 	}
 
 	[Watch (6,0), NoTV, Mac (11,0), iOS (13,0)]
