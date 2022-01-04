@@ -7,7 +7,6 @@
     <RuntimeIdentifier>win</RuntimeIdentifier>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.14.0" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
