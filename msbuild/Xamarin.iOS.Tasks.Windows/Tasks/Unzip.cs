@@ -1,14 +1,15 @@
-using Ionic.Zip;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System;
 using System.IO;
+using System.IO.Compression;
 using Xamarin.iOS.Tasks.Windows.Properties;
 
 namespace Xamarin.iOS.Tasks.Windows {
-	public class LocalUnzip : Task {
+	public class Unzip : Task {
 		[Required]
 		public string ZipFilePath { get; set; }
+
 		[Required]
 		public string ExtractionPath { get; set; }
 
@@ -20,16 +21,22 @@ namespace Xamarin.iOS.Tasks.Windows {
 			try {
 				Log.LogMessage (Resources.LocalUnzip_Unzipping, ZipFilePath);
 
-				// Extra check to ensure the unzip won't fail if a file exists with the same path
-				if (File.Exists (ExtractionPath))
+				//Directory.Delete will fail if a file with the same path already exist
+				if (File.Exists (ExtractionPath)) {
 					File.Delete (ExtractionPath);
+				}
 
-				using (var zipFile = ZipFile.Read (ZipFilePath))
-					zipFile.ExtractAll (ExtractionPath, ExtractExistingFileAction.OverwriteSilently);
+				//ZipFile.ExtractToDirectory will fail if the directory already exist
+				if (Directory.Exists (ExtractionPath)) {
+					Directory.Delete (ExtractionPath, recursive: true);
+				}
+
+				ZipFile.ExtractToDirectory (ZipFilePath, ExtractionPath);
 
 				// Fixes last write time of all files in the Zip, because the files keep the last write time from the Mac.
-				foreach (var filePath in Directory.EnumerateFiles (ExtractionPath, "*.*", SearchOption.AllDirectories))
+				foreach (var filePath in Directory.EnumerateFiles (ExtractionPath, "*.*", SearchOption.AllDirectories)) {
 					new FileInfo (filePath).LastWriteTime = DateTime.Now;
+				}
 
 				Log.LogMessage (Resources.LocalUnzip_Unzipped, ZipFilePath);
 			} catch (Exception ex) {

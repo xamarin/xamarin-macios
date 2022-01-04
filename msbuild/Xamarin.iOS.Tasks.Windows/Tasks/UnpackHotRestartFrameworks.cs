@@ -1,9 +1,9 @@
-using Ionic.Zip;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
@@ -33,7 +33,6 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 			foreach (var assemblyPath in ReferencedAssemblies.Distinct ().Where (x => !IsFrameworkItem (x))) {
 				var assembly = AssemblyDefinition.ReadAssembly (assemblyPath.ItemSpec);
-
 				// We should only get the embedded resources that ends with .framework
 				var embeddedFrameworks = assembly.MainModule.Resources.Where (x => Path.GetExtension (x.Name) == ".framework");
 
@@ -51,16 +50,19 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 						embeddedFramework.GetResourceStream ().CopyTo (fileStream);
 					}
 
-					// Unzip the framework
-					using (var zipFile = ZipFile.Read (frameworkZipPath)) {
-						zipFile.ExtractAll (frameworkPath, ExtractExistingFileAction.OverwriteSilently);
+					//Directory.Delete will fail if a file with the same path already exist
+					if (File.Exists (frameworkPath)) {
+						File.Delete (frameworkPath);
 					}
 
+					//ZipFile.ExtractToDirectory will fail if the directory already exist
+					if (Directory.Exists (frameworkPath)) {
+						Directory.Delete (frameworkPath, recursive: true);
+					}
+
+					ZipFile.ExtractToDirectory (frameworkZipPath, frameworkPath);
 					File.Delete (frameworkZipPath);
-
-					var taskItem = new TaskItem (frameworkPath);
-
-					frameworks.Add (taskItem);
+					frameworks.Add (new TaskItem (frameworkPath));
 				}
 			}
 
