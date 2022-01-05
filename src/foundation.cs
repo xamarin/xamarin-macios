@@ -238,7 +238,7 @@ namespace Foundation
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Internal]
 		[Export ("differenceFromArray:withOptions:")]
-		IntPtr _GetDifference (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options);
+		NativeHandle _GetDifference (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (NSArray.FromNSObjects (other), options))")]
@@ -248,7 +248,7 @@ namespace Foundation
 		[Internal]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("differenceFromArray:")]
-		IntPtr _GetDifference (NSArray other);
+		NativeHandle _GetDifference (NSArray other);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference(NSArray.FromNSObjects (other)))")]
@@ -258,7 +258,7 @@ namespace Foundation
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("arrayByApplyingDifference:")]
 		[return: NullAllowed]
-		IntPtr _GetArrayByApplyingDifference (NSOrderedCollectionDifference difference);
+		NativeHandle _GetArrayByApplyingDifference (NSOrderedCollectionDifference difference);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Wrap ("NSArray.ArrayFromHandle<NSObject> (_GetArrayByApplyingDifference (difference))")]
@@ -268,7 +268,7 @@ namespace Foundation
 		[Internal]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("differenceFromArray:withOptions:usingEquivalenceTest:")]
-		IntPtr _GetDifferenceFromArray (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> block */ ref BlockLiteral block);
+		NativeHandle _GetDifferenceFromArray (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> block */ ref BlockLiteral block);
 	}
 
 #if MONOMAC
@@ -602,15 +602,15 @@ namespace Foundation
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithContentsOfMarkdownFileAtURL:options:baseURL:error:")]
-		IntPtr Constructor (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithMarkdown:options:baseURL:error:")]
-		IntPtr Constructor (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithMarkdownString:options:baseURL:error:")]
-		IntPtr Constructor (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+		NativeHandle Constructor (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
 
 		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("attributedStringByInflectingString")]
@@ -16826,7 +16826,7 @@ namespace Foundation
 	{
 		[Export ("initWithMorphology:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSMorphology morphology);
+		NativeHandle Constructor (NSMorphology morphology);
 
 		[Export ("morphology", ArgumentSemantic.Copy)]
 		NSMorphology Morphology { get; }
@@ -16898,16 +16898,16 @@ namespace Foundation
 		[Internal]
 		[Static]
 		[Export ("changeWithObject:type:index:")]
-		IntPtr _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index);
+		NativeHandle _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index);
 
 		[Internal]
 		[Static]
 		[Export ("changeWithObject:type:index:associatedIndex:")]
-		IntPtr _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+		NativeHandle _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
 
 		[Internal]
 		[NullAllowed, Export ("object", ArgumentSemantic.Strong)]
-		IntPtr _Object { get; }
+		NativeHandle _Object { get; }
 
 		[Export ("changeType")]
 		NSCollectionChangeType ChangeType { get; }
@@ -16920,19 +16920,19 @@ namespace Foundation
 
 		[Internal]
 		[Export ("initWithObject:type:index:")]
-		IntPtr Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index);
+		NativeHandle Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index);
 		
 		[Wrap ("this (anObject!.Handle, type, index)")]
-		IntPtr Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index);
+		NativeHandle Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index);
 
 		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithObject:type:index:associatedIndex:")]
-		IntPtr Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+		NativeHandle Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
 		
 		[Wrap ("this (anObject!.Handle, type, index, associatedIndex)")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+		NativeHandle Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
 	}
 	
 	interface NSOrderedCollectionDifference <TKey> : NSOrderedCollectionDifference {}
@@ -16942,41 +16942,41 @@ namespace Foundation
 	interface NSOrderedCollectionDifference : INSFastEnumeration
 	{
 		[Export ("initWithChanges:")]
-		IntPtr Constructor (NSOrderedCollectionChange[] changes);
+		NativeHandle Constructor (NSOrderedCollectionChange[] changes);
 		
 		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges:")]
-		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects, NSOrderedCollectionChange[] changes);
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects, NSOrderedCollectionChange[] changes);
 
 		[Wrap ("this (inserts, NSArray.FromNSObjects (insertedObjects), removes, NSArray.FromNSObjects (removedObjects), changes)")]
-		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects, NSOrderedCollectionChange[] changes);
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects, NSOrderedCollectionChange[] changes);
 
 		[Internal]
 		[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:")]
-		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects);
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects);
 		
 		[Wrap ("this (inserts, NSArray.FromNSObjects (insertedObjects), removes, NSArray.FromNSObjects (removedObjects))")]
-		IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects);
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects);
 
 		[Internal]
 		[Export ("insertions", ArgumentSemantic.Strong)]
-		IntPtr _Insertions { get; }
+		NativeHandle _Insertions { get; }
 
 		[Internal]
 		[Export ("removals", ArgumentSemantic.Strong)]
-		IntPtr _Removals { get; }
+		NativeHandle _Removals { get; }
 
 		[Export ("hasChanges")]
 		bool HasChanges { get; }
 
 		[Internal]
 		[Export ("differenceByTransformingChangesWithBlock:")]
-		IntPtr _GetDifference (/* Func<NSOrderedCollectionChange<NSObject>, NSOrderedCollectionChange<NSObject>>*/ ref BlockLiteral block); 
+		NativeHandle _GetDifference (/* Func<NSOrderedCollectionChange<NSObject>, NSOrderedCollectionChange<NSObject>>*/ ref BlockLiteral block); 
 
 		[Internal]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("inverseDifference")]
-		IntPtr _InverseDifference ();
+		NativeHandle _InverseDifference ();
 	}
 }

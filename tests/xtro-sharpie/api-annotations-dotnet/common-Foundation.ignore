@@ -1379,8 +1379,6 @@
 ## convenience value (combined flags)
 !extra-enum-value! Managed value 3 for NSKeyValueObservingOptions.OldNew not found in native headers
 
-# complains because a ref can be null, but that is due to the fact that we are having to expose the ref BlockLiteral to
-# do a manual binding
-!extra-null-allowed! 'System.IntPtr Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'System.IntPtr Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.IntPtr Foundation.NSOrderedSet::_GetDifference(Foundation.NSOrderedSet,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+# not exposed to users. 
+!extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+!extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
