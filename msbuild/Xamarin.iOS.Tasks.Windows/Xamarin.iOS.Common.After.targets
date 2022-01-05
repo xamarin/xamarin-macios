@@ -316,9 +316,11 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net6.0').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
 		</PropertyGroup>
 
+		<!-- Include Debug symbols as input so those are copied to the server -->
 		<ItemGroup>
-			<!-- Include Debug symbols as input so those are copied to the server -->
-			<_ILLinkDebugSymbols Include="@(_DebugSymbolsIntermediatePath)" Condition="'$(_DebugSymbolsProduced)'=='true'" />
+			<!-- @(_PDBToLink) comes from the _ComputeManagedAssemblyToLink target, which is a dependency of this target and is included in Microsoft.NET.ILLink.targets -->
+			<!-- @(_PDBToLink) should contain the current assembly pdb and the project reference pdbs -->
+			<_ILLinkDebugSymbols Include="@(_PDBToLink)" />
 		</ItemGroup>
 		
 		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
