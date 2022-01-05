@@ -82,7 +82,10 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
-			Assert.Null (c.Title, "Title");
+			if (TestRuntime.CheckXcodeVersion (13, 2))
+				Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
+			else
+				Assert.Null (c.Title, "Title");
 #endif
 			Assert.That (c.Type, Is.EqualTo (EKCalendarType.Local), "Type");
 		}
@@ -121,7 +124,10 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
-			Assert.Null (c.Title, "Title");
+			if (TestRuntime.CheckXcodeVersion (13, 2))
+				Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
+			else
+				Assert.Null (c.Title, "Title");
 #endif
 			Assert.That (c.Type, Is.EqualTo (EKCalendarType.Local), "Type");
 			Assert.AreEqual (EKEntityMask.Reminder, c.AllowedEntityTypes, "AllowedEntityTypes");
