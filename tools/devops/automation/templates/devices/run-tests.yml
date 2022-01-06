@@ -72,17 +72,16 @@ steps:
 
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    echo '##vso[task.setvariable variable=PROVISIONING_FAILED;isOutput=true]False'
 
     make -C builds download -j || true
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
     EC=0
-    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests || EC=$?
-    if [ $EC -eq 0 ]; then
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded'
+    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests || RC=$?
+    if [ $RC -eq 0 ]; then
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
     else
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
     fi
   env:
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
