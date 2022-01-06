@@ -241,10 +241,14 @@ steps:
     Write-Host "mac PKG is $macPkg"
 
     Write-Host "Staging DMG file: ${iOSPkg}"
-    [IO.File]::Copy($iOSPkg, $SBomStagingDirectory)
+    $pkgFilename = [IO.Path]::GetFileName($iOSPkg)
+    $PKGPathAndFilename = [IO.Path]::Combine($SBomStagingDirectory, $pkgFilename)
+    [IO.File]::Copy($iOSPkg, $PKGPathAndFilename)
 
     Write-Host "Staging DMG file: ${macPkg}"
-    [IO.File]::Copy($macPkg, $SBomStagingDirectory)
+    $pkgFilename = [IO.Path]::GetFileName($macPkg)
+    $PKGPathAndFilename = [IO.Path]::Combine($SBomStagingDirectory, $pkgFilename)
+    [IO.File]::Copy($macPkg, $PKGPathAndFilename)
   displayName: 'SBOM: Staging'
 
 - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
