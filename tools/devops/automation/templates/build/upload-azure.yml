@@ -255,3 +255,24 @@ steps:
   displayName: 'SBOM: Generation'
   inputs:
     BuildDropPath: '$(Build.ArtifactStagingDirectory)/SBomArtifacts'
+
+- powershell: |
+    # The pkg files are already included under the drop-x64 and drop-arm locations
+    # We only needed them temporarily here as a means to produce the Software Bill of Materials (SBOM) manifest
+    # No need to include the pkg files (and duplicate them) in the SBOM drop
+    $SBomStagingDirectory = "$(Build.ArtifactStagingDirectory)/SBomArtifacts"
+
+    $pkgFiles = [IO.Directory]::GetFiles($SBomStagingDirectory, '*.pkg')
+    $pkgFiles | foreach {
+      Write-Host "Deleting PKG: $_"
+      [IO.File]::Delete($_)
+    }
+  displayName: 'SBOM: Cleanup'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'SBOM: Publish'
+  inputs:
+    artifactName: sbom
+    pathToPublish: $(Build.ArtifactStagingDirectory)/SBomArtifacts
+  condition: always()
+
