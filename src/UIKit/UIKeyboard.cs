@@ -26,13 +26,11 @@ namespace UIKit {
 #if !TVOS && !__MACCATALYST__
 #if !NET
 		[Deprecated (PlatformName.iOS, 3, 2)]
-#else
-		[UnsupportedOSPlatform ("ios3.2")]
-#endif
 		public static CGRect BoundsFromNotification (NSNotification n)
 		{
 			return RectangleFFrom (BoundsUserInfoKey, n);
 		}
+#endif
 
 		public static double AnimationDurationFromNotification (NSNotification n)
 		{
@@ -68,23 +66,19 @@ namespace UIKit {
 #if !TVOS && !__MACCATALYST__
 #if !NET
 		[Deprecated (PlatformName.iOS, 3, 2)]
-#else
-		[UnsupportedOSPlatform ("ios3.2")]
-#endif
 		static public CGPoint CenterBeginFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterBeginUserInfoKey, n);
 		}
+#endif
 
 #if !NET
 		[Deprecated (PlatformName.iOS, 3, 2)]
-#else
-		[UnsupportedOSPlatform ("ios3.2")]
-#endif
 		static public CGPoint CenterEndFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterEndUserInfoKey, n);
 		}
+#endif
 
 		static public CGRect FrameBeginFromNotification (NSNotification n)
 		{

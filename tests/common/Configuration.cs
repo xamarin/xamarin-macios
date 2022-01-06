@@ -704,7 +704,9 @@ namespace Xamarin.Tests
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
 		{
-			return GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			// variables with more than one value are wrapped in ', get the var remove the '' and split
+			var variable = GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Trim ('\'');
+			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
@@ -952,6 +954,33 @@ namespace Xamarin.Tests
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
+		}
+
+		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
+		{
+			string dir;
+
+			switch (platform) {
+			case ApplePlatform.iOS:
+				dir = simulator.Value ? "iphonesimulator" : "iphoneos";
+				break;
+			case ApplePlatform.MacOSX:
+				dir = "macos";
+				break;
+			case ApplePlatform.WatchOS:
+				dir = simulator.Value ? "watchsimulator" : "watchos";
+				break;
+			case ApplePlatform.TVOS:
+				dir = simulator.Value ? "tvsimulator" : "tvos";
+				break;
+			case ApplePlatform.MacCatalyst:
+				dir = "maccatalyst";
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+
+			return Path.Combine (SourceRoot, "tests", "test-libraries", ".libs", dir);
 		}
 	}
 }

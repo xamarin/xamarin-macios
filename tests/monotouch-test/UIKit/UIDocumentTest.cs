@@ -99,6 +99,10 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Save ()
 		{
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
 			using (NSUrl url = NSUrl.FromFilename (GetFileName ())) {
 				doc = new MyDocument (url);
 				doc.Save (url, UIDocumentSaveOperation.ForCreating, OperationHandler);
@@ -144,9 +148,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Ignore ("crash on the bots, run fines locally on sim")]
 		public void NSUrl_Subclass ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Inconclusive ("will crash runner application after test execution");
-			
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
 			if (File.Exists (file))
 				File.Delete (file);

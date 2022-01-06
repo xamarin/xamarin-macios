@@ -719,6 +719,8 @@ namespace Registrar {
 					case "System.UInt32":
 					case "System.Int64":
 					case "System.UInt64":
+					case "System.IntPtr":
+					case "System.UIntPtr":
 					case "System.nint":
 					case "System.nuint":
 					case "System.Single":
@@ -854,7 +856,7 @@ namespace Registrar {
 					} else {
 						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
 					}
-#elif MONOMAC
+#elif MONOMAC || __MACCATALYST__
 					if (Runtime.IsARM64CallingConvention) {
 						is_stret = false;
 					} else {

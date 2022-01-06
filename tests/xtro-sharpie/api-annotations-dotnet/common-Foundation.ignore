@@ -972,16 +972,16 @@
 !missing-null-allowed! 'Foundation.NSData Foundation.NSUserDefaults::DataForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData[] Foundation.NSUrlProtectionSpace::get_DistinguishedNames()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDataDetector Foundation.NSDataDetector::Create(Foundation.NSTextCheckingTypes,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::Date(System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::Date(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateByAddingComponents(Foundation.NSDateComponents,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateByAddingUnit(Foundation.NSCalendarUnit,System.nint,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateBySettingsHour(System.nint,System.nint,System.nint,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateBySettingUnit(Foundation.NSCalendarUnit,System.nint,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateForWeekOfYear(System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateByAddingUnit(Foundation.NSCalendarUnit,System.IntPtr,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateBySettingsHour(System.IntPtr,System.IntPtr,System.IntPtr,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateBySettingUnit(Foundation.NSCalendarUnit,System.IntPtr,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateForWeekOfYear(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateFromComponents(Foundation.NSDateComponents)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSCalendarUnit,System.nint,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSCalendarUnit,System.IntPtr,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSDateComponents,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,System.nint,System.nint,System.nint,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,System.IntPtr,System.IntPtr,System.IntPtr,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateComponents::get_Date()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateFormatter::Parse(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSFileVersion::get_ModificationDate()' is missing an [NullAllowed] on return type
@@ -1035,14 +1035,14 @@
 !missing-null-allowed! 'Foundation.NSMethodSignature Foundation.NSMethodSignature::FromObjcTypes(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSMutableArray Foundation.NSMutableArray::FromFile(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSMutableArray Foundation.NSMutableArray::FromUrl(Foundation.NSUrl)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSMutableData Foundation.NSMutableData::FromCapacity(System.nint)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSMutableData Foundation.NSMutableData::FromLength(System.nint)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSMutableData Foundation.NSMutableData::FromCapacity(System.IntPtr)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSMutableData Foundation.NSMutableData::FromLength(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSMutableDictionary Foundation.NSMutableDictionary::FromFile(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSMutableDictionary Foundation.NSMutableDictionary::FromUrl(Foundation.NSUrl)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSNumber Foundation.NSNumberFormatter::NumberFromString(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSNumber[] Foundation.NSHttpCookie::get_PortList()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSAttributedString::GetAttribute(System.String,System.nint,Foundation.NSRange&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSAttributedString::GetAttribute(System.String,System.nint,Foundation.NSRange&,Foundation.NSRange)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject Foundation.NSAttributedString::GetAttribute(System.String,System.IntPtr,Foundation.NSRange&)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject Foundation.NSAttributedString::GetAttribute(System.String,System.IntPtr,Foundation.NSRange&,Foundation.NSRange)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSBundle::ObjectForInfoDictionary(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSCache::ObjectForKey(Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSCoder::DecodeObject()' is missing an [NullAllowed] on return type
@@ -1062,7 +1062,7 @@
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSKeyedUnarchiverDelegate::DecodedObject(Foundation.NSKeyedUnarchiver,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSLocale::ObjectForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSMetadataItem::ValueForAttribute(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSMetadataQuery::ValueOfAttribute(System.String,System.nint)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject Foundation.NSMetadataQuery::ValueOfAttribute(System.String,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSMetadataQueryAttributeValueTuple::get_Value()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKeyPath(Foundation.NSString)' is missing an [NullAllowed] on return type
@@ -1171,7 +1171,7 @@
 !missing-null-allowed! 'System.Boolean Foundation.NSPredicate::EvaluateWithObject(Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean Foundation.NSUrl::SetResourceValue(Foundation.NSObject,Foundation.NSString,Foundation.NSError&)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.IntPtr Foundation.NSUserDefaults::InitWithSuiteName(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.nuint Foundation.NSString::DetectStringEncoding(Foundation.NSData,Foundation.NSDictionary,System.String&,System.Boolean&)' is missing an [NullAllowed] on parameter #1
+!missing-null-allowed! 'System.UIntPtr Foundation.NSString::DetectStringEncoding(Foundation.NSData,Foundation.NSDictionary,System.String&,System.Boolean&)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.String Foundation.NSBundle::get_BuiltinPluginsPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSBundle::get_BundleIdentifier()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSBundle::get_DevelopmentLocalization()' is missing an [NullAllowed] on return type
@@ -1197,7 +1197,7 @@
 !missing-null-allowed! 'System.String Foundation.NSDateComponentsFormatter::StringFromDate(Foundation.NSDate,Foundation.NSDate)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSDateComponentsFormatter::StringFromDateComponents(Foundation.NSDateComponents)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSDateComponentsFormatter::StringFromTimeInterval(System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSDateFormatter::GetDateFormatFromTemplate(System.String,System.nuint,Foundation.NSLocale)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String Foundation.NSDateFormatter::GetDateFormatFromTemplate(System.String,System.UIntPtr,Foundation.NSLocale)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSDecimalNumber::DescriptionWithLocale(Foundation.NSLocale)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.String Foundation.NSError::get_HelpAnchor()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSError::get_LocalizedFailureReason()' is missing an [NullAllowed] on return type
@@ -1364,13 +1364,13 @@
 !missing-null-allowed! 'System.Void Foundation.NSTimeZone::.ctor(System.String,Foundation.NSData)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSUrl::.ctor(System.String,Foundation.NSUrl)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSUrl::SetTemporaryResourceValue(Foundation.NSObject,Foundation.NSString)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUrlAuthenticationChallenge::.ctor(Foundation.NSUrlProtectionSpace,Foundation.NSUrlCredential,System.nint,Foundation.NSUrlResponse,Foundation.NSError,Foundation.NSUrlConnection)' is missing an [NullAllowed] on parameter #1
+!missing-null-allowed! 'System.Void Foundation.NSUrlAuthenticationChallenge::.ctor(Foundation.NSUrlProtectionSpace,Foundation.NSUrlCredential,System.IntPtr,Foundation.NSUrlResponse,Foundation.NSError,Foundation.NSUrlConnection)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSUrlConnection::SetDelegateQueue(Foundation.NSOperationQueue)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUrlCredentialStorage::RemoveCredential(Foundation.NSUrlCredential,Foundation.NSUrlProtectionSpace,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void Foundation.NSUrlCredentialStorage::RemoveCredential(Foundation.NSUrlCredential,Foundation.NSUrlProtectionSpace,Foundation.NSDictionary,Foundation.NSUrlSessionTask)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void Foundation.NSUrlProtocol::.ctor(Foundation.NSUrlRequest,Foundation.NSCachedUrlResponse,Foundation.INSUrlProtocolClient)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void Foundation.NSUrlQueryItem::.ctor(System.String,System.String)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void Foundation.NSUrlResponse::.ctor(Foundation.NSUrl,System.String,System.nint,System.String)' is missing an [NullAllowed] on parameter #1
+!missing-null-allowed! 'System.Void Foundation.NSUrlResponse::.ctor(Foundation.NSUrl,System.String,System.IntPtr,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSUserActivity::set_ExpirationDate(Foundation.NSDate)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUserActivity::set_RequiredUserInfoKeys(Foundation.NSSet`1<Foundation.NSString>)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUserDefaults::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
@@ -1379,3 +1379,7 @@
 
 ## convenience value (combined flags)
 !extra-enum-value! Managed value 3 for NSKeyValueObservingOptions.OldNew not found in native headers
+
+## these are implemented in a way that xtro doesn't see
+!missing-selector! NSAppleEventDescriptor::initListDescriptor not bound
+!missing-selector! NSAppleEventDescriptor::initRecordDescriptor not bound

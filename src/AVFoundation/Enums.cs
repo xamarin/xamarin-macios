@@ -145,7 +145,7 @@ namespace AVFoundation {
 		Locked, AutoWhiteBalance, ContinuousAutoWhiteBalance
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+#if !NET
 	[Flags]
 	[Native]
 	[Deprecated (PlatformName.iOS, 6, 0)]
@@ -258,7 +258,7 @@ namespace AVFoundation {
 		Unknown, ReadyToPlay, Failed
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+#if !NET
 	[NoTV]
 	[Flags]
 	[Native]
@@ -305,7 +305,10 @@ namespace AVFoundation {
 		Succeeded, Failed, Cancelled
 	}
 
-#if !XAMCORE_3_0 || MONOMAC
+#if XAMCORE_3_0
+	[NoiOS]
+	[NoWatch]
+#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[Native]
@@ -314,6 +317,9 @@ namespace AVFoundation {
 		NotPlaying, Playing
 	}
 
+#if XAMCORE_3_0
+	[NoiOS]
+#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV, NoWatch]
 	[Native]
@@ -321,7 +327,6 @@ namespace AVFoundation {
 	public enum AVVideoFieldMode : long {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
-#endif // !XAMCORE_3_0 || MONOMAC 
 
 	[Mac (10,15)]
 	[iOS (8,0)]
@@ -350,12 +355,7 @@ namespace AVFoundation {
 	public enum AVAudioSessionPortOverride : ulong {
 		None = 0,
 		[NoTV]
-#if XAMCORE_4_0 // Removed in Xcode 12 GM
-		[NoMac, NoWatch]
-#else
-		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
-		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
-#endif
+		[NoMac, NoWatch] // Removed in Xcode 12 GM
 		Speaker = 0x73706b72 // 'spkr'
 	}
 
@@ -380,42 +380,20 @@ namespace AVFoundation {
 	public enum AVAudioSessionCategoryOptions : ulong {
 		MixWithOthers = 1,
 		DuckOthers = 2,
-#if XAMCORE_4_0 // Removed in Xcode 12 GM
-		[NoMac, NoWatch]
-#else
-		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
-		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
-#endif
+		[NoMac, NoWatch] // Removed in Xcode 12 GM
 		[NoTV]
 		AllowBluetooth = 4,
-#if XAMCORE_4_0 // Removed in Xcode 12 GM
-		[NoMac, NoWatch]
-#else
-		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
-		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
-#endif
+		[NoMac, NoWatch] // Removed in Xcode 12 GM
 		[NoTV]
 		DefaultToSpeaker = 8,
 
-#if XAMCORE_4_0 // Removed in Xcode 12 GM
-		[NoMac]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
-#endif
+		[NoMac] // Removed in Xcode 12 GM
 		[iOS (9,0)]
 		InterruptSpokenAudioAndMixWithOthers = 17,
-#if XAMCORE_4_0 // Removed in Xcode 12 GM
-		[NoMac]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
-#endif
+		[NoMac] // Removed in Xcode 12 GM
 		[Watch (3,0), iOS (10,0), TV (10,0)]
 		AllowBluetoothA2DP = 32,
-#if XAMCORE_4_0 // Removed in Xcode 12 GM
-		[NoMac]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
-#endif
+		[NoMac] // Removed in Xcode 12 GM
 		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowAirPlay = 64,
 		[NoMac]
@@ -448,7 +426,7 @@ namespace AVFoundation {
 		CannotStartRecording = 0x21726563, // '!rec'
 		BadParam = -50,
 		InsufficientPriority = 0x21707269, // '!pri'
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'ResourceNotAvailable' instead.")]
 		CodeResourceNotAvailable = 0x21726573,
 #endif
@@ -638,9 +616,7 @@ namespace AVFoundation {
 		Auto = -1
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#endif
+	[Mac (10,15)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV, NoWatch, iOS (8,0)]
 	[Native]
@@ -923,6 +899,10 @@ namespace AVFoundation {
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Field ("AVOutputSettingsPresetHEVC3840x2160WithAlpha")]
 		PresetHevc3840x2160WithAlpha = 14,
+
+		[NoTV, NoWatch, Mac (12,1), NoiOS]
+		[Field ("AVOutputSettingsPresetHEVC7680x4320")]
+		PresetHevc7680x4320 = 15,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -988,9 +968,7 @@ namespace AVFoundation {
 		Unavailable = 4
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#endif
+	[Mac (10, 15)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, iOS (11,0)]
 	[Native]

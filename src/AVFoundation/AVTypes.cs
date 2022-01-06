@@ -256,7 +256,7 @@ namespace AVFoundation {
 	}
 #endif
 
-#if MONOMAC || !XAMCORE_4_0
+#if MONOMAC || !NET
 
 #if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]

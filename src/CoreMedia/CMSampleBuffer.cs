@@ -19,7 +19,11 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if NET
+using OSStatus = System.IntPtr;
+#else
 using OSStatus = System.nint;
+#endif
 
 #if !COREBUILD
 using AudioToolbox;

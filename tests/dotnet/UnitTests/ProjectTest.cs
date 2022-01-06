@@ -508,10 +508,26 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			// Simulate a crash dump
-			var crashDump = Path.Combine (appPath, "mono_crash.mem.123456.something.blob");
-			File.WriteAllText (crashDump, "A crash dump");
+			File.WriteAllText (Path.Combine (appPath, "mono_crash.mem.123456.something.blob"), "A crash dump");
+			File.WriteAllText (Path.Combine (appPath, "mono_crash.123456.somethingelse.blob"), "A crash dump");
 
 			// Build again
+			DotNet.AssertBuild (project_path, properties);
+
+			// Create a file that isn't a crash report.
+			File.WriteAllText (Path.Combine (appPath, "otherfile.txt"), "A file");
+
+			// Build again - this time it'll fail
+			var rv = DotNet.Build (project_path, properties);
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			Assert.AreEqual (1, warnings.Length, "Warning Count");
+			Assert.AreEqual ("Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/net6.0-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
+
+			// Remove the offending file
+			File.Delete (Path.Combine (appPath, "otherfile.txt"));
+
+			// Build yet again
 			DotNet.AssertBuild (project_path, properties);
 		}
 
@@ -688,6 +704,25 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm64")), File.Exists (arm64txt), "arm64.txt");
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-arm")), File.Exists (armtxt), "arm.txt");
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
+		}
+
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")] // https://github.com/xamarin/xamarin-macios/issues/12410
+		public void DoubleBuild (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "AppWithResources";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var projectPath = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out _);
+			Clean (projectPath);
+
+			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
+			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 		}
 
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)

@@ -71,6 +71,7 @@ namespace ClassKit {
 		InvalidCreate,
 		InvalidUpdate,
 		PartialFailure,
+		InvalidAccountCredentials,
 	}
 
 

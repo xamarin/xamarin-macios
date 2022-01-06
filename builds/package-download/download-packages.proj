@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ActualPackageVersion Condition="'$(CustomDotNetVersion)' != ''">$(CustomDotNetVersion)</ActualPackageVersion>
+    <ActualPackageVersion Condition="'$(ActualPackageVersion)' == ''">$(BundledNETCorePlatformsPackageVersion)</ActualPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,16 +11,21 @@
     <PackageRuntimeIdentifiersCoreCLR Include="$(PackageRuntimeIdentifiersCoreCLR.Split(' '))" />
 
     <!-- download the runtime packs -->
-    <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.Mono.%(Identity)')" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
-    <PackageDownload Include="@(PackageRuntimeIdentifiersCoreCLR -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
+    <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.Mono.%(Identity)')" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="@(PackageRuntimeIdentifiersCoreCLR -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(ActualPackageVersion)]" />
 
     <!-- download the reference assemblies -->
-    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(BundledNETCorePlatformsPackageVersion)]" Condition="'$(CustomDotNetVersion)' == ''" />
-    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(CustomDotNetVersion)]" Condition="'$(CustomDotNetVersion)' != ''" />
+    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
+
+    <!-- and get the mono workload as well -->
+    <!-- TODO: hardcode 6.0.100 as the version band for Microsoft.NET.Workload.Mono.ToolChain.Manifest until we get https://github.com/dotnet/runtime/pull/62787
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-$(DotNetManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+    -->
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-6.0.100" Version="[$(ActualPackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
   <Target Name="WriteBundledNETCorePlatformsPackageVersion" Condition="'$(WriteFilePath)' != ''">
-    <WriteLinesToFile File="$(WriteFilePath)" Lines="$(BundledNETCorePlatformsPackageVersion)" Overwrite="true" />
+    <WriteLinesToFile File="$(WriteFilePath)" Lines="$(ActualPackageVersion)" Overwrite="true" />
   </Target>
 </Project>

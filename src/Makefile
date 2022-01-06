@@ -60,7 +60,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET6_BCL_DIR)/System.Xml.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Xml.ReaderWriter.dll \
 
-DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO $(DOTNET_REFERENCES)
+DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO /define:XAMCORE_3_0 $(DOTNET_REFERENCES)
 
 DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
 DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET6_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
@@ -1247,7 +1247,6 @@ MACCATALYST_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THA
 
 MACCATALYST_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_BUILD_DIR)/Constants.cs    \
-	$(BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(DOTNET_BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)    \
@@ -1296,7 +1295,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Subs
 
 ### .NET ###
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp | $(MACCATALYST_DOTNET_BUILD_DIR)
+$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll: $(MACCATALYST_CORE_SOURCES) frameworks.sources Makefile $(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) \
 		$(MACCATALYST_WARNINGS_TO_FIX) \
@@ -1460,9 +1459,11 @@ DOTNET_GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/bin/DotNet/ge
 
 $(GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
 	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-frameworks-constants/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY)
+	$(Q) touch $@ # Running MSBuild doesn't always touch the target, so make sure we do here, otherwise make can end up confused.
 
 $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
 	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-frameworks-constants/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY) /p:Configuration=DotNet
+	$(Q) touch $@ # Running MSBuild doesn't always touch the target, so make sure we do here, otherwise make can end up confused.
 
 # This rule means: generate a Constants.<platform>.generated.cs for the frameworks in the variable <PLATFORM>_FRAMEWORKS
 $(BUILD_DIR)/Constants.%.generated.cs: Makefile $(GENERATE_FRAMEWORKS_CONSTANTS) | $(BUILD_DIR)

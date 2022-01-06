@@ -4,7 +4,7 @@
 		<SignAssembly>true</SignAssembly>
 		<GenerateTailCalls>true</GenerateTailCalls>
 
-		<RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+		<RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
 		<FSharpLibraryDirectory>$(RootTestsDirectory)\fsharplibrary</FSharpLibraryDirectory>
 
 		<AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>

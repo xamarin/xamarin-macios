@@ -82,25 +82,6 @@
 !missing-pinvoke! NSStringFromUIOffset is not bound
 !missing-pinvoke! UIOffsetFromString is not bound
 
-## HACK: those members are not *required* in ObjC but we made them abstract to have them inlined in UITextField and UITextView
-## Even more confusing it that respondToSelecttor return NO on them even if it works in _real_ life (compare unit and introspection tests)
-!incorrect-protocol-member! UITextInputTraits::autocapitalizationType is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::autocorrectionType is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::enablesReturnKeyAutomatically is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::isSecureTextEntry is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::keyboardAppearance is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::keyboardType is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::returnKeyType is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setAutocapitalizationType: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setAutocorrectionType: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setEnablesReturnKeyAutomatically: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setKeyboardAppearance: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setKeyboardType: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setReturnKeyType: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setSecureTextEntry: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::setSpellCheckingType: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UITextInputTraits::spellCheckingType is OPTIONAL and should NOT be abstract
-
 ## UIAccessibility
 ## We can't expose them as categories of NSObject so we have custom types instead
 !missing-selector! NSObject::accessibilityActivationPoint not bound
@@ -205,14 +186,6 @@
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UINavigationBar::GetTitleTextAttributes() should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UIBarItem::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UISegmentedControl::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
-
-## manually bound (better, stronger signature) on `[setS|s]copeBarButtonTitleTextAttributes:forState:` which is decorated with `UI_APPEARANCE_SELECTOR`
-!extra-ui-appearance-support! System.Void UIKit.UISearchBar::SetScopeBarButtonTitle(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 
 ## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_LargeTitleTextAttributes() should NOT be decorated with [Appearance]
