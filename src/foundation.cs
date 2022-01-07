@@ -16473,4 +16473,32 @@ namespace Foundation
 		Tls,
 		Https,
 	}
+
+	[NoiOS][NoTV][NoWatch]
+	[MacCatalyst(15, 0)]
+	[Native]
+	public enum NSNotificationSuspensionBehavior : ulong {
+		Drop = 1,
+		Coalesce = 2,
+		Hold = 3,
+		DeliverImmediately = 4,
+	}
+
+	[NoiOS][NoTV][NoWatch]
+	[MacCatalyst(15, 0)]
+	[Flags]
+	[Native]
+	public enum NSNotificationFlags : ulong {
+		DeliverImmediately = (1 << 0),
+		PostToAllSessions = (1 << 1),
+	}
+
+	[Mac (10,11)][NoWatch][NoTV][NoiOS][NoMacCatalyst]
+	[Native]
+	[Flags]
+	public enum NSFileManagerUnmountOptions : ulong
+	{
+		AllPartitionsAndEjectDisk = 1 << 0,
+		WithoutUI = 1 << 1,
+	}
 }

@@ -17,24 +17,6 @@ namespace AVKit {
 	}
 #endif
 
-#if MONOMAC
-	[Mac (10,10)]
-	[Native]
-	public enum AVCaptureViewControlsStyle : long {
-		Inline,
-		Floating,
-		InlineDeviceSelection,
-		Default = Inline,
-	}
-
-	[Mac (10,9)]
-	[Native]
-	public enum AVPlayerViewTrimResult : long {
-		OKButton,
-		CancelButton
-	}
-#endif
-
 #if !MONOMAC || !XAMCORE_4_0
 	[iOS (9,0)]
 	[TV (13,0)]
