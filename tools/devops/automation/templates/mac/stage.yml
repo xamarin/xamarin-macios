@@ -33,7 +33,7 @@ stages:
   condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
 
   variables:
-    MAC_TESTS_PRESENT: $[ dependencies.build_packages.outputs['build.macTestPkg.macTestsPresent'] ]
+    MAC_TESTS_PRESENT: $[ dependencies.build_packages.outputs['macTestPkg.macTestsPresent'] ]
 
   jobs:
   - job: run_tests
