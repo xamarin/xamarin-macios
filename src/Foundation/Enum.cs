@@ -498,25 +498,6 @@ namespace Foundation  {
 		Reverse = 2
 	}
 	
-#if MONOMAC || __MACCATALYST__
-	[MacCatalyst(15, 0)]
-	[Native]
-	public enum NSNotificationSuspensionBehavior : ulong {
-		Drop = 1,
-		Coalesce = 2,
-		Hold = 3,
-		DeliverImmediately = 4,
-	}
-
-	[MacCatalyst(15, 0)]
-	[Flags]
-	[Native]
-	public enum NSNotificationFlags : ulong {
-		DeliverImmediately = (1 << 0),
-		PostToAllSessions = (1 << 1),
-	}
-#endif
-
 	[Flags]
 	[Native]
 	public enum NSStreamEvent : ulong {
@@ -1268,17 +1249,6 @@ namespace Foundation  {
 		Long,
 		Abbreviated
 	}
-
-#if MONOMAC
-	[Mac (10,11)][NoWatch][NoTV][NoiOS]
-	[Native]
-	[Flags]
-	public enum NSFileManagerUnmountOptions : ulong
-	{
-		AllPartitionsAndEjectDisk = 1 << 0,
-		WithoutUI = 1 << 1
-	}
-#endif
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]

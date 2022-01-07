@@ -14,9 +14,7 @@ using AVFoundation;
 using OpenGLES;
 #endif
 #if !MONOMAC
-using AVCaptureViewControlsStyle = Foundation.NSObject;
 using AVPlayerViewControlsStyle = Foundation.NSObject;
-using AVPlayerViewTrimResult = Foundation.NSObject;
 using NSColor = UIKit.UIColor;
 using NSMenu = Foundation.NSObject;
 using NSView = UIKit.UIView;
@@ -938,6 +936,24 @@ namespace AVKit {
 
 		[Export ("playerView:restoreUserInterfaceForFullScreenExitWithCompletionHandler:")]
 		void RestoreUserInterfaceForFullScreenExit (AVPlayerView playerView, Action<bool> completionHandler);
+	}
+
+	[Mac (10,10)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Native]
+	public enum AVCaptureViewControlsStyle : long {
+		Inline,
+		Floating,
+		InlineDeviceSelection,
+		Default = Inline,
+	}
+
+	[Mac (10,9)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Native]
+	public enum AVPlayerViewTrimResult : long {
+		OKButton,
+		CancelButton,
 	}
 
 }
