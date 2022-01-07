@@ -16499,6 +16499,6 @@ namespace Foundation
 	public enum NSFileManagerUnmountOptions : ulong
 	{
 		AllPartitionsAndEjectDisk = 1 << 0,
-		WithoutUI = 1 << 1
+		WithoutUI = 1 << 1,
 	}
 }

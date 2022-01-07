@@ -953,7 +953,7 @@ namespace AVKit {
 	[Native]
 	public enum AVPlayerViewTrimResult : long {
 		OKButton,
-		CancelButton
+		CancelButton,
 	}
 
 }
