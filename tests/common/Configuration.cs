@@ -415,10 +415,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string GetRefNuGetName (TargetFramework targetFramework)
-		{
-			return targetFramework.Platform.ToString ();
-		}
+		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
 
 		static string GetRefNuGetName (ApplePlatform platform)
         {
