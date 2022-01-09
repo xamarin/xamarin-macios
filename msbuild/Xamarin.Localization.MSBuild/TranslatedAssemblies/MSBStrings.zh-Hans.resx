@@ -717,7 +717,7 @@
         <value>无法将 Mac Catalyst 版本 {0} 映射到相应的 macOS 版本。有效的 Mac Catalyst 版本为: {1}</value>
     </data>
   <data name="E0189" xml:space="preserve">
-        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
+        <value>无法分析自定义链接器参数 "-{0}": {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>无法解析 WiFi 调试程序设置的主机 IP。
@@ -1086,10 +1086,10 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="W7091" xml:space="preserve">
-        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+        <value>框架 {0} 是静态库的框架，不会复制到应用。</value>
     </data>
   <!-- This is the same as MT0140 -->
   <data name="E7092" xml:space="preserve">
-        <value>File '{0}' is not a valid framework: {1}</value>
+        <value>文件 "{0}" 是无效的框架: {1}</value>
     </data>
 </root>
