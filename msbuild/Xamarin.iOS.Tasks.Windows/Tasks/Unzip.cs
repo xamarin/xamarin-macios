@@ -19,7 +19,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 			LogTaskProperty ("ExtractionPath", ExtractionPath);
 
 			try {
-				Log.LogMessage (Resources.LocalUnzip_Unzipping, ZipFilePath);
+				Log.LogMessage (Resources.Unzip_Unzipping, ZipFilePath);
 
 				//Directory.Delete will fail if a file with the same path already exist
 				if (File.Exists (ExtractionPath)) {
@@ -38,9 +38,9 @@ namespace Xamarin.iOS.Tasks.Windows {
 					new FileInfo (filePath).LastWriteTime = DateTime.Now;
 				}
 
-				Log.LogMessage (Resources.LocalUnzip_Unzipped, ZipFilePath);
+				Log.LogMessage (Resources.Unzip_Unzipped, ZipFilePath);
 			} catch (Exception ex) {
-				Log.LogError (Resources.LocalUnzip_Error, ZipFilePath, ex.Message);
+				Log.LogError (Resources.Unzip_Error, ZipFilePath, ex.Message);
 			}
 
 			return !Log.HasLoggedErrors;
