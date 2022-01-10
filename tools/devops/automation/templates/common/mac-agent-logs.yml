@@ -49,7 +49,7 @@ steps:
     $url= $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=5.1"
     $buildPipeline= Invoke-RestMethod -Uri $url -Headers $headers -Method Get
 
-    $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:MM:SS")
+    $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 
     $end=Get-Date -Format "yyyy-mm-dd HH:mm:ss"
     Write-Host "end time: $end"
