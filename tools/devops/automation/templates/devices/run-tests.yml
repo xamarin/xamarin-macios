@@ -54,33 +54,41 @@ steps:
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
   timeoutInMinutes: 5
 
+- bash: |
+    set -x
+    set -e
+
+    make global6.json
+    make -C tests/dotnet global.json NuGet.config
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: 'Generate global.json'
+  continueOnError: false
+  timeoutInMinutes: 5
+
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
     set -e
 
-    cd $WORKING_DIR/xamarin-macios
-
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    echo '##vso[task.setvariable variable=PROVISIONING_FAILED;isOutput=true]False'
 
     make -C builds download -j || true
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
     EC=0
-    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests || EC=$?
-    if [ $EC -eq 0 ]; then
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded'
+    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests || RC=$?
+    if [ $RC -eq 0 ]; then
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
     else
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
     fi
   env:
-    WORKING_DIR: $(System.DefaultWorkingDirectory)
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }};/tests/' # uri used to create the vsdrops index using full uri
     USE_TCP_TUNNEL: 'true'
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
