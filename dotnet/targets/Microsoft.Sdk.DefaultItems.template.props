@@ -33,7 +33,7 @@
 
 	<!-- Default Asset Catalog file inclusion -->
 	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
-		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.pdf;**\*.xcassets\**\*.json" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+		<ImageAsset Include="**\*.xcassets\**\*.*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.xcassets\**\*.DS_Store">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<Visible>false</Visible>
 			<IsDefaultItem>true</IsDefaultItem>
