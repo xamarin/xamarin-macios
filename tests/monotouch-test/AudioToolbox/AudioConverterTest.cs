@@ -222,7 +222,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		static void WriteCookie (AudioConverter converter, AudioFile destinationFile)
 		{
 			var cookie = converter.CompressionMagicCookie;
-			if (cookie != null && cookie.Length != 0) {
+			if (cookie is not null && cookie.Length != 0) {
 				destinationFile.MagicCookie = cookie;
 			}
 		}
