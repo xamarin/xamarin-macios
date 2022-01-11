@@ -147,14 +147,7 @@ namespace Cecil.Tests {
 			}
 		}
 
-		public static IEnumerable NetPlatformAssemblies {
-			get {
-				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot (), "Microsoft.iOS.Ref", "ref", "net6.0", "Xamarin.iOS.dll"));
-				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot (), "Microsoft.tvOS.Ref", "ref", "net6.0", "Xamarin.TVOS.dll"));
-				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot (), "Microsoft.macOS.Ref", "ref", "net6.0", "Xamarin.Mac.dll"));
-				yield return new TestCaseData (Path.Combine (Configuration.GetDotNetRoot (), "Microsoft.MacCatalyst.Ref", "ref", "net6.0", "Xamarin.MacCatalyst.dll"));
-			}
-		}
+		public static IEnumerable NetPlatformAssemblies => Configuration.GetRefLibraries ();
 
 		public static IEnumerable TaskAssemblies {
 			get {

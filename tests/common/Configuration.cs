@@ -422,6 +422,8 @@ namespace Xamarin.Tests
 			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Microsoft.iOS.Ref";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Ref";
 			case ApplePlatform.TVOS:
 				return "Microsoft.tvOS.Ref";
 			case ApplePlatform.WatchOS:
@@ -630,8 +632,6 @@ namespace Xamarin.Tests
 			switch (profile) {
 			case Profile.iOS:
 				return XamarinIOSDll;
-			case Profile.macOSSystem: // MacCatalyst
-				return XamarinCatalystDll;
 			case Profile.tvOS:
 				return XamarinTVOSDll;
 			case Profile.watchOS:
@@ -676,8 +676,6 @@ namespace Xamarin.Tests
 			switch (targetFramework.Platform) {
 			case ApplePlatform.iOS:
 				return XamarinIOSDll;
-			case ApplePlatform.MacCatalyst:
-				return XamarinCatalystDll;
 			case ApplePlatform.TVOS:
 				return XamarinTVOSDll;
 			case ApplePlatform.WatchOS:
