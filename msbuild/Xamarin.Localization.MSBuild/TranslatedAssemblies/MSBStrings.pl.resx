@@ -717,7 +717,7 @@
         <value>Nie można zmapować wersji aplikacji Mac Catalyst {0} na odpowiadającą jej wersję systemu macOS. Prawidłowe wersje systemu Mac Catalyst: {1}</value>
     </data>
   <data name="E0189" xml:space="preserve">
-        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
+        <value>Nie można przeanalizować niestandardowych argumentów konsolidatora „-{0}”: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Nie można rozpoznać adresów IP hosta dla ustawień debugera WiFi.
@@ -1086,10 +1086,10 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="W7091" xml:space="preserve">
-        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+        <value>Platforma {0} jest strukturą bibliotek statycznych i nie zostanie skopiowana do aplikacji.</value>
     </data>
   <!-- This is the same as MT0140 -->
   <data name="E7092" xml:space="preserve">
-        <value>File '{0}' is not a valid framework: {1}</value>
+        <value>Plik „{0}” nie jest prawidłową nazwą strukturą: {1}</value>
     </data>
 </root>

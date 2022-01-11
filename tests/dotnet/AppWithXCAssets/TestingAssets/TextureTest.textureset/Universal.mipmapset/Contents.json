@@ -1,0 +1,12 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "levels" : [
+    {
+      "filename" : "TextureTestjpeg.jpeg",
+      "mipmap-level" : "base"
+    }
+  ]
+}
