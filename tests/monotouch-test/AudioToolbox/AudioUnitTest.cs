@@ -32,13 +32,13 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var audioComponent = AudioComponent.FindComponent (AudioTypeOutput.VoiceProcessingIO);
 			using var audioUnit = new global::AudioUnit.AudioUnit (audioComponent);
 
-			audioUnit.SetInputCallback (InputCallback, AudioUnitScopeType.Input, 1);
-			audioUnit.Initialize ();
+			Assert.AreEqual (AudioUnitStatus.OK, audioUnit.SetInputCallback (InputCallback, AudioUnitScopeType.Input, 1), "SetInputCallback");
+			Assert.AreEqual (AudioUnitStatus.OK, audioUnit.Initialize (), "Initialize");
 			try {
-				audioUnit.Start ();
+				Assert.AreEqual (AudioUnitStatus.OK, audioUnit.Start (), "Start");
 				Assert.IsTrue (inputCallbackEvent.WaitOne (TimeSpan.FromSeconds (1)), "No input callback for 1 second");
 			} finally {
-				audioUnit.Stop ();
+				Assert.AreEqual (AudioUnitStatus.OK, audioUnit.Stop (), "Stop");
 			}
 		}
 
