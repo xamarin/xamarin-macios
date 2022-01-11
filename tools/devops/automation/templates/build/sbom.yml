@@ -41,6 +41,10 @@ steps:
   displayName: 'SBOM: Generation'
   inputs:
     BuildDropPath: '$(Build.ArtifactStagingDirectory)/SBomArtifacts'
+    # UNDONE: Should we include the following parameters? The version could be gleaned from the pkg filename
+    # UNDONE: Given two packages are involved with two different versions there's no single package name and version
+    # PackageName: 'Xamarin.iOS and Xamarin.Mac'
+    # PackageVersion: ''
 
 - powershell: |
     # The pkg files are already included under the drop-x64 and drop-arm locations
