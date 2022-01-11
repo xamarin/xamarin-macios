@@ -385,7 +385,7 @@ function Test-JobSuccess {
     .PARAMETER APIGeneratorDiff
         The path to the json that contains the content for the generator diffs.
 #>
-function Write-APIDiffCotent {
+function Write-APIDiffContent {
     param (
 
         [Parameter(Mandatory)]
@@ -504,7 +504,7 @@ function New-GitHubSummaryComment {
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
 
-    Write-APIDiffCotent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
+    Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
 
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
