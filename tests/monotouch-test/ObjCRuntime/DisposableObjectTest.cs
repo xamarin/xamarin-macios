@@ -1,5 +1,6 @@
 using System;
 
+using Foundation;
 using ObjCRuntime;
 
 using NUnit.Framework;
@@ -10,6 +11,7 @@ using NativeHandle = System.IntPtr;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class DisposableObjectTest {
 		class Subclassed : DisposableObject {
 			public Subclassed () : base () { }
