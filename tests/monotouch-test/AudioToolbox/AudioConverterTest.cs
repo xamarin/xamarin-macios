@@ -244,7 +244,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			// mRemainderFrames, should equal mNumberValidFrames.
 
 			AudioFilePacketTableInfo? pti_n = destinationFile.PacketTableInfo;
-			if (pti_n == null)
+			if (pti_n is null)
 				return;
 
 			AudioFilePacketTableInfo pti = pti_n.Value;
