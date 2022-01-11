@@ -374,6 +374,65 @@ function Test-JobSuccess {
 
 <# 
     .SYNOPSIS
+        Helper function used to create the content in the comment with the APIDiff
+
+    .PARAMETER APIDiff
+        The path to the the json that contains the content for the PR API diff.
+
+    .PARAMETER APIGeneratorDiffJson
+        The path to the json that contains the content for the generator diffs with stable.
+
+    .PARAMETER APIGeneratorDiff
+        The path to the json that contains the content for the generator diffs.
+#>
+function Write-APIDiffCotent {
+    param (
+
+        [Parameter(Mandatory)]
+        [System.Text.StringBuilder]
+        $StringBuilder,
+
+        [String]
+        $APIDiff="",
+
+        [string]
+        $APIGeneratorDiffJson="",
+
+        [string]
+        $APIGeneratorDiff=""
+    )
+
+    if ([string]::IsNullOrEmpty($APIDiff)) {
+        $StringBuilder.AppendLine("API diff urls have not been provided.")
+    } else {
+        WriteDiffs $StringBuilder "API diff" $APIDiff
+    }
+    if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
+        $StringBuilder.AppendLine("API Current PR diff urls have not been provided.")
+    } else {
+        WriteDiffs $StringBuilder "API Current PR diff" $APIGeneratorDiffJson
+    }
+    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
+        Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
+        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
+            $StringBuilder.AppendLine("Path $APIGeneratorDiff was not found!")
+        } else {
+            $StringBuilder.AppendLine("# Generator diff")
+            $StringBuilder.AppendLine("")
+            # ugly workaround to get decent new lines
+            foreach ($line in Get-Content -Path $APIGeneratorDiff)
+            {
+                $StringBuilder.AppendLine($line)
+            }
+            $StringBuilder.AppendLine($apidiffcomments)
+        }
+    } else {
+        $StringBuilder.AppendLine("Generator diff comments have not been provided.")
+    }
+}
+
+<# 
+    .SYNOPSIS
         Add a new comment that contains the summaries to the Html Report as well as set the status accordingly.
 
     .PARAMETER Context
@@ -444,35 +503,9 @@ function New-GitHubSummaryComment {
         # we did generate an index with the files in vsdrops
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
-    $diffHeader = "API diff"
-    $currentPRHeader = "API Current PR diff"
-    if ([string]::IsNullOrEmpty($APIDiff)) {
-        $sb.AppendLine("API diff urls have not been provided.")
-    } else {
-        WriteDiffs $sb $diffHeader $APIDiff
-    }
-    if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
-        $sb.AppendLine("API Current PR diff urls have not been provided.")
-    } else {
-        WriteDiffs $sb $currentPRHeader $APIGeneratorDiffJson
-    }
-    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
-        Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
-        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
-            $sb.AppendLine("Path $APIGeneratorDiff was not found!")
-        } else {
-            $sb.AppendLine("# Generator diff")
-            $sb.AppendLine("")
-            # ugly workaround to get decent new lines
-            foreach ($line in Get-Content -Path $APIGeneratorDiff)
-            {
-                $sb.AppendLine($line)
-            }
-            $sb.AppendLine($apidiffcomments)
-        }
-    } else {
-        $sb.AppendLine("Generator diff comments have not been provided.")
-    }
+
+    Write-APIDiffCotent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
+
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
         if (-not (Test-Path $Artifacts -PathType Leaf)) {
