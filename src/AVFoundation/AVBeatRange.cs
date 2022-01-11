@@ -30,9 +30,7 @@ using ObjCRuntime;
 
 namespace AVFoundation {
 
-#if !NET
 	[iOS (9,0), Mac (10,11)]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVBeatRange {
 		public double Start;

@@ -37,11 +37,7 @@ using System.Runtime.Versioning;
 namespace AVFoundation {
 	public partial class AVCaptureConnection {
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public bool SupportsVideoMinFrameDuration {
 			get {
 				if (RespondsToSelector (new Selector ("isVideoMinFrameDurationSupported")))
@@ -50,11 +46,7 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public bool SupportsVideoMaxFrameDuration {
 			get {
 #if !MONOMAC
@@ -65,11 +57,7 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
 		[Obsolete ("Use AvailableAudioChannels property instead.")]
-#else
-		[Obsolete ("Use AvailableAudioChannels property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public virtual AVCaptureAudioChannel AudioChannels { 
 			get { throw new NotSupportedException ("Use AvailableAudioChannels property instead."); }
 		}

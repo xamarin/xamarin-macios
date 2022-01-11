@@ -13,9 +13,7 @@ namespace AVFoundation {
 
 		public enum InitMode {
 			WithConnection,
-#if !NET
 			[iOS (8,0)]
-#endif
 			WithNoConnection,
 		}
 

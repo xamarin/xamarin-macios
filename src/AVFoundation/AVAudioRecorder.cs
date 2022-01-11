@@ -59,9 +59,7 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
 		[iOS (10,0), Mac (10,12)]
-#endif
 		public static AVAudioRecorder Create (NSUrl url, AVAudioFormat format, out NSError error)
 		{
 			if (format == null)

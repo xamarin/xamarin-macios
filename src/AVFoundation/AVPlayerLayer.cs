@@ -15,9 +15,7 @@ using System.Runtime.Versioning;
 
 namespace AVFoundation {
 	public partial class AVPlayerLayer {
-#if !NET
 		[iOS (9,0), Mac (10,11)]
-#endif
 		public CVPixelBufferAttributes PixelBufferAttributes { 
 			get {
 				if (WeakPixelBufferAttributes != null) {

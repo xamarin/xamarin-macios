@@ -305,10 +305,8 @@ namespace AVFoundation {
 		Succeeded, Failed, Cancelled
 	}
 
-// #if XAMCORE_3_0
 	[NoiOS]
 	[NoWatch]
-// #endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[Native]
@@ -317,9 +315,7 @@ namespace AVFoundation {
 		NotPlaying, Playing
 	}
 
-// #if XAMCORE_3_0
 	[NoiOS]
-// #endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV, NoWatch]
 	[Native]

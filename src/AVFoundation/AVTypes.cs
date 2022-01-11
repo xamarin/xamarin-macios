@@ -258,16 +258,10 @@ namespace AVFoundation {
 
 // #if MONOMAC || !NET
 
-#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
-#else
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorSyncInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -280,16 +274,10 @@ namespace AVFoundation {
 		public bool IsDroppable;
 	}
 
-#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
-#else
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -311,32 +299,20 @@ namespace AVFoundation {
 		public bool HasRedundantCoding;
 	}
 
-#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
-#else
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorStorageRange {
 		public long Offset;
 		public long Length;
 	}
 
-#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
-#else
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorChunkInfo {
 		public long SampleCount;
@@ -354,11 +330,7 @@ namespace AVFoundation {
 
 // #if MONOMAC || __MACCATALYST__
 
-#if !NET
 	[Mac (10,15)]
-#else
-	[SupportedOSPlatform ("macos10.15")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -370,11 +342,7 @@ namespace AVFoundation {
 
 // #if MONOMAC
 
-#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
-#else
-	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
-#endif
 	[Native]
 	public enum AVCaptionUnitsType : long {
 		Unspecified = 0,
@@ -382,11 +350,7 @@ namespace AVFoundation {
 		Percent,
 	}
 
-#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
-#else
-	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionDimension {
 		public nfloat Value;
@@ -404,11 +368,7 @@ namespace AVFoundation {
 			=> AVCaptionDimensionMake (dimension, (nuint) (long)units);
 	}
 
-#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
-#else
-	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionPoint {
 		public AVCaptionDimension X;
@@ -421,11 +381,7 @@ namespace AVFoundation {
 			=> AVCaptionPointMake (x,y);
 	}
 
-#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
-#else
-	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionSize {
 		public AVCaptionDimension Width;

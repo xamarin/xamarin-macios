@@ -34,9 +34,7 @@ using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
-#if !NET
 	[Watch (6,0)]
-#endif
 	public class AVUrlAssetOptions : DictionaryContainer
 	{
 #if !COREBUILD
