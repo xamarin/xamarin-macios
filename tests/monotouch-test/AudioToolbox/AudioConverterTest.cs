@@ -38,13 +38,14 @@ namespace MonoTouchFixtures.AudioToolbox {
 			Convert (output1, output2, AudioFormatType.LinearPCM);
 		}
 
-		void Convert (string sourceURL, string destinationFilePath, AudioFormatType outputFormatType, int? sampleRate = null)
+		void Convert (string sourceFilePath, string destinationFilePath, AudioFormatType outputFormatType, int? sampleRate = null)
 		{
-			var destinationURL = NSUrl.FromFilename (destinationFilePath);
+			var destinationUrl = NSUrl.FromFilename (destinationFilePath);
+			var sourceUrl = NSUrl.FromFilename (sourceFilePath);
 
 			// get the source file
 			var name = Path.GetFileNameWithoutExtension (destinationFilePath);
-			using var sourceFile = AudioFile.Open (sourceURL, AudioFilePermission.Read);
+			using var sourceFile = AudioFile.Open (sourceUrl, AudioFilePermission.Read);
 
 			var srcFormat = (AudioStreamBasicDescription) sourceFile.DataFormat;
 			var dstFormat = new AudioStreamBasicDescription ();
@@ -96,7 +97,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			dstFormat = converter.CurrentOutputStreamDescription;
 
 			// create the destination file
-			using var destinationFile = AudioFile.Create (destinationURL, AudioFileType.CAF, dstFormat, AudioFileFlags.EraseFlags);
+			using var destinationFile = AudioFile.Create (destinationUrl, AudioFileType.CAF, dstFormat, AudioFileFlags.EraseFlags);
 
 			// set up source buffers and data proc info struct
 			afio.SourceFile = sourceFile;
