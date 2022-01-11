@@ -26,8 +26,8 @@ namespace CoreGraphics {
 #if !NET
 	[TV (9,2)]
 	[iOS (9,3)]
-	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
-	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
+	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTriple'.")]
+	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTriple'.")]
 #else
 #if IOS
 		[Obsolete ("Starting with ios10.0 replaced by 'GColorConversionInfoTriple'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
