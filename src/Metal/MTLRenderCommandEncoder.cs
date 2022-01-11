@@ -1,4 +1,3 @@
-#if MONOMAC
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -11,6 +10,7 @@ using ObjCRuntime;
 
 namespace Metal {
 	public static class IMTLRenderCommandEncoder_Extensions {
+#if MONOMAC
 #if !NET
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 #endif
@@ -28,6 +28,7 @@ namespace Metal {
 			fixed (void* handle = scissorRects)
 				This.SetScissorRects ((IntPtr)handle, (nuint)(scissorRects?.Length ?? 0));
 		}
+#endif
 
 #if IOS
 #if !NET
@@ -57,4 +58,3 @@ namespace Metal {
 #endif
 	}
 }
-#endif

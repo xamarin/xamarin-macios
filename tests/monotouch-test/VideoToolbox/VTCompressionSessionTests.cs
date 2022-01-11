@@ -217,7 +217,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			for (var i = 0; i < frameCount; i++) {
 				using var imageBuffer = new CVPixelBuffer (width, height, CVPixelFormatType.CV420YpCbCr8BiPlanarFullRange);
 				var pts = new CMTime (40 * i, 1);
-				status = session.EncodeFrame (imageBuffer, pts, duration, null, imageBuffer.Handle, out var infoFlags);
+				status = session.EncodeFrame (imageBuffer, pts, duration, null, imageBuffer, out var infoFlags);
 				Assert.AreEqual (status, VTStatus.Ok, $"status #{i}");
 				// This looks weird, but it seems the video encoder can become overwhelmed otherwise, and it
 				// will start failing (and taking a long time to do so, eventually timing out the test).

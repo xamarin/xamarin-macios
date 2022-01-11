@@ -717,7 +717,7 @@
         <value>No se pudo asignar la versión Mac Catalyst {0} a la versión de macOS correspondiente. Las versiones de Mac Catalyst son: {1}</value>
     </data>
   <data name="E0189" xml:space="preserve">
-        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
+        <value>No se han podido analizar los argumentos del enlazador personalizado "-{0}": {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>No se pudieron resolver las direcciones IP del host para la configuración del depurador Wi-Fi.
@@ -1086,10 +1086,10 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="W7091" xml:space="preserve">
-        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+        <value>El marco {0} es un marco de bibliotecas estáticas y no se copiará en la aplicación.</value>
     </data>
   <!-- This is the same as MT0140 -->
   <data name="E7092" xml:space="preserve">
-        <value>File '{0}' is not a valid framework: {1}</value>
+        <value>El archivo "{0}" no es un marco válido: {1}</value>
     </data>
 </root>

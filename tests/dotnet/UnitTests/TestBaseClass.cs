@@ -102,7 +102,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		protected bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
+		protected static bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:

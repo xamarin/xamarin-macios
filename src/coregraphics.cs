@@ -129,9 +129,17 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceITUR_709")]
 		NSString ItuR_709 { get; }
 
+		[Mac (12,1), iOS (15,2), TV (15,2), Watch (8,3)]
+		[Field ("kCGColorSpaceITUR_709_PQ")]
+		NSString ItuR_709_PQ { get; }
+
 		[Mac (10,11)]
 		[Field ("kCGColorSpaceITUR_2020")]
 		NSString ItuR_2020 { get; }
+
+		[Mac (12,1), iOS (15,2), TV (15,2), Watch (8,3)]
+		[Field ("kCGColorSpaceITUR_2020_sRGBGamma")]
+		NSString ItuR_2020_sRgbGamma { get; }
 
 		[iOS (9,3)][Mac (10,11)]
 		[TV (9,2)]
