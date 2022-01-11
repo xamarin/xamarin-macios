@@ -642,6 +642,9 @@ namespace AudioUnit
 
 			inputs [audioUnitElement] = inputDelegate;
 
+			if (!gcHandle.IsAllocated)
+				gcHandle = GCHandle.Alloc (this);
+
 			var cb = new AURenderCallbackStruct ();
 			cb.Proc = CreateInputCallback;
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
