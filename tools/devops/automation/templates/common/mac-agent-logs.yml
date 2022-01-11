@@ -78,7 +78,7 @@ steps:
       # add or not the working dir to the upload
       ${{ if eq(parameters.workingDirectory, '') }}:
         targetPath: ${{ parameters.outputPath }}
-      %{{ else }}
+      %{{ else }}:
         targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
       artifactName: $(Agent.Name)-${{ parameters.outputPath }} 
     continueOnError: true
