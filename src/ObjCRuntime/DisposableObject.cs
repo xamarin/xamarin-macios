@@ -35,7 +35,7 @@ namespace ObjCRuntime {
 			protected set => InitializeHandle (value);
 		}
 
-		protected bool Owns { get; }
+		protected bool Owns { get => owns; }
 
 		protected DisposableObject ()
 		{
