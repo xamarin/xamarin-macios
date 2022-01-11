@@ -173,6 +173,23 @@ jobs:
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
 
+# Executive Order (EO): Software Bill of Materials (SBOM): https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/secure-supply-chain/ado-sbom-generator
+- job: sbom
+  displayName: 'Software Bill of Materials'
+  timeoutInMinutes: 30
+  dependsOn:
+  - configure
+  - build
+  variables:
+    dropDirectoryPackage: "$(Pipeline.Workspace)/artifacts/package"
+
+  pool:
+    vmImage: 'internal-macOS-11'
+  workspace:
+    clean: all
+  steps:
+  - template: sbom.yml
+
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'
   timeoutInMinutes: 1000
