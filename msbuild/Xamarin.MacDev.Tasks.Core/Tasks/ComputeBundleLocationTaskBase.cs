@@ -248,16 +248,13 @@ namespace Xamarin.MacDev.Tasks {
 				return PublishFolderType.Resource;
 
 			// Assemblies and their related files
-			if (filename.EndsWith (".dll", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.Assembly;
-			} else if (filename.EndsWith (".exe", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.Assembly;
-			} else if (filename.EndsWith (".pdb", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.Assembly;
-			} else if (filename.EndsWith (".dll.mdb", StringComparison.OrdinalIgnoreCase) || filename.EndsWith (".exe.mdb", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.Assembly;
-			} else if (filename.EndsWith (".config", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.Assembly;
+			var assemblyExtensions = new string [] {
+				".dll",".exe", ".pdb",
+				".dll.mdb", ".exe.mdb", ".config",
+			};
+			foreach (var extension in assemblyExtensions) {
+				if (filename.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
+					return PublishFolderType.Assembly;
 			}
 
 			// Binding resource package (*.resources / *.resources.zip)
@@ -270,17 +267,23 @@ namespace Xamarin.MacDev.Tasks {
 				return PublishFolderType.AppleFramework;
 
 			// resources (png, jpg, ...?)
-			if (filename.EndsWith (".jpg", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.Resource;
-			} else if (filename.EndsWith (".png", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.Resource;
+			var resourceExtensions = new string [] {
+				".jpg",
+				".png",
+			};
+			foreach (var extension in resourceExtensions) {
+				if (filename.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
+					return PublishFolderType.Resource;
 			}
 
 			// *.framework.zip, *.xcframework.zip
-			if (filename.EndsWith (".framework.zip", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.CompressedAppleFramework;
-			} else if (filename.EndsWith (".xcframework.zip", StringComparison.OrdinalIgnoreCase)) {
-				return PublishFolderType.CompressedAppleFramework;
+			var compressedAppleFrameworksExtensions = new string [] {
+				".framework.zip",
+				".xcframework.zip",
+			};
+			foreach (var extension in compressedAppleFrameworksExtensions) {
+				if (filename.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
+					return PublishFolderType.CompressedAppleFramework;
 			}
 
 			// *.a and *.dylib
