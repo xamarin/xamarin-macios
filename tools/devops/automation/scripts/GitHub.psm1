@@ -447,12 +447,12 @@ function New-GitHubSummaryComment {
     $diffHeader = "API diff"
     $currentPRHeader = "API Current PR diff"
     if ([string]::IsNullOrEmpty($APIDiff)) {
-        $sb.AppendLine("API diff urls have not been provided.")
+        $sb.AppendLine("* :warning: API diff urls have not been provided.")
     } else {
         Write-Diffs -StringBuilder $sb -Header $diffHeader -APIDiff $APIDiff
     }
     if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
-        $sb.AppendLine("API Current PR diff urls have not been provided.")
+        $sb.AppendLine("* :warning: API Current PR diff urls have not been provided.")
     } else {
         Write-Diffs -StringBuilder $sb -Header $currentPRHeader -APIDiff $APIGeneratorDiffJson
     }
@@ -471,7 +471,7 @@ function New-GitHubSummaryComment {
             $sb.AppendLine($apidiffcomments)
         }
     } else {
-        $sb.AppendLine("Generator diff comments have not been provided.")
+        $sb.AppendLine("* :warning: Generator diff comments have not been provided.")
     }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
