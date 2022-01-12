@@ -101,6 +101,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
+			$(_CodesignAppBundleDependsOn);
 			_EmbedProvisionProfile;
 			_CodesignNativeLibraries;
 			_CollectFrameworks;
@@ -109,7 +110,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CodesignAppExtensions;
 			_PrepareCodesignAppExtension;
 			_CalculateCodesignAppBundleInputs;
-			_CleanAppBundleRootDirectory;
 		</_CodesignAppBundleDependsOn>
 
 		<CoreCodesignDependsOn>
@@ -621,41 +621,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppBundlePath)_CodeSignature\CodeResources')"
 			Files="$(_AppBundlePath)_CodeSignature\CodeResources"
 		/>
-	</Target>
-
-	<Target Name="_CleanAppBundleRootDirectory" Condition="'$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS'">
-		<!-- There shouldn't be any files in the root directory of the app bundle for macOS or Mac Catalyst (signing will fail) -->
-
-		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
-		<!-- Use a task to collect the files, so that we get the correct behavior on Windows -->
-		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
-			DirectoryPath="$(AppBundleDir)"
-			Pattern="mono_crash.*"
-			Recursive="false"
-			IncludeDirectories="false"
-			>
-			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
-		</GetFileSystemEntries>
-		<Delete
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
-			Files="@(_MonoCrashDumpsInAppBundle)"
-		/>
-
-		<!-- Warn about any files that are left -->
-		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
-			DirectoryPath="$(AppBundleDir)"
-			Pattern="*"
-			Recursive="false"
-			IncludeDirectories="false"
-			>
-			<Output TaskParameter="Entries" ItemName="_FilesInAppBundleRootDirectory" />
-		</GetFileSystemEntries>
-		<Warning Text="Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:%0a@(_FilesInAppBundleRootDirectory, '%0a')" Condition="@(_FilesInAppBundleRootDirectory->Count()) &gt; 0"/>
 	</Target>
 
 	<Target Name="_CoreCreateIpa" Condition="'$(BuildIpa)' == 'true'" DependsOnTargets="Codesign">
