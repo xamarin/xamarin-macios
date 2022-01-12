@@ -1,5 +1,31 @@
 # Breaking changes in .NET
 
+Reference: https://github.com/xamarin/xamarin-macios/issues/13087
+
+## Removed `System.nint` and `System.nuint`
+
+The two types `System.nint` and `System.nuint` (which despite their `System`
+namespace were shipped with Xamarin.iOS/Xamarin.Mac) have been removed in
+favor of the C# 9 `nint` and `nuint` types (these map to `System.IntPtr` and
+`System.UIntPtr` respectively).
+
+* Code that uses these types with the full namespace (`System.nint` / `System.nuint`) won't compile.
+
+    Fix: remove the namespace, and use `nint` / `nuint` only.
+
+* Code that overloads on `System.IntPtr`/`System.UIntPtr` and `nint`/`nuint`won't compile.
+
+    Example:
+
+    ```csharp
+    public void DoSomething (IntPtr value) {}
+    public void DoSomething (nint value) {}
+    ```
+
+    Fix: one of the overloads would have to be either renamed or removed.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/10508
+
 ## System.nfloat moved to ObjCRuntime.nfloat
 
 The `nfloat` type moved from the `System` namespace to the `ObjCRuntime` namespace.
