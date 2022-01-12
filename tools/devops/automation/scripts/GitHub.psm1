@@ -405,12 +405,12 @@ function Write-APIDiffContent {
     if ([string]::IsNullOrEmpty($APIDiff)) {
         $StringBuilder.AppendLine("API diff urls have not been provided.")
     } else {
-        WriteDiffs $StringBuilder "API diff" $APIDiff
+        Write-Diffs -StringBuilder $sb -Header "API diff" -APIDiff $APIDiff
     }
     if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
         $StringBuilder.AppendLine("API Current PR diff urls have not been provided.")
     } else {
-        WriteDiffs $StringBuilder "API Current PR diff" $APIGeneratorDiffJson
+        Write-Diffs -StringBuilder $sb -Header "API Current PR diff" -APIDiff $APIGeneratorDiffJson
     }
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
         Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
@@ -594,15 +594,15 @@ function New-GitHubSummaryComment {
     return $request
 }
 
-function WriteDiffs {
+function Write-Diffs {
     param (
         [Parameter(Mandatory)]
         [System.Text.StringBuilder]
-        $sb,
+        $StringBuilder,
 
         [Parameter(Mandatory)]
         [String]
-        $header,
+        $Header,
 
         [String]
         $APIDiff
@@ -610,7 +610,7 @@ function WriteDiffs {
 
     Write-Host "Parsing API diff in path $APIDiff"
     if (-not (Test-Path $APIDiff -PathType Leaf)) {
-        $sb.AppendLine("Path $APIDiff was not found!")
+        $StringBuilder.AppendLine("Path $APIDiff was not found!")
     } else {
         # read the json file, convert it to an object and add a line for each artifact
         $json =  Get-Content $APIDiff | ConvertFrom-Json
@@ -618,9 +618,9 @@ function WriteDiffs {
         $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
         $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
         if ($hasHtmlLinks -or $hasMDlinks) {
-            $sb.AppendLine("# $header")
+            $StringBuilder.AppendLine("# $Header")
             Write-Host "Message is '$($json.message)'"
-            $sb.AppendLine($json.message)
+            $StringBuilder.AppendLine($json.message)
 
             $commonPlatforms = "iOS", "macOS", "tvOS"
             $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS");}
@@ -630,8 +630,8 @@ function WriteDiffs {
             $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
 
             foreach ($linkGroup in $platforms) {
-                $sb.AppendLine("<details><summary>View $($linkGroup.Title)</summary>")
-                $sb.AppendLine("") # no new line results in a bad rendering in the links
+                $StringBuilder.AppendLine("<details><summary>View $($linkGroup.Title)</summary>")
+                $StringBuilder.AppendLine("") # no new line results in a bad rendering in the links
                 $htmlLink = ""
                 $gistLink = ""
 
@@ -653,21 +653,21 @@ function WriteDiffs {
                     }
 
                     if (($htmlLink -eq "") -and ($gistLink -eq "")) {
-                        $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
+                        $StringBuilder.AppendLine("* :fire: $linkPlatform :fire: Missing files")
                     } else {
                         # I don't like extra ' ' when we are missing vars, use join
                         $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
-                        $sb.AppendLine($line)
+                        $StringBuilder.AppendLine($line)
                     }
                 }
-                $sb.AppendLine("</details>")
-                $sb.AppendLine("")
+                $StringBuilder.AppendLine("</details>")
+                $StringBuilder.AppendLine("")
             }
-            $sb.AppendLine("")
+            $StringBuilder.AppendLine("")
         } else {
-            $sb.AppendLine("# API diff")
-            $sb.AppendLine("")
-            $sb.AppendLine("**No api diff data found.**")
+            $StringBuilder.AppendLine("# API diff")
+            $StringBuilder.AppendLine("")
+            $StringBuilder.AppendLine("**No api diff data found.**")
         }
     }
 }
@@ -960,4 +960,3 @@ Export-ModuleMember -Function New-GistWithFiles
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
 Export-ModuleMember -Function Push-RepositoryDispatch 
-Export-ModuleMember -Function WriteDiffs

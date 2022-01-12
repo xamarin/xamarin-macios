@@ -347,6 +347,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string XamarinCatalystDll {
+			get {
+				return Path.Combine (mt_root, "lib", "mono", "Xamarin.MacCatalyst", "Xamarin.MacCatalyst.dll");
+			}
+		}
+
 		public static string XamarinWatchOSDll {
 			get {
 				return Path.Combine (mt_root, "lib", "mono", "Xamarin.WatchOS", "Xamarin.WatchOS.dll");
@@ -409,11 +415,15 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string GetRefNuGetName (TargetFramework targetFramework)
-		{
-			switch (targetFramework.Platform) {
+		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
+
+		static string GetRefNuGetName (ApplePlatform platform)
+        {
+			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Microsoft.iOS.Ref";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Ref";
 			case ApplePlatform.TVOS:
 				return "Microsoft.tvOS.Ref";
 			case ApplePlatform.WatchOS:
@@ -421,7 +431,7 @@ namespace Xamarin.Tests
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Ref";
 			default:
-				throw new InvalidOperationException (targetFramework.ToString ());
+				throw new InvalidOperationException (platform.ToString ());
 			}
 		}
 
@@ -465,6 +475,11 @@ namespace Xamarin.Tests
 		public static string GetDotNetRoot ()
 		{
 			return Path.Combine (SourceRoot, "_build");
+		}
+
+		public static string GetRefDirectory (ApplePlatform platform)
+		{
+			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
@@ -716,6 +731,27 @@ namespace Xamarin.Tests
 				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
 				yield return Path.Combine (libdir, GetBaseLibraryName (platform));
 			}
+		}
+
+
+		public static IEnumerable<string> GetRefLibraries ()
+		{
+			foreach (var platform in GetIncludedPlatforms (true))
+				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform));
+		}
+
+		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
+		{
+			if (include_ios)
+				yield return ApplePlatform.iOS;
+			if (include_tvos)
+				yield return ApplePlatform.TVOS;
+			if (include_mac)
+				yield return ApplePlatform.MacOSX;
+			if (include_maccatalyst)
+				yield return ApplePlatform.MacCatalyst;
+			if (include_watchos && !dotnet)
+				yield return ApplePlatform.WatchOS;
 		}
 
 		public static string GetTargetFramework (Profile profile)
