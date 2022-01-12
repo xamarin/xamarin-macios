@@ -2038,6 +2038,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- Compute some metadata for the items -->
 		<ItemGroup>
+			<!-- Set individual metadata based on global values unless already specified -->
+			<_CodesignItems>
+				<CodesignAllocate Condition="'%(_CodesignItems.CodesignAllocate)' == ''">$(_CodesignAllocate)</CodesignAllocate>
+				<CodesignDisableTimestamp Condition="'%(_CodesignItems.CodesignDisableTimestamp)' == ''">$(_CodesignDisableTimestamp)</CodesignDisableTimestamp>
+				<CodesignEntitlements Condition="'%(_CodesignItems.CodesignEntitlements)' == ''">$(_AppBundleCodesignEntitlements)</CodesignEntitlements>
+				<CodesignExtraArgs Condition="'%(_CodesignItems.CodesignExtraArgs)' == ''">$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain Condition="'%(_CodesignItems.CodesignKeychain)' == ''">$(CodesignKeychain)</CodesignKeychain>
+				<CodesignResourceRules Condition="'%(_CodesignItems.CodesignResourceRules)' == ''">$(_PreparedResourceRules)</CodesignResourceRules>
+				<CodesignSigningKey Condition="'%(_CodesignItems.CodesignSigningKey)' == ''">$(_CodeSigningKey)</CodesignSigningKey>
+			</_CodesignItems>
 			<!-- Compute the relative path of the item in the app bundle -->
 			<_CodesignItems>
 				<CodesignRelativeAppBundlePath>$([System.String]::new('%(Identity)')).Substring($([System.String]::new('%(Identity)')).LastIndexOf('.app/')+5)</CodesignRelativeAppBundlePath>

@@ -1266,8 +1266,8 @@
 
 			<!-- Put the 'createdump' executable in the expected location in the app bundle when using CoreCLR -->
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/11432 -->
-			<ResolvedFileToPublish
-				Update="@(ResolvedFileToPublish)"
+			<_CreateDumpExecutable
+				Include="@(ResolvedFileToPublish)"
 				Condition=" '$(UseMonoRuntime)' == 'false' And
 				            '%(ResolvedFileToPublish.Filename)' == 'createdump' And
 				            '%(ResolvedFileToPublish.Extension)' == '' And
@@ -1277,6 +1277,14 @@
 				            "
 				PublishFolderType="Assembly"
 			/>
+			<ResolvedFileToPublish
+				Update="@(_CreateDumpExecutable)"
+				RelativePath="$(_DylibPublishDir)\%(Filename)%(Extension)"
+				Condition="@(_CreateDumpExecutable->Count()) &gt; 0"
+			/>
+			<!-- The 'createdump' executable must be signed. -->
+			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/13417 -->
+			<_CodesignItems Include="@(_CreateDumpExecutable)" Condition="'$(_RequireCodeSigning)' == 'true'" />
 
 			<!-- Remove any dylibs Mono told us not to link with -->
 			<ResolvedFileToPublish
