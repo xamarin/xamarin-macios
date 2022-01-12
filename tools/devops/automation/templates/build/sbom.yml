@@ -1,3 +1,7 @@
+parameters:
+- name: dropDirectoryPackage
+  type: string
+
 steps:
 - checkout: none
 
@@ -6,7 +10,7 @@ steps:
   displayName: Download packages
   inputs:
     artifact: package
-    path: "${{ variables.dropDirectoryPackage }}"
+    path: "${{ parameters.dropDirectoryPackage }}"
 
 # Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator
 - powershell: |
@@ -17,7 +21,7 @@ steps:
       [IO.Directory]::CreateDirectory($SBomStagingDirectory)
     }
 
-    $pkgsPath = "${{ variables.dropDirectoryPackage }}"
+    $pkgsPath = "${{ parameters.dropDirectoryPackage }}"
     Write-Host "Packages path: ${pkgsPath}"
 
     $iOSPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.ios-*.pkg

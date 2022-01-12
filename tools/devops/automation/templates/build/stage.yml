@@ -189,6 +189,8 @@ jobs:
     clean: all
   steps:
   - template: sbom.yml
+    parameters:
+      dropDirectoryPackage: "${{ variables.dropDirectoryPackage }}"
 
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'
