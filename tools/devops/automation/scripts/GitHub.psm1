@@ -403,19 +403,19 @@ function Write-APIDiffContent {
     )
 
     if ([string]::IsNullOrEmpty($APIDiff)) {
-        $StringBuilder.AppendLine("API diff urls have not been provided.")
+        $StringBuilder.AppendLine("* :warning: API diff urls have not been provided.")
     } else {
         WriteDiffs $StringBuilder "API diff" $APIDiff
     }
     if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
-        $StringBuilder.AppendLine("API Current PR diff urls have not been provided.")
+        $StringBuilder.AppendLine("* :warning: API Current PR diff urls have not been provided.")
     } else {
         WriteDiffs $StringBuilder "API Current PR diff" $APIGeneratorDiffJson
     }
     if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
         Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
         if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
-            $StringBuilder.AppendLine("Path $APIGeneratorDiff was not found!")
+            $StringBuilder.AppendLine("* :warning: Path $APIGeneratorDiff was not found!")
         } else {
             $StringBuilder.AppendLine("# Generator diff")
             $StringBuilder.AppendLine("")
