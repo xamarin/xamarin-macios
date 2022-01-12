@@ -22,7 +22,7 @@ namespace Foundation {
 		public static bool SupportsSecureCoding (Type type)
 		{
 			if (type is null)
-				throw new ArgumentNullException (nameof (type));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
 #if MONOMAC
 			try {
@@ -42,7 +42,7 @@ namespace Foundation {
 		public static bool SupportsSecureCoding (Class klass)
 		{
 			if (klass is null)
-				throw new ArgumentNullException (nameof (klass));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (klass));
 			return SupportsSecureCoding (klass.Handle);
 		}
 
