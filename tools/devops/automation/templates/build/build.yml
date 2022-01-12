@@ -572,3 +572,7 @@ steps:
     artifactName: all-binlogs
   continueOnError: true
   condition: succeededOrFailed()
+
+- template: ../common/mac-agent-logs.yml
+  parameters:
+    outputPath: agent-logs.log
