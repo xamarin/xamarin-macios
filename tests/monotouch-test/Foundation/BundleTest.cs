@@ -29,11 +29,16 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void LocalizedString2 ()
 		{
+#if NET
+			string s = main.GetLocalizedString (null, "value");
+			Assert.That (s, Is.EqualTo ("value"), "key");
+#else
 			string s = main.GetLocalizedString (null, "comment");
 			Assert.That (s, Is.Empty, "key");
+#endif
 
 			s = main.GetLocalizedString ("key", null);
-			Assert.That (s, Is.EqualTo ("key"), "comment");
+			Assert.That (s, Is.EqualTo ("key"), "key");
 
 			s = main.GetLocalizedString (null, null);
 			Assert.That (s, Is.Empty, "all-null");
