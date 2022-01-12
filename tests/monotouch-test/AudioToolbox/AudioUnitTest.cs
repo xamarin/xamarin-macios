@@ -7,7 +7,7 @@
 // Copyright 2022 Microsoft Corp. All rights reserved.
 //
 
-#if (__MACOS__ || __MACCATALYST__) && NET
+#if __MACOS__ && NET
 
 using System;
 using System.Threading;
@@ -25,6 +25,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 	{
 		ManualResetEvent inputCallbackEvent = new ManualResetEvent (false);
 
+		// This test currently only works on macOS, probably due to missing microphone entitlements/permissions for mobile platforms.
 		[Test]
 		public void Callbacks ()
 		{
@@ -49,4 +50,4 @@ namespace MonoTouchFixtures.AudioToolbox {
 	}
 }
 
-#endif // (__MACOS__ || __MACCATALYST__) && NET
+#endif // __MACOS__ && NET
