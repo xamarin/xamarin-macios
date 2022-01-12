@@ -51,7 +51,7 @@ steps:
 
     $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 
-    $end=Get-Date -Format "yyyy-mm-dd HH:mm:ss"
+    $end=Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     Write-Host "end time: $end"
 
     $predicate=$Env:PREDICATE
