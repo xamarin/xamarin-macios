@@ -7992,6 +7992,8 @@ namespace Foundation
 		void AddEntries (NSDictionary other);
 	}
 
+	interface NSMutableDictionary<K,V> : NSDictionary {}
+
 	[BaseType (typeof (NSSet))]
 	[DesignatedDefaultCtor]
 	interface NSMutableSet {
