@@ -31,6 +31,7 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using CoreVideo;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 

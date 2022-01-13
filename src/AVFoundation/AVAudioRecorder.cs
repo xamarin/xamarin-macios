@@ -29,6 +29,7 @@ using CoreFoundation;
 using AudioToolbox;
 using ObjCRuntime;
 using System;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 #if !TVOS
