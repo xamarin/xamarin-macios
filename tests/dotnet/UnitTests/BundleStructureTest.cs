@@ -454,32 +454,18 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
-			var project_dir = Path.GetDirectoryName (Path.GetDirectoryName (project_path));
+			var project_dir = Path.GetDirectoryName (Path.GetDirectoryName (project_path))!;
 			Clean (project_path);
 
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["_IsAppSigned"] = signature != CodeSignature.None ? "true" : "false";
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			var warningMessages = FilterWarnings (warnings);
 
 			var platformString = platform.AsString ();
 			var tfm = platform.ToFramework ();
 			var testsDirectory = Path.GetDirectoryName (Path.GetDirectoryName (project_dir));
-			var warningMessages = warnings
-				.Select (v => v?.Message!).Where (v => !string.IsNullOrWhiteSpace (v))
-				// Remove warnings of the form "This call site is reachable on: '...' and later. 'TheAPI' is only supported on: '...' and later."
-				.Where (v => !v.StartsWith ("This call site is reachable on:"))
-				// Remove CLSCompliant warnings
-				.Where (v => !v.Contains ("does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute"))
-				// Remove obsolete warnings
-				.Where (v => !v.Contains (" is obsolete: "))
-				// More obsolete warnings
-				.Where (v => !v.Contains (" overrides obsolete member "))
-				// Don't care about this
-				.Where (v => !v.Contains ("Supported iPhone orientations have not been set"))
-				// Sort the messages so that comparison against the expected array is faster
-				.OrderBy (v => v)
-				.ToArray ();
 			var expectedWarnings = new string [] {
 				$"The 'PublishFolderType' metadata value 'Unknown' on the item '{project_dir}/{platformString}/SomewhatUnknownI.bin' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the 'CopyToOutputDirectory' metadata on the item.",
 				$"The 'PublishFolderType' metadata value 'Unknown' on the item '{project_dir}/{platformString}/UnknownI.bin' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the 'CopyToOutputDirectory' metadata on the item.",
@@ -514,12 +500,64 @@ namespace Xamarin.Tests {
 				.OrderBy (v => v)
 				.ToList ();
 
-			CheckAppBundleContents (platform, appPath, rids, signature);
-
-			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings");
-
 			var appExecutable = GetNativeExecutable (platform, appPath);
+
+			CheckAppBundleContents (platform, appPath, rids, signature);
+			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			// touch AppDelegate.cs, and rebuild should succeed and do the right thing
+			var appDelegatePath = Path.Combine (project_dir, "AppDelegate.cs");
+			Configuration.Touch (appDelegatePath);
+
+			rv = DotNet.AssertBuild (project_path, properties);
+			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			warningMessages = FilterWarnings (warnings);
+
+			CheckAppBundleContents (platform, appPath, rids, signature);
+			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings Rebuild 1");
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			// remove the bin directory, and rebuild should succeed and do the right thing
+			var binDirectory = Path.Combine (Path.GetDirectoryName (project_path)!, "bin");
+			Directory.Delete (binDirectory, true);
+
+			rv = DotNet.AssertBuild (project_path, properties);
+			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			warningMessages = FilterWarnings (warnings);
+
+			CheckAppBundleContents (platform, appPath, rids, signature);
+			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings Rebuild 2");
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			// a simple rebuild should succeed
+			rv = DotNet.AssertBuild (project_path, properties);
+			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			warningMessages = FilterWarnings (warnings);
+
+			CheckAppBundleContents (platform, appPath, rids, signature);
+			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings Rebuild 3");
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
+
+		string[] FilterWarnings (IEnumerable<BuildLogEvent> warnings)
+		{
+			return warnings
+				.Select (v => v?.Message!).Where (v => !string.IsNullOrWhiteSpace (v))
+				// Remove warnings of the form "This call site is reachable on: '...' and later. 'TheAPI' is only supported on: '...' and later."
+				.Where (v => !v.StartsWith ("This call site is reachable on:"))
+				// Remove CLSCompliant warnings
+				.Where (v => !v.Contains ("does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute"))
+				// Remove obsolete warnings
+				.Where (v => !v.Contains (" is obsolete: "))
+				// More obsolete warnings
+				.Where (v => !v.Contains (" overrides obsolete member "))
+				// Don't care about this
+				.Where (v => !v.Contains ("Supported iPhone orientations have not been set"))
+				// Sort the messages so that comparison against the expected array is faster
+				.OrderBy (v => v)
+				.ToArray ();
+
 		}
 	}
 }
