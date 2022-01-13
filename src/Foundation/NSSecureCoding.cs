@@ -3,6 +3,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Foundation {
 
 #if XAMCORE_4_0
@@ -19,8 +21,8 @@ namespace Foundation {
 
 		public static bool SupportsSecureCoding (Type type)
 		{
-			if (type == null)
-				throw new ArgumentNullException ("type");
+			if (type is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
 #if MONOMAC
 			try {
@@ -39,8 +41,8 @@ namespace Foundation {
 
 		public static bool SupportsSecureCoding (Class klass)
 		{
-			if (klass == null)
-				throw new ArgumentNullException ("klass");
+			if (klass is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (klass));
 			return SupportsSecureCoding (klass.Handle);
 		}
 

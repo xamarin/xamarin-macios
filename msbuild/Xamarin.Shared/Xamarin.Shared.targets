@@ -294,6 +294,41 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)bundler.stamp" />
 	</Target>
 
+	<Target Name="_CleanAppBundleRootDirectory" Condition="'$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS'">
+		<!-- There shouldn't be any files in the root directory of the app bundle for macOS or Mac Catalyst (signing will fail) -->
+
+		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
+		<!-- Use a task to collect the files, so that we get the correct behavior on Windows -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="mono_crash.*"
+			Recursive="false"
+			IncludeDirectories="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
+		</GetFileSystemEntries>
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
+			Files="@(_MonoCrashDumpsInAppBundle)"
+		/>
+
+		<!-- Warn about any files that are left -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="*"
+			Recursive="false"
+			IncludeDirectories="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_FilesInAppBundleRootDirectory" />
+		</GetFileSystemEntries>
+		<Warning Text="Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:%0a@(_FilesInAppBundleRootDirectory, '%0a')" Condition="@(_FilesInAppBundleRootDirectory->Count()) &gt; 0"/>
+	</Target>
+
 	<Target Name="_CleanBindingResourcePackage">
 		<RemoveDir Directories="$(BindingResourcePath);" />  
 	</Target>
@@ -1689,6 +1724,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<!-- Code signing -->
 
 	<PropertyGroup>
+		<_CodesignAppBundleDependsOn>
+			$(_CodesignAppBundleDependsOn);
+			_CleanAppBundleRootDirectory;
+		</_CodesignAppBundleDependsOn>
+
 		<CoreCodesignDependsOn>
 			$(CoreCodesignDependsOn);
 			_CodesignAppBundle;

@@ -23,11 +23,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
-#if !NET
-	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
+#if NET
+	public struct CGColorConversionInfoTriple {
+#else
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 	public struct GColorConversionInfoTriple {
+#endif
 		public CGColorSpace Space;
 		public CGColorConversionInfoTransformType Transform;
 		public CGColorRenderingIntent Intent;
@@ -66,13 +68,21 @@ namespace CoreGraphics {
 			IntPtr space3, nuint transform3, nint intent3,
 			IntPtr lastSpaceMarker);
 
+#if NET
+		public CGColorConversionInfo (CGColorConversionOptions? options, params CGColorConversionInfoTriple [] triples)
+#else
 		public CGColorConversionInfo (CGColorConversionOptions? options, params GColorConversionInfoTriple [] triples)
+#endif
 			: this (options?.Dictionary, triples)
 		{
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
+#if NET
+		static IntPtr Create (NSDictionary? options, params CGColorConversionInfoTriple [] triples)
+#else
 		static IntPtr Create (NSDictionary? options, params GColorConversionInfoTriple [] triples)
+#endif
 		{
 			// the API won't return a valid instance if no triple is given, i.e. at least one is needed. 
 			// `null` is accepted to mark the end of the list, not to make it optional
@@ -84,8 +94,13 @@ namespace CoreGraphics {
 			IntPtr handle;
 			IntPtr o = options.GetHandle ();
 			var first = triples [0]; // there's always one
+#if NET
+			var second = triples.Length > 1 ? triples [1] : default (CGColorConversionInfoTriple);
+			var third = triples.Length > 2 ? triples [2] : default (CGColorConversionInfoTriple);
+#else
 			var second = triples.Length > 1 ? triples [1] : default (GColorConversionInfoTriple);
 			var third = triples.Length > 2 ? triples [2] : default (GColorConversionInfoTriple);
+#endif
 			if (Runtime.IsARM64CallingConvention) {
 				handle = CGColorConversionInfoCreateFromList_arm64 (o, first.Space.GetHandle (), (uint) first.Transform, (int) first.Intent,
 					IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero,
@@ -101,7 +116,11 @@ namespace CoreGraphics {
 			return handle;
 		}
 
+#if NET
+		public CGColorConversionInfo (NSDictionary? options, params CGColorConversionInfoTriple [] triples)
+#else
 		public CGColorConversionInfo (NSDictionary? options, params GColorConversionInfoTriple [] triples)
+#endif
 			: base (Create (options, triples), true, verify: true)
 		{
 
