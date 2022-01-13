@@ -654,6 +654,7 @@
 			ToolPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
 			Destination="%(_DirectoriesToPublish.TargetDirectory)"
+			TouchDestinationFiles="true"
 		/>
 	</Target>
 

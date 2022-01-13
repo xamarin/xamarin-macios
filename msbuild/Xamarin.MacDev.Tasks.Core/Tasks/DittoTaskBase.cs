@@ -20,6 +20,7 @@ namespace Xamarin.MacDev.Tasks
 		[Output]
 		public ITaskItem? Destination { get; set; }
 
+		public bool TouchDestinationFiles { get; set; }
 		#endregion
 
 		protected override string ToolName {
@@ -46,6 +47,20 @@ namespace Xamarin.MacDev.Tasks
 				args.Add (AdditionalArguments);
 
 			return args.ToString ();
+		}
+
+		public override bool Execute ()
+		{
+			if (!base.Execute ())
+				return false;
+
+			if (TouchDestinationFiles) {
+				foreach (var file in Directory.EnumerateFiles (Destination!.ItemSpec, "*", SearchOption.AllDirectories)) {
+					File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
+				}
+			}
+
+			return !Log.HasLoggedErrors;
 		}
 
 		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
