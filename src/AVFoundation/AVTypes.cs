@@ -256,7 +256,7 @@ namespace AVFoundation {
 	}
 #endif
 
-// #if MONOMAC || !NET
+#if MONOMAC || !NET
 
 #if NET
 	[SupportedOSPlatform ("macos10.10")]
@@ -354,9 +354,9 @@ namespace AVFoundation {
 		[MarshalAs (UnmanagedType.I1)]
 		public bool HasUniformFormatDescriptions;
 	}
-// #endif
+#endif
 
-// #if MONOMAC || __MACCATALYST__
+#if MONOMAC || __MACCATALYST__
 
 #if NET
 	[SupportedOSPlatform ("macos10.15")]
@@ -370,9 +370,9 @@ namespace AVFoundation {
 
 		public nint PacketRefreshCount;
 	}
-// #endif
+#endif
 
-// #if MONOMAC
+#if MONOMAC
 
 #if NET
 	[SupportedOSPlatform ("macos12.0")]
@@ -470,6 +470,6 @@ namespace AVFoundation {
 			=> AVCaptionSizeMake (width, height);
 	}
 
-// #endif
+#endif
 
 }
