@@ -365,9 +365,9 @@ namespace SceneKit {
 			axis.Normalize ();
 
 			result = new SCNMatrix4 (t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
-								 t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
-								 t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
-								 0, 0, 0, 1);
+			                     t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
+			                     t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
+			                     0, 0, 0, 1);
 		}
 
 		public static void CreateFromAxisAngle (Vector3 axis, float angle, out SCNMatrix4 result)
@@ -379,9 +379,9 @@ namespace SceneKit {
 			axis.Normalize ();
 
 			result = new SCNMatrix4 (t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
-								 t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
-								 t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
-								 0, 0, 0, 1);
+			                     t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
+			                     t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
+			                     0, 0, 0, 1);
 		}
 
 		public static void CreateFromAxisAngle (Vector3d axis, double angle, out SCNMatrix4 result)
@@ -393,9 +393,9 @@ namespace SceneKit {
 			axis.Normalize ();
 
 			result = new SCNMatrix4 ((pfloat) (t * axis.X * axis.X + cos), (pfloat) (t * axis.X * axis.Y - sin * axis.Z), (pfloat) (t * axis.X * axis.Z + sin * axis.Y), (pfloat) (0.0f),
-					(pfloat) ( t * axis.X * axis.Y + sin * axis.Z), (pfloat) (t * axis.Y * axis.Y + cos), (pfloat) (t * axis.Y * axis.Z - sin * axis.X), (pfloat) 0.0f,
-					(pfloat) (t * axis.X * axis.Z - sin * axis.Y), (pfloat) (t * axis.Y * axis.Z + sin * axis.X), (pfloat) (t * axis.Z * axis.Z + cos), (pfloat) 0.0f,
-					0, 0, 0, 1);
+			         (pfloat) ( t * axis.X * axis.Y + sin * axis.Z), (pfloat) (t * axis.Y * axis.Y + cos), (pfloat) (t * axis.Y * axis.Z - sin * axis.X), (pfloat) 0.0f,
+			         (pfloat) (t * axis.X * axis.Z - sin * axis.Y), (pfloat) (t * axis.Y * axis.Z + sin * axis.X), (pfloat) (t * axis.Z * axis.Z + cos), (pfloat) 0.0f,
+			         0, 0, 0, 1);
 		}
 
 		/// <summary>
@@ -744,9 +744,9 @@ namespace SceneKit {
 			pfloat d = -(2.0f * zFar * zNear) / (zFar - zNear);
 
 			result = new SCNMatrix4 (x, 0, 0, 0,
-								 0, y, 0, 0,
-								 a, b, c, -1,
-								 0, 0, d, 0);
+			                     0, y, 0, 0,
+			                     a, b, c, -1,
+			                     0, 0, d, 0);
 		}
 
 		/// <summary>
@@ -866,9 +866,9 @@ namespace SceneKit {
 			SCNVector3 y = SCNVector3.Normalize (SCNVector3.Cross (z, x));
 
 			SCNMatrix4 rot = new SCNMatrix4 (new SCNVector4 (x.X, y.X, z.X, 0.0f),
-										new SCNVector4 (x.Y, y.Y, z.Y, 0.0f),
-										new SCNVector4 (x.Z, y.Z, z.Z, 0.0f),
-										SCNVector4.UnitW);
+			                             new SCNVector4 (x.Y, y.Y, z.Y, 0.0f),
+			                             new SCNVector4 (x.Z, y.Z, z.Z, 0.0f),
+			                             SCNVector4.UnitW);
 
 			SCNMatrix4 trans = SCNMatrix4.CreateTranslation (-eye);
 
