@@ -75,7 +75,11 @@ namespace AVFoundation {
 			}
 		}
 
+#if !NET
 		[Obsolete ("Use AvailableAudioChannels property instead.")]
+#else
+		[Obsolete ("Use AvailableAudioChannels property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 		public virtual AVCaptureAudioChannel AudioChannels { 
 			get { throw new NotSupportedException ("Use AvailableAudioChannels property instead."); }
 		}
