@@ -603,7 +603,9 @@
 		<_ComputeFrameworkFilesToPublishDependsOn>
 			$(_ComputeFrameworkFilesToPublishDependsOn);
 			_DecompressAppleFrameworks;
+			_CollectDecompressedAppleFrameworks;
 			_DecompressAppleBindingResourcePackages;
+			_CollectDecompressedAppleBindingResourcePackages;
 			_ExpandNativeReferences;
 			_ComputeVariables;
 			_LoadLinkerOutput;
@@ -639,7 +641,7 @@
 	</Target>
 
 	<Target Name="_CopyDirectoriesToBundle"
-		DependsOnTargets="_DecompressPlugIns;_ComputeFrameworkFilesToPublish"
+		DependsOnTargets="_CollectDecompressedPlugins;_ComputeFrameworkFilesToPublish"
 		Inputs="@(_DirectoriesToPublish)"
 		Outputs="@(_DirectoriesToPublish -> '%(TargetDirectory)/%(Filename)')"
 		>
@@ -1375,6 +1377,11 @@
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)"
 			>
 		</Ditto>
+	</Target>
+
+	<Target Name="_CollectDecompressedAppleBindingResourcePackages"
+		DependsOnTargets="_DecompressAppleBindingResourcePackages"
+		>
 
 		<ItemGroup>
 			<_DecompressedAppleBindingResourcePackage Include="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)/%(Filename)')" />
@@ -1417,6 +1424,11 @@
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)%(Extension)"
 			>
 		</Ditto>
+	</Target>
+
+	<Target Name="_CollectDecompressedPlugIns"
+		DependsOnTargets="_DecompressPlugIns"
+		>
 
 		<ItemGroup>
 			<!-- Set TargetDirectory and SourceDirectory for all directories we have to publish -->
@@ -1459,6 +1471,20 @@
 			>
 		</Ditto>
 
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
+	</Target>
+
+	<Target Name="_CollectDecompressedAppleFrameworks"
+		DependsOnTargets="_DecompressAppleFrameworks"
+		>
+
 		<ItemGroup>
 			<!-- include any normal frameworks directly in _FrameworkNativeReference. -->
 			<_DecompressedFramework Include="$([System.IO.Directory]::GetDirectories('$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)','*.framework'))" />
@@ -1479,15 +1505,6 @@
 			>
 			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
 		</ResolveNativeReferences>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
 	</Target>
 
 	<Target Name="_ValidateRuntimeIdentifier"
