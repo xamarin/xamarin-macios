@@ -268,7 +268,9 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 #endif
+#if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorSyncInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -291,7 +293,9 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 #endif
+#if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -323,7 +327,9 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 #endif
+#if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorStorageRange {
 		public long Offset;
@@ -340,7 +346,9 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 #endif
+#if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorChunkInfo {
 		public long SampleCount;
