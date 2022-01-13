@@ -293,7 +293,6 @@
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
-!unknown-native-enum! NSWindowStyle bound
 !wrong-enum-size! NSSpellingState managed 4 vs native 8
 
 ## NSGlyphStorage protocol not bound

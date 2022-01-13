@@ -302,7 +302,6 @@
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
-!unknown-native-enum! NSWindowStyle bound
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! NSSpellingState managed 4 vs native 8
 
@@ -1335,3 +1334,7 @@
 
 # deprecated in 10.12, now removed
 !extra-enum-value! Managed value 7 for NSWindowButton.FullScreenButton not found in native headers
+
+# deprecated
+!extra-enum-value! Managed value 2048 for NSWindowStyle.Unscaled not found in native headers
+
