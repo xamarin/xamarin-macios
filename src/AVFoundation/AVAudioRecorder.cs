@@ -59,7 +59,14 @@ namespace AVFoundation {
 			}
 		}
 
-		[iOS (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		public static AVAudioRecorder Create (NSUrl url, AVAudioFormat format, out NSError error)
 		{
 			if (format == null)

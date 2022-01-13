@@ -258,10 +258,17 @@ namespace AVFoundation {
 
 // #if MONOMAC || !NET
 
-	[Mac (10, 10), NoiOS, NoWatch, NoTV]
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (10, 10)]
+	[NoiOS]
+	[NoWatch]
+	[NoTV]
 #endif
+	[Obsolete ("This API is not available on this platform.")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorSyncInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -274,10 +281,17 @@ namespace AVFoundation {
 		public bool IsDroppable;
 	}
 
-	[Mac (10, 10), NoiOS, NoWatch, NoTV]
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (10, 10)]
+	[NoiOS]
+	[NoWatch]
+	[NoTV]
 #endif
+	[Obsolete ("This API is not available on this platform.")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -299,20 +313,34 @@ namespace AVFoundation {
 		public bool HasRedundantCoding;
 	}
 
-	[Mac (10, 10), NoiOS, NoWatch, NoTV]
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (10, 10)]
+	[NoiOS]
+	[NoWatch]
+	[NoTV]
 #endif
+	[Obsolete ("This API is not available on this platform.")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorStorageRange {
 		public long Offset;
 		public long Length;
 	}
 
-	[Mac (10, 10), NoiOS, NoWatch, NoTV]
-#if !MONOMAC
-	[Obsolete ("This API is not available on this platform.")]
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (10, 10)]
+	[NoiOS]
+	[NoWatch]
+	[NoTV]
 #endif
+	[Obsolete ("This API is not available on this platform.")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorChunkInfo {
 		public long SampleCount;
@@ -330,7 +358,11 @@ namespace AVFoundation {
 
 // #if MONOMAC || __MACCATALYST__
 
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+#else
 	[Mac (10,15)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -342,7 +374,18 @@ namespace AVFoundation {
 
 // #if MONOMAC
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12,0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionUnitsType : long {
 		Unspecified = 0,
@@ -350,7 +393,18 @@ namespace AVFoundation {
 		Percent,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12,0)]
+	[NoMacCatalyst]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionDimension {
 		public nfloat Value;
@@ -368,7 +422,18 @@ namespace AVFoundation {
 			=> AVCaptionDimensionMake (dimension, (nuint) (long)units);
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12,0)]
+	[NoMacCatalyst]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionPoint {
 		public AVCaptionDimension X;
@@ -381,7 +446,18 @@ namespace AVFoundation {
 			=> AVCaptionPointMake (x,y);
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12,0)]
+	[NoMacCatalyst]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionSize {
 		public AVCaptionDimension Width;
