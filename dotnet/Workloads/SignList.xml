@@ -64,7 +64,19 @@
     <FirstParty Include="System.Diagnostics.Tracer.dll" />
     <!-- Broker.zip -->
     <FirstParty Include="Broker.exe" />
-    <FirstParty Include="Broker.resources.dll" />
+    <FirstParty Include="cs\Broker.resources.dll" />
+    <FirstParty Include="de\Broker.resources.dll" />
+    <FirstParty Include="es\Broker.resources.dll" />
+    <FirstParty Include="fr\Broker.resources.dll" />
+    <FirstParty Include="it\Broker.resources.dll" />
+    <FirstParty Include="ja\Broker.resources.dll" />
+    <FirstParty Include="ko\Broker.resources.dll" />
+    <FirstParty Include="pl\Broker.resources.dll" />
+    <FirstParty Include="pt-BR\Broker.resources.dll" />
+    <FirstParty Include="ru\Broker.resources.dll" />
+    <FirstParty Include="tr\Broker.resources.dll" />
+    <FirstParty Include="zh-Hans\Broker.resources.dll" />
+    <FirstParty Include="zh-Hant\Broker.resources.dll" />
     <FirstParty Include="Merq.dll" />
     <!-- Build.zip -->
     <FirstParty Include="Build.exe" />
