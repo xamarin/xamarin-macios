@@ -30,6 +30,7 @@ namespace Network {
 #endif
 	public class NWUdpMetadata : NWProtocolMetadata {
 
+		[Preserve (Conditional = true)]
 		internal NWUdpMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWUdpMetadata () : this (nw_udp_create_metadata (), owns: true) {}

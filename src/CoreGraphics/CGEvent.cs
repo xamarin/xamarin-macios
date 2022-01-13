@@ -87,6 +87,7 @@ namespace CoreGraphics {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal CGEvent (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

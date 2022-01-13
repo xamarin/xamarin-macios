@@ -84,6 +84,7 @@ namespace CoreText {
 #endregion
 
 	public class CTTextTab : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTTextTab (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{

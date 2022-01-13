@@ -38,6 +38,7 @@ namespace CoreFoundation
 
 		static nint CFNumberTypeID = CFNumberGetTypeID ();
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal CFPropertyList (NativeHandle handle, bool owns)
 #else

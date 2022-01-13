@@ -106,6 +106,7 @@ namespace Security {
 #endif
 	public partial class SecAccessControl : NativeObject {
 #if !COREBUILD
+		[Preserve (Conditional = true)]
 		internal SecAccessControl (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

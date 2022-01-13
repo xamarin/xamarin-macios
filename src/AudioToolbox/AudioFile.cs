@@ -565,6 +565,7 @@ namespace AudioToolbox {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal AudioFile (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

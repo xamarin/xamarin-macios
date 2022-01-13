@@ -36,6 +36,7 @@ namespace Security {
 
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public[tv
+		[Preserve (Conditional = true)]
 		internal SecProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 #if !COREBUILD

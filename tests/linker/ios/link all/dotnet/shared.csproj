@@ -84,6 +84,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(ThisTestDirectory)\..\..\..\monotouch-test\Tamarin.pdf" />
+  </ItemGroup>
+  <ItemGroup>
     <InterfaceDefinition Include="$(ThisTestDirectory)\LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>

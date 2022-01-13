@@ -25,6 +25,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_group_descriptor nw_group_descriptor_create_multiplex (OS_nw_endpoint remoteEndpoint);
 		
+		[Preserve (Conditional = true)]
 		internal NWMultiplexGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWMultiplexGroup (NWEndpoint endpoint) 

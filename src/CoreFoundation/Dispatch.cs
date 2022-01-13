@@ -760,6 +760,7 @@ namespace CoreFoundation {
 	public class DispatchGroup : DispatchObject
 	{
 #if !COREBUILD
+		[Preserve (Conditional = true)]
 		private DispatchGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

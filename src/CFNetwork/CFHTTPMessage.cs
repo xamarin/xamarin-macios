@@ -31,6 +31,7 @@ namespace CoreServices {
 #endif
 
 	public partial class CFHTTPMessage : CFType {
+		[Preserve (Conditional = true)]
 		internal CFHTTPMessage (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
