@@ -52,7 +52,7 @@ namespace AddressBook {
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
@@ -120,9 +120,9 @@ namespace AddressBook {
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-	[Obsolete ("Starting with ios9.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
@@ -205,9 +205,9 @@ namespace AddressBook {
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-	[Obsolete ("Starting with ios9.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
@@ -304,9 +304,9 @@ namespace AddressBook {
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-	[Obsolete ("Starting with ios9.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
@@ -360,9 +360,9 @@ namespace AddressBook {
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-	[Obsolete ("Starting with ios9.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
@@ -381,9 +381,9 @@ namespace AddressBook {
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-	[Obsolete ("Starting with ios9.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
@@ -402,9 +402,9 @@ namespace AddressBook {
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-	[Obsolete ("Starting with ios9.0 Use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
