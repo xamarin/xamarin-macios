@@ -43,20 +43,9 @@ using NativeHandle = System.IntPtr;
 
 namespace AddressBook {
 	
-#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	public class ABSource : ABRecord {
 		internal ABSource (NativeHandle handle, bool owns)
 			: base (handle, owns)
@@ -81,14 +70,7 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	static class ABSourcePropertyId {
 
 		public static int Name { get; private set;}
