@@ -1483,14 +1483,36 @@
 
 	<Target Name="_CollectDecompressedAppleFrameworks"
 		DependsOnTargets="_DecompressAppleFrameworks"
+		Condition="@(_CompressedAppleFrameworks->Count()) &gt; 0"
 		>
+
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DirectoryPath="$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)"
+			Pattern="*.framework"
+			Recursive="false"
+			IncludeDirectories="true"
+			>
+			<Output TaskParameter="Entries" ItemName="_DecompressedFramework" />
+		</GetFileSystemEntries>
+
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DirectoryPath="$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)"
+			Pattern="*.xcframework"
+			Recursive="false"
+			IncludeDirectories="true"
+			>
+			<Output TaskParameter="Entries" ItemName="_DecompressedXCFramework" />
+		</GetFileSystemEntries>
 
 		<ItemGroup>
 			<!-- include any normal frameworks directly in _FrameworkNativeReference. -->
+			<!-- .xcframeworks need to be resolved to a platform-specific .framework below -->
 			<_DecompressedFramework Include="$([System.IO.Directory]::GetDirectories('$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)','*.framework'))" />
 			<_FrameworkNativeReference Include="@(_DecompressedFramework -> '%(Identity)/%(Filename)')" Kind="Framework" />
-			<!-- .xcframeworks need to be resolved to a platform-specific .framework-->
-			<_DecompressedXCFramework Include="$([System.IO.Directory]::GetDirectories('$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)','*.xcframework'))" />
 		</ItemGroup>
 
 		<!-- resolve the .xcframeworks -->
