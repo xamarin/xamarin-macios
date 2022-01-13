@@ -447,7 +447,7 @@ function Write-Artifacts {
         $StringBuilder,
 
         [String]
-        $Artifacts="",
+        $Artifacts=""
 
     )
 
