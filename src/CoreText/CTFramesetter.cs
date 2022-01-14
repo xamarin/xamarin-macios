@@ -43,6 +43,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreText {
 
 	public class CTFramesetter : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTFramesetter (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{

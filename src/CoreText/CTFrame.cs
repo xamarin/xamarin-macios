@@ -112,6 +112,7 @@ namespace CoreText {
 	}
 
 	public class CTFrame : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTFrame (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{

@@ -27,6 +27,9 @@ using ObjCRuntime;
 #if !__WATCHOS__
 using StoreKit;
 #endif
+#if __MACOS__ || __IOS__
+using PdfKit;
+#endif
 #if !__MACOS__
 using UIKit;
 #endif
@@ -672,6 +675,19 @@ namespace LinkAll {
 			var suffix = Path.Combine (bundleName, bundleLocation, corelib);
 			Assert.That (corlib, Does.EndWith (suffix), corlib);
 		}
+
+#if __MACOS__ || __IOS__
+		[Test]
+		public void CGPdfPage ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+			var pdfPath = NSBundle.MainBundle.PathForResource ("Tamarin", "pdf");
+			using var view = new PdfView ();
+			view.Document = new PdfDocument (NSUrl.FromFilename (pdfPath));
+			using var page = view.CurrentPage;
+			Assert.IsNotNull (page.Page, "Page");
+		}
+#endif
 	}
 
 #if NET

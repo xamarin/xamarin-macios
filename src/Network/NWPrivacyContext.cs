@@ -24,6 +24,7 @@ namespace Network {
 		public static NWPrivacyContext Default =>
 			new NWPrivacyContext (NWPrivacyContextConstants._DefaultContext, false); 
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWPrivacyContext (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else

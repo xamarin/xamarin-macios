@@ -25,6 +25,7 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
 	public class NWMulticastGroup : NativeObject {
+		[Preserve (Conditional = true)]
 		internal NWMulticastGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

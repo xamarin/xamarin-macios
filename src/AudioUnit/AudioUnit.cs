@@ -313,6 +313,7 @@ namespace AudioUnit
 		Dictionary<uint, RenderDelegate>? renderer;
 		Dictionary<uint, InputDelegate>? inputs;
 
+		[Preserve (Conditional = true)]
 		internal AudioUnit (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -1044,6 +1045,7 @@ namespace AudioUnit
 		{
 		}
 
+		[Preserve (Conditional = true)]
 		internal AURenderEventEnumerator (NativeHandle handle, bool owns)
 		{
 			Handle = handle;

@@ -12,6 +12,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+
+using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
@@ -34,6 +36,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWParameters : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWParameters (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else

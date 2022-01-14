@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using Foundation;
 using ObjCRuntime;
 using Security;
 using System.Runtime.Versioning;
@@ -24,6 +25,7 @@ namespace Network {
 #endif
 	public class NWProtocolQuicOptions : NWProtocolOptions {
 
+		[Preserve (Conditional = true)]
 		internal NWProtocolQuicOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 		
 		public NWProtocolQuicOptions () : this (nw_quic_create_options (), owns: true) {}

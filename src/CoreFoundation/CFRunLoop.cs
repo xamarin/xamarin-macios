@@ -79,6 +79,7 @@ namespace CoreFoundation {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal CFRunLoopSource (NativeHandle handle, bool owns)
 #else
