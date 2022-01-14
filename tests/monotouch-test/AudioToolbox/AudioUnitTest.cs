@@ -29,6 +29,10 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void Callbacks ()
 		{
+			// Verify that we have a microphone
+			if (!HasMicrophone (out var message))
+				Assert.Ignore ($"No microphone ({message}");
+
 			var audioComponent = AudioComponent.FindComponent (AudioTypeOutput.VoiceProcessingIO);
 			using var audioUnit = new global::AudioUnit.AudioUnit (audioComponent);
 
@@ -39,6 +43,17 @@ namespace MonoTouchFixtures.AudioToolbox {
 				Assert.IsTrue (inputCallbackEvent.WaitOne (TimeSpan.FromSeconds (1)), "No input callback for 1 second");
 			} finally {
 				audioUnit.Stop ();
+			}
+		}
+
+		bool HasMicrophone (out string message)
+		{
+			message = string.Empty;
+			try {
+				return global::AudioUnit.AudioUnit.GetCurrentInputDevice () != 0;
+			} catch (Exception e) {
+				message = e.Message;
+				return false;
 			}
 		}
 
