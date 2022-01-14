@@ -34,7 +34,7 @@ using System.Net;
 using System.Net.Sockets;
 using ObjCRuntime;
 #if !WATCH
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 #else
 using CoreServices;

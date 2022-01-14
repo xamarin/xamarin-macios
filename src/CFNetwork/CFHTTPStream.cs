@@ -20,7 +20,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 // CFHttpStream is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
-#if XAMCORE_4_0
+#if NET
 namespace CFNetwork {
 #else
 namespace CoreServices {
