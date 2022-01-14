@@ -173,7 +173,7 @@ namespace Intents {
 		All
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -354,7 +354,7 @@ namespace Intents {
 		FailurePreviousRideNeedsFeedback,
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -373,7 +373,7 @@ namespace Intents {
 		Played,
 	}
 
-#if XAMCORE_4_0
+#if NEt
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -642,7 +642,7 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -668,7 +668,7 @@ namespace Intents {
 		Success,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -866,7 +866,7 @@ namespace Intents {
 		Authorized,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -912,7 +912,7 @@ namespace Intents {
 		FailureAppConfigurationRequired,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -1343,7 +1343,7 @@ namespace Intents {
 		ByLocationTrigger,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -2997,7 +2997,13 @@ namespace Intents {
 		[Export ("initWithEKRecurrenceRule:")]
 		NativeHandle Constructor (EKRecurrenceRule recurrenceRule);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
+		// Headers claim the recurrenceRule property is available in macOS, but the parameter type INRecurrenceRule is not, so...
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0), NoTV]
 		[Export ("initWithStartDateComponents:endDateComponents:recurrenceRule:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents, [NullAllowed] INRecurrenceRule recurrenceRule);
@@ -3008,7 +3014,13 @@ namespace Intents {
 		[NullAllowed, Export ("endDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents EndDateComponents { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
+		// Headers claim the recurrenceRule property is available in macOS, but the property type (INRecurrenceRule) is not, so...
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0), NoTV]
 		[NullAllowed, Export ("recurrenceRule", ArgumentSemantic.Copy)]
 		INRecurrenceRule RecurrenceRule { get; }
 
@@ -3018,7 +3030,7 @@ namespace Intents {
 		EKRecurrenceRule EKRecurrenceRule { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -3073,7 +3085,7 @@ namespace Intents {
 		INDateComponentsRangeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -4067,7 +4079,7 @@ namespace Intents {
 		NSDate ExpirationDate { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4128,7 +4140,7 @@ namespace Intents {
 		string ServiceName { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4199,7 +4211,7 @@ namespace Intents {
 		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -5699,7 +5711,7 @@ namespace Intents {
 		INSaveProfileInCarIntentResponseCode Code { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5752,7 +5764,7 @@ namespace Intents {
 		NSNumber WeakUnseen { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5799,7 +5811,7 @@ namespace Intents {
 		void ResolveUnseen (INSearchCallHistoryIntent intent, Action<INBooleanResolutionResult> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5825,7 +5837,7 @@ namespace Intents {
 		INCallRecord [] CallRecords { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5919,7 +5931,7 @@ namespace Intents {
 		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5966,7 +5978,7 @@ namespace Intents {
 		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -6220,6 +6232,9 @@ namespace Intents {
 		[Export ("resolveOutgoingMessageTypeForSendMessage:withCompletion:")]
 		void ResolveOutgoingMessageType (INSendMessageIntent intent, Action<INOutgoingMessageTypeResolutionResult> completion);
 
+#if NET
+		[NoMac] // The INSpeakableStringResolutionResult used as a parameter type is not available in macOS
+#endif
 		[Watch (4,0), iOS (11,0)]
 		[Export ("resolveSpeakableGroupNameForSendMessage:withCompletion:")]
 		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6240,6 +6255,9 @@ namespace Intents {
 		[Export ("code")]
 		INSendMessageIntentResponseCode Code { get; }
 
+#if NET
+		[NoMac] // The INMessage type isn't available in macOS
+#endif
 		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("sentMessage", ArgumentSemantic.Copy)]
 		INMessage SentMessage { get; set; }
@@ -7074,7 +7092,7 @@ namespace Intents {
 		NativeHandle Constructor (string spokenPhrase);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7129,7 +7147,7 @@ namespace Intents {
 		INSpeakableStringResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7161,7 +7179,7 @@ namespace Intents {
 		INPerson [] Contacts { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7195,7 +7213,7 @@ namespace Intents {
 		void ResolveContacts (INStartAudioCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7314,7 +7332,7 @@ namespace Intents {
 		NSNumber SearchResultsCount { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7335,11 +7353,15 @@ namespace Intents {
 		INPerson [] Contacts { get; }
 	}
 
-	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
+#if NET
+	[NoMac]
+#elif MONOMAC
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
+	[Mac (10, 12, 0)]
+#endif
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Protocol]
@@ -7362,7 +7384,7 @@ namespace Intents {
 		void ResolveContacts (INStartVideoCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -9781,7 +9803,7 @@ namespace Intents {
 		INNotebookItemTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -9818,7 +9840,7 @@ namespace Intents {
 		nuint GetIndex (string subKeyPath);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
