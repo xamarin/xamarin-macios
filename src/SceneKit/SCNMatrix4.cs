@@ -26,6 +26,8 @@ SOFTWARE.
 
  */
 
+#if !NET
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -170,6 +172,12 @@ namespace SceneKit
         public SCNVector4 Column0
         {
             get { return new SCNVector4(Row0.X, Row1.X, Row2.X, Row3.X); }
+            set {
+                M11 = value.X;
+                M21 = value.Y;
+                M31 = value.Z;
+                M41 = value.W;
+            }
         }
 
         /// <summary>
@@ -178,6 +186,12 @@ namespace SceneKit
         public SCNVector4 Column1
         {
             get { return new SCNVector4(Row0.Y, Row1.Y, Row2.Y, Row3.Y); }
+            set {
+                M12 = value.X;
+                M22 = value.Y;
+                M32 = value.Z;
+                M42 = value.W;
+            }
         }
 
         /// <summary>
@@ -186,6 +200,12 @@ namespace SceneKit
         public SCNVector4 Column2
         {
             get { return new SCNVector4(Row0.Z, Row1.Z, Row2.Z, Row3.Z); }
+            set {
+                M13 = value.X;
+                M23 = value.Y;
+                M33 = value.Z;
+                M43 = value.W;
+            }
         }
 
         /// <summary>
@@ -194,6 +214,12 @@ namespace SceneKit
         public SCNVector4 Column3
         {
             get { return new SCNVector4(Row0.W, Row1.W, Row2.W, Row3.W); }
+            set {
+                M14 = value.X;
+                M24 = value.Y;
+                M34 = value.Z;
+                M44 = value.W;
+            }
         }
 
         /// <summary>
@@ -307,6 +333,29 @@ namespace SceneKit
         #endregion
 
         #region Static
+
+        #region CreateFromColumns
+
+        public static SCNMatrix4 CreateFromColumns (SCNVector4 column0, SCNVector4 column1, SCNVector4 column2, SCNVector4 column3)
+        {
+            var result = new SCNMatrix4 ();
+            result.Column0 = column0;
+            result.Column1 = column1;
+            result.Column2 = column2;
+            result.Column3 = column3;
+            return result;
+        }
+
+        public static void CreateFromColumns (SCNVector4 column0, SCNVector4 column1, SCNVector4 column2, SCNVector4 column3, out SCNMatrix4 result)
+        {
+            result = new SCNMatrix4 ();
+            result.Column0 = column0;
+            result.Column1 = column1;
+            result.Column2 = column2;
+            result.Column3 = column3;
+        }
+
+        #endregion
         
         #region CreateFromAxisAngle
         
@@ -1176,3 +1225,6 @@ namespace SceneKit
 #endif
     }
 }
+
+#endif // !NET
+

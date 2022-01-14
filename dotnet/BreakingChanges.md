@@ -74,3 +74,14 @@ These APIs are used to determine whether we're executing in the simulator or
 on a device. Neither apply to a Mac Catalyst app, so they've been removed.
 
 Any code that these APIs will have to be ported to not use these APIs.
+
+## The SceneKit.SCNMatrix4 matrix is transposed in memory.
+
+The managed SCNMatrix4 struct used to be a row-major matrix, while the native
+SCNMatrix4 struct is a column-major matrix. This difference in the memory
+representation meant that matrices would often have to be transposed when
+interacting with the platform.
+
+In .NET, we've changed the managed SCNMatrix4 to be a column-major matrix, to
+match the native version. This means that any transposing that's currently
+done when accessing Apple APIs has to be undone.

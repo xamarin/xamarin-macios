@@ -70,6 +70,7 @@ namespace Extrospection {
 			{ "NFCVASErrorCode", "VasErrorCode" },
 			{ "NFCVASMode", "VasMode" },
 			{ "NFCISO15693RequestFlag", "RequestFlag" },
+			{ "NSWindowStyleMask", "NSWindowStyle" },
 			// not enums
 		};
 
@@ -114,6 +115,7 @@ namespace Extrospection {
 			{ "MIDIMessageType", "MidiMessageType" },
 			{ "MIDISysExStatus", "MidiSysExStatus" },
 			{ "MIDISystemStatus", "MidiSystemStatus" },
+			{ "NSWindowStyleMask", "NSWindowStyle" },
 			// not enums
 		};
 
