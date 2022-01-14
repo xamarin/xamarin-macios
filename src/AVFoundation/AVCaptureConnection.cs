@@ -41,7 +41,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
-		[Obsolete ("Starting with ios7.0", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -59,7 +59,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
-		[Obsolete ("Starting with ios7.0", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 		[UnsupportedOSPlatform ("tvos")]
 #else
