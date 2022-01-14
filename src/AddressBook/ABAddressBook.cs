@@ -141,12 +141,12 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-		[Obsolete ("Starting with ios6.0 use the static Create method instead", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios6.0 use the static Create method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use the static Create method instead")]
