@@ -427,7 +427,7 @@ function Write-APIDiffContent {
             $StringBuilder.AppendLine($apidiffcomments)
         }
     } else {
-        $StringBuilder.AppendLine("Generator diff comments have not been provided.")
+        $StringBuilder.AppendLine("* :warning: Generator diff comments have not been provided.")
     }
 }
 
