@@ -1375,7 +1375,7 @@ namespace AppKit {
 		AsKeyedArchive = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC // Use the one in Foundation instead, only keep this in macOS until XAMCORE_4_0.
+#if !NET && MONOMAC // Use the one in Foundation instead, only keep this in macOS until .NET.
 	[Native]
 	public enum NSUnderlineStyle : long {
 		None                = 0x00,
