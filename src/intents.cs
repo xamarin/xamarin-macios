@@ -2448,7 +2448,7 @@ namespace Intents {
 
 		[Export ("confirmBookRestaurantReservation:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmBookRestaurantReservation
@@ -2630,7 +2630,7 @@ namespace Intents {
 
 		[Export ("confirmCancelWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmCancelWorkout
@@ -3323,7 +3323,7 @@ namespace Intents {
 
 		[Export ("confirmEndWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmEndWorkout
@@ -3397,7 +3397,7 @@ namespace Intents {
 
 		[Export ("confirmGetAvailableRestaurantReservationBookingDefaults:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmAvailableRestaurantReservationBookingDefaults
@@ -3481,7 +3481,7 @@ namespace Intents {
 
 		[Export ("confirmGetAvailableRestaurantReservationBookings:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmAvailableRestaurantReservationBookings
@@ -3546,7 +3546,7 @@ namespace Intents {
 
 		[Export ("confirmGetRestaurantGuest:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRestaurantGuest
@@ -3609,7 +3609,7 @@ namespace Intents {
 
 		[Export ("confirmGetRideStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRideStatus
@@ -3691,7 +3691,7 @@ namespace Intents {
 
 		[Export ("confirmGetUserCurrentRestaurantReservationBookings:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmUserCurrentRestaurantReservationBookings
@@ -4028,7 +4028,7 @@ namespace Intents {
 
 		[Export ("confirmListRideOptions:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmListRideOptions
@@ -4298,7 +4298,7 @@ namespace Intents {
 
 		[Export ("confirmPauseWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmPauseWorkout
@@ -4898,7 +4898,7 @@ namespace Intents {
 
 		[Export ("confirmRequestPayment:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRequestPayment
@@ -4996,7 +4996,7 @@ namespace Intents {
 
 		[Export ("confirmRequestRide:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRequestRide
@@ -5339,7 +5339,7 @@ namespace Intents {
 
 		[Export ("confirmResumeWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmResumeWorkout
@@ -5667,7 +5667,7 @@ namespace Intents {
 
 		[Export ("confirmSaveProfileInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSaveProfileInCar
@@ -5771,7 +5771,7 @@ namespace Intents {
 
 		[Export ("confirmSearchCallHistory:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchCallHistory
@@ -5936,7 +5936,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForMessages:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchForMessages
@@ -6045,7 +6045,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForPhotos:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchForPhotos
@@ -6189,7 +6189,7 @@ namespace Intents {
 
 		[Export ("confirmSendMessage:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSendMessage
@@ -6279,7 +6279,7 @@ namespace Intents {
 
 		[Export ("confirmSendPayment:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSendPayment
@@ -6360,7 +6360,7 @@ namespace Intents {
 
 		[Export ("confirmSetAudioSourceInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetAudioSourceInCar
@@ -6471,7 +6471,7 @@ namespace Intents {
 
 		[Export ("confirmSetClimateSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetClimateSettingsInCar
@@ -6577,7 +6577,7 @@ namespace Intents {
 
 		[Export ("confirmSetDefrosterSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetDefrosterSettingsInCar
@@ -6643,7 +6643,7 @@ namespace Intents {
 
 		[Export ("confirmSetMessageAttribute:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetMessageAttribute
@@ -6729,7 +6729,7 @@ namespace Intents {
 
 		[Export ("confirmSetProfileInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetProfileInCar
@@ -6811,7 +6811,7 @@ namespace Intents {
 
 		[Export ("confirmSetRadioStation:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetRadioStation
@@ -6912,7 +6912,7 @@ namespace Intents {
 
 		[Export ("confirmSetSeatSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetSeatSettingsInCar
@@ -7180,7 +7180,7 @@ namespace Intents {
 
 		[Export ("confirmStartAudioCall:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartAudioCall
@@ -7273,7 +7273,7 @@ namespace Intents {
 
 		[Export ("confirmStartPhotoPlayback:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartPhotoPlayback
@@ -7351,7 +7351,7 @@ namespace Intents {
 
 		[Export ("confirmStartVideoCall:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartVideoCall
@@ -7426,7 +7426,7 @@ namespace Intents {
 
 		[Export ("confirmStartWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartWorkout
@@ -7808,7 +7808,7 @@ namespace Intents {
 
 		[Export ("confirmActivateCarSignal:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmActivateCarSignal
@@ -8099,7 +8099,7 @@ namespace Intents {
 
 		[Export ("confirmGetCarLockStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmGetCarLockStatus
@@ -8172,7 +8172,7 @@ namespace Intents {
 
 		[Export ("confirmGetCarPowerLevelStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmGetCarPowerLevelStatus
@@ -8360,7 +8360,7 @@ namespace Intents {
 
 		[Export ("confirmPayBill:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmPayBill
@@ -8694,7 +8694,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForBills:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearch
@@ -8775,7 +8775,7 @@ namespace Intents {
 
 		[Export ("confirmSetCarLockStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetCarLockStatus
