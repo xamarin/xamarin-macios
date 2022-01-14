@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.Foundation {
 			string s = main.GetLocalizedString (null, "value");
 			Assert.That (s, Is.EqualTo ("value"), "key");
 #else
-			string s = main.GetLocalizedString (null, "comment");
+			string s = main.LocalizedString (null, "comment");
 			Assert.That (s, Is.Empty, "key");
 #endif
 
