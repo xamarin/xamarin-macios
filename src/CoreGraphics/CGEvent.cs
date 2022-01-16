@@ -87,6 +87,7 @@ namespace CoreGraphics {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal CGEvent (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -306,7 +307,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static void CGEventSetTimestamp (IntPtr handle, ulong timeStampp);
 		
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Timestamp' instead.")]
 		public ulong Timestampe {
 			get {

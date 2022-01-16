@@ -2,6 +2,8 @@
 
 using System;
 using System.Runtime.InteropServices;
+
+using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 using System.Runtime.Versioning;
@@ -22,6 +24,7 @@ namespace Network {
 #endif
 	public class NWResolverConfig : NativeObject {
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else

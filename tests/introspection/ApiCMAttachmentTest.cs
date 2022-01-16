@@ -27,6 +27,10 @@ using VideoToolbox;
 using UIKit;
 using Network;
 
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
+#endif
+
 namespace Introspection {
 
 	[TestFixture]

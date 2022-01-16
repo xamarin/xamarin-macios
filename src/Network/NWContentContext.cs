@@ -35,6 +35,7 @@ namespace Network {
 #endif
 	public class NWContentContext : NativeObject {
 		bool global;
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
 #else

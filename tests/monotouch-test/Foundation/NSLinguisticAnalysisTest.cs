@@ -44,7 +44,7 @@ namespace monotouchtest
 				expectedWordCount = 4;
 #endif
 			Assert.AreEqual (expectedWordCount, words.Count, "Word count: " + string.Join (", ", words));
-#if XAMCORE_4_0
+#if NET
 			Assert.True (words.Contains (NSLinguisticTag.Word.GetConstant ()), "Token type.");
 #else
 			Assert.True (words.Contains (NSLinguisticTagUnit.Word.GetConstant ()), "Token type.");
@@ -58,7 +58,7 @@ namespace monotouchtest
 			var range = new NSRange (0, testString.Length - 1);
 			testString.EnumerateLinguisticTags (range, NSLinguisticTagScheme.Token, NSLinguisticTaggerOptions.OmitWhitespace, null, StopEnumerator);
 			Assert.AreEqual (1, words.Count, "Word count");
-#if XAMCORE_4_0
+#if NET
 			Assert.True (words.Contains (NSLinguisticTag.Word.GetConstant ()), "Token type.");
 #else
 			Assert.True (words.Contains (NSLinguisticTagUnit.Word.GetConstant ()), "Token type.");

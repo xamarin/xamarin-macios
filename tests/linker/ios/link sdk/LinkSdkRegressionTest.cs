@@ -397,7 +397,11 @@ namespace LinkSdk {
 				// from http://bugzilla.xamarin.com/show_bug.cgi?id=2000
 				NSError error;
 				var c = new NSPersistentStoreCoordinator (model);
+#if NET
+				c.AddPersistentStore (NSPersistentStoreCoordinator.SQLiteStoreType, null, url, null, out error);
+#else
 				c.AddPersistentStoreWithType (NSPersistentStoreCoordinator.SQLiteStoreType, null, url, null, out error);
+#endif
 				Assert.IsNull (error, "error");
 			} finally {
 				File.Delete (sqlitePath);

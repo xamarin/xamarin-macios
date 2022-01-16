@@ -36,6 +36,7 @@ namespace Network {
 #endif
 	public class NWDataTransferReport : NativeObject {
 
+		[Preserve (Conditional = true)]
 		internal NWDataTransferReport (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

@@ -18,10 +18,7 @@
     <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
 
     <!-- and get the mono workload as well -->
-    <!-- TODO: hardcode 6.0.100 as the version band for Microsoft.NET.Workload.Mono.ToolChain.Manifest until we get https://github.com/dotnet/runtime/pull/62787
     <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-$(DotNetManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
-    -->
-    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-6.0.100" Version="[$(ActualPackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->

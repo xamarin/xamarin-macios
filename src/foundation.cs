@@ -681,7 +681,7 @@ namespace Foundation
 		[Export ("components:fromDate:toDate:options:")]
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSCalendarOptions opts);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload with a 'NSCalendarOptions' parameter.")]
 		[Wrap ("Components (unitFlags, fromDate, toDate, (NSCalendarOptions) opts)")]
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSDateComponentsWrappingBehavior opts);
@@ -690,7 +690,7 @@ namespace Foundation
 		[Export ("dateByAddingComponents:toDate:options:")]
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSCalendarOptions opts);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload with a 'NSCalendarOptions' parameter.")]
 		[Wrap ("DateByAddingComponents (comps, date, (NSCalendarOptions) opts)")]
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSDateComponentsWrappingBehavior opts);
@@ -4522,7 +4522,7 @@ namespace Foundation
 
 	delegate void LinguisticTagEnumerator (string tag, NSRange tokenRange, bool stop);
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Use 'NSLinguisticTagUnit' enum instead.")]
 	[Static]
 	interface NSLinguisticTag {
@@ -7992,6 +7992,8 @@ namespace Foundation
 		void AddEntries (NSDictionary other);
 	}
 
+	interface NSMutableDictionary<K,V> : NSDictionary {}
+
 	[BaseType (typeof (NSSet))]
 	[DesignatedDefaultCtor]
 	interface NSMutableSet {
@@ -8646,7 +8648,7 @@ namespace Foundation
 	[Category]
 	[BaseType (typeof(NSString))]
 	interface NSLinguisticAnalysis {
-#if XAMCORE_4_0
+#if NET
 		[return: BindAs (typeof (NSLinguisticTag []))]
 #else
 		[return: BindAs (typeof (NSLinguisticTagUnit []))]
@@ -8656,7 +8658,7 @@ namespace Foundation
 		NSString[] GetLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
 
 		[Wrap ("GetLinguisticTags (This, range, scheme.GetConstant ()!, options, orthography, out tokenRanges)")]
-#if XAMCORE_4_0
+#if NET
 		NSLinguisticTag[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
 #else
 		NSLinguisticTagUnit[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);

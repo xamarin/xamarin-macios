@@ -727,6 +727,7 @@ namespace CoreFoundation {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		protected CFStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

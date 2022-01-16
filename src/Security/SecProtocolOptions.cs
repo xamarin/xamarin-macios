@@ -35,6 +35,7 @@ namespace Security {
 #if !COREBUILD
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public
+		[Preserve (Conditional = true)]
 		internal SecProtocolOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.SecurityLibrary)]

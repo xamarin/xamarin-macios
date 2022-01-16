@@ -248,6 +248,15 @@ namespace VideoToolbox {
 			/* VTEncodeInfoFlags */ out VTEncodeInfoFlags flags);
 
 		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
+			NSDictionary frameProperties, CVImageBuffer sourceFrame, out VTEncodeInfoFlags infoFlags)
+		{
+			if (sourceFrame is null)
+				throw new ArgumentNullException (nameof (sourceFrame));
+
+			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags);
+		}
+
+		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration, 
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (imageBuffer is null)
@@ -284,6 +293,17 @@ namespace VideoToolbox {
 			var del = (VTCompressionOutputHandler)(block->Target);
 			if (del is not null)
 				del (status, infoFlags, new CMSampleBuffer (sampleBuffer));
+		}
+
+		[Mac (10,11), iOS (9,0)]
+		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
+			NSDictionary frameProperties, CVImageBuffer sourceFrame, out VTEncodeInfoFlags infoFlags,
+			VTCompressionOutputHandler outputHandler)
+		{
+			if (sourceFrame is null)
+				throw new ArgumentNullException (nameof (sourceFrame));
+
+			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags, outputHandler);
 		}
 
 		[Mac (10,11), iOS (9,0)]

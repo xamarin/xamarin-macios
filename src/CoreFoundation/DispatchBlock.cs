@@ -26,6 +26,7 @@ namespace CoreFoundation {
 	[Mac (10, 10)]
 #endif
 	public sealed class DispatchBlock : NativeObject {
+		[Preserve (Conditional = true)]
 		internal DispatchBlock (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

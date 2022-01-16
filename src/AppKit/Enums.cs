@@ -868,6 +868,7 @@ namespace AppKit {
 #endregion
 	
 #region NSWindow
+	// This enum is called NSWindowStyleMask in the headers.
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
@@ -880,10 +881,12 @@ namespace AppKit {
 		Utility		       					= 1 << 4,
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
-		[Advice ("'TexturedBackground' should no longer be used.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Don't use 'TexturedBackground' anymore.")]
 		TexturedBackground     				= 1 << 8,
-		[Deprecated (PlatformName.MacOSX, 10, 14)]
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Don't use, this value has no effect.")]
 		Unscaled	       					= 1 << 11,
+#endif
 		UnifiedTitleAndToolbar 				= 1 << 12,
 		Hud		       						= 1 << 13,
 		FullScreenWindow       				= 1 << 14,
@@ -1372,7 +1375,7 @@ namespace AppKit {
 		AsKeyedArchive = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC // Use the one in Foundation instead, only keep this in macOS until XAMCORE_4_0.
+#if !NET && MONOMAC // Use the one in Foundation instead, only keep this in macOS until .NET.
 	[Native]
 	public enum NSUnderlineStyle : long {
 		None                = 0x00,

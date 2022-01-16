@@ -621,6 +621,7 @@ namespace AddressBook {
 		{
 		}
 
+		[Preserve (Conditional = true)]
 		internal ABPerson (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

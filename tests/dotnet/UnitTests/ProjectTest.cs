@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Diagnostics;
 
 using Mono.Cecil;
 
@@ -12,6 +13,8 @@ using NUnit.Framework;
 using Xamarin.Utils;
 using Xamarin.Tests;
 using Xamarin.MacDev;
+
+#nullable enable
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -136,7 +139,7 @@ namespace Xamarin.Tests {
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
 			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("EmbeddedResources.Welcome.resources"), "libtest.a");
-			var asm_dir = Path.GetDirectoryName (asm);
+			var asm_dir = Path.GetDirectoryName (asm)!;
 			Assert.That (Path.Combine (asm_dir, "en-AU", "EmbeddedResources.resources.dll"), Does.Exist, "en-AU");
 			Assert.That (Path.Combine (asm_dir, "de", "EmbeddedResources.resources.dll"), Does.Exist, "de");
 			Assert.That (Path.Combine (asm_dir, "es", "EmbeddedResources.resources.dll"), Does.Exist, "es");
@@ -312,7 +315,7 @@ namespace Xamarin.Tests {
 				Assert.That (asm, Does.Exist, "Assembly existence");
 
 				// Verify that the resources have been linked away
-				var asmDir = Path.GetDirectoryName (asm);
+				var asmDir = Path.GetDirectoryName (asm)!;
 				var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for interdependent-binding-projects.dll");
 
@@ -382,7 +385,7 @@ namespace Xamarin.Tests {
 				}
 			}
 			var result = DotNet.AssertBuild (project_path, properties);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), "monotouchtest.app");
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", platform.ToFramework (), "monotouchtest.app");
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -616,15 +619,15 @@ namespace Xamarin.Tests {
 
 			var rv = DotNet.AssertBuild (project_path, GetDefaultProperties ());
 
-			var dllPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), $"{project}.dll");
+			var dllPath = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", platform.ToFramework (), $"{project}.dll");
 			Assert.That (dllPath, Does.Exist, "Binding assembly");
 
 			// Verify that the MyNativeClass class exists in the assembly, and that it's actually a class.
 			var ad = AssemblyDefinition.ReadAssembly (dllPath, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 			var myNativeClass = ad.MainModule.Types.FirstOrDefault (v => v.FullName == "MyApiDefinition.MyNativeClass");
-			Assert.IsFalse (myNativeClass.IsInterface, "IsInterface");
+			Assert.IsFalse (myNativeClass!.IsInterface, "IsInterface");
 			var myStruct = ad.MainModule.Types.FirstOrDefault (v => v.FullName == "MyClassLibrary.MyStruct");
-			Assert.IsTrue (myStruct.IsValueType, "MyStruct");
+			Assert.IsTrue (myStruct!.IsValueType, "MyStruct");
 
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
@@ -725,7 +728,7 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 		}
 
-		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		internal static void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
 				return;
@@ -733,13 +736,13 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (executable);
 		}
 
-		void ExecuteWithMagicWordAndAssert (string executable)
+		static void ExecuteWithMagicWordAndAssert (string executable)
 		{
 			if (!File.Exists (executable))
 				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
 
 			var magicWord = Guid.NewGuid ().ToString ();
-			var env = new Dictionary<string, string> {
+			var env = new Dictionary<string, string?> {
 				{ "MAGIC_WORD", magicWord },
 				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
 			};
@@ -859,7 +862,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir), appPath);
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, appPath);
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
 	}
