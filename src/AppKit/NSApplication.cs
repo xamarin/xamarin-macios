@@ -35,8 +35,14 @@ using ObjCRuntime;
 
 namespace AppKit {
 	public partial class NSApplication : NSResponder {
+
+#if NET
+		public static bool CheckForIllegalCrossThreadCalls { get; set; }
+		public static bool CheckForEventAndDelegateMismatches { get; set; }
+#else
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
+#endif
 
 #if !(XAMCORE_4_0 && NET)
 #if NET

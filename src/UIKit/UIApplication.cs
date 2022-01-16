@@ -42,8 +42,13 @@ namespace UIKit {
 #endif
 	{
 		static Thread? mainThread;
+#if NET
+		public static bool CheckForIllegalCrossThreadCalls { get; set; }
+		public static bool CheckForEventAndDelegateMismatches { get; set; }
+#else
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
+#endif
 
 #if !WATCH
 		// We link with __Internal here so that this function is interposable from third-party native libraries.
