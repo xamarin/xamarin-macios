@@ -84,7 +84,7 @@ namespace AppKit {
 namespace UIKit {
 #endif
 
-#if XAMCORE_4_0 || MONOMAC
+#if NET || MONOMAC
 	delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, out bool stop);
 	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, out bool stop);
 #else
