@@ -330,7 +330,7 @@
 !extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDropOperation(AppKit.NSCollectionView,AppKit.NSDraggingInfo,Foundation.NSIndexPath&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'AppKit.NSImage AppKit.NSCollectionView::GetDraggingImage(Foundation.NSSet`1<Foundation.NSIndexPath>,AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'AppKit.NSImage AppKit.NSCollectionViewDelegate::GetDraggingImage(AppKit.NSCollectionView,Foundation.NSSet,AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'AppKit.NSImage AppKit.NSTableView::DragImageForRowsWithIndexestableColumnseventoffset(Foundation.NSIndexSet,AppKit.NSTableColumn[],AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #3
+!extra-null-allowed! 'AppKit.NSImage AppKit.NSTableView::DragImageForRows(Foundation.NSIndexSet,AppKit.NSTableColumn[],AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'AppKit.NSTextField AppKit.NSTextField::CreateTextField(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'AppKit.NSView AppKit.NSSharingServiceDelegate::CreateAnchoringView(AppKit.NSSharingService,CoreGraphics.CGRect&,AppKit.NSRectEdge&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'AppKit.NSView AppKit.NSSharingServiceDelegate::CreateAnchoringView(AppKit.NSSharingService,CoreGraphics.CGRect&,AppKit.NSRectEdge&)' has a extraneous [NullAllowed] on parameter #2

@@ -16939,7 +16939,11 @@ namespace AppKit {
 		bool CanDragRows (NSIndexSet rowIndexes, CGPoint mouseDownPoint );
 	
 		[Export ("dragImageForRowsWithIndexes:tableColumns:event:offset:")]
+#if NET
+		NSImage DragImageForRows (NSIndexSet dragRows, NSTableColumn [] tableColumns, NSEvent dragEvent, ref CGPoint dragImageOffset);
+#else
 		NSImage DragImageForRowsWithIndexestableColumnseventoffset (NSIndexSet dragRows, NSTableColumn [] tableColumns, NSEvent dragEvent, ref CGPoint dragImageOffset);
+#endif
 	
 		[Export ("setDraggingSourceOperationMask:forLocal:")]
 		void SetDraggingSourceOperationMask (NSDragOperation mask, bool isLocal);
