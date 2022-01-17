@@ -13320,7 +13320,7 @@ namespace AppKit {
 
 		//Detected properties
 		[Export ("documentView", ArgumentSemantic.Retain), NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSView DocumentView { get; set; }
 #else
 		NSObject DocumentView { get; set; }
