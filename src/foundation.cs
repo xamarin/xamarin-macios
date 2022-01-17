@@ -6663,7 +6663,7 @@ namespace Foundation
 	}
 
 	[Protocol (Name = "NSURLAuthenticationChallengeSender")]
-#if XAMCORE_4_0
+#if NET
 	interface NSUrlAuthenticationChallengeSender {
 #else
 	[Model]
@@ -6694,7 +6694,7 @@ namespace Foundation
 	
 	[BaseType (typeof (NSObject), Name="NSURLConnection")]
 	interface NSUrlConnection : 
-#if XAMCORE_4_0
+#if NET
 		NSUrlAuthenticationChallengeSender
 #else
 		NSURLAuthenticationChallengeSender
