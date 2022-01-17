@@ -6428,13 +6428,13 @@ namespace Intents {
 		[Export ("airCirculationMode", ArgumentSemantic.Assign)]
 		INCarAirCirculationMode AirCirculationMode { get; }
 
-#if XAMCORE_4_0 // Adding BindAs is a breaking change
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("fanSpeedIndex", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedIndex { get; }
 
-#if XAMCORE_4_0 // Adding BindAs is a breaking change
+#if NET
 		[BindAs (typeof (double?))]
 #endif
 		[NullAllowed, Export ("fanSpeedPercentage", ArgumentSemantic.Copy)]
@@ -6692,7 +6692,7 @@ namespace Intents {
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] [BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
 
-#if XAMCORE_4_0 // Breaking change
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
@@ -6884,7 +6884,7 @@ namespace Intents {
 		[Export ("seat", ArgumentSemantic.Assign)]
 		INCarSeat Seat { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("level", ArgumentSemantic.Copy)]
