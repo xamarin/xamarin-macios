@@ -1840,9 +1840,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 			<Output TaskParameter="Frameworks" ItemName="_Frameworks"/>
 		</CollectFrameworks>
+		<PropertyGroup>
+			<_MustCodesignFrameworks Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == 'true' And '@(_Frameworks)' != ''">true</_MustCodesignFrameworks>
+			<_MustCodesignFrameworks Condition="'$(_PlatformName)' != 'macOS' And '$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''">true</_MustCodesignFrameworks>
+		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
+	<Target Name="_CodesignFrameworks" Condition="'$(_MustCodesignFrameworks)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
 		Inputs="%(_Frameworks.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)">
 
 		<PropertyGroup>
