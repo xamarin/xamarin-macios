@@ -2030,6 +2030,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ToolPath="$(DittoPath)"
 			Source="@(_ResolvedAppExtensionReferences)"
 			Destination="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
+			TouchDestinationFiles="true"
 		/>
 
 		<!-- Delete any code signatures and dSYM dirs since they are now invalid -->
