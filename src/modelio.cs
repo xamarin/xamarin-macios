@@ -1043,16 +1043,28 @@ namespace ModelIO {
 		[Export ("map")]
 		MDLMeshBufferMap Map { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("length")]
 		nuint Length { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("allocator", ArgumentSemantic.Retain)]
 		IMDLMeshBufferAllocator Allocator { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("zone", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		IMDLMeshBufferZone Zone { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("type")]
 		MDLMeshBufferType Type { get; }
 	}
@@ -1127,9 +1139,15 @@ namespace ModelIO {
 	[Protocol]
 	interface MDLMeshBufferZone
 	{
+#if NET
+		[Abstract]
+#endif
 		[Export ("capacity")]
 		nuint Capacity { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("allocator")]
 		IMDLMeshBufferAllocator Allocator { get; }
 	}
@@ -1285,14 +1303,14 @@ namespace ModelIO {
 		[Export ("removeObject:")]
 		void RemoveObject (MDLObject @object);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		[Export ("objectAtIndexedSubscript:")]
 		MDLObject GetObject (nuint index);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
@@ -1972,7 +1990,7 @@ namespace ModelIO {
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("resetsTransform")]
@@ -1988,7 +2006,7 @@ namespace ModelIO {
 
 		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
 		[Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("keyTimes", ArgumentSemantic.Copy)]

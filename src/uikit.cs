@@ -1502,7 +1502,9 @@ namespace UIKit {
 	[Protocol]
 	interface UIInputViewAudioFeedback {
 		[Export ("enableInputClicksWhenVisible")]
-		[Abstract] // it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
+#if !NET
+		[Abstract]
+#endif
 		bool EnableInputClicksWhenVisible { get; }
 	}
 
@@ -5102,13 +5104,13 @@ namespace UIKit {
 	[Protocol]
 	[Model]
 	interface UIDynamicAnimatorDelegate {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("dynamicAnimatorWillResume:")]
 		void WillResume (UIDynamicAnimator animator);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("dynamicAnimatorDidPause:")]
@@ -15489,7 +15491,7 @@ namespace UIKit {
 		CGAffineTransform TargetTransform { get; }
 
 
-#if XAMCORE_4_0 // Can't break the world right now
+#if NET // Can't break the world right now
 		[Abstract]
 #endif
 		[iOS (10,0), TV (10,0)]
@@ -15837,7 +15839,7 @@ namespace UIKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		UIView GetTransitionViewControllerForKey (NSString key);
 
-#if XAMCORE_4_0 // This is abstract in headers but is a breaking change
+#if NET // This is abstract in headers but is a breaking change
 		[Abstract]
 #endif
 		[iOS (10, 0)]
@@ -15867,7 +15869,7 @@ namespace UIKit {
 		[Export ("notifyWhenInteractionEndsUsingBlock:")]
 		void NotifyWhenInteractionEndsUsingBlock (Action<IUIViewControllerTransitionCoordinatorContext> handler);
 
-#if XAMCORE_4_0 // This is abstract in headers but is a breaking change
+#if NET // This is abstract in headers but is a breaking change
 		[Abstract]
 #endif
 		[iOS (10,0)]
@@ -16544,16 +16546,18 @@ namespace UIKit {
 	[iOS (8,0)]
 	[Protocol]
 	interface UIPopoverBackgroundViewMethods {
-		//
-		// These must be overwritten by users, using the [Export ("...")] on the
-		// static method
-		//
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static, Export ("arrowHeight")]
 		nfloat GetArrowHeight ();
 
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static, Export ("arrowBase")]
 		nfloat GetArrowBase ();
 
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static, Export ("contentViewInsets")]
 		UIEdgeInsets GetContentViewInsets ();
 	}
@@ -17525,14 +17529,14 @@ namespace UIKit {
 		void AdjustTextPositionByCharacterOffset (nint offset);		
 
 		[iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // Adding required members is a breaking change
 #endif
 		[Export ("setMarkedText:selectedRange:")]
 		void SetMarkedText (string markedText, NSRange selectedRange);
 
 		[iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // Adding required members is a breaking change
 #endif
 		[Export ("unmarkText")]
@@ -17540,7 +17544,7 @@ namespace UIKit {
 
 		// Another abstract that was introduced on this released, breaking ABI
 		// Radar: 26867207
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10, 0)]
@@ -17549,7 +17553,7 @@ namespace UIKit {
 
 		// New abstract, breaks ABI
 		// Radar: 33685383
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0)]
@@ -17558,7 +17562,7 @@ namespace UIKit {
 
 		// New abstract, breaks ABI
 		// Radar: 33685383
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0)]
@@ -17623,7 +17627,7 @@ namespace UIKit {
 
 		[iOS (9,0)]
 		[Export ("topAnchor", ArgumentSemantic.Strong)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -17631,7 +17635,7 @@ namespace UIKit {
 
 		[iOS (9,0)]
 		[Export ("bottomAnchor", ArgumentSemantic.Strong)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -17639,7 +17643,7 @@ namespace UIKit {
 
 		[iOS (9,0)]
 		[Export ("heightAnchor", ArgumentSemantic.Strong)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -17837,7 +17841,7 @@ namespace UIKit {
 		[Export ("documentMenu:didPickDocumentPicker:"), EventArgs ("UIDocumentMenuDocumentPicked")]
 		void DidPickDocumentPicker (UIDocumentMenuViewController documentMenu, UIDocumentPickerViewController documentPicker);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("documentMenuWasCancelled:")]
@@ -17917,7 +17921,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	partial interface UIDocumentPickerDelegate {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Implement 'DidPickDocument (UIDocumentPickerViewController, NSUrl[])' instead.")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("documentPicker:didPickDocumentAtURL:"), EventArgs ("UIDocumentPicked")]
@@ -18144,7 +18148,7 @@ namespace UIKit {
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121416
 		[TV (12, 0), iOS (12, 0), NoWatch]
-#if XAMCORE_4_0 
+#if NET
 		[Abstract]
 #endif
 		[Export ("frame")]
@@ -18395,10 +18399,9 @@ namespace UIKit {
 	[iOS (9,0)]
 	[Protocol]
 	interface UIFocusEnvironment {
-		// Apple moved this member to @optional since they deprecated it
-		// but that's a breaking change for us, so it remains [Abstract]
-		// and we need to teach the intro and xtro tests about it
+#if !NET
 		[Abstract]
+#endif
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		[iOS (9,0)] // duplicated so it's inlined properly
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
@@ -18424,7 +18427,7 @@ namespace UIKit {
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 26825293
 		//
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10, 0)]
@@ -18440,14 +18443,14 @@ namespace UIKit {
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121293
 		[TV (12, 0), iOS (12, 0)]
-#if XAMCORE_4_0 
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("parentFocusEnvironment", ArgumentSemantic.Weak)]
 		IUIFocusEnvironment ParentFocusEnvironment { get; }
 
 		[TV (12, 0), iOS (12, 0)]
-#if XAMCORE_4_0 
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("focusItemContainer")]

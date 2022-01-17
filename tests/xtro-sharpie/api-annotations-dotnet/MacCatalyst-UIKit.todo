@@ -35,13 +35,6 @@
 !extra-null-allowed! 'System.Void UIKit.UIView::set_MotionEffects(UIKit.UIMotionEffect[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'UIKit.IUITextDocumentProxy UIKit.UIInputViewController::get_TextDocumentProxy()' has a extraneous [NullAllowed] on return type
 !extra-null-allowed! 'UIKit.UIView UIKit.UIScreen::SnapshotView(System.Boolean)' has a extraneous [NullAllowed] on return type
-!incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
-!incorrect-protocol-member! UIFocusEnvironment::parentFocusEnvironment is REQUIRED and should be abstract
-!incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
-!incorrect-protocol-member! UITextDocumentProxy::setMarkedText:selectedRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! UITextDocumentProxy::unmarkText is REQUIRED and should be abstract
 !missing-field! UIApplicationInvalidInterfaceOrientationException not bound
 !missing-field! UIKeyInputF1 not bound
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
