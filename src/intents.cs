@@ -7027,14 +7027,14 @@ namespace Intents {
 		string PronunciationHint { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("vocabularyIdentifier")]
 		string VocabularyIdentifier { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("alternativeSpeakableMatches")]
@@ -7043,7 +7043,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
-#if !XAMCORE_4_0 // Apple made this @optional in iOS 11
+#if !NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("identifier")]
@@ -8352,7 +8352,7 @@ namespace Intents {
 	[Protocol]
 	interface INPayBillIntentHandling {
 
-#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+#if NET
 		[Abstract]
 #endif
 		[Export ("handlePayBill:completion:")]
@@ -8686,7 +8686,7 @@ namespace Intents {
 	[Protocol]
 	interface INSearchForBillsIntentHandling {
 
-#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+#if NET
 		[Abstract]
 #endif
 		[Export ("handleSearchForBills:completion:")]
