@@ -794,7 +794,11 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
+#if NET
+	[NoMac]
+#else
 	[Mac (10, 12, 0)]
+#endif
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Native]

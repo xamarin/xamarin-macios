@@ -1,7 +1,5 @@
 ## unsorted
 
-!unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
-
 ## The API that uses the following is unavailable / API_UNAVAILABLE(macosx)
 !missing-enum! INBookRestaurantReservationIntentCode not bound
 !missing-enum! INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode not bound
