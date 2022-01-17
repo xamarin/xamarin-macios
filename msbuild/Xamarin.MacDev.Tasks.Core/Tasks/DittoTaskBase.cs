@@ -11,6 +11,8 @@ namespace Xamarin.MacDev.Tasks
 	{
 		#region Inputs
 
+		public string? AdditionalArguments { get; set; }
+
 		[Required]
 		public ITaskItem? Source { get; set; }
 
@@ -41,6 +43,8 @@ namespace Xamarin.MacDev.Tasks
 
 			args.AddQuoted (Source!.ItemSpec);
 			args.AddQuoted (Destination!.ItemSpec);
+			if (!string.IsNullOrEmpty (AdditionalArguments))
+				args.Add (AdditionalArguments);
 
 			return args.ToString ();
 		}
