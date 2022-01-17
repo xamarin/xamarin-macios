@@ -38,6 +38,7 @@ namespace Network {
 		bool skipHandShake = false;
 		nuint maximumMessageSize;
 
+		[Preserve (Conditional = true)]
 		internal NWWebSocketOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

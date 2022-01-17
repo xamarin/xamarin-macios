@@ -64,6 +64,7 @@
     <FirstParty Include="System.Diagnostics.Tracer.dll" />
     <!-- Broker.zip -->
     <FirstParty Include="Broker.exe" />
+    <FirstParty Include="Broker.resources.dll" />
     <FirstParty Include="Merq.dll" />
     <!-- Build.zip -->
     <FirstParty Include="Build.exe" />

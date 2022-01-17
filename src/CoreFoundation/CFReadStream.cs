@@ -56,6 +56,7 @@ namespace CoreFoundation {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal CFReadStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

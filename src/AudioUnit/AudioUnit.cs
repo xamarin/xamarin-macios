@@ -313,6 +313,7 @@ namespace AudioUnit
 		Dictionary<uint, RenderDelegate>? renderer;
 		Dictionary<uint, InputDelegate>? inputs;
 
+		[Preserve (Conditional = true)]
 		internal AudioUnit (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -641,6 +642,9 @@ namespace AudioUnit
 				Interlocked.CompareExchange (ref inputs, new Dictionary<uint, InputDelegate> (), null);
 
 			inputs [audioUnitElement] = inputDelegate;
+
+			if (!gcHandle.IsAllocated)
+				gcHandle = GCHandle.Alloc (this);
 
 			var cb = new AURenderCallbackStruct ();
 			cb.Proc = CreateInputCallback;
@@ -1041,6 +1045,7 @@ namespace AudioUnit
 		{
 		}
 
+		[Preserve (Conditional = true)]
 		internal AURenderEventEnumerator (NativeHandle handle, bool owns)
 		{
 			Handle = handle;

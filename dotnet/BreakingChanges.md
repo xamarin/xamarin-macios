@@ -1,5 +1,31 @@
 # Breaking changes in .NET
 
+Reference: https://github.com/xamarin/xamarin-macios/issues/13087
+
+## Removed `System.nint` and `System.nuint`
+
+The two types `System.nint` and `System.nuint` (which despite their `System`
+namespace were shipped with Xamarin.iOS/Xamarin.Mac) have been removed in
+favor of the C# 9 `nint` and `nuint` types (these map to `System.IntPtr` and
+`System.UIntPtr` respectively).
+
+* Code that uses these types with the full namespace (`System.nint` / `System.nuint`) won't compile.
+
+    Fix: remove the namespace, and use `nint` / `nuint` only.
+
+* Code that overloads on `System.IntPtr`/`System.UIntPtr` and `nint`/`nuint`won't compile.
+
+    Example:
+
+    ```csharp
+    public void DoSomething (IntPtr value) {}
+    public void DoSomething (nint value) {}
+    ```
+
+    Fix: one of the overloads would have to be either renamed or removed.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/10508
+
 ## System.nfloat moved to ObjCRuntime.nfloat
 
 The `nfloat` type moved from the `System` namespace to the `ObjCRuntime` namespace.
@@ -48,3 +74,14 @@ These APIs are used to determine whether we're executing in the simulator or
 on a device. Neither apply to a Mac Catalyst app, so they've been removed.
 
 Any code that these APIs will have to be ported to not use these APIs.
+
+## The SceneKit.SCNMatrix4 matrix is transposed in memory.
+
+The managed SCNMatrix4 struct used to be a row-major matrix, while the native
+SCNMatrix4 struct is a column-major matrix. This difference in the memory
+representation meant that matrices would often have to be transposed when
+interacting with the platform.
+
+In .NET, we've changed the managed SCNMatrix4 to be a column-major matrix, to
+match the native version. This means that any transposing that's currently
+done when accessing Apple APIs has to be undone.

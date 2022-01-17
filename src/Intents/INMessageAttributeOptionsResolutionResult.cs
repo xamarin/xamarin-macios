@@ -7,6 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#if !(NET && __MACOS__)
 #if !TVOS
 using System;
 using Foundation;
@@ -45,3 +46,4 @@ namespace Intents {
 	}
 }
 #endif
+#endif // !(NET && __MACOS__)

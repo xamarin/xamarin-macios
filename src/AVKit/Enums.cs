@@ -1,5 +1,6 @@
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -18,8 +19,13 @@ namespace AVKit {
 #endif
 
 #if !MONOMAC || !XAMCORE_4_0
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
 	[iOS (9,0)]
 	[TV (13,0)]
+#endif
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]
 	public enum AVKitError : long {
@@ -32,8 +38,16 @@ namespace AVKit {
 	}
 #endif
 
-	[NoWatch, NoTV, NoMac]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoMac]
 	[iOS (13,0)]
+#endif
 	[Native]
 	public enum AVAudioSessionRouteSelection : long {
 		None = 0,
@@ -41,8 +55,16 @@ namespace AVKit {
 		External = 2,
 	}
 
-	[NoiOS, NoWatch, NoTV]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoiOS]
+	[NoWatch]
+	[NoTV]
 	[Mac (10,15)]
+#endif
 	[Native]
 	public enum AVRoutePickerViewButtonState : long {
 		Normal,

@@ -179,6 +179,7 @@ namespace CoreText {
 	}
 
 	public class CTRunDelegate : NativeObject, IDisposable {
+		[Preserve (Conditional = true)]
 		internal CTRunDelegate (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

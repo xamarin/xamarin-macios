@@ -43,7 +43,6 @@
 !missing-enum! NSSplitViewItemCollapseBehavior not bound
 !missing-enum! NSTableColumnResizingOptions not bound
 !missing-enum! NSTableViewGridLineStyle not bound
-!missing-enum! NSWindowStyleMask not bound
 !missing-field! NSAbortModalException not bound
 !missing-field! NSAbortPrintingException not bound
 !missing-field! NSAccessibilityAscendingSortDirectionValue not bound

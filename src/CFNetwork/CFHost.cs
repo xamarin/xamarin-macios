@@ -50,6 +50,7 @@ namespace CoreServices {
 #endif
 #endif
 	class CFHost : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CFHost (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
