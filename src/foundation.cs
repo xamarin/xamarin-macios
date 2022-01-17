@@ -12165,7 +12165,7 @@ namespace Foundation
 	[iOS (9,0)][Mac (10,11)]
 	[Protocol]
 	interface NSProgressReporting {
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("progress")]

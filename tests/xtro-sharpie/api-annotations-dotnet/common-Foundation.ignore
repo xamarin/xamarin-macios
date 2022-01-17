@@ -38,9 +38,6 @@
 !missing-selector! NSNumber::initWithLong: not bound
 !missing-selector! NSNumber::initWithUnsignedLong: not bound
 
-# fixed in XAMCORE_3_0 - API break
-!incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
-
 ## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
 !unknown-native-enum! NSBundleExecutableArchitecture bound
 
