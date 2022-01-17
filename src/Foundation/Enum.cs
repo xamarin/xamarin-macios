@@ -242,7 +242,7 @@ namespace Foundation  {
 	public enum NSDataReadingOptions : ulong {
 		Mapped =   1 << 0,
 		Uncached = 1 << 1,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This option is unavailable.")]
 		Coordinated = 1 << 2,
 #endif
@@ -562,7 +562,7 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : ulong {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'None' instead.")]
 		SkipsNone                    = 0,
 #endif
@@ -745,7 +745,7 @@ namespace Foundation  {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
 		AllowFragments = FragmentsAllowed,
 #endif
