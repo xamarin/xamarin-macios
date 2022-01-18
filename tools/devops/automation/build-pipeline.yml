@@ -18,7 +18,12 @@ parameters:
   default: true
 
 - name: runDeviceTests
-  displayName: Run Device Tests (includes macOS)
+  displayName: Run Device Tests 
+  type: boolean
+  default: true
+
+- name: runOldMacOSTests
+  displayName: Run Tests on older macOS versions 
   type: boolean
   default: true
 
@@ -282,6 +287,8 @@ stages:
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
 
+- ${{ if eq(parameters.runOldMacOSTests, true) }}:
+  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
     - ${{ each config in parameters.macTestsConfigurations }}:
       - template: templates/mac/stage.yml
         parameters:
