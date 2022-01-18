@@ -13,6 +13,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Intents {
+#if !(NET && __MACOS__)
 	public partial class INMessageAttributeResolutionResult {
 
 		public static INMessageAttributeResolutionResult GetSuccess (INMessageAttribute resolvedValue)
@@ -43,5 +44,6 @@ namespace Intents {
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}
 	}
+#endif // !(NET && __MACOS__)
 }
 #endif

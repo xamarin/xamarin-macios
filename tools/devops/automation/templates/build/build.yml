@@ -491,7 +491,7 @@ steps:
     fi
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
-  timeoutInMinutes: 600
+  timeoutInMinutes: 720
   enabled: ${{ parameters.runTests }}
   env:
     IsPR: $(configuration.IsPR)

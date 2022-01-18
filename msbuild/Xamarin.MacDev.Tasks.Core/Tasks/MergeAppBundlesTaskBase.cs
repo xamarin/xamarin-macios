@@ -207,6 +207,7 @@ namespace Xamarin.MacDev.Tasks {
 					Directory.CreateDirectory (Path.GetDirectoryName (outputFile));
 					var symlinkTarget = PathUtils.GetSymlinkTarget (FullPath);
 					if (File.Exists (outputFile) && PathUtils.IsSymlink (outputFile) && PathUtils.GetSymlinkTarget (outputFile) == symlinkTarget) {
+						File.SetLastWriteTimeUtc (outputFile, DateTime.UtcNow); // update the timestamp, because the file the symlink points to might have changed.
 						Task.Log.LogMessage (MessageImportance.Low, "Target '{0}' is up-to-date", outputFile);
 					} else {
 						PathUtils.FileDelete (outputFile);

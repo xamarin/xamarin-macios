@@ -27,6 +27,10 @@
 
 		<!-- We don't need any dependency files -->
 		<GenerateDependencyFile Condition="'$(GenerateDependencyFile)' == ''">false</GenerateDependencyFile>
+
+		<!-- MSBuild will discard the 'PublishFolderType' metadata on items unless we set these properties -->
+		<MSBuildDisableGetCopyToOutputDirectoryItemsOptimization>true</MSBuildDisableGetCopyToOutputDirectoryItemsOptimization>
+		<MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>true</MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
@@ -49,6 +53,10 @@
 			Ref: https://github.com/dotnet/runtime/issues/54406
 		-->
 		<SelfContained>true</SelfContained>
+	</PropertyGroup>
+
+	<!-- We're never using any app hosts -->
+	<PropertyGroup>
 		<_RuntimeIdentifierUsesAppHost>false</_RuntimeIdentifierUsesAppHost>
 		<UseAppHost>false</UseAppHost>
 	</PropertyGroup>

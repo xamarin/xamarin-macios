@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 using NUnit.Framework;
 
@@ -650,7 +651,7 @@ namespace Xamarin.Tests
 			return GetBaseLibraryName (targetFramework.Platform);
 		}
 
-		static string GetBaseLibraryName (ApplePlatform platform)
+		public static string GetBaseLibraryName (ApplePlatform platform)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -1018,5 +1019,36 @@ namespace Xamarin.Tests
 
 			return Path.Combine (SourceRoot, "tests", "test-libraries", ".libs", dir);
 		}
+
+		// This implementation of Touch is to update a timestamp (not to make sure a certain file exists).
+		public static void Touch (string file)
+		{
+			if (!File.Exists (file))
+				throw new FileNotFoundException ($"Can't touch the file '{file}' because it doesn't exist.");
+			EnsureFilestampChange ();
+			File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
+			EnsureFilestampChange ();
+		}
+
+		static bool? is_apfs;
+		static bool IsAPFS {
+			get {
+				if (!is_apfs.HasValue) {
+					var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
+					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
+				}
+				return is_apfs.Value;
+			}
+		}
+
+		// Some file systems have a rather low resolution for file timestamps, so make sure enough time passes that
+		// touching a file will update the timestamp.
+		static void EnsureFilestampChange ()
+		{
+			if (IsAPFS)
+				return; // APFS has high resolution timestamps, so no need to wait at all.
+			Thread.Sleep (1000);
+		}
+
 	}
 }
