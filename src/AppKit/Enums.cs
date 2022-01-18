@@ -1331,7 +1331,7 @@ Luminosity
 #else
 		[Mac (10,10)]
 #endif
-FullSizeContentView   = 1 << 15 
+		FullSizeContentView   = 1 << 15 
 	}
 
 #if NET
@@ -1379,7 +1379,7 @@ FullSizeContentView   = 1 << 15
 #else
 		[Mac (10, 11)]
 #endif
-FullScreenAllowsTiling = 1 << 11,
+		FullScreenAllowsTiling = 1 << 11,
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -2867,7 +2867,7 @@ FullScreenDisallowsTiling = 1 << 12
 #else
 		[Mac (10,10)]
 #endif
-Separated = 8
+		Separated = 8
 	}
 	
 #if NET
