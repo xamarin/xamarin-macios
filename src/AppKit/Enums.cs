@@ -549,12 +549,12 @@ namespace AppKit {
 	// This enum is defined as an untyped enum in MacOSX.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
 	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
 	[NoMacCatalyst]
-#if NET
-	public enum NSKey {
-#else
+// #if NET
+// 	public enum NSKey {
+// #else
 	[Native]
 	public enum NSKey : ulong {
-#endif
+// #endif
 		A              = 0x00,
 		S              = 0x01,
 		D              = 0x02,
@@ -676,12 +676,12 @@ namespace AppKit {
 
 	// This is an untyped enum in AppKit's NSEvent.h
 	[NoMacCatalyst]
-#if !NET
+// #if !NET
 	[Native]
 	public enum NSFunctionKey : ulong {
-#else
-	public enum NSFunctionKey : int {
-#endif
+// #else
+	// public enum NSFunctionKey : int {
+// #endif
 		UpArrow        = 0xF700,
 		DownArrow      = 0xF701,
 		LeftArrow      = 0xF702,
@@ -757,12 +757,12 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-#if !NET
+// #if !NET
 	[Native]
 	public enum NSEventSubtype : ulong {
-#else
-	public enum NSEventSubtype : short {
-#endif
+// #else
+// 	public enum NSEventSubtype : short {
+// #endif
 		/* event subtypes for NSEventTypeAppKitDefined events */
 		WindowExposed = 0,
 		ApplicationActivated = 1,
