@@ -219,6 +219,7 @@ namespace AddressBook {
 		internal Converter<NativeHandle, T> toManaged;
 		internal Converter<T, NativeHandle> toNative;
 
+		[Preserve (Conditional = true)]
 		internal ABMultiValue (NativeHandle handle, bool owns)
 			: this (handle, 
 					v => (T) (object) Runtime.GetNSObject (v)!,
@@ -315,6 +316,7 @@ namespace AddressBook {
 #endif
 	public class ABMutableMultiValue<T> : ABMultiValue<T>
 	{
+		[Preserve (Conditional = true)]
 		internal ABMutableMultiValue (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

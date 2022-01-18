@@ -28,6 +28,7 @@ namespace CoreServices {
 #endif
 
 	public class CFHTTPAuthentication : CFType {
+		[Preserve (Conditional = true)]
 		internal CFHTTPAuthentication (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

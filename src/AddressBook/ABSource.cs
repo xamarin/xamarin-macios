@@ -58,6 +58,7 @@ namespace AddressBook {
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public class ABSource : ABRecord {
+		[Preserve (Conditional = true)]
 		internal ABSource (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

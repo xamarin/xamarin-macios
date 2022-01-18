@@ -34,6 +34,7 @@ namespace Network {
 	public class NWListener : NativeObject {
 		bool connectionHandlerWasSet = false;
 		object connectionHandlerLock = new object ();
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWListener (NativeHandle handle, bool owns) : base (handle, owns)
 #else

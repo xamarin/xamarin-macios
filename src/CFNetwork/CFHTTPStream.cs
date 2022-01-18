@@ -34,6 +34,7 @@ namespace CoreServices {
 #endif
 	public partial class CFHTTPStream : CFReadStream {
 
+		[Preserve (Conditional = true)]
 		internal CFHTTPStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

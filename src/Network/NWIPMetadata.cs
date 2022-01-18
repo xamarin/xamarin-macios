@@ -29,6 +29,7 @@ namespace Network {
 #endif
 	public class NWIPMetadata : NWProtocolMetadata {
 
+		[Preserve (Conditional = true)]
 		internal NWIPMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWIPMetadata () : this (nw_ip_create_metadata (), owns: true) {}

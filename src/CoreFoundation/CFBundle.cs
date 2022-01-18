@@ -37,6 +37,7 @@ namespace CoreFoundation {
 			public string Creator { get; private set; }
 		}
 
+		[Preserve (Conditional = true)]
 		internal CFBundle (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
