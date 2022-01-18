@@ -7,6 +7,8 @@
 // Copyright 2012 Xamarin Inc
 
 using System;
+using System.Runtime.Versioning;
+
 using ObjCRuntime;
 
 namespace AppKit {
