@@ -211,9 +211,7 @@ namespace AudioToolbox {
 				del ();
 		}
 
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlayAlertSound (Action onCompletion)
 		{
@@ -231,9 +229,7 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		public Task PlayAlertSoundAsync ()
 		{
 			var tcs = new TaskCompletionSource<bool> ();
@@ -243,9 +239,7 @@ namespace AudioToolbox {
 			return tcs.Task;
 		}
 
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlaySystemSound (Action onCompletion)
 		{
@@ -263,9 +257,7 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		public Task PlaySystemSoundAsync ()
 		{
 			var tcs = new TaskCompletionSource<bool> ();
@@ -275,15 +267,11 @@ namespace AudioToolbox {
 			return tcs.Task;
 		}
 
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
 
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
 

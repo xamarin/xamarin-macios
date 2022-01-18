@@ -138,11 +138,7 @@ namespace AudioToolbox {
 			Dictionary = new NSDictionary (dictHandle);
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public AudioSessionRouteChangeReason Reason {
 			get {
 				using (var num = new NSNumber (Dictionary.LowlevelObjectForKey (route_change_key))){
@@ -168,11 +164,7 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public AudioSessionInputRouteKind PreviousInputRoute {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -180,11 +172,7 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public AudioSessionOutputRouteKind [] PreviousOutputRoutes {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -192,11 +180,7 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public AudioSessionInputRouteKind CurrentInputRoute {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -204,11 +188,7 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-#endif
 		public AudioSessionOutputRouteKind [] CurrentOutputRoutes {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -217,14 +197,7 @@ namespace AudioToolbox {
 		}
 	}
 
-#if !NET
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'AVAudioSession' instead.")]
-#else
-	[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-	[Obsolete ("Starting with ios7.0 use 'AVAudioSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	public static class AudioSession {
 		static bool initialized;
 		public static event EventHandler Interrupted;
@@ -471,14 +444,7 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'InputRoute' or 'OutputRoute' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios5.0")]
-#if IOS
-		[Obsolete ("Starting with ios5.0 use 'InputRoute' or 'OutputRoute' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		static public string AudioRoute {
 			get {
 				return CFString.FromHandle (GetIntPtr (AudioSessionProperty.AudioRoute));
