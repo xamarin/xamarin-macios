@@ -141,7 +141,7 @@ namespace Foundation
 	delegate bool NSEnumerateErrorHandler (NSUrl url, NSError error);
 	delegate void NSMetadataQueryEnumerationCallback (NSObject result, nuint idx, ref bool stop);
 #if NET
-	delegate void NSItemProviderCompletionHandler (INSSecureCoding item, NSError error);
+	delegate void NSItemProviderCompletionHandler (INSSecureCoding itemBeingLoaded, NSError error);
 #else
 	delegate void NSItemProviderCompletionHandler (NSObject itemBeingLoaded, NSError error);
 #endif
