@@ -2407,7 +2407,7 @@ namespace Intents {
 	interface INBookRestaurantReservationIntent : NSCopying {
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
-#if XAMCORE_4_0
+#if NET
 		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
 #else
 		// This is correctly nuint but a bug in PMCS generated incorrect code which has shipped.
@@ -3165,7 +3165,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol] 
 	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
 #endif
 	{
@@ -3189,7 +3189,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling 
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
 #endif
 	{
@@ -4628,7 +4628,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
-#if XAMCORE_4_0 || TVOS || __MACCATALYST__
+#if NET || TVOS || __MACCATALYST__
 	[DisableDefaultCtor]
 #endif
 	[TV (14,0)]
