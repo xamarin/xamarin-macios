@@ -33,7 +33,7 @@ namespace StoreKit {
 		CloudServiceNetworkConnectionFailed,
 		// iOS 10.3
 		CloudServiceRevoked,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'SKError.CloudServiceRevoked' instead.")]
 		Revoked = CloudServiceRevoked,
 #endif
