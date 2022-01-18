@@ -8,8 +8,12 @@ namespace AppKit
 {
 	public partial class NSCollectionViewDelegate
 	{
-		[Obsolete ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.")]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[Mac (10, 11)]
+#endif
+		[Obsolete ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.")]
 		public virtual NSDragOperation ValidateDrop (NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
 		{
 			proposedDropIndexPath = null;
@@ -20,8 +24,12 @@ namespace AppKit
 
 	public partial class NSCollectionViewDelegateFlowLayout
 	{
-		[Obsolete ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.")]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[Mac (10, 11)]
+#endif
+		[Obsolete ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.")]
 		public virtual NSDragOperation ValidateDrop (NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
 		{
 			proposedDropIndexPath = null;
@@ -32,8 +40,12 @@ namespace AppKit
 
 	public static partial class NSCollectionViewDelegate_Extensions
 	{
-		[Obsolete ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.")]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[Mac (10, 11)]
+#endif
+		[Obsolete ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.")]
 		public static NSDragOperation ValidateDrop (this INSCollectionViewDelegate This, NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
 		{
 			proposedDropIndexPath = null;

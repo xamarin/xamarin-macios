@@ -47,7 +47,8 @@ namespace AppKit
 		public Func<NSMenuItem, bool> ValidateMenuItemFunc;
 #endif // !__MACCATALYST__
 
-		[Preserve, Export (skey)]
+		[Preserve]
+		[Export (skey)]
 		public void OnActivated (NSObject sender)
 		{
 			EventHandler handler = Activated;
@@ -55,7 +56,8 @@ namespace AppKit
 				handler (sender, EventArgs.Empty);
 		}
 
-		[Preserve, Export (dkey)]
+		[Preserve]
+		[Export (dkey)]
 		public void OnActivated2 (NSObject sender)
 		{
 			EventHandler handler = DoubleActivated;

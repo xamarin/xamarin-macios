@@ -11,14 +11,22 @@ using ObjCRuntime;
 
 namespace AppKit {
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum NSPrintRenderingQuality : long {
 		Best,
 		Responsive
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum NSCorrectionIndicatorType : long {
 		Default = 0,
@@ -26,7 +34,11 @@ namespace AppKit {
 		Guesses
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum NSCorrectionResponse : long {
 		None,
@@ -37,7 +49,11 @@ namespace AppKit {
 		Reverted
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum NSTextFinderMatchingType : long {
 		Contains = 0,
@@ -46,7 +62,11 @@ namespace AppKit {
 		EndsWith = 3
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum NSCharacterCollection : ulong {
 		/// <summary>Identity mapping (CID == NSGlyph)</summary>
@@ -69,7 +89,11 @@ namespace AppKit {
 	}
 
 	// Untyped enum (NSAttributedString.h). Only used as a convience enum in our API.
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Flags]
 	public enum NSSpellingState :
 #if XAMCORE_4_0

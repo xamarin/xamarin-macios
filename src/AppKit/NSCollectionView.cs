@@ -17,7 +17,11 @@ namespace AppKit {
 		}
 
 #if !XAMCORE_4_0
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[Mac (10, 11)]
+#endif
 		[Obsolete ("Use 'GetLayoutAttributes' instead.")]
 		public virtual NSCollectionViewLayoutAttributes GetLayoutAttributest (string kind, NSIndexPath indexPath)
 		{
