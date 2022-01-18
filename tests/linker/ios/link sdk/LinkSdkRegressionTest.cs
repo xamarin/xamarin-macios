@@ -676,7 +676,11 @@ namespace LinkSdk {
 		public void WebProxy_Leak ()
 		{
 			// note: needs to be executed under Instrument to verify it does not leak
+#if NET
+			Assert.NotNull (global::CoreFoundation.CFNetwork.GetSystemProxySettings (), "should not leak");
+#else
 			Assert.NotNull (CFNetwork.GetSystemProxySettings (), "should not leak");
+#endif
 		}
 #endif // !__TVOS__ && !__WATCHOS__
 		
