@@ -6,6 +6,8 @@ NAMES+=FrameworksInRuntimesNativeDirectory1 FrameworksInRuntimesNativeDirectory2
 # These frameworks are used in the BundleStructure test
 NAMES+=FrameworkTest1 FrameworkTest2 FrameworkTest3 FrameworkTest4 FrameworkTest5
 NAMES+=UnknownD UnknownE UnknownF1 UnknownF2 SomewhatUnknownD SomewhatUnknownE SomewhatUnknownF1 SomewhatUnknownF2
+# Used in mmptest
+NAMES+=MmpTestFramework
 
 # These plugins are used in the BundleStructure test
 PLUGINS=PlugInA CompressedPlugInB PlugInC CompressedPlugInD
