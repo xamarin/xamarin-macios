@@ -51,11 +51,19 @@ namespace AudioToolbox {
 
 	public static class SoundBank {
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // 10.5
+#endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus CopyNameFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFStringRef */ ref IntPtr outName);
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // 10.5
+#endif
 		public static string GetName (NSUrl url)
 		{
 			if (url == null)
@@ -71,11 +79,23 @@ namespace AudioToolbox {
 			return (error != 0) ? null : result;
 		}
 
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus CopyInstrumentInfoFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFSArrayRef */ ref IntPtr outInstrumentInfo);
 
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		public static InstrumentInfo [] GetInstrumentInfo (NSUrl url)
 		{
 			if (url == null)

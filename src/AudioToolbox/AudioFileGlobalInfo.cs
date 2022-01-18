@@ -244,7 +244,7 @@ namespace AudioToolbox {
 		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, IntPtr inSpecifier, ref uint ioDataSize, out uint outPropertyData);
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioFileTypeAndFormatID
 	{
 		public AudioFileType FileType;

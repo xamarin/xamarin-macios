@@ -53,7 +53,16 @@ namespace AudioToolbox {
 		AIFF = 0x41494646, // AIFF
 		AIFC = 0x41494643, // AIFC
 		WAVE = 0x57415645, // WAVE
-		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[NoWatch]
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+#endif
 		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
 		Next = 0x4e655854, // NeXT
@@ -69,9 +78,27 @@ namespace AudioToolbox {
 		ThreeGP = 0x33677070, // 3gpp
 		ThreeGP2 = 0x33677032, // 3gp2
 		AMR = 0x616d7266, // amrf
-		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[NoWatch]
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+#endif
 		FLAC =  0x666c6163, // flac
-		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[NoWatch]
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
+#endif
 		LatmInLoas = 0x6c6f6173, // loas
 	}
 
@@ -174,14 +201,14 @@ namespace AudioToolbox {
 		CAFiXML					= 0x69584d4c,	// 'iXML'
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioFramePacketTranslation {
 		public long Frame;
 		public long Packet;
 		public int FrameOffsetInPacket;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioBytePacketTranslation {
 		public long Byte;
 		public long Packet;
@@ -195,7 +222,7 @@ namespace AudioToolbox {
 		IsEstimate = 1
 	}
 	
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileSmpteTime { // AudioFile_SMPTE_Time
 		public sbyte Hours;
 		public byte  Minutes;
@@ -204,7 +231,7 @@ namespace AudioToolbox {
 		public uint  SubFrameSampleOffset;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileMarker {
 		public double FramePosition;
 		internal IntPtr Name_cfstringref;
@@ -221,7 +248,16 @@ namespace AudioToolbox {
 		}
 	}
 
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRangeByteCountTranslation {
 		public long Packet;
@@ -229,21 +265,48 @@ namespace AudioToolbox {
 		public long ByteCountUpperBound;
 	}
 
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRollDistanceTranslation {
 		public long Packet;
 		public long RollDistance;
 	}
 
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioIndependentPacketTranslation {
 		public long Packet;
 		public long IndependentlyDecodablePacket;
 	}
 
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {
 		public long Packet;
@@ -353,7 +416,7 @@ namespace AudioToolbox {
 		}
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFilePacketTableInfo
 	{
 		public long ValidFrames;
@@ -361,7 +424,7 @@ namespace AudioToolbox {
 		public int RemainderFrames;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileRegion {
 		readonly IntPtr ptr;
 		//
@@ -1691,7 +1754,7 @@ namespace AudioToolbox {
 			dSetSize = SourceSetSize;
 		}
 
-		[MonoPInvokeCallback(typeof(ReadProc))]
+		[MonoPInvokeCallback (typeof(ReadProc))]
 		static int SourceRead (IntPtr clientData, long inPosition, int requestCount, IntPtr buffer, out int actualCount)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
@@ -1702,7 +1765,7 @@ namespace AudioToolbox {
 
 		public abstract bool Read (long position, int requestCount, IntPtr buffer, out int actualCount);
 
-		[MonoPInvokeCallback(typeof(WriteProc))]
+		[MonoPInvokeCallback (typeof(WriteProc))]
 		static int SourceWrite (IntPtr clientData, long position, int requestCount, IntPtr buffer, out int actualCount)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
@@ -1712,7 +1775,7 @@ namespace AudioToolbox {
 		}
 		public abstract bool Write (long position, int requestCount, IntPtr buffer, out int actualCount);
 
-		[MonoPInvokeCallback(typeof(GetSizeProc))]
+		[MonoPInvokeCallback (typeof(GetSizeProc))]
 		static long SourceGetSize (IntPtr clientData)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
@@ -1720,7 +1783,7 @@ namespace AudioToolbox {
 			return audioSource?.Size ?? 0;
 		}
 
-		[MonoPInvokeCallback(typeof(SetSizeProc))]
+		[MonoPInvokeCallback (typeof(SetSizeProc))]
 		static int SourceSetSize (IntPtr clientData, long size)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
