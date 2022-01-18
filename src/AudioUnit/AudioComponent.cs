@@ -235,6 +235,7 @@ namespace AudioUnit
 
 	public class AudioComponent : DisposableObject {
 #if !COREBUILD
+		[Preserve (Conditional = true)]
 		internal AudioComponent (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{ 

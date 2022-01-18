@@ -58,6 +58,7 @@ namespace AddressBook {
 #endif
 #endif
 	public class ABSource : ABRecord {
+		[Preserve (Conditional = true)]
 		internal ABSource (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

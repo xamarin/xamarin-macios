@@ -154,6 +154,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationFree (IntPtr handle, AuthorizationFlags flags);
 		
+		[Preserve (Conditional = true)]
 		internal Authorization (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

@@ -1485,6 +1485,7 @@ namespace CoreText {
 	}
 
 	public partial class CTFont : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTFont (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{

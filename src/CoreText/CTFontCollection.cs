@@ -99,6 +99,7 @@ namespace CoreText {
 	}
 
 	public class CTFontCollection : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTFontCollection (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
