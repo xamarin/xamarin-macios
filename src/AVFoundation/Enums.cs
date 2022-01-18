@@ -200,7 +200,7 @@ namespace AVFoundation {
 #if NET
 	[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
-	[Obsolete ("Starting with ios6.0", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 	[Deprecated (PlatformName.iOS, 6, 0)]
@@ -326,7 +326,7 @@ namespace AVFoundation {
 #if NET
 	[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
-	[Obsolete ("Starting with ios6.0", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 	[UnsupportedOSPlatform ("tvos")]
 #else
@@ -1169,7 +1169,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("macos12.4")]
+	[SupportedOSPlatform ("macos10.12.4")]
 	[SupportedOSPlatform ("ios10.3")]
 #else
 	[TV (10, 2)]
@@ -1189,7 +1189,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("macos12.4")]
+	[SupportedOSPlatform ("macos10.12.4")]
 	[SupportedOSPlatform ("ios10.3")]
 #else
 	[TV (10, 2)]
@@ -1208,7 +1208,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("macos12.4")]
+	[SupportedOSPlatform ("macos10.12.4")]
 	[SupportedOSPlatform ("ios10.3")]
 #else
 	[TV (10, 2)]
@@ -1983,7 +1983,7 @@ namespace AVFoundation {
 #if !WATCH
 #if NET
 	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("macos12.4")]
+	[SupportedOSPlatform ("macos10.12.4")]
 	[SupportedOSPlatform ("ios10.3")]
 #else
 	[TV (10, 2)]

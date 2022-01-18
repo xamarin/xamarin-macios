@@ -23,7 +23,7 @@ namespace AVKit {
 		[SupportedOSPlatform ("ios8.0")]
 		[UnsupportedOSPlatform ("macos")]
 #if IOS
-		[Obsolete ("Starting with ios", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
