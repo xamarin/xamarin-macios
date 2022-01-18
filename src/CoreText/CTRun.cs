@@ -53,6 +53,7 @@ namespace CoreText {
 	}
 
 	public class CTRun : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTRun (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{

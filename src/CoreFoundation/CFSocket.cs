@@ -33,7 +33,9 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+
 using CoreFoundation;
+using Foundation;
 using ObjCRuntime;
 
 #if !NET
@@ -335,6 +337,7 @@ namespace CoreFoundation {
 			}
 		}
 
+		[Preserve (Conditional = true)]
 		CFSocket (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

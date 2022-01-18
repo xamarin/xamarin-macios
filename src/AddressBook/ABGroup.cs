@@ -97,6 +97,7 @@ namespace AddressBook {
 			Handle = ABGroupCreateInSource (source.Handle);
 		}
 
+		[Preserve (Conditional = true)]
 		internal ABGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

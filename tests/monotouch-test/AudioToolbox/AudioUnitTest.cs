@@ -32,13 +32,16 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var audioComponent = AudioComponent.FindComponent (AudioTypeOutput.VoiceProcessingIO);
 			using var audioUnit = new global::AudioUnit.AudioUnit (audioComponent);
 
-			audioUnit.SetInputCallback (InputCallback, AudioUnitScopeType.Input, 1);
-			audioUnit.Initialize ();
+			var rv = audioUnit.SetInputCallback (InputCallback, AudioUnitScopeType.Input, 1);
+			if (rv == AudioUnitStatus.CannotDoInCurrentContext)
+				Assert.Ignore ("Can't set input callback"); // No microphone? In a VM? This seems to happen often on bots.
+			Assert.AreEqual (AudioUnitStatus.OK, rv, "SetInputCallback");
+			Assert.AreEqual (AudioUnitStatus.OK, audioUnit.Initialize (), "Initialize");
 			try {
-				audioUnit.Start ();
+				Assert.AreEqual (AudioUnitStatus.OK, audioUnit.Start (), "Start");
 				Assert.IsTrue (inputCallbackEvent.WaitOne (TimeSpan.FromSeconds (1)), "No input callback for 1 second");
 			} finally {
-				audioUnit.Stop ();
+				Assert.AreEqual (AudioUnitStatus.OK, audioUnit.Stop (), "Stop");
 			}
 		}
 

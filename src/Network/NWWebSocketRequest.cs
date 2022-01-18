@@ -33,6 +33,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWWebSocketRequest : NativeObject {
+		[Preserve (Conditional = true)]
 		internal NWWebSocketRequest (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

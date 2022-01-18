@@ -42,6 +42,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWFramer : NativeObject {
+		[Preserve (Conditional = true)]
 		internal NWFramer (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

@@ -39,6 +39,7 @@ namespace CoreFoundation {
 
 	public partial class DispatchData : DispatchObject {
 #if !COREBUILD
+		[Preserve (Conditional = true)]
 #if NET
 		internal DispatchData (NativeHandle handle, bool owns) : base (handle, owns)
 #else

@@ -140,7 +140,7 @@ namespace Foundation
 
 	delegate bool NSEnumerateErrorHandler (NSUrl url, NSError error);
 	delegate void NSMetadataQueryEnumerationCallback (NSObject result, nuint idx, ref bool stop);
-#if XAMCORE_4_0
+#if NET
 	delegate void NSItemProviderCompletionHandler (INSSecureCoding item, NSError error);
 #else
 	delegate void NSItemProviderCompletionHandler (NSObject itemBeingLoaded, NSError error);
@@ -1140,14 +1140,14 @@ namespace Foundation
 		void RemoveCharacters (NSRange aRange);
 		
 		[Export ("addCharactersInString:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		void AddCharacters (string str);
 #else
 		void AddCharacters (NSString str);
 #endif
 		
 		[Export ("removeCharactersInString:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		void RemoveCharacters (string str);
 #else
 		void RemoveCharacters (NSString str);
@@ -2410,7 +2410,7 @@ namespace Foundation
 		[Static]
 		[Export ("archivedDataWithRootObject:requiringSecureCoding:error:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSData GetArchivedData (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
 #else
 		NSData ArchivedDataWithRootObject (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
@@ -2422,7 +2422,7 @@ namespace Foundation
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archivedDataWithRootObject:")]
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		NSData GetArchivedData (NSObject root);
 #else
 		NSData ArchivedDataWithRootObject (NSObject root);
@@ -3450,7 +3450,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_4_0
+#if NET
 	[DisableDefaultCtor] // points to nothing so access properties crash the apps
 #endif
 	interface NSMetadataItem {
@@ -4017,7 +4017,7 @@ namespace Foundation
 		[Field ("NSURLErrorDomain")]
 		NSString NSUrlErrorDomain { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[NoWatch]
 #else
 		[Obsoleted (PlatformName.WatchOS, 7,0)]
@@ -4178,7 +4178,7 @@ namespace Foundation
 		string[] CallStackSymbols { get; }
 	}
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	[Obsolete("NSExpressionHandler is deprecated, please use FromFormat (string, NSObject[]) instead.")]
 	delegate void NSExpressionHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
 #endif
@@ -4205,7 +4205,7 @@ namespace Foundation
 		[Static, Export ("expressionWithFormat:")]
 		NSExpression FromFormat (string expressionFormat);
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete("Use 'FromFormat (string, NSObject[])' instead.")]
 		[Static, Export ("expressionWithFormat:argumentArray:")]
 		NSExpression FromFormat (string format, NSExpression [] parameters);
@@ -4234,7 +4234,7 @@ namespace Foundation
 		[Static, Export ("expressionForFunction:selectorName:arguments:")]
 		NSExpression FromFunction (NSExpression target, string name, NSExpression[] parameters);
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete("Use 'FromFunction (NSExpressionCallbackHandler, NSExpression[])' instead.")]
 		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);
@@ -4819,14 +4819,14 @@ namespace Foundation
 		[Export ("enumerateMatchesInString:options:range:usingBlock:")]
 		void EnumerateMatches (NSString str, NSMatchingOptions options, NSRange range, NSMatchEnumerator enumerator);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetMatches2' instead, this method has the wrong return type.")]
 		[Export ("matchesInString:options:range:")]
 		NSString [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
 #endif
 
 		[Export ("matchesInString:options:range:")]
-#if XAMCORE_4_0
+#if NET
 		NSTextCheckingResult [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
 #else
 		[Sealed]
@@ -6663,7 +6663,7 @@ namespace Foundation
 	}
 
 	[Protocol (Name = "NSURLAuthenticationChallengeSender")]
-#if XAMCORE_4_0
+#if NET
 	interface NSUrlAuthenticationChallengeSender {
 #else
 	[Model]
@@ -6694,7 +6694,7 @@ namespace Foundation
 	
 	[BaseType (typeof (NSObject), Name="NSURLConnection")]
 	interface NSUrlConnection : 
-#if XAMCORE_4_0
+#if NET
 		NSUrlAuthenticationChallengeSender
 #else
 		NSURLAuthenticationChallengeSender
@@ -6950,7 +6950,7 @@ namespace Foundation
 		
 	}
 
-#if XAMCORE_4_0
+#if NET
 	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
 #elif XAMCORE_3_0
 	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
@@ -6993,7 +6993,7 @@ namespace Foundation
 		[Static, Export ("sessionWithConfiguration:delegate:delegateQueue:")]
 		NSUrlSession FromWeakConfiguration (NSUrlSessionConfiguration configuration, [NullAllowed] NSObject weakDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 	
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
 		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
@@ -7039,15 +7039,15 @@ namespace Foundation
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
-#elif XAMCORE_4_0
-		// Fixed version (breaking change) only for XAMCORE_4_0
+#elif NET
+		// Fixed version (breaking change) only for NET
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
 #endif
 
-#if !XAMCORE_4_0
-		// Workaround, not needed for XAMCORE_4_0+
+#if !NET
+		// Workaround, not needed for NET+
 		[Sealed]
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks2")]
@@ -7991,6 +7991,8 @@ namespace Foundation
 		[Export ("addEntriesFromDictionary:")]
 		void AddEntries (NSDictionary other);
 	}
+
+	interface NSMutableDictionary<K,V> : NSDictionary {}
 
 	[BaseType (typeof (NSSet))]
 	[DesignatedDefaultCtor]
@@ -10751,7 +10753,7 @@ namespace Foundation
 	interface NSDistributedNotificationCenter {
 		[Static]
 		[Export ("defaultCenter")]
-#if XAMCORE_4_0
+#if NET
 		NSDistributedNotificationCenter DefaultCenter { get; }
 #else
 		NSDistributedNotificationCenter GetDefaultCenter ();
@@ -10805,7 +10807,7 @@ namespace Foundation
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle);
 
 		[Export ("enqueueNotification:postingStyle:coalesceMask:forModes:")]
-#if !XAMCORE_4_0
+#if !NET
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, [NullAllowed] string [] modes);
 #else
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, [NullAllowed] NSString [] modes);
@@ -11041,10 +11043,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-#if !MONOMAC || !XAMCORE_4_0
-	// there were some, partial bindings in foundation-desktop.cs which did not define it as abstract for XM :(
 	[Abstract] // Apple docs: NSValueTransformer is an abstract class...
-#endif
 	interface NSValueTransformer {
 		[Static]
 		[Export ("setValueTransformer:forName:")]
@@ -11075,7 +11074,7 @@ namespace Foundation
 		[return: NullAllowed]
 		NSObject ReverseTransformedValue ([NullAllowed] NSObject value);
 
-#if IOS && !XAMCORE_4_0
+#if IOS && !NET
 		[iOS (9, 3)]
 		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
@@ -12163,7 +12162,7 @@ namespace Foundation
 	[iOS (9,0)][Mac (10,11)]
 	[Protocol]
 	interface NSProgressReporting {
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("progress")]
@@ -12215,7 +12214,7 @@ namespace Foundation
 		[Export ("initWithFilePresenter:")]
 		NativeHandle Constructor ([NullAllowed] INSFilePresenter filePresenterOrNil);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use '.ctor(INSFilePresenter)' instead.")]
 		[Wrap ("this (filePresenterOrNil as INSFilePresenter)")]
 		NativeHandle Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
@@ -12233,7 +12232,7 @@ namespace Foundation
 		[Export ("coordinateWritingItemAtURL:options:writingItemAtURL:options:error:byAccessor:")]
 		void CoordinateWriteWrite (NSUrl writingURL, NSFileCoordinatorWritingOptions writingOptions, NSUrl writingURL2, NSFileCoordinatorWritingOptions writingOptions2, out NSError error, /* non null */ NSFileCoordinatorWorkerRW writeWriteWorker);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CoordinateBatch' instead.")]
 		[Wrap ("CoordinateBatch (readingURLs, readingOptions, writingURLs, writingOptions, out error, batchHandler)", IsVirtual = true)]
 		void CoordinateBatc (NSUrl [] readingURLs, NSFileCoordinatorReadingOptions readingOptions, NSUrl [] writingURLs, NSFileCoordinatorWritingOptions writingOptions, out NSError error, /* non null */ Action batchHandler);
@@ -12669,7 +12668,7 @@ namespace Foundation
 	partial interface NSFilePresenter {
 		[Abstract]
 		[Export ("presentedItemURL", ArgumentSemantic.Retain)]
-#if XAMCORE_4_0
+#if NET
 		NSUrl PresentedItemUrl { get; }
 #else
 		NSUrl PresentedItemURL { get; }
@@ -12677,7 +12676,7 @@ namespace Foundation
 
 		[Abstract]
 		[Export ("presentedItemOperationQueue", ArgumentSemantic.Retain)]
-#if XAMCORE_4_0
+#if NET
 		NSOperationQueue PresentedItemOperationQueue { get; }
 #else
 		NSOperationQueue PesentedItemOperationQueue { get; }
@@ -14499,7 +14498,7 @@ namespace Foundation
 		[Export ("terminationReason")]
 		NSTaskTerminationReason TerminationReason { get; }
 
-#if !XAMCORE_4_0 && MONOMAC
+#if !NET && MONOMAC
 		[Field ("NSTaskDidTerminateNotification")]
 		NSString NSTaskDidTerminateNotification { get; }
 #endif

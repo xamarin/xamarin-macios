@@ -56,6 +56,7 @@ namespace CoreText {
 #endregion
 
 	public class CTGlyphInfo : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTGlyphInfo (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{

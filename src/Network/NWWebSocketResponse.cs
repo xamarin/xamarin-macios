@@ -34,6 +34,7 @@ namespace Network {
 #endif
 	public class NWWebSocketResponse : NativeObject {
 
+		[Preserve (Conditional = true)]
 		internal NWWebSocketResponse (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]

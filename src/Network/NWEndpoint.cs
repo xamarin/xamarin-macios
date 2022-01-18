@@ -34,6 +34,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWEndpoint : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else

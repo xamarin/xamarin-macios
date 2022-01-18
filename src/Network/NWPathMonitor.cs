@@ -33,6 +33,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWPathMonitor : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else

@@ -84,7 +84,7 @@ namespace AppKit {
 namespace UIKit {
 #endif
 
-#if XAMCORE_4_0 || MONOMAC
+#if NET || MONOMAC
 	delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, out bool stop);
 	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, out bool stop);
 #else
@@ -2325,7 +2325,7 @@ namespace UIKit {
 		[Mac (10, 12)]
 		[iOS (10,0), TV (10,0)]
 		[Export ("firstAnchor", ArgumentSemantic.Copy)]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		NSLayoutAnchor<NSObject> FirstAnchor { get; }
 #else
 		[Internal]
@@ -2335,7 +2335,7 @@ namespace UIKit {
 		[Mac (10, 12)]
 		[iOS (10,0), TV (10,0)]
 		[Export ("secondAnchor", ArgumentSemantic.Copy)]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[NullAllowed]
 		NSLayoutAnchor<NSObject> SecondAnchor { get; }
 #else

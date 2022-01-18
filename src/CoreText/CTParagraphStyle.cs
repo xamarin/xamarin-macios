@@ -320,6 +320,7 @@ namespace CoreText {
 	}
 
 	public class CTParagraphStyle : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTParagraphStyle (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{

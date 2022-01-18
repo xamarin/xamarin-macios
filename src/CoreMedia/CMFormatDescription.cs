@@ -293,6 +293,7 @@ namespace CoreMedia {
 	[Watch (6,0)]
 #endif
 	public class CMAudioFormatDescription : CMFormatDescription {
+		[Preserve (Conditional = true)]
 		internal CMAudioFormatDescription (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -305,6 +306,7 @@ namespace CoreMedia {
 	[Watch (6,0)]
 #endif
 	public partial class CMVideoFormatDescription : CMFormatDescription {
+		[Preserve (Conditional = true)]
 		internal CMVideoFormatDescription (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
