@@ -1140,14 +1140,14 @@ namespace Foundation
 		void RemoveCharacters (NSRange aRange);
 		
 		[Export ("addCharactersInString:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		void AddCharacters (string str);
 #else
 		void AddCharacters (NSString str);
 #endif
 		
 		[Export ("removeCharactersInString:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		void RemoveCharacters (string str);
 #else
 		void RemoveCharacters (NSString str);
