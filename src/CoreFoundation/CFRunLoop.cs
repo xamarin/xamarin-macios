@@ -209,12 +209,6 @@ namespace CoreFoundation {
 	}
 #endif
 
-#if NET
-// the default implementation of Equals and GetHashCode from DisposableObject
-// are fine (compatible) with how the == and != operators are implemented
-#pragma warning disable 660
-#pragma warning disable 661
-#endif
 	public partial class CFRunLoop : NativeObject
 	{
 #if !COREBUILD
@@ -329,6 +323,7 @@ namespace CoreFoundation {
 		{
 		}
 
+#if !NET
 		public static bool operator == (CFRunLoop a, CFRunLoop b)
 		{
 			if (a is null)
@@ -348,7 +343,6 @@ namespace CoreFoundation {
 			return a.Handle != b.Handle;
 		}
 
-#if !NET
 		// For the .net profile `DisposableObject` implements both
 		// `Equals` and `GetHashCode` based on the Handle property.
 		public override int GetHashCode ()

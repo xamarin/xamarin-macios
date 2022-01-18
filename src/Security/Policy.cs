@@ -42,13 +42,6 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
-#if NET
-// the default implementation of Equals and GetHashCode from DisposableObject
-// are fine (compatible) with how the == and != operators are implemented
-#pragma warning disable 660
-#pragma warning disable 661
-#endif
-
 	public partial class SecPolicy : NativeObject {
 #if !NET
 		public SecPolicy (NativeHandle handle)
@@ -87,6 +80,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary, EntryPoint="SecPolicyGetTypeID")]
 		public extern static nint GetTypeID ();
 
+#if !NET
 		public static bool operator == (SecPolicy? a, SecPolicy? b)
 		{
 			if (a is null)
@@ -106,7 +100,6 @@ namespace Security {
 			return a.Handle != b.Handle;
 		}
 
-#if !NET
 		// For the .net profile `DisposableObject` implements both
 		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object? other)

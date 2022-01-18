@@ -64,13 +64,6 @@ namespace CoreFoundation {
 		Unspecified     = 0x00,
 	}
 	
-#if NET
-// the default implementation of Equals and GetHashCode from DisposableObject
-// are fine (compatible) with how the == and != operators are implemented
-#pragma warning disable 660
-#pragma warning disable 661
-#endif
-
 	public abstract class DispatchObject : NativeObject
 	{
 #if !COREBUILD
@@ -103,6 +96,7 @@ namespace CoreFoundation {
 			dispatch_release (Handle);
 		}
 
+#if !NET
 		public static bool operator == (DispatchObject a, DispatchObject b)
 		{
 			if (a is null)
@@ -122,7 +116,6 @@ namespace CoreFoundation {
 			return a.Handle != b.Handle;
 		}
 
-#if !NET
 		// For the .net profile `DisposableObject` implements both
 		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
@@ -600,6 +593,7 @@ namespace CoreFoundation {
 		}
 #endif
 
+#if !NET
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
 		{
 			if ((object) left == null)
@@ -614,7 +608,6 @@ namespace CoreFoundation {
 			return !left.Equals (right);
 		}
 
-#if !NET
 		public override int GetHashCode ()
 		{
 			return ((IntPtr) Handle).ToInt32 ();
