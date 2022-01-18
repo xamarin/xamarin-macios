@@ -12,9 +12,6 @@
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=35021
 !missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 
-## the API exists but is [Sealed], until XAMCORE_4_0, to keep compatible with iOS/Mac profiles
-!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
-
 # missing - pending decision for implementation
 !missing-type! NSAssertionHandler not bound
 !missing-field! NSAssertionHandlerKey not bound
