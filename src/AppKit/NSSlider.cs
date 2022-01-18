@@ -38,9 +38,7 @@ namespace AppKit {
 	public partial class NSSlider {
 		NSActionDispatcher dispatcher;
 
-#if !NET
 		[Mac (10,12)]
-#endif
 		public static NSSlider FromTarget (Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -49,9 +47,7 @@ namespace AppKit {
 			return control;
 		}
 
-#if !NET
 		[Mac (10,12)]
-#endif
 		public static NSSlider FromValue (double value, double minValue, double maxValue, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);

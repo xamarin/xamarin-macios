@@ -20,20 +20,14 @@ using ObjCRuntime;
 
 namespace AppKit
 {
-#if !NET
 	[Mac (10,10)] // protocol added in 10.10
-#endif
 	public partial interface INSAccessibility {}
 
-#if !NET
 	[Mac (10,9)] // but the field/notifications are in 10.9
-#endif
 	public partial class NSAccessibility
 	{
 #if !COREBUILD
-#if !NET
 		[Mac (10,10)]
-#endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGRect NSAccessibilityFrameInView (NSView parentView, CGRect frame);
 
@@ -42,9 +36,7 @@ namespace AppKit
 			return NSAccessibilityFrameInView (parentView, frame);
 		}
 
-#if !NET
 		[Mac (10,10)]
-#endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGPoint NSAccessibilityPointInView (NSView parentView, CGPoint point);
 
