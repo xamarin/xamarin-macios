@@ -15323,7 +15323,7 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Protocol]
-#if !XAMCORE_4_0
+#if !NET
 	[Model]
 	[BaseType (typeof (NSObject))]
 #endif
@@ -15374,13 +15374,21 @@ namespace AppKit {
 		[Abstract]
 #endif
 		[Export ("stringAtIndex:effectiveRange:endsWithSearchBoundary:")]
+#if NET
+		string GetString (nuint index, out NSRange effectiveRange, bool endsWithSearchBoundary);
+#else
 		string StringAtIndexeffectiveRangeendsWithSearchBoundary (nuint characterIndex, ref NSRange outRange, bool outFlag);
+#endif
 
 #if !NET
 		[Abstract]
 #endif
 		[Export ("stringLength")]
+#if NET
+		nuint StringLength { get; }
+#else
 		nuint StringLength ();
+#endif
 
 #if !NET
 		[Abstract]
@@ -15392,13 +15400,21 @@ namespace AppKit {
 		[Abstract]
 #endif
 		[Export ("shouldReplaceCharactersInRanges:withStrings:")]
+#if NET
+		bool ShouldReplaceCharacters (NSArray ranges, NSArray strings);
+#else
 		bool ShouldReplaceCharactersInRangeswithStrings (NSArray ranges, NSArray strings);
+#endif
 
 #if !NET
 		[Abstract]
 #endif
 		[Export ("replaceCharactersInRange:withString:")]
+#if NET
+		void ReplaceCharacters (NSRange range, string str);
+#else
 		void ReplaceCharactersInRangewithString (NSRange range, string str);
+#endif
 
 #if !NET
 		[Abstract]
@@ -15410,19 +15426,27 @@ namespace AppKit {
 		[Abstract]
 #endif
 		[Export ("contentViewAtIndex:effectiveCharacterRange:")]
+#if NET
+		NSView GetContentView (nuint index, out NSRange outRange);
+#else
 		NSView ContentViewAtIndexeffectiveCharacterRange (nuint index, ref NSRange outRange);
+#endif
 
 #if !NET
 		[Abstract]
 #endif
 		[Export ("rectsForCharacterRange:")]
+#if NET
+		NSArray GetRects (NSRange characterRange);
+#else
 		NSArray RectsForCharacterRange (NSRange range);
+#endif
 
 #if !NET
 		[Abstract]
 #endif
 		[Export ("drawCharactersInRange:forContentView:")]
-#if !XAMCORE_4_0
+#if !NET
 		void DrawCharactersInRangeforContentView (NSRange range, NSView view);
 #else
 		void DrawCharacters (NSRange range, NSView view);

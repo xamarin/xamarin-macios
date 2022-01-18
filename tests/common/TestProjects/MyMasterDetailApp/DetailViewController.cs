@@ -55,7 +55,7 @@ namespace MyMasterDetailApp
 		[Export ("splitViewController:willHideViewController:withBarButtonItem:forPopoverController:")]
 		public void WillHideViewController (UISplitViewController splitController, UIViewController viewController, UIBarButtonItem barButtonItem, UIPopoverController popoverController)
 		{
-			barButtonItem.Title = NSBundle.MainBundle.LocalizedString ("Master", "Master");
+			barButtonItem.Title = NSBundle.MainBundle.GetLocalizedString ("Master", "Master");
 			NavigationItem.SetLeftBarButtonItem (barButtonItem, true);
 			masterPopoverController = popoverController;
 		}

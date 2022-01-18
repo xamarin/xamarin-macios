@@ -140,7 +140,7 @@ namespace Foundation
 
 	delegate bool NSEnumerateErrorHandler (NSUrl url, NSError error);
 	delegate void NSMetadataQueryEnumerationCallback (NSObject result, nuint idx, ref bool stop);
-#if XAMCORE_4_0
+#if NET
 	delegate void NSItemProviderCompletionHandler (INSSecureCoding item, NSError error);
 #else
 	delegate void NSItemProviderCompletionHandler (NSObject itemBeingLoaded, NSError error);
@@ -1140,14 +1140,14 @@ namespace Foundation
 		void RemoveCharacters (NSRange aRange);
 		
 		[Export ("addCharactersInString:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		void AddCharacters (string str);
 #else
 		void AddCharacters (NSString str);
 #endif
 		
 		[Export ("removeCharactersInString:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		void RemoveCharacters (string str);
 #else
 		void RemoveCharacters (NSString str);
@@ -2410,7 +2410,7 @@ namespace Foundation
 		[Static]
 		[Export ("archivedDataWithRootObject:requiringSecureCoding:error:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSData GetArchivedData (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
 #else
 		NSData ArchivedDataWithRootObject (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
@@ -2422,7 +2422,7 @@ namespace Foundation
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archivedDataWithRootObject:")]
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		NSData GetArchivedData (NSObject root);
 #else
 		NSData ArchivedDataWithRootObject (NSObject root);
@@ -3450,7 +3450,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_4_0
+#if NET
 	[DisableDefaultCtor] // points to nothing so access properties crash the apps
 #endif
 	interface NSMetadataItem {
@@ -6950,7 +6950,7 @@ namespace Foundation
 		
 	}
 
-#if XAMCORE_4_0
+#if NET
 	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
 #elif XAMCORE_3_0
 	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
@@ -7039,15 +7039,15 @@ namespace Foundation
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
-#elif XAMCORE_4_0
-		// Fixed version (breaking change) only for XAMCORE_4_0
+#elif NET
+		// Fixed version (breaking change) only for NET
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
 #endif
 
-#if !XAMCORE_4_0
-		// Workaround, not needed for XAMCORE_4_0+
+#if !NET
+		// Workaround, not needed for NET+
 		[Sealed]
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionActiveTasks2")]

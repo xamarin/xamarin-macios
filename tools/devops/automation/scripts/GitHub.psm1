@@ -427,7 +427,7 @@ function Write-APIDiffContent {
             $StringBuilder.AppendLine($apidiffcomments)
         }
     } else {
-        $StringBuilder.AppendLine("Generator diff comments have not been provided.")
+        $StringBuilder.AppendLine("* :warning: Generator diff comments have not been provided.")
     }
 }
 
@@ -533,7 +533,10 @@ function New-GitHubSummaryComment {
         $APIGeneratorDiffJson="",
 
         [string]
-        $APIGeneratorDiff=""
+        $APIGeneratorDiff="",
+
+        [switch]
+        $DeviceTest
     )
 
     $envVars = @{
@@ -563,9 +566,11 @@ function New-GitHubSummaryComment {
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
 
-    Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
+    if (-not $DeviceTest) {
+        Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
 
-    Write-Artifacts -StringBuilder $sb -Artifacts $Artifacts
+        Write-Artifacts -StringBuilder $sb -Artifacts $Artifacts
+    }
 
     if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
         $githubPagePrefix = "https://xamarin.github.io/macios.ci"

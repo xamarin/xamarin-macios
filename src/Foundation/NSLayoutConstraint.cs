@@ -118,7 +118,7 @@ namespace UIKit
 			return Create ((INativeObject) view1, attribute1, relation, view2, attribute2, multiplier, constant);
 		}
 
-#if !MONOMAC || XAMCORE_4_0
+#if !MONOMAC || NET
 #if !NET
 		[iOS (10, 0)]
 #endif
@@ -134,7 +134,7 @@ namespace UIKit
 		{
 			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_SecondAnchor ());
 		}
-#endif // !MONOMAC || XAMCORE_4_0
+#endif // !MONOMAC || NET
 	}
 }
 
