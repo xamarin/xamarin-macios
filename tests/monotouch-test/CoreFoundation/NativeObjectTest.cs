@@ -118,7 +118,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void Equals ()
 		{
-			// overriden Equals with weird behabiour to confim it can't be anything else
+			// overriden Equals with weird behavior to confirm it can't be anything else
 			using (var x = new FakeNativeObject ((IntPtr) 42, true)) {
 				Assert.False (x.Equals (x), "self");
 				Assert.True (x.Equals (null), "null");
