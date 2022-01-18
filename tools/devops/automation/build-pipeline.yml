@@ -28,6 +28,7 @@ parameters:
   default: true
 
 - name: runGovernanceTests
+  displayName: Run Governance Checks
   type: boolean
   default: true 
 
