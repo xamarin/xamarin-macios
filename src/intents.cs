@@ -2225,11 +2225,7 @@ namespace Intents {
 		School,
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
+	[Mac (12, 1)]
 	[iOS (10, 2)]
 	[Watch (3, 2)]
 	[NoTV]
@@ -2237,36 +2233,91 @@ namespace Intents {
 		[Field (null)]
 		None,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFather")]
 		Father,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipMother")]
 		Mother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipParent")]
 		Parent,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipBrother")]
 		Brother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSister")]
 		Sister,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipChild")]
 		Child,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFriend")]
 		Friend,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSpouse")]
 		Spouse,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipPartner")]
 		Partner,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipAssistant")]
 		Assistant,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipManager")]
 		Manager,
 

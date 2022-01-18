@@ -30,19 +30,6 @@
 !missing-type! INTicketedEvent not bound
 !missing-type! INTicketedEventReservation not bound
 
-## Apple fixed API availability fixed in XAMCORE_4_0
-!unknown-field! INPersonRelationshipAssistant bound
-!unknown-field! INPersonRelationshipBrother bound
-!unknown-field! INPersonRelationshipChild bound
-!unknown-field! INPersonRelationshipFather bound
-!unknown-field! INPersonRelationshipFriend bound
-!unknown-field! INPersonRelationshipManager bound
-!unknown-field! INPersonRelationshipMother bound
-!unknown-field! INPersonRelationshipParent bound
-!unknown-field! INPersonRelationshipPartner bound
-!unknown-field! INPersonRelationshipSister bound
-!unknown-field! INPersonRelationshipSpouse bound
-
 ## Headers say Mac (12,0) but types used in properties are still NoMac
 !missing-protocol! INStartCallIntentHandling not bound
 
