@@ -889,12 +889,12 @@ Luminosity
 	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
 #if NET
 	[UnsupportedOSPlatform ("maccatalyst")]
+	public enum NSKey {
 #else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSKey : ulong {
-// #endif
+#endif
 		A              = 0x00,
 		S              = 0x01,
 		D              = 0x02,
@@ -1017,14 +1017,12 @@ Luminosity
 	// This is an untyped enum in AppKit's NSEvent.h
 #if NET
 	[UnsupportedOSPlatform ("maccatalyst")]
+	public enum NSFunctionKey : int {
 #else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSFunctionKey : ulong {
-// #else
-	// public enum NSFunctionKey : int {
-// #endif
+#endif
 		UpArrow        = 0xF700,
 		DownArrow      = 0xF701,
 		LeftArrow      = 0xF702,
@@ -1101,14 +1099,12 @@ Luminosity
 
 #if NET
 	[UnsupportedOSPlatform ("maccatalyst")]
+	public enum NSEventSubtype : short {
 #else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSEventSubtype : ulong {
-// #else
-// 	public enum NSEventSubtype : short {
-// #endif
+#endif
 		/* event subtypes for NSEventTypeAppKitDefined events */
 		WindowExposed = 0,
 		ApplicationActivated = 1,
