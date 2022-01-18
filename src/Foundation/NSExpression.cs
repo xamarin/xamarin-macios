@@ -170,7 +170,7 @@ namespace Foundation {
 			}
 		}
 		
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete("Use 'EvaluateWith' instead.")]
 		public virtual NSExpression ExpressionValueWithObject (NSObject obj, NSMutableDictionary context) {
 			var result = EvaluateWith (obj, context);

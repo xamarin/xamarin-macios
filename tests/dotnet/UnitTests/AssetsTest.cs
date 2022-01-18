@@ -63,7 +63,7 @@ namespace Xamarin.Tests {
 		public void TestXCAssets ()
 		{
 			var appExecutable = GetNativeExecutable (platform, appPath);
-			DotNetProjectTest.ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
 			var resourcesDirectory = GetResourcesDirectory (platform, appPath);
 

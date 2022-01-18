@@ -27,7 +27,7 @@
 !missing-field! NSReplacementIndexAttributeName not bound
 !missing-null-allowed! 'Foundation.NSData Foundation.NSUbiquitousKeyValueStore::GetData(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUbiquitousKeyValueStore::GetDictionary(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
+!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSUbiquitousKeyValueStore::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject[] Foundation.NSUbiquitousKeyValueStore::GetArray(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSUbiquitousKeyValueStore::GetString(System.String)' is missing an [NullAllowed] on return type
