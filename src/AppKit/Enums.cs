@@ -197,105 +197,105 @@ namespace AppKit {
 #else
 		[Mac (10,10)]
 #endif
-Multiply,
+		Multiply,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Screen,
+		Screen,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Overlay,
+		Overlay,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Darken,
+		Darken,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Lighten,
+		Lighten,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-ColorDodge,
+		ColorDodge,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-ColorBurn,
+		ColorBurn,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-SoftLight,
+		SoftLight,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-HardLight,
+		HardLight,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Difference,
+		Difference,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Exclusion,
+		Exclusion,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Hue,
+		Hue,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Saturation,
+		Saturation,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Color,
+		Color,
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
-Luminosity
+		Luminosity
 	}
 
 #if NET
