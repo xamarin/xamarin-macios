@@ -2229,7 +2229,7 @@ namespace Intents {
 		School,
 	}
 
-	[Mac (12, 1)]
+	[Mac (10, 15)] // headers say nothing, documentation says introduced macOS 12.1, but both headers and documents say some enum fields were available in macOS 10.15, so let's go with that for the enum itself as well.
 	[iOS (10, 2)]
 	[Watch (3, 2)]
 	[NoTV]
