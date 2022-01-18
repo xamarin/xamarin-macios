@@ -19,10 +19,11 @@ namespace AppKit {
 #if !XAMCORE_4_0
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
+		[Obsolete ("Use 'GetLayoutAttributes' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #else
 		[Mac (10, 11)]
-#endif
 		[Obsolete ("Use 'GetLayoutAttributes' instead.")]
+#endif
 		public virtual NSCollectionViewLayoutAttributes GetLayoutAttributest (string kind, NSIndexPath indexPath)
 		{
 			return GetLayoutAttributes (kind, indexPath);
