@@ -323,16 +323,28 @@ namespace CoreFoundation {
 		{
 		}
 
+#if !NET
 		public static bool operator == (CFRunLoop a, CFRunLoop b)
 		{
-			return Object.Equals (a, b);
+			if (a is null)
+				return b is null;
+			else if (b is null)
+				return false;
+
+			return a.Handle == b.Handle;
 		}
 
 		public static bool operator != (CFRunLoop a, CFRunLoop b)
 		{
-			return !Object.Equals (a, b);
+			if (a is null)
+				return b is not null;
+			else if (b is null)
+				return true;
+			return a.Handle != b.Handle;
 		}
 
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override int GetHashCode ()
 		{
 			return Handle.GetHashCode ();
@@ -346,6 +358,7 @@ namespace CoreFoundation {
 
 			return cfother.Handle == Handle;
 		}
+#endif
 #endif // !COREBUILD
 	}
 }
