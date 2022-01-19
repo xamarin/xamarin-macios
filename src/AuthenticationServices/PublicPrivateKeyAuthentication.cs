@@ -21,14 +21,7 @@ using System.Linq;
 
 namespace AuthenticationServices {
 
-#if !NET
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public static class PublicPrivateKeyAuthentication {
 		[DllImport (Constants.AuthenticationServicesLibrary)]
 		static extern /* NSString[] */ IntPtr ASAuthorizationAllSupportedPublicKeyCredentialDescriptorTransports ();
