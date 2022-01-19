@@ -163,7 +163,9 @@ namespace AVFoundation {
 			}			
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
@@ -203,7 +205,9 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public AVSampleRateConverterAlgorithm? SampleRateConverterAlgorithm {
@@ -233,7 +237,9 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public AVAudioQuality? EncoderAudioQualityForVBR {

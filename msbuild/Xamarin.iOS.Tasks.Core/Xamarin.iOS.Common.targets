@@ -102,10 +102,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
 			$(_CodesignAppBundleDependsOn);
-			_EmbedProvisionProfile;
-			_CodesignNativeLibraries;
-			_CollectFrameworks;
-			_CodesignFrameworks;
 			_ReadAppExtensionCodesignProperties;
 			_CodesignAppExtensions;
 			_PrepareCodesignAppExtension;
@@ -116,11 +112,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			$(_CodesignAppBundleDependsOn);
 			$(CoreCodesignDependsOn);
 		</CoreCodesignDependsOn>
-
-		<CodesignDependsOn>
-			_CreateAppBundle;
-			$(CodesignDependsOn);
-		</CodesignDependsOn>
 	</PropertyGroup>
 
 	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">

@@ -27,6 +27,7 @@ using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
@@ -40,7 +41,9 @@ namespace AVFoundation {
 		Max = 0x7F
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVAssetExportSession.h
 	public enum AVAssetExportSessionStatus : long {
@@ -52,7 +55,9 @@ namespace AVFoundation {
 		Cancelled
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVAssetReader.h
 	public enum AVAssetReaderStatus : long {
@@ -63,7 +68,9 @@ namespace AVFoundation {
 		Cancelled,
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVAssetWriter.h
 	public enum AVAssetWriterStatus : long {
@@ -74,8 +81,14 @@ namespace AVFoundation {
 		Cancelled,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, NoWatch]
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVCaptureVideoOrientation : long {
@@ -85,36 +98,56 @@ namespace AVFoundation {
 		LandscapeLeft,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFlashMode : long {
 		Off, On, Auto
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureTorchMode : long {
 		Off, On, Auto
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFocusMode : long {
 		Locked, AutoFocus, ContinuousAutoFocus,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDevicePosition : long {
@@ -123,22 +156,40 @@ namespace AVFoundation {
 		Front = 2
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureExposureMode : long {
-		Locked, 
-		AutoExpose, 
-		ContinuousAutoExposure, 
-		[iOS (8,0), Mac (10,15)] 
+		Locked,
+		AutoExpose,
+		ContinuousAutoExposure,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (8, 0)]
+		[Mac (10, 15)]
+#endif
 		Custom,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureWhiteBalanceMode : long {
@@ -146,9 +197,16 @@ namespace AVFoundation {
 	}
 
 #if !NET
+#if NET
+	[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+	[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+	[Deprecated (PlatformName.iOS, 6, 0)]
+#endif
 	[Flags]
 	[Native]
-	[Deprecated (PlatformName.iOS, 6, 0)]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionInterruptionFlags : ulong {
 		ShouldResume = 1
@@ -157,7 +215,9 @@ namespace AVFoundation {
 
 	// Populated in NSError.Code, an NSInteger
 	// anonymous enum - AVError.h
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	public enum AVError : long {
 		Unknown = -11800,
@@ -210,7 +270,7 @@ namespace AVFoundation {
 		FailedToLoadMediaData = -11849,
 		ServerIncorrectlyConfigured = -11850,
 		ApplicationIsNotAuthorizedToUseDevice = -11852,
-			
+
 		FailedToParse2 = -11853,
 		FileTypeDoesNotSupportSampleReferences = -11854,
 		UndecodableMediaData = -11855,
@@ -242,7 +302,9 @@ namespace AVFoundation {
 		RequestCancelled = -11879,
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerActionAtItemEnd : long {
@@ -251,7 +313,9 @@ namespace AVFoundation {
 		None
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVPlayerItem.h
 	public enum AVPlayerItemStatus : long {
@@ -259,24 +323,36 @@ namespace AVFoundation {
 	}
 
 #if !NET
+#if NET
+	[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+	[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoTV]
+	[Deprecated (PlatformName.iOS, 6, 0)]
+#endif
 	[Flags]
 	[Native]
-	[Deprecated (PlatformName.iOS, 6, 0)]
 	// declared as AVAudioSessionSetActiveOptions (NSUInteger) - AVAudioSession.h
 	public enum AVAudioSessionFlags : ulong {
 		NotifyOthersOnDeactivation = 1
 	}
 #endif
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
 	public enum AVKeyValueStatus : long {
 		Unknown, Loading, Loaded, Failed, Cancelled
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerStatus : long {
@@ -285,7 +361,9 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Flags]
 	[Native]
 	// NSUInteger - AVAsset.h
@@ -293,45 +371,66 @@ namespace AVFoundation {
 		ForbidNone = 0,
 		ForbidRemoteReferenceToLocal = (1 << 0),
 		ForbidLocalReferenceToRemote = (1 << 1),
-		ForbidCrossSiteReference     = (1 << 2),
-		ForbidLocalReferenceToLocal  = (1 << 3),
+		ForbidCrossSiteReference = (1 << 2),
+		ForbidLocalReferenceToLocal = (1 << 3),
 		ForbidAll = 0xFFFF,
 	}
 
-	[Watch (6,0)]
+#if !NET
+	[Watch (6, 0)]
+#endif
 	[Native]
 	// NSInteger - AVAssetImageGenerator.h
 	public enum AVAssetImageGeneratorResult : long {
 		Succeeded, Failed, Cancelled
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 #if XAMCORE_3_0
 	[NoiOS]
 	[NoWatch]
 #endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDeviceTransportControlsPlaybackMode : long {
 		NotPlaying, Playing
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 #if XAMCORE_3_0
 	[NoiOS]
 #endif
 	[Unavailable (PlatformName.MacCatalyst)]
-	[NoTV, NoWatch]
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVVideoFieldMode : long {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
 
-	[Mac (10,15)]
-	[iOS (8,0)]
-	[TV (12,0)]
-	[Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[Mac (10, 15)]
+	[iOS (8, 0)]
+	[TV (12, 0)]
+	[Watch (7, 0)]
+#endif
 	[Flags]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -339,8 +438,12 @@ namespace AVFoundation {
 		ShouldResume = 1
 	}
 
-	[Mac (10,15)]
-	[Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[Mac (10, 15)]
+	[Watch (7, 0)]
+#endif
 	[Flags]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -348,19 +451,33 @@ namespace AVFoundation {
 		NotifyOthersOnDeactivation = 1
 	}
 
-	[Mac (10,15)]
-	[Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[Mac (10, 15)]
+	[Watch (7, 0)]
+#endif
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionPortOverride : ulong {
 		None = 0,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoTV]
-		[NoMac, NoWatch] // Removed in Xcode 12 GM
+		[NoMac] // Removed in Xcode 12 GM
+		[NoWatch] // Removed in Xcode 12 GM
+#endif
 		Speaker = 0x73706b72 // 'spkr'
 	}
 
-	[Mac (10,15)]
-	[Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[Mac (10, 15)]
+	[Watch (7, 0)]
+#endif
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionRouteChangeReason : ulong {
@@ -380,37 +497,85 @@ namespace AVFoundation {
 	public enum AVAudioSessionCategoryOptions : ulong {
 		MixWithOthers = 1,
 		DuckOthers = 2,
-		[NoMac, NoWatch] // Removed in Xcode 12 GM
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoMac] // Removed in Xcode 12 GM
+		[NoWatch] // Removed in Xcode 12 GM
 		[NoTV]
+#endif
 		AllowBluetooth = 4,
-		[NoMac, NoWatch] // Removed in Xcode 12 GM
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoMac] // Removed in Xcode 12 GM
+		[NoWatch] // Removed in Xcode 12 GM
 		[NoTV]
+#endif
 		DefaultToSpeaker = 8,
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac] // Removed in Xcode 12 GM
-		[iOS (9,0)]
+		[iOS (9, 0)]
+#endif
 		InterruptSpokenAudioAndMixWithOthers = 17,
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac] // Removed in Xcode 12 GM
-		[Watch (3,0), iOS (10,0), TV (10,0)]
+		[Watch (3, 0)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+#endif
 		AllowBluetoothA2DP = 32,
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac] // Removed in Xcode 12 GM
-		[NoWatch, iOS (10,0), TV (10,0)]
+		[NoWatch]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+#endif
 		AllowAirPlay = 64,
+#if NET
+		[SupportedOSPlatform ("ios14.5")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoMac]
 		[NoTV]
-		[iOS (14,5), Watch (7,3)]
+		[iOS (14, 5)]
+		[Watch (7, 3)]
+#endif
 		OverrideMutedMicrophoneInterruption = 128,
 	}
 
-	[Mac (10,15)]
-	[Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[Mac (10, 15)]
+	[Watch (7, 0)]
+#endif
 	[Native]
 	// NSUInteger - AVAudioSession.h
-	public enum AVAudioSessionInterruptionType : ulong  {
+	public enum AVAudioSessionInterruptionType : ulong {
 		Ended, Began
 	}
 
-	[Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[Mac (10, 15)]
+#endif
 	[Native]
 	// NSInteger - AVAudioSession.h
 	// typedef CF_ENUM(NSInteger, AVAudioSessionErrorCode) -> CoreAudioTypes.framework/Headers/AudioSessionTypes.h
@@ -436,9 +601,14 @@ namespace AVFoundation {
 		SessionNotActive = 0x696e6163, // 'inac'
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureAutoFocusRangeRestriction : long {
@@ -461,18 +631,29 @@ namespace AVFoundation {
 		Mastering
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Mac (10,14)]
+	[Mac (10, 14)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVAuthorizationStatus : long {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
-	[iOS (7,0)]
-	[Mac (10,14)]
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos10.14")]
+#else
+	[iOS (7, 0)]
+	[Mac (10, 14)]
+#endif
 	[Native]
 	// NSInteger - AVSpeechSynthesis.h
 	public enum AVSpeechBoundary : long {
@@ -480,7 +661,11 @@ namespace AVFoundation {
 		Word
 	}
 
-	[iOS (8,0)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
+	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum AVAudioCommonFormat : ulong {
 		Other = 0,
@@ -497,16 +682,37 @@ namespace AVFoundation {
 		HRTF = 2,
 		SoundField = 3,
 		StereoPassThrough = 5,
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8, 0)]
+		[Mac (10, 10)]
+#endif
 		HrtfHQ = 6,
-		[iOS (13,0)][TV (13,0)][Mac (10,15)][NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[NoWatch]
+#endif
 		Auto = 7,
 	}
 
-	[iOS (8,0)]
-	[Mac (10,15)]
-	[TV (12,0)]
-	[Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (8, 0)]
+	[Mac (10, 15)]
+	[TV (12, 0)]
+	[Watch (7, 0)]
+#endif
 	[Native]
 	public enum AVAudioSessionRecordPermission : ulong {
 		Undetermined = 1970168948 /*'undt'*/,
@@ -514,9 +720,14 @@ namespace AVFoundation {
 		Granted = 1735552628 /*'grnt'*/
 	}
 
-	[iOS (8,0)]
-	[Mac (10,15)]
-	[Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[iOS (8, 0)]
+	[Mac (10, 15)]
+	[Watch (7, 0)]
+#endif
 	[Native]
 	public enum AVAudioSessionSilenceSecondaryAudioHintType : ulong {
 		Begin = 1,
@@ -526,8 +737,8 @@ namespace AVFoundation {
 	[Flags]
 	[Native]
 	public enum AVAudioPlayerNodeBufferOptions : ulong {
-		Loops            = 0x01,
-		Interrupts       = 0x02,
+		Loops = 0x01,
+		Interrupts = 0x02,
 		InterruptsAtLoop = 0x04
 	}
 
@@ -545,7 +756,7 @@ namespace AVFoundation {
 		ResonantLowShelf = 9,
 		ResonantHighShelf = 10
 	}
-	
+
 	[Native]
 	public enum AVAudioUnitReverbPreset : long {
 		SmallRoom = 0,
@@ -596,29 +807,55 @@ namespace AVFoundation {
 		Linear = 3
 	}
 
-	[TV (10,2), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+#else
+	[TV (10, 2)]
+	[Watch (6, 0)]
+#endif
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : long {
 		Unknown, Rendering, Failed
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[NoWatch]
 	[NoTV]
+#endif
 	[Native]
 	public enum AVCaptureVideoStabilizationMode : long {
 		Off,
 		Standard,
 		Cinematic,
-		[iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13, 0)]
+#endif
 		CinematicExtended,
 		Auto = -1
 	}
 
-	[Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (10, 15)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, NoWatch, iOS (8,0)]
+	[NoTV]
+	[NoWatch]
+	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum AVCaptureAutoFocusSystem : long {
 		None,
@@ -627,29 +864,54 @@ namespace AVFoundation {
 	}
 
 #if !MONOMAC
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, NoWatch]
-	[iOS (9,0)]
+	[NoTV]
+	[NoWatch]
+	[iOS (9, 0)]
+#endif
 	[Native]
 	public enum AVCaptureSessionInterruptionReason : long {
 		VideoDeviceNotAvailableInBackground = 1,
 		AudioDeviceInUseByAnotherClient = 2,
 		VideoDeviceInUseByAnotherClient = 3,
 		VideoDeviceNotAvailableWithMultipleForegroundApps = 4,
+#if NET
+		[SupportedOSPlatform ("ios11.1")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (11, 1)]
+#endif
 		VideoDeviceNotAvailableDueToSystemPressure = 5,
 	}
 
 #endif
 
-	[iOS (9,0), Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[iOS (9, 0)]
+	[Mac (10, 15)]
+#endif
 	[Native]
 	public enum AVSpeechSynthesisVoiceQuality : long {
 		Default = 1,
 		Enhanced
 	}
 
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9, 0)]
+	[Mac (10, 11)]
+#endif
 	[Native]
 	public enum AVAudioConverterPrimeMethod : long {
 		Pre = 0,
@@ -657,7 +919,13 @@ namespace AVFoundation {
 		None = 2
 	}
 
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9, 0)]
+	[Mac (10, 11)]
+#endif
 	[Native]
 	public enum AVAudioConverterInputStatus : long {
 		HaveData = 0,
@@ -665,7 +933,13 @@ namespace AVFoundation {
 		EndOfStream = 2
 	}
 
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9, 0)]
+	[Mac (10, 11)]
+#endif
 	[Native]
 	public enum AVAudioConverterOutputStatus : long {
 		HaveData = 0,
@@ -674,27 +948,45 @@ namespace AVFoundation {
 		Error = 3
 	}
 
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9, 0)]
+	[Mac (10, 11)]
+#endif
 	[Flags]
 	[Native]
 	public enum AVMusicSequenceLoadOptions : ulong {
 		PreserveTracks = 0,
 		ChannelsToTracks = (1 << 0)
 	}
-			
+
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoTV]
-	[iOS (13,0)]
-	[Watch (6,0)]
-	[Mac (10,11)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
+	[Mac (10, 11)]
+#endif
 	[Flags]
 	[Native]
-	public enum AVMovieWritingOptions : ulong
-	{
+	public enum AVMovieWritingOptions : ulong {
 		AddMovieHeaderToDestination = 0,
 		TruncateDestinationToMovieHeaderOnly = (1 << 0)
 	}
 
-	[NoiOS][NoTV][NoWatch]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoiOS]
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	public enum AVContentAuthorizationStatus : long {
 		Unknown,
@@ -706,7 +998,18 @@ namespace AVFoundation {
 		NotPossible,
 	}
 
-	[iOS (15,0), TV (15,0), Watch (8,0), Mac (10,10), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[iOS (15, 0)]
+	[TV (15, 0)]
+	[Watch (8, 0)]
+	[Mac (10, 10)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Native]
 	public enum AVSampleBufferRequestDirection : long {
 		Forward = 1,
@@ -714,52 +1017,115 @@ namespace AVFoundation {
 		Reverse = -1,
 	}
 
-	[iOS (15,0), TV (15,0), Watch (8,0), Mac (10,10), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[iOS (15, 0)]
+	[TV (15, 0)]
+	[Watch (8, 0)]
+	[Mac (10, 10)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Native]
 	public enum AVSampleBufferRequestMode : long {
 		Immediate,
 		Scheduled,
-		[Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (10, 15)]
+#endif
 		Opportunistic = 2,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios10.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, NoWatch, Mac (10,15), iOS (10,0)]
+	[NoTV]
+	[NoWatch]
+	[Mac (10, 15)]
+	[iOS (10, 0)]
+#endif
 	[Native]
-	public enum AVCaptureColorSpace : long
-	{
+	public enum AVCaptureColorSpace : long {
 		Srgb = 0,
 		P3D65 = 1,
+#if NET
+		[SupportedOSPlatform ("maccatalyst14.1")]
+		[SupportedOSPlatform ("ios14.1")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Introduced (PlatformName.MacCatalyst, 14, 1)]
-		[iOS (14,1)][NoMac]
+		[iOS (14, 1)]
+		[NoMac]
+#endif
 		HlgBT2020 = 2,
 	}
 
-	[iOS (8,0)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
+	[iOS (8, 0)]
+#endif
 	[Native]
-	public enum AVMusicTrackLoopCount : long
-	{
+	public enum AVMusicTrackLoopCount : long {
 		Forever = -1
 	}
 
-	[Watch (6,0), iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[Watch (6, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Mac (10, 12)]
+#endif
 	[Native]
-	public enum AVPlayerTimeControlStatus : long
-	{
+	public enum AVPlayerTimeControlStatus : long {
 		Paused,
 		WaitingToPlayAtSpecifiedRate,
 		Playing
 	}
 
-	[NoWatch, NoTV, iOS (10,0), Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (10, 0)]
+	[Mac (10, 15)]
+#endif
 	[Native]
-	public enum AVAudioSessionIOType : long
-	{
+	public enum AVAudioSessionIOType : long {
 		NotSpecified = 0,
 		Aggregated = 1,
 	}
 
-	[Watch (6,0), iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[Watch (6, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Mac (10, 12)]
+#endif
 	[Native]
 	public enum AVPlayerLooperStatus : long {
 		Unknown,
@@ -767,8 +1133,17 @@ namespace AVFoundation {
 		Failed,
 		Cancelled
 	}
-	
-	[NoiOS, TV (10,0), NoWatch, NoMac]
+
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[NoiOS]
+	[TV (10, 0)]
+	[NoWatch]
+	[NoMac]
+#endif
 	[Native]
 	public enum AVContentProposalAction : long {
 		Accept,
@@ -776,14 +1151,32 @@ namespace AVFoundation {
 		Defer
 	}
 
-	[NoiOS, TV (10,0), NoWatch, NoMac]
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[NoiOS]
+	[TV (10, 0)]
+	[NoWatch]
+	[NoMac]
+#endif
 	[Native]
 	public enum AVPlayerViewControllerSkippingBehavior : long {
 		Default = 0,
 		SkipItem
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("macos10.12.4")]
+	[SupportedOSPlatform ("ios10.3")]
+#else
+	[TV (10, 2)]
+	[Mac (10, 12, 4)]
+	[iOS (10, 3)]
+	[Watch (7, 0)]
+#endif
 	[Native]
 	public enum AVContentKeyRequestStatus : long {
 		Requesting,
@@ -794,7 +1187,16 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7, 0)]
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("macos10.12.4")]
+	[SupportedOSPlatform ("ios10.3")]
+#else
+	[TV (10, 2)]
+	[Mac (10, 12, 4)]
+	[iOS (10, 3)]
+	[Watch (7, 0)]
+#endif
 	public enum AVContentKeyRequestRetryReason {
 		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
 		TimedOut,
@@ -804,34 +1206,75 @@ namespace AVFoundation {
 		ReceivedObsoleteContentKey,
 	}
 
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7, 0)]
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("macos10.12.4")]
+	[SupportedOSPlatform ("ios10.3")]
+#else
+	[TV (10, 2)]
+	[Mac (10, 12, 4)]
+	[iOS (10, 3)]
+	[Watch (7, 0)]
+#endif
 	public enum AVContentKeySystem {
 		[Field ("AVContentKeySystemFairPlayStreaming")]
 		FairPlayStreaming = 0,
 
-		[TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[TV (11, 0)]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
+#endif
 		[Field ("AVContentKeySystemClearKey")]
 		ClearKey = 1,
 
+#if !NET
 		[NoWatch]
+#endif
 		[Obsolete ("Use 'AVContentKeySystem.SystemClearKey' instead.")]
 		AVContentKeySystemClearKey = ClearKey,
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		[Field ("AVContentKeySystemAuthorizationToken")]
 		AuthorizationToken = 2,
 	}
 
 	// Convience enum for native string values 
+#if !NET
 	[NoWatch]
+#endif
 	public enum AVAssetExportSessionPreset {
-		[Mac(10,11)]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[Mac (10, 11)]
+#endif
 		[Field ("AVAssetExportPresetLowQuality")]
 		LowQuality = 0, // AVAssetExportPresetLowQuality
-		[Mac(10,11)]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[Mac (10, 11)]
+#endif
 		[Field ("AVAssetExportPresetMediumQuality")]
 		MediumQuality = 1, // AVAssetExportPresetMediumQuality
-		[Mac(10,11)]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[Mac (10, 11)]
+#endif
 		[Field ("AVAssetExportPresetHighestQuality")]
 		HighestQuality = 2, // AVAssetExportPresetHighestQuality
 		[Field ("AVAssetExportPreset640x480")]
@@ -843,8 +1286,13 @@ namespace AVFoundation {
 		[Field ("AVAssetExportPreset1920x1080")]
 		Preset1920x1080 = 6, // AVAssetExportPreset1920x1080
 
-		[iOS (9,0)]
-		[Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (9, 0)]
+		[Mac (10, 10)]
+#endif
 		[Field ("AVAssetExportPreset3840x2160")]
 		Preset3840x2160 = 7, // AVAssetExportPreset3840x2160
 
@@ -853,20 +1301,43 @@ namespace AVFoundation {
 		[Field ("AVAssetExportPresetPassthrough")]
 		Passthrough = 9, // AVAssetExportPresetPassthrough
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[Obsolete ("Use 'AVOutputSettingsPreset.PresetHevc1920x1080' instead.")]
-		[iOS (11, 0), Mac (10, 13)]
-		[TV (11, 0)]
 		[Field ("AVOutputSettingsPresetHEVC1920x1080")]
-		PresetHevc1920x1080 = 11, 
+		PresetHevc1920x1080 = 11,
 
-		[Obsolete ("Use 'AVOutputSettingsPreset.PresetHevc3840x2160' instead.")]
-		[iOS (11, 0), Mac (10, 13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
 		[TV (11, 0)]
+#endif
+		[Obsolete ("Use 'AVOutputSettingsPreset.PresetHevc3840x2160' instead.")]
 		[Field ("AVOutputSettingsPresetHEVC3840x2160")]
 		PresetHevc3840x2160 = 12,
 	}
 
-	[TV (9,0), NoWatch, Mac (10,9), iOS (7,0)]
+#if NET
+	[SupportedOSPlatform ("tvos9.0")]
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios7.0")]
+#else
+	[TV (9, 0)]
+	[NoWatch]
+	[Mac (10, 9)]
+	[iOS (7, 0)]
+#endif
 	public enum AVOutputSettingsPreset {
 		[Field ("AVOutputSettingsPreset640x480")]
 		Preset640x480 = 0,
@@ -880,47 +1351,125 @@ namespace AVFoundation {
 		[Field ("AVOutputSettingsPreset1920x1080")]
 		Preset1920x1080 = 3,
 
-		[Mac (10,10), iOS (9,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos9.0")]
+#else
+		[Mac (10, 10)]
+		[iOS (9, 0)]
+#endif
 		[Field ("AVOutputSettingsPreset3840x2160")]
 		Preset3840x2160 = 4,
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[Field ("AVOutputSettingsPresetHEVC1920x1080")]
 		PresetHevc1920x1080 = 11, // we added the wrong value in the export enum, we use the same so that they can be swap
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[Field ("AVOutputSettingsPresetHEVC3840x2160")]
 		PresetHevc3840x2160 = 12, // we added the wrong value in the export enum, we use the same so that they can be swap
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13, 0)]
+		[NoWatch]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		[Field ("AVOutputSettingsPresetHEVC1920x1080WithAlpha")]
 		PresetHevc1920x1080WithAlpha = 13,
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13, 0)]
+		[NoWatch]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		[Field ("AVOutputSettingsPresetHEVC3840x2160WithAlpha")]
 		PresetHevc3840x2160WithAlpha = 14,
 
-		[NoTV, NoWatch, Mac (12,1), NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos12.1")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoTV]
+		[NoWatch]
+		[Mac (12, 1)]
+		[NoiOS]
+#endif
 		[Field ("AVOutputSettingsPresetHEVC7680x4320")]
 		PresetHevc7680x4320 = 15,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (11, 0)]
+	[NoWatch]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum AVDepthDataAccuracy : long {
 		Relative = 0,
 		Absolute = 1,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4, 0)]
+	[TV (11, 0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum AVAudioEngineManualRenderingMode : long {
 		Offline = 0,
 		Realtime = 1
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4, 0)]
+	[TV (11, 0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum AVAudioEngineManualRenderingStatus : long {
 		Error = -1,
@@ -929,17 +1478,44 @@ namespace AVFoundation {
 		CannotDoInCurrentContext = 2
 	}
 
-	[TV (11,0), Watch (5,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[TV (11, 0)]
+	[Watch (5, 0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
 		Default = 0,
 		LongForm = 1,
 		Independent = 2,
-		[iOS (14,0), NoWatch, NoTV, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (14, 0)]
+		[NoWatch]
+		[NoTV]
+		[NoMac]
+#endif
 		LongFormVideo = 3,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4, 0)]
+	[TV (11, 0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum AVAudioPlayerNodeCompletionCallbackType : long {
 		Consumed = 0,
@@ -947,20 +1523,34 @@ namespace AVFoundation {
 		PlayedBack = 2
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	public enum AVAudioEngineManualRenderingError
-	{
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4, 0)]
+	[TV (11, 0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
+	public enum AVAudioEngineManualRenderingError {
 		InvalidMode = -80800,
 		Initialized = -80801,
 		NotRunning = -80802,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, iOS (11,0)]
+	[NoTV]
+	[iOS (11, 0)]
 	[NoWatch]
+#endif
 	[Native]
-	public enum AVCaptureLensStabilizationStatus : long
-	{
+	public enum AVCaptureLensStabilizationStatus : long {
 		Unsupported = 0,
 		Off = 1,
 		Active = 2,
@@ -968,19 +1558,36 @@ namespace AVFoundation {
 		Unavailable = 4
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Mac (10, 15)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, iOS (11,0)]
+	[NoWatch]
+	[NoTV]
+	[iOS (11, 0)]
+#endif
 	[Native]
-	public enum AVCaptureOutputDataDroppedReason : long
-	{
+	public enum AVCaptureOutputDataDroppedReason : long {
 		None = 0,
 		LateData = 1,
 		OutOfBuffers = 2,
 		Discontinuity = 3,
 	}
 
-	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[TV (11, 0)]
+	[NoWatch]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
 	public enum AVVideoApertureMode {
 		[Field ("AVVideoApertureModeCleanAperture")]
 		CleanAperture = 0,
@@ -992,7 +1599,16 @@ namespace AVFoundation {
 		EncodedPixels = 2,
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (12, 0)]
+	[iOS (11, 0)]
+#endif
 	public enum AVAssetDownloadedAssetEvictionPriority {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
 		Default = 0,
@@ -1001,7 +1617,16 @@ namespace AVFoundation {
 		Important = 1,
 	}
 
-	[NoWatch, iOS (11, 0), TV (11,0), Mac (10,13)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#else
+	[NoWatch]
+	[iOS (11, 0)]
+	[TV (11, 0)]
+	[Mac (10, 13)]
+#endif
 	public enum AVAssetWriterInputMediaDataLocation {
 		[Field ("AVAssetWriterInputMediaDataLocationInterleavedWithMainMediaData")]
 		InterleavedWithMainMediaData = 0,
@@ -1010,11 +1635,22 @@ namespace AVFoundation {
 		BeforeMainMediaDataNotInterleaved = 1,
 	}
 
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (11, 0)]
+	[NoWatch]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	public enum AVVideoCodecType {
 		[Field ("AVVideoCodecTypeH264")]
 		H264 = 0,
-		
+
 		[Field ("AVVideoCodecTypeJPEG")]
 		Jpeg = 1,
 
@@ -1027,44 +1663,112 @@ namespace AVFoundation {
 		[Field ("AVVideoCodecTypeHEVC")]
 		Hevc = 5,
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (13, 0)]
+		[NoWatch]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		[Field ("AVVideoCodecTypeAppleProRes422HQ")]
 		AppleProRes422HQ = 6,
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (13, 0)]
+		[NoWatch]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		[Field ("AVVideoCodecTypeAppleProRes422LT")]
 		AppleProRes422LT = 7,
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (13, 0)]
+		[NoWatch]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		[Field ("AVVideoCodecTypeAppleProRes422Proxy")]
 		AppleProRes422Proxy = 8,
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (13, 0)]
+		[NoWatch]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		[Field ("AVVideoCodecTypeHEVCWithAlpha")]
 		HevcWithAlpha = 9,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (11, 0)]
+	[NoWatch]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum AVDepthDataQuality : long {
 		Low = 0,
 		High = 1
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios11.1")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, NoMac, iOS (11,1)]
+	[NoWatch]
+	[NoTV]
+	[NoMac]
+	[iOS (11, 1)]
+#endif
 	[Flags]
-	[Native] 
-	public enum AVCaptureSystemPressureFactors : ulong
-	{
+	[Native]
+	public enum AVCaptureSystemPressureFactors : ulong {
 		None = 0,
 		SystemTemperature = (1 << 0),
 		PeakPower = (1 << 1),
 		DepthModuleTemperature = (1 << 2)
 	}
 
-	[TV (11,2), NoWatch, NoMac, iOS (11,2)]
+#if NET
+	[SupportedOSPlatform ("tvos11.2")]
+	[SupportedOSPlatform ("ios11.2")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[TV (11, 2)]
+	[NoWatch]
+	[NoMac]
+	[iOS (11, 2)]
+#endif
 	[Native]
 	[Flags]
 	public enum AVPlayerHdrMode : long {
@@ -1073,23 +1777,39 @@ namespace AVFoundation {
 		DolbyVision = 0x4,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[Watch (5, 0)]
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Mac (10, 15)]
+#endif
 	[Flags]
 	[Native]
-	[Watch (5,0), TV (12,0), iOS (12,0), Mac (10,15)]
-	public enum AVAudioSessionActivationOptions : ulong
-	{
+	public enum AVAudioSessionActivationOptions : ulong {
 		None = 0x0,
 	}
 
 	[Native]
-	public enum AVAudioSessionPromptStyle : ulong
-	{
+	public enum AVAudioSessionPromptStyle : ulong {
 		None = 0x6e6f6e65, // 1852796517 - 'none'
 		Short = 0x73687274, // 1936224884 - 'shrt'
 		Normal = 0x6e726d6c, //1852992876 - 'nrml'
 	}
 
-	[Watch (6,0), iOS (13,0), TV (13,0), Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[Watch (6, 0)]
+	[iOS (13, 0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+#endif
 	[Native]
 	public enum AVSpeechSynthesisVoiceGender : long {
 		Unspecified,
@@ -1097,8 +1817,18 @@ namespace AVFoundation {
 		Female,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[NoWatch]
+	[NoTV]
+	[NoMac]
+	[iOS (13, 0)]
+#endif
 	[Native]
 	public enum AVCapturePhotoQualityPrioritization : long {
 		Speed = 1,
@@ -1106,7 +1836,16 @@ namespace AVFoundation {
 		Quality = 3,
 	}
 
-	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13, 0)]
+	[NoWatch]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+#endif
 	[Native]
 	public enum AVAudioEnvironmentOutputType : long {
 		Auto = 0,
@@ -1115,7 +1854,16 @@ namespace AVFoundation {
 		ExternalSpeakers = 3,
 	}
 
-	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13, 0)]
+	[NoWatch]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+#endif
 	[Native]
 	public enum AVAudio3DMixingSourceMode : long {
 		SpatializeIfMono = 0,
@@ -1124,23 +1872,50 @@ namespace AVFoundation {
 		AmbienceBed = 3,
 	}
 
-	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13, 0)]
+	[NoWatch]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+#endif
 	[Native]
 	public enum AVAudio3DMixingPointSourceInHeadMode : long {
 		Mono = 0,
 		Bypass = 1,
 	}
 
-	[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[TV (14, 0)]
+	[NoWatch]
+	[Mac (11, 0)]
+	[iOS (14, 0)]
+#endif
 	[Native]
 	public enum AVAssetSegmentType : long {
 		Initialization = 1,
 		Separable = 2,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[TV (14, 0)]
+	[Watch (7, 0)]
+	[Mac (11, 0)]
+	[iOS (14, 0)]
+#endif
 	[Flags]
 	[Native]
-	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
 	public enum AVAudioSpatializationFormats : ulong {
 		None = 0,
 		MonoAndStereo = 3,
@@ -1148,8 +1923,17 @@ namespace AVFoundation {
 		MonoStereoAndMultichannel = 7,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[TV (14, 0)]
+	[Watch (7, 0)]
+	[Mac (11, 0)]
+	[iOS (14, 0)]
+#endif
 	[Native]
-	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
 	public enum AVAudioStereoOrientation : long {
 		None = 0,
 		Portrait = 1,
@@ -1158,7 +1942,16 @@ namespace AVFoundation {
 		LandscapeLeft = 4,
 	}
 
-	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[TV (14, 0)]
+	[Watch (7, 0)]
+	[Mac (11, 0)]
+	[iOS (14, 0)]
+#endif
 	public enum AVFileTypeProfile {
 		[Field (null)]
 		None = 0,
@@ -1168,8 +1961,19 @@ namespace AVFoundation {
 		Mpeg4CmafCompliant,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15, 0)]
+	[Watch (8, 0)]
+	[Mac (11, 0)]
+	[iOS (15, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Native]
-	[TV (15,0), Watch (8,0), Mac (11,0), iOS (15,0), MacCatalyst (15,0)]
 	public enum AVAudioRoutingArbitrationCategory : long {
 		Playback = 0,
 		PlayAndRecord = 1,
@@ -1177,15 +1981,44 @@ namespace AVFoundation {
 	}
 
 #if !WATCH
-	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("macos10.12.4")]
+	[SupportedOSPlatform ("ios10.3")]
+#else
+	[TV (10, 2)]
+	[Mac (10, 12, 4)]
+	[iOS (10, 3)]
+	[NoWatch]
+#endif
 	public enum AVContentKeyResponseDataType {
 		FairPlayStreamingKeyResponseData,
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13, 0)]
+		[NoWatch]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
 		AuthorizationTokenData,
 	}
 #endif
 
-	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15, 0)]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[Watch (8, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Flags]
 	[Native]
 	public enum AVDelegatingPlaybackCoordinatorRateChangeOptions : ulong {
@@ -1193,7 +2026,18 @@ namespace AVFoundation {
 		PlayImmediately = (1uL << 0),
 	}
 
-	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15, 0)]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[Watch (8, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Flags]
 	[Native]
 	public enum AVDelegatingPlaybackCoordinatorSeekOptions : ulong {
@@ -1201,7 +2045,18 @@ namespace AVFoundation {
 		ResumeImmediately = (1uL << 0),
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Native]
 	public enum AVCaptureMicrophoneMode : long {
 		Standard = 0,
@@ -1209,14 +2064,36 @@ namespace AVFoundation {
 		VoiceIsolation = 2,
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Native]
 	public enum AVCaptureSystemUserInterface : long {
 		VideoEffects = 1,
 		MicrophoneModes = 2,
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[Watch (8, 0)]
+	[TV (15, 0)]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	[Native]
 	public enum AVPlayerAudiovisualBackgroundPlaybackPolicy : long {
 		Automatic = 1,
@@ -1224,7 +2101,18 @@ namespace AVFoundation {
 		ContinuesIfPossible = 3,
 	}
 
-	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15, 0)]
+	[NoWatch]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[MacCatalyst (15, 0)]
+#endif
 	public enum AVCoordinatedPlaybackSuspensionReason {
 
 		[Field ("AVCoordinatedPlaybackSuspensionReasonAudioSessionInterrupted")]
@@ -1246,14 +2134,36 @@ namespace AVFoundation {
 		UserIsChangingCurrentTime,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
-	public enum AVCaptionAnimation : long	{
+	public enum AVCaptionAnimation : long {
 		None = 0,
 		CharacterReveal = 1,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionFontWeight : long {
 		Unknown = 0,
@@ -1261,7 +2171,18 @@ namespace AVFoundation {
 		Bold = 2,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst] 
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionFontStyle : long {
 		Unknown = 0,
@@ -1269,7 +2190,18 @@ namespace AVFoundation {
 		Italic = 2,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Flags]
 	[Native]
 	public enum AVCaptionDecoration : ulong {
@@ -1279,7 +2211,18 @@ namespace AVFoundation {
 		Overline = 1uL << 2,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionTextCombine : long {
 		All = -1,
@@ -1290,7 +2233,18 @@ namespace AVFoundation {
 		FourDigits = 4,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionTextAlignment : long {
 		Start = 0,
@@ -1300,22 +2254,54 @@ namespace AVFoundation {
 		Right = 4,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
-	public enum AVCaptionRegionWritingMode : long
-	{
+	public enum AVCaptionRegionWritingMode : long {
 		LeftToRightAndTopToBottom = 0,
 		TopToBottomAndRightToLeft = 2,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionRegionScroll : long {
 		None = 0,
 		RollUp = 1,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionRegionDisplayAlignment : long {
 		Before = 0,
@@ -1323,15 +2309,36 @@ namespace AVFoundation {
 		After = 2,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
-	public enum AVCaptionRubyPosition : long
-	{
+	public enum AVCaptionRubyPosition : long {
 		Before = 0,
 		After = 1,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum AVCaptionRubyAlignment : long {
 		Start = 0,
@@ -1340,30 +2347,61 @@ namespace AVFoundation {
 		DistributeSpaceAround = 3,
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+	[Mac (12, 0)]
+	[NoMacCatalyst]
+#endif
 	[Native]
-	public enum AVCaptionConversionValidatorStatus : long
-	{
+	public enum AVCaptionConversionValidatorStatus : long {
 		Unknown = 0,
 		Validating = 1,
 		Completed = 2,
 		Stopped = 3,
 	}
 
-	[NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (15, 0)]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+#endif
 	[Native]
-	public enum AVCapturePrimaryConstituentDeviceSwitchingBehavior : long
-	{
+	public enum AVCapturePrimaryConstituentDeviceSwitchingBehavior : long {
 		Unsupported = 0,
 		Auto = 1,
 		Restricted = 2,
 		Locked = 3,
 	}
 
-	[Flags, NoWatch, NoTV, MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (15, 0)]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+#endif
+	[Flags]
 	[Native]
-	public enum AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions : ulong
-	{
+	public enum AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions : ulong {
 		None = 0x0,
 		VideoZoomChanged = 1uL << 0,
 		FocusModeChanged = 1uL << 1,
