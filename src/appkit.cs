@@ -472,12 +472,17 @@ namespace AppKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSAppearanceCustomization {
-
+#if NET
+		[Abstract]
+#endif
 		[Mac (10,9)]
 		[NullAllowed]
 		[Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
 
+#if NET
+		[Abstract]
+#endif
 		[Mac (10,9)]
 		[Export ("effectiveAppearance", ArgumentSemantic.Strong)]
 		NSAppearance EffectiveAppearance { get; }
@@ -5469,7 +5474,9 @@ namespace AppKit {
 		[Export ("setDockTile:")]
 		void SetDockTile (NSDockTile dockTile);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("dockMenu")]
 		NSMenu DockMenu ();
 	}
@@ -6048,100 +6055,102 @@ namespace AppKit {
 #endif
 	[Protocol] // Apple docs say: "you never need to create a class that implements the NSDraggingInfo protocol.", so don't add [Model]
 	interface NSDraggingInfo  {
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingDestinationWindow")]
 		NSWindow DraggingDestinationWindow { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingSourceOperationMask")]
 		NSDragOperation DraggingSourceOperationMask { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingLocation")]
 		CGPoint DraggingLocation { get; }
 	
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggedImageLocation")]
 		CGPoint DraggedImageLocation { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggedImage")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSDraggingItem' objects instead.")]
 		NSImage DraggedImage { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingPasteboard")]
 		NSPasteboard DraggingPasteboard { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingSource")]
 		NSObject DraggingSource { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingSequenceNumber")]
 		nint DraggingSequenceNumber { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("slideDraggedImageTo:")]
 		void SlideDraggedImageTo (CGPoint screenPoint);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead.")]
 		[Export ("namesOfPromisedFilesDroppedAtDestination:")]
 		string [] PromisedFilesDroppedAtDestination (NSUrl dropDestination);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("animatesToDestination")]
 		bool AnimatesToDestination { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("numberOfValidItemsForDrop")]
 		nint NumberOfValidItemsForDrop { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingFormation")]
 		NSDraggingFormation DraggingFormation { get; set; } 
 
-		[Internal]
+#if NET
+		[Abstract]
+#endif
 		[Export ("enumerateDraggingItemsWithOptions:forView:classes:searchOptions:usingBlock:")]
 		void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, IntPtr classArray,
 					     NSDictionary searchOptions, NSDraggingEnumerator enumerator);
 
 		[Mac (10,11)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("springLoadingHighlight")]
 		NSSpringLoadingHighlight SpringLoadingHighlight { get; }
 
 		[Mac (10,11)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("resetSpringLoading")]
@@ -8327,7 +8336,7 @@ namespace AppKit {
 		[Export ("menuDidClose:")]
 		void MenuDidClose (NSMenu menu);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("menu:willHighlightItem:")]
@@ -11266,12 +11275,18 @@ namespace AppKit {
 	[Model]
 	[Protocol]
 	interface NSPasteboardWriting {
+#if NET
+		[Abstract]
+#endif
 		[Export ("writableTypesForPasteboard:")]
 		string [] GetWritableTypesForPasteboard (NSPasteboard pasteboard);
 
 		[Export ("writingOptionsForType:pasteboard:")]
 		NSPasteboardWritingOptions GetWritingOptionsForType (string type, NSPasteboard pasteboard);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("pasteboardPropertyListForType:")]
 		NSObject GetPasteboardPropertyListForType (string type);
 	}
@@ -11316,7 +11331,9 @@ namespace AppKit {
 		[Export ("pasteboard:item:provideDataForType:")]
 		void ProvideDataForType (NSPasteboard pasteboard, NSPasteboardItem item, string type);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("pasteboardFinishedWithDataProvider:")]
 		void FinishedWithDataProvider (NSPasteboard pasteboard);
 	}
@@ -11333,6 +11350,8 @@ namespace AppKit {
 #endif
 	[Protocol]
 	interface NSPasteboardReading {
+		// This method is required, but we don't generate the correct code for required static methods
+		// [Abstract]
 		[Static]
 		[Export ("readableTypesForPasteboard:")]
 		string [] GetReadableTypesForPasteboard (NSPasteboard pasteboard);
@@ -11559,9 +11578,11 @@ namespace AppKit {
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSResponder))]
 	interface NSPopover : NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility {
+#if !NET
 		[Obsolete ("Use 'GetAppearance' and 'SetAppearance' methods instead.")]
 		[Export ("appearance", ArgumentSemantic.Retain)]
 		new NSPopoverAppearance Appearance { get; set;  }
+#endif
 
 		[Export ("behavior")]
 		NSPopoverBehavior Behavior { get; set;  }
@@ -12169,7 +12190,9 @@ namespace AppKit {
 		[Export ("localizedSummaryItems")]
 		NSDictionary [] LocalizedSummaryItems ();
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("keyPathsForValuesAffectingPreview")]
 		NSSet KeyPathsForValuesAffectingPreview ();
 	}
@@ -12900,10 +12923,12 @@ namespace AppKit {
 		nfloat ReservedThicknessForAccessoryView { get; set; }
 
 		[Export ("measurementUnits")]
-#if XAMCORE_4_0
-		[BindAs (typeof (NSRulerViewUnits))] 
-#endif
+#if NET
+		[BindAs (typeof (NSRulerViewUnits))]
+		NSString MeasurementUnits { get; set; }
+#else
 		string MeasurementUnits { get; set; }
+#endif
 
 		[Export ("originOffset")]
 		nfloat OriginOffset { get; set; }
@@ -15291,113 +15316,141 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSUserInterfaceItemIdentification {
+#if NET
+		[Abstract]
+#endif
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		string Identifier { get; set; }
 	}
 
 	[NoMacCatalyst]
 	[Protocol]
-#if !XAMCORE_4_0
+#if !NET
 	[Model]
 	[BaseType (typeof (NSObject))]
 #endif
 	partial interface NSTextFinderClient {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("editable")]
 		bool Editable { [Bind ("isEditable")] get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("string", ArgumentSemantic.Copy)]
 		string String { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("firstSelectedRange")]
 		NSRange FirstSelectedRange { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("selectedRanges", ArgumentSemantic.Copy)]
 		NSArray SelectedRanges { get; set;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("visibleCharacterRanges", ArgumentSemantic.Copy)]
 		NSArray VisibleCharacterRanges { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("selectable")]
 		bool Selectable { [Bind ("isSelectable")] get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("stringAtIndex:effectiveRange:endsWithSearchBoundary:")]
+#if NET
+		string GetString (nuint index, out NSRange effectiveRange, bool endsWithSearchBoundary);
+#else
 		string StringAtIndexeffectiveRangeendsWithSearchBoundary (nuint characterIndex, ref NSRange outRange, bool outFlag);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("stringLength")]
+#if NET
+		nuint StringLength { get; }
+#else
 		nuint StringLength ();
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("scrollRangeToVisible:")]
 		void ScrollRangeToVisible (NSRange range);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("shouldReplaceCharactersInRanges:withStrings:")]
+#if NET
+		bool ShouldReplaceCharacters (NSArray ranges, NSArray strings);
+#else
 		bool ShouldReplaceCharactersInRangeswithStrings (NSArray ranges, NSArray strings);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("replaceCharactersInRange:withString:")]
+#if NET
+		void ReplaceCharacters (NSRange range, string str);
+#else
 		void ReplaceCharactersInRangewithString (NSRange range, string str);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("didReplaceCharacters")]
 		void DidReplaceCharacters ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("contentViewAtIndex:effectiveCharacterRange:")]
+#if NET
+		NSView GetContentView (nuint index, out NSRange outRange);
+#else
 		NSView ContentViewAtIndexeffectiveCharacterRange (nuint index, ref NSRange outRange);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("rectsForCharacterRange:")]
+#if NET
+		NSArray GetRects (NSRange characterRange);
+#else
 		NSArray RectsForCharacterRange (NSRange range);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
+#endif
 		[Export ("drawCharactersInRange:forContentView:")]
+#if !NET
 		void DrawCharactersInRangeforContentView (NSRange range, NSView view);
 #else
-		[Export ("drawCharactersInRange:forContentView:")]
 		void DrawCharacters (NSRange range, NSView view);
 #endif
 
@@ -18694,12 +18747,8 @@ namespace AppKit {
 		[Export ("insertText:")]
 		void InsertText (NSObject insertString);
 
-		// DoCommandBySelector conflicts with NSTextViewDelegate in generated code
-#if XAMCORE_4_0 
-		[Abstract]
-		[Export ("doCommandBySelector:")]
-		void DoCommandBySelector (Selector selector);
-#endif
+		// The doCommandBySelector: conflicts with NSTextViewDelegate in generated code
+		// It's also deprecated in NSTextInput, and why we're not adding it here
 
 		[Abstract]
 		[Export ("setMarkedText:selectedRange:")]
@@ -19315,33 +19364,63 @@ namespace AppKit {
 	[Protocol, Model]
 	interface NSTextInputClient
 	{
+#if NET
+		[Abstract]
+#endif
 		[Export ("insertText:replacementRange:")]
 		void InsertText (NSObject text, NSRange replacementRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("setMarkedText:selectedRange:replacementRange:")]
 		void SetMarkedText (NSObject text, NSRange selectedRange, NSRange replacementRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("unmarkText")]
 		void UnmarkText ();
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("selectedRange")]
 		NSRange SelectedRange { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("markedRange")]
 		NSRange MarkedRange { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("hasMarkedText")]
 		bool HasMarkedText { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("attributedSubstringForProposedRange:actualRange:")]
 		NSAttributedString GetAttributedSubstring (NSRange proposedRange, out NSRange actualRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("validAttributesForMarkedText")]
 		NSString [] ValidAttributesForMarkedText { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("firstRectForCharacterRange:actualRange:")]
 		CGRect GetFirstRect (NSRange characterRange, out NSRange actualRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("characterIndexForPoint:")]
 		nuint GetCharacterIndex (CGPoint point);
 
@@ -21199,6 +21278,8 @@ namespace AppKit {
 	[Model]
 	[Protocol]
 	partial interface NSWindowRestoration {
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static]
 		[Export ("restoreWindowWithIdentifier:state:completionHandler:")]
 		void RestoreWindow (string identifier, NSCoder state, NSWindowCompletionHandler onCompletion);
@@ -22166,11 +22247,15 @@ namespace AppKit {
 		[Export ("ruleEditor:displayValueForCriterion:inRow:"), DelegateName ("NSRulerEditorDisplayValue"), DefaultValue(null)]
 		NSObject DisplayValue (NSRuleEditor editor, NSObject criterion, nint row);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("ruleEditor:predicatePartsForCriterion:withDisplayValue:inRow:"), DelegateName ("NSRulerEditorPredicateParts"), DefaultValue(null)]
 		NSDictionary PredicateParts (NSRuleEditor editor, NSObject criterion, NSObject value, nint row);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("ruleEditorRowsDidChange:"), EventArgs ("NSNotification")]
 		void RowsDidChange (NSNotification notification);
 		
@@ -24390,7 +24475,7 @@ namespace AppKit {
 		bool IsAccessibilitySelectorAllowed (Selector selector);
 
 		[Mac (10, 12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("accessibilityRequired")]
@@ -24529,21 +24614,21 @@ namespace AppKit {
 		NSString AnnouncementRequestedNotification { get; }
 
 		[Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("accessibilityChildrenInNavigationOrder", ArgumentSemantic.Copy)]
 		NSAccessibilityElement[] AccessibilityChildrenInNavigationOrder { get; set; }
 
 		[Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("accessibilityCustomRotors", ArgumentSemantic.Copy)]
 		NSAccessibilityCustomRotor[] AccessibilityCustomRotors { get; set; }
 
 		[Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("accessibilityCustomActions", ArgumentSemantic.Copy)]
@@ -25945,6 +26030,9 @@ namespace AppKit {
 		[Export ("filePromiseProvider:fileNameForType:")]
 		string GetFileNameForDestination (NSFilePromiseProvider filePromiseProvider, string fileType);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
 		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 

@@ -67,7 +67,7 @@ namespace IntentsUI {
 	[Protocol]
 	interface INUIHostedViewControlling {
 
-#if !XAMCORE_4_0 && !__MACCATALYST__ // Apple made this member optional in iOS 11
+#if !NET && !__MACCATALYST__ // Apple made this member optional in iOS 11
 		[Abstract]
 #endif
 		[Export ("configureWithInteraction:context:completion:")]

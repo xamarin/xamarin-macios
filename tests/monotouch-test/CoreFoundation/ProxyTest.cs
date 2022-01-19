@@ -119,7 +119,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.XamarinUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.AreEqual (1, proxies.Length, "Length");
 			// assert the data of the proxy, although we are really testing the js used
@@ -133,7 +137,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.MicrosoftUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.IsNotNull (proxies, "Not null proxies");
 			Assert.AreEqual (1, proxies.Length, "Proxies length");
@@ -146,7 +154,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			var script = "Not VALID js";
 			var targetUri = NetworkResources.MicrosoftUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#endif
 			Assert.IsNotNull (error, "Not null error");
 			Assert.IsNull (proxies, "Null proxies");
 		}
@@ -170,7 +182,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {
@@ -208,7 +224,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {
@@ -230,7 +250,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = NetworkResources.XamarinUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.AreEqual (1, proxies.Length, "Length");
 			// assert the data of the proxy, although we are really testing the js used
@@ -243,7 +267,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = NetworkResources.MicrosoftUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.IsNotNull (proxies, "Not null proxies");
 			Assert.AreEqual (1, proxies.Length, "Proxies length");
@@ -267,7 +295,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {
@@ -302,7 +334,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {

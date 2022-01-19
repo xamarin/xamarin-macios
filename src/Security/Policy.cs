@@ -41,6 +41,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
+
 	public partial class SecPolicy : NativeObject {
 #if !NET
 		public SecPolicy (NativeHandle handle)
@@ -79,6 +80,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary, EntryPoint="SecPolicyGetTypeID")]
 		public extern static nint GetTypeID ();
 
+#if !NET
 		public static bool operator == (SecPolicy? a, SecPolicy? b)
 		{
 			if (a is null)
@@ -98,6 +100,8 @@ namespace Security {
 			return a.Handle != b.Handle;
 		}
 
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object? other)
 		{
 			var o = other as SecPolicy;
@@ -108,5 +112,6 @@ namespace Security {
 		{
 			return ((IntPtr) Handle).ToInt32 ();
 		}
+#endif
 	}
 }

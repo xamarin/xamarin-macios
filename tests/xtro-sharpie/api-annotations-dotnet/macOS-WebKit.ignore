@@ -1,11 +1,5 @@
 ## only a subset of the old, pre WKWebKit, is bound for macOS
 
-!incorrect-protocol-member! WebOpenPanelResultListener::cancel is REQUIRED and should be abstract
-!incorrect-protocol-member! WebOpenPanelResultListener::chooseFilename: is REQUIRED and should be abstract
-!incorrect-protocol-member! WebOpenPanelResultListener::chooseFilenames: is REQUIRED and should be abstract
-!incorrect-protocol-member! WebPolicyDecisionListener::download is REQUIRED and should be abstract
-!incorrect-protocol-member! WebPolicyDecisionListener::ignore is REQUIRED and should be abstract
-!incorrect-protocol-member! WebPolicyDecisionListener::use is REQUIRED and should be abstract
 !missing-enum! WKUserInterfaceDirectionPolicy not bound
 !missing-field! WebViewDidBeginEditingNotification not bound
 !missing-field! WebViewDidChangeNotification not bound
