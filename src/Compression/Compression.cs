@@ -16,7 +16,13 @@ using ObjCRuntime;
 
 namespace Compression
 {
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	public partial class CompressionStream : Stream
 	{
 		private const int DefaultBufferSize = 8192;
@@ -270,7 +276,7 @@ namespace Compression
 				ThrowStreamClosedException ();
 		}
 
-		[MethodImpl(MethodImplOptions.NoInlining)]
+		[MethodImpl (MethodImplOptions.NoInlining)]
 		private static void ThrowStreamClosedException ()
 		{
 			throw new ObjectDisposedException (null, "Can not access a closed Stream.");
@@ -282,7 +288,7 @@ namespace Compression
 				ThrowCannotReadFromDeflateStreamException ();
 		}
 
-		[MethodImpl(MethodImplOptions.NoInlining)]
+		[MethodImpl (MethodImplOptions.NoInlining)]
 		private static void ThrowCannotReadFromDeflateStreamException ()
 		{
 			throw new InvalidOperationException ("Reading from the compression stream is not supported.");
@@ -294,7 +300,7 @@ namespace Compression
 				ThrowCannotWriteToDeflateStreamException ();
 		}
 
-		[MethodImpl(MethodImplOptions.NoInlining)]
+		[MethodImpl (MethodImplOptions.NoInlining)]
 		private static void ThrowCannotWriteToDeflateStreamException()
 		{
 			throw new InvalidOperationException ("Writing to the compression stream is not supported.");
