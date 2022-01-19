@@ -56,7 +56,7 @@ namespace AudioUnit
 #endif
 		MIDIProcessor		= 0x61756d69, // 'aumi'
 
-// #if !MONOMAC
+#if !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 #else
@@ -81,7 +81,7 @@ namespace AudioUnit
 		[iOS (7,0)]
 #endif
 		RemoteMusicEffect	= 0x6174726d, // 'aurm'
-// #endif
+#endif
 	}
 
 	public enum AudioTypeOutput { // OSType in AudioComponentDescription
@@ -124,9 +124,9 @@ namespace AudioUnit
 		AUiPodTimeOther=0x6970746f, // 'ipto
 		RoundTripAAC=0x72616163, // 'raac'
 		MultiSplitter=0x6d73706c, // 'mspl'
-// #if MONOMAC
+#if MONOMAC
 		TimePitch=0x746d7074, // 'tmpt'
-// #else
+#else
 #if NET
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -141,7 +141,7 @@ namespace AudioUnit
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 #endif
 		AUiPodTime=0x6970746d, // 'iptm'
-// #endif
+#endif
 	}
 
 	public enum AudioTypeEffect { // OSType in AudioComponentDescription
@@ -211,7 +211,7 @@ namespace AudioUnit
 		MultiChannel=0x6d636d78, // 'mcmx'
 		Matrix=0x6d786d78, // 'mxmx'
 		Spacial=0x3364656d, // Same as Embedded3D
-// #if MONOMAC
+#if MONOMAC
 		Stereo=0x736d7872, // 'smxr'
 #if NET
 		[UnsupportedOSPlatform ("macos10.10")]
@@ -222,17 +222,14 @@ namespace AudioUnit
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Spacial' instead.")]
 #endif
 		ThreeD=0x33646d78, // '3dmx'
-// #else
+#else
 #if NET
 		[UnsupportedOSPlatform ("ios8.0")]
 #if IOS
 		[Obsolete ("Starting with ios8.0 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-#else
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Spacial' instead.")]
-#endif
 		Embedded3D=0x3364656d, // '3dem'
-// #endif
+#endif
 	}
 
 	public enum AudioTypePanner { // OSType in AudioComponentDescription

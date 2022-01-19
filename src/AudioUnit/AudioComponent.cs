@@ -56,7 +56,7 @@ namespace AudioUnit
 
 #if !COREBUILD
 
-// #if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+#if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 #if NET
@@ -69,8 +69,9 @@ namespace AudioUnit
 	[Mac (10,13)]
 	[iOS (11,0)]
 #endif
+#if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
-// #endif
+#endif
 	public partial class ResourceUsageInfo : DictionaryContainer {
 		static NSString userClientK = new NSString ("iokit.user-client");
 		static NSString globalNameK = new NSString ("mach-lookup.global-name");
@@ -237,7 +238,7 @@ namespace AudioUnit
 			}
 		}
 	}
-// #endif // (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+#endif // (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
 
 #endif // !COREBUILD
 
@@ -379,8 +380,8 @@ namespace AudioUnit
 			return Runtime.GetNSObject<UIImage> (ptr, owns: true);
 		}
 
-// #if !MONOMAC
-// #if !__MACCATALYST__
+#if !MONOMAC
+#if !__MACCATALYST__
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[UnsupportedOSPlatform ("tvos14.0")]
@@ -416,7 +417,7 @@ namespace AudioUnit
 		{
 			return Runtime.GetNSObject<UIKit.UIImage> (AudioComponentGetIcon (Handle, desiredPointSize));
 		}
-// #endif // !__MACCATALYST__
+#endif // !__MACCATALYST__
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
@@ -466,7 +467,7 @@ namespace AudioUnit
 				return AudioComponentGetLastActiveTime (Handle);
 			}
 		}
-// #else
+#else
 		// extern NSImage * __nullable AudioComponentGetIcon (AudioComponent __nonnull comp) __attribute__((availability(macosx, introduced=10.11)));
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
@@ -495,9 +496,9 @@ namespace AudioUnit
 		{
 			return Runtime.GetNSObject<AppKit.NSImage> (AudioComponentGetIcon (Handle));
 		}
-// #endif
+#endif
 
-// #if IOS || MONOMAC
+#if IOS || MONOMAC
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
@@ -580,7 +581,7 @@ namespace AudioUnit
 				}
 			}
 		}
-// #endif
+#endif
 
 #endif // !COREBUILD
     }
