@@ -1999,9 +1999,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 
 		<ItemGroup>
-			<_AppExtensionCodesignProperties Remove="@(_AppExtensionCodesignProperties)" />
-
-			<_AppExtensionCodesignProperties Include="$(_AppBundleFileName)">
+			<_AppExtensionCodesignPropertiesToWrite Include="$(_AppBundleFileName)">
 				<CodesignAppExtensionInputs>$(_CodesignAppExtensionInputs)</CodesignAppExtensionInputs>
 				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
@@ -2012,12 +2010,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<LibrarySigningKey>$(_LibrarySigningKey)</LibrarySigningKey>
 				<SigningKey>$(_CodeSigningKey)</SigningKey>
 				<ExtraArgs>$(CodesignExtraArgs)</ExtraArgs>
-			</_AppExtensionCodesignProperties>
+			</_AppExtensionCodesignPropertiesToWrite>
 		</ItemGroup>
 
 		<WriteItemsToFile
 			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_AppExtensionCodesignProperties)"
+			Items="@(_AppExtensionCodesignPropertiesToWrite)"
 			ItemName="_AppExtensionCodesignProperties"
 			File="$(DeviceSpecificOutputPath)codesign.items"
 			IncludeMetadata="true"
