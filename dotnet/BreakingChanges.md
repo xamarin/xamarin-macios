@@ -85,3 +85,15 @@ interacting with the platform.
 In .NET, we've changed the managed SCNMatrix4 to be a column-major matrix, to
 match the native version. This means that any transposing that's currently
 done when accessing Apple APIs has to be undone.
+
+## Some types were moved from the CoreServices namespace to the CFNetwork namespace.
+
+The following types:
+
+* CFHTTPStream
+* CFHTTPMessage
+* CFHTTPAuthentication
+
+were moved from the CoreServices namespace to the CFNetwork namespace.
+
+This requires adding a `using CFNetwork;` statement to any files that uses these types.
