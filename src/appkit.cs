@@ -21952,28 +21952,34 @@ namespace AppKit {
 		
 		[Export ("active")]
 		bool Active { [Bind ("isActive")] get;  }
-		
+
 		[Export ("activationPolicy")]
 		NSApplicationActivationPolicy ActivationPolicy { get;  }
-		
+
+		[NullAllowed]
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get;  }
-		
+
+		[NullAllowed]
 		[Export ("bundleIdentifier", ArgumentSemantic.Copy)]
 		string BundleIdentifier { get;  }
-		
+
+		[NullAllowed]
 		[Export ("bundleURL", ArgumentSemantic.Copy)]
 		NSUrl BundleUrl { get;  }
-		
+
+		[NullAllowed]
 		[Export ("executableURL", ArgumentSemantic.Copy)]
 		NSUrl ExecutableUrl { get;  }
 
 		[Export ("processIdentifier")]
 		int ProcessIdentifier { get;  } /* pid_t = int */
-		
+
+		[NullAllowed]
 		[Export ("launchDate", ArgumentSemantic.Copy)]
 		NSDate LaunchDate { get;  }
 		
+		[NullAllowed]
 		[Export ("icon", ArgumentSemantic.Strong)]
 		NSImage Icon { get;  }
 		
