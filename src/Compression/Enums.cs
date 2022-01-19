@@ -5,14 +5,8 @@ using ObjCRuntime;
 namespace Compression {
 
 	// this enum as per the headers is an int NOT an NSInteger
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
-	[iOS (9,0)]
-	[TV (9,0)]
-	[Mac (10,11)]
+#if !NET
+	[iOS (9,0), TV (9,0), Mac (10,11)]
 #endif
 	public enum CompressionAlgorithm {
 		LZ4 = 0x100,
