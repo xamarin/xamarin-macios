@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class GetFiles : GetFilesTaskBase, ITaskCallback, ICancelableTask
 	{
