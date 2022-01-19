@@ -388,11 +388,7 @@ namespace AudioUnit
 #if !MONOMAC
 		[Obsolete ("This API is not available on iOS.")]
 #endif
-#if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 		[MacCatalyst (15,0)]
-#endif
 		public static uint GetCurrentInputDevice ()
 		{
 #if MONOMAC || __MACCATALYST__
@@ -669,39 +665,18 @@ namespace AudioUnit
 		#endregion
 
 #if !MONOMAC
-#if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.MacCatalyst, 14,0)]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
 
-#if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
 		{
 
@@ -716,39 +691,18 @@ namespace AudioUnit
 			}
 		}
 
-#if !NET
 		[iOS (7,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
 		[Deprecated (PlatformName.MacCatalyst, 14,0)]
-#else
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
 
-#if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
-#else
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public UIKit.UIImage? GetHostIcon (float desiredPointSize)
 		{
 			return Runtime.GetNSObject<UIKit.UIImage> (AudioOutputUnitGetHostIcon (Handle, desiredPointSize));
@@ -923,11 +877,7 @@ namespace AudioUnit
 		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
 #if MONOMAC || __MACCATALYST__
-#if !NET
 		[MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.CoreAudioLibrary)]
 		static extern int AudioObjectGetPropertyData (
 			uint inObjectID,
@@ -1116,14 +1066,7 @@ namespace AudioUnit
 		ParameterRamp = 2,
 		Midi = 8,
 		MidiSysEx = 9,
-#if !NET
 		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("macos12.0")]
-#endif
 		MidiEventList  = 10,
 	}
 
@@ -1233,9 +1176,7 @@ namespace AudioUnit
  		public float Value;
  	}
 
-#if !NET
 	[iOS (10,0), Mac (10,12)]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {
 		public ulong HostTime;
