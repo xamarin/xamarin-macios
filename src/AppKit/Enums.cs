@@ -22,17 +22,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
 namespace AppKit {
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSRunResponse : long {
 		Stopped = -1000,
@@ -40,11 +35,7 @@ namespace AppKit {
 		Continues = -1002
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSApplicationActivationOptions : ulong {
 		Default = 0,
@@ -52,21 +43,13 @@ namespace AppKit {
 		ActivateIgnoringOtherWindows = 2
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSApplicationActivationPolicy : long {
 		Regular, Accessory, Prohibited
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSApplicationPresentationOptions : ulong {
@@ -86,20 +69,11 @@ namespace AppKit {
 
 		FullScreen                 = (1 << 10),
 		AutoHideToolbar            = (1 << 11),
-#if NET
-		[SupportedOSPlatform ("macos10.11.2")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,11,2)]
-#endif
 		DisableCursorLocationAssistance = (1 << 12),
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSApplicationDelegateReply : ulong {
 		Success,
@@ -107,43 +81,27 @@ namespace AppKit {
 		Failure
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSRequestUserAttentionType : ulong {
 		CriticalRequest = 0,
 		InformationalRequest = 10
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSApplicationTerminateReply : ulong {
 		Cancel, Now, Later
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSApplicationPrintReply : ulong {
 		Cancelled, Success, Failure, ReplyLater
 	}
 
 #if !XAMCORE_4_0
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSApplicationLayoutDirection : long {
 		LeftToRight = 0,
@@ -151,21 +109,13 @@ namespace AppKit {
 	}
 #endif
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageInterpolation : ulong {
 		Default, None, Low, Medium, High
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSComposite : ulong {
 		Clear,
@@ -180,189 +130,55 @@ namespace AppKit {
 		DestinationAtop,
 		XOR,
 		PlusDarker,
-#if NET
-		[UnsupportedOSPlatform ("macos10.10")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.10 use NSCompositeSourceOver instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSCompositeSourceOver instead.")]
-#endif
 		Highlight,
 		PlusLighter,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Multiply,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Screen,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Overlay,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Darken,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Lighten,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		ColorDodge,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		ColorBurn,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		SoftLight,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		HardLight,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Difference,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Exclusion,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Hue,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Saturation,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Color,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Luminosity
+		[Mac (10,10)] Multiply,
+		[Mac (10,10)] Screen,
+		[Mac (10,10)] Overlay,
+		[Mac (10,10)] Darken,
+		[Mac (10,10)] Lighten,
+		[Mac (10,10)] ColorDodge,
+		[Mac (10,10)] ColorBurn,
+		[Mac (10,10)] SoftLight,
+		[Mac (10,10)] HardLight,
+		[Mac (10,10)] Difference,
+		[Mac (10,10)] Exclusion,
+		[Mac (10,10)] Hue,
+		[Mac (10,10)] Saturation,
+		[Mac (10,10)] Color,
+		[Mac (10,10)] Luminosity
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBackingStore : ulong {
-#if NET
-		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'Buffered' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
-#endif
 		Retained, 
-#if NET
-		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'Buffered' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
-#endif
 		Nonretained, 
 		Buffered,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindowOrderingMode : long {
 		Below = -1, Out, Above,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSFocusRingPlacement : ulong {
 		RingOnly, RingBelow, RingAbove,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSFocusRingType : ulong {
 		Default, None, Exterior
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSColorRenderingIntent : long {
 		Default,
@@ -373,32 +189,20 @@ namespace AppKit {
 		
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.0")]
-#else
 	[MacCatalyst (13, 0)]
-#endif
 	[Native]
 	public enum NSRectEdge : ulong {
 		MinXEdge, MinYEdge, MaxXEdge, MaxYEdge
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSUserInterfaceLayoutDirection : long {
 		LeftToRight, RightToLeft
 	}
 
 #region NSColorSpace
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSColorSpaceModel : long {
 		Unknown = -1,
@@ -414,11 +218,7 @@ namespace AppKit {
 
 #region NSFileWrapper
 #if !XAMCORE_3_0
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead.")]
@@ -429,22 +229,14 @@ namespace AppKit {
 #endregion
 	
 #region NSParagraphStyle
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextTabType : ulong {
 		Left, Right, Center, Decimal
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoMacCatalyst]
-#endif
 	[Native]
+	[NoMacCatalyst]
 	public enum NSLineBreakMode : ulong {
 		ByWordWrapping,
 		CharWrapping,
@@ -459,17 +251,9 @@ namespace AppKit {
 #region NSCell Defines 
 
 #if !XAMCORE_4_0
-#if NET
-	[UnsupportedOSPlatform ("macos10.10")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.10 use formatters instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use formatters instead.")]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use formatters instead.")]
 	public enum NSType : ulong {
 	    Any			= 0,
 	    Int			= 1,
@@ -481,11 +265,7 @@ namespace AppKit {
 	}
 #endif
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSCellType : ulong {
 	    Null,
@@ -493,11 +273,7 @@ namespace AppKit {
 	    Image
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSCellAttribute : ulong {
 		CellDisabled,
@@ -519,11 +295,7 @@ namespace AppKit {
 		CellAllowsMixedState,
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSCellImagePosition : ulong {
 		NoImage,
@@ -533,27 +305,13 @@ namespace AppKit {
 		ImageBelow,
 		ImageAbove,
 		ImageOverlaps,
-#if NET
-		[SupportedOSPlatform ("macos10.12")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,12)]
-#endif
 		ImageLeading,
-#if NET
-		[SupportedOSPlatform ("macos10.12")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,12)]
-#endif
 		ImageTrailing,
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageScale : ulong {
 		ProportionallyDown = 0,
@@ -562,11 +320,7 @@ namespace AppKit {
 		ProportionallyUpOrDown
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSCellStateValue : long {
 		Mixed = -1,
@@ -574,11 +328,7 @@ namespace AppKit {
 		On
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSCellStyleMask : ulong {
@@ -589,11 +339,7 @@ namespace AppKit {
 		ChangeBackgroundCell = 1 << 3
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSCellHit : ulong {
@@ -603,11 +349,7 @@ namespace AppKit {
 		TrackableArae = 4
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSControlTint : ulong {
 		Default  = 0,	// system 'default'
@@ -616,53 +358,24 @@ namespace AppKit {
 		Clear    = 7
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSControlSize : ulong {
 		Regular = 0, 
 		Small = 1,
 		Mini = 2,
-#if NET
-		[SupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (11,0)]
-#endif
 		Large = 3,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBackgroundStyle : long {
 		Normal = 0,
-#if NET
-		[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'Normal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Normal' instead.")]
-#endif
 		Light = Normal,
 		Emphasized,
-#if NET
-		[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'Emphasized' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Emphasized' instead.")]
-#endif
 		Dark = Emphasized, 
 		Raised, 
 		Lowered,
@@ -671,11 +384,7 @@ namespace AppKit {
 
 #region NSImage
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageLoadStatus : ulong {
 	    		Completed,
@@ -685,11 +394,7 @@ namespace AppKit {
 	    		ReadError
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageCacheMode : ulong {
 		Default, 
@@ -698,13 +403,8 @@ namespace AppKit {
 		Never    
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,10)]
-#endif
 	[Native (ConvertToNative = "NSImageResizingModeExtensions.ToNative", ConvertToManaged = "NSImageResizingModeExtensions.ToManaged")]
 	public enum NSImageResizingMode : long {
 		Stretch,
@@ -714,23 +414,14 @@ namespace AppKit {
 #endregion
 	
 #region NSAlert
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSAlertStyle : ulong {
 		Warning, Informational, Critical
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.9")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,9)]
-#endif
 	[Native]
 	public enum NSModalResponse : long {
 		OK = 1,
@@ -742,11 +433,7 @@ namespace AppKit {
 #endregion
 
 #region NSEvent
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSEventType : ulong {
 		LeftMouseDown = 1,            
@@ -787,20 +474,11 @@ namespace AppKit {
 		QuickLook = 33,
 		Pressure = 34, // 10.10.3, 64-bit-only
 		DirectTouch = 37, // 10.10
-#if NET
-		[SupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,15)]
-#endif
 		ChangeMode = 38,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	public enum NSEventMask : ulong {
 		LeftMouseDown         = 1UL << (int)NSEventType.LeftMouseDown,
@@ -835,21 +513,12 @@ namespace AppKit {
 		SmartMagnify          = 1UL << (int)NSEventType.SmartMagnify,
 		Pressure              = 1UL << (int)NSEventType.Pressure, // 10.10.3, 64-bit-only
 		DirectTouch           = 1UL << (int)NSEventType.DirectTouch, // 10.10
-#if NET
-		[SupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,15)]
-#endif
 		ChangeMode            = 1UL << (int)NSEventType.ChangeMode,
 		AnyEvent              = unchecked ((ulong)UInt64.MaxValue)
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSEventModifierMask : ulong {
@@ -864,21 +533,13 @@ namespace AppKit {
 		DeviceIndependentModifierFlagsMask    = 0xffff0000
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPointingDeviceType : ulong {
 		Unknown, Pen, Cursor, Eraser
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSEventButtonMask : ulong {
@@ -887,11 +548,10 @@ namespace AppKit {
 
 	// This enum is defined as an untyped enum in MacOSX.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
 	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
+	[NoMacCatalyst]
 #if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
 	public enum NSKey {
 #else
-	[NoMacCatalyst]
 	[Native]
 	public enum NSKey : ulong {
 #endif
@@ -1015,13 +675,12 @@ namespace AppKit {
 	}
 
 	// This is an untyped enum in AppKit's NSEvent.h
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-	public enum NSFunctionKey : int {
-#else
 	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSFunctionKey : ulong {
+#else
+	public enum NSFunctionKey : int {
 #endif
 		UpArrow        = 0xF700,
 		DownArrow      = 0xF701,
@@ -1097,13 +756,12 @@ namespace AppKit {
 		ModeSwitch     = 0xF747
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-	public enum NSEventSubtype : short {
-#else
 	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSEventSubtype : ulong {
+#else
+	public enum NSEventSubtype : short {
 #endif
 		/* event subtypes for NSEventTypeAppKitDefined events */
 		WindowExposed = 0,
@@ -1128,73 +786,25 @@ namespace AppKit {
 	}
 
 #if !NET
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSystemDefinedEvents : ulong {
-#if NET
-		[UnsupportedOSPlatform ("macos10.12")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.12 use 'NSEventSubtype.PowerOff' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.PowerOff' instead.")]
-#endif
 		NSPowerOffEventType = 1
 	}
 #endif // !NET
 
 #if !NET
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSEventMouseSubtype : ulong {
-#if NET
-		[UnsupportedOSPlatform ("macos10.12")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.12 use 'NSEventSubtype.MouseEvent' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.MouseEvent' instead.")]
-#endif
 		Mouse, 
-#if NET
-		[UnsupportedOSPlatform ("macos10.12")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.12 use 'NSEventSubtype.TabletPoint' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletPoint' instead.")]
-#endif
 		TablePoint, 
-#if NET
-		[UnsupportedOSPlatform ("macos10.12")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.12 use 'NSEventSubtype.TabletProximity' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletProximity' instead.")]
-#endif
 		TabletProximity,
-#if NET
-		[UnsupportedOSPlatform ("macos10.12")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.12 use 'NSEventSubtype.Touch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.Touch' instead.")]
-#endif
 		Touch,
 	}
 #endif // !NET
@@ -1202,11 +812,7 @@ namespace AppKit {
 #endregion
 
 #region NSView
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSViewResizingMask : ulong {
@@ -1219,51 +825,30 @@ namespace AppKit {
 		MaxYMargin		= 32
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBorderType : ulong {
 		NoBorder, LineBorder, BezelBorder, GrooveBorder
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextFieldBezelStyle : ulong {
 		Square, Rounded
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSViewLayerContentsRedrawPolicy : long {
 		Never,
 		OnSetNeedsDisplay,
 		DuringViewResize, 
 		BeforeViewResize,
-#if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,9)]
-#endif
 		Crossfade = 4,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSViewLayerContentsPlacement : long {
 		ScaleAxesIndependently,
@@ -1284,11 +869,7 @@ namespace AppKit {
 	
 #region NSWindow
 	// This enum is called NSWindowStyleMask in the headers.
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSWindowStyle : ulong {
@@ -1300,65 +881,31 @@ namespace AppKit {
 		Utility		       					= 1 << 4,
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
-#if NET
-		[UnsupportedOSPlatform ("macos11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos11.0 don't use 'TexturedBackground' anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Don't use 'TexturedBackground' anymore.")]
-#endif
 		TexturedBackground     				= 1 << 8,
 #if !NET
-#if NET
-		[UnsupportedOSPlatform ("macos10.9")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 don't use, this value has no effect.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Don't use, this value has no effect.")]
-#endif
 		Unscaled	       					= 1 << 11,
 #endif
 		UnifiedTitleAndToolbar 				= 1 << 12,
 		Hud		       						= 1 << 13,
 		FullScreenWindow       				= 1 << 14,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		FullSizeContentView   = 1 << 15 
+		[Mac (10,10)] FullSizeContentView   = 1 << 15 
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindowSharingType : ulong {
 		None, ReadOnly, ReadWrite
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindowBackingLocation : ulong {
 		Default, VideoMemory, MainMemory,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSWindowCollectionBehavior : ulong {
@@ -1373,27 +920,11 @@ namespace AppKit {
 		FullScreenPrimary = 1 << 7,
 		FullScreenAuxiliary = 1 << 8,
 		FullScreenNone = 1 << 9,
-#if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 11)]
-#endif
-		FullScreenAllowsTiling = 1 << 11,
-#if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 11)]
-#endif
-FullScreenDisallowsTiling = 1 << 12
+		[Mac (10, 11)] FullScreenAllowsTiling = 1 << 11,
+		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSWindowNumberListOptions : ulong {
@@ -1401,11 +932,7 @@ FullScreenDisallowsTiling = 1 << 12
 		AllSpaces = 1 << 4
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSelectionDirection : ulong {
 		Direct = 0,
@@ -1413,31 +940,15 @@ FullScreenDisallowsTiling = 1 << 12
 		Previous
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindowButton : ulong {
 		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
-#if NET
-		[UnsupportedOSPlatform ("macos10.12")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.12 the standard window button for FullScreenButton is always null; use ZoomButton instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "The standard window button for FullScreenButton is always null; use ZoomButton instead.")]
-#endif
 		FullScreenButton
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTouchPhase : ulong {
@@ -1453,11 +964,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 #region NSAnimation
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSAnimationCurve : ulong {
 		EaseInOut,
@@ -1466,11 +973,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Linear
 	};
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSAnimationBlockingMode : ulong {
 		Blocking,
@@ -1481,11 +984,7 @@ FullScreenDisallowsTiling = 1 << 12
 
 #region NSBox
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTitlePosition : ulong {
 		NoTitle,
@@ -1497,43 +996,21 @@ FullScreenDisallowsTiling = 1 << 12
 		BelowBottom
 	};
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBoxType : ulong {
 		NSBoxPrimary,
-#if NET
-		[UnsupportedOSPlatform ("maccatalyst")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 identical to 'NSBoxPrimary'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Obsoleted (PlatformName.MacOSX, 10,15, message: "Identical to 'NSBoxPrimary'.")]
-#endif
 		NSBoxSecondary,
 		NSBoxSeparator,
-#if NET
-		[UnsupportedOSPlatform ("maccatalyst")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 'NSBoxOldStyle' is discouraged. Use 'NSBoxPrimary' or 'NSBoxCustom'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Obsoleted (PlatformName.MacOSX, 10,15, message: "'NSBoxOldStyle' is discouraged. Use 'NSBoxPrimary' or 'NSBoxCustom'.")]
-#endif
 		NSBoxOldStyle,
 		NSBoxCustom
 	};
 #endregion
 
 #region NSButtonCell
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSButtonType : ulong {
 		MomentaryLightButton,
@@ -1548,11 +1025,7 @@ FullScreenDisallowsTiling = 1 << 12
 		MultiLevelAccelerator // 10.10.3
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBezelStyle : ulong {
 		Rounded = 1,
@@ -1572,17 +1045,9 @@ FullScreenDisallowsTiling = 1 << 12
 		Inline
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.12")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.12 the GradientType property is unused, and setting it has no effect.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 12, message : "The GradientType property is unused, and setting it has no effect.")]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 12, message : "The GradientType property is unused, and setting it has no effect.")]
 	public enum NSGradientType : ulong {
 		None,
 		ConcaveWeak,
@@ -1594,11 +1059,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 
 #region NSGraphics
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	// NSGraphics.h:typedef int NSWindowDepth;
 	public enum NSWindowDepth : int {
 		TwentyfourBitRgb = 0x208,
@@ -1606,11 +1067,7 @@ FullScreenDisallowsTiling = 1 << 12
 		OneHundredTwentyEightBitRgb = 0x220	
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSCompositingOperation : ulong {
 		Clear,
@@ -1628,118 +1085,39 @@ FullScreenDisallowsTiling = 1 << 12
 		Highlight,
 		PlusLighter,
 
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Multiply,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Screen,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Overlay,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Darken,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Lighten,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		ColorDodge,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		ColorBurn,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		SoftLight,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		HardLight,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Difference,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Exclusion,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Hue,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Saturation,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Color,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10, 10)]
-#endif
 		Luminosity
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSAnimationEffect : ulong {
 		DissapearingItemDefault = 0,
@@ -1748,11 +1126,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 	
 #region NSMatrix
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSMatrixMode : ulong {
 		Radio, Highlight, List, Track
@@ -1760,21 +1134,13 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 
 #region NSBrowser
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBrowserColumnResizingType : ulong {
 		None, Auto, User
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBrowserDropOperation : ulong {
 		On, Above
@@ -1782,11 +1148,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 
 #region NSColorPanel
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSColorPanelMode : long {
 		None = -1,
@@ -1800,11 +1162,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Crayon
 	};
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSColorPanelFlags : ulong {
@@ -1823,22 +1181,14 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 #region NSDocument
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSDocumentChangeType : ulong  {
 		Done, Undone, Cleared, ReadOtherContents, Autosaved, Redone,
 		Discardable = 256 /* New in Lion */
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSaveOperationType : ulong  {
 		Save, SaveAs, SaveTo,
@@ -1852,41 +1202,25 @@ FullScreenDisallowsTiling = 1 << 12
 
 #region NSBezelPath
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSLineCapStyle : ulong {
 		Butt, Round, Square
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSLineJoinStyle : ulong {
 		Miter, Round, Bevel
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindingRule : ulong {
 		NonZero, EvenOdd
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBezierPathElement : ulong {
 		MoveTo, LineTo, CurveTo, ClosePath
@@ -1894,11 +1228,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 
 #region NSRulerView
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSRulerOrientation : ulong {
 		Horizontal, Vertical
@@ -1906,13 +1236,8 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 
 #region NSGestureRecognizer
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,10)]
-#endif
 	[Native]
 	public enum NSGestureRecognizerState : long {
 		Possible,
@@ -1926,11 +1251,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endregion
 
 #region NSStackLayout
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSUserInterfaceLayoutOrientation : long {
 		Horizontal = 0,
@@ -1938,11 +1259,7 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 
 	// NSStackView.h:typedef float NSStackViewVisibilityPriority
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	public enum NSStackViewVisibilityPriority : int {
 		MustHold = 1000,
 #if !XAMCORE_4_0
@@ -1953,11 +1270,7 @@ FullScreenDisallowsTiling = 1 << 12
 		NotVisible = 0
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSStackViewGravity : long {
 		Top = 1,
@@ -1968,13 +1281,8 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 #endregion
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSStackViewDistribution : long
 	{
@@ -1986,11 +1294,7 @@ FullScreenDisallowsTiling = 1 << 12
 		EqualCentering
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSDragOperation : ulong {
@@ -2005,11 +1309,7 @@ FullScreenDisallowsTiling = 1 << 12
 		All = ulong.MaxValue,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native (ConvertToNative = "NSTextAlignmentExtensions.ToNative", ConvertToManaged = "NSTextAlignmentExtensions.ToManaged")]
 	public enum NSTextAlignment : ulong {
 		Left = 0,
@@ -2033,11 +1333,7 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 #endif // !NET && MONOMAC
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextMovement : long {
 		Other = 0,
@@ -2051,11 +1347,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Cancel = 0x17
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSMenuProperty : ulong {
@@ -2067,21 +1359,13 @@ FullScreenDisallowsTiling = 1 << 12
 		AccessibilityDescription = 1 << 5
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSFontRenderingMode : ulong {
 		Default, Antialiased, IntegerAdvancements, AntialiasedIntegerAdvancements
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSPasteboardReadingOptions : ulong {
@@ -2108,11 +1392,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endif
 
 	// Convenience enum, untyped in ObjC
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	public enum NSUnderlinePattern : int {
 		Solid             = 0x0000,
 		Dot               = 0x0100,
@@ -2121,32 +1401,20 @@ FullScreenDisallowsTiling = 1 << 12
 		DashDotDot        = 0x0400
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSelectionAffinity : ulong {
 		Upstream, Downstream
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSelectionGranularity : ulong {
 		Character, Word, Paragraph
 	}
 
 #region NSTrackingArea
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTrackingAreaOptions : ulong {
@@ -2163,11 +1431,7 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 #endregion
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSLineSweepDirection : ulong {
 		NSLineSweepLeft,
@@ -2176,21 +1440,13 @@ FullScreenDisallowsTiling = 1 << 12
 		NSLineSweepUp
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSLineMovementDirection : ulong {
 		None, Left, Right, Down, Up
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum  NSTiffCompression : ulong {
 		None = 1,
@@ -2198,36 +1454,16 @@ FullScreenDisallowsTiling = 1 << 12
 		CcittFax4 = 4,
 		Lzw = 5,
 
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		Jpeg		= 6,
 		Next		= 32766,
 		PackBits	= 32773,
 
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		OldJpeg		= 32865
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSBitmapImageFileType : ulong {
 		Tiff,
@@ -2238,11 +1474,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Jpeg2000
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageRepLoadStatus : long {
 		UnknownType     = -1,
@@ -2253,11 +1485,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Completed       = -6 
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSBitmapFormat : ulong {
@@ -2271,39 +1499,23 @@ FullScreenDisallowsTiling = 1 << 12
 		BigEndian32Bit = 1 << 11
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPrintingOrientation : ulong {
 		Portrait, Landscape
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPrintingPaginationMode : ulong {
 		Auto, Fit, Clip
 	}
 
 #if !NET
-#if NET
-	[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.11 use 'NSGlyphProperty' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
-#endif
 	[Flags]
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : ulong {
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
@@ -2312,16 +1524,8 @@ FullScreenDisallowsTiling = 1 << 12
 #endif // !NET
 
 #if !XAMCORE_4_0
-#if NET
-	[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.11 use NSTextStorageEditActions instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use NSTextStorageEditActions instead.")]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTextStorageEditedFlags : ulong {
@@ -2330,27 +1534,15 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 #endif
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPrinterTableStatus : ulong {
 		Ok, NotFound, Error
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14)]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]	
 	public enum NSScrollArrowPosition : ulong {
 		MaxEnd = 0,
 		MinEnd = 1,
@@ -2358,81 +1550,37 @@ FullScreenDisallowsTiling = 1 << 12
 		None = 2,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSUsableScrollerParts : ulong {
 		NoScroller, 
-#if NET
-		[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Deprecated (PlatformName.MacOSX, 10, 14)]
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 14)]		
 		OnlyArrows, 
 		All,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSScrollerPart : ulong {
 		None,
 		DecrementPage,
 		Knob,
 		IncrementPage,
-#if NET
-		[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Deprecated (PlatformName.MacOSX, 10, 14)]
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 14)]	
 		DecrementLine,
-#if NET
-		[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Deprecated (PlatformName.MacOSX, 10, 14)]
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 14)]	
 		IncrementLine,
 		KnobSlot,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14)]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]		
 	public enum NSScrollerArrow : ulong {
 		IncrementArrow, DecrementArrow
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPrintingPageOrder : long {
 		Descending = -1,
@@ -2441,11 +1589,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Unknown
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSPrintPanelOptions : long {
@@ -2459,21 +1603,13 @@ FullScreenDisallowsTiling = 1 << 12
 		ShowsPreview = 131072
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextBlockValueType : ulong {
 		Absolute, Percentage
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextBlockDimension : ulong {
 		Width = 0,
@@ -2484,52 +1620,32 @@ FullScreenDisallowsTiling = 1 << 12
 		MaximumHeight = 6,
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextBlockLayer : long {
 		Padding = -1, Border, Margin
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextBlockVerticalAlignment : ulong {
 		Top, Middle, Bottom, Baseline
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextTableLayoutAlgorithm : ulong {
 		Automatic, Fixed
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTextListOptions : ulong {
 		PrependEnclosingMarker = 1
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	public enum NSFontSymbolicTraits : int { // uint32_t NSFontSymbolicTraits
 		ItalicTrait = (1 << 0),
@@ -2539,19 +1655,9 @@ FullScreenDisallowsTiling = 1 << 12
 		MonoSpaceTrait = (1 << 10),
 		VerticalTrait = (1 << 11), 
 		UIOptimizedTrait = (1 << 12),
-#if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,13)]
-#endif
 		TraitTightLeading = 1 << 15,
-#if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,13)]
-#endif
 		TraitLooseLeading = 1 << 16,
 		TraitEmphasized = BoldTrait,
 		UnknownClass = 0 << 28,
@@ -2569,11 +1675,7 @@ FullScreenDisallowsTiling = 1 << 12
 		FamilyClassMask = (int) -268435456,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSFontTraitMask : ulong {
@@ -2591,48 +1693,28 @@ FullScreenDisallowsTiling = 1 << 12
 		Unitalic = 0x1000000
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSPasteboardWritingOptions : ulong	 {
 		WritingPromised = 1 << 9
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.0")]
-#else
 	[MacCatalyst (13, 0)]
-#endif
 	[Native]
 	public enum NSToolbarDisplayMode : ulong {
 		Default, IconAndLabel, Icon, Label
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.0")]
-#else
 	[MacCatalyst (13, 0)]
-#endif
 	[Native]
 	public enum NSToolbarSizeMode : ulong {
 		Default, Regular, Small
 	}
 
 #if !NET
-#if NET
-	[UnsupportedOSPlatform ("macos10.10")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.10 use NSAlertButtonReturn instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
-#endif
 	[Native]
 	public enum NSAlertType : long {
 		ErrorReturn = -2,
@@ -2643,27 +1725,15 @@ FullScreenDisallowsTiling = 1 << 12
 #endif // !NET
 
 #if !XAMCORE_4_0
-#if NET
-	[UnsupportedOSPlatform ("macos10.10")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.10 use NSModalResponse instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSModalResponse instead.")]
-#endif
 	[Native]
 	public enum NSPanelButtonType : long {
 		Cancel, Ok
 	}
 #endif
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTableViewColumnAutoresizingStyle : ulong {
 		None = 0,
@@ -2674,32 +1744,16 @@ FullScreenDisallowsTiling = 1 << 12
 		FirstColumnOnly
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTableViewSelectionHighlightStyle : long {
 		None = -1,
 		Regular = 0,
-#if NET
-		[UnsupportedOSPlatform ("macos11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos11.0 set 'NSTableView.Style' to 'NSTableViewStyle.SourceList' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Set 'NSTableView.Style' to 'NSTableViewStyle.SourceList' instead.")]
-#endif
 		SourceList = 1,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTableViewDraggingDestinationFeedbackStyle : long {
 		None = -1,
@@ -2708,22 +1762,14 @@ FullScreenDisallowsTiling = 1 << 12
 		FeedbackStyleGap = 2,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTableViewDropOperation : ulong {
 		On,
 		Above
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTableColumnResizing : long {
@@ -2732,11 +1778,7 @@ FullScreenDisallowsTiling = 1 << 12
 		UserResizingMask = ( 1 << 1 )
 	} 
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTableViewGridStyle : ulong {
@@ -2746,11 +1788,7 @@ FullScreenDisallowsTiling = 1 << 12
 		DashedHorizontalGridLine = 1 << 3
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSGradientDrawingOptions : ulong {
@@ -2759,11 +1797,7 @@ FullScreenDisallowsTiling = 1 << 12
 		AfterEndingLocation =    (1 << 1)
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageAlignment : ulong {
 		Center = 0,
@@ -2777,11 +1811,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Right
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageFrameStyle : ulong {
 		None = 0,
@@ -2791,11 +1821,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Button
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSpeechBoundary : ulong {
 		Immediate =  0,
@@ -2807,11 +1833,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Sentence
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSplitViewDividerStyle : long {
 		Thick = 1,
@@ -2819,13 +1841,8 @@ FullScreenDisallowsTiling = 1 << 12
 		PaneSplitter = 3
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSSplitViewItemBehavior : long
 	{
@@ -2834,11 +1851,7 @@ FullScreenDisallowsTiling = 1 << 12
 		ContentList
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSImageScaling : ulong {
 		ProportionallyDown = 0,
@@ -2847,11 +1860,7 @@ FullScreenDisallowsTiling = 1 << 12
 		ProportionallyUpOrDown
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSegmentStyle : long {
 		Automatic = 0,
@@ -2861,20 +1870,10 @@ FullScreenDisallowsTiling = 1 << 12
 		TexturedSquare = 4,
 		Capsule = 5,
 		SmallSquare = 6,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10,10)]
-#endif
-		Separated = 8
+		[Mac (10,10)] Separated = 8
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSegmentSwitchTracking : ulong {
 		SelectOne = 0,
@@ -2883,11 +1882,7 @@ FullScreenDisallowsTiling = 1 << 12
 		MomentaryAccelerator // 10.10.3
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTickMarkPosition : ulong {
 		Below,
@@ -2898,22 +1893,14 @@ FullScreenDisallowsTiling = 1 << 12
 		Trailing = Right
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSliderType : ulong {
 		Linear   = 0,
 		Circular = 1
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTokenStyle : ulong {
 		Default,
@@ -2923,18 +1910,10 @@ FullScreenDisallowsTiling = 1 << 12
 		PlainSquared = 4,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos11.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 11, 0)]
-#endif
 	[Flags]
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	public enum NSWorkspaceLaunchOptions : ulong {
 		Print = 2,
 		WithErrorPresentation = 0x40,
@@ -2950,11 +1929,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Default = Async | AllowingClassicStartup
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSWorkspaceIconCreationOptions : ulong {
@@ -2962,32 +1937,16 @@ FullScreenDisallowsTiling = 1 << 12
 		NSExclude10_4Elements       = 1 << 2
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPathStyle : long {
 		Standard,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		NavigationBar,
 		PopUp
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTabViewType : ulong {
 		NSTopTabsBezelBorder,
@@ -2999,21 +1958,13 @@ FullScreenDisallowsTiling = 1 << 12
 		NSNoTabsNoBorder,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTabState : ulong {
 		Selected, Background, Pressed
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTabViewControllerTabStyle : long {
 		SegmentedControlOnTop = 0,
@@ -3022,44 +1973,27 @@ FullScreenDisallowsTiling = 1 << 12
 		Unspecified = -1
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSLevelIndicatorStyle : ulong {
 		Relevancy, ContinuousCapacity, DiscreteCapacity, RatingLevel
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSFontCollectionOptions : long {
 		ApplicationOnlyMask = 1
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.1")]
-#else
 	[MacCatalyst (13,1)]
-#endif
 	[Native]
 	public enum NSCollectionViewDropOperation : long {
 		On = 0, Before = 1
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.1")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
 	[MacCatalyst (13,1)]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSCollectionViewItemHighlightState : long
 	{
@@ -3069,13 +2003,8 @@ FullScreenDisallowsTiling = 1 << 12
 		AsDropTarget = 3
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.0")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
 	[MacCatalyst (13,0)]
 	[Mac (10,11)] // Not marked 10.11 in the headers, but doesn't exist in the 10.10 headers
-#endif
 	[Native]
 	[Flags]
 	public enum NSCollectionViewScrollPosition : ulong
@@ -3093,13 +2022,8 @@ FullScreenDisallowsTiling = 1 << 12
 		NearestVerticalEdge = 1 << 8
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.1")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
 	[MacCatalyst (13,1)]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSCollectionElementCategory : long
 	{
@@ -3109,13 +2033,8 @@ FullScreenDisallowsTiling = 1 << 12
 		InterItemGap
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSCollectionUpdateAction : long
 	{
@@ -3126,13 +2045,8 @@ FullScreenDisallowsTiling = 1 << 12
 		None
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.1")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
 	[MacCatalyst (13,1)]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSCollectionViewScrollDirection : long
 	{
@@ -3140,11 +2054,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Horizontal
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSDatePickerStyle : ulong {
 		TextFieldAndStepper,
@@ -3152,21 +2062,13 @@ FullScreenDisallowsTiling = 1 << 12
 		TextField
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSDatePickerMode : ulong {
 		Single, Range
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSDatePickerElementFlags : ulong {
@@ -3179,67 +2081,19 @@ FullScreenDisallowsTiling = 1 << 12
 		Era = 0x100
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLContextParameter : ulong {
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		SwapRectangle = 200,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		SwapRectangleEnable = 201,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		RasterizationEnable = 221,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		StateValidation = 301,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		SurfaceSurfaceVolatile = 306,
 
 		SwapInterval = 222,
@@ -3255,26 +2109,14 @@ FullScreenDisallowsTiling = 1 << 12
 		MpsSwapsInFlight = 315
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	public enum NSSurfaceOrder {
 		AboveWindow = 1,
 		BelowWindow = -1
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLPixelFormatAttribute : uint { // uint32_t NSOpenGLPixelFormatAttribute
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
@@ -3292,25 +2134,9 @@ FullScreenDisallowsTiling = 1 << 12
 		AccumSize          =  14,
 		MinimumPolicy      =  51,
 		MaximumPolicy      =  52,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		OffScreen          =  53,
-#if NET
-		[UnsupportedOSPlatform ("macos10.6")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.6.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
-#endif
 		FullScreen         =  54,
 		SampleBuffers      =  55,
 		Samples            =  56,
@@ -3320,60 +2146,20 @@ FullScreenDisallowsTiling = 1 << 12
 		Supersample        =  60,
 		SampleAlpha        =  61,
 		RendererID         =  70,
-#if NET
-		[UnsupportedOSPlatform ("macos10.9")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
-#endif
 		SingleRenderer     =  71,
 		NoRecovery         =  72,
 		Accelerated        =  73,
 		ClosestPolicy      =  74,
 		BackingStore       =  76,
-#if NET
-		[UnsupportedOSPlatform ("macos10.9")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
-#endif
 		Window             =  80,
-#if NET
-		[UnsupportedOSPlatform ("macos10.9")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
-#endif
 		Compliant          =  83,
 		ScreenMask         =  84,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		PixelBuffer        =  90,
-#if NET
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
-#endif
 		RemotePixelBuffer  =  91,
 		AllowOfflineRenderers = 96,
 		AcceleratedCompute =  97,
@@ -3382,59 +2168,23 @@ FullScreenDisallowsTiling = 1 << 12
 		OpenGLProfile = 99,
 		VirtualScreenCount = 128,
 
-#if NET
-		[UnsupportedOSPlatform ("macos10.5")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.5.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 5)]
-#endif
 		Robust  =  75,
-#if NET
-		[UnsupportedOSPlatform ("macos10.5")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.5.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 5)]
-#endif
 		MPSafe  =  78,
-#if NET
-		[UnsupportedOSPlatform ("macos10.5")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.5.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 5)]
-#endif
 		MultiScreen =  81
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLProfile : int {
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
 		Version4_1Core  = 0x4100
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSAlertButtonReturn : long {
 		First = 1000,
@@ -3442,75 +2192,35 @@ FullScreenDisallowsTiling = 1 << 12
 		Third = 1002,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLGlobalOption : uint {
 		FormatCacheSize = 501,
 		ClearFormatCache = 502,
 		RetainRenderers = 503,
 		UseBuildCache = 506,
-#if NET
-		[UnsupportedOSPlatform ("macos10.4")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 4)]
-#endif
 		ResetLibrary = 504
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLTextureTarget : uint {
 		T2D = 0x0de1,
 		CubeMap = 0x8513,
 		RectangleExt = 0x84F5,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLFormat : uint {
 		RGB = 0x1907,
 		RGBA = 0x1908,
 		DepthComponent = 0x1902,
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLTextureCubeMap : uint {
 		None = 0,
 		PositiveX = 0x8515,
@@ -3521,33 +2231,17 @@ FullScreenDisallowsTiling = 1 << 12
 		NegativeZ = 0x851A
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-#endif
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLColorBuffer : uint {
 		Front = 0x0404,
 		Back = 0x0405,
 		Aux0 = 0x0409
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 14)]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	public enum NSProgressIndicatorThickness : ulong {
 		Small = 10,
 		Regular = 14,
@@ -3555,21 +2249,13 @@ FullScreenDisallowsTiling = 1 << 12
 		Large = 18
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSProgressIndicatorStyle : ulong {
 		Bar, Spinning
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPopUpArrowPosition : ulong {
 		None,
@@ -3578,11 +2264,7 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 
 	// FileType 4cc values to use with NSFileTypeForHFSTypeCode.
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-	[MacCatalyst (15, 0)]
-#endif
+	[MacCatalyst(15, 0)]
 	public enum HfsTypeCode : uint
 	{
 		/* Generic Finder icons */
@@ -3774,17 +2456,9 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 	
 	// These constants specify the possible states of a drawer.
-#if NET
-	[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.13 use 'NSSplitViewController' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 	public enum NSDrawerState : ulong {
 		Closed = 0,
 		Opening = 1,
@@ -3792,23 +2466,11 @@ FullScreenDisallowsTiling = 1 << 12
 		Closing = 3
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindowLevel : long {
 		Normal = 0,
-#if NET
-		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-#endif
 		Dock = 20,
 		Floating = 3,
 		MainMenu = 24, 
@@ -3820,22 +2482,14 @@ FullScreenDisallowsTiling = 1 << 12
 		TornOffMenu = 3
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSRuleEditorRowType : ulong {
 		Simple = 0,
 		Compound
 	}
    
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSRuleEditorNestingMode : ulong {
 		Single,
@@ -3844,26 +2498,14 @@ FullScreenDisallowsTiling = 1 << 12
 		Simple
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.11 use 'NSGlyphProperty' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
-#endif
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphInscription : ulong {
 		Base, Below, Above, Overstrike, OverBelow
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTypesetterBehavior : long {
 		Latest = -1,
@@ -3875,11 +2517,7 @@ FullScreenDisallowsTiling = 1 << 12
 			
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSRemoteNotificationType : ulong {
@@ -3889,11 +2527,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Alert = 1 << 2
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSScrollViewFindBarPosition : long {
 		AboveHorizontalRuler = 0,
@@ -3901,22 +2535,14 @@ FullScreenDisallowsTiling = 1 << 12
 		BelowContent
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSScrollerStyle : long {
    		Legacy = 0,
 		Overlay
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum  NSScrollElasticity : long {
 		Automatic = 0,
@@ -3924,11 +2550,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Allowed
 	}
 	
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum  NSScrollerKnobStyle : long {
 		Default  = 0,
@@ -3936,11 +2558,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Light    = 2
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSEventPhase : ulong {
@@ -3953,11 +2571,7 @@ FullScreenDisallowsTiling = 1 << 12
 		MayBegin = 32
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSEventSwipeTrackingOptions : ulong {
@@ -3965,31 +2579,19 @@ FullScreenDisallowsTiling = 1 << 12
 		ClampGestureAmount = 2
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSEventGestureAxis : long {
 		None, Horizontal, Vertical
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSLayoutConstraintOrientation : long {
 		Horizontal, Vertical
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	public enum NSLayoutPriority : int /*float*/ {
 		Required = 1000,
 		DefaultHigh = 750,
@@ -4000,31 +2602,19 @@ FullScreenDisallowsTiling = 1 << 12
 		FittingSizeCompression = 50,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPopoverAppearance : long {
 		Minimal, HUD
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPopoverBehavior : long {
 		ApplicationDefined, Transient, Semitransient
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTableViewRowSizeStyle : long {
 		Default = -1,
@@ -4032,13 +2622,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Small, Medium, Large
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSTableRowActionEdge : long
 	{
@@ -4046,13 +2631,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Trailing
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSTableViewRowActionStyle : long
 	{
@@ -4060,11 +2640,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Destructive
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTableViewAnimation : ulong {
@@ -4072,11 +2648,7 @@ FullScreenDisallowsTiling = 1 << 12
 		SlideUp = 0x10, SlideDown = 0x20, SlideLeft = 0x30, SlideRight = 0x40
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSDraggingItemEnumerationOptions : ulong {
@@ -4084,41 +2656,25 @@ FullScreenDisallowsTiling = 1 << 12
 		ClearNonenumeratedImages = 1 << 16
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSDraggingFormation : long {
 		Default, None, Pile, List, Stack
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSDraggingContext : long {
 		OutsideApplication, WithinApplication
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindowAnimationBehavior : long {
 		Default = 0, None = 2, DocumentWindow, UtilityWindow, AlertPanel
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSTextFinderAction : long {
 		ShowFindInterface = 1,
@@ -4136,11 +2692,7 @@ FullScreenDisallowsTiling = 1 << 12
 		HideReplaceInterface = 13
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSFontPanelMode : ulong {
@@ -4157,11 +2709,7 @@ FullScreenDisallowsTiling = 1 << 12
 		AllModesMask = unchecked ((ulong)UInt32.MaxValue)
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSFontCollectionVisibility : ulong {
@@ -4170,11 +2718,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Computer = 1 << 2,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSSharingContentScope : long {
 		Item,
@@ -4182,11 +2726,7 @@ FullScreenDisallowsTiling = 1 << 12
 		Full
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTypesetterControlCharacterAction : ulong {
@@ -4198,11 +2738,7 @@ FullScreenDisallowsTiling = 1 << 12
 		ContainerBreak = 1 << 5,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSPageControllerTransitionStyle : long {
 		StackHistory,
@@ -4210,11 +2746,7 @@ FullScreenDisallowsTiling = 1 << 12
 		HorizontalStrip
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSWindowTitleVisibility : long {
 		Visible = 0,
@@ -4225,11 +2757,7 @@ FullScreenDisallowsTiling = 1 << 12
 #endif
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSViewControllerTransitionOptions : ulong {
@@ -4244,22 +2772,14 @@ FullScreenDisallowsTiling = 1 << 12
 		AllowUserInteraction = 0x1000
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSApplicationOcclusionState  : ulong {
 		Visible = 1 << 1
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSWindowOcclusionState  : ulong {
@@ -4269,11 +2789,7 @@ FullScreenDisallowsTiling = 1 << 12
 	
 	
 #region NSVisualEffectView
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSVisualEffectMaterial : long {
 		[Advice ("Use a specific material instead.")]
@@ -4284,124 +2800,46 @@ FullScreenDisallowsTiling = 1 << 12
 		Dark,
 		Titlebar,
 		Selection,
-#if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,11)]
-#endif
 		Menu,
-#if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,11)]
-#endif
 		Popover,
-#if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,11)]
-#endif
 		Sidebar,
-#if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,11)]
-#endif
 		[Advice ("Use a semantic material instead.")]
 		MediumLight,
-#if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,11)]
-#endif
 		[Advice ("Use a semantic material instead.")]
 		UltraDark,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		HeaderView = 10,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		Sheet = 11,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		WindowBackground = 12,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		HudWindow = 13,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		FullScreenUI = 15,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		ToolTip = 17,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		ContentBackground = 18,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		UnderWindowBackground = 21,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Mac (10,14)]
-#endif
 		UnderPageBackground = 22,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSVisualEffectBlendingMode : long {
 		BehindWindow,
 		WithinWindow
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Native]
 	public enum NSVisualEffectState : long {
 		FollowsWindowActiveState,
@@ -4410,13 +2848,8 @@ FullScreenDisallowsTiling = 1 << 12
 	}
 #endregion
 
-#if NET
-	[SupportedOSPlatform ("macos10.10.3")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,10,3)]
-#endif
 	[Native]
 	public enum NSPressureBehavior : long
 	{
@@ -4429,13 +2862,8 @@ FullScreenDisallowsTiling = 1 << 12
 		PrimaryDeepDrag = 6
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSHapticFeedbackPattern : long
 	{
@@ -4444,13 +2872,8 @@ FullScreenDisallowsTiling = 1 << 12
 		LevelChange
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSHapticFeedbackPerformanceTime : ulong
 	{
@@ -4459,13 +2882,8 @@ FullScreenDisallowsTiling = 1 << 12
 		DrawCompleted
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,11)]
-#endif
 	[Native]
 	public enum NSSpringLoadingHighlight : long
 	{
@@ -4474,14 +2892,9 @@ FullScreenDisallowsTiling = 1 << 12
 		Emphasized
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Mac (10,11)]
-#endif
 	[Flags]
+	[Mac (10,11)]
 	[Native]
 	public enum NSSpringLoadingOptions : ulong
 	{
@@ -4491,26 +2904,16 @@ FullScreenDisallowsTiling = 1 << 12
 		NoHover = 1 << 3
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-	[Mac (10,12)]
-#endif
 	[Flags]
+	[Mac (10,12)]
 	[Native]
 	public enum NSWindowListOptions : long {
 		OrderedFrontToBack = (1 << 0)
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,12)]
-#endif
 	[Native]
 	public enum NSStatusItemBehavior : ulong
 	{
@@ -4518,13 +2921,8 @@ FullScreenDisallowsTiling = 1 << 12
 		TerminationOnRemoval = (1 << 2)
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,12)]
-#endif
 	[Native]
 	public enum NSWindowTabbingMode : long
 	{
@@ -4533,13 +2931,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Disallowed
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,12)]
-#endif
 	[Native]
 	public enum NSWindowUserTabbingPreference : long
 	{
@@ -4548,13 +2941,8 @@ FullScreenDisallowsTiling = 1 << 12
 		InFullScreen
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
 	[Native]
 	public enum NSGridCellPlacement : long
 	{
@@ -4568,13 +2956,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Fill
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
 	[Native]
 	public enum NSGridRowAlignment : long
 	{
@@ -4584,13 +2967,8 @@ FullScreenDisallowsTiling = 1 << 12
 		LastBaseline
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
 	[Native]
 	public enum NSImageLayoutDirection : long
 	{
@@ -4599,15 +2977,9 @@ FullScreenDisallowsTiling = 1 << 12
 		RightToLeft = 3
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
-	[Native]
-	[Flags]
+	[Native][Flags]
 	public enum NSCloudKitSharingServiceOptions : ulong
 	{
 		Standard = 0,
@@ -4617,13 +2989,8 @@ FullScreenDisallowsTiling = 1 << 12
 		AllowReadWrite = 1 << 5
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
 	[Native]
 	public enum NSDisplayGamut : long
 	{
@@ -4631,13 +2998,8 @@ FullScreenDisallowsTiling = 1 << 12
 		P3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
 	[Native]
 	public enum NSTabPosition : ulong
 	{
@@ -4648,13 +3010,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Right,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
 	[Native]
 	public enum NSTabViewBorderType : ulong
 	{
@@ -4663,26 +3020,16 @@ FullScreenDisallowsTiling = 1 << 12
 		Bezel,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 12)]
-#endif
 	[Native]
 	public enum NSPasteboardContentsOptions : ulong
 	{
 		CurrentHostOnly = 1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12.2")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,12,2)]
-#endif
 	[Native]
 	public enum NSTouchType : long
 	{
@@ -4690,13 +3037,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Indirect
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12.2")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,12,2)]
-#endif
 	[Native]
 	[Flags]
 	public enum NSTouchTypeMask : ulong
@@ -4705,13 +3047,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Indirect = (1 << (int)NSTouchType.Indirect)
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12.2")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,12,2)]
-#endif
 	[Native]
 	public enum NSScrubberMode : long
 	{
@@ -4719,13 +3056,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Free
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12.2")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,12,2)]
-#endif
 	[Native]
 	public enum NSScrubberAlignment : long
 	{
@@ -4735,26 +3067,16 @@ FullScreenDisallowsTiling = 1 << 12
 		Center
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	public enum NSFontError : int {
 		AssetDownloadError = 66304,
 		ErrorMinimum = 66304,
 		ErrorMaximum = 66335,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	[Native]
 	public enum NSAccessibilityAnnotationPosition : long {
 		FullRange,
@@ -4762,26 +3084,16 @@ FullScreenDisallowsTiling = 1 << 12
 		End,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	[Native]
 	public enum NSAccessibilityCustomRotorSearchDirection : long {
 		Previous,
 		Next,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	[Native]
 	public enum NSAccessibilityCustomRotorType : long {
 		Custom = 0,
@@ -4808,13 +3120,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Audiograph,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10, 13)]
-#endif
 	[Native]
 	public enum NSColorType : long {
 		ComponentBased,
@@ -4822,26 +3129,16 @@ FullScreenDisallowsTiling = 1 << 12
 		Catalog,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	[Native]
 	[Flags]
 	public enum NSFontAssetRequestOptions : ulong {
 		UsesStandardUI = 1 << 0,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	[Native]
 	[Flags]
 	public enum NSFontPanelModeMask : ulong {
@@ -4858,13 +3155,8 @@ FullScreenDisallowsTiling = 1 << 12
 		AllModes = (ulong)0XFFFFFFFF,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	[Native]
 	public enum NSLevelIndicatorPlaceholderVisibility : long {
 		Automatic = 0,
@@ -4872,13 +3164,8 @@ FullScreenDisallowsTiling = 1 << 12
 		WhileEditing = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,13)]
-#endif
 	[Native]
 	public enum NSSegmentDistribution : long {
 		Fit = 0,
@@ -4887,13 +3174,8 @@ FullScreenDisallowsTiling = 1 << 12
 		FillProportionally,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.14")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,14)]
-#endif
 	[Native]
 	public enum NSColorSystemEffect : long {
 		None,
@@ -4903,13 +3185,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Rollover,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.14")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (10,14)]
-#endif
 	[Native]
 	public enum NSWorkspaceAuthorizationType : long  {
 		CreateSymbolicLink,
@@ -4917,13 +3194,8 @@ FullScreenDisallowsTiling = 1 << 12
 		ReplaceFile,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (11,0)]
-#endif
 	[Native]
 	public enum NSTableViewStyle : long
 	{
@@ -4934,13 +3206,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Plain,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (11,0)]
-#endif
 	[Native]
 	public enum NSTitlebarSeparatorStyle : long
 	{
@@ -4950,13 +3217,8 @@ FullScreenDisallowsTiling = 1 << 12
 		Shadow,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (11,0)]
-#endif
 	[Native]
 	public enum NSWindowToolbarStyle : long
 	{
@@ -4967,11 +3229,7 @@ FullScreenDisallowsTiling = 1 << 12
 		UnifiedCompact,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
-#endif
 	[Flags]
 	[Native]
 	public enum NSTableViewAnimationOptions : ulong
@@ -4985,13 +3243,8 @@ FullScreenDisallowsTiling = 1 << 12
 		SlideRight = 0x40,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
 	[NoMacCatalyst]
 	[Mac (11,0)]
-#endif
 	[Native]
 	public enum NSImageSymbolScale : long
 	{
