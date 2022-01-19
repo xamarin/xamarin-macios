@@ -1,6 +1,6 @@
 // Copyright 2011-2013 Xamarin Inc. All rights reserved
 
-#if !HAS_UIKIT && !HAS_APPKIT
+#if HAS_UIKIT || HAS_APPKIT
 
 using System;
 using System.Drawing;
@@ -29,4 +29,4 @@ namespace MonoTouchFixtures.XKit {
 	}
 }
 
-#endif // !HAS_UIKIT && !HAS_APPKIT
+#endif // HAS_UIKIT || HAS_APPKIT
