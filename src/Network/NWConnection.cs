@@ -54,6 +54,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWConnection : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else

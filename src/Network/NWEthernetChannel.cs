@@ -41,6 +41,7 @@ namespace Network {
 #endif
 	public class NWEthernetChannel : NativeObject {
 
+		[Preserve (Conditional = true)]
 		internal NWEthernetChannel (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

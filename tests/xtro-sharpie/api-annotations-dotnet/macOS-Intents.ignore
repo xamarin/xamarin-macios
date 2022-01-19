@@ -1,16 +1,5 @@
 ## unsorted
 
-!unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
-
-## Fixed in XAMCORE_4_0 but with a conditional TODO check in code
-## API_AVAILABLE(macosx(10.12), ios(10.0)); This is supposed to be there according to availability (Last Review: Feb 2018)
-!unknown-protocol! INCallsDomainHandling bound
-
-## No availability set on headers, it is possible to be fixed later since makes sense to have in macOS.
-## unfortunately it is not at the moment (Last Review: Feb 2018)
-!unknown-native-enum! INMessageAttribute bound
-!unknown-type! INMessageAttributeResolutionResult bound
-
 ## The API that uses the following is unavailable / API_UNAVAILABLE(macosx)
 !missing-enum! INBookRestaurantReservationIntentCode not bound
 !missing-enum! INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode not bound
@@ -39,36 +28,12 @@
 !missing-type! INTicketedEvent not bound
 !missing-type! INTicketedEventReservation not bound
 
-## Apple fixed API availability fixed in XAMCORE_4_0
-!unknown-field! INPersonRelationshipAssistant bound
-!unknown-field! INPersonRelationshipBrother bound
-!unknown-field! INPersonRelationshipChild bound
-!unknown-field! INPersonRelationshipFather bound
-!unknown-field! INPersonRelationshipFriend bound
-!unknown-field! INPersonRelationshipManager bound
-!unknown-field! INPersonRelationshipMother bound
-!unknown-field! INPersonRelationshipParent bound
-!unknown-field! INPersonRelationshipPartner bound
-!unknown-field! INPersonRelationshipSister bound
-!unknown-field! INPersonRelationshipSpouse bound
-!unknown-protocol! INSearchCallHistoryIntentHandling bound
-!unknown-protocol! INSearchForMessagesIntentHandling bound
-!unknown-protocol! INStartAudioCallIntentHandling bound
-!unknown-protocol! INStartVideoCallIntentHandling bound
-!unknown-type! INDateComponentsRangeResolutionResult bound
-!unknown-type! INMessage bound
-!unknown-type! INMessageAttributeOptionsResolutionResult bound
-!unknown-type! INParameter bound
-!unknown-type! INRecurrenceRule bound
-!unknown-type! INSearchCallHistoryIntent bound
-!unknown-type! INSearchCallHistoryIntentResponse bound
-!unknown-type! INSearchForMessagesIntent bound
-!unknown-type! INSearchForMessagesIntentResponse bound
-!unknown-type! INSpeakableStringResolutionResult bound
-!unknown-type! INStartAudioCallIntent bound
-!unknown-type! INStartAudioCallIntentResponse bound
-!unknown-type! INStartVideoCallIntent bound
-!unknown-type! INStartVideoCallIntentResponse bound
-
 ## Headers say Mac (12,0) but types used in properties are still NoMac
 !missing-protocol! INStartCallIntentHandling not bound
+
+## API that uses types that aren't available in macOS (even though the API itself supposedly is), so we can't (and shouldn't) bind those API.
+!missing-protocol-member! INSendMessageIntentHandling::resolveSpeakableGroupNameForSendMessage:withCompletion: not found
+!missing-selector! INDateComponentsRange::initWithStartDateComponents:endDateComponents:recurrenceRule: not bound
+!missing-selector! INDateComponentsRange::recurrenceRule not bound
+!missing-selector! INSendMessageIntentResponse::sentMessage not bound
+!missing-selector! INSendMessageIntentResponse::setSentMessage: not bound

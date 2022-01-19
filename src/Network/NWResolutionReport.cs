@@ -25,6 +25,7 @@ namespace Network {
 #endif
 	public class NWResolutionReport : NativeObject {
 
+		[Preserve (Conditional = true)]
 		internal NWResolutionReport (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

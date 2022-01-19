@@ -15,7 +15,11 @@ using CoreMedia;
 using CoreFoundation;
 using CoreGraphics;
 using CoreText;
+#if NET
+using CFNetwork;
+#else
 using CoreServices;
+#endif
 using CoreVideo;
 using Foundation;
 using ImageIO;

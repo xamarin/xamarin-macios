@@ -77,7 +77,7 @@ namespace Foundation  {
 
 #if MONOMAC || !XAMCORE_3_0
 
-#if !XAMCORE_4_0
+#if !NET
 	[Native]
 	public enum NSBundleExecutableArchitecture : long {
 #else
@@ -242,7 +242,7 @@ namespace Foundation  {
 	public enum NSDataReadingOptions : ulong {
 		Mapped =   1 << 0,
 		Uncached = 1 << 1,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This option is unavailable.")]
 		Coordinated = 1 << 2,
 #endif
@@ -562,7 +562,7 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : ulong {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'None' instead.")]
 		SkipsNone                    = 0,
 #endif
@@ -745,7 +745,7 @@ namespace Foundation  {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
 		AllowFragments = FragmentsAllowed,
 #endif
@@ -820,8 +820,8 @@ namespace Foundation  {
 		LongestEffectiveRangeNotRequired = 1 << 20
 	}
 
-#if XAMCORE_4_0 || !MONOMAC
-	// macOS has defined this in AppKit as well, but starting with XAMCORE_4_0 we're going
+#if NET || !MONOMAC
+	// macOS has defined this in AppKit as well, but starting with .NET we're going
 	// to use this one only.
 	[Native]
 	public enum NSUnderlineStyle : long {
@@ -893,7 +893,7 @@ namespace Foundation  {
 		None, Default, All 
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Flags]
 	[Native]
 	public enum NSDateComponentsWrappingBehavior : ulong {

@@ -8,6 +8,7 @@ using System;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
+using Foundation;
 using ObjCRuntime;
 
 #if !NET
@@ -28,6 +29,7 @@ namespace CoreFoundation {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal CFType (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

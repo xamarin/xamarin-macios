@@ -2388,7 +2388,7 @@ namespace CoreImage {
 		[NullAllowed, Export ("metalTexture")]
 		IMTLTexture MetalTexture { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but it was added in Xcode9
 #endif
 		[iOS (11,0)]
@@ -2431,7 +2431,7 @@ namespace CoreImage {
 		[NullAllowed, Export ("metalCommandBuffer")]
 		IMTLCommandBuffer MetalCommandBuffer { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but it was added in Xcode9
 #endif
 		[iOS (11,0)]

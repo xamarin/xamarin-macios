@@ -34,6 +34,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using ObjCRuntime;
 using Foundation;
+#if NET
+using CFNetwork;
+#endif
 
 namespace CoreFoundation {
 	// Utility enum for string constants in ObjC

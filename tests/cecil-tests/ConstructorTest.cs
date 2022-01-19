@@ -344,5 +344,78 @@ namespace Cecil.Tests {
 			}
 			Assert.That (failures, Is.Empty, "No failures");
 		}
+
+		bool IsConditionallyPreserved (MethodDefinition ctor)
+		{
+			if (!ctor.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in ctor.CustomAttributes) {
+				if (ca.AttributeType.Name != "PreserveAttribute")
+					continue;
+				if (!ca.HasFields)
+					continue;
+				foreach (var field in ca.Fields) {
+					if (field.Name != "Conditional")
+						continue;
+					return (bool) field.Argument.Value;
+				}
+			}
+
+			return false;
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void NativeObjectIntPtrBoolConstructorIsPreserved (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var failures = new List<string> ();
+			foreach (var dll in Configuration.GetBaseLibraryImplementations (platform)) {
+				using (var ad = AssemblyDefinition.ReadAssembly (dll, new ReaderParameters (ReadingMode.Deferred) { ReadSymbols = true })) {
+					foreach (var type in ad.MainModule.Types) {
+						switch (type.Name) {
+						case "AudioBuffers": // this class shouldn't really be an INativeObject in the first place
+							continue;
+						}
+						// Find classes that implement INativeObject, but doesn't subclass NSObject.
+						if (!type.IsClass)
+							continue;
+
+						// Skip abstract classes, any subclasses should preserve their ctor (which will make the linker mark this class' ctor as well).
+						if (type.IsAbstract)
+							continue;
+
+						// Does type implement INativeObject?
+						if (!ImplementsINativeObject (type))
+							continue;
+
+						if (SubclassesNSObject (type))
+							continue;
+
+						// Find the IntPtr/NativeHandle, Boolean constructor
+						var intptrBoolCtor = GetConstructor (type, ("System", "IntPtr"), ("System", "Boolean"));
+						var nativeHandleBoolCtor = GetConstructor (type, ("ObjCRuntime", "NativeHandle"), ("System", "Boolean"));
+
+						if (intptrBoolCtor is not null && !IsConditionallyPreserved (intptrBoolCtor)) {
+							var msg = $"{type}: The (IntPtr, bool) constructor is not conditionally preserved.";
+							Console.WriteLine ($"{GetLocation (intptrBoolCtor)}{msg}");
+							failures.Add (msg);
+						}
+
+						if (nativeHandleBoolCtor is not null && !IsConditionallyPreserved (nativeHandleBoolCtor)) {
+							var msg = $"{type}: The (NativeHandle, bool) constructor is not conditionally preserved.";
+							Console.WriteLine ($"{GetLocation (nativeHandleBoolCtor)}{msg}");
+							failures.Add (msg);
+						}
+					}
+				}
+			}
+			Assert.That (failures, Is.Empty, "No failures");
+		}
 	}
 }

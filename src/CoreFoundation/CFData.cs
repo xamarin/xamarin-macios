@@ -40,6 +40,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreFoundation {
 
 	class CFData : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CFData (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

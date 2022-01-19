@@ -45,6 +45,7 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
 	public class NWConnectionGroup : NativeObject {
+		[Preserve (Conditional = true)]
 		protected internal NWConnectionGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

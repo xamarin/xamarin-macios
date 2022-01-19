@@ -2102,12 +2102,21 @@ namespace WebKit {
 	[Protocol]
 #endif
 	partial interface WebOpenPanelResultListener {
+#if NET
+		[Abstract]
+#endif
 		[Export ("chooseFilename:")]
 		void ChooseFilename (string filename);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("chooseFilenames:")]
 		void ChooseFilenames (string [] filenames);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("cancel")]
 		void Cancel ();
 	}
@@ -2141,12 +2150,21 @@ namespace WebKit {
 	[Protocol]
 #endif
 	partial interface WebPolicyDecisionListener {
+#if NET
+		[Abstract]
+#endif
 		[Export ("use")]
 		void Use ();
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("download")]
 		void Download ();
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("ignore")]
 		void Ignore ();
 	}
@@ -2384,7 +2402,7 @@ namespace WebKit {
 		[Export ("webView:validateUserInterfaceItem:defaultValidation:"), DelegateName ("WebViewValidateUserInterface"), DefaultValueFromArgument ("defaultValidation")]
 		bool UIValidateUserInterfaceItem (WebView webView, NSObject validatedUserInterfaceItem, bool defaultValidation);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("webView:shouldPerformAction:fromSender:"), DelegateName("WebViewPerformAction"), DefaultValue (null)]
 		bool UIShouldPerformActionfromSender (WebView webView, Selector action, NSObject sender);
 #else

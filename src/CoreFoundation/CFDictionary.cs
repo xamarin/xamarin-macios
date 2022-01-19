@@ -45,6 +45,7 @@ namespace CoreFoundation {
 		public static IntPtr KeyCallbacks;
 		public static IntPtr ValueCallbacks;
 
+		[Preserve (Conditional = true)]
 		internal CFDictionary (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

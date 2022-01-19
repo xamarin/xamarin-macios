@@ -110,6 +110,7 @@ namespace CoreText {
 #endregion
 
 	public class CTTypesetter : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTTypesetter (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{

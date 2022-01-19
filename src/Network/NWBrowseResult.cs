@@ -35,6 +35,7 @@ namespace Network {
 #endif
 	public class NWBrowseResult : NativeObject {
 
+		[Preserve (Conditional = true)]
 		internal NWBrowseResult (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

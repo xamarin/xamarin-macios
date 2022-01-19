@@ -30,6 +30,7 @@ namespace Network {
 #endif
 	public class NWTlsMetadata : NWProtocolMetadata {
 
+		[Preserve (Conditional = true)]
 		internal NWTlsMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public SecProtocolMetadata SecProtocolMetadata

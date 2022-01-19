@@ -427,7 +427,66 @@ function Write-APIDiffContent {
             $StringBuilder.AppendLine($apidiffcomments)
         }
     } else {
-        $StringBuilder.AppendLine("Generator diff comments have not been provided.")
+        $StringBuilder.AppendLine("* :warning: Generator diff comments have not been provided.")
+    }
+}
+
+<# 
+    .SYNOPSIS
+        Helper function used to create the content in the comment with the artifacts.
+
+    .PARAMETER Artifacts
+        The json that contains all the artifacts.
+#>
+function Write-Artifacts {
+
+    param (
+
+        [Parameter(Mandatory)]
+        [System.Text.StringBuilder]
+        $StringBuilder,
+
+        [String]
+        $Artifacts=""
+
+    )
+
+    if (-not [string]::IsNullOrEmpty($Artifacts)) {
+        Write-Host "Parsing artifacts"
+        if (-not (Test-Path $Artifacts -PathType Leaf)) {
+            $StringBuilder.AppendLine("Path $Artifacts was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $Artifacts | ConvertFrom-Json
+            if ($json.Count -gt 0) {
+                $StringBuilder.AppendLine("# Packages generated")
+                $StringBuilder.AppendLine("")
+                $StringBuilder.AppendLine("<details><summary>View packages</summary>")
+                $StringBuilder.AppendLine("") # no new line results in a bad rendering in the links
+                foreach ($a in $json) {
+                    $url = $a.url
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
+                        try {
+                            $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
+                            Write-Host "Adding link for $fileName"
+                            if ($a.url.Contains("notarized")) {
+                                $link = "* [$fileName (notarized)]($($a.url))"
+                            } else {
+                                $link = "* [$fileName]($($a.url))"
+                            }
+                            $StringBuilder.AppendLine($link)
+                        } catch {
+                            Write-Host "Could not get file name for url $url"
+                        }
+                    }
+                }
+                $StringBuilder.AppendLine("</details>")
+            } else {
+                $StringBuilder.AppendLine("No packages found.")
+            }
+        }
+    } else {
+        Write-Host "Artifacts were not provided."
     }
 }
 
@@ -474,7 +533,10 @@ function New-GitHubSummaryComment {
         $APIGeneratorDiffJson="",
 
         [string]
-        $APIGeneratorDiff=""
+        $APIGeneratorDiff="",
+
+        [switch]
+        $DeviceTest
     )
 
     $envVars = @{
@@ -504,44 +566,10 @@ function New-GitHubSummaryComment {
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
 
-    Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
+    if (-not $DeviceTest) {
+        Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
 
-    if (-not [string]::IsNullOrEmpty($Artifacts)) {
-        Write-Host "Parsing artifacts"
-        if (-not (Test-Path $Artifacts -PathType Leaf)) {
-            $sb.AppendLine("Path $Artifacts was not found!")
-        } else {
-            # read the json file, convert it to an object and add a line for each artifact
-            $json =  Get-Content $Artifacts | ConvertFrom-Json
-            if ($json.Count -gt 0) {
-                $sb.AppendLine("# Packages generated")
-                $sb.AppendLine("")
-                $sb.AppendLine("<details><summary>View packages</summary>")
-                $sb.AppendLine("") # no new line results in a bad rendering in the links
-                foreach ($a in $json) {
-                    $url = $a.url
-                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
-                        try {
-                            $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
-                            Write-Host "Adding link for $fileName"
-                            if ($a.url.Contains("notarized")) {
-                                $link = "* [$fileName (notarized)]($($a.url))"
-                            } else {
-                                $link = "* [$fileName]($($a.url))"
-                            }
-                            $sb.AppendLine($link)
-                        } catch {
-                            Write-Host "Could not get file name for url $url"
-                        }
-                    }
-                }
-                $sb.AppendLine("</details>")
-            } else {
-                $sb.AppendLine("No packages found.")
-            }
-        }
-    } else {
-        Write-Host "Artifacts were not provided."
+        Write-Artifacts -StringBuilder $sb -Artifacts $Artifacts
     }
 
     if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip

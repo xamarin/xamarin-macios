@@ -45,6 +45,7 @@ namespace Network {
 		bool queueSet = false;
 		object startLock = new Object ();
 
+		[Preserve (Conditional = true)]
 		internal NWBrowser (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 			SetChangesHandler (InternalChangesHandler);

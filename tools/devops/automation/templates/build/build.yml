@@ -432,11 +432,14 @@ steps:
     set -x
     set -e
 
+    echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
     RC=0
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests || RC=$?
     if [ $RC -eq 0 ]; then
+      echo "Setting outpur var macTestsPresent to Succeeded"
       echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
     else
+      echo "Setting outpur var macTestsPresent to Failed"
       echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
     fi
     exit $RC
@@ -488,7 +491,7 @@ steps:
     fi
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
-  timeoutInMinutes: 600
+  timeoutInMinutes: 720
   enabled: ${{ parameters.runTests }}
   env:
     IsPR: $(configuration.IsPR)

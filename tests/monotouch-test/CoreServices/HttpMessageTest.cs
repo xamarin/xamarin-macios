@@ -11,7 +11,7 @@
 
 using System;
 using System.Net;
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 #else
 using CoreServices;

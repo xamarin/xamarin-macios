@@ -263,7 +263,7 @@ namespace CarPlay {
 		[Export ("trailingNavigationBarButtons", ArgumentSemantic.Strong)]
 		CPBarButton [] TrailingNavigationBarButtons { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (12,2)]
@@ -1054,8 +1054,9 @@ namespace CarPlay {
 	[BaseType (typeof (NSObject))]
 	interface CPSessionConfigurationDelegate {
 
-		// This is not @required since Xcode 11 but kept for API compatibility.
+#if !NET
 		[Abstract]
+#endif
 		[Export ("sessionConfiguration:limitedUserInterfacesChanged:")]
 		void LimitedUserInterfacesChanged (CPSessionConfiguration sessionConfiguration, CPLimitableUserInterface limitedUserInterfaces);
 
@@ -1933,7 +1934,7 @@ namespace CarPlay {
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (15, 0), MacCatalyst (15,0)]

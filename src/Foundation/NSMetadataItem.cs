@@ -15,12 +15,13 @@ using System.Runtime.Versioning;
 
 namespace Foundation {
 	public partial class NSMetadataItem {
-
+#if !NET
 		bool GetBool (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
 			return n is null ? false : n.BoolValue;
 		}
+#endif
 
 		bool? GetNullableBool (NSString key)
 		{
@@ -109,24 +110,38 @@ namespace Foundation {
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? IsUbiquitous {
+#else
 		public bool IsUbiquitous {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#else
 				return GetBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemHasUnresolvedConflicts {
+#else
 		public bool UbiquitousItemHasUnresolvedConflicts {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#endif
 			}
 		}
 
 #if !NET
 		[iOS (7,0)][Mac (10,9)]
 #endif
-#if XAMCORE_4_0
+#if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
 #else
 		public NSItemDownloadingStatus DownloadingStatus {
@@ -136,38 +151,73 @@ namespace Foundation {
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsDownloading {
+#else
 		public bool UbiquitousItemIsDownloading {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsUploaded {
+#else
 		public bool UbiquitousItemIsUploaded {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsUploading {
+#else
 		public bool UbiquitousItemIsUploading {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public double? UbiquitousItemPercentDownloaded {
+#else
 		public double UbiquitousItemPercentDownloaded {
+#endif
 			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#else
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public double? UbiquitousItemPercentUploaded {
+#else
 		public double UbiquitousItemPercentUploaded {
+#endif
 			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#else
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#endif
 			}
 		}
 
@@ -189,23 +239,33 @@ namespace Foundation {
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-#if !NET
+#if NET
+		public bool? UbiquitousItemDownloadRequested {
+#else
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		public bool UbiquitousItemDownloadRequested {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-#if !NET
+#if NET
+		public bool? UbiquitousItemIsExternalDocument {
+#else
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		public bool UbiquitousItemIsExternalDocument {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#endif
 			}
 		}
 

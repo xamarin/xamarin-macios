@@ -166,6 +166,7 @@ namespace AddressBook {
 			return new ABAddressBook (handle, true);
 		}
 			
+		[Preserve (Conditional = true)]
 		internal ABAddressBook (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

@@ -565,6 +565,7 @@ namespace AudioToolbox {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal AudioFile (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -794,7 +795,7 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static OSStatus AudioFileReadPacketData (
 			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, ref int numBytes, 
-			AudioStreamPacketDescription [] packetDescriptions, long inStartingPacket, ref int numPackets, IntPtr outBuffer);
+			AudioStreamPacketDescription* packetDescriptions, long inStartingPacket, ref int numPackets, IntPtr outBuffer);
 
 		public AudioStreamPacketDescription []? ReadPacketData (long inStartingPacket, int nPackets, byte [] buffer)
 		{
@@ -898,7 +899,10 @@ namespace AudioToolbox {
 		
 		unsafe AudioStreamPacketDescription []? RealReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error, AudioStreamPacketDescription[] descriptions)
 		{
-			var r = AudioFileReadPacketData (Handle, useCache, ref count, descriptions, inStartingPacket, ref nPackets, buffer);
+			OSStatus r;
+			fixed (AudioStreamPacketDescription* pdesc = &descriptions [0]) {
+				r = AudioFileReadPacketData (Handle, useCache, ref count, pdesc, inStartingPacket, ref nPackets, buffer);
+			}
 
 			error = (AudioFileError)r;
 
@@ -957,7 +961,10 @@ namespace AudioToolbox {
 		{
 			var descriptions = new AudioStreamPacketDescription [nPackets];
 			fixed (byte *bop = &buffer [offset]){
-				var r = AudioFileReadPacketData (Handle, useCache, ref count, descriptions, inStartingPacket, ref nPackets, (IntPtr) bop);
+				OSStatus r;
+				fixed (AudioStreamPacketDescription* pdesc = &descriptions [0]) {
+					r = AudioFileReadPacketData (Handle, useCache, ref count, pdesc, inStartingPacket, ref nPackets, (IntPtr) bop);
+				}
 				error = (AudioFileError)r;
 				if (r == (int) AudioFileError.EndOfFile) {
 					if (count == 0)
