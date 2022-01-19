@@ -64,11 +64,38 @@ namespace AudioUnit
 		Initialized = -10849,
 		InvalidOfflineRender = -10848,
 		Unauthorized = -10847,
-		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		MidiOutputBufferFull = -66753,
-		[iOS (11,3), Mac (10,13,4), TV (11,3), NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("macos10.13.4")]
+		[SupportedOSPlatform ("tvos11.3")]
+#else
+		[iOS (11,3)]
+		[Mac (10,13,4)]
+		[TV (11,3)]
+		[NoWatch]
+#endif
 		InvalidParameterValue = -66743,
-		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		ExtensionNotFound = -66744,
 	}
 
@@ -81,7 +108,13 @@ namespace AudioUnit
 		NotPermitted			= -66748,
 		InitializationTimedOut	= -66747,
 		InvalidFormat			= -66746,
-		[iOS (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		RenderTimeout			= -66745,
 	}
 
@@ -129,7 +162,17 @@ namespace AudioUnit
 		Milliseconds		= 24,
 		Ratio				= 25,
 		CustomUnit			= 26,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		MIDI2Controller	 	= 27,
 	}
 
@@ -138,7 +181,11 @@ namespace AudioUnit
 	{
 		CFNameRelease		= (1 << 4),
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
+#endif
 		OmitFromPresets		= (1 << 13),
 		PlotHistory			= (1 << 14),
 		MeterReadOnly		= (1 << 15),
@@ -190,12 +237,36 @@ namespace AudioUnit
 		TranslateUIDToBox = 1969841250, // 'uidb'
 		ClockDeviceList = 1668049699, //'clk#'
 		TranslateUidToClockDevice = 1969841251, // 'uidc',
+#if NET
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 use the 'ProcessIsMain' element instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 use the 'ProcessIsMain' element instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 use the 'ProcessIsMain' element instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacOSX, 12,0, message : "Use the 'ProcessIsMain' element instead.")]
+#endif
 		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
-		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+		[Mac (12,0)]
+		[NoTV]
+		[NoWatch]
+#endif
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -209,7 +280,18 @@ namespace AudioUnit
 		ActualSampleRate = 1634955892,// 'asrt',
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
-		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+		[Mac (12,0)]
+		[NoTV]
+		[NoWatch]
+#endif
 		ProcessMute = 1634758765, // 'appm'
 	}
 
@@ -269,29 +351,95 @@ namespace AudioUnit
 		ParameterHistoryInfo = 53,
 		Nickname = 54,
 		OfflineRender = 37,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8, 0)]
+#endif
 		ParameterIDName = 34,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8, 0)]
+#endif
 		ParameterStringFromValue = 33,
 		ParameterClumpName = 35,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8, 0)]
+#endif
 		ParameterValueFromString = 38,
 		ContextName = 25,
 		PresentationLatency = 40,
 		ClassInfoFromDocument = 50,
 		RequestViewController = 56,
 		ParametersForOverview = 57,
-		[iOS (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		SupportsMpe = 58,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		LastRenderSampleTime = 61,
-		[iOS (14,5), TV (14,5), Mac (11,3)]
+#if NET
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[SupportedOSPlatform ("macos11.3")]
+#else
+		[iOS (14,5)]
+		[TV (14,5)]
+		[Mac (11,3)]
+#endif
 		LoadedOutOfProcess = 62,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		MIDIOutputEventListCallback = 63,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		AudioUnitMIDIProtocol = 64,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		HostMIDIProtocol = 65,
 
 #if MONOMAC
@@ -365,7 +513,18 @@ namespace AudioUnit
 		BypassVoiceProcessing = 2100,
 		VoiceProcessingEnableAGC = 2101,
 		MuteOutput = 2104,
-		[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoWatch, NoTV]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
+		[NoMac]
+		[NoWatch]
+		[NoTV]
+#endif
 		MutedSpeechActivityEventListener = 2106,
 
 		// AUNBandEQ unit
@@ -381,18 +540,45 @@ namespace AudioUnit
 		MatrixLevels = 3006,
 		MatrixDimensions = 3009,
 		MeterClipping = 3011,
-		[iOS (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		InputAnchorTimeStamp = 3016,
 
 		// SpatialMixer
 		ReverbRoomType = 10,
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
+#if NET
+		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0)]
+#endif
 		DistanceParams = 3010,
+#if NET
+		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0)]
+#endif
 		AttenuationCurve = 3013,
+#if NET
+		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0)]
+#endif
 		RenderingFlags = 3003,
 
 		// AUScheduledSoundPlayer
@@ -498,9 +684,17 @@ namespace AudioUnit
 		ReverbFilterFrequency				= 14,
 		ReverbFilterBandwidth				= 15,
 		ReverbFilterGain					= 16,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8, 0)]
+#endif
 		ReverbFilterType					= 17,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8, 0)]
+#endif
 		ReverbFilterEnable					= 18,
 
 		// AUMultiChannelMixer
@@ -554,7 +748,13 @@ namespace AudioUnit
 		AULowShelfCutoffFrequency			= 0,
 		AULowShelfGain						= 1,
 
+#if NET
+#if IOS
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Obsoleted (PlatformName.iOS, 7, 0)]
+#endif
 		AUDCFilterDecayTime					= 0,
 
 		// AUParametricEQ
@@ -574,12 +774,38 @@ namespace AudioUnit
 		DynamicsProcessorExpansionThreshold	= 3,
 		DynamicsProcessorAttackTime			= 4,
 		DynamicsProcessorReleaseTime 		= 5,
+#if NET
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("ios15.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos15.0 use 'DynamicsProcessorOverallGain' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 use 'DynamicsProcessorOverallGain' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 use 'DynamicsProcessorOverallGain' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 use 'DynamicsProcessorOverallGain' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
+#endif
 		DynamicsProcessorMasterGain			= 6,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		DynamicsProcessorOverallGain		= 6,
 		DynamicsProcessorCompressionAmount 	= 1000,
 		DynamicsProcessorInputAmplitude		= 2000,
@@ -657,7 +883,11 @@ namespace AudioUnit
 		ObstructionAttenuation = 11,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[iOS (8, 0)]
+#endif
 	public enum SpatialMixerAttenuation {
 		Power = 0,
 		Exponential = 1,
@@ -665,11 +895,23 @@ namespace AudioUnit
 		Linear = 3,
 	}
 
-	[Flags]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[iOS (8, 0)]
+#endif
+	[Flags]
 	public enum SpatialMixerRenderingFlags {
 		InterAuralDelay = (1 << 0),
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0)]
+#endif
 		DistanceAttenuation = (1 << 2),
 	}
 
@@ -679,14 +921,29 @@ namespace AudioUnit
 		BeganToRender = 0x02,
 		BeganToRenderLate = 0x04,
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
+#endif
 		Loop                   = 0x08,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
+#endif
 		Interrupt              = 0x10,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
+#endif
 		InterruptAtLoop        = 0x20,
 	}
 
@@ -741,12 +998,35 @@ namespace AudioUnit
 		Immediate = unchecked ((long) 0xffffffff00000000),
 	}
 
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
-		[NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		InProcess = 2,
-		[iOS (14,5), TV (14,5), NoMac]
+#if NET
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (14,5)]
+		[TV (14,5)]
+		[NoMac]
+#endif
 		LoadedRemotely = 1u << 31,
 	}
 
@@ -848,7 +1128,15 @@ namespace AudioUnit
 		VectorBasedPanning = 4,
 		StereoPassThrough = 5,
 		HrtfHQ = 6,
-		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+#endif
 		UseOutputType = 7,
 	}
 
@@ -866,14 +1154,30 @@ namespace AudioUnit
 		DistanceAttenuation = (1 << 2),
 	}
 
-	[iOS (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[Mac (10,12)]
+#endif
 	public enum AUParameterAutomationEventType : uint {
 		Value = 0,
 		Touch = 1,
 		Release = 2,
 	}
 
-	[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+#endif
 	public enum AUVoiceIOSpeechActivityEvent : uint
 	{
 		Started = 0,
