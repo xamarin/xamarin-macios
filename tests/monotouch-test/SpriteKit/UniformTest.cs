@@ -45,6 +45,9 @@ namespace MonoTouchFixtures.SpriteKit
 
 			using (var obj = new SKUniform ("name")) {
 				var M4Zero = new Matrix4 (Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
+				var N4Zero = default (NMatrix4);
+				var N3Zero = default (NMatrix3);
+				var N2Zero = default (NMatrix2);
 				Assert.AreEqual ("name", obj.Name, "1 Name");
 				Assert.AreEqual (SKUniformType.None, obj.UniformType, "1 UniformType");
 				Assert.IsNull (obj.TextureValue, "1 TextureValue");
@@ -52,9 +55,18 @@ namespace MonoTouchFixtures.SpriteKit
 				Asserts.AreEqual (Vector2.Zero, obj.FloatVector2Value, "1 FloatVector2Value");
 				Asserts.AreEqual (Vector3.Zero, obj.FloatVector3Value, "1 FloatVector3Value");
 				Asserts.AreEqual (Vector4.Zero, obj.FloatVector4Value, "1 FloatVector4Value");
+#if !NET
 				Asserts.AreEqual (Matrix2.Zero, obj.FloatMatrix2Value, "1 FloatMatrix2Value");
+#endif
+				Asserts.AreEqual (N2Zero, obj.MatrixFloat2x2Value, "1 MatrixFloat2x2Value");
+#if !NET
 				Asserts.AreEqual (Matrix3.Zero, obj.FloatMatrix3Value, "1 FloatMatrix3Value");
+#endif
+				Asserts.AreEqual (N3Zero, obj.MatrixFloat3x3Value, "1 MatrixFloat3x3Value");
+#if !NET
 				Asserts.AreEqual (M4Zero, obj.FloatMatrix4Value, "1 FloatMatrix4Value");
+#endif
+				Asserts.AreEqual (N4Zero, obj.MatrixFloat4x4Value, "1 MatrixFloat4x4Value");
 
 				texture = SKTexture.FromImageNamed ("basn3p08.png");
 				V2 = new Vector2 (1, 2);
@@ -82,14 +94,26 @@ namespace MonoTouchFixtures.SpriteKit
 				obj.FloatVector4Value = V4;
 				Asserts.AreEqual (V4, obj.FloatVector4Value, "2 FloatVector4Value");
 
+#if !NET
 				obj.FloatMatrix2Value = M2;
 				Asserts.AreEqual (M2, obj.FloatMatrix2Value, "2 FloatMatrix2Value");
+#endif
+				obj.MatrixFloat2x2Value = M2x2;
+				Asserts.AreEqual (M2x2, obj.MatrixFloat2x2Value, "2 MatrixFloat2x2Value");
 
+#if !NET
 				obj.FloatMatrix3Value = M3;
 				Asserts.AreEqual (M3, obj.FloatMatrix3Value, "2 FloatMatrix3Value");
+#endif
+				obj.MatrixFloat3x3Value = M3x3;
+				Asserts.AreEqual (M3x3, obj.MatrixFloat3x3Value, "2 MatrixFloat3x3Value");
 
+#if !NET
 				obj.FloatMatrix4Value = M4;
 				Asserts.AreEqual (M4, obj.FloatMatrix4Value, "2 FloatMatrix4Value");
+#endif
+				obj.MatrixFloat4x4Value = M4x4;
+				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4Value, "2 MatrixFloat4x4Value");
 			}
 
 			bool hasSimdConstructors = TestRuntime.CheckXcodeVersion (8, 0);
@@ -113,6 +137,7 @@ namespace MonoTouchFixtures.SpriteKit
 				Asserts.AreEqual (V4, obj.FloatVector4Value, "7 FloatVector4Value");
 			}
 
+#if !NET
 			using (var obj = new SKUniform ("name", M2)) {
 				Asserts.AreEqual (M2, obj.FloatMatrix2Value, "8 FloatMatrix2Value");
 				Asserts.AreEqual (M2, MatrixFloat2x2.Transpose (CFunctions.GetMatrixFloat2x2 (obj, "matrixFloat2x2Value")), "8b FloatMatrix2Value");
@@ -127,6 +152,7 @@ namespace MonoTouchFixtures.SpriteKit
 				Asserts.AreEqual (M4, obj.FloatMatrix4Value, "10 FloatMatrix4Value");
 				Asserts.AreEqual (M4, MatrixFloat4x4.Transpose (CFunctions.GetMatrixFloat4x4 (obj, "matrixFloat4x4Value")), "10b FloatMatrix4Value");
 			}
+#endif
 
 			using (var obj = new SKUniform ("name", M2x2)) {
 				Asserts.AreEqual (M2x2, obj.MatrixFloat2x2Value, "11 MatrixFloat2x2Value");
