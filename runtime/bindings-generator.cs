@@ -94,6 +94,7 @@ namespace Xamarin.BindingMethods.Generator
 			var data = new List<FunctionData> ();
 
 			Types.NativeHandleType = isDotNet ? Types.NativeHandle : Types.IntPtr;
+			Types.NFloat = isDotNet ? Types.NFloat_DotNet : Types.NFloat_Legacy;
 
 			data.Add (
 				new FunctionData {
@@ -3524,8 +3525,18 @@ namespace Xamarin.BindingMethods.Generator
 				Bit32Type = UInt32,
 				Bit64Type = UInt64,
 			};
-			public static TypeData NFloat = new TypeData {
+			public static TypeData NFloat;
+			public static TypeData NFloat_Legacy = new TypeData {
 				ManagedType = "nfloat",
+				NativeType = "xm_nfloat_t",
+				NativeWrapperType = "xm_nfloat_t",
+				RequireMarshal = false,
+				IsNativeType = true,
+				Bit32Type = Float,
+				Bit64Type = Double,
+			};
+			public static TypeData NFloat_DotNet = new TypeData {
+				ManagedType = "NFloat",
 				NativeType = "xm_nfloat_t",
 				NativeWrapperType = "xm_nfloat_t",
 				RequireMarshal = false,

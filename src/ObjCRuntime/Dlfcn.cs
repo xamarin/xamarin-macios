@@ -306,13 +306,24 @@ namespace ObjCRuntime {
 		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
+#if NO_NFLOAT_OPERATORS
+				return new NFloat (0);
+#else
 				return 0;
+#endif
 
 			unsafe {
+#if NO_NFLOAT_OPERATORS
+				if (sizeof (IntPtr) == 4)
+					return new NFloat (*(float *) indirect);
+				else
+					return new NFloat (*(double *) indirect);
+#else
 				if (sizeof (IntPtr) == 4)
 					return (nfloat) (*(float *) indirect);
 				else
 					return (nfloat) (*(double *) indirect);
+#endif
 			}
 		}
 

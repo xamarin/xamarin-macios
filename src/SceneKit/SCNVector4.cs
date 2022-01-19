@@ -24,6 +24,10 @@ SOFTWARE.
  */
 #endregion
 
+#if !MONOMAC
+#define PFLOAT_SINGLE
+#endif
+
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
@@ -35,7 +39,7 @@ using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
 #if MONOMAC
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif
@@ -132,15 +136,44 @@ namespace SceneKit
         }
 
         /// <summary>
+        /// Constructs a new SCNVector4.
+        /// </summary>
+        /// <param name="x">The x component of the SCNVector4.</param>
+        /// <param name="y">The y component of the SCNVector4.</param>
+        /// <param name="z">The z component of the SCNVector4.</param>
+        /// <param name="w">The z component of the SCNVector4.</param>
+        public SCNVector4(double x, double y, double z, double w)
+        {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            X = new NFloat (x);
+            Y = new NFloat (y);
+            Z = new NFloat (z);
+            W = new NFloat (w);
+#else
+            X = (pfloat) x;
+            Y = (pfloat) y;
+            Z = (pfloat) z;
+            W = (pfloat) w;
+#endif
+        }
+
+        /// <summary>
         /// Constructs a new SCNVector4 from the given Vector2.
         /// </summary>
         /// <param name="v">The Vector2 to copy components from.</param>
         public SCNVector4(Vector2 v)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            X = new NFloat (v.X);
+            Y = new NFloat (v.Y);
+            Z = new NFloat (0.0f);
+            W = new NFloat (0.0f);
+#else
             X = v.X;
             Y = v.Y;
             Z = 0.0f;
             W = 0.0f;
+#endif
         }
 
         /// <summary>
@@ -152,24 +185,42 @@ namespace SceneKit
             X = v.X;
             Y = v.Y;
             Z = v.Z;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            W = new NFloat (0.0f);
+#else
             W = 0.0f;
+#endif
         }
 
 
         public SCNVector4(Vector3 v)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            X = new NFloat (v.X);
+            Y = new NFloat (v.Y);
+            Z = new NFloat (v.Z);
+            W = new NFloat (0.0f);
+#else
             X = v.X;
             Y = v.Y;
             Z = v.Z;
             W = 0.0f;
+#endif
         }
 
         public SCNVector4(Vector4 v)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            X = new NFloat (v.X);
+            Y = new NFloat (v.Y);
+            Z = new NFloat (v.Z);
+            W = new NFloat (v.W);
+#else
             X = v.X;
             Y = v.Y;
             Z = v.Z;
             W = v.W;
+#endif
         }
 
         /// <summary>
@@ -214,7 +265,11 @@ namespace SceneKit
         {
             get
             {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                return new NFloat (System.Math.Sqrt(X.Value * X.Value + Y.Value * Y.Value + Z.Value * Z.Value + W.Value * W.Value));
+#else
                 return (pfloat)System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+#endif
             }
         }
 
@@ -235,7 +290,11 @@ namespace SceneKit
         {
             get
             {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                return new NFloat (1.0f / MathHelper.InverseSqrtFast(X.Value * X.Value + Y.Value * Y.Value + Z.Value * Z.Value + W.Value * W.Value));
+#else
                 return (pfloat)(1.0f / MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
+#endif
             }
         }
 
@@ -256,7 +315,11 @@ namespace SceneKit
         {
             get
             {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                return new NFloat (X.Value * X.Value + Y.Value * Y.Value + Z.Value * Z.Value + W.Value * W.Value);
+#else
                 return X * X + Y * Y + Z * Z + W * W;
+#endif
             }
         }
 
@@ -269,11 +332,19 @@ namespace SceneKit
         /// </summary>
         public void Normalize()
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat scale = new NFloat (1.0f / this.Length.Value);
+            X = new NFloat (X.Value * scale.Value);
+            Y = new NFloat (Y.Value * scale.Value);
+            Z = new NFloat (Z.Value * scale.Value);
+            W = new NFloat (W.Value * scale.Value);
+#else
             pfloat scale = 1.0f / this.Length;
             X *= scale;
             Y *= scale;
             Z *= scale;
             W *= scale;
+#endif
         }
 
         #endregion
@@ -285,11 +356,19 @@ namespace SceneKit
         /// </summary>
         public void NormalizeFast()
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat scale = new NFloat (MathHelper.InverseSqrtFast(X.Value * X.Value + Y.Value * Y.Value + Z.Value * Z.Value + W.Value * W.Value));
+            X = new NFloat (X.Value * scale.Value);
+            Y = new NFloat (Y.Value * scale.Value);
+            Z = new NFloat (Z.Value * scale.Value);
+            W = new NFloat (W.Value * scale.Value);
+#else
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
             X *= scale;
             Y *= scale;
             Z *= scale;
             W *= scale;
+#endif
         }
 
         #endregion
@@ -310,10 +389,17 @@ namespace SceneKit
         /// <returns>Result of subtraction</returns>
         public static SCNVector4 Sub(SCNVector4 a, SCNVector4 b)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            a.X = new NFloat (a.X.Value - b.X.Value);
+            a.Y = new NFloat (a.Y.Value - b.Y.Value);
+            a.Z = new NFloat (a.Z.Value - b.Z.Value);
+            a.W = new NFloat (a.W.Value - b.W.Value);
+#else
             a.X -= b.X;
             a.Y -= b.Y;
             a.Z -= b.Z;
             a.W -= b.W;
+#endif
             return a;
         }
 
@@ -325,10 +411,17 @@ namespace SceneKit
         /// <param name="result">Result of subtraction</param>
         public static void Sub(ref SCNVector4 a, ref SCNVector4 b, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.X = new NFloat (a.X.Value - b.X.Value);
+            result.Y = new NFloat (a.Y.Value - b.Y.Value);
+            result.Z = new NFloat (a.Z.Value - b.Z.Value);
+            result.W = new NFloat (a.W.Value - b.W.Value);
+#else
             result.X = a.X - b.X;
             result.Y = a.Y - b.Y;
             result.Z = a.Z - b.Z;
             result.W = a.W - b.W;
+#endif
         }
 
         #endregion
@@ -343,11 +436,19 @@ namespace SceneKit
         /// <returns>Result of the multiplication</returns>
         public static SCNVector4 Mult(SCNVector4 a, pfloat f)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            a.X = new NFloat (a.X.Value * f.Value);
+            a.Y = new NFloat (a.Y.Value * f.Value);
+            a.Z = new NFloat (a.Z.Value * f.Value);
+            a.W = new NFloat (a.W.Value * f.Value);
+            return a;
+#else
             a.X *= f;
             a.Y *= f;
             a.Z *= f;
             a.W *= f;
             return a;
+#endif
         }
 
         /// <summary>
@@ -358,10 +459,17 @@ namespace SceneKit
         /// <param name="result">Result of the multiplication</param>
         public static void Mult(ref SCNVector4 a, pfloat f, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.X = new NFloat (a.X.Value * f.Value);
+            result.Y = new NFloat (a.Y.Value * f.Value);
+            result.Z = new NFloat (a.Z.Value * f.Value);
+            result.W = new NFloat (a.W.Value * f.Value);
+#else
             result.X = a.X * f;
             result.Y = a.Y * f;
             result.Z = a.Z * f;
             result.W = a.W * f;
+#endif
         }
 
         #endregion
@@ -376,12 +484,21 @@ namespace SceneKit
         /// <returns>Result of the division</returns>
         public static SCNVector4 Div(SCNVector4 a, pfloat f)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat mult = new NFloat (1.0f / f.Value);
+            a.X = new NFloat (a.X.Value * mult.Value);
+            a.Y = new NFloat (a.Y.Value * mult.Value);
+            a.Z = new NFloat (a.Z.Value * mult.Value);
+            a.W = new NFloat (a.W.Value * mult.Value);
+            return a;
+#else
             pfloat mult = 1.0f / f;
             a.X *= mult;
             a.Y *= mult;
             a.Z *= mult;
             a.W *= mult;
             return a;
+#endif
         }
 
         /// <summary>
@@ -392,11 +509,19 @@ namespace SceneKit
         /// <param name="result">Result of the division</param>
         public static void Div(ref SCNVector4 a, pfloat f, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat mult = new NFloat (1.0f / f.Value);
+            result.X = new NFloat (a.X.Value * mult.Value);
+            result.Y = new NFloat (a.Y.Value * mult.Value);
+            result.Z = new NFloat (a.Z.Value * mult.Value);
+            result.W = new NFloat (a.W.Value * mult.Value);
+#else
             pfloat mult = 1.0f / f;
             result.X = a.X * mult;
             result.Y = a.Y * mult;
             result.Z = a.Z * mult;
             result.W = a.W * mult;
+#endif
         }
 
         #endregion
@@ -425,7 +550,11 @@ namespace SceneKit
         /// <param name="result">Result of operation.</param>
         public static void Add(ref SCNVector4 a, ref SCNVector4 b, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new SCNVector4(a.X.Value + b.X.Value, a.Y.Value + b.Y.Value, a.Z.Value + b.Z.Value, a.W.Value + b.W.Value);
+#else
             result = new SCNVector4(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+#endif
         }
 
         #endregion
@@ -452,7 +581,11 @@ namespace SceneKit
         /// <param name="result">Result of subtraction</param>
         public static void Subtract(ref SCNVector4 a, ref SCNVector4 b, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new SCNVector4(a.X.Value - b.X.Value, a.Y.Value - b.Y.Value, a.Z.Value - b.Z.Value, a.W.Value - b.W.Value);
+#else
             result = new SCNVector4(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+#endif
         }
 
         #endregion
@@ -479,7 +612,11 @@ namespace SceneKit
         /// <param name="result">Result of the operation.</param>
         public static void Multiply(ref SCNVector4 vector, pfloat scale, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new SCNVector4(vector.X.Value * scale.Value, vector.Y.Value * scale.Value, vector.Z.Value * scale.Value, vector.W.Value * scale.Value);
+#else
             result = new SCNVector4(vector.X * scale, vector.Y * scale, vector.Z * scale, vector.W * scale);
+#endif
         }
 
         /// <summary>
@@ -502,7 +639,11 @@ namespace SceneKit
         /// <param name="result">Result of the operation.</param>
         public static void Multiply(ref SCNVector4 vector, ref SCNVector4 scale, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new SCNVector4(vector.X.Value * scale.X.Value, vector.Y.Value * scale.Y.Value, vector.Z.Value * scale.Z.Value, vector.W.Value * scale.W.Value);
+#else
             result = new SCNVector4(vector.X * scale.X, vector.Y * scale.Y, vector.Z * scale.Z, vector.W * scale.W);
+#endif
         }
 
         #endregion
@@ -529,7 +670,11 @@ namespace SceneKit
         /// <param name="result">Result of the operation.</param>
         public static void Divide(ref SCNVector4 vector, pfloat scale, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            Multiply(ref vector, new NFloat (1 / scale.Value), out result);
+#else
             Multiply(ref vector, 1 / scale, out result);
+#endif
         }
 
         /// <summary>
@@ -552,7 +697,11 @@ namespace SceneKit
         /// <param name="result">Result of the operation.</param>
         public static void Divide(ref SCNVector4 vector, ref SCNVector4 scale, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new SCNVector4(vector.X.Value / scale.X.Value, vector.Y.Value / scale.Y.Value, vector.Z.Value / scale.Z.Value, vector.W.Value / scale.W.Value);
+#else
             result = new SCNVector4(vector.X / scale.X, vector.Y / scale.Y, vector.Z / scale.Z, vector.W / scale.W);
+#endif
         }
 
         #endregion
@@ -567,10 +716,17 @@ namespace SceneKit
         /// <returns>The component-wise minimum</returns>
         public static SCNVector4 Min(SCNVector4 a, SCNVector4 b)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            a.X = a.X.Value < b.X.Value ? a.X : b.X;
+            a.Y = a.Y.Value < b.Y.Value ? a.Y : b.Y;
+            a.Z = a.Z.Value < b.Z.Value ? a.Z : b.Z;
+            a.W = a.W.Value < b.W.Value ? a.W : b.W;
+#else
             a.X = a.X < b.X ? a.X : b.X;
             a.Y = a.Y < b.Y ? a.Y : b.Y;
             a.Z = a.Z < b.Z ? a.Z : b.Z;
             a.W = a.W < b.W ? a.W : b.W;
+#endif
             return a;
         }
 
@@ -582,10 +738,17 @@ namespace SceneKit
         /// <param name="result">The component-wise minimum</param>
         public static void Min(ref SCNVector4 a, ref SCNVector4 b, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.X = a.X.Value < b.X.Value ? a.X : b.X;
+            result.Y = a.Y.Value < b.Y.Value ? a.Y : b.Y;
+            result.Z = a.Z.Value < b.Z.Value ? a.Z : b.Z;
+            result.W = a.W.Value < b.W.Value ? a.W : b.W;
+#else
             result.X = a.X < b.X ? a.X : b.X;
             result.Y = a.Y < b.Y ? a.Y : b.Y;
             result.Z = a.Z < b.Z ? a.Z : b.Z;
             result.W = a.W < b.W ? a.W : b.W;
+#endif
         }
 
         #endregion
@@ -600,10 +763,17 @@ namespace SceneKit
         /// <returns>The component-wise maximum</returns>
         public static SCNVector4 Max(SCNVector4 a, SCNVector4 b)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            a.X = a.X.Value > b.X.Value ? a.X : b.X;
+            a.Y = a.Y.Value > b.Y.Value ? a.Y : b.Y;
+            a.Z = a.Z.Value > b.Z.Value ? a.Z : b.Z;
+            a.W = a.W.Value > b.W.Value ? a.W : b.W;
+#else
             a.X = a.X > b.X ? a.X : b.X;
             a.Y = a.Y > b.Y ? a.Y : b.Y;
             a.Z = a.Z > b.Z ? a.Z : b.Z;
             a.W = a.W > b.W ? a.W : b.W;
+#endif
             return a;
         }
 
@@ -615,10 +785,17 @@ namespace SceneKit
         /// <param name="result">The component-wise maximum</param>
         public static void Max(ref SCNVector4 a, ref SCNVector4 b, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.X = a.X.Value > b.X.Value ? a.X : b.X;
+            result.Y = a.Y.Value > b.Y.Value ? a.Y : b.Y;
+            result.Z = a.Z.Value > b.Z.Value ? a.Z : b.Z;
+            result.W = a.W.Value > b.W.Value ? a.W : b.W;
+#else
             result.X = a.X > b.X ? a.X : b.X;
             result.Y = a.Y > b.Y ? a.Y : b.Y;
             result.Z = a.Z > b.Z ? a.Z : b.Z;
             result.W = a.W > b.W ? a.W : b.W;
+#endif
         }
 
         #endregion
@@ -634,10 +811,17 @@ namespace SceneKit
         /// <returns>The clamped vector</returns>
         public static SCNVector4 Clamp(SCNVector4 vec, SCNVector4 min, SCNVector4 max)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            vec.X = vec.X.Value < min.X.Value ? min.X : vec.X.Value > max.X.Value ? max.X : vec.X;
+            vec.Y = vec.Y.Value < min.Y.Value ? min.Y : vec.Y.Value > max.Y.Value ? max.Y : vec.Y;
+            vec.Z = vec.X.Value < min.Z.Value ? min.Z : vec.Z.Value > max.Z.Value ? max.Z : vec.Z;
+            vec.W = vec.Y.Value < min.W.Value ? min.W : vec.W.Value > max.W.Value ? max.W : vec.W;
+#else
             vec.X = vec.X < min.X ? min.X : vec.X > max.X ? max.X : vec.X;
             vec.Y = vec.Y < min.Y ? min.Y : vec.Y > max.Y ? max.Y : vec.Y;
             vec.Z = vec.X < min.Z ? min.Z : vec.Z > max.Z ? max.Z : vec.Z;
             vec.W = vec.Y < min.W ? min.W : vec.W > max.W ? max.W : vec.W;
+#endif
             return vec;
         }
 
@@ -650,10 +834,17 @@ namespace SceneKit
         /// <param name="result">The clamped vector</param>
         public static void Clamp(ref SCNVector4 vec, ref SCNVector4 min, ref SCNVector4 max, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.X = vec.X.Value < min.X.Value ? min.X : vec.X.Value > max.X.Value ? max.X : vec.X;
+            result.Y = vec.Y.Value < min.Y.Value ? min.Y : vec.Y.Value > max.Y.Value ? max.Y : vec.Y;
+            result.Z = vec.X.Value < min.Z.Value ? min.Z : vec.Z.Value > max.Z.Value ? max.Z : vec.Z;
+            result.W = vec.Y.Value < min.W.Value ? min.W : vec.W.Value > max.W.Value ? max.W : vec.W;
+#else
             result.X = vec.X < min.X ? min.X : vec.X > max.X ? max.X : vec.X;
             result.Y = vec.Y < min.Y ? min.Y : vec.Y > max.Y ? max.Y : vec.Y;
             result.Z = vec.X < min.Z ? min.Z : vec.Z > max.Z ? max.Z : vec.Z;
             result.W = vec.Y < min.W ? min.W : vec.W > max.W ? max.W : vec.W;
+#endif
         }
 
         #endregion
@@ -667,11 +858,19 @@ namespace SceneKit
         /// <returns>The normalized vector</returns>
         public static SCNVector4 Normalize(SCNVector4 vec)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat scale = new NFloat (1.0f / vec.Length.Value);
+            vec.X = new NFloat (vec.X.Value * scale.Value);
+            vec.Y = new NFloat (vec.Y.Value * scale.Value);
+            vec.Z = new NFloat (vec.Z.Value * scale.Value);
+            vec.W = new NFloat (vec.W.Value * scale.Value);
+#else
             pfloat scale = 1.0f / vec.Length;
             vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
             vec.W *= scale;
+#endif
             return vec;
         }
 
@@ -682,11 +881,19 @@ namespace SceneKit
         /// <param name="result">The normalized vector</param>
         public static void Normalize(ref SCNVector4 vec, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat scale = new NFloat (1.0f / vec.Length.Value);
+            result.X = new NFloat (vec.X.Value * scale.Value);
+            result.Y = new NFloat (vec.Y.Value * scale.Value);
+            result.Z = new NFloat (vec.Z.Value * scale.Value);
+            result.W = new NFloat (vec.W.Value * scale.Value);
+#else
             pfloat scale = 1.0f / vec.Length;
             result.X = vec.X * scale;
             result.Y = vec.Y * scale;
             result.Z = vec.Z * scale;
             result.W = vec.W * scale;
+#endif
         }
 
         #endregion
@@ -700,11 +907,19 @@ namespace SceneKit
         /// <returns>The normalized vector</returns>
         public static SCNVector4 NormalizeFast(SCNVector4 vec)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat scale = new NFloat(MathHelper.InverseSqrtFast(vec.X.Value * vec.X.Value + vec.Y.Value * vec.Y.Value + vec.Z.Value * vec.Z.Value + vec.W.Value * vec.W.Value));
+            vec.X = new NFloat (vec.X.Value * scale.Value);
+            vec.Y = new NFloat (vec.Y.Value * scale.Value);
+            vec.Z = new NFloat (vec.Z.Value * scale.Value);
+            vec.W = new NFloat (vec.W.Value * scale.Value);
+#else
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
             vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
             vec.W *= scale;
+#endif
             return vec;
         }
 
@@ -715,11 +930,19 @@ namespace SceneKit
         /// <param name="result">The normalized vector</param>
         public static void NormalizeFast(ref SCNVector4 vec, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat scale = new NFloat (MathHelper.InverseSqrtFast(vec.X.Value * vec.X.Value + vec.Y.Value * vec.Y.Value + vec.Z.Value * vec.Z.Value + vec.W.Value * vec.W.Value));
+            result.X = new NFloat (vec.X.Value * scale.Value);
+            result.Y = new NFloat (vec.Y.Value * scale.Value);
+            result.Z = new NFloat (vec.Z.Value * scale.Value);
+            result.W = new NFloat (vec.W.Value * scale.Value);
+#else
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
             result.X = vec.X * scale;
             result.Y = vec.Y * scale;
             result.Z = vec.Z * scale;
             result.W = vec.W * scale;
+#endif
         }
 
         #endregion
@@ -734,7 +957,11 @@ namespace SceneKit
         /// <returns>The dot product of the two inputs</returns>
         public static pfloat Dot(SCNVector4 left, SCNVector4 right)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            return new NFloat (left.X.Value * right.X.Value + left.Y.Value * right.Y.Value + left.Z.Value * right.Z.Value + left.W.Value * right.W.Value);
+#else
             return left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
+#endif
         }
 
         /// <summary>
@@ -745,7 +972,11 @@ namespace SceneKit
         /// <param name="result">The dot product of the two inputs</param>
         public static void Dot(ref SCNVector4 left, ref SCNVector4 right, out pfloat result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new NFloat (left.X.Value * right.X.Value + left.Y.Value * right.Y.Value + left.Z.Value * right.Z.Value + left.W.Value * right.W.Value);
+#else
             result = left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
+#endif
         }
 
         #endregion
@@ -761,10 +992,17 @@ namespace SceneKit
         /// <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
         public static SCNVector4 Lerp(SCNVector4 a, SCNVector4 b, pfloat blend)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            a.X = new NFloat (blend.Value * (b.X.Value - a.X.Value) + a.X.Value);
+            a.Y = new NFloat (blend.Value * (b.Y.Value - a.Y.Value) + a.Y.Value);
+            a.Z = new NFloat (blend.Value * (b.Z.Value - a.Z.Value) + a.Z.Value);
+            a.W = new NFloat (blend.Value * (b.W.Value - a.W.Value) + a.W.Value);
+#else
             a.X = blend * (b.X - a.X) + a.X;
             a.Y = blend * (b.Y - a.Y) + a.Y;
             a.Z = blend * (b.Z - a.Z) + a.Z;
             a.W = blend * (b.W - a.W) + a.W;
+#endif
             return a;
         }
 
@@ -777,10 +1015,17 @@ namespace SceneKit
         /// <param name="result">a when blend=0, b when blend=1, and a linear combination otherwise</param>
         public static void Lerp(ref SCNVector4 a, ref SCNVector4 b, pfloat blend, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.X = new NFloat (blend.Value * (b.X.Value - a.X.Value) + a.X.Value);
+            result.Y = new NFloat (blend.Value * (b.Y.Value - a.Y.Value) + a.Y.Value);
+            result.Z = new NFloat (blend.Value * (b.Z.Value - a.Z.Value) + a.Z.Value);
+            result.W = new NFloat (blend.Value * (b.W.Value - a.W.Value) + a.W.Value);
+#else
             result.X = blend * (b.X - a.X) + a.X;
             result.Y = blend * (b.Y - a.Y) + a.Y;
             result.Z = blend * (b.Z - a.Z) + a.Z;
             result.W = blend * (b.W - a.W) + a.W;
+#endif
         }
 
         #endregion
@@ -798,7 +1043,11 @@ namespace SceneKit
         /// <returns>a when u=v=0, b when u=1,v=0, c when u=0,v=1, and a linear combination of a,b,c otherwise</returns>
         public static SCNVector4 BaryCentric(SCNVector4 a, SCNVector4 b, SCNVector4 c, pfloat u, pfloat v)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
             return a + u * (b - a) + v * (c - a);
+#else
+            return a + u * (b - a) + v * (c - a);
+#endif
         }
 
         /// <summary>Interpolate 3 Vectors using Barycentric coordinates</summary>
@@ -847,6 +1096,27 @@ namespace SceneKit
         /// <param name="result">The transformed vector</param>
         public static void Transform(ref SCNVector4 vec, ref SCNMatrix4 mat, out SCNVector4 result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.X = new NFloat (vec.X.Value * mat.Row0.X.Value +
+                       vec.Y.Value * mat.Row1.X.Value +
+                       vec.Z.Value * mat.Row2.X.Value +
+                       vec.W.Value * mat.Row3.X.Value);
+
+            result.Y = new NFloat (vec.X.Value * mat.Row0.Y.Value +
+                       vec.Y.Value * mat.Row1.Y.Value +
+                       vec.Z.Value * mat.Row2.Y.Value +
+                       vec.W.Value * mat.Row3.Y.Value);
+
+            result.Z = new NFloat (vec.X.Value * mat.Row0.Z.Value +
+                       vec.Y.Value * mat.Row1.Z.Value +
+                       vec.Z.Value * mat.Row2.Z.Value +
+                       vec.W.Value * mat.Row3.Z.Value);
+
+            result.W = new NFloat (vec.X.Value * mat.Row0.W.Value +
+                       vec.Y.Value * mat.Row1.W.Value +
+                       vec.Z.Value * mat.Row2.W.Value +
+                       vec.W.Value * mat.Row3.W.Value);
+#else
             result.X = vec.X * mat.Row0.X +
                        vec.Y * mat.Row1.X +
                        vec.Z * mat.Row2.X +
@@ -866,6 +1136,7 @@ namespace SceneKit
                        vec.Y * mat.Row1.W +
                        vec.Z * mat.Row2.W +
                        vec.W * mat.Row3.W;
+#endif
         }
 
         #endregion
@@ -878,13 +1149,21 @@ namespace SceneKit
         /// Gets or sets an OpenTK.Vector2 with the X and Y components of this instance.
         /// </summary>
         [XmlIgnore]
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+        public Vector2 Xy { get { return new Vector2((float)X.Value, (float)Y.Value); } set { X = new NFloat (value.X); Y = new NFloat (value.Y); } }
+#else
         public Vector2 Xy { get { return new Vector2((float)X, (float)Y); } set { X = value.X; Y = value.Y; } }
+#endif
 
         /// <summary>
         /// Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
         /// </summary>
         [XmlIgnore]
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+        public SCNVector3 Xyz { get { return new SCNVector3(X.Value, Y.Value, Z.Value); } set { X = value.X; Y = value.Y; Z = value.Z; } }
+#else
         public SCNVector3 Xyz { get { return new SCNVector3(X, Y, Z); } set { X = value.X; Y = value.Y; Z = value.Z; } }
+#endif
 
         #endregion
 
@@ -898,10 +1177,17 @@ namespace SceneKit
         /// <returns>The result of the calculation.</returns>
         public static SCNVector4 operator +(SCNVector4 left, SCNVector4 right)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            left.X = new NFloat (left.X.Value + right.X.Value);
+            left.Y = new NFloat (left.Y.Value + right.Y.Value);
+            left.Z = new NFloat (left.Z.Value + right.Z.Value);
+            left.W = new NFloat (left.W.Value + right.W.Value);
+#else
             left.X += right.X;
             left.Y += right.Y;
             left.Z += right.Z;
             left.W += right.W;
+#endif
             return left;
         }
 
@@ -913,10 +1199,17 @@ namespace SceneKit
         /// <returns>The result of the calculation.</returns>
         public static SCNVector4 operator -(SCNVector4 left, SCNVector4 right)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            left.X = new NFloat (left.X.Value - right.X.Value);
+            left.Y = new NFloat (left.Y.Value - right.Y.Value);
+            left.Z = new NFloat (left.Z.Value - right.Z.Value);
+            left.W = new NFloat (left.W.Value - right.W.Value);
+#else
             left.X -= right.X;
             left.Y -= right.Y;
             left.Z -= right.Z;
             left.W -= right.W;
+#endif
             return left;
         }
 
@@ -927,10 +1220,17 @@ namespace SceneKit
         /// <returns>The result of the calculation.</returns>
         public static SCNVector4 operator -(SCNVector4 vec)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            vec.X = new NFloat (-vec.X.Value);
+            vec.Y = new NFloat (-vec.Y.Value);
+            vec.Z = new NFloat (-vec.Z.Value);
+            vec.W = new NFloat (-vec.W.Value);
+#else
             vec.X = -vec.X;
             vec.Y = -vec.Y;
             vec.Z = -vec.Z;
             vec.W = -vec.W;
+#endif
             return vec;
         }
 
@@ -942,10 +1242,17 @@ namespace SceneKit
         /// <returns>The result of the calculation.</returns>
         public static SCNVector4 operator *(SCNVector4 vec, pfloat scale)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            vec.X = new NFloat (vec.X.Value * scale.Value);
+            vec.Y = new NFloat (vec.Y.Value * scale.Value);
+            vec.Z = new NFloat (vec.Z.Value * scale.Value);
+            vec.W = new NFloat (vec.W.Value * scale.Value);
+#else
             vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
             vec.W *= scale;
+#endif
             return vec;
         }
 
@@ -957,10 +1264,17 @@ namespace SceneKit
         /// <returns>The result of the calculation.</returns>
         public static SCNVector4 operator *(pfloat scale, SCNVector4 vec)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            vec.X = new NFloat (vec.X.Value * scale.Value);
+            vec.Y = new NFloat (vec.Y.Value * scale.Value);
+            vec.Z = new NFloat (vec.Z.Value * scale.Value);
+            vec.W = new NFloat (vec.W.Value * scale.Value);
+#else
             vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
             vec.W *= scale;
+#endif
             return vec;
         }
 
@@ -972,11 +1286,19 @@ namespace SceneKit
         /// <returns>The result of the calculation.</returns>
         public static SCNVector4 operator /(SCNVector4 vec, pfloat scale)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat mult = new NFloat (1.0f / scale.Value);
+            vec.X = new NFloat (vec.X.Value * mult.Value);
+            vec.Y = new NFloat (vec.Y.Value * mult.Value);
+            vec.Z = new NFloat (vec.Z.Value * mult.Value);
+            vec.W = new NFloat (vec.W.Value * mult.Value);
+#else
             pfloat mult = 1.0f / scale;
             vec.X *= mult;
             vec.Y *= mult;
             vec.Z *= mult;
             vec.W *= mult;
+#endif
             return vec;
         }
 
@@ -1085,10 +1407,17 @@ namespace SceneKit
         public bool Equals(SCNVector4 other)
         {
             return
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                X.Value == other.X.Value &&
+                Y.Value == other.Y.Value &&
+                Z.Value == other.Z.Value &&
+                W.Value == other.W.Value;
+#else
                 X == other.X &&
                 Y == other.Y &&
                 Z == other.Z &&
                 W == other.W;
+#endif
         }
 
         #endregion
@@ -1100,7 +1429,11 @@ namespace SceneKit
 
 	public static explicit operator Vector4 (SCNVector4 source)
 	{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+		return new Vector4 ((float)source.X.Value, (float)source.Y.Value, (float)source.Z.Value, (float)source.W.Value);
+#else
 		return new Vector4 ((float)source.X, (float)source.Y, (float)source.Z, (float)source.W);
+#endif
 	}
 
 		

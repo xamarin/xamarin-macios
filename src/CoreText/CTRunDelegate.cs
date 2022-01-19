@@ -85,17 +85,29 @@ namespace CoreText {
 #if NET
 		public virtual nfloat GetAscent ()
 		{
+#if NO_NFLOAT_OPERATORS
+			return new NFloat (0);
+#else
 			return 0;
+#endif
 		}
 
 		public virtual nfloat GetDescent ()
 		{
+#if NO_NFLOAT_OPERATORS
+			return new NFloat (0);
+#else
 			return 0;
+#endif
 		}
 
 		public virtual nfloat GetWidth ()
 		{
+#if NO_NFLOAT_OPERATORS
+			return new NFloat (0);
+#else
 			return 0;
+#endif
 		}
 #else
 		public virtual float GetAscent ()
@@ -155,8 +167,13 @@ namespace CoreText {
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
+#if NO_NFLOAT_OPERATORS
+				return new NFloat (0);
+			return self.GetAscent ();
+#else
 				return 0;
 			return (nfloat) self.GetAscent ();
+#endif
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
@@ -164,8 +181,13 @@ namespace CoreText {
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
+#if NO_NFLOAT_OPERATORS
+				return new NFloat (0);
+			return self.GetDescent ();
+#else
 				return 0;
 			return (nfloat) self.GetDescent ();
+#endif
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
@@ -173,8 +195,13 @@ namespace CoreText {
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
+#if NO_NFLOAT_OPERATORS
+				return new NFloat (0);
+			return self.GetWidth ();
+#else
 				return 0;
 			return (nfloat) self.GetWidth ();
+#endif
 		}
 	}
 

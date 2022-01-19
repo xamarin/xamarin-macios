@@ -26,17 +26,12 @@ favor of the C# 9 `nint` and `nuint` types (these map to `System.IntPtr` and
 
 Reference: https://github.com/xamarin/xamarin-macios/issues/10508
 
-## System.nfloat moved to ObjCRuntime.nfloat
+## Removed `System.nfloat`
 
-The `nfloat` type moved from the `System` namespace to the `ObjCRuntime` namespace.
+The `nfloat` type has been removed in favor of the
+`System.Runtime.InteropServices.NFloat` type.
 
-* Code that references the `nfloat` type might not compile unless the `ObjCRuntime` namespace is imported.
-
-  Fix: add `using ObjCRuntime` to the file in question.
-
-* Code that references the full typename, `System.nfloat` won't compile.
-
-  Fix: use `ObjCRuntime.nfloat` instead.
+// TODO: explain more
 
 ## System.NMath moved to ObjCRuntime.NMath
 

@@ -61,6 +61,15 @@ namespace UIKit {
 		// note: NSDirectionalEdgeInsetsEqualToDirectionalEdgeInsets (UIGeometry.h) is a macro
 		public bool Equals (NSDirectionalEdgeInsets other)
 		{
+#if NO_NFLOAT_OPERATORS
+			if (Leading.Value != other.Leading.Value)
+				return false;
+			if (Trailing.Value != other.Trailing.Value)
+				return false;
+			if (Top.Value != other.Top.Value)
+				return false;
+			return (Bottom.Value == other.Bottom.Value);
+#else
 			if (Leading != other.Leading)
 				return false;
 			if (Trailing != other.Trailing)
@@ -68,6 +77,7 @@ namespace UIKit {
 			if (Top != other.Top)
 				return false;
 			return (Bottom == other.Bottom);
+#endif
 		}
 
 		public override bool Equals (object obj)

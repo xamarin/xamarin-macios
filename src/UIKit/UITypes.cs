@@ -39,15 +39,31 @@ namespace UIKit {
 		// note: UIEdgeInsetsInsetRect (UIGeometry.h) is a macro
 		public CGRect InsetRect (CGRect rect)
 		{
+#if NO_NFLOAT_OPERATORS
+			return new CGRect (rect.X.Value + Left.Value,
+			                       rect.Y.Value + Top.Value,
+			                       rect.Width.Value - Left.Value - Right.Value,
+			                       rect.Height.Value - Top.Value - Bottom.Value);
+#else
 			return new CGRect (rect.X + Left,
 			                       rect.Y + Top,
 			                       rect.Width - Left - Right,
 			                       rect.Height - Top - Bottom);
+#endif
 		}
 
 		// note: UIEdgeInsetsEqualToEdgeInsets (UIGeometry.h) is a macro
 		public bool Equals (UIEdgeInsets other)
 		{
+#if NO_NFLOAT_OPERATORS
+			if (Left.Value != other.Left.Value)
+				return false;
+			if (Right.Value != other.Right.Value)
+				return false;
+			if (Top.Value != other.Top.Value)
+				return false;
+			return (Bottom.Value == other.Bottom.Value);
+#else
 			if (Left != other.Left)
 				return false;
 			if (Right != other.Right)
@@ -55,6 +71,7 @@ namespace UIKit {
 			if (Top != other.Top)
 				return false;
 			return (Bottom == other.Bottom);
+#endif
 		}
 
 		public override bool Equals (object obj)
@@ -132,7 +149,11 @@ namespace UIKit {
 		// [DllImport (Constants.UIKitLibrary)]
 		// static extern bool UIFloatRangeIsEqualToRange (UIFloatRange range, UIFloatRange otherRange);
 
+#if NO_NFLOAT_OPERATORS
+		public bool Equals (UIFloatRange other) => this.Minimum.Value == other.Minimum.Value && this.Maximum.Value == other.Maximum.Value;
+#else
 		public bool Equals (UIFloatRange other) => this.Minimum == other.Minimum && this.Maximum == other.Maximum;
+#endif
 
 		public override bool Equals (object other)
 		{
@@ -150,7 +171,11 @@ namespace UIKit {
 		public static UIFloatRange Zero;
 
 		[Field ("UIFloatRangeInfinite")] // fake (but helps testing and could also help documentation)
+#if NO_NFLOAT_OPERATORS
+		public static UIFloatRange Infinite = new UIFloatRange (NFloatHelpers.NegativeInfinity, NFloatHelpers.PositiveInfinity);
+#else
 		public static UIFloatRange Infinite = new UIFloatRange (nfloat.NegativeInfinity, nfloat.PositiveInfinity);
+#endif
 	}
 #endif
 

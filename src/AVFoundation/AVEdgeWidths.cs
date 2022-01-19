@@ -49,25 +49,44 @@ namespace AVFoundation {
 		public static bool operator == (AVEdgeWidths left, AVEdgeWidths right)
 		{
 			return
+#if NO_NFLOAT_OPERATORS
+				left.Left.Value == right.Left.Value &&
+				left.Top.Value == right.Top.Value &&
+				left.Right.Value == right.Right.Value &&
+				left.Bottom.Value == right.Bottom.Value;
+#else
 				left.Left == right.Left &&
 				left.Top == right.Top &&
 				left.Right == right.Right &&
 				left.Bottom == right.Bottom;
+#endif
 		}
 
 		public static bool operator != (AVEdgeWidths left, AVEdgeWidths right)
 		{
 			return
+#if NO_NFLOAT_OPERATORS
+				left.Left.Value != right.Left.Value ||
+				left.Top.Value != right.Top.Value ||
+				left.Right.Value != right.Right.Value ||
+				left.Bottom.Value != right.Bottom.Value;
+#else
 				left.Left != right.Left ||
 				left.Top != right.Top ||
 				left.Right != right.Right ||
 				left.Bottom != right.Bottom;
+#endif
 		}
 
 		public override int GetHashCode ()
 		{
+#if NO_NFLOAT_OPERATORS
+			return (int)Left.Value ^
+				(int)Top.Value ^ (int)Right.Value ^ (int)Bottom.Value;
+#else
 			return (int)Left ^
 				(int)Top ^ (int)Right ^ (int)Bottom;
+#endif
 		}
 
 		public override bool Equals (object other)

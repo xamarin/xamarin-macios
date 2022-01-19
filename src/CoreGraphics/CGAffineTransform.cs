@@ -92,6 +92,34 @@ namespace CoreGraphics {
 			this.y0 = y0;
 		}
 #endif
+
+		public CGAffineTransform (double a, double b, double c, double d, double tx, double ty)
+		{
+#if NET
+#if NO_NFLOAT_OPERATORS
+			this.A = new NFloat (a);
+			this.B = new NFloat (b);
+			this.C = new NFloat (c);
+			this.D = new NFloat (d);
+			this.Tx = new NFloat (tx);
+			this.Ty = new NFloat (ty);
+#else
+			this.A = a;
+			this.B = b;
+			this.C = c;
+			this.D = d;
+			this.Tx = tx;
+			this.Ty = ty;
+#endif
+#else
+			this.xx = (nfloat) a;
+			this.yx = (nfloat) b;
+			this.xy = (nfloat) c;
+			this.yy = (nfloat) d;
+			this.x0 = (nfloat) tx;
+			this.y0 = (nfloat) ty;
+#endif
+		}
 		
 		// Identity
 		public static CGAffineTransform MakeIdentity ()
@@ -101,8 +129,13 @@ namespace CoreGraphics {
 		
 		public static CGAffineTransform MakeRotation (nfloat angle)
 		{
+#if NO_NFLOAT_OPERATORS
+			var cos = Math.Cos (angle.Value);
+			var sin = Math.Sin (angle.Value);
+#else
 			var cos = (nfloat) Math.Cos (angle);
 			var sin = (nfloat) Math.Sin (angle);
+#endif
 			return new CGAffineTransform (
 				cos, sin,
 				-sin, cos,
@@ -111,12 +144,20 @@ namespace CoreGraphics {
 
 		public static CGAffineTransform MakeScale (nfloat sx, nfloat sy)
 		{
+#if NO_NFLOAT_OPERATORS
+			return new CGAffineTransform (sx.Value, 0, 0, sy.Value, 0, 0);
+#else
 			return new CGAffineTransform (sx, 0, 0, sy, 0, 0);
+#endif
 		}
 
 		public static CGAffineTransform MakeTranslation (nfloat tx, nfloat ty)
 		{
+#if NO_NFLOAT_OPERATORS
+			return new CGAffineTransform (1, 0, 0, 1, tx.Value, ty.Value);
+#else
 			return new CGAffineTransform (1, 0, 0, 1, tx, ty);
+#endif
 		}
 
 		//
@@ -125,12 +166,21 @@ namespace CoreGraphics {
 		public static CGAffineTransform Multiply (CGAffineTransform a, CGAffineTransform b)
 		{
 #if NET
+#if NO_NFLOAT_OPERATORS
+			return new CGAffineTransform (new NFloat (a.A.Value * b.A.Value + a.B.Value * b.C.Value),
+						      new NFloat (a.A.Value * b.B.Value + a.B.Value * b.D.Value),
+						      new NFloat (a.C.Value * b.A.Value + a.D.Value * b.C.Value),
+						      new NFloat (a.C.Value * b.B.Value + a.D.Value * b.D.Value),
+						      new NFloat (a.Tx.Value * b.A.Value + a.Ty.Value * b.C.Value + b.Tx.Value),
+						      new NFloat (a.Tx.Value * b.B.Value + a.Ty.Value * b.D.Value + b.Ty.Value));
+#else
 			return new CGAffineTransform (a.A * b.A + a.B * b.C,
 						      a.A * b.B + a.B * b.D,
 						      a.C * b.A + a.D * b.C,
 						      a.C * b.B + a.D * b.D,
 						      a.Tx * b.A + a.Ty * b.C + b.Tx,
 						      a.Tx * b.B + a.Ty * b.D + b.Ty);
+#endif
 #else
 			return new CGAffineTransform (a.xx * b.xx + a.yx * b.xy,
 						      a.xx * b.yx + a.yx * b.yy,
@@ -145,12 +195,21 @@ namespace CoreGraphics {
 		{
 			var a = this;
 #if NET
+#if NO_NFLOAT_OPERATORS
+			A = new NFloat (a.A.Value * b.A.Value + a.B.Value * b.C.Value);
+			B = new NFloat (a.A.Value * b.B.Value + a.B.Value * b.D.Value);
+			C = new NFloat (a.C.Value * b.A.Value + a.D.Value * b.C.Value);
+			D = new NFloat (a.C.Value * b.B.Value + a.D.Value * b.D.Value);
+			Tx = new NFloat (a.Tx.Value * b.A.Value + a.Ty.Value * b.C.Value + b.Tx.Value);
+			Ty = new NFloat (a.Tx.Value * b.B.Value + a.Ty.Value * b.D.Value + b.Ty.Value);
+#else
 			A = a.A * b.A + a.B * b.C;
 			B = a.A * b.B + a.B * b.D;
 			C = a.C * b.A + a.D * b.C;
 			D = a.C * b.B + a.D * b.D;
 			Tx = a.Tx * b.A + a.Ty * b.C + b.Tx;
 			Ty = a.Tx * b.B + a.Ty * b.D + b.Ty;
+#endif
 #else
 			xx = a.xx * b.xx + a.yx * b.xy;
 			yx = a.xx * b.yx + a.yx * b.yy;
@@ -184,6 +243,15 @@ namespace CoreGraphics {
 		public static CGAffineTransform Scale (CGAffineTransform transform, nfloat sx, nfloat sy)
 		{
 #if NET
+#if NO_NFLOAT_OPERATORS
+			return new CGAffineTransform (
+				new NFloat (sx.Value * transform.A.Value),
+				new NFloat (sx.Value * transform.B.Value),
+				new NFloat (sy.Value * transform.C.Value),
+				new NFloat (sy.Value * transform.D.Value),
+				new NFloat (transform.Tx.Value),
+				new NFloat (transform.Ty.Value));
+#else
 			return new CGAffineTransform (
 				sx * transform.A,
 				sx * transform.B,
@@ -191,6 +259,7 @@ namespace CoreGraphics {
 				sy * transform.D,
 				transform.Tx,
 				transform.Ty);
+#endif
 #else
 			return new CGAffineTransform (
 				sx * transform.xx,
@@ -225,6 +294,15 @@ namespace CoreGraphics {
 		public static CGAffineTransform Translate (CGAffineTransform transform, nfloat tx, nfloat ty)
 		{
 #if NET
+#if NO_NFLOAT_OPERATORS
+			return new CGAffineTransform (
+				transform.A,
+				transform.B,
+				transform.C,
+				transform.D,
+				new NFloat (tx.Value * transform.A.Value + ty.Value * transform.C.Value + transform.Tx.Value),
+				new NFloat (tx.Value * transform.B.Value + ty.Value * transform.D.Value + transform.Ty.Value));
+#else
 			return new CGAffineTransform (
 				transform.A,
 				transform.B,
@@ -232,6 +310,7 @@ namespace CoreGraphics {
 				transform.D,
 				tx * transform.A + ty * transform.C + transform.Tx,
 				tx * transform.B + ty * transform.D + transform.Ty);
+#endif
 #else
 			return new CGAffineTransform (
 				transform.xx,
@@ -266,6 +345,18 @@ namespace CoreGraphics {
 		public static CGAffineTransform Rotate (CGAffineTransform transform, nfloat angle)
 		{
 #if NET
+#if NO_NFLOAT_OPERATORS
+			var cos = Math.Cos (angle.Value);
+			var sin = Math.Sin (angle.Value);
+
+			return new CGAffineTransform (
+				cos * transform.A.Value + sin * transform.C.Value,
+				cos * transform.B.Value + sin * transform.D.Value,
+				cos * transform.C.Value - sin * transform.A.Value,
+				cos * transform.D.Value - sin * transform.B.Value,
+				transform.Tx.Value,
+				transform.Ty.Value);
+#else
 			var cos = (nfloat) Math.Cos (angle);
 			var sin = (nfloat) Math.Sin (angle);
 
@@ -276,6 +367,7 @@ namespace CoreGraphics {
 				cos * transform.D - sin * transform.B,
 				transform.Tx,
 				transform.Ty);
+#endif
 #else
 			var cos = (nfloat) Math.Cos (angle);
 			var sin = (nfloat) Math.Sin (angle);
@@ -293,7 +385,11 @@ namespace CoreGraphics {
 		public bool IsIdentity {
 			get {
 #if NET
+#if NO_NFLOAT_OPERATORS
+				return A.Value == 1 && B.Value == 0 && C.Value == 0 && D.Value == 1 && Tx.Value == 0 && Ty.Value == 0;
+#else
 				return A == 1 && B == 0 && C == 0 && D == 1 && Tx == 0 && Ty == 0;
+#endif
 #else
 				return xx == 1 && yx == 0 && xy == 0 && yy == 1 && x0 == 0 && y0 == 0;
 #endif
@@ -323,9 +419,15 @@ namespace CoreGraphics {
 		public static bool operator == (CGAffineTransform lhs, CGAffineTransform rhs)
 		{
 #if NET
+#if NO_NFLOAT_OPERATORS
+			return (lhs.A.Value == rhs.A.Value && lhs.C.Value == rhs.C.Value &&
+				lhs.B.Value == rhs.B.Value && lhs.D.Value == rhs.D.Value &&
+				lhs.Tx.Value == rhs.Tx.Value && lhs.Ty.Value == rhs.Ty.Value);
+#else
 			return (lhs.A == rhs.A && lhs.C == rhs.C &&
 				lhs.B == rhs.B && lhs.D == rhs.D &&
 				lhs.Tx == rhs.Tx && lhs.Ty == rhs.Ty);
+#endif
 #else
 			return (lhs.xx == rhs.xx && lhs.xy == rhs.xy &&
 				lhs.yx == rhs.yx && lhs.yy == rhs.yy &&
@@ -341,12 +443,21 @@ namespace CoreGraphics {
 		public static CGAffineTransform operator * (CGAffineTransform a, CGAffineTransform b)
 		{
 #if NET
+#if NO_NFLOAT_OPERATORS
+			return new CGAffineTransform (a.A.Value * b.A.Value + a.B.Value * b.C.Value,
+						      a.A.Value * b.B.Value + a.B.Value * b.D.Value,
+						      a.C.Value * b.A.Value + a.D.Value * b.C.Value,
+						      a.C.Value * b.B.Value + a.D.Value * b.D.Value,
+						      a.Tx.Value * b.A.Value + a.Ty.Value * b.C.Value + b.Tx.Value,
+						      a.Tx.Value * b.B.Value + a.Ty.Value * b.D.Value + b.Ty.Value);
+#else
 			return new CGAffineTransform (a.A * b.A + a.B * b.C,
 						      a.A * b.B + a.B * b.D,
 						      a.C * b.A + a.D * b.C,
 						      a.C * b.B + a.D * b.D,
 						      a.Tx * b.A + a.Ty * b.C + b.Tx,
 						      a.Tx * b.B + a.Ty * b.D + b.Ty);
+#endif
 #else
 			return new CGAffineTransform (a.xx * b.xx + a.yx * b.xy,
 						      a.xx * b.yx + a.yx * b.yy,
@@ -379,8 +490,13 @@ namespace CoreGraphics {
 		public CGPoint TransformPoint (CGPoint point)
 		{
 #if NET
+#if NO_NFLOAT_OPERATORS
+			return new CGPoint (A.Value * point.X.Value + C.Value * point.Y.Value + Tx.Value,
+					    B.Value * point.X.Value + D.Value * point.Y.Value + Ty.Value);
+#else
 			return new CGPoint (A * point.X + C * point.Y + Tx,
 					    B * point.X + D * point.Y + Ty);
+#endif
 #else
 			return new CGPoint (xx * point.X + xy * point.Y + x0,
 					    yx * point.X + yy * point.Y + y0);

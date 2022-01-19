@@ -1,3 +1,4 @@
+
 #if MTOUCH || MMP || BUNDLER
 namespace Xamarin.Bundler {
 #else

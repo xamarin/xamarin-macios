@@ -535,7 +535,11 @@ namespace CoreGraphics {
 
 		public CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths)
 		{
+#if NO_NFLOAT_OPERATORS
+			return CopyByDashingPath (transform, lengths, new NFloat (0));
+#else
 			return CopyByDashingPath (transform, lengths, 0);
+#endif
 		}
 
 		public unsafe CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths, nfloat phase)
@@ -545,7 +549,11 @@ namespace CoreGraphics {
 
 		public CGPath CopyByDashingPath (nfloat [] lengths)
 		{
+#if NO_NFLOAT_OPERATORS
+			return CopyByDashingPath (lengths, new NFloat (0));
+#else
 			return CopyByDashingPath (lengths, 0);
+#endif
 		}
 
 		public unsafe CGPath CopyByDashingPath (nfloat [] lengths, nfloat phase)
@@ -611,9 +619,17 @@ namespace CoreGraphics {
 
 		static unsafe CGPath _FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform *transform)
 		{
+#if NO_NFLOAT_OPERATORS
+			if ((cornerWidth.Value < 0) || (2 * cornerWidth.Value > rectangle.Width.Value))
+#else
 			if ((cornerWidth < 0) || (2 * cornerWidth > rectangle.Width))
+#endif
 				throw new ArgumentException (nameof (cornerWidth));
+#if NO_NFLOAT_OPERATORS
+			if ((cornerHeight.Value < 0) || (2 * cornerHeight.Value > rectangle.Height.Value))
+#else
 			if ((cornerHeight < 0) || (2 * cornerHeight > rectangle.Height))
+#endif
 				throw new ArgumentException (nameof (cornerHeight));
 			return MakeMutable (CGPathCreateWithRoundedRect (rectangle, cornerWidth, cornerHeight, transform), true);
 		}

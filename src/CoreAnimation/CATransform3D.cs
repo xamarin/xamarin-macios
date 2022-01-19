@@ -83,7 +83,7 @@ namespace CoreAnimation {
 		{
 			Identity = new CATransform3D ();
 #if NET
-			Identity.M11 = Identity.M22 = Identity.M33 = Identity.M44 = 1f;
+			Identity.M11 = Identity.M22 = Identity.M33 = Identity.M44 = new nfloat (1f);
 #else
 			Identity.m11 = Identity.m22 = Identity.m33 = Identity.m44 = 1f;
 #endif
@@ -119,7 +119,11 @@ namespace CoreAnimation {
 		{
 			unsafe {
 #if NET
+#if NO_NFLOAT_OPERATORS
+				int code = (int) M11.Value;
+#else
 				int code = (int) M11;
+#endif
 				fixed (nfloat *fp = &M11){
 #else
 				int code = (int) m11;

@@ -63,7 +63,11 @@ namespace UIKit {
 			if (text_shadow_color != null)
 				n++;
 			var text_shadow_offset = TextShadowOffset;
+#if NO_NFLOAT_OPERATORS
+			if (text_shadow_offset.Horizontal.Value != 0 || text_shadow_offset.Vertical.Value != 0)
+#else
 			if (text_shadow_offset.Horizontal != 0 || text_shadow_offset.Vertical != 0)
+#endif
 				n++;
 			if (n == 0)
 				return new NSDictionary ();
@@ -86,7 +90,11 @@ namespace UIKit {
 				values [n] = text_shadow_color;
 				n++;
 			}
+#if NO_NFLOAT_OPERATORS
+			if (text_shadow_offset.Horizontal.Value != 0 || text_shadow_offset.Vertical.Value != 0){
+#else
 			if (text_shadow_offset.Horizontal != 0 || text_shadow_offset.Vertical != 0){
+#endif
 				keys [n] = UITextAttributesConstants.TextShadowOffset;
 				values [n] = NSValue.FromUIOffset (text_shadow_offset);
 			}

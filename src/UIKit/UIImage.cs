@@ -54,7 +54,11 @@ namespace UIKit {
 		public NSData AsJPEG ()
 		{
 			using (var pool = new NSAutoreleasePool ())
+#if NO_NFLOAT_OPERATORS
+				return (NSData) Runtime.GetNSObject (UIImageJPEGRepresentation (Handle, new NFloat (1.0f)));
+#else
 				return (NSData) Runtime.GetNSObject (UIImageJPEGRepresentation (Handle, 1.0f));
+#endif
 		}
 
 		public NSData AsJPEG (nfloat compressionQuality)
@@ -67,7 +71,11 @@ namespace UIKit {
 		{
 			UIGraphics.BeginImageContextWithOptions (newSize, false, scaleFactor);
 
+#if NO_NFLOAT_OPERATORS
+			Draw (new CGRect (new NFloat (0), new NFloat (0), newSize.Width, newSize.Height));
+#else
 			Draw (new CGRect (0, 0, newSize.Width, newSize.Height));
+#endif
 
 			var scaledImage = UIGraphics.GetImageFromCurrentImageContext();
 			UIGraphics.EndImageContext();
@@ -79,7 +87,11 @@ namespace UIKit {
 		{
 			UIGraphics.BeginImageContext (newSize);
 
+#if NO_NFLOAT_OPERATORS
+			Draw (new CGRect (new NFloat (0), new NFloat (0), newSize.Width, newSize.Height));
+#else
 			Draw (new CGRect (0, 0, newSize.Width, newSize.Height));
+#endif
 	
 			var scaledImage = UIGraphics.GetImageFromCurrentImageContext();
 			UIGraphics.EndImageContext();

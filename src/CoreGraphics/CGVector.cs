@@ -48,12 +48,20 @@ namespace CoreGraphics {
 
 		public static bool operator == (CGVector left, CGVector right)
 		{
+#if NO_NFLOAT_OPERATORS
+			return left.dx.Value == right.dx.Value && left.dy.Value == right.dy.Value;
+#else
 			return left.dx == right.dx && left.dy == right.dy;
+#endif
 		}
 
 		public static bool operator != (CGVector left, CGVector right)
 		{
+#if NO_NFLOAT_OPERATORS
+			return left.dx.Value != right.dx.Value || left.dy.Value != right.dy.Value;
+#else
 			return left.dx != right.dx || left.dy != right.dy;
+#endif
 		}
 
 		public override int GetHashCode ()
@@ -62,7 +70,11 @@ namespace CoreGraphics {
 			return HashCode.Combine (dx, dy);
 #else
 			unchecked {
+#if NO_NFLOAT_OPERATORS
+				return ((int)dx.Value) ^ ((int)dy.Value);
+#else
 				return ((int)dx) ^ ((int)dy);
+#endif
 			}
 #endif
 		}
@@ -70,7 +82,11 @@ namespace CoreGraphics {
 		public override bool Equals (object other)
 		{
 			if (other is CGVector vector)
+#if NO_NFLOAT_OPERATORS
+				return dx.Value == vector.dx.Value && dy.Value == vector.dy.Value;
+#else
 				return dx == vector.dx && dy == vector.dy;
+#endif
 			return false;
 		}
 

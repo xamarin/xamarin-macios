@@ -10,7 +10,11 @@ namespace AppKit {
 
 		public static NSColor FromRgb (nfloat red, nfloat green, nfloat blue)
 		{
+#if NO_NFLOAT_OPERATORS
+			return FromRgba (red, green, blue, new NFloat (1.0f));
+#else
 			return FromRgba (red, green, blue, 1.0f);
+#endif
 		}
 
 		public static NSColor FromRgb (byte red, byte green, byte blue)
@@ -33,14 +37,36 @@ namespace AppKit {
 			return FromRgba ((byte) red, (byte) green, (byte) blue, (byte) alpha);
 		}
 
+		public static NSColor FromRgba (double red, double green, double blue, double alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromRgba (new NFloat (red), new NFloat (green), new NFloat (blue), new NFloat (alpha));
+#else
+			return FromRgba ((nfloat) red, (nfloat) green, (nfloat) blue, (nfloat) alpha);
+#endif
+		}
+
 		public static NSColor FromHsb (nfloat hue, nfloat saturation, nfloat brightness)
 		{
+#if NO_NFLOAT_OPERATORS
+			return FromHsba (hue, saturation, brightness, new NFloat (1.0f));
+#else
 			return FromHsba (hue, saturation, brightness, 1.0f);
+#endif
 		}
 
 		public static NSColor FromHsba (byte hue, byte saturation, byte brightness, byte alpha)
 		{
 			return FromHsba (hue / 255.0f, saturation / 255.0f, brightness / 255.0f, alpha / 255.0f);
+		}
+
+		public static NSColor FromHsba (double hue, double saturation, double brightness, double alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromHsba (new NFloat (hue), new NFloat (saturation), new NFloat (brightness), new NFloat (alpha));
+#else
+			return FromHsba ((nfloat) hue, (nfloat) saturation, (nfloat) brightness, (nfloat) alpha);
+#endif
 		}
 
 		public static NSColor FromHsb (byte hue, byte saturation, byte brightness)
@@ -60,7 +86,11 @@ namespace AppKit {
 
 		public static NSColor FromDeviceRgb (nfloat red, nfloat green, nfloat blue)
 		{
+#if NO_NFLOAT_OPERATORS
+			return FromDeviceRgba (red, green, blue, new NFloat (1.0f));
+#else
 			return FromDeviceRgba (red, green, blue, 1.0f);
+#endif
 		}
 
 		public static NSColor FromDeviceRgb (byte red, byte green, byte blue)
@@ -83,9 +113,22 @@ namespace AppKit {
 			return FromDeviceRgba ((byte) red, (byte) green, (byte) blue, (byte) alpha);
 		}
 
+		public static NSColor FromDeviceRgba (double red, double green, double blue, double alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromDeviceRgba (new NFloat (red), new NFloat (green), new NFloat (blue), new NFloat (alpha));
+#else
+			return FromDeviceRgba ((nfloat) red, (nfloat) green, (nfloat) blue, (nfloat) alpha);
+#endif
+		}
+
 		public static NSColor FromDeviceHsb (nfloat hue, nfloat saturation, nfloat brightness)
 		{
+#if NO_NFLOAT_OPERATORS
+			return FromDeviceHsba (hue, saturation, brightness, new NFloat (1.0f));
+#else
 			return FromDeviceHsba (hue, saturation, brightness, 1.0f);
+#endif
 		}
 
 		public static NSColor FromDeviceHsba (byte hue, byte saturation, byte brightness, byte alpha)
@@ -103,14 +146,45 @@ namespace AppKit {
 			return FromDeviceHsba ((byte) hue, (byte) saturation, (byte) brightness, (byte) alpha);
 		}
 
+		public static NSColor FromDeviceHsba (double hue, double saturation, double brightness, double alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromDeviceHsba (new NFloat (hue), new NFloat (saturation), new NFloat (brightness), new NFloat (alpha));
+#else
+			return FromDeviceHsba ((nfloat) hue, (nfloat) saturation, (nfloat) brightness, (nfloat) alpha);
+#endif
+		}
+
 		public static NSColor FromDeviceHsb (int hue, int saturation, int brightness)
 		{
 			return FromDeviceHsb ((byte) hue, (byte) saturation, (byte) brightness);
 		}
 
+		public static NSColor FromDeviceHsb (double hue, double saturation, double brightness)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromDeviceHsb (new NFloat (hue), new NFloat (saturation), new NFloat (brightness));
+#else
+			return FromDeviceHsb ((nfloat) hue, (nfloat) saturation, (nfloat) brightness);
+#endif
+		}
+
 		public static NSColor FromDeviceCymk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black)
 		{
+#if NO_NFLOAT_OPERATORS
+			return FromDeviceCymka (cyan, magenta, yellow, black, new NFloat (1.0f));
+#else
 			return FromDeviceCymka (cyan, magenta, yellow, black, 1.0f);
+#endif
+		}
+
+		public static NSColor FromDeviceCymka (double cyan, double magenta, double yellow, double black, double alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromDeviceCymka (new NFloat (cyan), new NFloat (magenta), new NFloat (yellow), new NFloat (black), new NFloat (alpha));
+#else
+			return FromDeviceCymka ((nfloat) cyan, (nfloat) magenta, (nfloat) yellow, (nfloat) black, (nfloat) alpha);
+#endif
 		}
 
 		public static NSColor FromDeviceCymka (byte cyan, byte magenta, byte yellow, byte black, byte alpha)
@@ -135,7 +209,11 @@ namespace AppKit {
 
 		public static NSColor FromCalibratedRgb (nfloat red, nfloat green, nfloat blue)
 		{
+#if NO_NFLOAT_OPERATORS
+			return FromCalibratedRgba (red, green, blue, new NFloat (1.0f));
+#else
 			return FromCalibratedRgba (red, green, blue, 1.0f);
+#endif
 		}
 
 		public static NSColor FromCalibratedRgb (byte red, byte green, byte blue)
@@ -158,9 +236,36 @@ namespace AppKit {
 			return FromCalibratedRgba ((byte) red, (byte) green, (byte) blue, (byte) alpha);
 		}
 
+		public static NSColor FromCalibratedRgba (double red, double green, double blue, double alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromCalibratedRgba (new NFloat (red), new NFloat (green), new NFloat (blue), new NFloat (alpha));
+#else
+			return FromCalibratedRgba ((nfloat) red, (nfloat) green, (nfloat) blue, (nfloat) alpha);
+#endif
+		}
+
 		public static NSColor FromCalibratedHsb (nfloat hue, nfloat saturation, nfloat brightness)
 		{
+#if NO_NFLOAT_OPERATORS
+			return FromCalibratedHsba (hue, saturation, brightness, new NFloat (1.0f));
+#else
 			return FromCalibratedHsba (hue, saturation, brightness, 1.0f);
+#endif
+		}
+
+		public static NSColor FromCalibratedHsb (double hue, double saturation, double brightness)
+		{
+			return FromCalibratedHsba (hue, saturation, brightness, 1.0f);
+		}
+
+		public static NSColor FromCalibratedHsba (double hue, double saturation, double brightness, double alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromCalibratedHsba (new NFloat (hue), new NFloat (saturation), new NFloat (brightness), new NFloat (alpha));
+#else
+			return FromCalibratedHsba ((nfloat) hue, (nfloat) saturation, (nfloat) brightness, (nfloat) alpha);
+#endif
 		}
 
 		public static NSColor FromCalibratedHsba (byte hue, byte saturation, byte brightness, byte alpha)
@@ -192,7 +297,11 @@ namespace AppKit {
 			
 			try {
 				pNativeFloatArray = Marshal.AllocHGlobal (components.Length * IntPtr.Size);
+#if NO_NFLOAT_OPERATORS
+				NFloatHelpers.CopyArray (components, 0, pNativeFloatArray, components.Length);
+#else
 				nfloat.CopyArray (components, 0, pNativeFloatArray, components.Length);
+#endif
 				return _FromColorSpace (space, pNativeFloatArray, components.Length);
 			} finally {
 				Marshal.FreeHGlobal (pNativeFloatArray);
@@ -209,7 +318,11 @@ namespace AppKit {
 				pNativeFloatArray = Marshal.AllocHGlobal (count * IntPtr.Size);
 				_GetComponents (pNativeFloatArray);
 
+#if NO_NFLOAT_OPERATORS
+				NFloatHelpers.CopyArray (pNativeFloatArray, components, 0, count);
+#else
 				nfloat.CopyArray (pNativeFloatArray, components, 0, count);
+#endif
 			} finally {
 				Marshal.FreeHGlobal (pNativeFloatArray);
 			}

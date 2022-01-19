@@ -13,6 +13,7 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
+using System.Runtime.InteropServices;
 
 #if MONOMAC
 using View = AppKit.NSView;
@@ -108,7 +109,11 @@ namespace UIKit
 
 		public static NSLayoutConstraint Create (NSObject view1, NSLayoutAttribute attribute1, NSLayoutRelation relation)
 		{
+#if NO_NFLOAT_OPERATORS
+			return NSLayoutConstraint.Create (view1, attribute1, relation, null, NSLayoutAttribute.NoAttribute, new NFloat (1.0f), new NFloat (0f));
+#else
 			return NSLayoutConstraint.Create (view1, attribute1, relation, null, NSLayoutAttribute.NoAttribute, 1.0f, 0f);
+#endif
 		}
 
 		// This solves the duplicate selector export problem while not breaking the API.

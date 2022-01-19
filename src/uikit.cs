@@ -5447,7 +5447,7 @@ namespace UIKit {
 		[Static]
 		[Internal] // bug https://xamarin.github.io/bugzilla-archives/25/25511/bug.html
 		[Export ("monospacedSystemFontOfSize:weight:")]
-		IntPtr _MonospacedSystemFontOfSize (nfloat fontSize, double weight);
+		IntPtr _MonospacedSystemFontOfSize (nfloat fontSize, nfloat weight);
 
 		[NoWatch][NoTV]
 		[Static] [Export ("labelFontSize")]

@@ -35,6 +35,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
+using ObjCRuntime;
 
 using Vector3 = global::OpenTK.Vector3;
 using Vector3d = global::OpenTK.Vector3d;
@@ -45,7 +46,7 @@ using Quaterniond = global::OpenTK.Quaterniond;
 #if PFLOAT_SINGLE
 using pfloat = System.Single;
 #else
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #endif
 
 #nullable enable
@@ -130,13 +131,56 @@ namespace SceneKit {
 			Column3 = new SCNVector4 (m03, m13, m23, m33);
 		}
 
+		/// <summary>
+		/// Constructs a new instance.
+		/// </summary>
+		/// <param name="m00">First item of the first row of the matrix.</param>
+		/// <param name="m01">Second item of the first row of the matrix.</param>
+		/// <param name="m02">Third item of the first row of the matrix.</param>
+		/// <param name="m03">Fourth item of the first row of the matrix.</param>
+		/// <param name="m10">First item of the second row of the matrix.</param>
+		/// <param name="m11">Second item of the second row of the matrix.</param>
+		/// <param name="m12">Third item of the second row of the matrix.</param>
+		/// <param name="m13">Fourth item of the second row of the matrix.</param>
+		/// <param name="m20">First item of the third row of the matrix.</param>
+		/// <param name="m21">Second item of the third row of the matrix.</param>
+		/// <param name="m22">Third item of the third row of the matrix.</param>
+		/// <param name="m23">First item of the third row of the matrix.</param>
+		/// <param name="m30">Fourth item of the fourth row of the matrix.</param>
+		/// <param name="m31">Second item of the fourth row of the matrix.</param>
+		/// <param name="m32">Third item of the fourth row of the matrix.</param>
+		/// <param name="m33">Fourth item of the fourth row of the matrix.</param>
+		public SCNMatrix4 (
+			double m00, double m01, double m02, double m03,
+			double m10, double m11, double m12, double m13,
+			double m20, double m21, double m22, double m23,
+			double m30, double m31, double m32, double m33)
+		{
+			Column0 = new SCNVector4 (m00, m10, m20, m30);
+			Column1 = new SCNVector4 (m01, m11, m21, m31);
+			Column2 = new SCNVector4 (m02, m12, m22, m32);
+			Column3 = new SCNVector4 (m03, m13, m23, m33);
+		}
+
 #if !WATCH
 		public SCNMatrix4 (CoreAnimation.CATransform3D transform)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			Column0 = new SCNVector4 (new NFloat (transform.M11.Value), new NFloat (transform.M21.Value), new NFloat (transform.M31.Value), new NFloat (transform.M41.Value));
+			Column1 = new SCNVector4 (new NFloat (transform.M12.Value), new NFloat (transform.M22.Value), new NFloat (transform.M32.Value), new NFloat (transform.M42.Value));
+			Column2 = new SCNVector4 (new NFloat (transform.M13.Value), new NFloat (transform.M23.Value), new NFloat (transform.M33.Value), new NFloat (transform.M43.Value));
+			Column3 = new SCNVector4 (new NFloat (transform.M14.Value), new NFloat (transform.M24.Value), new NFloat (transform.M34.Value), new NFloat (transform.M44.Value));
+#elif NO_NFLOAT_OPERATORS
+			Column0 = new SCNVector4 ((pfloat) transform.M11.Value, (pfloat) transform.M21.Value, (pfloat) transform.M31.Value, (pfloat) transform.M41.Value);
+			Column1 = new SCNVector4 ((pfloat) transform.M12.Value, (pfloat) transform.M22.Value, (pfloat) transform.M32.Value, (pfloat) transform.M42.Value);
+			Column2 = new SCNVector4 ((pfloat) transform.M13.Value, (pfloat) transform.M23.Value, (pfloat) transform.M33.Value, (pfloat) transform.M43.Value);
+			Column3 = new SCNVector4 ((pfloat) transform.M14.Value, (pfloat) transform.M24.Value, (pfloat) transform.M34.Value, (pfloat) transform.M44.Value);
+#else
 			Column0 = new SCNVector4 ((pfloat) transform.M11, (pfloat) transform.M21, (pfloat) transform.M31, (pfloat) transform.M41);
 			Column1 = new SCNVector4 ((pfloat) transform.M12, (pfloat) transform.M22, (pfloat) transform.M32, (pfloat) transform.M42);
 			Column2 = new SCNVector4 ((pfloat) transform.M13, (pfloat) transform.M23, (pfloat) transform.M33, (pfloat) transform.M43);
 			Column3 = new SCNVector4 ((pfloat) transform.M14, (pfloat) transform.M24, (pfloat) transform.M34, (pfloat) transform.M44);
+#endif
 		}
 #endif
 
@@ -152,12 +196,22 @@ namespace SceneKit {
 		public pfloat Determinant {
 			get {
 				return
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				new NFloat (
+					Column0.X.Value * Column1.Y.Value * Column2.Z.Value * Column3.W.Value - Column0.X.Value * Column1.Y.Value * Column2.W.Value * Column3.Z.Value + Column0.X.Value * Column1.Z.Value * Column2.W.Value * Column3.Y.Value - Column0.X.Value * Column1.Z.Value * Column2.Y.Value * Column3.W.Value
+				  + Column0.X.Value * Column1.W.Value * Column2.Y.Value * Column3.Z.Value - Column0.X.Value * Column1.W.Value * Column2.Z.Value * Column3.Y.Value - Column0.Y.Value * Column1.Z.Value * Column2.W.Value * Column3.X.Value + Column0.Y.Value * Column1.Z.Value * Column2.X.Value * Column3.W.Value
+				  - Column0.Y.Value * Column1.W.Value * Column2.X.Value * Column3.Z.Value + Column0.Y.Value * Column1.W.Value * Column2.Z.Value * Column3.X.Value - Column0.Y.Value * Column1.X.Value * Column2.Z.Value * Column3.W.Value + Column0.Y.Value * Column1.X.Value * Column2.W.Value * Column3.Z.Value
+				  + Column0.Z.Value * Column1.W.Value * Column2.X.Value * Column3.Y.Value - Column0.Z.Value * Column1.W.Value * Column2.Y.Value * Column3.X.Value + Column0.Z.Value * Column1.X.Value * Column2.Y.Value * Column3.W.Value - Column0.Z.Value * Column1.X.Value * Column2.W.Value * Column3.Y.Value
+				  + Column0.Z.Value * Column1.Y.Value * Column2.W.Value * Column3.X.Value - Column0.Z.Value * Column1.Y.Value * Column2.X.Value * Column3.W.Value - Column0.W.Value * Column1.X.Value * Column2.Y.Value * Column3.Z.Value + Column0.W.Value * Column1.X.Value * Column2.Z.Value * Column3.Y.Value
+				  - Column0.W.Value * Column1.Y.Value * Column2.Z.Value * Column3.X.Value + Column0.W.Value * Column1.Y.Value * Column2.X.Value * Column3.Z.Value - Column0.W.Value * Column1.Z.Value * Column2.X.Value * Column3.Y.Value + Column0.W.Value * Column1.Z.Value * Column2.Y.Value * Column3.X.Value);
+#else
 					Column0.X * Column1.Y * Column2.Z * Column3.W - Column0.X * Column1.Y * Column2.W * Column3.Z + Column0.X * Column1.Z * Column2.W * Column3.Y - Column0.X * Column1.Z * Column2.Y * Column3.W
 				  + Column0.X * Column1.W * Column2.Y * Column3.Z - Column0.X * Column1.W * Column2.Z * Column3.Y - Column0.Y * Column1.Z * Column2.W * Column3.X + Column0.Y * Column1.Z * Column2.X * Column3.W
 				  - Column0.Y * Column1.W * Column2.X * Column3.Z + Column0.Y * Column1.W * Column2.Z * Column3.X - Column0.Y * Column1.X * Column2.Z * Column3.W + Column0.Y * Column1.X * Column2.W * Column3.Z
 				  + Column0.Z * Column1.W * Column2.X * Column3.Y - Column0.Z * Column1.W * Column2.Y * Column3.X + Column0.Z * Column1.X * Column2.Y * Column3.W - Column0.Z * Column1.X * Column2.W * Column3.Y
 				  + Column0.Z * Column1.Y * Column2.W * Column3.X - Column0.Z * Column1.Y * Column2.X * Column3.W - Column0.W * Column1.X * Column2.Y * Column3.Z + Column0.W * Column1.X * Column2.Z * Column3.Y
 				  - Column0.W * Column1.Y * Column2.Z * Column3.X + Column0.W * Column1.Y * Column2.X * Column3.Z - Column0.W * Column1.Z * Column2.X * Column3.Y + Column0.W * Column1.Z * Column2.Y * Column3.X;
+#endif
 			}
 		}
 
@@ -358,30 +412,56 @@ namespace SceneKit {
 		/// <param name="result">A matrix instance.</param>
 		public static void CreateFromAxisAngle (SCNVector3 axis, pfloat angle, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			pfloat cos = new NFloat (System.Math.Cos (-angle.Value));
+			pfloat sin = new NFloat (System.Math.Sin (-angle.Value));
+			pfloat t = new NFloat (1.0f - cos.Value);
+#else
 			pfloat cos = (float) System.Math.Cos (-angle);
 			pfloat sin = (float) System.Math.Sin (-angle);
 			pfloat t = 1.0f - cos;
+#endif
 
 			axis.Normalize ();
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result = new SCNMatrix4 (new NFloat (t.Value * axis.X.Value * axis.X.Value + cos.Value), new NFloat (t.Value * axis.X.Value * axis.Y.Value - sin.Value * axis.Z.Value), new NFloat (t.Value * axis.X.Value * axis.Z.Value + sin.Value * axis.Y.Value), new NFloat (0.0f),
+			                     new NFloat (t.Value * axis.X.Value * axis.Y.Value + sin.Value * axis.Z.Value), new NFloat (t.Value * axis.Y.Value * axis.Y.Value + cos.Value), new NFloat (t.Value * axis.Y.Value * axis.Z.Value - sin.Value * axis.X.Value), new NFloat (0.0f),
+			                     new NFloat (t.Value * axis.X.Value * axis.Z.Value - sin.Value * axis.Y.Value), new NFloat (t.Value * axis.Y.Value * axis.Z.Value + sin.Value * axis.X.Value), new NFloat (t.Value * axis.Z.Value * axis.Z.Value + cos.Value), new NFloat (0.0f),
+			                     new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 			result = new SCNMatrix4 (t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
 			                     t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
 			                     t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
 			                     0, 0, 0, 1);
+#endif
 		}
 
 		public static void CreateFromAxisAngle (Vector3 axis, float angle, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			pfloat cos = new NFloat (System.Math.Cos (-angle));
+			pfloat sin = new NFloat (System.Math.Sin (-angle));
+			pfloat t = new NFloat (1.0f - cos.Value);
+#else
 			pfloat cos = (float) System.Math.Cos (-angle);
 			pfloat sin = (float) System.Math.Sin (-angle);
 			pfloat t = 1.0f - cos;
+#endif
 
 			axis.Normalize ();
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result = new SCNMatrix4 (new NFloat (t.Value * axis.X * axis.X + cos.Value), new NFloat (t.Value * axis.X * axis.Y - sin.Value * axis.Z), new NFloat (t.Value * axis.X * axis.Z + sin.Value * axis.Y), new NFloat (0.0f),
+			                     new NFloat (t.Value * axis.X * axis.Y + sin.Value * axis.Z), new NFloat (t.Value * axis.Y * axis.Y + cos.Value), new NFloat (t.Value * axis.Y * axis.Z - sin.Value * axis.X), new NFloat (0.0f),
+			                     new NFloat (t.Value * axis.X * axis.Z - sin.Value * axis.Y), new NFloat (t.Value * axis.Y * axis.Z + sin.Value * axis.X), new NFloat (t.Value * axis.Z * axis.Z + cos.Value), new NFloat (0.0f),
+			                     new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 			result = new SCNMatrix4 (t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
 			                     t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
 			                     t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
 			                     0, 0, 0, 1);
+#endif
 		}
 
 		public static void CreateFromAxisAngle (Vector3d axis, double angle, out SCNMatrix4 result)
@@ -392,10 +472,17 @@ namespace SceneKit {
 
 			axis.Normalize ();
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result = new SCNMatrix4 (new NFloat (t * axis.X * axis.X + cos), new NFloat (t * axis.X * axis.Y - sin * axis.Z), new NFloat (t * axis.X * axis.Z + sin * axis.Y), new NFloat (0.0f),
+			         new NFloat ( t * axis.X * axis.Y + sin * axis.Z), new NFloat (t * axis.Y * axis.Y + cos), new NFloat (t * axis.Y * axis.Z - sin * axis.X), new NFloat (0.0f),
+			         new NFloat (t * axis.X * axis.Z - sin * axis.Y), new NFloat (t * axis.Y * axis.Z + sin * axis.X), new NFloat (t * axis.Z * axis.Z + cos), new NFloat (0.0f),
+			         new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 			result = new SCNMatrix4 ((pfloat) (t * axis.X * axis.X + cos), (pfloat) (t * axis.X * axis.Y - sin * axis.Z), (pfloat) (t * axis.X * axis.Z + sin * axis.Y), (pfloat) (0.0f),
 			         (pfloat) ( t * axis.X * axis.Y + sin * axis.Z), (pfloat) (t * axis.Y * axis.Y + cos), (pfloat) (t * axis.Y * axis.Z - sin * axis.X), (pfloat) 0.0f,
 			         (pfloat) (t * axis.X * axis.Z - sin * axis.Y), (pfloat) (t * axis.Y * axis.Z + sin * axis.X), (pfloat) (t * axis.Z * axis.Z + cos), (pfloat) 0.0f,
 			         0, 0, 0, 1);
+#endif
 		}
 
 		/// <summary>
@@ -422,13 +509,23 @@ namespace SceneKit {
 		/// <param name="result">The resulting SCNMatrix4 instance.</param>
 		public static void CreateRotationX (pfloat angle, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			pfloat cos = new NFloat (System.Math.Cos (angle.Value));
+			pfloat sin = new NFloat (System.Math.Sin (angle.Value));
+#else
 			pfloat cos = (pfloat) System.Math.Cos (angle);
 			pfloat sin = (pfloat) System.Math.Sin (angle);
+#endif
 
 			result = new SCNMatrix4 ();
 			result.Row0 = SCNVector4.UnitX;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.Row1 = new SCNVector4 (new NFloat (0.0f), cos, sin, new NFloat (0.0f));
+			result.Row2 = new SCNVector4 (new NFloat (0.0f), new NFloat (-sin.Value), cos, new NFloat (0.0f));
+#else
 			result.Row1 = new SCNVector4 (0.0f, cos, sin, 0.0f);
 			result.Row2 = new SCNVector4 (0.0f, -sin, cos, 0.0f);
+#endif
 			result.Row3 = SCNVector4.UnitW;
 		}
 
@@ -451,13 +548,26 @@ namespace SceneKit {
 		/// <param name="result">The resulting SCNMatrix4 instance.</param>
 		public static void CreateRotationY (pfloat angle, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			pfloat cos = new NFloat (System.Math.Cos (angle.Value));
+			pfloat sin = new NFloat (System.Math.Sin (angle.Value));
+#else
 			pfloat cos = (pfloat) System.Math.Cos (angle);
 			pfloat sin = (pfloat) System.Math.Sin (angle);
+#endif
 
 			result = new SCNMatrix4 ();
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.Row0 = new SCNVector4 (cos, new NFloat (0.0f), new NFloat (-sin.Value), new NFloat (0.0f));
+#else
 			result.Row0 = new SCNVector4 (cos, 0.0f, -sin, 0.0f);
+#endif
 			result.Row1 = SCNVector4.UnitY;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.Row2 = new SCNVector4 (sin, new NFloat (0.0f), cos, new NFloat (0.0f));
+#else
 			result.Row2 = new SCNVector4 (sin, 0.0f, cos, 0.0f);
+#endif
 			result.Row3 = SCNVector4.UnitW;
 		}
 
@@ -480,12 +590,22 @@ namespace SceneKit {
 		/// <param name="result">The resulting SCNMatrix4 instance.</param>
 		public static void CreateRotationZ (pfloat angle, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			pfloat cos = new NFloat (System.Math.Cos (angle.Value));
+			pfloat sin = new NFloat (System.Math.Sin (angle.Value));
+#else
 			pfloat cos = (pfloat) System.Math.Cos (angle);
 			pfloat sin = (pfloat) System.Math.Sin (angle);
+#endif
 
 			result = new SCNMatrix4 ();
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.Row0 = new SCNVector4 (cos, sin, new NFloat (0.0f), new NFloat (0.0f));
+			result.Row1 = new SCNVector4 (new NFloat (-sin.Value), cos, new NFloat (0.0f), new NFloat (0.0f));
+#else
 			result.Row0 = new SCNVector4 (cos, sin, 0.0f, 0.0f);
 			result.Row1 = new SCNVector4 (-sin, cos, 0.0f, 0.0f);
+#endif
 			result.Row2 = SCNVector4.UnitZ;
 			result.Row3 = SCNVector4.UnitW;
 		}
@@ -516,7 +636,11 @@ namespace SceneKit {
 		public static void CreateTranslation (pfloat x, pfloat y, pfloat z, out SCNMatrix4 result)
 		{
 			result = Identity;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.Row3 = new SCNVector4 (x, y, z, new NFloat (1));
+#else
 			result.Row3 = new SCNVector4 (x, y, z, 1);
+#endif
 		}
 
 		/// <summary>
@@ -527,7 +651,11 @@ namespace SceneKit {
 		public static void CreateTranslation (ref SCNVector3 vector, out SCNMatrix4 result)
 		{
 			result = Identity;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.Row3 = new SCNVector4 (vector.X, vector.Y, vector.Z, new NFloat (1));
+#else
 			result.Row3 = new SCNVector4 (vector.X, vector.Y, vector.Z, 1);
+#endif
 		}
 
 		/// <summary>
@@ -570,7 +698,11 @@ namespace SceneKit {
 		/// <param name="result">The resulting SCNMatrix4 instance.</param>
 		public static void CreateOrthographic (pfloat width, pfloat height, pfloat zNear, pfloat zFar, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateOrthographicOffCenter (new NFloat (-width.Value / 2), new NFloat (width.Value / 2), new NFloat (-height.Value / 2), new NFloat (height.Value / 2), zNear, zFar, out result);
+#else
 			CreateOrthographicOffCenter (-width / 2, width / 2, -height / 2, height / 2, zNear, zFar, out result);
+#endif
 		}
 
 		/// <summary>
@@ -584,7 +716,11 @@ namespace SceneKit {
 		public static SCNMatrix4 CreateOrthographic (pfloat width, pfloat height, pfloat zNear, pfloat zFar)
 		{
 			SCNMatrix4 result;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateOrthographicOffCenter (new NFloat (-width.Value / 2), new NFloat (width.Value / 2), new NFloat (-height.Value / 2), new NFloat (height.Value / 2), zNear, zFar, out result);
+#else
 			CreateOrthographicOffCenter (-width / 2, width / 2, -height / 2, height / 2, zNear, zFar, out result);
+#endif
 			return result;
 		}
 
@@ -606,6 +742,20 @@ namespace SceneKit {
 		{
 			result = new SCNMatrix4 ();
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			pfloat invRL = new NFloat (1 / (right.Value - left.Value));
+			pfloat invTB = new NFloat (1 / (top.Value - bottom.Value));
+			pfloat invFN = new NFloat (1 / (zFar.Value - zNear.Value));
+
+			result.M11 = new NFloat (2 * invRL.Value);
+			result.M22 = new NFloat (2 * invTB.Value);
+			result.M33 = new NFloat (-2 * invFN.Value);
+
+			result.M41 = new NFloat (-(right.Value + left.Value) * invRL.Value);
+			result.M42 = new NFloat (-(top.Value + bottom.Value) * invTB.Value);
+			result.M43 = new NFloat (-(zFar.Value + zNear.Value) * invFN.Value);
+			result.M44 = new NFloat (1);
+#else
 			pfloat invRL = 1 / (right - left);
 			pfloat invTB = 1 / (top - bottom);
 			pfloat invFN = 1 / (zFar - zNear);
@@ -618,6 +768,7 @@ namespace SceneKit {
 			result.M42 = -(top + bottom) * invTB;
 			result.M43 = -(zFar + zNear) * invFN;
 			result.M44 = 1;
+#endif
 		}
 
 		/// <summary>
@@ -661,6 +812,18 @@ namespace SceneKit {
 		/// </exception>
 		public static void CreatePerspectiveFieldOfView (pfloat fovy, pfloat aspect, pfloat zNear, pfloat zFar, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			if (fovy.Value <= 0 || fovy.Value > Math.PI)
+				throw new ArgumentOutOfRangeException ("fovy");
+			if (aspect.Value <= 0)
+				throw new ArgumentOutOfRangeException ("aspect");
+			if (zNear.Value <= 0)
+				throw new ArgumentOutOfRangeException ("zNear");
+			if (zFar.Value <= 0)
+				throw new ArgumentOutOfRangeException ("zFar");
+			if (zNear.Value >= zFar.Value)
+				throw new ArgumentOutOfRangeException ("zNear");
+#else
 			if (fovy <= 0 || fovy > Math.PI)
 				throw new ArgumentOutOfRangeException ("fovy");
 			if (aspect <= 0)
@@ -671,11 +834,19 @@ namespace SceneKit {
 				throw new ArgumentOutOfRangeException ("zFar");
 			if (zNear >= zFar)
 				throw new ArgumentOutOfRangeException ("zNear");
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			pfloat yMax = new NFloat (zNear.Value * (float) System.Math.Tan (0.5f * fovy.Value));
+			pfloat yMin = new NFloat (-yMax.Value);
+			pfloat xMin = new NFloat (yMin.Value * aspect.Value);
+			pfloat xMax = new NFloat (yMax.Value * aspect.Value);
+#else
 			pfloat yMax = zNear * (float) System.Math.Tan (0.5f * fovy);
 			pfloat yMin = -yMax;
 			pfloat xMin = yMin * aspect;
 			pfloat xMax = yMax * aspect;
+#endif
 
 			CreatePerspectiveOffCenter (xMin, xMax, yMin, yMax, zNear, zFar, out result);
 		}
@@ -729,19 +900,37 @@ namespace SceneKit {
 		/// </exception>
 		public static void CreatePerspectiveOffCenter (pfloat left, pfloat right, pfloat bottom, pfloat top, pfloat zNear, pfloat zFar, out SCNMatrix4 result)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			if (zNear.Value <= 0)
+				throw new ArgumentOutOfRangeException ("zNear");
+			if (zFar.Value <= 0)
+				throw new ArgumentOutOfRangeException ("zFar");
+			if (zNear.Value >= zFar.Value)
+				throw new ArgumentOutOfRangeException ("zNear");
+#else
 			if (zNear <= 0)
 				throw new ArgumentOutOfRangeException ("zNear");
 			if (zFar <= 0)
 				throw new ArgumentOutOfRangeException ("zFar");
 			if (zNear >= zFar)
 				throw new ArgumentOutOfRangeException ("zNear");
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			double x = (2.0f * zNear.Value) / (right.Value - left.Value);
+			double y = (2.0f * zNear.Value) / (top.Value - bottom.Value);
+			double a = (right.Value + left.Value) / (right.Value - left.Value);
+			double b = (top.Value + bottom.Value) / (top.Value - bottom.Value);
+			double c = -(zFar.Value + zNear.Value) / (zFar.Value - zNear.Value);
+			double d = -(2.0f * zFar.Value * zNear.Value) / (zFar.Value - zNear.Value);
+#else
 			pfloat x = (2.0f * zNear) / (right - left);
 			pfloat y = (2.0f * zNear) / (top - bottom);
 			pfloat a = (right + left) / (right - left);
 			pfloat b = (top + bottom) / (top - bottom);
 			pfloat c = -(zFar + zNear) / (zFar - zNear);
 			pfloat d = -(2.0f * zFar * zNear) / (zFar - zNear);
+#endif
 
 			result = new SCNMatrix4 (x, 0, 0, 0,
 			                     0, y, 0, 0,
@@ -865,9 +1054,15 @@ namespace SceneKit {
 			SCNVector3 x = SCNVector3.Normalize (SCNVector3.Cross (up, z));
 			SCNVector3 y = SCNVector3.Normalize (SCNVector3.Cross (z, x));
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			SCNMatrix4 rot = new SCNMatrix4 (new SCNVector4 (x.X, y.X, z.X, new NFloat (0.0f)),
+			                             new SCNVector4 (x.Y, y.Y, z.Y, new NFloat (0.0f)),
+			                             new SCNVector4 (x.Z, y.Z, z.Z, new NFloat (0.0f)),
+#else
 			SCNMatrix4 rot = new SCNMatrix4 (new SCNVector4 (x.X, y.X, z.X, 0.0f),
 			                             new SCNVector4 (x.Y, y.Y, z.Y, 0.0f),
 			                             new SCNVector4 (x.Z, y.Z, z.Z, 0.0f),
+#endif
 			                             SCNVector4.UnitW);
 
 			SCNMatrix4 trans = SCNMatrix4.CreateTranslation (-eye);
@@ -919,6 +1114,24 @@ namespace SceneKit {
 		public static void Mult (ref SCNMatrix4 left, ref SCNMatrix4 right, out SCNMatrix4 result)
 		{
 			result = new SCNMatrix4 (
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				left.M11.Value * right.M11.Value + left.M12.Value * right.M21.Value + left.M13.Value * right.M31.Value + left.M14.Value * right.M41.Value,
+				left.M11.Value * right.M12.Value + left.M12.Value * right.M22.Value + left.M13.Value * right.M32.Value + left.M14.Value * right.M42.Value,
+				left.M11.Value * right.M13.Value + left.M12.Value * right.M23.Value + left.M13.Value * right.M33.Value + left.M14.Value * right.M43.Value,
+				left.M11.Value * right.M14.Value + left.M12.Value * right.M24.Value + left.M13.Value * right.M34.Value + left.M14.Value * right.M44.Value,
+				left.M21.Value * right.M11.Value + left.M22.Value * right.M21.Value + left.M23.Value * right.M31.Value + left.M24.Value * right.M41.Value,
+				left.M21.Value * right.M12.Value + left.M22.Value * right.M22.Value + left.M23.Value * right.M32.Value + left.M24.Value * right.M42.Value,
+				left.M21.Value * right.M13.Value + left.M22.Value * right.M23.Value + left.M23.Value * right.M33.Value + left.M24.Value * right.M43.Value,
+				left.M21.Value * right.M14.Value + left.M22.Value * right.M24.Value + left.M23.Value * right.M34.Value + left.M24.Value * right.M44.Value,
+				left.M31.Value * right.M11.Value + left.M32.Value * right.M21.Value + left.M33.Value * right.M31.Value + left.M34.Value * right.M41.Value,
+				left.M31.Value * right.M12.Value + left.M32.Value * right.M22.Value + left.M33.Value * right.M32.Value + left.M34.Value * right.M42.Value,
+				left.M31.Value * right.M13.Value + left.M32.Value * right.M23.Value + left.M33.Value * right.M33.Value + left.M34.Value * right.M43.Value,
+				left.M31.Value * right.M14.Value + left.M32.Value * right.M24.Value + left.M33.Value * right.M34.Value + left.M34.Value * right.M44.Value,
+				left.M41.Value * right.M11.Value + left.M42.Value * right.M21.Value + left.M43.Value * right.M31.Value + left.M44.Value * right.M41.Value,
+				left.M41.Value * right.M12.Value + left.M42.Value * right.M22.Value + left.M43.Value * right.M32.Value + left.M44.Value * right.M42.Value,
+				left.M41.Value * right.M13.Value + left.M42.Value * right.M23.Value + left.M43.Value * right.M33.Value + left.M44.Value * right.M43.Value,
+				left.M41.Value * right.M14.Value + left.M42.Value * right.M24.Value + left.M43.Value * right.M34.Value + left.M44.Value * right.M44.Value);
+#else
 				left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31 + left.M14 * right.M41,
 				left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32 + left.M14 * right.M42,
 				left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33 + left.M14 * right.M43,
@@ -935,6 +1148,7 @@ namespace SceneKit {
 				left.M41 * right.M12 + left.M42 * right.M22 + left.M43 * right.M32 + left.M44 * right.M42,
 				left.M41 * right.M13 + left.M42 * right.M23 + left.M43 * right.M33 + left.M44 * right.M43,
 				left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44);
+#endif
 		}
 
 		#endregion
@@ -945,75 +1159,161 @@ namespace SceneKit {
 		{
 			// https://github.com/dotnet/runtime/blob/79ae74f5ca5c8a6fe3a48935e85bd7374959c570/src/libraries/System.Private.CoreLib/src/System/Numerics/Matrix4x4.cs#L1556
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			double a = matrix.M11.Value, b = matrix.M12.Value, c = matrix.M13.Value, d = matrix.M14.Value;
+			double e = matrix.M21.Value, f = matrix.M22.Value, g = matrix.M23.Value, h = matrix.M24.Value;
+			double i = matrix.M31.Value, j = matrix.M32.Value, k = matrix.M33.Value, l = matrix.M34.Value;
+			double m = matrix.M41.Value, n = matrix.M42.Value, o = matrix.M43.Value, p = matrix.M44.Value;
+#else
 			pfloat a = matrix.M11, b = matrix.M12, c = matrix.M13, d = matrix.M14;
 			pfloat e = matrix.M21, f = matrix.M22, g = matrix.M23, h = matrix.M24;
 			pfloat i = matrix.M31, j = matrix.M32, k = matrix.M33, l = matrix.M34;
 			pfloat m = matrix.M41, n = matrix.M42, o = matrix.M43, p = matrix.M44;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var kp_lo = k * p - l * o;
+			var jp_ln = j * p - l * n;
+			var jo_kn = j * o - k * n;
+			var ip_lm = i * p - l * m;
+			var io_km = i * o - k * m;
+			var in_jm = i * n - j * m;
+#else
 			pfloat kp_lo = k * p - l * o;
 			pfloat jp_ln = j * p - l * n;
 			pfloat jo_kn = j * o - k * n;
 			pfloat ip_lm = i * p - l * m;
 			pfloat io_km = i * o - k * m;
 			pfloat in_jm = i * n - j * m;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var a11 = +(f * kp_lo - g * jp_ln + h * jo_kn);
+			var a12 = -(e * kp_lo - g * ip_lm + h * io_km);
+			var a13 = +(e * jp_ln - f * ip_lm + h * in_jm);
+			var a14 = -(e * jo_kn - f * io_km + g * in_jm);
+#else
 			pfloat a11 = +(f * kp_lo - g * jp_ln + h * jo_kn);
 			pfloat a12 = -(e * kp_lo - g * ip_lm + h * io_km);
 			pfloat a13 = +(e * jp_ln - f * ip_lm + h * in_jm);
 			pfloat a14 = -(e * jo_kn - f * io_km + g * in_jm);
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var det = a * a11 + b * a12 + c * a13 + d * a14;
+#else
 			pfloat det = a * a11 + b * a12 + c * a13 + d * a14;
+#endif
 
-#if PFLOAT_SINGLE
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			if (Math.Abs (det) < double.Epsilon)
+#elif PFLOAT_SINGLE
 			if (MathF.Abs (det) < pfloat.Epsilon)
 #else
 			if (Math.Abs (det) < pfloat.Epsilon)
 #endif
 			{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				result = new SCNMatrix4 (NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN,
+				                         NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN,
+				                         NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN,
+				                         NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN, NFloatHelpers.NaN);
+#else
 				result = new SCNMatrix4 (pfloat.NaN, pfloat.NaN, pfloat.NaN, pfloat.NaN,
 				                         pfloat.NaN, pfloat.NaN, pfloat.NaN, pfloat.NaN,
 				                         pfloat.NaN, pfloat.NaN, pfloat.NaN, pfloat.NaN,
 				                         pfloat.NaN, pfloat.NaN, pfloat.NaN, pfloat.NaN);
+#endif
 				return false;
 			}
 
 			result = default (SCNMatrix4);
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var invDet = 1.0f / det;
+#else
 			pfloat invDet = 1.0f / det;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.M11 = new NFloat (a11 * invDet);
+			result.M21 = new NFloat (a12 * invDet);
+			result.M31 = new NFloat (a13 * invDet);
+			result.M41 = new NFloat (a14 * invDet);
+#else
 			result.M11 = a11 * invDet;
 			result.M21 = a12 * invDet;
 			result.M31 = a13 * invDet;
 			result.M41 = a14 * invDet;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.M12 = new NFloat (-(b * kp_lo - c * jp_ln + d * jo_kn) * invDet);
+			result.M22 = new NFloat (+(a * kp_lo - c * ip_lm + d * io_km) * invDet);
+			result.M32 = new NFloat (-(a * jp_ln - b * ip_lm + d * in_jm) * invDet);
+			result.M42 = new NFloat (+(a * jo_kn - b * io_km + c * in_jm) * invDet);
+#else
 			result.M12 = -(b * kp_lo - c * jp_ln + d * jo_kn) * invDet;
 			result.M22 = +(a * kp_lo - c * ip_lm + d * io_km) * invDet;
 			result.M32 = -(a * jp_ln - b * ip_lm + d * in_jm) * invDet;
 			result.M42 = +(a * jo_kn - b * io_km + c * in_jm) * invDet;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var gp_ho = g * p - h * o;
+			var fp_hn = f * p - h * n;
+			var fo_gn = f * o - g * n;
+			var ep_hm = e * p - h * m;
+			var eo_gm = e * o - g * m;
+			var en_fm = e * n - f * m;
+#else
 			pfloat gp_ho = g * p - h * o;
 			pfloat fp_hn = f * p - h * n;
 			pfloat fo_gn = f * o - g * n;
 			pfloat ep_hm = e * p - h * m;
 			pfloat eo_gm = e * o - g * m;
 			pfloat en_fm = e * n - f * m;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.M13 = new NFloat (+(b * gp_ho - c * fp_hn + d * fo_gn) * invDet);
+			result.M23 = new NFloat (-(a * gp_ho - c * ep_hm + d * eo_gm) * invDet);
+			result.M33 = new NFloat (+(a * fp_hn - b * ep_hm + d * en_fm) * invDet);
+			result.M43 = new NFloat (-(a * fo_gn - b * eo_gm + c * en_fm) * invDet);
+#else
 			result.M13 = +(b * gp_ho - c * fp_hn + d * fo_gn) * invDet;
 			result.M23 = -(a * gp_ho - c * ep_hm + d * eo_gm) * invDet;
 			result.M33 = +(a * fp_hn - b * ep_hm + d * en_fm) * invDet;
 			result.M43 = -(a * fo_gn - b * eo_gm + c * en_fm) * invDet;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var gl_hk = g * l - h * k;
+			var fl_hj = f * l - h * j;
+			var fk_gj = f * k - g * j;
+			var el_hi = e * l - h * i;
+			var ek_gi = e * k - g * i;
+			var ej_fi = e * j - f * i;
+#else
 			pfloat gl_hk = g * l - h * k;
 			pfloat fl_hj = f * l - h * j;
 			pfloat fk_gj = f * k - g * j;
 			pfloat el_hi = e * l - h * i;
 			pfloat ek_gi = e * k - g * i;
 			pfloat ej_fi = e * j - f * i;
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			result.M14 = new NFloat (-(b * gl_hk - c * fl_hj + d * fk_gj) * invDet);
+			result.M24 = new NFloat (+(a * gl_hk - c * el_hi + d * ek_gi) * invDet);
+			result.M34 = new NFloat (-(a * fl_hj - b * el_hi + d * ej_fi) * invDet);
+			result.M44 = new NFloat (+(a * fk_gj - b * ek_gi + c * ej_fi) * invDet);
+#else
 			result.M14 = -(b * gl_hk - c * fl_hj + d * fk_gj) * invDet;
 			result.M24 = +(a * gl_hk - c * el_hi + d * ek_gi) * invDet;
 			result.M34 = -(a * fl_hj - b * el_hi + d * ej_fi) * invDet;
 			result.M44 = +(a * fk_gj - b * ek_gi + c * ej_fi) * invDet;
+#endif
 
 			return true;
 		}

@@ -10,6 +10,7 @@
 #if !__MACCATALYST__
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace AppKit
 {
@@ -23,7 +24,11 @@ namespace AppKit
 	{
 		public NSStatusItem CreateStatusItem (NSStatusItemLength length)
 		{
-			return CreateStatusItem ((float)length);
+#if NO_NFLOAT_OPERATORS
+			return CreateStatusItem (new NFloat ((long) length));
+#else
+			return CreateStatusItem (length);
+#endif
 		}
 	}
 }

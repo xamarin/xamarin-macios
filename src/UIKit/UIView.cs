@@ -13,6 +13,7 @@
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Foundation; 
 using ObjCRuntime;
@@ -154,7 +155,11 @@ namespace UIKit {
 			UIImage snapshot = null;
 			var bounds = Bounds; // try to access objc the smalles amount of times.
 			try {
+#if NO_NFLOAT_OPERATORS
+				UIGraphics.BeginImageContextWithOptions (bounds.Size, Opaque, new NFloat (0.0f));
+#else
 				UIGraphics.BeginImageContextWithOptions (bounds.Size, Opaque, 0.0f);
+#endif
 				DrawViewHierarchy (bounds, afterScreenUpdates);
 				snapshot = UIGraphics.GetImageFromCurrentImageContext ();
 			} finally {

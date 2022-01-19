@@ -23,6 +23,10 @@ SOFTWARE.
  */
 #endregion
 
+#if !MONOMAC
+#define PFLOAT_SINGLE
+#endif
+
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Matrix3 = global::OpenTK.Matrix3;
@@ -32,7 +36,7 @@ using MathHelper = global::OpenTK.MathHelper;
 
 #if MONOMAC
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif
@@ -87,24 +91,53 @@ namespace SceneKit
             : this(new SCNVector3(x, y, z), w)
         { }
 
+        /// <summary>
+        /// Construct a new SCNQuaternion
+        /// </summary>
+        /// <param name="x">The x component</param>
+        /// <param name="y">The y component</param>
+        /// <param name="z">The z component</param>
+        /// <param name="w">The w component</param>
+        public SCNQuaternion(double x, double y, double z, double w)
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            : this (new SCNVector3 (x, y, z), new NFloat (w))
+#else
+            : this (new SCNVector3(x, y, z), (pfloat) w)
+#endif
+        { }
+
         public SCNQuaternion (ref Matrix3 matrix)
         {
             double scale = System.Math.Pow(matrix.Determinant, 1.0d / 3.0d);
 	    float x, y, z;
 	    
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            w = new NFloat ((System.Math.Sqrt(System.Math.Max(0, scale + matrix[0, 0] + matrix[1, 1] + matrix[2, 2])) / 2));
+#else
             w = (float) (System.Math.Sqrt(System.Math.Max(0, scale + matrix[0, 0] + matrix[1, 1] + matrix[2, 2])) / 2);
+#endif
             x = (float) (System.Math.Sqrt(System.Math.Max(0, scale + matrix[0, 0] - matrix[1, 1] - matrix[2, 2])) / 2);
             y = (float) (System.Math.Sqrt(System.Math.Max(0, scale - matrix[0, 0] + matrix[1, 1] - matrix[2, 2])) / 2);
             z = (float) (System.Math.Sqrt(System.Math.Max(0, scale - matrix[0, 0] - matrix[1, 1] + matrix[2, 2])) / 2);
 
 	    xyz = new Vector3 (x, y, z);
 	    
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            if (matrix[2, 1] - matrix[1, 2] < 0) X = new NFloat (-X.Value);
+            if (matrix[0, 2] - matrix[2, 0] < 0) Y = new NFloat (-Y.Value);
+            if (matrix[1, 0] - matrix[0, 1] < 0) Z = new NFloat (-Z.Value);
+#else
             if (matrix[2, 1] - matrix[1, 2] < 0) X = -X;
             if (matrix[0, 2] - matrix[2, 0] < 0) Y = -Y;
             if (matrix[1, 0] - matrix[0, 1] < 0) Z = -Z;
+#endif
         }
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+	public SCNQuaternion (Quaternion openTkQuaternion) : this (new SCNVector3 (openTkQuaternion.XYZ), new NFloat (openTkQuaternion.W))
+#else
 	public SCNQuaternion (Quaternion openTkQuaternion) : this (new SCNVector3 (openTkQuaternion.XYZ), openTkQuaternion.W)
+#endif
 	{
 		
 	}
@@ -168,14 +201,24 @@ namespace SceneKit
         public SCNVector4 ToAxisAngle()
         {
             SCNQuaternion q = this;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            if (q.W.Value > 1.0f)
+#else
             if (q.W > 1.0f)
+#endif
                 q.Normalize();
 
             SCNVector4 result = new SCNVector4();
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.W = new NFloat (2.0f * System.Math.Acos(q.W.Value)); // angle
+            pfloat den = new NFloat (System.Math.Sqrt(1.0 - q.W.Value * q.W.Value));
+            if (den.Value > 0.0001f)
+#else
             result.W = 2.0f * (pfloat)System.Math.Acos(q.W); // angle
             pfloat den = (pfloat)System.Math.Sqrt(1.0 - q.W * q.W);
             if (den > 0.0001f)
+#endif
             {
                 result.Xyz = q.Xyz / den;
             }
@@ -201,7 +244,11 @@ namespace SceneKit
         {
             get
             {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                return (float)System.Math.Sqrt(W.Value * W.Value + Xyz.LengthSquared.Value);
+#else
                 return (float)System.Math.Sqrt(W * W + Xyz.LengthSquared);
+#endif
             }
         }
 
@@ -216,7 +263,11 @@ namespace SceneKit
         {
             get
             {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                return (float)(W.Value * W.Value + Xyz.LengthSquared.Value);
+#else
                 return (float)(W * W + Xyz.LengthSquared);
+#endif
             }
         }
 
@@ -230,8 +281,13 @@ namespace SceneKit
         public void Normalize()
         {
             float scale = 1.0f / this.Length;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            Xyz *= new NFloat (scale);
+            W = new NFloat (W.Value * scale);
+#else
             Xyz *= scale;
             W *= scale;
+#endif
         }
 
         #endregion
@@ -273,7 +329,11 @@ namespace SceneKit
         {
             return new SCNQuaternion(
                 left.Xyz + right.Xyz,
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                new NFloat (left.W.Value + right.W.Value));
+#else
                 left.W + right.W);
+#endif
         }
 
         /// <summary>
@@ -286,7 +346,11 @@ namespace SceneKit
         {
             result = new SCNQuaternion(
                 left.Xyz + right.Xyz,
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                new NFloat (left.W.Value + right.W.Value));
+#else
                 left.W + right.W);
+#endif
         }
 
         #endregion
@@ -303,7 +367,11 @@ namespace SceneKit
         {
             return  new SCNQuaternion(
                 left.Xyz - right.Xyz,
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                new NFloat (left.W.Value - right.W.Value));
+#else
                 left.W - right.W);
+#endif
         }
 
         /// <summary>
@@ -316,7 +384,11 @@ namespace SceneKit
         {
             result = new SCNQuaternion(
                 left.Xyz - right.Xyz,
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                new NFloat (left.W.Value - right.W.Value));
+#else
                 left.W - right.W);
+#endif
         }
 
         #endregion
@@ -346,7 +418,11 @@ namespace SceneKit
         {
             result = new SCNQuaternion(
                 right.W * left.Xyz + left.W * right.Xyz + SCNVector3.Cross(left.Xyz, right.Xyz),
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                new NFloat (left.W.Value * right.W.Value - SCNVector3.Dot(left.Xyz, right.Xyz).Value));
+#else
                 left.W * right.W - SCNVector3.Dot(left.Xyz, right.Xyz));
+#endif
         }
 
         /// <summary>
@@ -357,7 +433,11 @@ namespace SceneKit
         /// <param name="result">A new instance containing the result of the calculation.</param>
         public static void Multiply(ref SCNQuaternion quaternion, float scale, out SCNQuaternion result)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new SCNQuaternion(new NFloat (quaternion.X.Value * scale), new NFloat (quaternion.Y.Value * scale), new NFloat (quaternion.Z.Value * scale), new NFloat (quaternion.W.Value * scale));
+#else
             result = new SCNQuaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+#endif
         }
 
         /// <summary>
@@ -368,7 +448,11 @@ namespace SceneKit
         /// <returns>A new instance containing the result of the calculation.</returns>
         public static SCNQuaternion Multiply(SCNQuaternion quaternion, float scale)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            return new SCNQuaternion(new NFloat (quaternion.X.Value * scale), new NFloat (quaternion.Y.Value * scale), new NFloat (quaternion.Z.Value * scale), new NFloat (quaternion.W.Value * scale));
+#else
             return new SCNQuaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+#endif
         }
 
         #endregion
@@ -422,7 +506,11 @@ namespace SceneKit
             if (lengthSq != 0.0)
             {
                 float i = 1.0f / lengthSq;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                result = new SCNQuaternion(q.Xyz * new NFloat (-i), new NFloat (q.W.Value * i));
+#else
                 result = new SCNQuaternion(q.Xyz * -i, q.W * i);
+#endif
             }
             else
             {
@@ -454,7 +542,11 @@ namespace SceneKit
         public static void Normalize(ref SCNQuaternion q, out SCNQuaternion result)
         {
             float scale = 1.0f / q.Length;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result = new SCNQuaternion(q.Xyz * new NFloat (scale), new NFloat (q.W.Value * scale));
+#else
             result = new SCNQuaternion(q.Xyz * scale, q.W * scale);
+#endif
         }
 
         #endregion
@@ -469,15 +561,24 @@ namespace SceneKit
         /// <returns></returns>
         public static SCNQuaternion FromAxisAngle(SCNVector3 axis, float angle)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            if (axis.LengthSquared.Value == 0.0f)
+#else
             if (axis.LengthSquared == 0.0f)
+#endif
                 return Identity;
 
             SCNQuaternion result = Identity;
 
             angle *= 0.5f;
             axis.Normalize();
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            result.Xyz = axis * new NFloat (System.Math.Sin(angle));
+            result.W = new NFloat (System.Math.Cos(angle));
+#else
             result.Xyz = axis * (float)System.Math.Sin(angle);
             result.W = (float)System.Math.Cos(angle);
+#endif
 
             return Normalize(result);
         }
@@ -510,26 +611,51 @@ namespace SceneKit
             }
 
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            pfloat cosHalfAngle = new NFloat (q1.W.Value * q2.W.Value + SCNVector3.Dot(q1.Xyz, q2.Xyz).Value);
+#else
             pfloat cosHalfAngle = q1.W * q2.W + SCNVector3.Dot(q1.Xyz, q2.Xyz);
+#endif
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            if (cosHalfAngle.Value >= 1.0f || cosHalfAngle.Value <= -1.0f)
+#else
             if (cosHalfAngle >= 1.0f || cosHalfAngle <= -1.0f)
+#endif
             {
                 // angle = 0.0f, so just return one input.
                 return q1;
             }
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            else if (cosHalfAngle.Value < 0.0f)
+#else
             else if (cosHalfAngle < 0.0f)
+#endif
             {
                 q2.Xyz = -q2.Xyz;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                q2.W = new NFloat (-q2.W.Value);
+                cosHalfAngle = new NFloat (-cosHalfAngle.Value);
+#else
                 q2.W = -q2.W;
                 cosHalfAngle = -cosHalfAngle;
+#endif
             }
 
             float blendA;
             float blendB;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            if (cosHalfAngle.Value < 0.99f)
+#else
             if (cosHalfAngle < 0.99f)
+#endif
             {
                 // do proper slerp for big angles
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+                float halfAngle = (float)System.Math.Acos(cosHalfAngle.Value);
+#else
                 float halfAngle = (float)System.Math.Acos(cosHalfAngle);
+#endif
                 float sinHalfAngle = (float)System.Math.Sin(halfAngle);
                 float oneOverSinHalfAngle = 1.0f / sinHalfAngle;
                 blendA = (float)System.Math.Sin(halfAngle * (1.0f - blend)) * oneOverSinHalfAngle;
@@ -542,7 +668,11 @@ namespace SceneKit
                 blendB = blend;
             }
 
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            SCNQuaternion result = new SCNQuaternion((new NFloat (blendA) * q1.Xyz + new NFloat (blendB) * q2.Xyz), new NFloat (blendA * q1.W.Value + blendB * q2.W.Value));
+#else
             SCNQuaternion result = new SCNQuaternion(blendA * q1.Xyz + blendB * q2.Xyz, blendA * q1.W + blendB * q2.W);
+#endif
             if (result.LengthSquared > 0.0f)
                 return Normalize(result);
             else
@@ -564,7 +694,11 @@ namespace SceneKit
         public static SCNQuaternion operator +(SCNQuaternion left, SCNQuaternion right)
         {
             left.Xyz += right.Xyz;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            left.W = new NFloat (left.W.Value + right.W.Value);
+#else
             left.W += right.W;
+#endif
             return left;
         }
 
@@ -577,7 +711,11 @@ namespace SceneKit
         public static SCNQuaternion operator -(SCNQuaternion left, SCNQuaternion right)
         {
             left.Xyz -= right.Xyz;
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            left.W = new NFloat (left.W.Value - right.W.Value);
+#else
             left.W -= right.W;
+#endif
             return left;
         }
 
@@ -613,7 +751,11 @@ namespace SceneKit
         /// <returns>A new instance containing the result of the calculation.</returns>
         public static SCNQuaternion operator *(float scale, SCNQuaternion quaternion)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            return new SCNQuaternion(quaternion.X.Value * scale, quaternion.Y.Value * scale, quaternion.Z.Value * scale, quaternion.W.Value * scale);
+#else
             return new SCNQuaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+#endif
         }
 
         /// <summary>
@@ -696,7 +838,11 @@ namespace SceneKit
         /// <returns>True if both instances are equal; false otherwise.</returns>
         public bool Equals(SCNQuaternion other)
         {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+            return Xyz == other.Xyz && W.Value == other.W.Value;
+#else
             return Xyz == other.Xyz && W == other.W;
+#endif
         }
 
         #endregion

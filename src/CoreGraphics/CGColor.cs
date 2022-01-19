@@ -103,7 +103,11 @@ namespace CoreGraphics {
 		}
 
 		public CGColor (nfloat red, nfloat green, nfloat blue)
+#if NO_NFLOAT_OPERATORS
+			: base (CGColorCreateGenericRGB (red, green, blue, new NFloat (1.0f)), true)
+#else
 			: base (CGColorCreateGenericRGB (red, green, blue, 1.0f), true)
+#endif
 		{
 		}
 

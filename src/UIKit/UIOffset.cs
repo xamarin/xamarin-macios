@@ -34,7 +34,11 @@ namespace UIKit {
 			if (!(obj is UIOffset))
 				return false;
 			var other = (UIOffset) obj;
+#if NO_NFLOAT_OPERATORS
+			return other.Horizontal.Value == Horizontal.Value && other.Vertical.Value == Vertical.Value;
+#else
 			return other.Horizontal == Horizontal && other.Vertical == Vertical;
+#endif
 		}
 
 		public override int GetHashCode ()
@@ -44,12 +48,20 @@ namespace UIKit {
 
 		public static bool operator == (UIOffset left, UIOffset right)
 		{
+#if NO_NFLOAT_OPERATORS
+			return (left.Horizontal.Value == right.Horizontal.Value) && (left.Vertical.Value == right.Vertical.Value);
+#else
 			return (left.Horizontal == right.Horizontal) && (left.Vertical == right.Vertical);
+#endif
 		}
 
 		public static bool operator != (UIOffset left, UIOffset right)
 		{
+#if NO_NFLOAT_OPERATORS
+			return (left.Horizontal.Value != right.Horizontal.Value) || (left.Vertical.Value != right.Vertical.Value);
+#else
 			return (left.Horizontal != right.Horizontal) || (left.Vertical != right.Vertical);
+#endif
 		}
 	}
 }

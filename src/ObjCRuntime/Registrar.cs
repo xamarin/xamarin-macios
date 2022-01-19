@@ -89,9 +89,9 @@ namespace Registrar {
 #endif
 
 #if MMP || MTOUCH || BUNDLER
-		static string NFloatTypeName { get => Driver.IsDotNet ? "ObjCRuntime.nfloat" : "System.nfloat"; }
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
 #elif NET
-		const string NFloatTypeName = "ObjCRuntime.nfloat";
+		const string NFloatTypeName = "System.Runtime.InteropServices.NFloat";
 #else
 		const string NFloatTypeName = "System.nfloat";
 #endif

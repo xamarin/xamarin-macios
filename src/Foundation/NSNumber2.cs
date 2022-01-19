@@ -128,30 +128,54 @@ namespace Foundation {
 		}
 
 		public NSNumber (nfloat value) :
+#if NO_NFLOAT_OPERATORS
+#if ARCH_64
+			this (value.Value)
+#else
+			this ((float)value.Value)
+#endif
+#else
 #if ARCH_64
 			this ((double)value)
 #else
 			this ((float)value)
+#endif
 #endif
 		{
 		}
 
 		public nfloat NFloatValue {
 			get {
+#if NO_NFLOAT_OPERATORS
+#if ARCH_64
+				return new NFloat (DoubleValue);
+#else
+				return new NFloat (FloatValue);
+#endif
+#else
 #if ARCH_64
 				return (nfloat)DoubleValue;
 #else
 				return (nfloat)FloatValue;
+#endif
 #endif
 			}
 		}
 
 		public static NSNumber FromNFloat (nfloat value)
 		{
+#if NO_NFLOAT_OPERATORS
+#if ARCH_64
+			return (FromDouble (value.Value));
+#else
+			return (FromFloat ((float)value.Value));
+#endif
+#else
 #if ARCH_64
 			return (FromDouble ((double)value));
 #else
 			return (FromFloat ((float)value));
+#endif
 #endif
 		}
 

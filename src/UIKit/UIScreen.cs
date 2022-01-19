@@ -12,6 +12,8 @@
 
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
+
 using Foundation; 
 using ObjCRuntime;
 using CoreGraphics;
@@ -33,7 +35,11 @@ namespace UIKit {
 				// This is from https://developer.apple.com/library/content/qa/qa1817/_index.html
 				try {
 					var view = UIApplication.SharedApplication.KeyWindow;
+#if NO_NFLOAT_OPERATORS
+					UIGraphics.BeginImageContextWithOptions (view.Bounds.Size, view.Opaque, new NFloat (0));
+#else
 					UIGraphics.BeginImageContextWithOptions (view.Bounds.Size, view.Opaque, 0);
+#endif
 					view.DrawViewHierarchy (view.Bounds, true);
 					return UIGraphics.GetImageFromCurrentImageContext ();
 				} finally {
@@ -45,7 +51,11 @@ namespace UIKit {
 			var selScreen = new Selector ("screen");
 			var size = Bounds.Size;
 
+#if NO_NFLOAT_OPERATORS
+			UIGraphics.BeginImageContextWithOptions (size, false, new NFloat (0));
+#else
 			UIGraphics.BeginImageContextWithOptions (size, false, 0);
+#endif
 
 			try {
 				var context = UIGraphics.GetCurrentContext ();
@@ -57,7 +67,11 @@ namespace UIKit {
 					context.SaveState ();
 					context.TranslateCTM (window.Center.X, window.Center.Y);
 					context.ConcatCTM (window.Transform);
+#if NO_NFLOAT_OPERATORS
+					context.TranslateCTM (new NFloat (-window.Bounds.Size.Width.Value * window.Layer.AnchorPoint.X.Value), new NFloat (-window.Bounds.Size.Height.Value * window.Layer.AnchorPoint.Y.Value));
+#else
 					context.TranslateCTM (-window.Bounds.Size.Width * window.Layer.AnchorPoint.X, -window.Bounds.Size.Height * window.Layer.AnchorPoint.Y);
+#endif
 
 					window.Layer.RenderInContext (context);
 					context.RestoreState ();

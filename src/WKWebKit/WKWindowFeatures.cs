@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
@@ -39,9 +40,15 @@ namespace WebKit
 			if (number == null)
 				return null;
 			else if (IntPtr.Size == 4)
+#if NO_NFLOAT_OPERATORS
+				return new NFloat (number.FloatValue);
+			else
+				return new NFloat (number.DoubleValue);
+#else
 				return (nfloat)number.FloatValue;
 			else
 				return (nfloat)number.DoubleValue;
+#endif
 		}
 
 		public nfloat? X {

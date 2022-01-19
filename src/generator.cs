@@ -7373,7 +7373,7 @@ public partial class Generator : IMemberGatherer {
 							if (AttributeManager.HasAttribute<NoDefaultValueAttribute> (mi))
 								print ("throw new You_Should_Not_Call_base_In_This_Method ();");
 							else {
-								var def = GetDefaultValue (mi);
+								var def = GetDefaultValue (mi, out var argumentType);
 								if ((def is string) && ((def as string) == "null") && mi.ReturnType.IsValueType)
 									print ("throw new Exception (\"No event handler has been added to the {0} event.\");", mi.Name);
 								else {
@@ -7387,6 +7387,12 @@ public partial class Generator : IMemberGatherer {
 										print ("return ((nint) ({0}));", def);
 									} else if (mi.ReturnType == TypeManager.System_nuint) {
 										print ("return ((nuint) ({0}));", def);
+									} else if (mi.ReturnType == TypeManager.System_nfloat) {
+										if (argumentType == mi.ReturnType) {
+											print ("return {0};", def);
+										} else {
+											print ("return (new nfloat ({0}));", def);
+										}
 									} else {
 										print ("return {0}!;", def);
 									}
@@ -8052,13 +8058,19 @@ public partial class Generator : IMemberGatherer {
 		return ((EventArgsAttribute) a).ArgName;
 	}
 	
-	object GetDefaultValue (MethodInfo mi)
+	object GetDefaultValue (MethodInfo mi, out Type argumentType)
 	{
+		argumentType = null;
+
 		Attribute a = AttributeManager.GetCustomAttribute<DefaultValueAttribute> (mi);
 		if (a == null){
 			a = AttributeManager.GetCustomAttribute<DefaultValueFromArgumentAttribute> (mi);
 			if (a != null){
 				var fvfa = (DefaultValueFromArgumentAttribute) a;
+				foreach (var parameter in mi.GetParameters ()) {
+					if (parameter.Name == fvfa.Argument)
+						argumentType = parameter.ParameterType;
+				}
 				return fvfa.Argument;
 			}
 			
