@@ -139,7 +139,6 @@
 !incorrect-protocol-member! NSUserInterfaceItemIdentification::identifier is REQUIRED and should be abstract
 !incorrect-protocol-member! NSUserInterfaceItemIdentification::setIdentifier: is REQUIRED and should be abstract
 !missing-enum! NSWritingDirectionFormatType not bound
-!missing-enum-native! NSSpellingState
 !missing-field! NSAuthorDocumentAttribute not bound
 !missing-field! NSBackgroundColorDocumentAttribute not bound
 !missing-field! NSBottomMarginDocumentAttribute not bound
@@ -293,7 +292,6 @@
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
-!wrong-enum-size! NSSpellingState managed 4 vs native 8
 
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
