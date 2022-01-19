@@ -3520,6 +3520,9 @@ namespace AVFoundation {
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
 
+#if NET
+		[Abstract]
+#endif
 		[TV (14,5), Watch (7,4), Mac (11,3), iOS (14,5)]
 		[MacCatalyst (14,5)]
 		[Export ("hasSufficientMediaDataForReliablePlaybackStart")]

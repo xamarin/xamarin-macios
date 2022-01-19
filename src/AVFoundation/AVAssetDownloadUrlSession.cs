@@ -26,7 +26,7 @@ namespace AVFoundation {
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		public new static NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue)
 		{

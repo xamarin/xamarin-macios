@@ -446,7 +446,7 @@ namespace FileProvider {
 		[Export ("filename")]
 		string Filename { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		// became optional when deprecated
 		[Abstract]
 #endif

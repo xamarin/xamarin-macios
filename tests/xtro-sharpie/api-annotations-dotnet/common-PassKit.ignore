@@ -1,10 +1,3 @@
-## made optional in xcode9 beta 3 since it was replaced with newer API
-!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
-
-## made optional in xcode12 beta 3 since it was replaced with newer API
-!incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewControllerWillAuthorizePayment: is OPTIONAL and should NOT be abstract
-
 # Initial result from new rule extra-null-allowed
 !extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_CountryCode(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_CurrencyCode(System.String)' has a extraneous [NullAllowed] on parameter #0
