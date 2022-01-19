@@ -1466,13 +1466,13 @@ namespace GameKit {
 		[Export ("matchmakerViewController:didFailWithError:"), EventArgs ("GKError")]
 		void DidFailWithError (GKMatchmakerViewController viewController, NSError error);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("matchmakerViewController:didFindMatch:"), EventArgs ("GKMatch")]
 		void DidFindMatch (GKMatchmakerViewController viewController, GKMatch match);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[NoTV]
@@ -1481,7 +1481,7 @@ namespace GameKit {
 		[Export ("matchmakerViewController:didFindPlayers:"), EventArgs ("GKPlayers")]
 		void DidFindPlayers (GKMatchmakerViewController viewController, string [] playerIDs);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[iOS (8,0), Mac (10,10)]
@@ -1885,7 +1885,7 @@ namespace GameKit {
 		[Export ("handleMatchEnded:")]
 		void HandleMatchEnded (GKTurnBasedMatch match);
 
-#if !MONOMAC || XAMCORE_4_0
+#if !MONOMAC || NET
 		[Abstract]
 #endif
 		[Export ("handleTurnEventForMatch:didBecomeActive:")]
@@ -2132,7 +2132,7 @@ namespace GameKit {
 		[Export ("turnBasedMatchmakerViewController:didFailWithError:")]
 		void FailedWithError (GKTurnBasedMatchmakerViewController viewController, NSError error);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[NoTV]
@@ -2141,7 +2141,7 @@ namespace GameKit {
 		[Export ("turnBasedMatchmakerViewController:didFindMatch:")]
 		void FoundMatch (GKTurnBasedMatchmakerViewController viewController, GKTurnBasedMatch match);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[NoTV]

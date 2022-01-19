@@ -153,7 +153,7 @@ namespace SceneKit {
 		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
@@ -164,7 +164,7 @@ namespace SceneKit {
 		[Export ("removeAllAnimations")]
 		void RemoveAllAnimations ();
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -179,7 +179,7 @@ namespace SceneKit {
 		[Export ("animationKeys")]
 		NSString [] GetAnimationKeys ();
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[return: NullAllowed]
@@ -233,13 +233,16 @@ namespace SceneKit {
 		[Export ("removeAnimationForKey:fadeOutDuration:")]
 		void RemoveAnimation (NSString key, nfloat duration);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
 		[Export ("removeAnimationForKey:blendOutDuration:")]
 		void RemoveAnimationUsingBlendOutDuration (NSString key, nfloat blendOutDuration);
 
+#if NET
+		[Abstract]
+#endif
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SCNAnimationPlayer.Speed' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use 'SCNAnimationPlayer.Speed' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use 'SCNAnimationPlayer.Speed' instead.")]
@@ -3051,6 +3054,9 @@ namespace SceneKit {
 		IntPtr Context { get;  }
 
 #if MONOMAC
+#if NET
+		[Abstract]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[NoiOS]
 		[Export ("currentTime")]
@@ -3116,7 +3122,7 @@ namespace SceneKit {
 		[Export ("prepareObjects:withCompletionHandler:")]
 		void Prepare (NSObject [] objects, [NullAllowed] Action<bool> completionHandler);
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[iOS (9,0)][Mac (10,11)] // SKTransition -> SpriteKit -> only on 64 bits
@@ -3124,28 +3130,28 @@ namespace SceneKit {
 		[Export ("presentScene:withTransition:incomingPointOfView:completionHandler:")]
 		void PresentScene (SCNScene scene, SKTransition transition, [NullAllowed] SCNNode pointOfView, [NullAllowed] Action completionHandler);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("nodesInsideFrustumWithPointOfView:")]
 		SCNNode[] GetNodesInsideFrustum (SCNNode pointOfView);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("debugOptions", ArgumentSemantic.Assign)]
 		SCNDebugOptions DebugOptions { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("renderingAPI")]
 		SCNRenderingApi RenderingApi { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3153,7 +3159,7 @@ namespace SceneKit {
 		[NullAllowed, Export ("currentRenderCommandEncoder")]
 		IMTLRenderCommandEncoder CurrentRenderCommandEncoder { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3161,7 +3167,7 @@ namespace SceneKit {
 		[NullAllowed, Export ("device")]
 		IMTLDevice Device { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3169,7 +3175,7 @@ namespace SceneKit {
 		[Export ("colorPixelFormat")]
 		MTLPixelFormat ColorPixelFormat { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3177,7 +3183,7 @@ namespace SceneKit {
 		[Export ("depthPixelFormat")]
 		MTLPixelFormat DepthPixelFormat { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3185,7 +3191,7 @@ namespace SceneKit {
 		[Export ("stencilPixelFormat")]
 		MTLPixelFormat StencilPixelFormat { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3193,14 +3199,14 @@ namespace SceneKit {
 		[NullAllowed, Export ("commandQueue")]
 		IMTLCommandQueue CommandQueue { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("audioEngine")]
 		AVAudioEngine AudioEngine { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[NoWatch]
@@ -3209,7 +3215,7 @@ namespace SceneKit {
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		AVAudioEnvironmentNode AudioEnvironmentNode { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
@@ -3217,21 +3223,21 @@ namespace SceneKit {
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		SCNNode AudioListener { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("temporalAntialiasingEnabled")]
 		bool TemporalAntialiasingEnabled { [Bind ("isTemporalAntialiasingEnabled")] get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("currentViewport")]
 		CGRect CurrentViewport { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -3240,7 +3246,7 @@ namespace SceneKit {
 
 		[NoWatch]
 		[TV (14,0)][Mac (10,11)][iOS (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("currentRenderPassDescriptor")]
@@ -3850,7 +3856,7 @@ namespace SceneKit {
 		[Export ("removeAllActions")]
 		void RemoveAllActions ();
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (8,0), Mac(10,10)]

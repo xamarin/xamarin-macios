@@ -570,7 +570,9 @@ namespace CoreNFC {
 		[Export ("readerSessionDidBecomeActive:")]
 		void DidBecomeActive (NFCReaderSession session);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("readerSession:didDetectTags:")]
 		void DidDetectTags (NFCReaderSession session, INFCTag [] tags);
 
@@ -953,7 +955,9 @@ namespace CoreNFC {
 	[iOS (13,0)]
 	[Protocol]
 	interface NFCMiFareTag : NFCTag, NFCNdefTag {
-
+#if NET
+		[Abstract]
+#endif
 		[Export ("mifareFamily", ArgumentSemantic.Assign)]
 		NFCMiFareFamily MifareFamily { get; }
 
@@ -992,9 +996,6 @@ namespace CoreNFC {
 		[Export ("tagReaderSessionDidBecomeActive:")]
 		void DidBecomeActive (NFCTagReaderSession session);
 
-#if NET
-		[Abstract]
-#endif
 		[Export ("tagReaderSession:didDetectTags:")]
 		void DidDetectTags (NFCTagReaderSession session, INFCTag[] tags);
 	}
