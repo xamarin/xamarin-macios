@@ -381,6 +381,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFontDescriptor (string name, float size)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (name, new NFloat (size)), true, true)
+#else
+			: base (Create (name, (nfloat) size), true, true)
+#endif
+		{
+		}
+
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateWithAttributes (IntPtr attributes);
 		public CTFontDescriptor (CTFontDescriptorAttributes attributes)

@@ -1513,6 +1513,14 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (string name, float size)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (name, new NFloat (size)), true)
+#else
+			: base (Create (name, (nfloat) size), true)
+#endif
+		{
+		}
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithName (IntPtr name, nfloat size, ref CGAffineTransform matrix);
 
@@ -1534,6 +1542,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (string name, float size, ref CGAffineTransform matrix)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (name, new NFloat (size), ref matrix), true)
+#else
+			: base (Create (name, (nfloat) size, ref matrix), true)
+#endif
+		{
+		}
+
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptor (IntPtr descriptor, nfloat size, IntPtr matrix);
 
@@ -1552,6 +1569,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (CTFontDescriptor descriptor, float size)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (descriptor, new NFloat (size)), true)
+#else
+			: base (Create (descriptor, (nfloat) size), true)
+#endif
+		{
+		}
+
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptor (IntPtr descriptor, nfloat size, ref CGAffineTransform matrix);
 
@@ -1567,6 +1593,15 @@ namespace CoreText {
 
 		public CTFont (CTFontDescriptor descriptor, nfloat size, ref CGAffineTransform matrix)
 			: base (Create (descriptor, size, ref matrix), true)
+		{
+		}
+
+		public CTFont (CTFontDescriptor descriptor, float size, ref CGAffineTransform matrix)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (descriptor, new NFloat (size), ref matrix), true)
+#else
+			: base (Create (descriptor, (nfloat) size, ref matrix), true)
+#endif
 		{
 		}
 
@@ -1599,6 +1634,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (string name, float size, CTFontOptions options)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (name, new NFloat (size), options), true)
+#else
+			: base (Create (name, (nfloat) size, options), true)
+#endif
+		{
+		}
+
 #if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
@@ -1628,6 +1672,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (string name, float size, ref CGAffineTransform matrix, CTFontOptions options)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (name, new NFloat (size), ref matrix, options), true)
+#else
+			: base (Create (name, (nfloat) size, ref matrix, options), true)
+#endif
+		{
+		}
+
 #if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
@@ -1649,6 +1702,15 @@ namespace CoreText {
 #endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options)
 			: base (Create (descriptor, size, options), true)
+		{
+		}
+
+		public CTFont (CTFontDescriptor descriptor, float size, CTFontOptions options)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (descriptor, new NFloat (size), options), true)
+#else
+			: base (Create (descriptor, (nfloat) size, options), true)
+#endif
 		{
 		}
 
@@ -1676,6 +1738,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (CTFontDescriptor descriptor, float size, CTFontOptions options, ref CGAffineTransform matrix)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (descriptor, new NFloat (size), options, ref matrix), true)
+#else
+			: base (Create (descriptor, (nfloat) size, options, ref matrix), true)
+#endif
+		{
+		}
+
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontRef __nonnull */ IntPtr CTFontCreateWithGraphicsFont (
 			/* CGFontRef __nonnull */ IntPtr cgfontRef, nfloat size, 
@@ -1700,6 +1771,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (CGFont font, float size, CGAffineTransform transform, CTFontDescriptor descriptor)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (font, new NFloat (size), transform, descriptor), true)
+#else
+			: base (Create (font, (nfloat) size, transform, descriptor), true)
+#endif
+		{
+		}
+
 		static IntPtr Create (CGFont font, nfloat size, CTFontDescriptor descriptor)
 		{
 			if (font is null)
@@ -1715,6 +1795,15 @@ namespace CoreText {
 		{
 		}
 
+		public CTFont (CGFont font, float size, CTFontDescriptor descriptor)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (font, new NFloat (size), descriptor), true)
+#else
+			: base (Create (font, (nfloat) size, descriptor), true)
+#endif
+		{
+		}
+
 		static IntPtr Create (CGFont font, nfloat size, CGAffineTransform transform)
 		{
 			if (font is null)
@@ -1727,6 +1816,15 @@ namespace CoreText {
 
 		public CTFont (CGFont font, nfloat size, CGAffineTransform transform)
 			: base (Create (font, size, transform), true)
+		{
+		}
+
+		public CTFont (CGFont font, float size, CGAffineTransform transform)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (font, new NFloat (size), transform), true)
+#else
+			: base (Create (font, (nfloat) size, transform), true)
+#endif
 		{
 		}
 		
@@ -1748,6 +1846,15 @@ namespace CoreText {
 
 		public CTFont (CTFontUIFontType uiType, nfloat size, string language)
 			: base (Create (uiType, size, language), true)
+		{
+		}
+
+		public CTFont (CTFontUIFontType uiType, float size, string language)
+#if NO_NFLOAT_OPERATORS
+			: base (Create (uiType, new NFloat (size), language), true)
+#else
+			: base (Create (uiType, (nfloat) size, language), true)
+#endif
 		{
 		}
 

@@ -37,6 +37,21 @@ namespace AppKit {
 			Bottom = bottom;
 			Right = right;
 		}
+
+		public NSEdgeInsets (float top, float left, float bottom, float right)
+		{
+#if NO_NFLOAT_OPERATORS
+			Top = new NFloat (top);
+			Left = new NFloat (left);
+			Bottom = new NFloat (bottom);
+			Right = new NFloat (right);
+#else
+			Top = top;
+			Left = left;
+			Bottom = bottom;
+			Right = right;
+#endif
+		}
 	}
 
 }

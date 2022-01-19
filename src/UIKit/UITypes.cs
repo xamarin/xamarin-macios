@@ -40,10 +40,10 @@ namespace UIKit {
 		public CGRect InsetRect (CGRect rect)
 		{
 #if NO_NFLOAT_OPERATORS
-			return new CGRect (rect.X.Value + Left.Value,
-			                       rect.Y.Value + Top.Value,
-			                       rect.Width.Value - Left.Value - Right.Value,
-			                       rect.Height.Value - Top.Value - Bottom.Value);
+			return new CGRect (new NFloat (rect.X.Value + Left.Value),
+			                       new NFloat (rect.Y.Value + Top.Value),
+			                       new NFloat (rect.Width.Value - Left.Value - Right.Value),
+			                       new NFloat (rect.Height.Value - Top.Value - Bottom.Value));
 #else
 			return new CGRect (rect.X + Left,
 			                       rect.Y + Top,

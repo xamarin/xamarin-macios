@@ -437,6 +437,15 @@ namespace SceneKit {
 #endif
 		}
 
+		public static void CreateFromAxisAngle (SCNVector3 axis, double angle, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateFromAxisAngle (axis, new NFloat (angle), out result);
+#else
+			CreateFromAxisAngle (axis, (pfloat) angle, out result);
+#endif
+		}
+
 		public static void CreateFromAxisAngle (Vector3 axis, float angle, out SCNMatrix4 result)
 		{
 #if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
@@ -498,6 +507,15 @@ namespace SceneKit {
 			return result;
 		}
 
+		public static SCNMatrix4 CreateFromAxisAngle (SCNVector3 axis, double angle)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreateFromAxisAngle (axis, new NFloat (angle));
+#else
+			return CreateFromAxisAngle (axis, (pfloat) angle);
+#endif
+		}
+
 		#endregion
 
 		#region CreateRotation[XYZ]
@@ -529,6 +547,15 @@ namespace SceneKit {
 			result.Row3 = SCNVector4.UnitW;
 		}
 
+		public static void CreateRotationX (double angle, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateRotationX (new NFloat (angle), out result);
+#else
+			CreateRotationX ((pfloat) angle, out result);
+#endif
+		}
+
 		/// <summary>
 		/// Builds a rotation matrix for a rotation around the x-axis.
 		/// </summary>
@@ -539,6 +566,15 @@ namespace SceneKit {
 			SCNMatrix4 result;
 			CreateRotationX (angle, out result);
 			return result;
+		}
+
+		public static SCNMatrix4 CreateRotationX (double angle)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreateRotationX (new NFloat (angle));
+#else
+			return CreateRotationX ((pfloat) angle);
+#endif
 		}
 
 		/// <summary>
@@ -571,6 +607,15 @@ namespace SceneKit {
 			result.Row3 = SCNVector4.UnitW;
 		}
 
+		public static void CreateRotationY (double angle, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateRotationY (new NFloat (angle), out result);
+#else
+			CreateRotationY ((pfloat) angle, out result);
+#endif
+		}
+
 		/// <summary>
 		/// Builds a rotation matrix for a rotation around the y-axis.
 		/// </summary>
@@ -581,6 +626,15 @@ namespace SceneKit {
 			SCNMatrix4 result;
 			CreateRotationY (angle, out result);
 			return result;
+		}
+
+		public static SCNMatrix4 CreateRotationY (double angle)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreateRotationY (new NFloat (angle));
+#else
+			return CreateRotationY ((pfloat) angle);
+#endif
 		}
 
 		/// <summary>
@@ -610,6 +664,15 @@ namespace SceneKit {
 			result.Row3 = SCNVector4.UnitW;
 		}
 
+		public static void CreateRotationZ (double angle, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateRotationZ (new NFloat (angle), out result);
+#else
+			CreateRotationZ ((pfloat) angle, out result);
+#endif
+		}
+
 		/// <summary>
 		/// Builds a rotation matrix for a rotation around the z-axis.
 		/// </summary>
@@ -620,6 +683,15 @@ namespace SceneKit {
 			SCNMatrix4 result;
 			CreateRotationZ (angle, out result);
 			return result;
+		}
+
+		public static SCNMatrix4 CreateRotationZ (double angle)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreateRotationZ (new NFloat (angle));
+#else
+			return CreateRotationZ ((pfloat) angle);
+#endif
 		}
 
 		#endregion
@@ -640,6 +712,15 @@ namespace SceneKit {
 			result.Row3 = new SCNVector4 (x, y, z, new NFloat (1));
 #else
 			result.Row3 = new SCNVector4 (x, y, z, 1);
+#endif
+		}
+
+		public static void CreateTranslation (double x, double y, double z, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateTranslation (new NFloat (x), new NFloat (y), new NFloat (z), out result);
+#else
+			CreateTranslation ((pfloat) x, (pfloat) y, (pfloat) z, out result);
 #endif
 		}
 
@@ -670,6 +751,15 @@ namespace SceneKit {
 			SCNMatrix4 result;
 			CreateTranslation (x, y, z, out result);
 			return result;
+		}
+
+		public static SCNMatrix4 CreateTranslation (double x, double y, double z)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreateTranslation (new NFloat (x), new NFloat (y), new NFloat (z));
+#else
+			return CreateTranslation ((pfloat) x, (pfloat) y, (pfloat) z);
+#endif
 		}
 
 		/// <summary>
@@ -705,6 +795,15 @@ namespace SceneKit {
 #endif
 		}
 
+		public static void CreateOrthographic (double width, double height, double zNear, double zFar, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateOrthographic (new NFloat (width), new NFloat (height), new NFloat (zNear), new NFloat (zFar), out result);
+#else
+			CreateOrthographic ((pfloat) width, (pfloat) height, (pfloat) zNear, (pfloat) zFar, out result);
+#endif
+		}
+
 		/// <summary>
 		/// Creates an orthographic projection matrix.
 		/// </summary>
@@ -722,6 +821,15 @@ namespace SceneKit {
 			CreateOrthographicOffCenter (-width / 2, width / 2, -height / 2, height / 2, zNear, zFar, out result);
 #endif
 			return result;
+		}
+
+		public static SCNMatrix4 CreateOrthographic (double width, double height, double zNear, double zFar)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreateOrthographic (new NFloat (width), new NFloat (height), new NFloat (zNear), new NFloat (zFar));
+#else
+			return CreateOrthographic ((pfloat) width, (pfloat) height, (pfloat) zNear, (pfloat) zFar);
+#endif
 		}
 
 		#endregion
@@ -771,6 +879,15 @@ namespace SceneKit {
 #endif
 		}
 
+		public static void CreateOrthographicOffCenter (double left, double right, double bottom, double top, double zNear, double zFar, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreateOrthographicOffCenter (new NFloat (left), new NFloat (right), new NFloat (bottom), new NFloat (top), new NFloat (zNear), new NFloat (zFar), out result);
+#else
+			CreateOrthographicOffCenter ((pfloat) left, (pfloat) right, (pfloat) bottom, (pfloat) top, (pfloat) zNear, (pfloat) zFar, out result);
+#endif
+		}
+
 		/// <summary>
 		/// Creates an orthographic projection matrix.
 		/// </summary>
@@ -786,6 +903,15 @@ namespace SceneKit {
 			SCNMatrix4 result;
 			CreateOrthographicOffCenter (left, right, bottom, top, zNear, zFar, out result);
 			return result;
+		}
+
+		public static SCNMatrix4 CreateOrthographicOffCenter (double left, double right, double bottom, double top, double zNear, double zFar)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreateOrthographicOffCenter (new NFloat (left), new NFloat (right), new NFloat (bottom), new NFloat (top), new NFloat (zNear), new NFloat (zFar));
+#else
+			return CreateOrthographicOffCenter ((pfloat) left, (pfloat) right, (pfloat) bottom, (pfloat) top, (pfloat) zNear, (pfloat) zFar);
+#endif
 		}
 
 		#endregion
@@ -851,6 +977,15 @@ namespace SceneKit {
 			CreatePerspectiveOffCenter (xMin, xMax, yMin, yMax, zNear, zFar, out result);
 		}
 
+		public static void CreatePerspectiveFieldOfView (double fovy, double aspect, double zNear, double zFar, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreatePerspectiveFieldOfView (new NFloat (fovy), new NFloat (aspect), new NFloat (zNear), new NFloat (zFar), out result);
+#else
+			CreatePerspectiveFieldOfView ((pfloat) fovy, (pfloat) aspect, (pfloat) zNear, (pfloat) zFar, out result);
+#endif
+		}
+
 		/// <summary>
 		/// Creates a perspective projection matrix.
 		/// </summary>
@@ -874,6 +1009,15 @@ namespace SceneKit {
 			SCNMatrix4 result;
 			CreatePerspectiveFieldOfView (fovy, aspect, zNear, zFar, out result);
 			return result;
+		}
+
+		public static SCNMatrix4 CreatePerspectiveFieldOfView (double fovy, double aspect, double zNear, double zFar)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreatePerspectiveFieldOfView (new NFloat (fovy), new NFloat (aspect), new NFloat (zNear), new NFloat (zFar));
+#else
+			return CreatePerspectiveFieldOfView ((pfloat) fovy, (pfloat) aspect, (pfloat) zNear, (pfloat) zFar);
+#endif
 		}
 
 		#endregion
@@ -938,6 +1082,15 @@ namespace SceneKit {
 			                     0, 0, d, 0);
 		}
 
+		public static void CreatePerspectiveOffCenter (double left, double right, double bottom, double top, double zNear, double zFar, out SCNMatrix4 result)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			CreatePerspectiveOffCenter (new NFloat (left), new NFloat (right), new NFloat (bottom), new NFloat (top), new NFloat (zNear), new NFloat (zFar), out result);
+#else
+			CreatePerspectiveOffCenter ((pfloat) left, (pfloat) right, (pfloat) bottom, (pfloat) top, (pfloat) zNear, (pfloat) zFar, out result);
+#endif
+		}
+
 		/// <summary>
 		/// Creates an perspective projection matrix.
 		/// </summary>
@@ -963,6 +1116,15 @@ namespace SceneKit {
 			return result;
 		}
 
+		public static SCNMatrix4 CreatePerspectiveOffCenter (double left, double right, double bottom, double top, double zNear, double zFar)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return CreatePerspectiveOffCenter (new NFloat (left), new NFloat (right), new NFloat (bottom), new NFloat (top), new NFloat (zNear), new NFloat (zFar));
+#else
+			return CreatePerspectiveOffCenter ((pfloat) left, (pfloat) right, (pfloat) bottom, (pfloat) top, (pfloat) zNear, (pfloat) zFar);
+#endif
+		}
+
 		#endregion
 
 		#region Scale Functions
@@ -975,6 +1137,20 @@ namespace SceneKit {
 		public static SCNMatrix4 Scale (pfloat scale)
 		{
 			return Scale (scale, scale, scale);
+		}
+
+		/// <summary>
+		/// Build a scaling matrix
+		/// </summary>
+		/// <param name="scale">Single scale factor for x,y and z axes</param>
+		/// <returns>A scaling matrix</returns>
+		public static SCNMatrix4 Scale (double scale)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return Scale (new NFloat (scale), new NFloat (scale), new NFloat (scale));
+#else
+			return Scale ((pfloat) scale, (pfloat) scale, (pfloat) scale);
+#endif
 		}
 
 		/// <summary>
@@ -1002,6 +1178,15 @@ namespace SceneKit {
 			result.Row2 = SCNVector4.UnitZ * z;
 			result.Row3 = SCNVector4.UnitW;
 			return result;
+		}
+
+		public static SCNMatrix4 Scale (double x, double y, double z)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return Scale (new NFloat (x), new NFloat (y), new NFloat (z));
+#else
+			return Scale ((pfloat) x, (pfloat) y, (pfloat) z);
+#endif
 		}
 
 		#endregion
@@ -1086,6 +1271,15 @@ namespace SceneKit {
 		public static SCNMatrix4 LookAt (pfloat eyeX, pfloat eyeY, pfloat eyeZ, pfloat targetX, pfloat targetY, pfloat targetZ, pfloat upX, pfloat upY, pfloat upZ)
 		{
 			return LookAt (new SCNVector3 (eyeX, eyeY, eyeZ), new SCNVector3 (targetX, targetY, targetZ), new SCNVector3 (upX, upY, upZ));
+		}
+
+		public static SCNMatrix4 LookAt (double eyeX, double eyeY, double eyeZ, double targetX, double targetY, double targetZ, double upX, double upY, double upZ)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			return LookAt (new NFloat (eyeX), new NFloat (eyeY), new NFloat (eyeZ), new NFloat (targetX), new NFloat (targetY), new NFloat (targetZ), new NFloat (upX), new NFloat (upY), new NFloat (upZ));
+#else
+			return LookAt ((pfloat) eyeX, (pfloat) eyeY, (pfloat) eyeZ, (pfloat) targetX, (pfloat) targetY, (pfloat) targetZ, (pfloat) upX, (pfloat) upY, (pfloat) upZ);
+#endif
 		}
 
 		#endregion

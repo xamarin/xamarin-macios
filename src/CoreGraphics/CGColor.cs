@@ -94,11 +94,28 @@ namespace CoreGraphics {
 		{
 		}
 
+		public CGColor (float gray, float alpha)
+#if NO_NFLOAT_OPERATORS
+			: base (CGColorCreateGenericGray (new NFloat (gray), new NFloat (alpha)), true)
+#else
+			: base (CGColorCreateGenericGray ((nfloat) gray, (nfloat) alpha), true)
+#endif
+		{
+		}
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateGenericRGB (/* CGFloat */ nfloat red, /* CGFloat */ nfloat green, /* CGFloat */ nfloat blue, /* CGFloat */ nfloat alpha);
 
 		public CGColor (nfloat red, nfloat green, nfloat blue, nfloat alpha)
 			: base (CGColorCreateGenericRGB (red, green, blue, alpha), true)
+		{
+		}
+
+		public CGColor (float red, float green, float blue, float alpha)
+#if NO_NFLOAT_OPERATORS
+			: base (CGColorCreateGenericRGB (new NFloat (red), new NFloat (green), new NFloat (blue), new NFloat (alpha)), true)
+#else
+			: base (CGColorCreateGenericRGB (red, green, blue, alpha), true)
+#endif
 		{
 		}
 
@@ -108,6 +125,11 @@ namespace CoreGraphics {
 #else
 			: base (CGColorCreateGenericRGB (red, green, blue, 1.0f), true)
 #endif
+		{
+		}
+
+		public CGColor (float red, float green, float blue)
+			: this (red, green, blue, 1.0f)
 		{
 		}
 
@@ -195,6 +217,15 @@ namespace CoreGraphics {
 
 		public CGColor (CGColor source, nfloat alpha)
 			: base (Create (source, alpha), true)
+		{
+		}
+
+		public CGColor (CGColor source, float alpha)
+#if NO_NFLOAT_OPERATORS
+			: this (Create (source, new NFloat (alpha)), true)
+#else
+			: this (Create (source, (nfloat) alpha), true)
+#endif
 		{
 		}
 
@@ -342,6 +373,15 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
+		public static CGColor? CreateSrgb (float red, float green, float blue, float alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return CreateSrgb (new NFloat (red), new NFloat (green), new NFloat (blue), new NFloat (alpha));
+#else
+			return CreateSrgb ((nfloat) red, (nfloat) green, (nfloat) blue, (nfloat) alpha);
+#endif
+		}
+
 #if !NET
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -371,6 +411,15 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
+		public static CGColor? CreateGenericGrayGamma2_2 (float gray, float alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return CreateGenericGrayGamma2_2 (new NFloat (gray), new NFloat (alpha));
+#else
+			return CreateGenericGrayGamma2_2 ((nfloat) gray, (nfloat) alpha);
+#endif
+		}
+
 #if !NET
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
 		[MacCatalyst (14,0)]
@@ -396,6 +445,15 @@ namespace CoreGraphics {
 		{
 			var h = CGColorCreateGenericCMYK (cyan, magenta, yellow, black, alpha);
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
+		}
+
+		public static CGColor? CreateCmyk (float cyan, float magenta, float yellow, float black, float alpha)
+		{
+#if NO_NFLOAT_OPERATORS
+			return CreateCmyk (new NFloat (cyan), new NFloat (magenta), new NFloat (yellow), new NFloat (black), new NFloat (alpha));
+#else
+			return CreateCmyk ((nfloat) cyan, (nfloat) magenta, (nfloat) yellow, (nfloat) black, (nfloat) alpha);
+#endif
 		}
 
 #if !NET

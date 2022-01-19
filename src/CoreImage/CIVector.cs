@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.InteropServices;
+
 using Foundation;
 using ObjCRuntime;
 
@@ -44,6 +46,44 @@ namespace CoreImage {
 			this (values, values == null ? 0 : values.Length)
 		{
 		}
+
+		public CIVector (float x)
+#if NO_NFLOAT_OPERATORS
+			: this (new NFloat (x))
+#else
+			: this ((nfloat) x)
+#endif
+		{
+		}
+
+		public CIVector (float x, float y)
+#if NO_NFLOAT_OPERATORS
+			: this (new NFloat (x), new NFloat (y))
+#else
+			: this ((nfloat) x, (nfloat) y)
+#endif
+		{
+		}
+
+		public CIVector (float x, float y, float z)
+#if NO_NFLOAT_OPERATORS
+			: this (new NFloat (x), new NFloat (y), new NFloat (z))
+#else
+			: this ((nfloat) x, (nfloat) y, (nfloat) z)
+#endif
+		{
+		}
+
+		public CIVector (float x, float y, float z, float w)
+#if NO_NFLOAT_OPERATORS
+			: this (new NFloat (x), new NFloat (y), new NFloat (z), new NFloat (w))
+#else
+			: this ((nfloat) x, (nfloat) y, (nfloat) z, (nfloat) w)
+#endif
+		{
+		}
+
+
 
 		[DesignatedInitializer]
 		[Export ("initWithValues:count:")]

@@ -444,6 +444,15 @@ namespace CoreGraphics
 			return inflated;
 		}
 
+		public static CGRect Inflate (CGRect rect, float x, float y)
+		{
+#if NO_NFLOAT_OPERATORS
+			return Inflate (rect, new NFloat (x), new NFloat (y));
+#else
+			return Inflate (rect, (nfloat) x, (nfloat) y);
+#endif
+		}
+
 		nfloat x;
 		nfloat y;
 		nfloat width;
@@ -532,22 +541,6 @@ namespace CoreGraphics
 			this.width = width;
 			this.height = height;
 		}
-
-		public CGRect (double x, double y, double width, double height)
-		{
-#if NO_NFLOAT_OPERATORS
-			this.x = NFloatOperators.ToNFloat (x);
-			this.y = NFloatOperators.ToNFloat (y);
-			this.width = NFloatOperators.ToNFloat (width);
-			this.height = NFloatOperators.ToNFloat (height);
-#else
-			this.x = (nfloat)x;
-			this.y = (nfloat)y;
-			this.width = (nfloat)width;
-			this.height = (nfloat)height;
-#endif
-		}
-
 
 		public CGRect (float x, float y, float width, float height)
 		{

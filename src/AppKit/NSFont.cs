@@ -68,6 +68,15 @@ namespace AppKit {
 			var ptr = _FromFontName (fontName, fontSize);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
+
+		public static NSFont FromFontName (string fontName, float fontSize)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromFontName (fontName, new NFloat (fontSize));
+#else
+			return FromFontName (fontName, (nfloat) fontSize);
+#endif
+		}
  
 		public static NSFont FromDescription (NSFontDescriptor fontDescriptor, nfloat fontSize)
 		{

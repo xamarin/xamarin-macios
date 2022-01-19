@@ -142,6 +142,15 @@ namespace CoreGraphics {
 				0, 0);
 		}
 
+		public static CGAffineTransform MakeRotation (float angle)
+		{
+#if NO_NFLOAT_OPERATORS
+			return MakeRotation (new NFloat (angle));
+#else
+			return MakeRotation ((nfloat) angle);
+#endif
+		}
+
 		public static CGAffineTransform MakeScale (nfloat sx, nfloat sy)
 		{
 #if NO_NFLOAT_OPERATORS
@@ -151,12 +160,30 @@ namespace CoreGraphics {
 #endif
 		}
 
+		public static CGAffineTransform MakeScale (float sx, float sy)
+		{
+#if NO_NFLOAT_OPERATORS
+			return MakeScale (new NFloat (sx), new NFloat (sy));
+#else
+			return MakeScale ((nfloat) sx, (nfloat) sy);
+#endif
+		}
+
 		public static CGAffineTransform MakeTranslation (nfloat tx, nfloat ty)
 		{
 #if NO_NFLOAT_OPERATORS
 			return new CGAffineTransform (1, 0, 0, 1, tx.Value, ty.Value);
 #else
 			return new CGAffineTransform (1, 0, 0, 1, tx, ty);
+#endif
+		}
+
+		public static CGAffineTransform MakeTranslation (float tx, float ty)
+		{
+#if NO_NFLOAT_OPERATORS
+			return MakeTranslation (new NFloat (tx), new NFloat (ty));
+#else
+			return MakeTranslation ((nfloat) tx, (nfloat) ty);
 #endif
 		}
 
@@ -220,6 +247,15 @@ namespace CoreGraphics {
 #endif
 		}
 
+		public void Scale (float sx, float sy, MatrixOrder order)
+		{
+#if NO_NFLOAT_OPERATORS
+			Scale (new NFloat (sx), new NFloat (sy), order);
+#else
+			Scale ((nfloat) sx, (nfloat) sy, order);
+#endif
+		}
+
 		public void Scale (nfloat sx, nfloat sy, MatrixOrder order)
 		{
 			switch (order) {
@@ -238,6 +274,16 @@ namespace CoreGraphics {
 		public void Scale (nfloat sx, nfloat sy)
 		{
 			Scale (sx, sy, MatrixOrder.Append);
+		}
+
+		[Advice ("By default, the new operation is applied after the old operation: t' = t * [ sx 0 0 sy 0 0 ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Scale (nfloat, nfloat, MatrixOrder)'.")]
+		public void Scale (float sx, float sy)
+		{
+#if NO_NFLOAT_OPERATORS
+			Scale (new NFloat (sx), new NFloat (sy));
+#else
+			Scale ((nfloat) sx, (nfloat) sy);
+#endif
 		}
 
 		public static CGAffineTransform Scale (CGAffineTransform transform, nfloat sx, nfloat sy)
@@ -271,6 +317,24 @@ namespace CoreGraphics {
 #endif
 		}
 
+		public static CGAffineTransform Scale (CGAffineTransform transform, float sx, float sy)
+		{
+#if NO_NFLOAT_OPERATORS
+			return Scale (transform, new NFloat (sx), new NFloat (sy));
+#else
+			return Scale (transform, (nfloat) sx, (nfloat) sy);
+#endif
+		}
+
+		public static CGAffineTransform Scale (CGAffineTransform transform, double sx, double sy)
+		{
+#if NO_NFLOAT_OPERATORS
+			return Scale (transform, new NFloat (sx), new NFloat (sy));
+#else
+			return Scale (transform, (nfloat) sx, (nfloat) sy);
+#endif
+		}
+
 		public void Translate (nfloat tx, nfloat ty, MatrixOrder order)
 		{
 			switch (order) {
@@ -285,10 +349,29 @@ namespace CoreGraphics {
 			}
 		}
 
+		public void Translate (float tx, float ty, MatrixOrder order)
+		{
+#if NO_NFLOAT_OPERATORS
+			Translate (new NFloat (tx), new NFloat (ty), order);
+#else
+			Translate ((nfloat) tx, (nfloat) ty, order);
+#endif
+		}
+
 		[Advice ("By default, the new operation is applied after the old operation: t' = t * [ 1 0 0 1 tx ty ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Translate (nfloat, nfloat, MatrixOrder)'.")]
 		public void Translate (nfloat tx, nfloat ty)
 		{
 			Translate (tx, ty, MatrixOrder.Append);
+		}
+
+		[Advice ("By default, the new operation is applied after the old operation: t' = t * [ 1 0 0 1 tx ty ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Translate (nfloat, nfloat, MatrixOrder)'.")]
+		public void Translate (float tx, float ty)
+		{
+#if NO_NFLOAT_OPERATORS
+			Translate (new NFloat (tx), new NFloat (ty));
+#else
+			Translate ((nfloat) tx, (nfloat) ty);
+#endif
 		}
 
 		public static CGAffineTransform Translate (CGAffineTransform transform, nfloat tx, nfloat ty)
@@ -319,6 +402,24 @@ namespace CoreGraphics {
 				transform.yy,
 				tx * transform.xx + ty * transform.xy + transform.x0,
 				tx * transform.yx + ty * transform.yy + transform.y0);
+#endif
+		}
+
+		public static CGAffineTransform Translate (CGAffineTransform transform, float tx, float ty)
+		{
+#if NO_NFLOAT_OPERATORS
+			return Translate (transform, new NFloat (tx), new NFloat (ty));
+#else
+			return Translate (transform, (nfloat) tx, (nfloat) ty);
+#endif
+		}
+
+		public static CGAffineTransform Translate (CGAffineTransform transform, double tx, double ty)
+		{
+#if NO_NFLOAT_OPERATORS
+			return Translate (transform, new NFloat (tx), new NFloat (ty));
+#else
+			return Translate (transform, (nfloat) tx, (nfloat) ty);
 #endif
 		}
 
@@ -379,6 +480,24 @@ namespace CoreGraphics {
 				cos * transform.yy - sin * transform.yx,
 				transform.x0,
 				transform.y0);
+#endif
+		}
+
+		public static CGAffineTransform Rotate (CGAffineTransform transform, float angle)
+		{
+#if NO_NFLOAT_OPERATORS
+			return Rotate (transform, new NFloat (angle));
+#else
+			return Rotate (transform, (nfloat) angle);
+#endif
+		}
+
+		public static CGAffineTransform Rotate (CGAffineTransform transform, double angle)
+		{
+#if NO_NFLOAT_OPERATORS
+			return Rotate (transform, new NFloat (angle));
+#else
+			return Rotate (transform, (nfloat) angle);
 #endif
 		}
 

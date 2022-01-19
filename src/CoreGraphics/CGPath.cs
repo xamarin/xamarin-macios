@@ -642,12 +642,30 @@ namespace CoreGraphics {
 			return _FromRoundedRect (rectangle, cornerWidth, cornerHeight, null);
 		}
 
+		public static CGPath FromRoundedRect (CGRect rectangle, float cornerWidth, float cornerHeight)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromRoundedRect (rectangle, new NFloat (cornerWidth), new NFloat (cornerHeight));
+#else
+			return FromRoundedRect (rectangle, (nfloat) cornerWidth, (nfloat) cornerHeight);
+#endif
+		}
+
 #if !NET
 		[Mac(10,9)][iOS (7,0)]
 #endif
 		static public unsafe CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform transform)
 		{
 			return _FromRoundedRect (rectangle, cornerWidth, cornerHeight, &transform);
+		}
+
+		public static CGPath FromRoundedRect (CGRect rectangle, float cornerWidth, float cornerHeight, CGAffineTransform transform)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromRoundedRect (rectangle, new NFloat (cornerWidth), new NFloat (cornerHeight), transform);
+#else
+			return FromRoundedRect (rectangle, (nfloat) cornerWidth, (nfloat) cornerHeight, transform);
+#endif
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
