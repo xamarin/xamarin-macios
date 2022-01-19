@@ -495,6 +495,10 @@ namespace Xamarin.Tests {
 				}
 			}
 
+			if (signature == CodeSignature.None && (platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX)) {
+				expectedWarnings.Add ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/{tfm}{(runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : "/" + runtimeIdentifiers)}/BundleStructure.app/UnknownJ.bin");
+			}
+
 			// Sort the messages so that comparison against the expected array is faster
 			expectedWarnings = expectedWarnings
 				.OrderBy (v => v)

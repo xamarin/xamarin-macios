@@ -65,17 +65,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<_CodesignAppBundleDependsOn>
-			$(_CodesignAppBundleDependsOn);
-			_CreateAppBundle;
-			_EmbedProvisionProfile;
-			_CodesignNativeLibraries;
-			_CollectFrameworks;
-			_CodesignFrameworks;
-		</_CodesignAppBundleDependsOn>
-	</PropertyGroup>
-
 	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
 		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true'"
