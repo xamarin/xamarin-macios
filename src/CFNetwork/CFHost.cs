@@ -28,11 +28,27 @@ namespace CFNetwork {
 namespace CoreServices {
 #endif
 
+#if NET
+	[UnsupportedOSPlatform ("tvos15.0")]
+	[UnsupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("ios15.0")]
+#if TVOS
+	[Obsolete ("Starting with tvos15.0 onstants.UseNetworkInstea.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst15.0 onstants.UseNetworkInstea.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+	[Obsolete ("Starting with macos12.0 onstants.UseNetworkInstea.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios15.0 onstants.UseNetworkInstea.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
- 	[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
- 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
- 	[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
+#endif
 	class CFHost : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CFHost (NativeHandle handle, bool owns)
