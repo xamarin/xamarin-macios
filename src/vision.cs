@@ -1848,7 +1848,7 @@ namespace Vision {
 		[Export ("alignmentTransform", ArgumentSemantic.Assign)]
 		CGAffineTransform AlignmentTransform {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
@@ -1864,7 +1864,7 @@ namespace Vision {
 		Matrix3 WarpTransform {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif

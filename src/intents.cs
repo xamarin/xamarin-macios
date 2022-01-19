@@ -794,7 +794,11 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
+#if NET
+	[NoMac]
+#else
 	[Mac (10, 12, 0)]
+#endif
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Native]
@@ -2225,11 +2229,7 @@ namespace Intents {
 		School,
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
+	[Mac (10, 15)] // headers say nothing, documentation says introduced macOS 12.1, but both headers and documents say some enum fields were available in macOS 10.15, so let's go with that for the enum itself as well.
 	[iOS (10, 2)]
 	[Watch (3, 2)]
 	[NoTV]
@@ -2237,36 +2237,91 @@ namespace Intents {
 		[Field (null)]
 		None,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFather")]
 		Father,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipMother")]
 		Mother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipParent")]
 		Parent,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipBrother")]
 		Brother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSister")]
 		Sister,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipChild")]
 		Child,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFriend")]
 		Friend,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSpouse")]
 		Spouse,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipPartner")]
 		Partner,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipAssistant")]
 		Assistant,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipManager")]
 		Manager,
 
@@ -2407,7 +2462,7 @@ namespace Intents {
 	interface INBookRestaurantReservationIntent : NSCopying {
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
-#if XAMCORE_4_0
+#if NET
 		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
 #else
 		// This is correctly nuint but a bug in PMCS generated incorrect code which has shipped.
@@ -3165,7 +3220,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol] 
 	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
 #endif
 	{
@@ -3189,7 +3244,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling 
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
 #endif
 	{
@@ -4628,7 +4683,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
-#if XAMCORE_4_0 || TVOS || __MACCATALYST__
+#if NET || TVOS || __MACCATALYST__
 	[DisableDefaultCtor]
 #endif
 	[TV (14,0)]

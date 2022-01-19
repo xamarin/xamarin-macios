@@ -10,18 +10,9 @@
 ## exception name, not clear if useful
 !missing-field! UIApplicationInvalidInterfaceOrientationException not bound
 
-## fixed for XAMCORE_4_0
-!incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
-!incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
-!incorrect-protocol-member! UIFocusEnvironment::parentFocusEnvironment is REQUIRED and should be abstract
-
 ## Special case from UIAccessibilityAction. We added it (completly) on UIResponser but magic tap is also available on app delegate according to docs
 ## See comments is uikit.cs for more info
 !extra-protocol-member! unexpected selector UIApplicationDelegate::accessibilityPerformMagicTap found
-
-# fixed in XAMCORE_4_0 - API break
-!incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
 
 ## the category name is clear enough: UIPrintPaper_Deprecated_Nonfunctional
 !missing-selector! UIPrintPaper::printRect not bound
@@ -44,10 +35,6 @@
 !missing-protocol-member! NSCollectionLayoutVisibleItem::setCenter: not found
 !missing-protocol-member! NSCollectionLayoutVisibleItem::setTransform: not found
 !missing-protocol-member! NSCollectionLayoutVisibleItem::transform not found
-
-## This is a breaking change
-!incorrect-protocol-member! UITextDocumentProxy::setMarkedText:selectedRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! UITextDocumentProxy::unmarkText is REQUIRED and should be abstract
 
 ## Not really useful to have them exposed
 !missing-pinvoke! UIFontWeightForImageSymbolWeight is not bound
