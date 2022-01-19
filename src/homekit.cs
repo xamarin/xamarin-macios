@@ -271,6 +271,7 @@ namespace HomeKit {
 #endif // !WATCH
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[MacCatalyst(14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessoryProfile
@@ -438,6 +439,7 @@ namespace HomeKit {
 
 	[TV (10,0)]
 	[iOS(8,0)]
+	[MacCatalyst(14,0)]
 	[Static]
 	[Internal]
 	interface HMCharacteristicPropertyInternal {
@@ -459,6 +461,7 @@ namespace HomeKit {
 
 	[TV (10,0)]
 	[iOS (8,0)]
+	[MacCatalyst(14,0)]
 	[Static]
 	[Internal]
 	interface HMCharacteristicMetadataUnitsInternal {
@@ -1136,6 +1139,7 @@ namespace HomeKit {
 	[Static, Internal]
 	[iOS (8,0)]
 	[TV (10,0)]
+	[MacCatalyst (14,0)]
 	interface HMCharacteristicMetadataFormatKeys {
 		[Field ("HMCharacteristicMetadataFormatBool")]
 		NSString _Bool { get; }
