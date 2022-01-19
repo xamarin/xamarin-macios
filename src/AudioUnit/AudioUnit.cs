@@ -384,14 +384,12 @@ namespace AudioUnit
 			return device;
 		}
 
-#if !XAMCORE_3_0 || MONOMAC
-#if !MONOMAC
+// #if !XAMCORE_3_0 || MONOMAC
 		[Obsolete ("This API is not available on iOS.")]
-#endif
 		[MacCatalyst (15,0)]
 		public static uint GetCurrentInputDevice ()
 		{
-#if MONOMAC || __MACCATALYST__
+// #if MONOMAC || __MACCATALYST__
 			// We need to replace AudioHardwareGetProperty since it has been deprecated since OS X 10.6 and iOS 2.0
 			// Replacing with the following implementation recommended in the following doc
 			// See Listing 4  New - Getting the default input device.
@@ -411,11 +409,11 @@ namespace AudioUnit
 			if (err != 0)
 				throw new AudioUnitException ((int) err);
 			return inputDevice;
-#elif !XAMCORE_3_0
-			return 0;
-#endif
+// #elif !XAMCORE_3_0
+// 			return 0;
+// #endif
 		}
-#endif
+// #endif
 		public AudioUnitStatus SetCurrentDevice (uint inputDevice, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			return AudioUnitSetProperty (Handle,
@@ -664,7 +662,7 @@ namespace AudioUnit
 
 		#endregion
 
-#if !MONOMAC
+// #if !MONOMAC
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
@@ -707,7 +705,7 @@ namespace AudioUnit
 		{
 			return Runtime.GetNSObject<UIKit.UIImage> (AudioOutputUnitGetHostIcon (Handle, desiredPointSize));
 		}
-#endif
+// #endif
 
 		// TODO: return AudioUnitStatus
 		public int Initialize ()
@@ -876,7 +874,7 @@ namespace AudioUnit
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
-#if MONOMAC || __MACCATALYST__
+// #if MONOMAC || __MACCATALYST__
 		[MacCatalyst (15,0)]
 		[DllImport (Constants.CoreAudioLibrary)]
 		static extern int AudioObjectGetPropertyData (
@@ -887,7 +885,7 @@ namespace AudioUnit
 			ref uint ioDataSize,
 			out uint outData
 		);
-#endif // MONOMAC
+// #endif // MONOMAC
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus MusicDeviceMIDIEvent (IntPtr /* MusicDeviceComponent = void* */ inUnit, uint /* UInt32 */ inStatus, uint /* UInt32 */ inData1, uint /* UInt32 */ inData2, uint /* UInt32 */ inOffsetSampleFrame);
 
@@ -948,7 +946,7 @@ namespace AudioUnit
 #endif // !COREBUILD
 	}
 
-#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+// #if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 	[StructLayout(LayoutKind.Sequential)]
 	struct AudioObjectPropertyAddress
 	{
@@ -972,7 +970,7 @@ namespace AudioUnit
 		}
 #endif // !COREBUILD
 	}
-#endif // !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+// #endif // !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 
 	public unsafe class AURenderEventEnumerator : INativeObject
 #if COREBUILD

@@ -52,7 +52,7 @@ namespace AudioUnit
 		[iOS (7,0)]
 		MIDIProcessor		= 0x61756d69, // 'aumi'
 
-#if !MONOMAC
+// #if !MONOMAC
 		[iOS (7,0)]
 		RemoteEffect		= 0x61757278, // 'aurx',
 		[iOS (7,0)]
@@ -61,7 +61,7 @@ namespace AudioUnit
 		RemoteInstrument	= 0x61757269, // 'auri',
 		[iOS (7,0)]
 		RemoteMusicEffect	= 0x6174726d, // 'aurm'
-#endif
+// #endif
 	}
 
 	public enum AudioTypeOutput { // OSType in AudioComponentDescription
@@ -96,14 +96,14 @@ namespace AudioUnit
 		AUiPodTimeOther=0x6970746f, // 'ipto
 		RoundTripAAC=0x72616163, // 'raac'
 		MultiSplitter=0x6d73706c, // 'mspl'
-#if MONOMAC
+// #if MONOMAC
 		TimePitch=0x746d7074, // 'tmpt'
-#else
+// #else
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		AUiPodTime=0x6970746d, // 'iptm'
-#endif
+// #endif
 	}
 
 	public enum AudioTypeEffect { // OSType in AudioComponentDescription
@@ -147,14 +147,14 @@ namespace AudioUnit
 		MultiChannel=0x6d636d78, // 'mcmx'
 		Matrix=0x6d786d78, // 'mxmx'
 		Spacial=0x3364656d, // Same as Embedded3D
-#if MONOMAC
+// #if MONOMAC
 		Stereo=0x736d7872, // 'smxr'
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Spacial' instead.")]
 		ThreeD=0x33646d78, // '3dmx'
-#else
+// #else
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Spacial' instead.")]
 		Embedded3D=0x3364656d, // '3dem'
-#endif
+// #endif
 	}
 
 	public enum AudioTypePanner { // OSType in AudioComponentDescription

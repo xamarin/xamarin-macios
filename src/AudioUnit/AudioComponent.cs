@@ -56,13 +56,13 @@ namespace AudioUnit
 
 #if !COREBUILD
 
-#if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+// #if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#if ((WATCH || TVOS) && !NET)
+// #if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
-#endif
+// #endif
 	public partial class ResourceUsageInfo : DictionaryContainer {
 		static NSString userClientK = new NSString ("iokit.user-client");
 		static NSString globalNameK = new NSString ("mach-lookup.global-name");
@@ -220,7 +220,7 @@ namespace AudioUnit
 			}
 		}
 	}
-#endif // (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+// #endif // (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
 
 #endif // !COREBUILD
 
@@ -342,8 +342,8 @@ namespace AudioUnit
 			return Runtime.GetNSObject<UIImage> (ptr, owns: true);
 		}
 
-#if !MONOMAC
-#if !__MACCATALYST__
+// #if !MONOMAC
+// #if !__MACCATALYST__
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.TvOS, 14,0)]
@@ -357,7 +357,7 @@ namespace AudioUnit
 		{
 			return Runtime.GetNSObject<UIKit.UIImage> (AudioComponentGetIcon (Handle, desiredPointSize));
 		}
-#endif // !__MACCATALYST__
+// #endif // !__MACCATALYST__
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
@@ -376,7 +376,7 @@ namespace AudioUnit
 				return AudioComponentGetLastActiveTime (Handle);
 			}
 		}
-#else
+// #else
 		// extern NSImage * __nullable AudioComponentGetIcon (AudioComponent __nonnull comp) __attribute__((availability(macosx, introduced=10.11)));
 		[Mac (10,11)]
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
@@ -389,9 +389,9 @@ namespace AudioUnit
 		{
 			return Runtime.GetNSObject<AppKit.NSImage> (AudioComponentGetIcon (Handle));
 		}
-#endif
+// #endif
 
-#if IOS || MONOMAC
+// #if IOS || MONOMAC
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
@@ -447,7 +447,7 @@ namespace AudioUnit
 				}
 			}
 		}
-#endif
+// #endif
 
 #endif // !COREBUILD
     }
