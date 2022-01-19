@@ -82,7 +82,7 @@ namespace CoreText {
 		{
 		}
 
-#if XAMCORE_4_0
+#if NET
 		public virtual nfloat GetAscent ()
 		{
 			return 0;

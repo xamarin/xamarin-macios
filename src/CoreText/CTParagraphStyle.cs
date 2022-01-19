@@ -418,121 +418,99 @@ namespace CoreText {
 			get {return (CTWritingDirection) GetByteValue (CTParagraphStyleSpecifier.BaseWritingDirection);}
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat FirstLineHeadIndent {
 #else
-		float
+		public float FirstLineHeadIndent {
 #endif
-		FirstLineHeadIndent {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.FirstLineHeadIndent); }
 		}
 
-		unsafe
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		unsafe nfloat GetFloatValue (CTParagraphStyleSpecifier spec)
 #else
-		float
+		unsafe float GetFloatValue (CTParagraphStyleSpecifier spec)
 #endif
-		GetFloatValue (CTParagraphStyleSpecifier spec)
 		{
 			nfloat value;
 			if (!CTParagraphStyleGetValueForSpecifier (Handle, spec, (nuint) sizeof (nfloat), &value))
 				throw new InvalidOperationException ("Unable to get property value.");
-			return
-#if !XAMCORE_4_0
-			(float)
+#if NET
+			return value;
+#else
+			return (float) value;
 #endif
-			value;
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat HeadIndent {
 #else
-		float
+		public float HeadIndent {
 #endif
-		HeadIndent {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.HeadIndent); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat TailIndent {
 #else
-		float
+		public float TailIndent {
 #endif
-		TailIndent {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.TailIndent); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat DefaultTabInterval {
 #else
-		float
+		public float DefaultTabInterval {
 #endif
-		DefaultTabInterval {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.DefaultTabInterval); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat LineHeightMultiple {
 #else
-		float
+		public float LineHeightMultiple {
 #endif
-		LineHeightMultiple {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.LineHeightMultiple); }
 		}
 
-public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat MaximumLineHeight {
 #else
-		float
+		public float MaximumLineHeight {
 #endif
-		MaximumLineHeight {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.MaximumLineHeight); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat MinimumLineHeight {
 #else
-		float
+		public float MinimumLineHeight {
 #endif
-		MinimumLineHeight {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.MinimumLineHeight); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat LineSpacing {
 #else
-		float
+		public float LineSpacing {
 #endif
-		LineSpacing {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.LineSpacing); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat ParagraphSpacing {
 #else
-		float
+		public float ParagraphSpacing {
 #endif
-		ParagraphSpacing {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacing); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat ParagraphSpacingBefore {
 #else
-		float
+		public float ParagraphSpacingBefore {
 #endif
-		ParagraphSpacingBefore {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacingBefore); }
 		}
 #endregion
