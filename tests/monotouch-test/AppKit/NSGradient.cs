@@ -31,24 +31,45 @@ namespace Xamarin.Mac.Tests
 			
 			g.GetColor (out color, out location, 0);
 			color = color.UsingColorSpace (NSColorSpace.CalibratedRGB);
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (black.RedComponent.Value - color.RedComponent.Value < closeEnough);
+			Assert.IsTrue (black.BlueComponent.Value - color.BlueComponent.Value < closeEnough);
+			Assert.IsTrue (black.GreenComponent.Value - color.GreenComponent.Value < closeEnough);
+			Assert.AreEqual (0.0f, (float)location.Value);
+#else
 			Assert.IsTrue (black.RedComponent - color.RedComponent < closeEnough);
 			Assert.IsTrue (black.BlueComponent - color.BlueComponent < closeEnough);
 			Assert.IsTrue (black.GreenComponent - color.GreenComponent < closeEnough);
 			Assert.AreEqual (0.0f, (float)location);
+#endif
 
 			g.GetColor (out color, out location, 1);
 			color = color.UsingColorSpace (NSColorSpace.CalibratedRGB);
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (white.RedComponent.Value - color.RedComponent.Value < closeEnough);
+			Assert.IsTrue (white.BlueComponent.Value - color.BlueComponent.Value < closeEnough);
+			Assert.IsTrue (white.GreenComponent.Value - color.GreenComponent.Value < closeEnough);
+			Assert.AreEqual (0.5f, (float)location.Value);
+#else
 			Assert.IsTrue (white.RedComponent - color.RedComponent < closeEnough);
 			Assert.IsTrue (white.BlueComponent - color.BlueComponent < closeEnough);
 			Assert.IsTrue (white.GreenComponent - color.GreenComponent < closeEnough);
 			Assert.AreEqual (0.5f, (float)location);
+#endif
 
 			g.GetColor (out color, out location, 2);
 			color = color.UsingColorSpace (NSColorSpace.CalibratedRGB);
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (black.RedComponent.Value - color.RedComponent.Value < closeEnough);
+			Assert.IsTrue (black.BlueComponent.Value - color.BlueComponent.Value < closeEnough);
+			Assert.IsTrue (black.GreenComponent.Value - color.GreenComponent.Value < closeEnough);
+			Assert.AreEqual (1.0f, (float)location.Value);
+#else
 			Assert.IsTrue (black.RedComponent - color.RedComponent < closeEnough);
 			Assert.IsTrue (black.BlueComponent - color.BlueComponent < closeEnough);
 			Assert.IsTrue (black.GreenComponent - color.GreenComponent < closeEnough);
 			Assert.AreEqual (1.0f, (float)location);
+#endif
 		}
 	}
 }

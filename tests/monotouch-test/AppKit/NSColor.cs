@@ -19,9 +19,15 @@ namespace Xamarin.Mac.Tests
 			NSColor c = NSColor.Blue;
 			nfloat [] components;
 			c.GetComponents (out components);
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (0f == components[0].Value, "Red");
+			Assert.IsTrue (0f == components[1].Value, "Green");
+			Assert.IsTrue (1f == components[2].Value, "Blue");
+#else
 			Assert.IsTrue (0f == components[0], "Red");
 			Assert.IsTrue (0f == components[1], "Green");
 			Assert.IsTrue (1f == components[2], "Blue");
+#endif
 		}
 
 		[Test]

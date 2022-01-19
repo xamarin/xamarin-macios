@@ -1,5 +1,7 @@
 #if __MACOS__
 using System;
+using System.Runtime.InteropServices;
+
 using NUnit.Framework;
 
 using Foundation;
@@ -32,7 +34,11 @@ namespace apitest
 		[Test]
 		public void NSFormatter_ShouldGetAttributedString ()
 		{
+#if NO_NFLOAT_OPERATORS
+			var str = formatter.GetAttributedString (NSNumber.FromFloat (3.21f), new NSStringAttributes () { Font = NSFont.SystemFontOfSize (new NFloat (8)) });
+#else
 			var str = formatter.GetAttributedString (NSNumber.FromFloat (3.21f), new NSStringAttributes () { Font = NSFont.SystemFontOfSize (8) });
+#endif
 		
 			Assert.AreEqual (str.Value, "$3.21");
 		}

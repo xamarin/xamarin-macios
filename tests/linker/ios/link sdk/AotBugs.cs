@@ -584,6 +584,7 @@ namespace LinkSdk.Aot {
 			Assert.That (c.Count, Is.EqualTo (1));
 		}
 
+#if !NO_NFLOAT_OPERATORS
 		[Test]
 		public void Bug39443 ()
 		{
@@ -595,6 +596,7 @@ namespace LinkSdk.Aot {
 				Assert.That (double.Epsilon.ToString (), Is.EqualTo (nfe), "Epsilon");
 			}
 		}
+#endif
 
 		// The first character of this class is a cyrillic c, not a latin c.
 		[Preserve (AllMembers = true)]

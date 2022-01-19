@@ -12,6 +12,8 @@
 #nullable enable
 
 using System;
+using System.Runtime.InteropServices;
+
 using CoreAnimation;
 using Foundation;
 using SceneKit;
@@ -19,14 +21,14 @@ using OpenTK;
 
 using NUnit.Framework;
 
-#if __MACOS__
-#if NET
-using pfloat = System.Runtime.InteropServices.NFloat;
-#else
-using pfloat = System.nfloat;
+#if !MONOMAC
+#define PFLOAT_SINGLE
 #endif
-#else
+
+#if PFLOAT_SINGLE
 using pfloat = System.Single;
+#else
+using pfloat = System.Runtime.InteropServices.NFloat;
 #endif
 
 namespace MonoTouchFixtures.SceneKit {
@@ -34,6 +36,21 @@ namespace MonoTouchFixtures.SceneKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SCNMatrix4Test {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+		static NFloat OneThird = new NFloat (1.0 / 3.0);
+		static NFloat OneFifteenth = new NFloat (1.0 / 15.0);
+		static NFloat TwoThirds = new NFloat (2.0 / 3.0);
+		static NFloat TwoFifteenths = new NFloat (2.0 / 15.0); // 0.1333333333..
+		static NFloat SqrtTwo = new NFloat (Math.Sqrt (2));
+		static NFloat SqrtTwoHalved = new NFloat (Math.Sqrt (2) / 2);
+		static NFloat SqrtThree = new NFloat (Math.Sqrt (3));
+		static NFloat SqrtThreeHalved = new NFloat (Math.Sqrt (3) / 2);
+		static NFloat SqrtThreeInverted = new NFloat (1 / Math.Sqrt (3));
+		static NFloat SqrtSix = new NFloat (Math.Sqrt (6));
+		static NFloat SqrtSixInverted = new NFloat  (1 / Math.Sqrt (6));
+		static NFloat SqrtTwelve = new NFloat (Math.Sqrt (12)); // 3.464102
+		static NFloat OhPointFive = new NFloat (0.5);
+#else
 		static pfloat OneThird = (pfloat) (1.0 / 3.0);
 		static pfloat OneFifteenth = (pfloat) (1.0 / 15.0);
 		static pfloat TwoThirds = (pfloat) (2.0 / 3.0);
@@ -47,6 +64,14 @@ namespace MonoTouchFixtures.SceneKit {
 		static pfloat SqrtSixInverted = (pfloat)  (1 / Math.Sqrt (6));
 		static pfloat SqrtTwelve = (pfloat) (Math.Sqrt (12)); // 3.464102
 		static pfloat OhPointFive = (pfloat) 0.5;
+#endif
+
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+		public static bool CloseEnough (NFloat a, NFloat b, double epsilon = 0.00001)
+		{
+			return CloseEnough (a.Value, b.Value, epsilon);
+		}
+#endif
 
 		public static bool CloseEnough (double a, double b, double epsilon = 0.00001)
 		{
@@ -64,6 +89,50 @@ namespace MonoTouchFixtures.SceneKit {
 			} else { // use relative error
 				return diff / (absA + absB) < epsilon;
 			}
+		}
+
+		void AssertEqual (SCNMatrix4 matrix, string message,
+			int m11, int m12, int m13, int m14,
+			int m21, int m22, int m23, int m24,
+			int m31, int m32, int m33, int m34,
+			int m41, int m42, int m43, int m44
+		)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			AssertEqual (matrix, message,
+				new NFloat (m11), new NFloat (m12), new NFloat (m13), new NFloat (m14),
+				new NFloat (m21), new NFloat (m22), new NFloat (m23), new NFloat (m24),
+				new NFloat (m31), new NFloat (m32), new NFloat (m33), new NFloat (m34),
+				new NFloat (m41), new NFloat (m42), new NFloat (m43), new NFloat (m44));
+#else
+			AssertEqual (matrix, message,
+				(pfloat) m11, (pfloat) m12, (pfloat) m13, (pfloat) m14,
+				(pfloat) m21, (pfloat) m22, (pfloat) m23, (pfloat) m24,
+				(pfloat) m31, (pfloat) m32, (pfloat) m33, (pfloat) m34,
+				(pfloat) m41, (pfloat) m42, (pfloat) m43, (pfloat) m44);
+#endif
+		}
+
+		void AssertEqual (SCNMatrix4 matrix, string message,
+			double m11, double m12, double m13, double m14,
+			double m21, double m22, double m23, double m24,
+			double m31, double m32, double m33, double m34,
+			double m41, double m42, double m43, double m44
+		)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			AssertEqual (matrix, message,
+				new NFloat (m11), new NFloat (m12), new NFloat (m13), new NFloat (m14),
+				new NFloat (m21), new NFloat (m22), new NFloat (m23), new NFloat (m24),
+				new NFloat (m31), new NFloat (m32), new NFloat (m33), new NFloat (m34),
+				new NFloat (m41), new NFloat (m42), new NFloat (m43), new NFloat (m44));
+#else
+			AssertEqual (matrix, message,
+				(pfloat) m11, (pfloat) m12, (pfloat) m13, (pfloat) m14,
+				(pfloat) m21, (pfloat) m22, (pfloat) m23, (pfloat) m24,
+				(pfloat) m31, (pfloat) m32, (pfloat) m33, (pfloat) m34,
+				(pfloat) m41, (pfloat) m42, (pfloat) m43, (pfloat) m44);
+#endif
 		}
 
 		void AssertEqual (SCNMatrix4 matrix, string message,
@@ -91,13 +160,26 @@ namespace MonoTouchFixtures.SceneKit {
 
 		void AssertEqual (SCNVector4 vector, string message, pfloat m1, pfloat m2, pfloat m3, pfloat m4)
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			if (m1.Value == vector.X.Value && m2.Value == vector.Y.Value && m3.Value == vector.Z.Value && m4.Value == vector.W.Value)
+#else
 			if (m1 == vector.X && m2 == vector.Y && m3 == vector.Z && m4 == vector.W)
+#endif
 				return;
 
 			var expectedString = vector.ToString ();
 			var actualString = $"({m1}, {m2}, {m3}, {m4})";
 
 			Assert.Fail ($"Expected vector:\n{expectedString}\nActual vector:\n{actualString}\n{message}");
+		}
+
+		void AssertEqual (SCNVector4 vector, string message, double m1, double m2, double m3, double m4)
+		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			AssertEqual (vector, message, new NFloat (m1), new NFloat (m2), new NFloat (m3), new NFloat (m4));
+#else
+			AssertEqual (vector, message, (pfloat) m1, (pfloat) m2, (pfloat) m3, (pfloat) m4);
+#endif
 		}
 
 		[Test]
@@ -146,6 +228,24 @@ namespace MonoTouchFixtures.SceneKit {
 		public void Constructor_CATransform3d ()
 		{
 			var transform = new CATransform3D () {
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				M11 = new NFloat (11),
+				M12 = new NFloat (12),
+				M13 = new NFloat (13),
+				M14 = new NFloat (14),
+				M21 = new NFloat (21),
+				M22 = new NFloat (22),
+				M23 = new NFloat (23),
+				M24 = new NFloat (24),
+				M31 = new NFloat (31),
+				M32 = new NFloat (32),
+				M33 = new NFloat (33),
+				M34 = new NFloat (34),
+				M41 = new NFloat (41),
+				M42 = new NFloat (42),
+				M43 = new NFloat (43),
+				M44 = new NFloat (44),
+#else
 				M11 = 11,
 				M12 = 12,
 				M13 = 13,
@@ -162,6 +262,7 @@ namespace MonoTouchFixtures.SceneKit {
 				M42 = 42,
 				M43 = 43,
 				M44 = 44,
+#endif
 			};
 			var matrix = new SCNMatrix4 (transform);
 			AssertEqual (matrix, "Constructor",
@@ -180,7 +281,11 @@ namespace MonoTouchFixtures.SceneKit {
 				5, 3, 5, 8,
 				9, 6, 4, 2,
 				4, 6, 9, 8);
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			Assert.AreEqual (new NFloat (-165), matrix.Determinant, "Determinant");
+#else
 			Assert.AreEqual ((pfloat) (-165), matrix.Determinant, "Determinant");
+#endif
 		}
 
 
@@ -206,6 +311,24 @@ namespace MonoTouchFixtures.SceneKit {
 				21, 22, 23, 24,
 				31, 32, 33, 34,
 				41, 42, 43, 44);
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			Assert.AreEqual (new NFloat (11), matrix.M11, "M11");
+			Assert.AreEqual (new NFloat (12), matrix.M12, "M12");
+			Assert.AreEqual (new NFloat (13), matrix.M13, "M13");
+			Assert.AreEqual (new NFloat (14), matrix.M14, "M14");
+			Assert.AreEqual (new NFloat (21), matrix.M21, "M21");
+			Assert.AreEqual (new NFloat (22), matrix.M22, "M22");
+			Assert.AreEqual (new NFloat (23), matrix.M23, "M23");
+			Assert.AreEqual (new NFloat (24), matrix.M24, "M24");
+			Assert.AreEqual (new NFloat (31), matrix.M31, "M31");
+			Assert.AreEqual (new NFloat (32), matrix.M32, "M32");
+			Assert.AreEqual (new NFloat (33), matrix.M33, "M33");
+			Assert.AreEqual (new NFloat (34), matrix.M34, "M34");
+			Assert.AreEqual (new NFloat (41), matrix.M41, "M41");
+			Assert.AreEqual (new NFloat (42), matrix.M42, "M42");
+			Assert.AreEqual (new NFloat (43), matrix.M43, "M43");
+			Assert.AreEqual (new NFloat (44), matrix.M44, "M44");
+#else
 			Assert.AreEqual ((pfloat) 11, matrix.M11, "M11");
 			Assert.AreEqual ((pfloat) 12, matrix.M12, "M12");
 			Assert.AreEqual ((pfloat) 13, matrix.M13, "M13");
@@ -222,6 +345,7 @@ namespace MonoTouchFixtures.SceneKit {
 			Assert.AreEqual ((pfloat) 42, matrix.M42, "M42");
 			Assert.AreEqual ((pfloat) 43, matrix.M43, "M43");
 			Assert.AreEqual ((pfloat) 44, matrix.M44, "M44");
+#endif
 		}
 
 #if NET // The legacy Invert implementation seems very wrong, so only verify .NET behavior
@@ -244,10 +368,17 @@ namespace MonoTouchFixtures.SceneKit {
 			matrix.Invert ();
 
 			AssertEqual (matrix, "Invert",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				new NFloat (-0.6181818181818182), new NFloat (0.3151515151515151), new NFloat (-0.030303030303030304), new NFloat (0.3878787878787879),
+				new NFloat (1.6363636363636365), new NFloat (-0.696969696969697), new NFloat (0.3939393939393939), new NFloat (-1.2424242424242424),
+				new NFloat (-1.3818181818181818), new NFloat (0.3515151515151515), new NFloat (-0.30303030303030304), new NFloat (1.2787878787878788),
+				new NFloat (0.6363636363636364), new NFloat (-0.030303030303030304), new NFloat (0.06060606060606061), new NFloat (-0.5757575757575758));
+#else
 				(pfloat) (-0.6181818181818182), (pfloat) (0.3151515151515151), (pfloat) (-0.030303030303030304), (pfloat) (0.3878787878787879),
 				(pfloat) (1.6363636363636365), (pfloat) (-0.696969696969697), (pfloat) (0.3939393939393939), (pfloat) (-1.2424242424242424),
 				(pfloat) (-1.3818181818181818), (pfloat) (0.3515151515151515), (pfloat) (-0.30303030303030304), (pfloat) (1.2787878787878788),
 				(pfloat) (0.6363636363636364), (pfloat) (-0.030303030303030304), (pfloat) (0.06060606060606061), (pfloat) (-0.5757575757575758));
+#endif
 		}
 #endif
 
@@ -301,12 +432,23 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void CreateFromAxisAngle_pfloat_Out ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			SCNMatrix4.CreateFromAxisAngle (new SCNVector3 (2, 2, 2), new NFloat (Math.PI / 3), out var matrix);
+#else
 			SCNMatrix4.CreateFromAxisAngle (new SCNVector3 (2, 2, 2), (pfloat) (Math.PI / 3), out var matrix);
+#endif
 			AssertEqual (matrix, "CreateFromAxisAngle",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				TwoThirds, TwoThirds, new NFloat (-OneThird.Value), new NFloat (0),
+				new NFloat (-OneThird.Value), TwoThirds, TwoThirds, new NFloat (0),
+				TwoThirds, new NFloat (-OneThird.Value), TwoThirds, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				TwoThirds, TwoThirds, -OneThird, 0,
 				-OneThird, TwoThirds, TwoThirds, 0,
 				TwoThirds, -OneThird, TwoThirds, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
@@ -314,10 +456,17 @@ namespace MonoTouchFixtures.SceneKit {
 		{
 			SCNMatrix4.CreateFromAxisAngle (new Vector3 (2, 2, 2), (float) (Math.PI / 3), out var matrix);
 			AssertEqual (matrix, "CreateFromAxisAngle",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				TwoThirds, TwoThirds, new NFloat (-OneThird.Value), new NFloat (0),
+				new NFloat (-OneThird.Value), TwoThirds, TwoThirds, new NFloat (0),
+				TwoThirds, new NFloat (-OneThird.Value), TwoThirds, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				TwoThirds, TwoThirds, -OneThird, 0,
 				-OneThird, TwoThirds, TwoThirds, 0,
 				TwoThirds, -OneThird, TwoThirds, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
@@ -325,87 +474,171 @@ namespace MonoTouchFixtures.SceneKit {
 		{
 			SCNMatrix4.CreateFromAxisAngle (new Vector3d (2, 2, 2), (double) (Math.PI / 3), out var matrix);
 			AssertEqual (matrix, "CreateFromAxisAngle",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				TwoThirds, TwoThirds, new NFloat (-OneThird.Value), new NFloat (0),
+				new NFloat (-OneThird.Value), TwoThirds, TwoThirds, new NFloat (0),
+				TwoThirds, new NFloat (-OneThird.Value), TwoThirds, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				TwoThirds, TwoThirds, -OneThird, 0,
 				-OneThird, TwoThirds, TwoThirds, 0,
 				TwoThirds, -OneThird, TwoThirds, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
 		public void CreateFromAxisAngle ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var matrix = SCNMatrix4.CreateFromAxisAngle (new SCNVector3 (2, 2, 2), new NFloat (Math.PI / 3));
+#else
 			var matrix = SCNMatrix4.CreateFromAxisAngle (new SCNVector3 (2, 2, 2), (pfloat) (Math.PI / 3));
+#endif
 			AssertEqual (matrix, "CreateFromAxisAngle",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				TwoThirds, TwoThirds, new NFloat (-OneThird.Value), new NFloat (0),
+				new NFloat (-OneThird.Value), TwoThirds, TwoThirds, new NFloat (0),
+				TwoThirds, new NFloat (-OneThird.Value), TwoThirds, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				TwoThirds, TwoThirds, -OneThird, 0,
 				-OneThird, TwoThirds, TwoThirds, 0,
 				TwoThirds, -OneThird, TwoThirds, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
 		public void CreateRotationX_Out ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			SCNMatrix4.CreateRotationX (new NFloat (Math.PI / 3), out var matrix);
+#else
 			SCNMatrix4.CreateRotationX ((pfloat) (Math.PI / 3), out var matrix);
+#endif
 			AssertEqual (matrix, "CreateRotationX",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				new NFloat (1), new NFloat (0), new NFloat (0), new NFloat (0),
+				new NFloat (0), OhPointFive, SqrtThreeHalved, new NFloat (0),
+				new NFloat (0), new NFloat (-SqrtThreeHalved.Value), OhPointFive, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				1, 0, 0, 0,
 				0, OhPointFive, SqrtThreeHalved, 0,
 				0, -SqrtThreeHalved, OhPointFive, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
 		public void CreateRotationX ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var matrix = SCNMatrix4.CreateRotationX (new NFloat (Math.PI / 3));
+#else
 			var matrix = SCNMatrix4.CreateRotationX ((pfloat) (Math.PI / 3));
+#endif
 			AssertEqual (matrix, "CreateRotationX",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				new NFloat (1), new NFloat (0), new NFloat (0), new NFloat (0),
+				new NFloat (0), OhPointFive, SqrtThreeHalved, new NFloat (0),
+				new NFloat (0), new NFloat (-SqrtThreeHalved.Value), OhPointFive, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				1, 0, 0, 0,
 				0, OhPointFive, SqrtThreeHalved, 0,
 				0, -SqrtThreeHalved, OhPointFive, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
 		public void CreateRotationY_Out ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			SCNMatrix4.CreateRotationY (new NFloat (Math.PI / 3), out var matrix);
+#else
 			SCNMatrix4.CreateRotationY ((pfloat) (Math.PI / 3), out var matrix);
+#endif
 			AssertEqual (matrix, "CreateRotationY",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				OhPointFive, new NFloat (0), new NFloat (-SqrtThreeHalved.Value), new NFloat (0),
+				new NFloat (0), new NFloat (1), new NFloat (0), new NFloat (0),
+				SqrtThreeHalved, new NFloat (0), OhPointFive, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				OhPointFive, 0, -SqrtThreeHalved, 0,
 				0, 1, 0, 0,
 				SqrtThreeHalved, 0, OhPointFive, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
 		public void CreateRotationY ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var matrix = SCNMatrix4.CreateRotationY (new NFloat (Math.PI / 3));
+#else
 			var matrix = SCNMatrix4.CreateRotationY ((pfloat) (Math.PI / 3));
+#endif
 			AssertEqual (matrix, "CreateRotationY",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				OhPointFive, new NFloat (0), new NFloat (-SqrtThreeHalved.Value), new NFloat (0),
+				new NFloat (0), new NFloat (1), new NFloat (0), new NFloat (0),
+				SqrtThreeHalved, new NFloat (0), OhPointFive, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				OhPointFive, 0, -SqrtThreeHalved, 0,
 				0, 1, 0, 0,
 				SqrtThreeHalved, 0, OhPointFive, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
 		public void CreateRotationZ_Out ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			SCNMatrix4.CreateRotationZ (new NFloat (Math.PI / 3), out var matrix);
+#else
 			SCNMatrix4.CreateRotationZ ((pfloat) (Math.PI / 3), out var matrix);
+#endif
 			AssertEqual (matrix, "CreateRotationZ",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				OhPointFive, SqrtThreeHalved, new NFloat (0), new NFloat (0),
+				new NFloat (-SqrtThreeHalved.Value), OhPointFive, new NFloat (0), new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (1), new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				OhPointFive, SqrtThreeHalved, 0, 0,
 				-SqrtThreeHalved, OhPointFive, 0, 0,
 				0, 0, 1, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
 		public void CreateRotationZ ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var matrix = SCNMatrix4.CreateRotationZ (new NFloat (Math.PI / 3));
+#else
 			var matrix = SCNMatrix4.CreateRotationZ ((pfloat) (Math.PI / 3));
+#endif
 			AssertEqual (matrix, "CreateRotationZ",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				OhPointFive, SqrtThreeHalved, new NFloat (0), new NFloat (0),
+				new NFloat (-SqrtThreeHalved.Value), OhPointFive, new NFloat (0), new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (1), new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				OhPointFive, SqrtThreeHalved, 0, 0,
 				-SqrtThreeHalved, OhPointFive, 0, 0,
 				0, 0, 1, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
@@ -501,23 +734,45 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void CreatePerspectiveFieldOfView_Out ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			SCNMatrix4.CreatePerspectiveFieldOfView (new NFloat (Math.PI / 3), new NFloat (2), new NFloat (3), new NFloat (4), out var matrix);
+#else
 			SCNMatrix4.CreatePerspectiveFieldOfView ((pfloat) (Math.PI / 3), 2, 3, 4, out var matrix);
+#endif
 			AssertEqual (matrix, "CreatePerspectiveFieldOfView",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				SqrtThreeHalved, new NFloat (0), new NFloat (0), new NFloat (0),
+				new NFloat (0), SqrtThree, new NFloat (0), new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (-7), new NFloat (-1),
+				new NFloat (0), new NFloat (0), new NFloat (-24), new NFloat (0));
+#else
 				SqrtThreeHalved, 0, 0, 0,
 				0, SqrtThree, 0, 0,
 				0, 0, -7, -1,
 				0, 0, -24, 0);
+#endif
 		}
 
 		[Test]
 		public void CreatePerspectiveFieldOfView ()
 		{
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+			var matrix = SCNMatrix4.CreatePerspectiveFieldOfView (new NFloat (Math.PI / 3), new NFloat (2), new NFloat (3), new NFloat (4));
+#else
 			var matrix = SCNMatrix4.CreatePerspectiveFieldOfView ((pfloat) (Math.PI / 3), 2, 3, 4);
+#endif
 			AssertEqual (matrix, "CreatePerspectiveFieldOfView",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				SqrtThreeHalved, new NFloat (0), new NFloat (0), new NFloat (0),
+				new NFloat (0), SqrtThree, new NFloat (0), new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (-7), new NFloat (-1),
+				new NFloat (0), new NFloat (0), new NFloat (-24), new NFloat (0));
+#else
 				SqrtThreeHalved, 0, 0, 0,
 				0, SqrtThree, 0, 0,
 				0, 0, -7, -1,
 				0, 0, -24, 0);
+#endif
 		}
 
 		[Test]
@@ -581,10 +836,17 @@ namespace MonoTouchFixtures.SceneKit {
 			var quaternion = new Quaternion (1, 2, 3, 4);
 			var matrix = SCNMatrix4.Rotate (quaternion);
 			AssertEqual (matrix, "Rotate",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				TwoFifteenths, new NFloat (7 * TwoFifteenths.Value), new NFloat (-OneThird.Value), new NFloat (0),
+				new NFloat (-TwoThirds.Value), OneThird, TwoThirds, new NFloat (0),
+				new NFloat (11 * OneFifteenth.Value), TwoFifteenths, TwoThirds, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				TwoFifteenths, 7 * TwoFifteenths, -OneThird, 0,
 				-TwoThirds, OneThird, TwoThirds, 0,
 				11 * OneFifteenth, TwoFifteenths, TwoThirds, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
@@ -593,10 +855,17 @@ namespace MonoTouchFixtures.SceneKit {
 			var quaternion = new Quaterniond (1, 2, 3, 4);
 			var matrix = SCNMatrix4.Rotate (quaternion);
 			AssertEqual (matrix, "Rotate",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				TwoFifteenths, new NFloat (7 * TwoFifteenths.Value), new NFloat (-OneThird.Value), new NFloat (0),
+				new NFloat (-TwoThirds.Value), OneThird, TwoThirds, new NFloat (0),
+				new NFloat (11 * OneFifteenth.Value), TwoFifteenths, TwoThirds, new NFloat (0),
+				new NFloat (0), new NFloat (0), new NFloat (0), new NFloat (1));
+#else
 				TwoFifteenths, 7 * TwoFifteenths, -OneThird, 0,
 				-TwoThirds, OneThird, TwoThirds, 0,
 				11 * OneFifteenth, TwoFifteenths, TwoThirds, 0,
 				0, 0, 0, 1);
+#endif
 		}
 
 		[Test]
@@ -604,10 +873,17 @@ namespace MonoTouchFixtures.SceneKit {
 		{
 			var matrix = SCNMatrix4.LookAt (new SCNVector3 (1, 2, 3), new SCNVector3 (4, 5, 6), new SCNVector3 (7, 8, 9));
 			AssertEqual (matrix, "LookAt",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				SqrtSixInverted, new NFloat (-SqrtTwoHalved.Value), new NFloat (-SqrtThreeInverted.Value), new NFloat (0),
+				new NFloat (-2 * SqrtSixInverted.Value), new NFloat (0), new NFloat (-SqrtThreeInverted.Value), new NFloat (0),
+				SqrtSixInverted, SqrtTwoHalved, new NFloat (-SqrtThreeInverted.Value), new NFloat (0),
+				new NFloat (0), new NFloat (-SqrtTwo.Value), SqrtTwelve, new NFloat (1));
+#else
 				SqrtSixInverted, -SqrtTwoHalved, -SqrtThreeInverted, 0,
 				-2 * SqrtSixInverted, 0, -SqrtThreeInverted, 0,
 				SqrtSixInverted, SqrtTwoHalved, -SqrtThreeInverted, 0,
 				0, -SqrtTwo, SqrtTwelve, 1);
+#endif
 		}
 
 		[Test]
@@ -615,10 +891,17 @@ namespace MonoTouchFixtures.SceneKit {
 		{
 			var matrix = SCNMatrix4.LookAt (1, 2, 3, 4, 5, 6, 7, 8, 9);
 			AssertEqual (matrix, "LookAt",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				SqrtSixInverted, new NFloat (-SqrtTwoHalved.Value), new NFloat (-SqrtThreeInverted.Value), new NFloat (0),
+				new NFloat (-2 * SqrtSixInverted.Value), new NFloat (0), new NFloat (-SqrtThreeInverted.Value), new NFloat (0),
+				SqrtSixInverted, SqrtTwoHalved, new NFloat (-SqrtThreeInverted.Value), new NFloat (0),
+				new NFloat (0), new NFloat (-SqrtTwo.Value), SqrtTwelve, new NFloat (1));
+#else
 				SqrtSixInverted, -SqrtTwoHalved, -SqrtThreeInverted, 0,
 				-2 * SqrtSixInverted, 0, -SqrtThreeInverted, 0,
 				SqrtSixInverted, SqrtTwoHalved, -SqrtThreeInverted, 0,
 				0, -SqrtTwo, SqrtTwelve, 1);
+#endif
 		}
 
 		[Test]
@@ -684,10 +967,17 @@ namespace MonoTouchFixtures.SceneKit {
 			var matrix = SCNMatrix4.Invert (a);
 
 			AssertEqual (matrix, "Invert",
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+				new NFloat (-0.6181818181818182), new NFloat (0.3151515151515151), new NFloat (-0.030303030303030304), new NFloat (0.3878787878787879),
+				new NFloat (1.6363636363636365), new NFloat (-0.696969696969697), new NFloat (0.3939393939393939), new NFloat (-1.2424242424242424),
+				new NFloat (-1.3818181818181818), new NFloat (0.3515151515151515), new NFloat (-0.30303030303030304), new NFloat (1.2787878787878788),
+				new NFloat (0.6363636363636364), new NFloat (-0.030303030303030304), new NFloat (0.06060606060606061), new NFloat (-0.5757575757575758));
+#else
 				(pfloat) (-0.6181818181818182), (pfloat) (0.3151515151515151), (pfloat) (-0.030303030303030304), (pfloat) (0.3878787878787879),
 				(pfloat) (1.6363636363636365), (pfloat) (-0.696969696969697), (pfloat) (0.3939393939393939), (pfloat) (-1.2424242424242424),
 				(pfloat) (-1.3818181818181818), (pfloat) (0.3515151515151515), (pfloat) (-0.30303030303030304), (pfloat) (1.2787878787878788),
 				(pfloat) (0.6363636363636364), (pfloat) (-0.030303030303030304), (pfloat) (0.06060606060606061), (pfloat) (-0.5757575757575758));
+#endif
 		}
 #endif
 

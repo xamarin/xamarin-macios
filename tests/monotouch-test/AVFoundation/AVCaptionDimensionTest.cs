@@ -1,5 +1,7 @@
 #if __MACOS__
 using System;
+using System.Runtime.InteropServices;
+
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
@@ -22,7 +24,11 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void CreateTest ()
 		{
 			// create a new struct, test that we do have the expected values
+#if NO_NFLOAT_OPERATORS
+			nfloat val = new NFloat (10);
+#else
 			nfloat val = 10;
+#endif
 			var units = AVCaptionUnitsType.Cells;
 			var dimension = AVCaptionDimension.Create (val, units);
 			Assert.AreEqual (val, dimension.Value, "Value");

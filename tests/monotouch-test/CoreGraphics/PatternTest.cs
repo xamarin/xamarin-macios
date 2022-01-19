@@ -39,7 +39,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public UIImage GetRenderedPattern ()
 		{
 			var patternBounds = new CGRect (0, 0, 12, 12);
+#if NO_NFLOAT_OPERATORS
+			var bounds = new CGRect (new NFloat (0), new NFloat (0), new NFloat (patternBounds.Width.Value * patternBounds.Width.Value), new NFloat (patternBounds.Height.Value * patternBounds.Height.Value));
+#else
 			var bounds = new CGRect (0, 0, patternBounds.Width * patternBounds.Width, patternBounds.Height * patternBounds.Height);
+#endif
 #if __MACOS__
 			var img = new NSImage (bounds.Size);
 			img.LockFocus ();
@@ -64,7 +68,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 						ctx.AddLineToPoint (6, 10);
 						ctx.StrokePath ();
 					})) {
+#if NO_NFLOAT_OPERATORS
+						context.SetFillPattern (pattern, new nfloat [] { new NFloat (1) });
+#else
 						context.SetFillPattern (pattern, new nfloat [] { 1 });
+#endif
 					}
 				}
 

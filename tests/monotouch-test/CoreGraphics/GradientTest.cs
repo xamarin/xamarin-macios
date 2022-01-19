@@ -38,11 +38,19 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var g = new CGGradient (null, array)) {
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "null,CGColor[]");
 			}
+#if NO_NFLOAT_OPERATORS
+			using (var g = new CGGradient (null, array, new nfloat [3] { new NFloat (0f), new NFloat (1f), new NFloat (0.5f) })) {
+#else
 			using (var g = new CGGradient (null, array, new nfloat [3] { 0f, 1f, 0.5f })) {
+#endif
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "null,CGColor[],float[]");
 			}
 			
+#if NO_NFLOAT_OPERATORS
+			using (var g = new CGGradient (null, array, new nfloat [3] { new NFloat (0f), new NFloat (1f), new NFloat (0.5f) })) {
+#else
 			using (var g = new CGGradient (null, array, new nfloat [3] { 0f, 1f, 0.5f })) {
+#endif
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "null,CGColor[],float[]");
 			}
 		}
@@ -59,7 +67,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void Colorspaces ()
 		{
 			foreach (var cs in spaces) {
+#if NO_NFLOAT_OPERATORS
+				using (var g = new CGGradient (null, array, new nfloat [3] { new NFloat (0f), new NFloat (1f), new NFloat (0.5f) })) {
+#else
 				using (var g = new CGGradient (null, array, new nfloat [3] { 0f, 1f, 0.5f })) {
+#endif
 					Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), cs.ToString ());
 				}
 			}
@@ -67,6 +79,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef */ IntPtr CGGradientCreateWithColorComponents (/* CGColorSpaceRef */ IntPtr colorspace, /* CGFloat[] */ nfloat [] components, /* CGFloat[] */ nfloat [] locations, /* size_t */ nint count);
+
+#if NO_NFLOAT_OPERATORS
+		static IntPtr CGGradientCreateWithColorComponents (IntPtr colorspace, float[] components, float[] locations, nint count)
+		{
+			return CGGradientCreateWithColorComponents (colorspace, NFloatHelpers.ConvertArray (components), NFloatHelpers.ConvertArray (locations), count);
+		}
+#endif
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef */ IntPtr CGGradientCreateWithColors (/* CGColorSpaceRef */ IntPtr space, /* CFArrayRef */ IntPtr colors, /* CGFloat[] */ nfloat [] locations);
@@ -76,8 +95,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			// either a null CGColorSpace or a null CGFloat* array will return nil, i.e. not a valid instance
 			using (var cs = CGColorSpace.CreateDeviceGray ())
+#if NO_NFLOAT_OPERATORS
+				Assert.That (CGGradientCreateWithColorComponents (cs.Handle, (nfloat[]) null, (nfloat[]) null, 0), Is.EqualTo (IntPtr.Zero), "CGGradientCreateWithColorComponents-1");
+			Assert.That (CGGradientCreateWithColorComponents (IntPtr.Zero, new nfloat [3] { new NFloat (0f), new NFloat (1f), new NFloat (0.5f) }, null, 0), Is.EqualTo (IntPtr.Zero), "CGGradientCreateWithColorComponents-2");
+#else
 				Assert.That (CGGradientCreateWithColorComponents (cs.Handle, null, null, 0), Is.EqualTo (IntPtr.Zero), "CGGradientCreateWithColorComponents-1");
 			Assert.That (CGGradientCreateWithColorComponents (IntPtr.Zero, new nfloat [3] { 0f, 1f, 0.5f }, null, 0), Is.EqualTo (IntPtr.Zero), "CGGradientCreateWithColorComponents-2");
+#endif
 
 			// a null CFArray won't return a valid instance
 			using (var cs = CGColorSpace.CreateDeviceGray ())

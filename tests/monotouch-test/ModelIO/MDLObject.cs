@@ -10,6 +10,8 @@
 #if !__WATCHOS__
 
 using System;
+using System.Runtime.InteropServices;
+
 using CoreGraphics;
 using Foundation;
 using ModelIO;
@@ -37,7 +39,11 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void GetBoundingBox ()
 		{
+#if NO_NFLOAT_OPERATORS
+			using (var obj = MDLObject.FromNode (SCNNode.FromGeometry (SCNBox.Create (new NFloat (1), new NFloat (1), new NFloat (1), new NFloat (0))))) {
+#else
 			using (var obj = MDLObject.FromNode (SCNNode.FromGeometry (SCNBox.Create (1, 1, 1, 0)))) {
+#endif
 				var bb = obj.GetBoundingBox (0);
 			}
 		}

@@ -23,7 +23,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TrampolineTest {
+#if NO_NFLOAT_OPERATORS
+		public static readonly double pi = 3.14159f;
+#else
 		public static readonly nfloat pi = 3.14159f;
+#endif
 #if MONOMAC || __MACCATALYST__
 		public static bool IsX64 { get { return IntPtr.Size == 8 && !IsArm64CallingConvention; } }
 		public static bool IsX86 { get { return IntPtr.Size == 4; } }
@@ -182,10 +186,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		void AreAlmostEqual (CGRect left, CGRect right, string message)
 		{
 			var delta = 0.000001f;
+#if NO_NFLOAT_OPERATORS
+			Assert.AreEqual (left.X.Value, right.X.Value, delta, message);
+			Assert.AreEqual (left.Y.Value, right.Y.Value, delta, message);
+			Assert.AreEqual (left.Width.Value, right.Width.Value, delta, message);
+			Assert.AreEqual (left.Height.Value, right.Height.Value, delta, message);
+#else
 			Assert.AreEqual (left.X, right.X, delta, message);
 			Assert.AreEqual (left.Y, right.Y, delta, message);
 			Assert.AreEqual (left.Width, right.Width, delta, message);
 			Assert.AreEqual (left.Height, right.Height, delta, message);
+#endif
 		}
 
 		[Test]
@@ -212,7 +223,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				CGRect_objc_msgSend_stret_IntPtr_IntPtr_CGRect (out rect, obj.Handle, new Selector ("testCGRect_string_string_CGRect:b:c:").Handle, new NSString ("a").Handle, new NSString ("b").Handle, rect2);
 			}
+#if NO_NFLOAT_OPERATORS
+			Assert.That (rect == new CGRect (new NFloat (rect2.X.Value * pi), new NFloat (rect2.Y.Value * pi), new NFloat (rect2.Width.Value * pi), new NFloat (rect2.Height.Value * pi)), "#testCGRect_string_string_CGRect:b:c:");
+#else
 			Assert.That (rect == new CGRect (rect2.X * pi, rect2.Y * pi, rect2.Width * pi, rect2.Height * pi), "#testCGRect_string_string_CGRect:b:c:");
+#endif
 
 			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.CGRect_objc_msgSend (obj.Handle, new Selector ("testCGRect").Handle);
@@ -241,7 +256,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_IntPtr:").Handle, tmp_obj.Handle);
 			}
+#if NO_NFLOAT_OPERATORS
+			AreAlmostEqual (rect, new CGRect (new NFloat (pi + 0.4f), new NFloat (pi + 0.3f), new NFloat (pi + 0.2f), new NFloat (pi + 0.1f)), "#ret RectF-IntPtr");
+#else
 			AreAlmostEqual (rect, new CGRect (pi + 0.4f, pi + 0.3f, pi + 0.2f, pi + 0.1f), "#ret RectF-IntPtr");
+#endif
 
 #if !__TVOS__
 			mkregion = new MKCoordinateRegion (new CLLocationCoordinate2D (123.456, 345.678), new MKCoordinateSpan (987.654, 654.321));
@@ -250,7 +269,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_MKCoordinateRegion_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
 			}
+#if NO_NFLOAT_OPERATORS
+			Assert.That (rect == new CGRect (new NFloat (123.456f+pi), new NFloat (345.678f-pi), new NFloat (987.654f*pi), new NFloat (654.321f/pi)), "#testCGRect_MCCoordinateRegion_IntPtr:str:");
+#else
 			Assert.That (rect == new CGRect (123.456f+pi, 345.678f-pi, 987.654f*pi, 654.321f/pi), "#testCGRect_MCCoordinateRegion_IntPtr:str:");
+#endif
 
 			mkmaprect = new MKMapRect (111.1, 222.2, 333.3, 444.4);
 			if (IsArm64CallingConvention || IsArmv7k) {
@@ -284,7 +307,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_CGRect_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_CGRect_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
 			}
+#if NO_NFLOAT_OPERATORS
+			Assert.That (rect == new CGRect (new NFloat (5.4f*pi), new NFloat (4.3f+pi), new NFloat (3.2f-pi), new NFloat (2.1f/pi)));
+#else
 			Assert.That (rect == new CGRect (5.4f*pi, 4.3f+pi, 3.2f-pi, 2.1f/pi));
+#endif
 
 			rect2 = new CGRect (1, 2, 3, 4);
 			rect3 = new CGRect (9, 8, 7, 6);
@@ -293,7 +320,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			} else {
 				Messaging.CGRect_objc_msgSend_stret_CGRect_CGRect_float (out rect, obj.Handle, new Selector ("testCGRect_CGRect_CGRect_float:b:c:").Handle, rect2, rect3, (float) pi);
 			}
+#if NO_NFLOAT_OPERATORS
+			Assert.That (rect == new CGRect (new NFloat (1 * 9 * pi), new NFloat (2 * 8 * pi), new NFloat (3 * 7 * pi), new NFloat (4 * 6 * pi)), "#testCGRect_CGRect_CGRect_float:b:c:");
+#else
 			Assert.That (rect == new CGRect (1 * 9 * pi, 2 * 8 * pi, 3 * 7 * pi, 4 * 6 * pi), "#testCGRect_CGRect_CGRect_float:b:c:");
+#endif
 
 			rect2 = new CGRect (1, 2, 3, 4);
 			rect3 = new CGRect (9, 8, 7, 6);
@@ -326,10 +357,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.CATransform3D_objc_msgSend_stret (out catransform3d, obj.Handle, new Selector ("testCATransform3D").Handle);
 			}
 			CATransform3D res = new CATransform3D ();
+#if NO_NFLOAT_OPERATORS
+			res.M11 = new NFloat (11.1f);
+			res.M22 = new NFloat (22.2f);
+			res.M33 = new NFloat (33.3f);
+			res.M44 = new NFloat (44.4f);
+#else
 			res.M11 = 11.1f;
 			res.M22 = 22.2f;
 			res.M33 = 33.3f;
 			res.M44 = 44.4f;
+#endif
 			Assert.That (catransform3d.Equals (res), "#testCATransform3D");
 #endif // !__WATCHOS__
 			
@@ -360,8 +398,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			
 			res = bool_objc_msgSend_out_CGPoint (obj.Handle, new Selector ("Test_CGPoint:").Handle, out point);
 			Assert.That (res, "#res");
+#if NO_NFLOAT_OPERATORS
+			Assert.That (point.X, Is.EqualTo (new NFloat (3.1415f)), "#x");
+			Assert.That (point.Y, Is.EqualTo (new NFloat (0)), "#y");
+#else
 			Assert.That (point.X, Is.EqualTo ((nfloat) 3.1415f), "#x");
 			Assert.That (point.Y, Is.EqualTo ((nfloat) 0), "#y");
+#endif
 		}
 		
 		[Test]
@@ -674,7 +717,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			float pi = ParseString (str.ToString ());
 			if ((object) StringObj != (object) str)
 				return CGRect.Empty;
+#if NO_NFLOAT_OPERATORS
+			return new CGRect (new NFloat ((double)(float)a.Center.Latitude+pi), new NFloat ((double)(float)a.Center.Longitude-pi), new NFloat ((double)(float)a.Span.LatitudeDelta*pi), new NFloat ((double)(float)a.Span.LongitudeDelta/pi));
+#else
 			return new CGRect ((double)(float)a.Center.Latitude+pi, (double)(float)a.Center.Longitude-pi, (double)(float)a.Span.LatitudeDelta*pi, (double)(float)a.Span.LongitudeDelta/pi);
+#endif
 		}
 		
 		[Export ("testCGRect_MKMapRect:")]
@@ -693,7 +740,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Export ("testCGRect_CGRect_int:i:")]
 		public CGRect Test_CGRect_CGRect_int (CGRect a, int i)
 		{
+#if NO_NFLOAT_OPERATORS
+			return new CGRect (new NFloat (a.X.Value*i), new NFloat (a.Y.Value+i), new NFloat (a.Width.Value-i), new NFloat (a.Height.Value/i));
+#else
 			return new CGRect (a.X*i, a.Y+i, a.Width-i, a.Height/i);
+#endif
 		}
 		
 		[Export ("testCGRect_CGRect_IntPtr:str:")]
@@ -702,20 +753,32 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			float pi = ParseString (str.ToString ());
 			if ((object) StringObj != (object) str)
 				return CGRect.Empty;
+#if NO_NFLOAT_OPERATORS
+			return new CGRect (new NFloat (a.X.Value*pi), new NFloat (a.Y.Value+pi), new NFloat (a.Width.Value-pi), new NFloat (a.Height.Value/pi));
+#else
 			return new CGRect (a.X*pi, a.Y+pi, a.Width-pi, a.Height/pi);
+#endif
 		}
 		
 		[Export ("testCGRect_CGRect_CGRect_float:b:c:")]
 		public CGRect Test_CGRect_CGRect_CGRect_float (CGRect a, CGRect b, float c)
 		{
+#if NO_NFLOAT_OPERATORS
+			return new CGRect (new NFloat (a.X.Value*b.X.Value*c), new NFloat (a.Y.Value*b.Y.Value*c), new NFloat (a.Width.Value*b.Width.Value*c), new NFloat (a.Height.Value*b.Height.Value*c));
+#else
 			return new CGRect (a.X*b.X*c, a.Y*b.Y*c, a.Width*b.Width*c, a.Height*b.Height*c);
+#endif
 		}
 
 
 		[Export ("testCGRect_CGRect_CGRect_CGRect:b:c:")]
 		public CGRect Test_CGRect_CGRect_CGRect_CGRect (CGRect a, CGRect b, CGRect c)
 		{
+#if NO_NFLOAT_OPERATORS
+			return new CGRect (new NFloat (a.X.Value+b.X.Value+c.X.Value), new NFloat (a.Y.Value+b.Y.Value+c.Y.Value), new NFloat (a.Width.Value+b.Width.Value+c.Width.Value), new NFloat (a.Height.Value+b.Height.Value+c.Height.Value));
+#else
 			return new CGRect (a.X+b.X+c.X, a.Y+b.Y+c.Y, a.Width+b.Width+c.Width, a.Height+b.Height+c.Height);
+#endif
 		}
 
 		[Export ("testCGRect_string_string_CGRect:b:c:")]
@@ -723,7 +786,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			Assert.That (Is.Equals (a.ToString (), "a"), "#a");
 			Assert.That (Is.Equals (b.ToString (), "b"), "#b");
+#if NO_NFLOAT_OPERATORS
+			return new CGRect (new NFloat (c.X.Value * pi), new NFloat (c.Y.Value * pi), new NFloat (c.Width.Value * pi), new NFloat (c.Height.Value * pi));
+#else
 			return new CGRect (c.X * pi, c.Y * pi, c.Width * pi, c.Height * pi);
+#endif
 		}
 
 #if !__WATCHOS__
@@ -743,10 +810,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public CATransform3D Test_CATransform3D ()
 		{
 			CATransform3D res = new CATransform3D ();
+#if NO_NFLOAT_OPERATORS
+			res.M11 = new NFloat (11.1f);
+			res.M22 = new NFloat (22.2f);
+			res.M33 = new NFloat (33.3f);
+			res.M44 = new NFloat (44.4f);
+#else
 			res.M11 = 11.1f;
 			res.M22 = 22.2f;
 			res.M33 = 33.3f;
 			res.M44 = 44.4f;
+#endif
 			return res;
 		}
 #endif // !__WATCHOS__

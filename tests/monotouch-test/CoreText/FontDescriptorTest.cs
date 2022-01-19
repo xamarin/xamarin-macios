@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
+
 using Foundation;
 using CoreText;
 #if MONOMAC
@@ -39,7 +41,11 @@ namespace MonoTouchFixtures.CoreText {
 				// check that the created font match the descriptor's attributes
 				Assert.That (font.FamilyName, Is.EqualTo ("Courier"), "FamilyName");
 				Assert.That (font.FullName, Is.EqualTo ("Courier Bold"), "FullName");
+#if NO_NFLOAT_OPERATORS
+				Assert.That (font.Size, Is.EqualTo (new NFloat (16)), "Size");
+#else
 				Assert.That (font.Size, Is.EqualTo ((nfloat)16), "Size");
+#endif
 				// that changed in iOS 8.3, there's an undocumented flag + MonoSpace (make sense) + bold
 				Assert.True ((font.SymbolicTraits & CTFontSymbolicTraits.Bold) != 0, "SymbolicTraits");
 			}

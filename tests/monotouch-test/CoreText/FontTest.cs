@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
+
 using CoreGraphics;
 using CoreText;
 using Foundation;
@@ -85,7 +87,11 @@ namespace MonoTouchFixtures.CoreText {
 		public void GetGlyphsForCharacters_35048 ()
 		{
 			using (var font = CGFont.CreateWithFontName ("AppleColorEmoji"))
+#if NO_NFLOAT_OPERATORS
+			using (var ctfont = font.ToCTFont (new NFloat (10.0))) {
+#else
 			using (var ctfont = font.ToCTFont ((nfloat) 10.0)) {
+#endif
 				ushort[] gid = new ushort [2];
 				Assert.True (ctfont.GetGlyphsForCharacters ("\ud83d\ude00".ToCharArray (), gid), "GetGlyphsForCharacters");
 				Assert.That (gid [0], Is.Not.EqualTo (0), "0");
@@ -126,7 +132,11 @@ namespace MonoTouchFixtures.CoreText {
 				Assert.That (ctfont.GetGlyphName ((ushort) 65), Is.EqualTo ("asciicircum"), "1");
 
 			using (var font = CGFont.CreateWithFontName ("AppleColorEmoji"))
+#if NO_NFLOAT_OPERATORS
+			using (var ctfont = font.ToCTFont (new NFloat (10.0)))
+#else
 			using (var ctfont = font.ToCTFont ((nfloat) 10.0))
+#endif
 				Assert.Null (ctfont.GetGlyphName ('\ud83d'), "2");
 		}
 	}

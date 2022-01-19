@@ -43,8 +43,13 @@ namespace Xamarin.Mac.Tests
 		{
 			NSString input = new NSString("Hey\nHow\nYou\nDoing");
 			CGRect rect = input.BoundingRectWithSize (new CGSize (20, 30), NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading, new NSDictionary ());
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (rect.Width.Value > 0);
+			Assert.IsTrue (rect.Height.Value > 0);
+#else
 			Assert.IsTrue (rect.Width > 0);
 			Assert.IsTrue (rect.Height > 0);
+#endif
 		}
 
 		[Test]
@@ -75,8 +80,13 @@ namespace Xamarin.Mac.Tests
 			NSFont font = NSFont.FromFontName ("Arial", 40);
 			NSAttributedString str = new NSAttributedString("Hello World", font);
 			CGRect rect = str.BoundingRectWithSize (new CGSize (20, 30), NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading);
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (rect.Width.Value > 0);
+			Assert.IsTrue (rect.Height.Value > 0);
+#else
 			Assert.IsTrue (rect.Width > 0);
 			Assert.IsTrue (rect.Height > 0);
+#endif
 		}
 
 		[Test]

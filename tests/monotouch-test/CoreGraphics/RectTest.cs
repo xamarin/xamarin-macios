@@ -24,22 +24,43 @@ namespace MonoTouchFixtures.CoreGraphics
 		{
 			var rect = new CGRect (1, 2, 3, 4);
 			rect.Inflate (5, 6);
+#if NO_NFLOAT_OPERATORS
+			Assert.AreEqual (-4, (int)rect.X.Value, "x 1");
+			Assert.AreEqual (-4, (int)rect.Y.Value, "y 1");
+			Assert.AreEqual (13, (int)rect.Width.Value, "w 1");
+			Assert.AreEqual (16, (int)rect.Height.Value, "h 1");
+#else
 			Assert.AreEqual (-4, (int)rect.X, "x 1");
 			Assert.AreEqual (-4, (int)rect.Y, "y 1");
 			Assert.AreEqual (13, (int)rect.Width, "w 1");
 			Assert.AreEqual (16, (int)rect.Height, "h 1");
+#endif
 
 			rect.Inflate (new CGSize (10, 20));
+#if NO_NFLOAT_OPERATORS
+			Assert.AreEqual (-14, (int)rect.X.Value, "x 2");
+			Assert.AreEqual (-24, (int)rect.Y.Value, "y 2");
+			Assert.AreEqual (33, (int)rect.Width.Value, "w 2");
+			Assert.AreEqual (56, (int)rect.Height.Value, "h 2");
+#else
 			Assert.AreEqual (-14, (int)rect.X, "x 2");
 			Assert.AreEqual (-24, (int)rect.Y, "y 2");
 			Assert.AreEqual (33, (int)rect.Width, "w 2");
 			Assert.AreEqual (56, (int)rect.Height, "h 2");
+#endif
 
 			rect = CGRect.Inflate (rect, 5, 4);
+#if NO_NFLOAT_OPERATORS
+			Assert.AreEqual (-19, (int)rect.X.Value, "x 3");
+			Assert.AreEqual (-28, (int)rect.Y.Value, "y 3");
+			Assert.AreEqual (43, (int)rect.Width.Value, "w 3");
+			Assert.AreEqual (64, (int)rect.Height.Value, "h 3");
+#else
 			Assert.AreEqual (-19, (int)rect.X, "x 3");
 			Assert.AreEqual (-28, (int)rect.Y, "y 3");
 			Assert.AreEqual (43, (int)rect.Width, "w 3");
 			Assert.AreEqual (64, (int)rect.Height, "h 3");
+#endif
 		}
 
 		[Test]

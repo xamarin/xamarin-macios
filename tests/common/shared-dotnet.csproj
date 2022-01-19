@@ -53,11 +53,18 @@
 
 		<!-- XAMCORE_3_0 is always defined for .NET -->
 		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
+
+		<!-- define NO_NFLOAT_OPERATORS until .NET 7 -->
+		<DefineConstants>$(DefineConstants);NO_NFLOAT_OPERATORS</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="NUnitLite" Version="3.12.0" />
 		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(MSBuildThisFileDirectory)\DotNetGlobals.cs" Condition="'$(Language)' == 'C#'" />
 	</ItemGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" />

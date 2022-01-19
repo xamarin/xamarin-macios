@@ -7,6 +7,8 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+#if !NET
+
 using System;
 using System.Globalization;
 
@@ -148,3 +150,4 @@ namespace MonoTouchFixtures.System {
 		}
 	}
 }
+#endif // !NET

@@ -9,6 +9,8 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
+
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -330,9 +332,15 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void CalibratedGray ()
 		{
+#if NO_NFLOAT_OPERATORS
+			var whitepoint = new nfloat [] { new NFloat (1), new NFloat (2), new NFloat (3) };
+			var blackpoint = new nfloat [] { new NFloat (3), new NFloat (2), new NFloat (1) };
+			var gamma = new NFloat (1);
+#else
 			var whitepoint = new nfloat [] { 1, 2, 3 };
 			var blackpoint = new nfloat [] { 3, 2, 1 };
 			var gamma = (nfloat) 1;
+#endif
 
 			Assert.Throws<ArgumentNullException> (() => CGColorSpace.CreateCalibratedGray (null, blackpoint, gamma), "null whitepoint");
 			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedGray (new nfloat [0], blackpoint, gamma), "invalid whitepoint0");
@@ -353,10 +361,17 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void CalibratedRGB ()
 		{
+#if NO_NFLOAT_OPERATORS
+			var whitepoint = new nfloat [] { new NFloat (1), new NFloat (2), new NFloat (3) };
+			var blackpoint = new nfloat [] { new NFloat (3), new NFloat (2), new NFloat (1) };
+			var gamma = new nfloat [] { new NFloat (1), new NFloat (2), new NFloat (3) };
+			var matrix = new nfloat [] { new NFloat (1), new NFloat (2), new NFloat (3), new NFloat (4), new NFloat (5), new NFloat (6), new NFloat (7), new NFloat (8), new NFloat (9) };
+#else
 			var whitepoint = new nfloat [] { 1, 2, 3 };
 			var blackpoint = new nfloat [] { 3, 2, 1 };
 			var gamma = new nfloat [] { 1, 2, 3 };
 			var matrix = new nfloat [] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+#endif
 			Assert.Throws<ArgumentNullException> (() => CGColorSpace.CreateCalibratedRGB (null, blackpoint, gamma, matrix), "null whitepoint");
 			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (new nfloat [0], blackpoint, gamma, matrix), "invalid whitepoint0");
 			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (new nfloat [4], blackpoint, gamma, matrix), "invalid whitepoint4");
@@ -394,9 +409,15 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Lab ()
 		{
+#if NO_NFLOAT_OPERATORS
+			var whitepoint = new nfloat [] { new NFloat (1), new NFloat (2), new NFloat (3) };
+			var blackpoint = new nfloat [] { new NFloat (3), new NFloat (2), new NFloat (1) };
+			var range = new nfloat [] { new NFloat (1), new NFloat (2), new NFloat (3), new NFloat (4) };
+#else
 			var whitepoint = new nfloat [] { 1, 2, 3 };
 			var blackpoint = new nfloat [] { 3, 2, 1 };
 			var range = new nfloat [] { 1, 2, 3, 4 };
+#endif
 			Assert.Throws<ArgumentNullException> (() => CGColorSpace.CreateLab (null, blackpoint, range), "null whitepoint");
 			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (new nfloat [0], blackpoint, range), "invalid whitepoint0");
 			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (new nfloat [4], blackpoint, range), "invalid whitepoint4");

@@ -86,8 +86,13 @@ namespace MonoTouchFixtures.CoreImage
 					return new NSObject[] { MyImage, new NSNumber(5) };
 				case CustomerFilterType.ColorPositionKernel:
 					var dod = MyImage.Extent;
+#if NO_NFLOAT_OPERATORS
+					double radius = 0.5 * Math.Sqrt (Math.Pow (dod.Width.Value, 2) + Math.Pow (dod.Height.Value, 2));
+					CIVector centerOffset = new CIVector ((float)(dod.Size.Width.Value * .5), (float)(dod.Size.Height.Value * .5));
+#else
 					double radius = 0.5 * Math.Sqrt (Math.Pow (dod.Width, 2) + Math.Pow (dod.Height, 2));
 					CIVector centerOffset = new CIVector ((float)(dod.Size.Width * .5), (float)(dod.Size.Height * .5));
+#endif
 					return new NSObject[] { MyImage, centerOffset, new NSNumber (radius) };
 				case CustomerFilterType.NoOpWarpKernel:
 					return new NSObject[] { };

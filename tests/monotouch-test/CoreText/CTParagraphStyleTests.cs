@@ -10,6 +10,7 @@
 using System;
 using NUnit.Framework;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using Foundation;
 using CoreText;
@@ -25,6 +26,18 @@ namespace MonoTouchFixtures.CoreText {
 		public void StylePropertiesTest ()
 		{
 			var settings = new CTParagraphStyleSettings () {
+#if NO_NFLOAT_OPERATORS
+				TailIndent = new NFloat (5),
+				ParagraphSpacingBefore = new NFloat (5),
+				ParagraphSpacing = new NFloat (5),
+				LineSpacing = new NFloat (5),
+				MinimumLineHeight = new NFloat (5),
+				MaximumLineHeight = new NFloat (5),
+				LineHeightMultiple = new NFloat (5),
+				DefaultTabInterval = new NFloat (5),
+				HeadIndent = new NFloat (5),
+				FirstLineHeadIndent = new NFloat (5),
+#else
 				TailIndent = 5,
 				ParagraphSpacingBefore = 5,
 				ParagraphSpacing = 5,
@@ -35,6 +48,7 @@ namespace MonoTouchFixtures.CoreText {
 				DefaultTabInterval = 5,
 				HeadIndent = 5,
 				FirstLineHeadIndent = 5,
+#endif
 				LineBreakMode = CTLineBreakMode.TruncatingHead,
 				BaseWritingDirection = CTWritingDirection.Natural,
 				Alignment = CTTextAlignment.Justified,

@@ -1,5 +1,7 @@
 #if __MACOS__
 using System;
+using System.Runtime.InteropServices;
+
 using NUnit.Framework;
 
 using AppKit;
@@ -104,9 +106,15 @@ namespace Xamarin.Mac.Tests
 		public void NSStackViewShouldChangeSpacing ()
 		{
 			var spacing = view.Spacing;
+#if NO_NFLOAT_OPERATORS
+			view.Spacing = new NFloat (spacing.Value + 3);
+
+			Assert.IsFalse (view.Spacing.Value == spacing.Value, "NSStackViewShouldChangeSpacing - Failed to change Spacing property");
+#else
 			view.Spacing = spacing + 3;
 
 			Assert.IsFalse (view.Spacing == spacing, "NSStackViewShouldChangeSpacing - Failed to change Spacing property");
+#endif
 		}
 
 		[Test]
@@ -115,10 +123,17 @@ namespace Xamarin.Mac.Tests
 			var edgeInsets = view.EdgeInsets;
 			view.EdgeInsets = new NSEdgeInsets (20, 20, 20, 20);
 
+#if NO_NFLOAT_OPERATORS
+			Assert.IsFalse (view.EdgeInsets.Left.Value == edgeInsets.Left.Value, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
+			Assert.IsFalse (view.EdgeInsets.Right.Value == edgeInsets.Right.Value, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
+			Assert.IsFalse (view.EdgeInsets.Top.Value == edgeInsets.Top.Value, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
+			Assert.IsFalse (view.EdgeInsets.Bottom.Value == edgeInsets.Bottom.Value, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
+#else
 			Assert.IsFalse (view.EdgeInsets.Left == edgeInsets.Left, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
 			Assert.IsFalse (view.EdgeInsets.Right == edgeInsets.Right, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
 			Assert.IsFalse (view.EdgeInsets.Top == edgeInsets.Top, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
 			Assert.IsFalse (view.EdgeInsets.Bottom == edgeInsets.Bottom, "NSStackViewShouldChangeEdgeInsets - Failed to change EdgeInsets property");
+#endif
 		}
 
 		[Test]
@@ -168,7 +183,11 @@ namespace Xamarin.Mac.Tests
 			var customSpacing = view.CustomSpacingAfterView (first);
 			view.SetCustomSpacing (10, first);
 
+#if NO_NFLOAT_OPERATORS
+			Assert.IsFalse (view.CustomSpacingAfterView (first).Value == customSpacing.Value, 
+#else
 			Assert.IsFalse (view.CustomSpacingAfterView (first) == customSpacing, 
+#endif
 				"NSStackViewShouldChangeCustomSpacing - Failed to set CustomSpacing");
 		}
 

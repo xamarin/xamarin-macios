@@ -11,6 +11,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 using Foundation;
 #if MONOMAC
@@ -87,7 +88,11 @@ namespace MonoTouchFixtures.CoreImage {
 					success = false;
 #endif
 				if (success) {
+#if NO_NFLOAT_OPERATORS
+					Assert.That (h.Extent.Height, Is.EqualTo (new NFloat (1)), "Height");
+#else
 					Assert.That (h.Extent.Height, Is.EqualTo ((nfloat)1), "Height");
+#endif
 				} else {
 					Assert.IsNull (h, "Image");
 				}

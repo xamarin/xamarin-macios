@@ -664,8 +664,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var pnt1 = new CGPoint (123, 456);
 				PointF pnt2 = new CGPoint ();
 				void_objc_msgSend_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("testCGPoint:out:"), pnt1, ref pnt2);
+#if NO_NFLOAT_OPERATORS
+				Assert.AreEqual (new NFloat (123), pnt2.X, "X");
+				Assert.AreEqual (new NFloat (456), pnt2.Y, "Y");
+#else
 				Assert.AreEqual ((nfloat) 123, pnt2.X, "X");
 				Assert.AreEqual ((nfloat) 456, pnt2.Y, "Y");
+#endif
 			}
 		}
 

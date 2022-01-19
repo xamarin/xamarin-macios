@@ -95,13 +95,21 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldGetFractionofDistanceThroughGlyph ()
 		{
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (textView.GetFractionOfDistanceThroughGlyph (new CGPoint (1, 2)).Value == 0, "NSTextInputClient_ShouldGetFractionofDistanceThroughGlyph - Returned wrong fraaction value");
+#else
 			Assert.IsTrue (textView.GetFractionOfDistanceThroughGlyph (new CGPoint (1, 2)) == 0, "NSTextInputClient_ShouldGetFractionofDistanceThroughGlyph - Returned wrong fraaction value");
+#endif
 		}
 
 		[Test]
 		public void NSTextInputClient_ShouldGetBaselineDelta ()
 		{
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (textView.GetBaselineDelta (4).Value == 11, "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
+#else
 			Assert.IsTrue (textView.GetBaselineDelta (4) == 11, "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
+#endif
 		}
 
 		[Test]

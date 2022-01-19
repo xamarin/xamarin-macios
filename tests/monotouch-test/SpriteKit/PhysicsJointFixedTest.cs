@@ -11,6 +11,8 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
+
 using CoreGraphics;
 using Foundation;
 using SpriteKit;
@@ -28,8 +30,13 @@ namespace MonoTouchFixtures.SpriteKit {
 			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var s = new SKScene (new CGSize (320, 240)))
+#if NO_NFLOAT_OPERATORS
+			using (var b1 = SKPhysicsBody.CreateCircularBody (new NFloat (1.0f)))
+			using (var b2 = SKPhysicsBody.CreateCircularBody (new NFloat (2.0f))) {
+#else
 			using (var b1 = SKPhysicsBody.CreateCircularBody (1.0f))
 			using (var b2 = SKPhysicsBody.CreateCircularBody (2.0f)) {
+#endif
 				// according to Apple docs we should not create this joint before adding it to a scene
 				// <quote>The body must be connected to a node that is already part of the scene’s node tree.</quote>
 				// Note that doing the same for a `SKPhysicsJointLimit` does crash

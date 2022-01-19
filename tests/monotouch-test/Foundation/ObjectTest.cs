@@ -10,6 +10,7 @@
 using System;
 using System.Drawing;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 using Foundation;
@@ -78,7 +79,11 @@ namespace MonoTouchFixtures.Foundation {
 			using (CGPath p = CGPath.FromRect (new CGRect (1, 2, 3, 4))) {
 				Assert.IsNotNull (NSObject.FromObject (p), "CGPath");
 			}
+#if NO_NFLOAT_OPERATORS
+			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { new NFloat (0.1f), new NFloat (0.2f), new NFloat (0.3f), new NFloat (1.0f) })) {
+#else
 			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { 0.1f, 0.2f, 0.3f, 1.0f })) {
+#endif
 				Assert.IsNotNull (NSObject.FromObject (c), "CGColor");
 			}
 			var hasSecAccessControl = TestRuntime.CheckXcodeVersion (6, 0);
@@ -99,7 +104,11 @@ namespace MonoTouchFixtures.Foundation {
 			using (CGPath p = CGPath.FromRect (new CGRect (1, 2, 3, 4))) {
 				Assert.IsNotNull (NSObject.FromObject (p.Handle), "CGPath");
 			}
+#if NO_NFLOAT_OPERATORS
+			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { new NFloat (0.1f), new NFloat (0.2f), new NFloat (0.3f), new NFloat (1.0f) })) {
+#else
 			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { 0.1f, 0.2f, 0.3f, 1.0f })) {
+#endif
 				Assert.IsNotNull (NSObject.FromObject (c.Handle), "CGColor");
 			}
 		}
@@ -114,7 +123,11 @@ namespace MonoTouchFixtures.Foundation {
 			using (var nativeuint = (NSNumber) NSObject.FromObject ((nuint)42)) {
 				Assert.That (nativeuint.UInt32Value, Is.EqualTo (42), "nuint");
 			}
+#if NO_NFLOAT_OPERATORS
+			using (var nativefloat = (NSNumber) NSObject.FromObject (new NFloat (3.14))) {
+#else
 			using (var nativefloat = (NSNumber) NSObject.FromObject ((nfloat)3.14)) {
+#endif
 				Assert.That (nativefloat.FloatValue, Is.EqualTo (3.14f), "nfloat");
 			}
 		}

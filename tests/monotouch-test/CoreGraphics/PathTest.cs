@@ -38,8 +38,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			var identity = CGAffineTransform.MakeIdentity ();
 			using (var path = CGPath.EllipseFromRect (CGRect.Empty, identity)) {
+#if NO_NFLOAT_OPERATORS
+				var lengths = new nfloat[] { new NFloat (10), new NFloat (10) };
+				var phase = new NFloat (2);
+#else
 				var lengths = new nfloat[] { 10, 10 };
 				var phase = 2;
+#endif
 				using (var d1 = path.CopyByDashingPath (lengths)) {
 					Assert.That (d1.Handle, Is.Not.EqualTo (IntPtr.Zero), "d1");
 				}

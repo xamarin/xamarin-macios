@@ -32,10 +32,17 @@ namespace Xamarin.Mac.Tests
 			image.CapInsets = new NSEdgeInsets (5f, 6f, 7f, 8f);
 
 			Assert.IsNotNull (image.CapInsets);
+#if NO_NFLOAT_OPERATORS
+			Assert.IsTrue (image.CapInsets.Top.Value == 5f, "NSImageCapInsets - Top value was not 5");
+			Assert.IsTrue (image.CapInsets.Left.Value == 6f, "NSImageCapInsets - Left value was not 6");
+			Assert.IsTrue (image.CapInsets.Bottom.Value == 7f, "NSImageCapInsets - Bottom value was not 7");
+			Assert.IsTrue (image.CapInsets.Right.Value == 8f, "NSImageCapInsets - Right value was not 8");
+#else
 			Assert.IsTrue (image.CapInsets.Top == 5f, "NSImageCapInsets - Top value was not 5");
 			Assert.IsTrue (image.CapInsets.Left == 6f, "NSImageCapInsets - Left value was not 6");
 			Assert.IsTrue (image.CapInsets.Bottom == 7f, "NSImageCapInsets - Bottom value was not 7");
 			Assert.IsTrue (image.CapInsets.Right == 8f, "NSImageCapInsets - Right value was not 8");
+#endif
 		}
 
 		[Test]

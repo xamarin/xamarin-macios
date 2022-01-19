@@ -10,6 +10,7 @@
 #if !__WATCHOS__
 
 using System;
+using System.Runtime.InteropServices;
 
 using Foundation;
 using CoreImage;
@@ -27,10 +28,17 @@ namespace MonoTouchFixtures.CoreImage {
 		{
 			// Make sure these do not crash
 			Assert.That (new CIVector (new nfloat [0]).Count, Is.EqualTo ((nint) 0), "0");
+#if NO_NFLOAT_OPERATORS
+			Assert.That (new CIVector (new nfloat [] {new NFloat (1)}).Count, Is.EqualTo ((nint) 1), "1");
+			Assert.That (new CIVector (new nfloat [] {new NFloat (1),new NFloat (2)}).Count, Is.EqualTo ((nint) 2), "2'");
+			Assert.That (new CIVector (new nfloat [] {new NFloat (1),new NFloat (2),new NFloat (3)}).Count, Is.EqualTo ((nint) 3), "3");
+			Assert.That (new CIVector (new nfloat [] {new NFloat (1),new NFloat (2),new NFloat (3),new NFloat (4)}).Count, Is.EqualTo ((nint) 4), "4");
+#else
 			Assert.That (new CIVector (new nfloat [] {1}).Count, Is.EqualTo ((nint) 1), "1");
 			Assert.That (new CIVector (new nfloat [] {1,2}).Count, Is.EqualTo ((nint) 2), "2'");
 			Assert.That (new CIVector (new nfloat [] {1,2,3}).Count, Is.EqualTo ((nint) 3), "3");
 			Assert.That (new CIVector (new nfloat [] {1,2,3,4}).Count, Is.EqualTo ((nint) 4), "4");
+#endif
 
 			Assert.Throws<ArgumentNullException> (() => new CIVector ((nfloat[]) null), "null");
 		}
@@ -39,12 +47,22 @@ namespace MonoTouchFixtures.CoreImage {
 		public void CtorFloatArrayCount ()
 		{
 			Assert.That (new CIVector (new nfloat [0], 0).Count, Is.EqualTo ((nint) 0), "0");
+#if NO_NFLOAT_OPERATORS
+			Assert.That (new CIVector (new nfloat [] {new NFloat (1)}, 1).Count, Is.EqualTo ((nint) 1), "1");
+			Assert.That (new CIVector (new nfloat [] {new NFloat (1),new NFloat (2)}, 2).Count, Is.EqualTo ((nint) 2), "2'");
+			Assert.That (new CIVector (new nfloat [] {new NFloat (1),new NFloat (2),new NFloat (3),new NFloat (4)}, 2).Count, Is.EqualTo ((nint) 2), "4/2");
+#else
 			Assert.That (new CIVector (new nfloat [] {1}, 1).Count, Is.EqualTo ((nint) 1), "1");
 			Assert.That (new CIVector (new nfloat [] {1,2}, 2).Count, Is.EqualTo ((nint) 2), "2'");
 			Assert.That (new CIVector (new nfloat [] {1,2,3,4}, 2).Count, Is.EqualTo ((nint) 2), "4/2");
+#endif
 
 			Assert.Throws<ArgumentNullException> (() => new CIVector ((nfloat[]) null, 0), "null");
+#if NO_NFLOAT_OPERATORS
+			Assert.Throws<ArgumentOutOfRangeException> (() => new CIVector (new nfloat [] {new NFloat (1)}, 2), "out-of-range");
+#else
 			Assert.Throws<ArgumentOutOfRangeException> (() => new CIVector (new nfloat [] {1}, 2), "out-of-range");
+#endif
 		}
 
 		[Test]

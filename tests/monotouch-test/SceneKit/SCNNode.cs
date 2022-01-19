@@ -1,5 +1,6 @@
 #if __MACOS__
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -51,7 +52,11 @@ namespace Xamarin.Mac.Tests
 				Scene.RootNode.AddChildNode (floorNode);
 
 				floorNode.PhysicsBody = SCNPhysicsBody.CreateStaticBody ();
+#if NO_NFLOAT_OPERATORS
+				Scene.PhysicsWorld.Speed = new NFloat (0);
+#else
 				Scene.PhysicsWorld.Speed = 0;
+#endif
 			}
 		}
 
