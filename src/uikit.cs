@@ -2140,6 +2140,7 @@ namespace UIKit {
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Should not be used for applications that support multiple scenes because it returns a key window across all connected scenes.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Should not be used for applications that support multiple scenes because it returns a key window across all connected scenes.")]
+		[NullAllowed]
 		[Export ("keyWindow")]
 		[Transient]
 		UIWindow KeyWindow { get; }
