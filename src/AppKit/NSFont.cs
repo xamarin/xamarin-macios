@@ -152,14 +152,14 @@ namespace AppKit {
 			var ptr = _ControlContentFontOfSize (fontSize);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
+
 #if NET
- 		[UnsupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.13")]
 #if MONOMAC
- 		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
 		public virtual NSFont PrinterFont { 
 			get {
@@ -167,14 +167,14 @@ namespace AppKit {
 				return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 			}
 		}
- 
+
 #if NET
- 		[UnsupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.13")]
 #if MONOMAC
- 		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
 		public virtual NSFont ScreenFont {
 			get {
@@ -202,22 +202,22 @@ namespace AppKit {
 			var ptr = _GetVerticalFont ();
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
+
 #if NET
- 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos10.11")]
 #else
- 		[Mac (10,11)]
+		[Mac (10,11)]
 #endif
 		public static NSFont SystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
 			var ptr = _SystemFontOfSize (fontSize, weight);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
+
 #if NET
- 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos10.11")]
 #else
- 		[Mac (10,11)]
+		[Mac (10,11)]
 #endif
 		public static NSFont MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
