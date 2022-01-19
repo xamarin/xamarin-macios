@@ -12,7 +12,16 @@ using ObjCRuntime;
 
 namespace BackgroundTasks {
 
-	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[TV (13,0)]
+	[NoWatch]
+	[NoMac]
+	[iOS (13,0)]
+#endif
 	[Native]
 	[ErrorDomain ("BGTaskSchedulerErrorDomain")]
 	public enum BGTaskSchedulerErrorCode : long {
