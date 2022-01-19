@@ -680,14 +680,14 @@ namespace AudioToolbox
 		[DllImport (Constants.AudioToolboxLibrary)]
         static extern AudioConverterError AudioConverterNew (ref AudioStreamBasicDescription inSourceFormat, ref AudioStreamBasicDescription inDestinationFormat, ref IntPtr outAudioConverter);		
 
-		[DllImport (Constants.AudioToolboxLibrary)]
+		[DllImport (Constants.AudioToolboxLibrary)]	
 		static extern AudioConverterError AudioConverterNewSpecific (ref AudioStreamBasicDescription inSourceFormat, ref AudioStreamBasicDescription inDestinationFormat,
 			int inNumberClassDescriptions, ref AudioClassDescription[] inClassDescriptions, ref IntPtr outAudioConverter);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterDispose (IntPtr inAudioConverter);
 
-		[DllImport (Constants.AudioToolboxLibrary)]
+		[DllImport (Constants.AudioToolboxLibrary)]	
 		static extern AudioConverterError AudioConverterReset (IntPtr inAudioConverter);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
