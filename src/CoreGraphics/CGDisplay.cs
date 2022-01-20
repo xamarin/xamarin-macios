@@ -8,14 +8,22 @@ using Foundation;
 namespace CoreGraphics
 {
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 	[MacCatalyst (15,0)]
+#endif
 	public enum CGCaptureOptions : uint
 	{
 		None = 0,
 		NoFill = 1 << 0
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 	[MacCatalyst (15,0)]
+#endif
 	public static class CGDisplay
 	{
 #if !COREBUILD
@@ -74,7 +82,15 @@ namespace CoreGraphics
 		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGDisplayRestoreColorSyncSettings")]
 		public static extern void RestoreColorSyncSettings ();
 
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos10.9")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGDisplayIsCaptured (uint display);

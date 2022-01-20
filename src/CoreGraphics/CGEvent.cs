@@ -26,7 +26,11 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 	[MacCatalyst (15,0)]
+#endif
 	public sealed class CGEvent : NativeObject {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
@@ -423,22 +427,42 @@ namespace CoreGraphics {
 			return result;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 		[Mac (11,0)]
+#endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightListenEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool PreflightListenEventAccess ();
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 		[Mac (11,0)]
+#endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestListenEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RequestListenEventAccess ();
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 		[Mac (11,0)]
+#endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightPostEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool PreflightPostEventAccess ();
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 		[Mac (11,0)]
+#endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestPostEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RequestPostEventAccess ();

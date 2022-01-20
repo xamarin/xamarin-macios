@@ -54,8 +54,18 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
+#if NET
+	[UnsupportedOSPlatform ("macos10.9")]
+	[UnsupportedOSPlatform ("ios7.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 9)]
+#endif
 	public enum CGTextEncoding {
 		FontSpecific,
 		MacRoman,
@@ -103,8 +113,13 @@ namespace CoreGraphics {
 		PlusLighter,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
 	[Mac (10,15)]
 	[iOS (13,0)]
+#endif
 	public enum CGPdfTagType /* int32_t */ {
 		Document = 100,
 		Part,
@@ -170,7 +185,13 @@ namespace CoreGraphics {
 		Stream,
 	};
 
-	[iOS(11,0), Mac(10,13)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#else
+	[iOS (11,0)]
+	[Mac (10,13)]
+#endif
 	public enum CGPDFAccessPermissions : uint {
 		AllowsLowQualityPrinting    = (1 << 0),
 		AllowsHighQualityPrinting   = (1 << 1),
@@ -183,9 +204,23 @@ namespace CoreGraphics {
 	}
 
 	// uint32_t enum -> CGColorConverter.h
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[NoWatch][NoMac]
+#if NET
+	[SupportedOSPlatform ("tvos9.2")]
+	[SupportedOSPlatform ("ios9.3")]
+	[UnsupportedOSPlatform ("macos")]
+#if TVOS
+	[Obsolete ("Starting with tvos10.0 replaced by 'CGColorConversionInfoTransformType'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios10.0 replaced by 'CGColorConversionInfoTransformType'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+	[TV (9,2)]
+	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
+	[iOS (9,3)]
+	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
+	[NoWatch]
+	[NoMac]
+#endif
 	public enum CGColorConverterTransformType : uint {
 		FromSpace,
 		ToSpace,
@@ -193,7 +228,16 @@ namespace CoreGraphics {
 	}
 
 	// uint32_t enum -> CGColorConversionInfo.h
-	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Watch (3,0)]
+	[Mac (10,12)]
+#endif
 	public enum CGColorConversionInfoTransformType : uint {
 		FromSpace = 0,
 		ToSpace,

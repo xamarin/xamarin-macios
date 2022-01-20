@@ -79,7 +79,7 @@ namespace CoreGraphics {
 		// This is what we expose on the API
 		public delegate void DrawPattern (CGContext ctx);
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGPatternCreate (/* void* */ IntPtr info, CGRect bounds, CGAffineTransform matrix,
 			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, [MarshalAs (UnmanagedType.I1)] bool isColored,
 			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);

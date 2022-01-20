@@ -44,8 +44,12 @@ namespace CoreGraphics {
 
 #if MONOMAC || __MACCATALYST__
 	// uint32_t -> CGWindow.h (OSX SDK only)
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 	[MacCatalyst (15,0)]
-	[Flags]	
+#endif
+	[Flags]
 	public enum CGWindowImageOption : uint {
 		Default             = 0,
 		BoundsIgnoreFraming = (1 << 0),
@@ -56,7 +60,11 @@ namespace CoreGraphics {
 	}
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 	[MacCatalyst (15,0)]
+#endif
 	[Flags]
 	public enum CGWindowListOption : uint {
 		All                 = 0,
@@ -228,17 +236,29 @@ namespace CoreGraphics {
 		}
 
 #if MONOMAC || __MACCATALYST__
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 		[MacCatalyst (15,0)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
         
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 		[MacCatalyst (15,0)]
+#endif
 		public static CGImage? ScreenImage (int windownumber, CGRect bounds)
 		{
 			return ScreenImage (windownumber, bounds, CGWindowListOption.IncludingWindow, CGWindowImageOption.Default);
 		}
 
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
 		[MacCatalyst (15,0)]
+#endif
 		public static CGImage? ScreenImage (int windownumber, CGRect bounds, CGWindowListOption windowOption,
 			CGWindowImageOption imageOption)
 		{
@@ -465,12 +485,24 @@ namespace CoreGraphics {
 			}
 		}
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr /* CFStringRef */ CGImageGetUTType (/* __nullable CGImageRef* */ IntPtr image);
 
 		// we return an NSString, instead of a string, as all our UTType constants are NSString (see mobilecoreservices.cs)
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		public NSString? UTType {
 			get {
 				var h = CGImageGetUTType (Handle);
@@ -478,18 +510,54 @@ namespace CoreGraphics {
 			}
 		}
 
-		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12,0)]
+		[Mac (10,14)]
+		[TV (12,0)]
+		[Watch (5,0)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImagePixelFormatInfo CGImageGetPixelFormatInfo (/* __nullable CGImageRef */ IntPtr handle);
 		
-		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12,0)]
+		[Mac (10,14)]
+		[TV (12,0)]
+		[Watch (5,0)]
+#endif
 		public CGImagePixelFormatInfo PixelFormatInfo => CGImageGetPixelFormatInfo (Handle);
 			
-		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12,0)]
+		[Mac (10,14)]
+		[TV (12,0)]
+		[Watch (5,0)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImageByteOrderInfo CGImageGetByteOrderInfo (/* __nullable CGImageRef */ IntPtr handle);
 
-		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12,0)]
+		[Mac (10,14)]
+		[TV (12,0)]
+		[Watch (5,0)]
+#endif
 		public CGImageByteOrderInfo ByteOrderInfo => CGImageGetByteOrderInfo (Handle);
 		
 #endif // !COREBUILD

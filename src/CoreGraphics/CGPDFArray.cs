@@ -229,12 +229,30 @@ namespace CoreGraphics {
 
 		public delegate bool ApplyCallback (nint index, object? value, object? info);
 
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12, 0)]
+		[Mac (10, 14)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayApplyBlock (/* CGPDFArrayRef */ IntPtr array, /* CGPDFArrayApplierBlock */ ref BlockLiteral block, /* void* */ IntPtr info);
 
-		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12, 0)]
+		[Mac (10, 14)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (ApplyCallback callback, object? info = null)
 		{
