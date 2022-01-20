@@ -581,14 +581,24 @@ namespace CoreFoundation {
 		}
 
 #if MONOMAC
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
+#endif
 		public static bool IsExecutableLoadable (CFBundle bundle)
 		{
 			if (bundle is null)
@@ -597,14 +607,24 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadable (bundle.GetCheckedHandle ());
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
+#endif
 		public static bool IsExecutableLoadable (NSUrl url)
 		{
 			if (url is null)
@@ -613,14 +633,24 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadableForURL (url.Handle);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
+#endif
 		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
 
 #endif

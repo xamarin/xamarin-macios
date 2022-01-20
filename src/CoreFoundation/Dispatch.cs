@@ -155,20 +155,32 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		internal extern static void dispatch_suspend (IntPtr o);
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		public void Activate ()
 		{
 			dispatch_activate (GetCheckedHandle ());
 		}
 
-		[DllImport (Constants.libcLibrary)]
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
 #endif // !COREBUILD
 	}
@@ -209,10 +221,16 @@ namespace CoreFoundation {
 				throw new Exception ("Error creating dispatch queue");
 		}
 		
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		public DispatchQueue (string label, Attributes attributes, DispatchQueue target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
@@ -228,7 +246,11 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public static string CurrentQueueLabel {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (IntPtr.Zero));
@@ -263,8 +285,18 @@ namespace CoreFoundation {
 			}
 		}
 	
+#if NET
+		[UnsupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+#endif
 		public static DispatchQueue CurrentQueue {
 			get {
 				return new DispatchQueue (dispatch_get_current_queue (), false);
@@ -472,8 +504,13 @@ namespace CoreFoundation {
 			return gchandle.Target;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,10)]
 		[iOS (8,0)]
+#endif
 		public DispatchQualityOfService GetQualityOfService (out int relative_priority)
 		{
 			unsafe {
@@ -482,8 +519,13 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,10)]
 		[iOS (8,0)]
+#endif
 		public DispatchQualityOfService QualityOfService {
 			get {
 				unsafe {
@@ -498,10 +540,16 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
 		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
 
@@ -523,10 +571,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_async (IntPtr queue, IntPtr block);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync (IntPtr queue, IntPtr block);
 
 		[DllImport (Constants.libcLibrary)]
@@ -535,8 +583,18 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
+#endif
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_current_queue ();
 
@@ -548,14 +606,19 @@ namespace CoreFoundation {
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)
 		extern static IntPtr dispatch_queue_get_label (IntPtr queue);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_queue_set_specific (IntPtr queue, /* const void* */ IntPtr key, /* void *_Nullable */ IntPtr context, dispatch_callback_t /* _Nullable */ destructor);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,10)]
 		[iOS (8,0)]
+#endif
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
 
@@ -604,24 +667,46 @@ namespace CoreFoundation {
 		{
 			public bool Concurrent { get; set; }
 
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			public bool IsInitiallyInactive { get; set; }
 
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
+#if NET
+			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[Mac (10,10)]
 			[iOS (8,0)]
+#endif
 			public int RelativePriority { get; set; }
 
+#if NET
+			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[Mac (10,10)]
 			[iOS (8,0)]
+#endif
 			public DispatchQualityOfService? QualityOfService { get; set; }
 
 			internal IntPtr Create ()
@@ -643,30 +728,53 @@ namespace CoreFoundation {
 				return rv;
 			}
 
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
 
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
 			[Watch (3,0)]
+#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
 
+#if NET
+			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[Mac (10,10)]
 			[iOS (8,0)]
+#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		[Native]
 		public enum AutoreleaseFrequency : ulong /* unsigned long */
 		{
