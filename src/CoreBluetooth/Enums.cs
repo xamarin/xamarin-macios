@@ -15,14 +15,9 @@ using ObjCRuntime;
 
 namespace CoreBluetooth {
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios10.0")]
-#else
 	[Mac (10,13)]
 	[Watch (4,0)]
 	[iOS (10,0)]
-#endif
 	[Native]
 	public enum CBManagerState : long {
 		Unknown = 0,
@@ -34,15 +29,8 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBCentralManager.h
-#if NET
-	[UnsupportedOSPlatform ("ios10.0")]
-#if IOS
-	[Obsolete ("Starting with ios10.0 use 'CBManagerState' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
-#endif
 	[Native]
 	public enum CBCentralManagerState : long {
 		Unknown = CBManagerState.Unknown,
@@ -54,15 +42,8 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-#if NET
-	[UnsupportedOSPlatform ("ios10.0")]
-#if IOS
-	[Obsolete ("Starting with ios10.0 use 'CBManagerState' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
-#endif
 	[Native]
 	public enum CBPeripheralManagerState : long {
 		Unknown = CBManagerState.Unknown,
@@ -74,29 +55,19 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	[Native]
 	public enum CBPeripheralState : long {
 		Disconnected,
 		Connecting,
 		Connected,
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.13")]
-#else
-		[iOS (9,0)]
-		[Mac (10,13)]
-#endif
+		[iOS (9,0)][Mac (10,13)]
 		Disconnecting,
 	}
 
 #if !NET
 	// NSInteger -> CBPeripheralManager.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	[Native]
 	public enum CBPeripheralManagerAuthorizationStatus : long {
 		NotDetermined,
@@ -107,9 +78,7 @@ namespace CoreBluetooth {
 #endif // !NET
 
 	// NSUInteger -> CBCharacteristic.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	[Flags]
 	[Native]
 	public enum CBCharacteristicProperties : ulong {
@@ -121,23 +90,13 @@ namespace CoreBluetooth {
 		Indicate = 32,
 		AuthenticatedSignedWrites = 64,
 		ExtendedProperties = 128,
-#if NET
-		[SupportedOSPlatform ("macos10.9")]
-#else
 		[Mac (10,9)]
-#endif
 		NotifyEncryptionRequired = 0x100,
-#if NET
-		[SupportedOSPlatform ("macos10.9")]
-#else
 		[Mac (10,9)]
-#endif
 		IndicateEncryptionRequired = 0x200
 	}
 
-#if !NET
 	[Watch (4,0)]
-#endif
 	[ErrorDomain ("CBErrorDomain")]
 	[Native] // NSInteger -> CBError.h
 	public enum CBError : long {
@@ -161,9 +120,7 @@ namespace CoreBluetooth {
 		TooManyLEPairedDevices = 16,
 	}
 
-#if !NET
 	[Watch (4,0)]
-#endif
 	[ErrorDomain ("CBATTErrorDomain")]
 	[Native] // NSInteger -> CBError.h
 	public enum CBATTError : long {
@@ -188,9 +145,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheral.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	[Native]
 	public enum CBCharacteristicWriteType : long {
 		WithResponse,
@@ -198,12 +153,8 @@ namespace CoreBluetooth {
 	}
 
 	// NSUInteger -> CBCharacteristic.h
-#if NET
-	[SupportedOSPlatform ("macos10.9")]
-#else
 	[Mac (10,9)]
 	[Watch (4,0)]
-#endif
 	[Flags]
 	[Native]
 	public enum CBAttributePermissions : ulong {
@@ -214,9 +165,7 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	[Native]
 	public enum CBPeripheralManagerConnectionLatency : long {
 		Low = 0,
@@ -224,48 +173,20 @@ namespace CoreBluetooth {
 		High
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-#else
-	[iOS (13,0)]
-	[TV (13,0)]
-	[Watch (6,0)]
-	[Mac (10,15)]
-#endif
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
 	[Native]
 	public enum CBConnectionEvent : long {
 		Disconnected = 0,
 		Connected = 1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
-	[UnsupportedOSPlatform ("macos")]
-#else
-	[iOS (13,0)]
-	[TV (13,0)]
-	[Watch (6,0)]
-	[NoMac]
-#endif
-	[Flags]
+	[Flags, iOS (13,0), TV (13,0), Watch (6,0), NoMac]
 	[Native]
 	public enum CBCentralManagerFeature : ulong {
 		ExtendedScanAndConnect = 1uL << 0,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-#else
-	[iOS (13,0)]
-	[TV (13,0)]
-	[Watch (6,0)]
-	[Mac (10,15)]
-#endif
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
 	[Native]
 	public enum CBManagerAuthorization : long {
 		NotDetermined = 0,
