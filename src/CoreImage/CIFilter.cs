@@ -121,7 +121,11 @@ using UIKit;
 namespace CoreImage {
 	public partial class CIFilter {
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
+#endif
 		protected CIFilter () : base ()
 		{
 		}

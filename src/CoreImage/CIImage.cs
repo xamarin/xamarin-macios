@@ -51,9 +51,17 @@ namespace CoreImage {
 
 		public CIImageOrientation? ImageOrientation;
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
+#endif
 		public bool? AutoAdjustCrop;
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
+#endif
 		public bool? AutoAdjustLevel;
 		
 		internal NSDictionary? ToDictionary ()
