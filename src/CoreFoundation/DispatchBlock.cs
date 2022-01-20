@@ -21,10 +21,8 @@ using NativeHandle = System.IntPtr;
 namespace CoreFoundation {
 #if !COREBUILD
 
-#if !NET
 	[iOS (8, 0)]
 	[Mac (10, 10)]
-#endif
 	public sealed class DispatchBlock : NativeObject {
 		[Preserve (Conditional = true)]
 		internal DispatchBlock (NativeHandle handle, bool owns)

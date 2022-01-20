@@ -581,22 +581,14 @@ namespace CoreFoundation {
 		}
 
 #if MONOMAC
-#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
-#else
-		[SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
 
-#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
-#else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public static bool IsExecutableLoadable (CFBundle bundle)
 		{
 			if (bundle is null)
@@ -605,22 +597,14 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadable (bundle.GetCheckedHandle ());
 		}
 
-#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
-#else
-		[SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
-#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
-#else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public static bool IsExecutableLoadable (NSUrl url)
 		{
 			if (url is null)
@@ -629,22 +613,14 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadableForURL (url.Handle);
 		}
 
-#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
-#else
-		[SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
 
-#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
-#else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), UnsupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
 
 #endif
