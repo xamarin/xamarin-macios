@@ -23,6 +23,10 @@ parameters:
   type: boolean
   default: false
 
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -358,10 +362,11 @@ steps:
   displayName: 'Build'
   timeoutInMinutes: 180
 
- # run ASAP so that we do not have any files that got generated confusing git 
-- template: api-diff.yml
-  parameters:
-    prID: variables['PrID']
+# run ASAP so that we do not have any files that got generated confusing git 
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - template: api-diff.yml
+    parameters:
+      prID: variables['PrID']
 
 # build not signed .pkgs for the SDK
 - bash: |
