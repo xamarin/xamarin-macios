@@ -65,6 +65,16 @@ steps:
   continueOnError: false
   timeoutInMinutes: 5
 
+- bash: |
+    set -x
+    set -e
+
+    make global6.json
+    make -C builds dotnet
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: Boostrap dotnet
+  timeoutInMinutes: 30
+
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
