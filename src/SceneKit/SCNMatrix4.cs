@@ -32,19 +32,11 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 
-#if NET
-using Vector3 = global::System.Numerics.Vector3;
-using Vector3d = global::CoreGraphics.NVector3d;
-using Vector4 = global::System.Numerics.Vector4;
-using Quaterniond = global::CoreGraphics.NQuaterniond;
-#else
 using Vector3 = global::OpenTK.Vector3;
 using Vector3d = global::OpenTK.Vector3d;
 using Vector4 = global::OpenTK.Vector4;
 using Quaternion = global::OpenTK.Quaternion;
 using Quaterniond = global::OpenTK.Quaterniond;
-#endif
-
 #if MONOMAC
 #if NET
 using pfloat = ObjCRuntime.nfloat;
@@ -393,11 +385,8 @@ namespace SceneKit
             pfloat sin = (float)System.Math.Sin(-angle);
             pfloat t = 1.0f - cos;
 
-#if NET
-            axis = Vector3.Normalize(axis);
-#else
             axis.Normalize();
-#endif
+
             result = new SCNMatrix4(t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
                                  t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
                                  t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
@@ -841,20 +830,11 @@ namespace SceneKit
         /// </summary>
         /// <param name="q">the quaternion</param>
         /// <returns>A rotation matrix</returns>
-#if NET
-        public static SCNMatrix4 Rotate(SCNQuaternion q)
-#else
         public static SCNMatrix4 Rotate(Quaternion q)
-#endif
         {
 	    SCNMatrix4 result;
-#if NET
-            SCNVector3 axis;
-            pfloat angle;
-#else
             Vector3 axis;
             float angle;
-#endif
             q.ToAxisAngle(out axis, out angle);
             CreateFromAxisAngle(axis, angle, out result);
 	    return result;
@@ -870,7 +850,7 @@ namespace SceneKit
             Vector3d axis;
             double angle;
 	    SCNMatrix4 result;
-	    q.ToAxisAngle(out axis, out angle);
+            q.ToAxisAngle(out axis, out angle);
 	    CreateFromAxisAngle(axis, angle, out result);
             return result;
         }
