@@ -53,9 +53,27 @@ namespace CoreData {
 		Boolean = 800,
 		Date = 900,
 		Binary = 1000,
-		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Watch (4,0)]
+#endif
 		Uuid = 1100,
-		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Watch (4,0)]
+#endif
 		Uri = 1200,
 		Transformable = 1800,
 		ObjectID = 2000
@@ -85,7 +103,16 @@ namespace CoreData {
 	public enum NSPersistentStoreRequestType : ulong {
 		Fetch = 1,
 		Save,
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		[Mac (10,15)]
+#endif
 		BatchInsert = 5,
 		BatchUpdate = 6,
 		BatchDelete = 7
@@ -119,7 +146,13 @@ namespace CoreData {
 		UpdatedObjectsCount = 2
 	}
 
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum NSBatchDeleteRequestResultType : ulong {
 		StatusOnly = 0,
@@ -143,7 +176,16 @@ namespace CoreData {
 		StringTooLong = 1660,
 		StringTooShort = 1670,
 		StringPatternMatching = 1680,
-		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Watch (4,0)]
+#endif
 		InvalidUri = 1690,
 	}
 
@@ -181,11 +223,29 @@ namespace CoreData {
 		EntityMigrationPolicy = 134170,
 		InferredMappingModel = 134190,
 		ExternalRecordImport = 134200,
-		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Watch (4,0)]
+#endif
 		HistoryTokenExpired = 134301,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum NSFetchIndexElementType : ulong
 	{
@@ -193,7 +253,16 @@ namespace CoreData {
 		RTree
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum NSPersistentHistoryChangeType : long
 	{
@@ -202,7 +271,16 @@ namespace CoreData {
 		Delete
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum NSPersistentHistoryResultType : long
 	{
@@ -214,7 +292,16 @@ namespace CoreData {
 		TransactionsAndChanges = 5
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum NSBatchInsertRequestResultType : ulong {
 		StatusOnly = 0,
@@ -222,7 +309,16 @@ namespace CoreData {
 		Count = 2,
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Flags]
 	[Native]
 	public enum NSPersistentCloudKitContainerSchemaInitializationOptions : ulong {
@@ -231,14 +327,32 @@ namespace CoreData {
 		PrintSchema = 1 << 2,
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum NSPersistentCloudKitContainerEventResultType : long {
 		Events = 0,
 		CountEvents,
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum NSPersistentCloudKitContainerEventType : long {
 		Setup,
