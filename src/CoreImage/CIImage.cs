@@ -51,13 +51,9 @@ namespace CoreImage {
 
 		public CIImageOrientation? ImageOrientation;
 
-#if !NET
 		[iOS (8,0)]
-#endif
 		public bool? AutoAdjustCrop;
-#if !NET
 		[iOS (8,0)]
-#endif
 		public bool? AutoAdjustLevel;
 		
 		internal NSDictionary? ToDictionary ()

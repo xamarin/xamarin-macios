@@ -89,9 +89,7 @@ namespace CoreImage {
 			}
 		}
 
-#if !NET
 		[Mac (10,12)]
-#endif
 		public bool? PriorityRequestLow {
 			get {
 				return GetBoolValue (CIContext.PriorityRequestLow);
@@ -110,9 +108,7 @@ namespace CoreImage {
 			}
 		}
 
-#if !NET
 		[iOS (7,0)]
-#endif
 		public bool? OutputPremultiplied {
 			get {
 				return GetBoolValue (CIContext.OutputPremultiplied);
@@ -122,9 +118,7 @@ namespace CoreImage {
 			}
 		}
 
-#if !NET
 		[iOS (10,0)][Mac (10,12)]
-#endif
 		public bool? CacheIntermediates {
 			get {
 				return GetBoolValue (CIContext.CacheIntermediates);
@@ -134,13 +128,7 @@ namespace CoreImage {
 			}
 		}
 
-#if NET
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#else
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
-#endif
 		public bool? AllowLowPower {
 			get {
 				return GetBoolValue (CIContext.AllowLowPower);
@@ -150,13 +138,7 @@ namespace CoreImage {
 			}
 		}
 
-#if NET
-		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
-#else
 		[iOS (14,0)][TV (14,0)][Mac (11,0)]
-#endif
 		public string? Name {
 			get {
 				return GetStringValue (CIContext.Name);
@@ -169,9 +151,7 @@ namespace CoreImage {
 	
 	public partial class CIContext {
 
-#if !NET
 		[iOS (8,0)]
-#endif
 		public CIContext (CIContextOptions options) :
 			this (options?.Dictionary)
 		{
@@ -206,11 +186,7 @@ namespace CoreImage {
 #endif
 
 #if MONOMAC
-#if NET
-		[UnsupportedOSPlatform ("macos10.11")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
-#endif
 		public CGLayer? CreateCGLayer (CGSize size)
 		{
 			return CreateCGLayer (size, null);
