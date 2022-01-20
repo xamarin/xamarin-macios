@@ -74,7 +74,7 @@ namespace CoreGraphics {
 			CGGradientRelease (GetCheckedHandle ());
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColorComponents (
 			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat []? components, 
 			/* const CGFloat* __nullable */ nfloat []? locations, /* size_t */ nint count);
@@ -113,7 +113,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColors (
 			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors, 
 			/* const CGFloat* __nullable */ nfloat []? locations);

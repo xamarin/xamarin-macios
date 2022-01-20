@@ -68,7 +68,7 @@ namespace CoreGraphics {
 			CGShadingRelease (GetCheckedHandle ());
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingCreateAxial (/* CGColorSpaceRef */ IntPtr space, 
 			CGPoint start, CGPoint end, /* CGFunctionRef */ IntPtr functionHandle, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);
 
@@ -82,7 +82,7 @@ namespace CoreGraphics {
 			return new CGShading (CGShadingCreateAxial (colorspace.GetCheckedHandle (), start, end, function.GetCheckedHandle (), extendStart, extendEnd), true);
 		}
 		
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGShadingRef */ IntPtr CGShadingCreateRadial (/* CGColorSpaceRef */ IntPtr space, 
 			CGPoint start, /* CGFloat */ nfloat startRadius, CGPoint end, /* CGFloat */ nfloat endRadius,
 			/* CGFunctionRef */ IntPtr function, [MarshalAs (UnmanagedType.I1)] bool extendStart, [MarshalAs (UnmanagedType.I1)] bool extendEnd);

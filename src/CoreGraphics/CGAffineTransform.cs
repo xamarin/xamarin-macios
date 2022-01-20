@@ -35,7 +35,7 @@ using Foundation;
 namespace CoreGraphics {
 
 	// CGAffineTransform.h
-	[StructLayout (LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct CGAffineTransform {
 		public /* CGFloat */ nfloat xx;   // a
 		public /* CGFloat */ nfloat yx;   // b 

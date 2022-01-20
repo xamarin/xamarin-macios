@@ -127,7 +127,7 @@ namespace CoreGraphics {
 		}
 
 		// Settings
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]		
 		extern static void CGContextSetLineWidth (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat width);
 
 		public void SetLineWidth (nfloat w)

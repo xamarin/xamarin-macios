@@ -58,7 +58,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorConversionInfoRef __nullable */ IntPtr CGColorConversionInfoCreateFromList (/* __nullable CFDictionaryRef */ IntPtr options, 
 			/* CGColorSpaceRef __nullable */ IntPtr space1, CGColorConversionInfoTransformType transform1, CGColorRenderingIntent intent1,
 			/* CGColorSpaceRef __nullable */ IntPtr space2, CGColorConversionInfoTransformType transform2, CGColorRenderingIntent intent2,
@@ -72,7 +72,7 @@ namespace CoreGraphics {
 		// but since each parameter must be pointer-sized (to occupy the right amount of stack space),
 		// we define it as nuint (and not the enum type, which is 32-bit even on 64-bit platforms).
 		// Same for the 'intentX' argument (except that it's signed instead of unsigned).
-		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint="CGColorConversionInfoCreateFromList")]
+		[DllImport(Constants.CoreGraphicsLibrary, EntryPoint="CGColorConversionInfoCreateFromList")]
 		extern static /* CGColorConversionInfoRef __nullable */ IntPtr CGColorConversionInfoCreateFromList_arm64 (/* __nullable CFDictionaryRef */ IntPtr options,
 			IntPtr space1, nuint transform1, nint intent1, // varargs starts after them
 			IntPtr dummy4, IntPtr dummy5, IntPtr dummy6, IntPtr dummy7, // dummies so the rest goes to the stack
@@ -121,7 +121,7 @@ namespace CoreGraphics {
 
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGColorConversionInfoCreate (/* cg_nullable CGColorSpaceRef */ IntPtr src, /* cg_nullable CGColorSpaceRef */ IntPtr dst);
 
 		static IntPtr Create (CGColorSpace source, CGColorSpace destination)
@@ -149,7 +149,7 @@ namespace CoreGraphics {
 		[TV (13,0)]
 		[Watch (6,0)]
 #endif
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorConversionInfoRef* */ IntPtr CGColorConversionInfoCreateWithOptions (/* CGColorSpaceRef* */ IntPtr src, /* CGColorSpaceRef* */ IntPtr dst, /* CFDictionaryRef _Nullable */ IntPtr options);
 
 		static IntPtr Create (CGColorSpace source, CGColorSpace destination, NSDictionary? options)

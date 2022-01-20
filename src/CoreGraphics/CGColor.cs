@@ -69,7 +69,7 @@ namespace CoreGraphics {
 			CGColorRelease (GetCheckedHandle ());
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreate (/* CGColorSpaceRef */ IntPtr space, /* CGFloat */ nfloat [] components);
 
 		static IntPtr Create (CGColorSpace colorspace, nfloat [] components)
@@ -86,7 +86,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateGenericGray (/* CGFloat */ nfloat gray, /* CGFloat */ nfloat alpha);
 
 		public CGColor (nfloat gray, nfloat alpha)
@@ -94,7 +94,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateGenericRGB (/* CGFloat */ nfloat red, /* CGFloat */ nfloat green, /* CGFloat */ nfloat blue, /* CGFloat */ nfloat alpha);
 
 		public CGColor (nfloat red, nfloat green, nfloat blue, nfloat alpha)
@@ -107,7 +107,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorGetConstantColor (/* CFStringRef */ IntPtr colorName);
 
 		static IntPtr Create (string name)
@@ -160,7 +160,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateWithPattern (/* CGColorSpaceRef */ IntPtr space, /* CGPatternRef */ IntPtr pattern, /* const CGFloat[] */ nfloat [] components);
 
 		static IntPtr Create (CGColorSpace colorspace, CGPattern pattern, nfloat [] components)
@@ -181,7 +181,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateCopyWithAlpha (/* CGColorRef */ IntPtr color, nfloat alpha);
 
 		static IntPtr Create (CGColor source, nfloat alpha)
@@ -196,7 +196,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGColorEqualToColor (/* CGColorRef */ IntPtr color1, /* CGColorRef */ IntPtr color2);
 
@@ -224,7 +224,7 @@ namespace CoreGraphics {
 			return CGColorEqualToColor (this.Handle, other.Handle);
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGColorGetNumberOfComponents (/* CGColorRef */ IntPtr color);
 
 		public nint NumberOfComponents {
@@ -233,7 +233,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static unsafe /* CGFloat* */ nfloat *CGColorGetComponents (/* CGColorRef */ IntPtr color);
 
 		public nfloat [] Components {
@@ -251,7 +251,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGFloat */ nfloat CGColorGetAlpha (/* CGColorRef */ IntPtr color);
 
 		public nfloat Alpha {
@@ -260,7 +260,7 @@ namespace CoreGraphics {
 			}
 		}
 		
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorGetColorSpace (/* CGColorRef */ IntPtr color);
 
 		public CGColorSpace? ColorSpace {
@@ -270,7 +270,7 @@ namespace CoreGraphics {
 			}
 		}
 		
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGPatternRef */ IntPtr CGColorGetPattern (/* CGColorRef */ IntPtr color);
 		public CGPattern? Pattern {
 			get {
