@@ -30,6 +30,7 @@
 #if MONOMAC
 
 using System;
+using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -72,6 +73,7 @@ namespace Darwin {
 		{
 		}
 
+		[Preserve (Conditional = true)]
 		SystemLog (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -199,6 +201,7 @@ namespace Darwin {
 			True = 7
 		}
 
+		[Preserve (Conditional = true)]
 		internal Message (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

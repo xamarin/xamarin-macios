@@ -60,6 +60,7 @@ namespace CoreFoundation {
 			/* CFURLPathStyle */ nint pathStyle, 
 			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool isDirectory);
 		
+		[Preserve (Conditional = true)]
 		internal CFUrl (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

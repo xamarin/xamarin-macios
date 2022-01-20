@@ -423,7 +423,7 @@ namespace GameplayKit {
 	[Protocol]
 	interface GKGameModelPlayer {
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 		[Export ("playerId")]
 		nint PlayerId { get; }

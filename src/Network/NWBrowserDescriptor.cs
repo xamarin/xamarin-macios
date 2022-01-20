@@ -33,6 +33,7 @@ namespace Network {
 #endif
 	public class NWBrowserDescriptor: NativeObject {
 
+		[Preserve (Conditional = true)]
 		internal NWBrowserDescriptor (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

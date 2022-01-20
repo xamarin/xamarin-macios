@@ -78,7 +78,7 @@ namespace CoreGraphics {
 			return CGPDFArrayGetBoolean (Handle, idx, out result);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetBoolean (int idx, out bool result)
 		{
 			return CGPDFArrayGetBoolean (Handle, idx, out result);
@@ -96,7 +96,7 @@ namespace CoreGraphics {
 			return CGPDFArrayGetInteger (Handle, idx, out result);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetInt (int idx, out nint result)
 		{
 			return CGPDFArrayGetInteger (Handle, idx, out result);
@@ -114,7 +114,7 @@ namespace CoreGraphics {
 			return CGPDFArrayGetNumber (Handle, idx, out result);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetFloat (int idx, out nfloat result)
 		{
 			return CGPDFArrayGetNumber (Handle, idx, out result);
@@ -133,7 +133,7 @@ namespace CoreGraphics {
 			return r;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetName (int idx, out string? result)
 		{
 			return GetName ((nint) idx, out result);
@@ -151,7 +151,7 @@ namespace CoreGraphics {
 			return r;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetDictionary (int idx, out CGPDFDictionary? result)
 		{
 			return GetDictionary ((nint) idx, out result);
@@ -169,7 +169,7 @@ namespace CoreGraphics {
 			return r;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetStream (int idx, out CGPDFStream? result)
 		{
 			return GetStream ((nint) idx, out result);
@@ -187,7 +187,7 @@ namespace CoreGraphics {
 			return r;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetArray (int idx, out CGPDFArray? array)
 		{
 			return GetArray ((nint) idx, out array);
@@ -205,7 +205,7 @@ namespace CoreGraphics {
 			return r;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		public bool GetString (int idx, out string? result)
 		{
 			return GetString ((nint) idx, out result);

@@ -42,6 +42,7 @@ namespace CoreVideo {
 			/* CFDictionaryRef __nullable */ IntPtr textureAttributes, 
 			/* CVMetalTextureCacheRef __nullable * __nonnull */ out IntPtr cacheOut);
 
+		[Preserve (Conditional = true)]
 		internal CVMetalTextureCache (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

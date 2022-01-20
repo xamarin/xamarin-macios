@@ -290,7 +290,7 @@ namespace PassKit {
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment2' instead.")]
 		[Export ("paymentAuthorizationViewController:didAuthorizePayment:completion:")]
 		[EventArgs ("PKPaymentAuthorization")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		void DidAuthorizePayment (PKPaymentAuthorizationViewController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
@@ -324,7 +324,7 @@ namespace PassKit {
 
 		[iOS (8,3)]
 		[Export ("paymentAuthorizationViewControllerWillAuthorizePayment:")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		void WillAuthorizePayment (PKPaymentAuthorizationViewController controller);
@@ -1144,7 +1144,7 @@ namespace PassKit {
 		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("paymentAuthorizationController:didAuthorizePayment:completion:")]
@@ -1204,7 +1204,7 @@ namespace PassKit {
 		[MacCatalyst (14,0)]
 		[Export ("presentationWindowForPaymentAuthorizationController:")]
 		[return: NullAllowed]
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[Abstract]
 #endif
 		UIWindow GetPresentationWindow (PKPaymentAuthorizationController controller);

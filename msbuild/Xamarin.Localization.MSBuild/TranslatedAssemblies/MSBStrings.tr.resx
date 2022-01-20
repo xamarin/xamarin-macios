@@ -717,7 +717,7 @@
         <value>Mac Catalyst {0} sürümü karşılık gelen bir macOS sürümüne eşlenemedi. Geçerli Mac Catalyst sürümleri şunlardır: {1}</value>
     </data>
   <data name="E0189" xml:space="preserve">
-        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
+        <value>Özel bağlayıcı bağımsız değişkenleri '-{0}' ayrıştırılamadı: {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Wi-Fi hata ayıklayıcısı ayarları için konak IP'leri çözümlenemedi.
@@ -1086,10 +1086,10 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="W7091" xml:space="preserve">
-        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+        <value>{0} çerçevesi statik kitaplıklardan oluşan bir çerçevedir ve uygulamaya kopyalanmaz.</value>
     </data>
   <!-- This is the same as MT0140 -->
   <data name="E7092" xml:space="preserve">
-        <value>File '{0}' is not a valid framework: {1}</value>
+        <value>'{0}' dosyası geçerli bir çerçeve değil: {1}</value>
     </data>
 </root>

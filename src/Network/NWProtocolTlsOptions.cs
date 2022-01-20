@@ -33,6 +33,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWProtocolTlsOptions : NWProtocolOptions {
+		[Preserve (Conditional = true)]
 		internal NWProtocolTlsOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWProtocolTlsOptions () : this (nw_tls_create_options (), owns: true) {}

@@ -37,7 +37,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 #elif !WATCH
 using CoreServices;
@@ -727,6 +727,7 @@ namespace CoreFoundation {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		protected CFStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

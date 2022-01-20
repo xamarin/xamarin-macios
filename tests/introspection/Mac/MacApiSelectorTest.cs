@@ -1218,10 +1218,6 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8))
 					return true;
 				break;
-			case "initWithString:":
-				if (declaredType.Name == "NSTextStorage")
-					return true;
-				break;
 			}
 
 			switch (declaredType.Name) {

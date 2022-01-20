@@ -22,7 +22,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 // CFHost is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
-#if XAMCORE_4_0
+#if NET
 namespace CFNetwork {
 #else
 namespace CoreServices {
@@ -50,6 +50,7 @@ namespace CoreServices {
 #endif
 #endif
 	class CFHost : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CFHost (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

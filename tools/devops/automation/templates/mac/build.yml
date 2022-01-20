@@ -143,10 +143,10 @@ steps:
   condition: ${{ parameters.clearProvisionatorCache }}
 
 # sometimes the make that creates the pkgs fails.
-- pwsh:
+- pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
 
-    if ($Env:MAC_TESTS_PRESENT -ne "Succeeded") {
+    if ($Env:MAC_TESTS_PRESENT -eq "Failed") {
       Set-GitHubStatus -Status "error" -Description "Mac tests were not packaged." -Context "$Env:CONTEXT"
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Mac tests were not packaged."
       Stop-Pipeline
@@ -154,6 +154,9 @@ steps:
   displayName: Validate tests pacakge
   env:
     CONTEXT: ${{ parameters.statusContext }}
+    BUILD_REVISION: $(Build.SourceVersion)
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 - task: DownloadPipelineArtifact@2
   displayName: Download Mac tests

@@ -109,6 +109,11 @@ namespace AudioUnit
 			return String.Format ("Unknown error code: 0x{0:x}", k);
 		}
 		
+		internal AudioUnitException (AudioUnitStatus status)
+			: this ((int) status)
+		{
+		}
+
 		internal AudioUnitException (int k) : base (Lookup (k))
 		{
 		}
@@ -313,6 +318,7 @@ namespace AudioUnit
 		Dictionary<uint, RenderDelegate>? renderer;
 		Dictionary<uint, InputDelegate>? inputs;
 
+		[Preserve (Conditional = true)]
 		internal AudioUnit (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -323,7 +329,7 @@ namespace AudioUnit
 			if (component is null)
 				throw new ArgumentNullException (nameof (component));
 
-			int err = AudioComponentInstanceNew (component.GetCheckedHandle (), out var handle);
+			var err = AudioComponentInstanceNew (component.GetCheckedHandle (), out var handle);
 			if (err != 0)
 				throw new AudioUnitException (err);
 
@@ -642,6 +648,9 @@ namespace AudioUnit
 
 			inputs [audioUnitElement] = inputDelegate;
 
+			if (!gcHandle.IsAllocated)
+				gcHandle = GCHandle.Alloc (this);
+
 			var cb = new AURenderCallbackStruct ();
 			cb.Proc = CreateInputCallback;
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
@@ -755,32 +764,60 @@ namespace AudioUnit
 		}
 #endif
 
-		// TODO: return AudioUnitStatus
-		public int Initialize ()
+#if NET
+		public AudioUnitStatus Initialize ()
 		{
 			return AudioUnitInitialize (Handle);
 		}
+#else
+		public int Initialize ()
+		{
+			return (int) AudioUnitInitialize (Handle);
+		}
+#endif
 
-		// TODO: return AudioUnitStatus
-		public int Uninitialize ()
+#if NET
+		public AudioUnitStatus Uninitialize ()
 		{
 			return AudioUnitUninitialize (Handle);
 		}
-
-		public void Start()
+#else
+		public int Uninitialize ()
 		{
+			return (int) AudioUnitUninitialize (Handle);
+		}
+#endif
+
+#if NET
+		public AudioUnitStatus Start ()
+#else
+		public void Start()
+#endif
+		{
+			AudioUnitStatus rv = 0;
 			if (! _isPlaying) {
-				AudioOutputUnitStart (Handle);
+				rv = AudioOutputUnitStart (Handle);
 				_isPlaying = true;
 			}
+#if NET
+			return rv;
+#endif
 		}
 		
+#if NET
+		public AudioUnitStatus Stop ()
+#else
 		public void Stop()
+#endif
 		{
+			AudioUnitStatus rv = 0;
 			if (_isPlaying) {
-				AudioOutputUnitStop (Handle);
+				rv = AudioOutputUnitStop (Handle);
 				_isPlaying = false;
 			}
+#if NET
+			return rv;
+#endif
 		}
 
 		#region Render
@@ -820,22 +857,22 @@ namespace AudioUnit
 		}
 
 		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentInstanceNew")]
-		static extern int AudioComponentInstanceNew(IntPtr inComponent, out IntPtr inDesc);
+		static extern AudioUnitStatus AudioComponentInstanceNew(IntPtr inComponent, out IntPtr inDesc);
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentInstanceGetComponent (IntPtr inComponent);
 		
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioUnitInitialize(IntPtr inUnit);
+		static extern AudioUnitStatus AudioUnitInitialize (IntPtr inUnit);
 		
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioUnitUninitialize(IntPtr inUnit);
+		static extern AudioUnitStatus AudioUnitUninitialize (IntPtr inUnit);
 
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioOutputUnitStart(IntPtr ci);
+		static extern AudioUnitStatus AudioOutputUnitStart (IntPtr ci);
 
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioOutputUnitStop(IntPtr ci);
+		static extern AudioUnitStatus AudioOutputUnitStop (IntPtr ci);
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitRender(IntPtr inUnit, ref AudioUnitRenderActionFlags ioActionFlags, ref AudioTimeStamp inTimeStamp,
@@ -1041,6 +1078,7 @@ namespace AudioUnit
 		{
 		}
 
+		[Preserve (Conditional = true)]
 		internal AURenderEventEnumerator (NativeHandle handle, bool owns)
 		{
 			Handle = handle;

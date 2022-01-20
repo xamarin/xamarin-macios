@@ -34,6 +34,7 @@ namespace CoreMedia {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal CMClock (NativeHandle handle, bool owns) 
 			: base (handle, owns)
 		{
@@ -122,6 +123,7 @@ namespace CoreMedia {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		private CMTimebase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -741,6 +743,7 @@ namespace CoreMedia {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal CMClockOrTimebase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

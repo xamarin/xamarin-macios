@@ -23,6 +23,10 @@ parameters:
   type: boolean
   default: false
 
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -358,10 +362,11 @@ steps:
   displayName: 'Build'
   timeoutInMinutes: 180
 
- # run ASAP so that we do not have any files that got generated confusing git 
-- template: api-diff.yml
-  parameters:
-    prID: variables['PrID']
+# run ASAP so that we do not have any files that got generated confusing git 
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - template: api-diff.yml
+    parameters:
+      prID: variables['PrID']
 
 # build not signed .pkgs for the SDK
 - bash: |
@@ -432,11 +437,14 @@ steps:
     set -x
     set -e
 
+    echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
     RC=0
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests || RC=$?
     if [ $RC -eq 0 ]; then
+      echo "Setting outpur var macTestsPresent to Succeeded"
       echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
     else
+      echo "Setting outpur var macTestsPresent to Failed"
       echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
     fi
     exit $RC
@@ -488,7 +496,7 @@ steps:
     fi
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
-  timeoutInMinutes: 600
+  timeoutInMinutes: 720
   enabled: ${{ parameters.runTests }}
   env:
     IsPR: $(configuration.IsPR)
@@ -572,3 +580,7 @@ steps:
     artifactName: all-binlogs
   continueOnError: true
   condition: succeededOrFailed()
+
+- template: ../common/mac-agent-logs.yml
+  parameters:
+    outputPath: agent-logs.log

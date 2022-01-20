@@ -32,6 +32,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWAdvertiseDescriptor : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWAdvertiseDescriptor (NativeHandle handle, bool owns) : base (handle, owns)
 #else

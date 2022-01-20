@@ -70,7 +70,7 @@ namespace SafariServices {
 		[Export ("addReadingListItemWithURL:title:previewText:error:")]
 		bool Add (NSUrl url, [NullAllowed] string title, [NullAllowed] string previewText, out NSError error);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("SSReadingListErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif

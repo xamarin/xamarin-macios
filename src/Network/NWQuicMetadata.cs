@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
+using Foundation;
 using ObjCRuntime;
 using Security;
 
@@ -23,6 +24,7 @@ namespace Network {
 #endif
 	public class NWQuicMetadata : NWProtocolMetadata {
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWQuicMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 #else

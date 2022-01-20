@@ -30,6 +30,8 @@
 
 using System;
 using System.Runtime.InteropServices;
+
+using Foundation;
 using ObjCRuntime;
 
 #if !NET
@@ -57,6 +59,7 @@ namespace CoreGraphics {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 		internal CGPDFPage (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

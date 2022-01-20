@@ -13,7 +13,9 @@ namespace AVFoundation {
 
 		public enum InitMode {
 			WithConnection,
-#if !NET
+#if NET
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[iOS (8,0)]
 #endif
 			WithNoConnection,

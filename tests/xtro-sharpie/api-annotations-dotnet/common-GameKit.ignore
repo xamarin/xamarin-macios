@@ -14,6 +14,4 @@
 
 ## unsorted
 
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
 !missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound

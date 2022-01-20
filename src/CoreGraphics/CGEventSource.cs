@@ -38,6 +38,7 @@ namespace CoreGraphics {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal CGEventSource (NativeHandle handle, bool owns)
 #else

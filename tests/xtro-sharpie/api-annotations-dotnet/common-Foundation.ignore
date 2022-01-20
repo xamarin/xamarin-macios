@@ -12,9 +12,6 @@
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=35021
 !missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 
-## the API exists but is [Sealed], until XAMCORE_4_0, to keep compatible with iOS/Mac profiles
-!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
-
 # missing - pending decision for implementation
 !missing-type! NSAssertionHandler not bound
 !missing-field! NSAssertionHandlerKey not bound
@@ -37,15 +34,6 @@
 ## native long is same size as int (.net long is long long)
 !missing-selector! NSNumber::initWithLong: not bound
 !missing-selector! NSNumber::initWithUnsignedLong: not bound
-
-# fixed in XAMCORE_3_0 - API break
-!incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
-
-## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
-!unknown-native-enum! NSBundleExecutableArchitecture bound
-
-## enum was [re]named to NSCalendarOptions - excluding from XAMCORE_4_0
-!unknown-native-enum! NSDateComponentsWrappingBehavior bound
 
 ## collections - many are special
 !missing-type! NSCountedSet not bound
@@ -1119,7 +1107,7 @@
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrl(Foundation.NSSearchPathDirectory,Foundation.NSSearchPathDomain,Foundation.NSUrl,System.Boolean,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForPublishingUbiquitousItem(Foundation.NSUrl,Foundation.NSDate&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForUbiquityContainer(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSFilePresenter::get_PresentedItemURL()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSUrl Foundation.NSFilePresenter::get_PresentedItemUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileVersion::ReplaceItem(Foundation.NSUrl,Foundation.NSFileVersionReplacingOptions,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileWrapper::get_SymbolicLinkDestinationURL()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSHttpCookie::get_CommentUrl()' is missing an [NullAllowed] on return type
