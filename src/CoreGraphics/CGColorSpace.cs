@@ -69,7 +69,11 @@ namespace CoreGraphics {
 	{
 #if !COREBUILD
 #if !XAMCORE_3_0
+#if !NET
 		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.")]
+#else
+		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 		public readonly static CGColorSpace Null = CreateNull ();
 #endif
 
@@ -159,7 +163,11 @@ namespace CoreGraphics {
 		}
 
 #if !XAMCORE_3_0
+#if !NET
 		[Obsolete ("This method has been renamed 'CreateDeviceCmyk'.")]
+#else
+		[Obsolete ("This method has been renamed 'CreateDeviceCmyk'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static /* CGColorSpaceRef */ CGColorSpace CreateDeviceCMYK ()
 		{
