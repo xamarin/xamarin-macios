@@ -50,18 +50,9 @@ namespace CoreAnimation {
 		TopBottomEdges = TopEdge | BottomEdge
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-#else
 	[NoWatch] // headers not updated
-	[iOS (11,0)]
-	[TV (11,0)]
-	[Mac (10,13)]
-#endif
-	[Native]
-	[Flags]
+	[iOS (11,0)][TV (11,0)][Mac (10,13)]
+	[Native][Flags]
 	public enum CACornerMask : ulong {
 		MinXMinYCorner = 1 << 0,
 		MaxXMinYCorner = 1 << 1,
