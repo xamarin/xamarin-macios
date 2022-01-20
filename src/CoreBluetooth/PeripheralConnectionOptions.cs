@@ -36,7 +36,9 @@ using System.Runtime.Versioning;
 
 namespace CoreBluetooth {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public class PeripheralConnectionOptions : DictionaryContainer
 	{
 #if !COREBUILD
