@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
@@ -299,10 +300,20 @@ namespace CoreGraphics {
 			}
 		}
 		
+#if NET && !MONOMAC
+		// on macOS NSAffineTransform is an ObjC type
+		[DllImport (Constants.UIKitLibrary)]
+		extern static /* NSString */ IntPtr NSStringFromCGAffineTransform (CGAffineTransform transform);
+#endif
+
 		public override String ToString ()
 		{
 #if NET
-			String s = String.Format ("A:{0:##0.0#} B:{1:##0.0#} C:{2:##0.0#} D:{3:##0.0#} Tx:{4:##0.0#} Ty:{5:##0.0#}", A, B, C, D, Tx, Ty);
+	#if MONOMAC
+			String s = $"[{A}, {B}, {C}, {D}, {Tx}, {Ty}]";
+	#else
+			String s = CFString.FromHandle (NSStringFromCGAffineTransform (this));
+	#endif
 #else
 			String s = String.Format ("xx:{0:##0.0#} yx:{1:##0.0#} xy:{2:##0.0#} yy:{3:##0.0#} x0:{4:##0.0#} y0:{5:##0.0#}", xx, yx, xy, yy, x0, y0);
 #endif
@@ -357,9 +368,7 @@ namespace CoreGraphics {
 		public override int GetHashCode()
 		{
 #if NET
-			return  (int) this.A ^ (int) this.C ^
-					(int) this.B ^ (int) this.D ^
-					(int) this.Tx ^ (int) this.Ty;
+			return HashCode.Combine (A, C, B, D, Tx, Ty);
 #else
 			return  (int)this.xx ^ (int)this.xy ^
 					(int)this.yx ^ (int)this.yy ^
