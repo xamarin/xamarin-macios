@@ -1911,7 +1911,7 @@ namespace UIKit {
 		Next
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoTV]
 #else
 	// Xcode 8.2 beta 1 added __TVOS_PROHIBITED but we need to keep it for binary compatibility

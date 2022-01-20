@@ -24,15 +24,15 @@ namespace UIKit {
 		// The following construct emulates the support for:
 		// id<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 		//
-		// That is, the type can contain either one, btu we still want it strongly typed
+		// That is, the type can contain either one, but we still want it strongly typed
 		//
-#if XAMCORE_4_0
+#if NET
 		public IUIImagePickerControllerDelegate ImagePickerControllerDelegate {
 			get {
 				return Delegate as IUIImagePickerControllerDelegate;
 			}
 			set {
-				Delegate = value;
+				Delegate = (NSObject) value;
 			}
 		}
 
@@ -41,7 +41,7 @@ namespace UIKit {
 				return Delegate as IUINavigationControllerDelegate;
 			}
 			set {
-				Delegate = value;
+				Delegate = (NSObject) value;
 			}
 		}
 #else
