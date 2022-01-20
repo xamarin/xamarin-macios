@@ -6,6 +6,7 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
