@@ -8,7 +8,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public abstract class GetFilesTaskBase : XamarinTask
 	{
