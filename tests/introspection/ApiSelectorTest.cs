@@ -864,6 +864,13 @@ namespace Introspection {
 				if (selectorName == "waitUntilExit")
 					return true;
 				break;
+			case "NSTextStorage":
+				switch (selectorName) {
+				// declared in a superclass, and implemented in a concrete subclass, so it doesn't show up during inspection of NSTextStorage itself.
+				case "initWithString:":
+					return true;
+				}
+				break;
 			case "MPSImageDescriptor":
 				switch (selectorName) {
 				case "copyWithZone:":
