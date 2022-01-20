@@ -200,61 +200,31 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#endif
 		extern static void CGPDFContextSetOutline (/* CGPDFDocumentRef */ IntPtr document, IntPtr /* dictionary */ outline);
 
-#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#endif
 		public void SetOutline (CGPDFOutlineOptions? options)
 		{
 			CGPDFContextSetOutline (Handle, options.GetHandle ());
 		}
 					
 		[DllImport (Constants.CoreGraphicsLibrary)]
-#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#endif
 		extern static /* CFDictionaryPtry */ IntPtr CGPDFDocumentGetOutline (/* CGPDFDocumentRef */ IntPtr document);
 
-#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#endif
 		public CGPDFOutlineOptions GetOutline ()
 		{
 			var ptr = CGPDFDocumentGetOutline (Handle);
 			return new CGPDFOutlineOptions (Runtime.GetNSObject<NSDictionary> (ptr));
 		}
 
-#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGPDFAccessPermissions CGPDFDocumentGetAccessPermissions (IntPtr document);
 
-#if !NET
 		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#endif
 		public CGPDFAccessPermissions GetAccessPermissions ()
 		{
 			return CGPDFDocumentGetAccessPermissions (Handle);

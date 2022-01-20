@@ -73,15 +73,11 @@ namespace CoreGraphics {
 
 #if MONOTOUCH
 #if !COREBUILD
-#if !NET
 		[iOS (8,0)]
-#endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static IntPtr NSStringFromCGVector (CGVector vector);
 		
-#if !NET
 		[iOS (8,0)]
-#endif
 		public override string ToString ()
 		{
 			using (var ns = new NSString (NSStringFromCGVector (this)))
@@ -92,15 +88,11 @@ namespace CoreGraphics {
 #endif
 		}
 
-#if !NET
 		[iOS (8,0)]
-#endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static CGVector CGVectorFromString (IntPtr str);
 		
-#if !NET
 		[iOS (8,0)]
-#endif
 		static public CGVector FromString (string s)
 		{
 			// note: null is allowed

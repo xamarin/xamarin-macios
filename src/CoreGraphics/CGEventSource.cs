@@ -25,11 +25,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreGraphics {
-#if !NET
 	[MacCatalyst (15,0)]
-#else
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 	public sealed class CGEventSource : NativeObject {
 #if !NET
 		public CGEventSource (NativeHandle handle)
