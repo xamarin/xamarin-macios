@@ -8,11 +8,7 @@ using System.Runtime.Versioning;
 namespace CoreBluetooth {
 	public partial class CBManager {
 
-#if !NET
 		[iOS (13,0), Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-#endif
 		public static CBManagerAuthorization Authorization {
 			get {
 				// in iOS 13.1 / Watch 6.1 this is a static property, like other [tv|mac]OS

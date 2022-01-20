@@ -40,9 +40,7 @@ namespace CoreBluetooth {
 	// It's intentionally not called AdvertisementDataOptions because different options
 	// are valid in different contexts
 	//
-#if !NET
 	[Watch (4,0)]
-#endif
 	public class StartAdvertisingOptions : DictionaryContainer
 	{
 #if !COREBUILD
