@@ -79,7 +79,6 @@ namespace CoreImage {
 
 #if NET
 	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("tvos11.0")]
 #else
 	[iOS (11,0)]
@@ -96,7 +95,6 @@ namespace CoreImage {
 
 #if NET
 	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("tvos11.0")]
 #else
 	[iOS (11,0)]
@@ -115,7 +113,6 @@ namespace CoreImage {
 
 #if NET
 	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("tvos11.0")]
 #else
 	[iOS (11,0)]
