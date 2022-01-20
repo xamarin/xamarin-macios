@@ -23,6 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
