@@ -407,7 +407,7 @@ steps:
       keyringPass: ${{ parameters.keyringPass }}
 
 # publish nugets (must be done after signing)
-- ${{ if eq(parameters.enableDotnet, true) }}:
+- ${{ if and(ne(parameters.skipPackages, true), eq(parameters.enableDotnet, true)) }}:
   - template: publish-nugets.yml
 
 - ${{ if ne(parameters.skipPackages, true) }}:
