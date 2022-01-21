@@ -129,7 +129,7 @@ namespace QuickLookThumbnailing {
 	}
 }
 
-#if IOS && !XAMCORE_4_0
+#if IOS && !NET
 namespace QuickLook {
 #else
 namespace QuickLookThumbnailing {
