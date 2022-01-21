@@ -600,7 +600,6 @@
 !missing-null-allowed! 'CoreGraphics.CGPoint AppKit.NSPanGestureRecognizer::VelocityInView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'CoreGraphics.CGRect AppKit.NSMenuDelegate::ConfinementRectForMenu(AppKit.NSMenu,AppKit.NSScreen)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'CoreGraphics.CGRect AppKit.NSPageControllerDelegate::GetFrame(AppKit.NSPageController,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'CoreGraphics.CGSize AppKit.NSStringDrawing_NSString::StringSize(Foundation.NSString,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'CoreImage.CIContext AppKit.NSGraphicsContext::get_CIContext()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAffineTransform AppKit.NSFontDescriptor::get_Matrix()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray AppKit.NSTextFinderClient::RectsForCharacterRange(Foundation.NSRange)' is missing an [NullAllowed] on return type
@@ -1295,8 +1294,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSPanGestureRecognizer::SetTranslation(CoreGraphics.CGPoint,AppKit.NSView)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSSpellChecker::RecordResponse(AppKit.NSCorrectionResponse,System.String,System.String,System.String,System.nint)' is missing an [NullAllowed] on parameter #3
 !missing-null-allowed! 'System.Void AppKit.NSSpellChecker::ShowCorrectionIndicatorOfType(AppKit.NSCorrectionIndicatorType,System.String,System.String[],CoreGraphics.CGRect,AppKit.NSRulerView,AppKit.NSSpellCheckerShowCorrectionIndicatorOfTypeHandler)' is missing an [NullAllowed] on parameter #5
-!missing-null-allowed! 'System.Void AppKit.NSStringDrawing_NSString::DrawAtPoint(Foundation.NSString,CoreGraphics.CGPoint,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void AppKit.NSStringDrawing_NSString::DrawInRect(Foundation.NSString,CoreGraphics.CGRect,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSTextAttachmentCell::Highlight(System.Boolean,CoreGraphics.CGRect,AppKit.NSView)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSTextView::.ctor(CoreGraphics.CGRect,AppKit.NSTextContainer)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSTrackingArea::.ctor(CoreGraphics.CGRect,AppKit.NSTrackingAreaOptions,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #2
