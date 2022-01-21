@@ -1269,7 +1269,6 @@
 !missing-null-allowed! 'Foundation.NSSet AppKit.NSEvent::TouchesMatchingPhase(AppKit.NSTouchPhase,AppKit.NSView)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSImage::HitTestRect(CoreGraphics.CGRect,CoreGraphics.CGRect,AppKit.NSGraphicsContext,Foundation.NSDictionary,System.Boolean)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean AppKit.NSImage::HitTestRect(CoreGraphics.CGRect,CoreGraphics.CGRect,AppKit.NSGraphicsContext,Foundation.NSDictionary,System.Boolean)' is missing an [NullAllowed] on parameter #3
-!missing-null-allowed! 'System.Boolean AppKit.NSImageRep::DrawInRect(CoreGraphics.CGRect,CoreGraphics.CGRect,AppKit.NSCompositingOperation,System.nfloat,System.Boolean,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #5
 !missing-null-allowed! 'System.Boolean AppKit.NSTextAttachmentCell::TrackMouse(AppKit.NSEvent,CoreGraphics.CGRect,AppKit.NSView,System.Boolean)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean AppKit.NSTextAttachmentCell::TrackMouse(AppKit.NSEvent,CoreGraphics.CGRect,AppKit.NSView,System.nuint,System.Boolean)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean AppKit.NSTextAttachmentCell::WantsToTrackMouse(AppKit.NSEvent,CoreGraphics.CGRect,AppKit.NSView,System.nuint)' is missing an [NullAllowed] on parameter #2
