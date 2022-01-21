@@ -17,8 +17,10 @@ namespace Xamarin.Tests {
 			// { platform, template_name }
 			new [] { "iOS", "ios" },
 			new [] { "iOS", "ioslib" },
+			//new [] { "iOS", "iosbinding" },
 			new [] { "tvOS", "tvos" },
 			new [] { "MacCatalyst", "maccatalyst" },
+			//new [] { "MacCatalyst", "maccatalystbinding" },
 			new [] { "macOS", "macos" },
 		};
 
