@@ -3130,7 +3130,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[Export ("application:didFailToContinueUserActivityWithType:error:")]
-#if XAMCORE_4_0
+#if NET
 		void DidFailToContinueUserActivity (UIApplication application, string userActivityType, NSError error);
 #else
 		void DidFailToContinueUserActivitiy (UIApplication application, string userActivityType, NSError error);
@@ -9868,9 +9868,10 @@ namespace UIKit {
 		[Export ("numberOfItems")]
 		nint Count { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Export ("pasteboardTypesForItemSet:")]
-		NSArray<NSString> [] GetPasteBoardTypes (NSIndexSet itemSet);
+		[return: NullAllowed]
+		NSArray<NSString> [] GetPasteBoardTypes ([NullAllowed] NSIndexSet itemSet);
 #else
 		[Export ("pasteboardTypesForItemSet:")]
 		NSArray [] PasteBoardTypesForSet (NSIndexSet itemSet);
@@ -10051,12 +10052,18 @@ namespace UIKit {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
 
-		[NullAllowed] // by default this property is null
+#if NET
+		[NullAllowed]
 		[Export ("dataSource", ArgumentSemantic.Assign)]
-#if XAMCORE_4_0
+		NSObject WeakDataSource { get; set; }
+
+		[NullAllowed]
+		[Wrap ("WeakDataSource")]
 		IUIPickerViewDataSource DataSource { get; set; }
 #else
 		// should have been WeakDataSource
+		[NullAllowed] // by default this property is null
+		[Export ("dataSource", ArgumentSemantic.Assign)]
 		NSObject DataSource { get; set; }
 #endif
 
@@ -10100,7 +10107,7 @@ namespace UIKit {
 		// 	inlined both + UIPickerView.cs implements IUITableViewDataSource
 
 		[Export ("tableView:numberOfRowsInSection:")]
-#if XAMCORE_4_0
+#if NET
 		nint RowsInSection (UITableView tableView, nint section);
 #else
 		nint RowsInSection (UITableView tableview, nint section);
@@ -10176,6 +10183,8 @@ namespace UIKit {
 		[Abstract]
 		nint GetRowsInComponent (UIPickerView pickerView, nint component);
 	}
+
+	interface IUIPickerViewDataSource { }
 
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -12685,7 +12694,7 @@ namespace UIKit {
 	interface UITableViewSource {
 		[Export ("tableView:numberOfRowsInSection:")]
 		[Abstract]
-#if XAMCORE_4_0
+#if NET
 		nint RowsInSection (UITableView tableView, nint section);
 #else
 		nint RowsInSection (UITableView tableview, nint section);
@@ -15062,33 +15071,29 @@ namespace UIKit {
 		[Export ("shouldPerformSegueWithIdentifier:sender:")]
 		bool ShouldPerformSegue (string segueIdentifier, NSObject sender);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
-#endif // !XAMCORE_4_0
+#endif
 		[Export ("canPerformUnwindSegueAction:fromViewController:withSender:")]
-		bool
-#if !XAMCORE_4_0
-		CanPerformUnwind
+#if !NET
+		bool CanPerformUnwind (Selector segueAction, UIViewController fromViewController, NSObject sender);
 #else
-		CanPerformUnwindDeprecated
-#endif // !XAMCORE_4_0
-		(Selector segueAction, UIViewController fromViewController, NSObject sender);
+		bool CanPerformUnwindDeprecated (Selector segueAction, UIViewController fromViewController, NSObject sender);
+#endif
 
 		// Apple decided to rename the selector and it clashes with our current one
-		// we will get the right name 'CanPerformUnwind' if XAMCORE_4_0 happens, use CanPerformUnwindSegueAction for now.
+		// we will get the right name 'CanPerformUnwind' if NET happens, use CanPerformUnwindSegueAction for now.
 		[TV (13,0), iOS (13,0)]
 		[Export ("canPerformUnwindSegueAction:fromViewController:sender:")]
-		bool
-#if !XAMCORE_4_0
-		CanPerformUnwindSegueAction
+#if !NET
+		bool CanPerformUnwindSegueAction (Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
 #else
-		CanPerformUnwind
-#endif // !XAMCORE_4_0
-		(Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
+		bool CanPerformUnwind (Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
+#endif
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("viewControllerForUnwindSegueAction:fromViewController:withSender:")]
@@ -17757,7 +17762,7 @@ namespace UIKit {
 		NSString ResponseTypedTextKey { get; }
 	}
 #else
-#if !XAMCORE_4_0 // No longer present in watchOS 7.0
+#if !NET // No longer present in watchOS 7.0
 	[Watch (2,0)]
 	[Static]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' or 'UserNotifications.UNTextInputNotificationAction' instead.")]
@@ -17766,7 +17771,7 @@ namespace UIKit {
 		[Field ("UIUserNotificationActionResponseTypedTextKey")]
 		NSString ResponseTypedTextKey { get; }
 	}
-#endif // !XAMCORE_4_0
+#endif // !NET
 #endif
 
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' instead.")]
