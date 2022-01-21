@@ -11,13 +11,13 @@ namespace AppKit {
 
 	public partial class NSWorkspace {
 
-#if !NET
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("macos11.0")]
 #if MONOMAC
 		[Obsolete ("Starting with macos11.0 use 'NSWorkspace.OpenUrls' with completion handler.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 #endif
 		public virtual bool OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, string[] identifiers)
 		{
@@ -25,13 +25,13 @@ namespace AppKit {
 			return _OpenUrls (urls, bundleIdentifier, options, descriptor, null);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("macos11.0")]
 #if MONOMAC
 		[Obsolete ("Starting with macos11.0 use 'NSWorkspace.OpenUrls' with completion handler.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 #endif
 		public virtual bool OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor)
 		{
