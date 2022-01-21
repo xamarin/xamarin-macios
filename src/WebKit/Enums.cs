@@ -160,7 +160,7 @@ namespace WebKit {
 		Any = UInt64.MaxValue
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	public enum WebNavigationType : uint {
 #else
 	[Native]

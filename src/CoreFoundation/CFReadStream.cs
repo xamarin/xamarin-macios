@@ -35,20 +35,29 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
 	// CFStream.h
 	public class CFReadStream : CFStream {
-#if !XAMCORE_4_0
-		public CFReadStream (IntPtr handle)
+#if !NET
+		public CFReadStream (NativeHandle handle)
 			: base (handle, true)
 		{
 		}
 #endif
 
-		internal CFReadStream (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CFReadStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

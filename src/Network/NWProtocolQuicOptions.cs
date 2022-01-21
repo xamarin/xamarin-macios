@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using Foundation;
 using ObjCRuntime;
 using Security;
 using System.Runtime.Versioning;
@@ -8,6 +9,10 @@ using System.Runtime.Versioning;
 using OS_nw_protocol_options = System.IntPtr;
 using OS_nw_protocol_metadata = System.IntPtr;
 using SecProtocolOptionsRef = System.IntPtr;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 #nullable enable
 
@@ -20,7 +25,8 @@ namespace Network {
 #endif
 	public class NWProtocolQuicOptions : NWProtocolOptions {
 
-		internal NWProtocolQuicOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolQuicOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 		
 		public NWProtocolQuicOptions () : this (nw_quic_create_options (), owns: true) {}
 

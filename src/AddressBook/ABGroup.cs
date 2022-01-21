@@ -40,6 +40,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 	static class ABGroupProperty {
 
@@ -93,12 +97,13 @@ namespace AddressBook {
 			Handle = ABGroupCreateInSource (source.Handle);
 		}
 
-		internal ABGroup (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal ABGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		internal ABGroup (IntPtr handle, ABAddressBook addressbook)
+		internal ABGroup (NativeHandle handle, ABAddressBook addressbook)
         	: base (handle, false)
 		{
 			AddressBook = addressbook;

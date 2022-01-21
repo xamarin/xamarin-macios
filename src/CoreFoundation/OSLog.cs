@@ -21,9 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+
+using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
@@ -70,7 +76,8 @@ namespace CoreFoundation {
 		[DllImport ("__Internal")]
 		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, string message);
 
-		internal OSLog (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal OSLog (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

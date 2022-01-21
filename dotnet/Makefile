@@ -3,8 +3,6 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-# The sdk version band has the last two digits set to 0: https://github.com/dotnet/sdk/blob/22c4860dcb2cf6b123dd641cc4a87a50380759d5/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/SdkDirectoryWorkloadManifestProvider.cs#L52-L53
-MANIFEST_VERSION_BAND=$(shell echo $(DOTNET6_VERSION_BAND) | sed 's/..$$/00/')
 DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(MANIFEST_VERSION_BAND)
 DOTNET_PACKS_PATH=$(DOTNET6_DIR)/packs
 DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET6_DIR)/template-packs
@@ -90,13 +88,14 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e "s/@DEFAULT_TARGET_PLATFORM_VERSION@/$$(DEFAULT_TARGET_PLATFORM_VERSION_$(2))/g" \
 		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
 		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
+		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.Sdk.Versions.props
 	$$(Q) $$(CP) $$< $$@
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
 
 define DefaultItems
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.Sdk.DefaultItems.template.props Makefile

@@ -33,24 +33,6 @@ namespace MonoTouchFixtures.ModelIO {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-
-			if (
-#if !MONOMAC
-				Runtime.Arch == Arch.SIMULATOR && 
-#endif
-				IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				object dummy;
-				using (var obj = new MDLVertexAttribute ()) {
-					dummy = obj.BufferIndex;
-					dummy = obj.Format;
-					dummy = obj.InitializationValue;
-					dummy = obj.Name;
-					dummy = obj.Offset;
-				}
-			}
 		}
 
 		[Test]

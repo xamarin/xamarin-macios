@@ -716,6 +716,9 @@
   <data name="E0188" xml:space="preserve">
         <value>Non è stato possibile eseguire il mapping della versione Mac Catalyst{0} sulla versione macOS corrispondente. Le versioni di Mac Catalyst valide sono: {1}</value>
     </data>
+  <data name="E0189" xml:space="preserve">
+        <value>Non è stato possibile analizzare gli argomenti del linker personalizzati '-{0}': {1}</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.
         </value>
@@ -1081,5 +1084,12 @@
   <data name="W7087" xml:space="preserve">
         <value>È previsto un ‘file manifest' nella directory {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>Il framework {0} è un framework di librerie statiche e non verrà copiato nell'app.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>Il file '{0}' non è un framework valido: {1}</value>
     </data>
 </root>

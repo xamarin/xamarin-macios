@@ -4,6 +4,10 @@ using Foundation;
 
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Chip {
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -90,7 +94,7 @@ namespace Chip {
 	{
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -103,7 +107,7 @@ namespace Chip {
 	{
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeVendorNameWithResponseHandler:")]
@@ -147,7 +151,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("barrierControlGoToPercent:responseHandler:")]
@@ -186,7 +190,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Export ("mfgSpecificPing:")]
 		void GetMfgSpecificPing (ChipResponseHandler responseHandler);
@@ -284,7 +288,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("bind:groupId:endpointId:clusterId:responseHandler:")]
@@ -307,7 +311,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("moveColor:rateY:optionsMask:optionsOverride:responseHandler:")]
@@ -670,7 +674,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeDeviceListWithResponseHandler:")]
@@ -701,7 +705,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("clearAllPins:")]
@@ -828,7 +832,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("armFailSafe:breadcrumb:timeoutMs:responseHandler:")]
@@ -867,7 +871,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeGroupsWithResponseHandler:")]
@@ -890,7 +894,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addGroup:groupName:responseHandler:")]
@@ -932,7 +936,7 @@ namespace Chip {
 	{
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("identify:responseHandler:")]
@@ -963,7 +967,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("move:rate:optionMask:optionOverride:responseHandler:")]
@@ -1022,7 +1026,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("sleep:")]
@@ -1041,7 +1045,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addThreadNetwork:breadcrumb:timeoutMs:responseHandler:")]
@@ -1092,7 +1096,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("off:")]
@@ -1131,7 +1135,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
@@ -1175,7 +1179,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMaxPressureWithResponseHandler:")]
@@ -1230,7 +1234,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addScene:sceneId:transitionTime:sceneName:clusterId:length:value:responseHandler:")]
@@ -1293,7 +1297,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeNumberOfPositionsWithResponseHandler:")]
@@ -1324,7 +1328,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMeasuredValueWithResponseHandler:")]
@@ -1358,7 +1362,7 @@ namespace Chip {
 	{
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("test:")]
@@ -1528,7 +1532,7 @@ namespace Chip {
 	{
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("clearWeeklySchedule:")]
@@ -1613,7 +1617,11 @@ namespace Chip {
 	interface IChipDevicePairingDelegate {}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject), Name="CHIPDevicePairingDelegate")]
 	interface ChipDevicePairingDelegate
 	{
@@ -1705,7 +1713,7 @@ namespace Chip {
 	interface ChipManualSetupPayloadParser
 	{
 		[Export ("initWithDecimalStringRepresentation:")]
-		IntPtr Constructor (string decimalStringRepresentation);
+		NativeHandle Constructor (string decimalStringRepresentation);
 
 		[Export ("populatePayload:")]
 		[return: NullAllowed]
@@ -1715,7 +1723,11 @@ namespace Chip {
 	interface IChipPersistentStorageDelegate {}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject), Name="CHIPPersistentStorageDelegate")]
 	interface ChipPersistentStorageDelegate
 	{
@@ -1791,7 +1803,7 @@ namespace Chip {
 	interface ChipQRCodeSetupPayloadParser
 	{
 		[Export ("initWithBase38Representation:")]
-		IntPtr Constructor (string base38Representation);
+		NativeHandle Constructor (string base38Representation);
 
 		[Export ("populatePayload:")]
 		[return: NullAllowed]
@@ -1806,7 +1818,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("getSetupPIN:responseHandler:")]
@@ -1829,7 +1841,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("launchApp:catalogVendorId:applicationId:responseHandler:")]
@@ -1852,7 +1864,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("renameOutput:name:responseHandler:")]
@@ -1879,7 +1891,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeOutOfServiceWithResponseHandler:")]
@@ -1930,7 +1942,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeVendorNameWithResponseHandler:")]
@@ -2006,7 +2018,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("launchContent:data:responseHandler:")]
@@ -2037,7 +2049,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("resetCounts:")]
@@ -2076,7 +2088,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeLabelListWithResponseHandler:")]
@@ -2095,7 +2107,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeNetworkInterfacesWithResponseHandler:")]
@@ -2118,7 +2130,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("sendKey:responseHandler:")]
@@ -2137,7 +2149,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("hideInputStatus:")]
@@ -2172,7 +2184,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("mediaFastForward:")]
@@ -2232,7 +2244,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMeasuredValueWithResponseHandler:")]
@@ -2267,7 +2279,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("resetWatermarks:")]
@@ -2290,7 +2302,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("navigateTarget:data:responseHandler:")]
@@ -2314,7 +2326,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addTrustedRootCertificate:responseHandler:")]
@@ -2337,7 +2349,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("changeChannel:responseHandler:")]
@@ -2376,7 +2388,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeWakeOnLanMacAddressWithResponseHandler:")]
@@ -2395,7 +2407,7 @@ namespace Chip {
 
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]

@@ -21,6 +21,10 @@ using Foundation;
 using CoreFoundation;
 using System.Collections.Generic;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	[Native] // CFIndex
@@ -54,7 +58,8 @@ namespace CoreFoundation {
 	
 	public class CFNotificationCenter : NativeObject {
 		// If this becomes public for some reason, and more than three instances are created, you should revisit the lookup code
-		internal CFNotificationCenter (CFNotificationCenterRef handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CFNotificationCenter (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

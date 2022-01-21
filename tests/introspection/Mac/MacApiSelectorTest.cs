@@ -429,7 +429,7 @@ namespace Introspection {
 					}
 					break;
 #endif // !NET
-#if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
+#if !XAMCORE_4_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":
 					switch (selectorName) {
@@ -456,7 +456,7 @@ namespace Introspection {
 #endif
 				case "NSMenuDelegate":
 					switch (selectorName) {
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 					case "menu:willHighlightItem:":
 						return true; // bound
 #endif
@@ -629,7 +629,7 @@ namespace Introspection {
 					break;
 				case "PdfView":
 					switch (selectorName) {
-#if !XAMCORE_3_0					
+#if !XAMCORE_4_0					
 					case "menu:willHighlightItem:":
 						return true;
 #endif
@@ -1216,10 +1216,6 @@ namespace Introspection {
 			case "usesSceneTimeBase":
 			case "setUsesSceneTimeBase:":
 				if (!Mac.CheckSystemVersion (10, 8))
-					return true;
-				break;
-			case "initWithString:":
-				if (declaredType.Name == "NSTextStorage")
 					return true;
 				break;
 			}

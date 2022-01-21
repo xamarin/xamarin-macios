@@ -33,8 +33,14 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+
 using CoreFoundation;
+using Foundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
@@ -331,7 +337,8 @@ namespace CoreFoundation {
 			}
 		}
 
-		CFSocket (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		CFSocket (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 			gch = GCHandle.Alloc (this);

@@ -205,7 +205,6 @@
 !missing-null-allowed! 'System.String[] UIKit.UITextChecker::GuessesForWordRange(Foundation.NSRange,System.String,System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Void Foundation.NSObject::set_AccessibilityAttributedUserInputLabels(Foundation.NSAttributedString[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSObject::set_AccessibilityUserInputLabels(System.String[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void UIKit.NSLayoutManagerDelegate::DidCompleteLayout(UIKit.NSLayoutManager,UIKit.NSTextContainer,System.Boolean)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(System.String,Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void UIKit.UIAlertController::AddTextField(System.Action`1<UIKit.UITextField>)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIApplicationDelegate::HandleWatchKitExtensionRequest(UIKit.UIApplication,Foundation.NSDictionary,System.Action`1<Foundation.NSDictionary>)' is missing an [NullAllowed] on parameter #1
@@ -260,8 +259,6 @@
 !missing-null-allowed! 'UIKit.IUIViewControllerInteractiveTransitioning UIKit.UIViewControllerTransitioningDelegate::GetInteractionControllerForPresentation(UIKit.IUIViewControllerAnimatedTransitioning)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.IUIViewControllerTransitionCoordinator UIKit.TransitionCoordinator_UIViewController::GetTransitionCoordinator(UIKit.UIViewController)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.NSTextContainer UIKit.NSLayoutManager::get_ExtraLineFragmentTextContainer()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.NSTextContainer UIKit.NSLayoutManager::GetTextContainer(System.nuint,Foundation.NSRange&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.NSTextContainer UIKit.NSLayoutManager::GetTextContainer(System.nuint,Foundation.NSRange&,System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIAlertAction UIKit.UIAlertAction::Create(System.String,UIKit.UIAlertActionStyle,System.Action`1<UIKit.UIAlertAction>)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'UIKit.UIBezierPath UIKit.UICollisionBehavior::GetBoundary(Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UICollectionView UIKit.UICollectionViewLayout::get_CollectionView()' is missing an [NullAllowed] on return type

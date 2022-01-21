@@ -21,6 +21,10 @@ using OS_nw_protocol_definition=System.IntPtr;
 using OS_nw_protocol_options=System.IntPtr;
 using IntPtr=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -31,7 +35,8 @@ namespace Network {
 #endif
 	public class NWProtocolTcpOptions : NWProtocolOptions {
 		
-		internal NWProtocolTcpOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolTcpOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWProtocolTcpOptions () : this (nw_tcp_create_options (), owns: true) {}
 

@@ -12,6 +12,10 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	public partial class CFBundle : NativeObject {
@@ -33,7 +37,8 @@ namespace CoreFoundation {
 			public string Creator { get; private set; }
 		}
 
-		internal CFBundle (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CFBundle (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -87,7 +92,7 @@ namespace CoreFoundation {
 			// might be modified by a diff thread. We are going to clone the array and make sure
 			// that Apple does not modify the array while we work with it. That avoids changes
 			// in the index or in the bundles returned.
-			using (var cfBundles = new CFArray (CFBundleGetAllBundles ()))
+			using (var cfBundles = new CFArray (CFBundleGetAllBundles (), false))
 			using (var cfBundlesCopy = cfBundles.Clone () ) {
 				return CFArray.ArrayFromHandleFunc<CFBundle> (cfBundlesCopy.Handle, (handle) => new CFBundle (handle, false), false);
 			}

@@ -15,6 +15,10 @@ using Foundation;
 using CoreFoundation;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -25,7 +29,8 @@ namespace Network {
 #endif
 	public class NWIPMetadata : NWProtocolMetadata {
 
-		internal NWIPMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWIPMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWIPMetadata () : this (nw_ip_create_metadata (), owns: true) {}
 

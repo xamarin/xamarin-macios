@@ -184,15 +184,38 @@ namespace Xharness.Jenkins {
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro,
 				Timeout = TimeSpan.FromMinutes (15),
+				SupportsParallelExecution = false,
 			};
 
 			var runXtroReporter = new RunXtroTask (this, buildXtroTests, processManager, crashReportSnapshotFactory) {
 				Platform = TestPlatform.Mac,
 				TestName = buildXtroTests.TestName,
+				Mode = "Legacy Xamarin",
 				Ignored = buildXtroTests.Ignored,
 				WorkingDirectory = buildXtroTests.WorkingDirectory,
+				AnnotationsDirectory = buildXtroTests.WorkingDirectory,
 			};
 			Tasks.Add (runXtroReporter);
+
+			var buildDotNetXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
+				Platform = TestPlatform.All,
+				TestName = "Xtro",
+				Target = "dotnet-wrench",
+				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
+				Ignored = !IncludeXtro && !IncludeDotNet,
+				Timeout = TimeSpan.FromMinutes (15),
+				SupportsParallelExecution = false,
+			};
+
+			var runDotNetXtroReporter = new RunXtroTask (this, buildDotNetXtroTests, processManager, crashReportSnapshotFactory) {
+				Platform = TestPlatform.Mac,
+				TestName = buildDotNetXtroTests.TestName,
+				Mode = ".NET",
+				Ignored = buildDotNetXtroTests.Ignored,
+				WorkingDirectory = buildDotNetXtroTests.WorkingDirectory,
+				AnnotationsDirectory = Path.Combine (buildDotNetXtroTests.WorkingDirectory, "api-annotations-dotnet"),
+			};
+			Tasks.Add (runDotNetXtroReporter);
 
 			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
 				IsDotNetProject = true,
@@ -225,7 +248,7 @@ namespace Xharness.Jenkins {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
-				Timeout = TimeSpan.FromMinutes (120),
+				Timeout = TimeSpan.FromMinutes (240),
 				Ignored = !IncludeDotNet,
 			};
 			Tasks.Add (runDotNetTests);

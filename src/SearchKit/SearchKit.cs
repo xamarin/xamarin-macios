@@ -27,6 +27,10 @@ using Foundation;
 
 using System.Runtime.InteropServices;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace SearchKit
 {
 	public enum SKIndexType {
@@ -43,7 +47,8 @@ namespace SearchKit
 
 	public class SKSearch : NativeObject
 	{
-		internal SKSearch (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal SKSearch (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -130,7 +135,8 @@ namespace SearchKit
 		{
 		}
 
-		internal SKDocument (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal SKDocument (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -193,7 +199,8 @@ namespace SearchKit
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static void SKIndexClose (IntPtr handle);
 
-		SKIndex (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		SKIndex (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -486,7 +493,8 @@ namespace SearchKit
 
 	public class SKSummary : NativeObject
 	{
-		internal SKSummary (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal SKSummary (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

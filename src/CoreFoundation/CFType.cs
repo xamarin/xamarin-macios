@@ -8,7 +8,12 @@ using System;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
+using Foundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 	public class CFType : NativeObject, ICFType {
@@ -24,7 +29,8 @@ namespace CoreFoundation {
 		}
 #endif
 
-		internal CFType (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CFType (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

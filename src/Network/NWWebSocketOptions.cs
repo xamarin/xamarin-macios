@@ -20,6 +20,10 @@ using CoreFoundation;
 using OS_nw_protocol_options=System.IntPtr;
 using nw_ws_request_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -32,9 +36,10 @@ namespace Network {
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
 		bool skipHandShake = false;
-		nuint maximumMessageSize = (nuint) 0;
+		nuint maximumMessageSize;
 
-		internal NWWebSocketOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWWebSocketOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_ws_create_options (NWWebSocketVersion version);

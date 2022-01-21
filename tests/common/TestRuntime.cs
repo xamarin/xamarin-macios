@@ -33,6 +33,10 @@ using ObjCRuntime;
 
 using Xamarin.Utils;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 partial class TestRuntime
 {
 
@@ -142,20 +146,48 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
 	}
 
-	public static void AssertDevice ()
+	public static void AssertDevice (string message = "This test only runs on device.")
 	{
-#if !MONOMAC
-		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
-			NUnit.Framework.Assert.Ignore ("This test only runs on device.");
+#if !MONOMAC && !__MACCATALYST__
+		if (ObjCRuntime.Runtime.Arch == Arch.DEVICE)
+			return;
+#endif
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertNotDevice (string message = "This test does not run on device.")
+	{
+#if !MONOMAC && !__MACCATALYST__
+		if (ObjCRuntime.Runtime.Arch == Arch.DEVICE)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+	public static void AssertIfSimulatorThenARM64 ()
+	{
+#if !__MACOS__ && !__MACCATALYST__
+		if (ObjCRuntime.Runtime.Arch != Arch.SIMULATOR)
+			return;
+		if (!IsARM64)
+			NUnit.Framework.Assert.Ignore ("This test does not run simulators that aren't ARM64 simulators.");
 #endif
 	}
 
-	public static void AssertNotSimulator ()
+	public static void AssertNotSimulator (string message = "This test does not work in the simulator.")
 	{
-#if !__MACOS__
-		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
-			NUnit.Framework.Assert.Ignore ("This test does not work in the simulator.");
-#endif
+		if (IsSimulator)
+			NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertSimulator (string message = "This test only works in the simulator.")
+	{
+		if (!IsSimulator)
+			NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertSimulatorOrDesktop (string message = "This test only works in the simulator or on the desktop.")
+	{
+		if (!IsSimulatorOrDesktop)
+			NUnit.Framework.Assert.Ignore (message);
 	}
 
 	public static bool IsVM => 
@@ -311,6 +343,18 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (15, 1);
 #elif MONOMAC
 				return CheckMacSystemVersion (12, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (8, 3);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (15, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (15, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (12, 1);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -940,7 +984,7 @@ partial class TestRuntime
 	{
 #if __WATCHOS__
 		throw new Exception ("Can't get iOS SDK version on WatchOS.");
-#elif !MONOMAC
+#elif !MONOMAC && !__MACCATALYST__
 		if (Runtime.Arch == Arch.SIMULATOR || !UIDevice.CurrentDevice.CheckSystemVersion (6, 0)) {
 			// dyld_get_program_sdk_version was introduced with iOS 6.0, so don't do the SDK check on older deviecs.
 			return true; // dyld_get_program_sdk_version doesn't return what we're looking for on the mac.
@@ -968,6 +1012,36 @@ partial class TestRuntime
 			return true;
 #else
 			return false;
+#endif
+		}
+	}
+
+	public static bool IsDevice {
+		get {
+#if __MACOS__ || __MACCATALYST__
+			return false;
+#else
+			return Runtime.Arch == Arch.DEVICE;
+#endif
+		}
+	}
+
+	public static bool IsSimulator {
+		get {
+#if __MACOS__ || __MACCATALYST__
+			return false;
+#else
+			return Runtime.Arch == Arch.SIMULATOR;
+#endif
+		}
+	}
+
+	public static bool IsSimulatorOrDesktop {
+		get {
+#if __MACOS__ || __MACCATALYST__
+			return true;
+#else
+			return Runtime.Arch == Arch.SIMULATOR;
 #endif
 		}
 	}
@@ -1244,4 +1318,44 @@ partial class TestRuntime
 			return !(Type.GetType ("System.__Canon") is null);
 		}
 	}
+
+
+	enum NXByteOrder /* unspecified in header, means most likely int */ {
+		Unknown,
+		LittleEndian,
+		BigEndian,
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	struct NXArchInfo {
+		IntPtr name; // const char *
+		public int CpuType; // cpu_type_t -> integer_t -> int
+		public int CpuSubType; // cpu_subtype_t -> integer_t -> int
+		public NXByteOrder ByteOrder;
+		IntPtr description; // const char *
+
+		public string Name {
+			get { return Marshal.PtrToStringUTF8 (name)!; }
+		}
+
+		public string Description {
+			get { return Marshal.PtrToStringUTF8 (description)!; }
+		}
+	}
+
+	[DllImport (Constants.libSystemLibrary)]
+	static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
+
+	public unsafe static bool IsARM64 {
+		get { return NXGetLocalArchInfo ()->Name.StartsWith ("arm64"); }
+	}
 }
+
+#if NET
+internal static class NativeHandleExtensions {
+	public static string ToString (this NativeHandle @this, string format)
+	{
+		return ((IntPtr) @this).ToString (format);
+	}
+}
+#endif

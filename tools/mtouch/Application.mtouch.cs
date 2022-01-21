@@ -54,8 +54,6 @@ namespace Xamarin.Bundler {
 		
 		public bool? BuildDSym;
 
-		public List<string> UserGccFlags;
-
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		bool cached_executable {
 			get {

@@ -36,6 +36,10 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// CFURLPathStyle -> CFIndex -> CFURL.h
@@ -56,7 +60,8 @@ namespace CoreFoundation {
 			/* CFURLPathStyle */ nint pathStyle, 
 			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool isDirectory);
 		
-		internal CFUrl (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CFUrl (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

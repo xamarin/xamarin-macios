@@ -37,7 +37,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 #elif !WATCH
 using CoreServices;
@@ -45,7 +45,15 @@ using CoreServices;
 using ObjCRuntime;
 using Foundation;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
@@ -719,7 +727,8 @@ namespace CoreFoundation {
 		}
 #endif
 
-		protected CFStream (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		protected CFStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -763,7 +772,7 @@ namespace CoreFoundation {
 #endif
 		public DispatchQueue ReadDispatchQueue {
 			get {
-				return new DispatchQueue (CFReadStreamCopyDispatchQueue (Handle));
+				return new DispatchQueue (CFReadStreamCopyDispatchQueue (Handle), true);
 			}
 			set {
 				CFReadStreamSetDispatchQueue (Handle, value.GetHandle ());
@@ -775,7 +784,7 @@ namespace CoreFoundation {
 #endif
 		public DispatchQueue WriteDispatchQueue {
 			get {
-				return new DispatchQueue (CFWriteStreamCopyDispatchQueue (Handle));
+				return new DispatchQueue (CFWriteStreamCopyDispatchQueue (Handle), true);
 			}
 			set {
 				CFWriteStreamSetDispatchQueue (Handle, value.GetHandle ());

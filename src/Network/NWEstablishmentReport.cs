@@ -24,6 +24,10 @@ using nw_report_protocol_enumerator_t=System.IntPtr;
 using nw_protocol_definition_t=System.IntPtr;
 using nw_resolution_report_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -35,7 +39,8 @@ namespace Network {
 #endif
 	public class NWEstablishmentReport : NativeObject {
 
-		internal NWEstablishmentReport (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWEstablishmentReport (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]

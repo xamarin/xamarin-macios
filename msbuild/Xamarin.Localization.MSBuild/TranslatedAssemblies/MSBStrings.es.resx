@@ -716,6 +716,9 @@
   <data name="E0188" xml:space="preserve">
         <value>No se pudo asignar la versión Mac Catalyst {0} a la versión de macOS correspondiente. Las versiones de Mac Catalyst son: {1}</value>
     </data>
+  <data name="E0189" xml:space="preserve">
+        <value>No se han podido analizar los argumentos del enlazador personalizado "-{0}": {1}</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>No se pudieron resolver las direcciones IP del host para la configuración del depurador Wi-Fi.
         </value>
@@ -1081,5 +1084,12 @@
   <data name="W7087" xml:space="preserve">
         <value>Se esperaba un archivo "manifest" en el directorio {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>El marco {0} es un marco de bibliotecas estáticas y no se copiará en la aplicación.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>El archivo "{0}" no es un marco válido: {1}</value>
     </data>
 </root>

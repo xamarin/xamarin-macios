@@ -202,7 +202,7 @@ namespace LinkSdk {
 #if !__MACOS__
 			// we want to ensure we can get the constants without authorization (on iOS 6.0+) so this application
 			// needs to be unauthorized (in settings.app). Note: authorization checks only occurs on devices
-			if ((Runtime.Arch == Arch.DEVICE) && UIDevice.CurrentDevice.CheckSystemVersion (6,0)) {
+			if (TestRuntime.IsDevice && UIDevice.CurrentDevice.CheckSystemVersion (6,0)) {
 				Assert.That (ABAddressBook.GetAuthorizationStatus (), Is.Not.EqualTo (ABAuthorizationStatus.Authorized),
 					"Please deny access to contacts for this this application (it's important for this test)");
 			}
@@ -344,11 +344,7 @@ namespace LinkSdk {
 		public void Bug1790_TimeZoneInfo_Local ()
 		{
 			// the simulator has complete file access but the device won't have - i.e. we can't depend on it
-#if __MACOS__
-			var hasFileAccess = true;
-#else
-			var hasFileAccess = Runtime.Arch == Arch.SIMULATOR;
-#endif
+			var hasFileAccess = TestRuntime.IsSimulatorOrDesktop;
 			Assert.That (File.Exists ("/etc/localtime"), Is.EqualTo (hasFileAccess), "/etc/localtime");
 			Assert.NotNull (TimeZoneInfo.Local, "Local");
 			// should not throw a TimeZoneNotFoundException on devices
@@ -372,10 +368,6 @@ namespace LinkSdk {
 				Thread.Sleep (values [number]);
 				//Console.WriteLine (number);
 			});
-#if !__MACOS__
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
-#endif
 		}
 		
 		[Test]
@@ -405,7 +397,11 @@ namespace LinkSdk {
 				// from http://bugzilla.xamarin.com/show_bug.cgi?id=2000
 				NSError error;
 				var c = new NSPersistentStoreCoordinator (model);
+#if NET
+				c.AddPersistentStore (NSPersistentStoreCoordinator.SQLiteStoreType, null, url, null, out error);
+#else
 				c.AddPersistentStoreWithType (NSPersistentStoreCoordinator.SQLiteStoreType, null, url, null, out error);
+#endif
 				Assert.IsNull (error, "error");
 			} finally {
 				File.Delete (sqlitePath);
@@ -684,7 +680,11 @@ namespace LinkSdk {
 		public void WebProxy_Leak ()
 		{
 			// note: needs to be executed under Instrument to verify it does not leak
+#if NET
+			Assert.NotNull (global::CoreFoundation.CFNetwork.GetSystemProxySettings (), "should not leak");
+#else
 			Assert.NotNull (CFNetwork.GetSystemProxySettings (), "should not leak");
+#endif
 		}
 #endif // !__TVOS__ && !__WATCHOS__
 		
@@ -829,13 +829,18 @@ namespace LinkSdk {
 		public void PrivateMemorySize64 ()
 		{
 			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=21882
+#if NET
+#if __MACOS__ || __MACCATALYST__
+			var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64;
+			Assert.That (mem, Is.EqualTo (0), "PrivateMemorySize64");
+#else
+			// It's not entirely clear, but it appears this is not implemented, and won't be, for mobile platforms: https://github.com/dotnet/runtime/issues/28990
+			Assert.Throws<PlatformNotSupportedException> (() => { var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64; }, "PrivateMemorySize64");
+#endif // __MACOS__ || __MACCATALYST__
+#else
 			var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64;
 			// the above used a mach call that iOS samdbox did *not* allow (sandbox) on device
 			// but has been fixed (different call) for the same PID
-#if NET
-			// It's not entirely clear, but it appears this is not implemented, and won't be, for mobile platforms: https://github.com/dotnet/runtime/issues/28990
-			Assert.That (mem, Is.EqualTo (0), "PrivateMemorySize64");
-#else
 			Assert.That (mem, Is.Not.EqualTo (0), "PrivateMemorySize64");
 #endif
 		}
@@ -878,12 +883,8 @@ namespace LinkSdk {
 			var home = Environment.GetEnvironmentVariable ("HOME");
 #endif
 
-#if __MACOS__
-			bool device = false;
-#else
 			// note: this test is more interesting on devices because of the sandbox they have
-			bool device = Runtime.Arch == Arch.DEVICE;
-#endif
+			var device = TestRuntime.IsDevice;
 
 			// some stuff we do not support (return String.Empty for the path)
 			TestFolder (Environment.SpecialFolder.Programs, supported: false);
@@ -928,11 +929,9 @@ namespace LinkSdk {
 			var path = TestFolder (Environment.SpecialFolder.Desktop, exists: false);
 #endif
 
-#if __MACOS__
-			var isMac1015 = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15);
-			path = TestFolder (Environment.SpecialFolder.Favorites, supported: isMac1015, exists: isMac1015);
-#elif __MACCATALYST__
-			path = TestFolder (Environment.SpecialFolder.Favorites, exists: true);
+#if __MACOS__ || __MACCATALYST__
+			// The behavior for the Favorites folder changes betwee macOS versions, and it's quite complicated
+			// to get it right, so just skip any checks for this particular folder.
 #else
 			path = TestFolder (Environment.SpecialFolder.Favorites, exists: false);
 #endif
@@ -954,8 +953,8 @@ namespace LinkSdk {
 
 #if __TVOS__
 			path = TestFolder (Environment.SpecialFolder.Fonts, exists: null, supported: true);
-#elif __MACOS__
-			path = TestFolder (Environment.SpecialFolder.Fonts, supported: isMac1015, exists: isMac1015);
+#elif __MACOS__ || __MACCATALYST__
+			// See comment about the Favorites folder, it applies to the Fonts folder as well.
 #else
 			path = TestFolder (Environment.SpecialFolder.Fonts, exists: myExists);
 #endif
@@ -1002,7 +1001,7 @@ namespace LinkSdk {
 #if __MACOS__
 			Assert.That (path, Is.EqualTo (home), "UserProfile");
 #else
-			if (Runtime.Arch == Arch.DEVICE) {
+			if (TestRuntime.IsDevice) {
 				if (isExtension)
 					Assert.That (path, Does.StartWith ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
 #if !__WATCHOS__

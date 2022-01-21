@@ -37,6 +37,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// untyped enum -> CGColorSpace.h
@@ -73,8 +77,8 @@ namespace CoreGraphics {
 		public readonly static CGColorSpace Null = CreateNull ();
 #endif
 
-#if !XAMCORE_4_0
-		public CGColorSpace (IntPtr handle)
+#if !NET
+		public CGColorSpace (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
@@ -106,7 +110,7 @@ namespace CoreGraphics {
 		}
 
 		[Preserve (Conditional=true)]
-		internal CGColorSpace (IntPtr handle, bool owns)
+		internal CGColorSpace (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -451,7 +455,7 @@ namespace CoreGraphics {
 		[Obsolete ("Starting with macos10.13 use 'CreateIDCCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-#if XAMCORE_4_0
+#if NET
 		public static CGColorSpace? CreateIccProfile (NSData? data)
 #else
 		public static CGColorSpace? CreateICCProfile (NSData? data)
@@ -490,7 +494,7 @@ namespace CoreGraphics {
 			/* CGDataProviderRef __nullable */ IntPtr profile,
 			/* CGColorSpaceRef __nullable */ IntPtr alternate);
 
-#if XAMCORE_4_0
+#if NET
 		public static CGColorSpace? CreateIccProfile (nfloat[]? range, CGDataProvider profile, CGColorSpace alternate)
 #else
 		public static CGColorSpace? CreateICCProfile (nfloat[]? range, CGDataProvider profile, CGColorSpace alternate)
@@ -539,7 +543,7 @@ namespace CoreGraphics {
 		[Obsolete ("Starting with macos10.13 use 'GetICCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-#if XAMCORE_4_0
+#if NET
 		public NSData? GetIccProfile ()
 #else
 		public NSData? GetICCProfile ()

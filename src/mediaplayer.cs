@@ -21,16 +21,20 @@ using UIKit;
 #endif
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MediaPlayer {
 	[Mac (10,12,2)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
 #if !MONOMAC
-#if XAMCORE_4_0
+#if NET
 	[NoWatch] // marked as unavailable in xcode 12 beta 1
 #else
 	[Watch (5,0)]
 	[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
-#endif // XAMCORE_4_0
+#endif // NET
 	[TV (14,0)]
 	interface MPMediaEntity : NSSecureCoding {
 #else
@@ -52,7 +56,7 @@ namespace MediaPlayer {
 		[Export ("objectForKeyedSubscript:")]
 		NSObject GetObject (NSObject key);
 
-#if XAMCORE_4_0
+#if NET
 		[NoWatch] // marked as unavailable in xcode 12 beta 1
 #else
 		[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
@@ -263,11 +267,11 @@ namespace MediaPlayer {
 		[TV (10,0)]
 		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
+		NativeHandle Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("initWithImage:")]
-		IntPtr Constructor (UIImage image);
+		NativeHandle Constructor (UIImage image);
 		
 		[Export ("imageWithSize:")]
 		[return: NullAllowed]
@@ -275,7 +279,7 @@ namespace MediaPlayer {
 #else
 		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGSize boundsSize, Func<CGSize, NSImage> requestHandler);
+		NativeHandle Constructor (CGSize boundsSize, Func<CGSize, NSImage> requestHandler);
 
 		[Export ("imageWithSize:")]
 		[return: NullAllowed]
@@ -302,7 +306,7 @@ namespace MediaPlayer {
 #else
 	[BaseType (typeof (NSObject))]
 #endif
-#if XAMCORE_3_0 || !IOS
+#if XAMCORE_3_0 || !IOS || NET
 	interface MPMediaItemCollection : NSSecureCoding {
 #else
 	// part of the bug is that we inlined MPMediaEntity needlessly
@@ -314,7 +318,7 @@ namespace MediaPlayer {
 
 		[DesignatedInitializer]
 		[Export ("initWithItems:")]
-		IntPtr Constructor (MPMediaItem [] items);
+		NativeHandle Constructor (MPMediaItem [] items);
 
 		[Export ("items")]
 		MPMediaItem [] Items { get; }
@@ -383,7 +387,7 @@ namespace MediaPlayer {
 	interface MPMediaPickerController {
 		[DesignatedInitializer]
 		[Export ("initWithMediaTypes:")]
-		IntPtr Constructor (MPMediaType mediaTypes);
+		NativeHandle Constructor (MPMediaType mediaTypes);
 
 		[Export ("mediaTypes")]
 		MPMediaType MediaTypes { get; }
@@ -431,7 +435,7 @@ namespace MediaPlayer {
 	[DisableDefaultCtor]
 	interface MPMediaPlaylist : NSSecureCoding {
 		[Export ("initWithItems:")]
-		IntPtr Constructor (MPMediaItem [] items);
+		NativeHandle Constructor (MPMediaItem [] items);
 
 		[Static, Export ("canFilterByProperty:")]
 		bool CanFilterByProperty (string property);
@@ -519,7 +523,7 @@ namespace MediaPlayer {
 	interface MPMediaQuery : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithFilterPredicates:")]
-		IntPtr Constructor ([NullAllowed] NSSet filterPredicates);
+		NativeHandle Constructor ([NullAllowed] NSSet filterPredicates);
 
 		[NullAllowed] // by default this property is null
 		[Export ("filterPredicates", ArgumentSemantic.Retain)]
@@ -758,7 +762,7 @@ namespace MediaPlayer {
 	}
 
 	[NoMac]
-#if XAMCORE_4_0
+#if NET
 	[NoWatch] // marked as unavailable in xcode 12 beta 1
 	[NoTV]
 #else
@@ -824,24 +828,28 @@ namespace MediaPlayer {
 		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
+#if !NET
 		[NoWatch]
 		[Export ("backgroundColor", ArgumentSemantic.Retain)]
 		// <quote>You should avoid using this property. It is available only when you use the initWithContentURL: method to initialize the movie player controller object.</quote>
 		[Deprecated (PlatformName.iOS, 3, 2, message: "Do not use; this API was removed and is not always available.")]
 		[Obsoleted (PlatformName.iOS, 8, 0, message: "Do not use; this API was removed and is not always available.")]
 		UIColor BackgroundColor { get; set; }
+#endif
 
 		[NoWatch]
 		[Export ("scalingMode")]
 		MPMovieScalingMode ScalingMode { get; set; }
 
+#if !NET
 		[NoWatch]
 		[Export ("movieControlMode")]
 		[Deprecated (PlatformName.iOS, 3, 2, message: "Do not use; this API was removed.")]
 		[Obsoleted (PlatformName.iOS, 8, 0, message: "Do not use; this API was removed.")]
 		MPMovieControlMode MovieControlMode { get; set; }
+#endif
 
 		[NoWatch]
 		[Export ("initialPlaybackTime")]
@@ -1147,7 +1155,7 @@ namespace MediaPlayer {
 		string Keyspace { get;  }
 
 		[Export ("value")]
-#if XAMCORE_3_0
+#if NET
 		NSObject Value { get;  }
 #else
 		NSObject value { get;  }
@@ -1168,16 +1176,18 @@ namespace MediaPlayer {
 	interface MPMoviePlayerViewController {
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("moviePlayer")]
 		MPMoviePlayerController MoviePlayer { get; }
 
+#if !NET
 		// Directly removed, shows up in iOS 6.1 SDK, but not any later SDKs.
 		[Deprecated (PlatformName.iOS, 7, 0, message: "Do not use; this API was removed.")]
 		[Obsoleted (PlatformName.iOS, 7, 0, message: "Do not use; this API was removed.")]
 		[Export ("shouldAutorotateToInterfaceOrientation:")]
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation orientation);
+#endif // !NET
 	}
 #endif
 
@@ -1191,7 +1201,7 @@ namespace MediaPlayer {
 		[Export ("init")]
 		[Deprecated (PlatformName.iOS, 11,3)]
 		[NoTV]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static, Export ("applicationMusicPlayer")]
 		MPMusicPlayerController ApplicationMusicPlayer { get; }
@@ -1293,7 +1303,7 @@ namespace MediaPlayer {
 	[BaseType (typeof (UIView))]
 	interface MPVolumeView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView' instead.")]
 		[Export ("showsRouteButton")]
@@ -1501,7 +1511,7 @@ namespace MediaPlayer {
 
 		[DesignatedInitializer]
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[NullAllowed]
 		[Export ("artwork")]
@@ -1550,7 +1560,7 @@ namespace MediaPlayer {
 		[Abstract]
 		[Export ("contentItemAtIndexPath:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		MPContentItem GetContentItem (NSIndexPath indexPath);
 #else
 		MPContentItem ContentItem (NSIndexPath indexPath);
@@ -1959,7 +1969,7 @@ namespace MediaPlayer {
 	[DisableDefaultCtor] // pre-emptive
 	interface MPNowPlayingInfoLanguageOption {
 		[Export ("initWithType:languageTag:characteristics:displayName:identifier:")]
-		IntPtr Constructor (MPNowPlayingInfoLanguageOptionType languageOptionType, string languageTag, [NullAllowed] NSString[] languageOptionCharacteristics, string displayName, string identifier);
+		NativeHandle Constructor (MPNowPlayingInfoLanguageOptionType languageOptionType, string languageTag, [NullAllowed] NSString[] languageOptionCharacteristics, string displayName, string identifier);
 
 		[Export ("languageOptionType")]
 		MPNowPlayingInfoLanguageOptionType LanguageOptionType { get; }
@@ -1992,7 +2002,7 @@ namespace MediaPlayer {
 	[DisableDefaultCtor] // pre-emptive
 	interface MPNowPlayingInfoLanguageOptionGroup {
 		[Export ("initWithLanguageOptions:defaultLanguageOption:allowEmptySelection:")]
-		IntPtr Constructor (MPNowPlayingInfoLanguageOption[] languageOptions, [NullAllowed] MPNowPlayingInfoLanguageOption defaultLanguageOption, bool allowEmptySelection);
+		NativeHandle Constructor (MPNowPlayingInfoLanguageOption[] languageOptions, [NullAllowed] MPNowPlayingInfoLanguageOption defaultLanguageOption, bool allowEmptySelection);
 
 		[Export ("languageOptions")]
 		MPNowPlayingInfoLanguageOption[] LanguageOptions { get; }
@@ -2065,7 +2075,7 @@ namespace MediaPlayer {
 	interface MPMediaPlaylistCreationMetadata {
 		[Export ("initWithName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("name")]
 		string Name { get; }
@@ -2088,7 +2098,7 @@ namespace MediaPlayer {
 
 		[Export ("init")]
 		[Deprecated (PlatformName.iOS, 11,3)]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 	}
 
 	[NoMac]
@@ -2099,10 +2109,10 @@ namespace MediaPlayer {
 	interface MPMusicPlayerMediaItemQueueDescriptor
 	{
 		[Export ("initWithQuery:")]
-		IntPtr Constructor (MPMediaQuery query);
+		NativeHandle Constructor (MPMediaQuery query);
 
 		[Export ("initWithItemCollection:")]
-		IntPtr Constructor (MPMediaItemCollection itemCollection);
+		NativeHandle Constructor (MPMediaItemCollection itemCollection);
 
 		[Export ("query", ArgumentSemantic.Copy)]
 		MPMediaQuery Query { get; }
@@ -2128,7 +2138,7 @@ namespace MediaPlayer {
 	interface MPMusicPlayerStoreQueueDescriptor
 	{
 		[Export ("initWithStoreIDs:")]
-		IntPtr Constructor (string[] storeIDs);
+		NativeHandle Constructor (string[] storeIDs);
 
 		[NullAllowed, Export ("storeIDs", ArgumentSemantic.Copy)]
 		string[] StoreIDs { get; set; }
@@ -2193,7 +2203,7 @@ namespace MediaPlayer {
 	[DisableDefaultCtor]
 	interface MPMusicPlayerPlayParameters : NSSecureCoding {
 		[Export ("initWithDictionary:")]
-		IntPtr Constructor (NSDictionary dictionary);
+		NativeHandle Constructor (NSDictionary dictionary);
 
 		[Export ("dictionary", ArgumentSemantic.Copy)]
 		NSDictionary Dictionary { get; }
@@ -2207,7 +2217,7 @@ namespace MediaPlayer {
 	[DisableDefaultCtor]
 	interface MPMusicPlayerPlayParametersQueueDescriptor {
 		[Export ("initWithPlayParametersQueue:")]
-		IntPtr Constructor (MPMusicPlayerPlayParameters[] playParametersQueue);
+		NativeHandle Constructor (MPMusicPlayerPlayParameters[] playParametersQueue);
 
 		[Export ("playParametersQueue", ArgumentSemantic.Copy)]
 		MPMusicPlayerPlayParameters[] PlayParametersQueue { get; set; }
@@ -2273,7 +2283,11 @@ namespace MediaPlayer {
 
 	[TV (14,0)]
 	[NoWatch, NoMac, NoiOS]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface MPNowPlayingSessionDelegate {
 
@@ -2291,7 +2305,7 @@ namespace MediaPlayer {
 	interface MPNowPlayingSession {
 
 		[Export ("initWithPlayers:")]
-		IntPtr Constructor (AVPlayer[] players);
+		NativeHandle Constructor (AVPlayer[] players);
 
 		[Export ("players", ArgumentSemantic.Strong)]
 		AVPlayer[] Players { get; }

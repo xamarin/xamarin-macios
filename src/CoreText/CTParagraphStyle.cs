@@ -38,6 +38,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Paragraph Style Values
@@ -201,7 +205,7 @@ namespace CoreText {
 	internal class CTParagraphStyleSpecifierIntPtrsValue : CTParagraphStyleSpecifierValue {
 		CFArray value;
 
-		public CTParagraphStyleSpecifierIntPtrsValue (CTParagraphStyleSpecifier spec, IntPtr[] value)
+		public CTParagraphStyleSpecifierIntPtrsValue (CTParagraphStyleSpecifier spec, NativeHandle[] value)
 			: base (spec)
 		{
 			this.value = CFArray.FromIntPtrs (value);
@@ -293,7 +297,7 @@ namespace CoreText {
 
 		static CTParagraphStyleSpecifierValue CreateValue (CTParagraphStyleSpecifier spec, IEnumerable<CTTextTab> value)
 		{
-			var handles = new List<IntPtr>();
+			var handles = new List<NativeHandle>();
 			foreach (var ts in value)
 				handles.Add (ts.Handle);
 			return new CTParagraphStyleSpecifierIntPtrsValue (spec, handles.ToArray ());
@@ -316,7 +320,8 @@ namespace CoreText {
 	}
 
 	public class CTParagraphStyle : NativeObject {
-		internal CTParagraphStyle (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CTParagraphStyle (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}
@@ -413,121 +418,99 @@ namespace CoreText {
 			get {return (CTWritingDirection) GetByteValue (CTParagraphStyleSpecifier.BaseWritingDirection);}
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat FirstLineHeadIndent {
 #else
-		float
+		public float FirstLineHeadIndent {
 #endif
-		FirstLineHeadIndent {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.FirstLineHeadIndent); }
 		}
 
-		unsafe
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		unsafe nfloat GetFloatValue (CTParagraphStyleSpecifier spec)
 #else
-		float
+		unsafe float GetFloatValue (CTParagraphStyleSpecifier spec)
 #endif
-		GetFloatValue (CTParagraphStyleSpecifier spec)
 		{
 			nfloat value;
 			if (!CTParagraphStyleGetValueForSpecifier (Handle, spec, (nuint) sizeof (nfloat), &value))
 				throw new InvalidOperationException ("Unable to get property value.");
-			return
-#if !XAMCORE_4_0
-			(float)
+#if NET
+			return value;
+#else
+			return (float) value;
 #endif
-			value;
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat HeadIndent {
 #else
-		float
+		public float HeadIndent {
 #endif
-		HeadIndent {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.HeadIndent); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat TailIndent {
 #else
-		float
+		public float TailIndent {
 #endif
-		TailIndent {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.TailIndent); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat DefaultTabInterval {
 #else
-		float
+		public float DefaultTabInterval {
 #endif
-		DefaultTabInterval {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.DefaultTabInterval); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat LineHeightMultiple {
 #else
-		float
+		public float LineHeightMultiple {
 #endif
-		LineHeightMultiple {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.LineHeightMultiple); }
 		}
 
-public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat MaximumLineHeight {
 #else
-		float
+		public float MaximumLineHeight {
 #endif
-		MaximumLineHeight {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.MaximumLineHeight); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat MinimumLineHeight {
 #else
-		float
+		public float MinimumLineHeight {
 #endif
-		MinimumLineHeight {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.MinimumLineHeight); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat LineSpacing {
 #else
-		float
+		public float LineSpacing {
 #endif
-		LineSpacing {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.LineSpacing); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat ParagraphSpacing {
 #else
-		float
+		public float ParagraphSpacing {
 #endif
-		ParagraphSpacing {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacing); }
 		}
 
-		public
-#if XAMCORE_4_0
-		nfloat
+#if NET
+		public nfloat ParagraphSpacingBefore {
 #else
-		float
+		public float ParagraphSpacingBefore {
 #endif
-		ParagraphSpacingBefore {
 			get { return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacingBefore); }
 		}
 #endregion

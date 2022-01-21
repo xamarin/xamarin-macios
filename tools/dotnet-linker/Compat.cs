@@ -50,7 +50,7 @@ namespace Xamarin.Bundler {
 				} else if (Platform == ApplePlatform.MacOSX && !EnableDebug) {
 					// release macOS builds use the static registrar by default
 					Registrar = RegistrarMode.Static;
-				} else if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+				} else if (!AreAnyAssembliesTrimmed && IsDefaultMarshalManagedExceptionMode) {
 					// Otherwise use the partial static registrar if we can
 					Registrar = RegistrarMode.PartialStatic;
 				} else {

@@ -73,7 +73,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 
 			var temp = String.Empty;
 			using (NSUrl url = new NSUrl (NSBundle.MainBundle.ResourceUrl.AbsoluteString + "basn3p08.png")) {
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 				var read_only = false;
 #else
 				var read_only = Runtime.Arch == Arch.DEVICE;

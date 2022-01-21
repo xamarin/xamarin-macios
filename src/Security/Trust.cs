@@ -39,19 +39,21 @@ using CoreFoundation;
 using Foundation;
 #if NET
 using System.Runtime.Versioning;
+#else
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
 	public partial class SecTrust : NativeObject {
-#if !XAMCORE_4_0
-		public SecTrust (IntPtr handle) 
+#if !NET
+		public SecTrust (NativeHandle handle) 
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal SecTrust (IntPtr handle, bool owns)
+		internal SecTrust (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

@@ -17,7 +17,7 @@ using Foundation;
 
 namespace UIKit {
 	public partial class UIWindow {
-#if !XAMCORE_4_0
+#if !NET
 		// duplicates from UIKeyboard without a [Notification]
 
 		public static NSString KeyboardDidChangeFrameNotification {

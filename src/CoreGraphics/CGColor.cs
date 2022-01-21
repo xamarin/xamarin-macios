@@ -36,19 +36,25 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGColor.h
 	public class CGColor : NativeObject
 	{
 #if !COREBUILD
-		public CGColor (IntPtr handle)
+#if !NET
+		public CGColor (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal CGColor (IntPtr handle, bool owns)
+		internal CGColor (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -194,17 +200,24 @@ namespace CoreGraphics {
 
 		public static bool operator == (CGColor color1, CGColor color2)
 		{
-			return Object.Equals (color1, color2);
+			if (color1 is null)
+				return color2 is null;
+			return color1.Equals (color2);
 		}
 
 		public static bool operator != (CGColor color1, CGColor color2)
 		{
-			return !Object.Equals (color1, color2);
+			if (color1 is null)
+				return color2 is not null;
+			return !color1.Equals (color2);
 		}
 
 		public override int GetHashCode ()
 		{
-			return Handle.GetHashCode ();
+			// looks weird but it's valid
+			// using the Handle property would not be since there's a special function for equality
+			// see Remarks in https://docs.microsoft.com/en-us/dotnet/api/system.object.gethashcode?view=net-6.0
+			return 0;
 		}
 
 		public override bool Equals (object? o)

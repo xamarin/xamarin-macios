@@ -15,6 +15,10 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Metal {
@@ -162,7 +166,7 @@ namespace Metal {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload that takes an IntPtr instead. The 'data' parameter must be page-aligned and allocated using vm_allocate or mmap, which won't be the case for managed arrays, so this method will always fail.")]
 		public static IMTLBuffer? CreateBufferNoCopy<T> (this IMTLDevice This, T [] data, MTLResourceOptions options, MTLDeallocator deallocator) where T : struct
 		{
@@ -186,7 +190,11 @@ namespace Metal {
 			if (positions.Length < (nint)count)
 				throw new ArgumentException ("Length of 'positions' cannot be less than 'count'.");
 			fixed (void * handle = positions)
+#if NET
+				This.GetDefaultSamplePositions ((IntPtr) handle, count);
+#else
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);
+#endif
 		}
 #if IOS
 
@@ -243,18 +251,17 @@ namespace Metal {
 		}
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[return: Release]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
 		public static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError? error)
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
-			IntPtr errorValue = IntPtr.Zero;
+			var errorValue = NativeHandle.Zero;
 
 			var ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
 			error = Runtime.GetNSObject<NSError> (errorValue);
-
 			return ret;
 		}
 

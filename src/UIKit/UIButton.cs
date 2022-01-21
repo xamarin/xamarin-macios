@@ -15,7 +15,12 @@ using ObjCRuntime;
 namespace UIKit {
 	public partial class UIButton {
 		
-		public UIButton (UIButtonType type) : base (ObjCRuntime.Messaging.IntPtr_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int)type))
+		public UIButton (UIButtonType type)
+#if NET
+		: base (ObjCRuntime.Messaging.NativeHandle_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int)type))
+#else
+		: base (ObjCRuntime.Messaging.IntPtr_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int)type))
+#endif
 		{
 			VerifyIsUIButton ();
 		}

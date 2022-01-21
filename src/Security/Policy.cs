@@ -36,17 +36,22 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
+
 	public partial class SecPolicy : NativeObject {
-#if !XAMCORE_4_0
-		public SecPolicy (IntPtr handle)
+#if !NET
+		public SecPolicy (NativeHandle handle)
 			: base (handle, false, true)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal SecPolicy (IntPtr handle, bool owns)
+		internal SecPolicy (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}
@@ -75,6 +80,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary, EntryPoint="SecPolicyGetTypeID")]
 		public extern static nint GetTypeID ();
 
+#if !NET
 		public static bool operator == (SecPolicy? a, SecPolicy? b)
 		{
 			if (a is null)
@@ -94,6 +100,8 @@ namespace Security {
 			return a.Handle != b.Handle;
 		}
 
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object? other)
 		{
 			var o = other as SecPolicy;
@@ -102,7 +110,8 @@ namespace Security {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
+#endif
 	}
 }

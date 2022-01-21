@@ -29,6 +29,10 @@ using UIImage = Foundation.NSObject;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Intents {
 
 	// HACK only to please the generator - which does not (normally) know the type hierarchy in the
@@ -169,7 +173,7 @@ namespace Intents {
 		All
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -350,7 +354,7 @@ namespace Intents {
 		FailurePreviousRideNeedsFeedback,
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -369,7 +373,7 @@ namespace Intents {
 		Played,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -638,7 +642,7 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -664,7 +668,7 @@ namespace Intents {
 		Success,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -790,7 +794,11 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
+#if NET
+	[NoMac]
+#else
 	[Mac (10, 12, 0)]
+#endif
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Native]
@@ -862,7 +870,7 @@ namespace Intents {
 		Authorized,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -908,7 +916,7 @@ namespace Intents {
 		FailureAppConfigurationRequired,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -1339,7 +1347,7 @@ namespace Intents {
 		ByLocationTrigger,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -2221,11 +2229,7 @@ namespace Intents {
 		School,
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
+	[Mac (10, 15)] // headers say nothing, documentation says introduced macOS 12.1, but both headers and documents say some enum fields were available in macOS 10.15, so let's go with that for the enum itself as well.
 	[iOS (10, 2)]
 	[Watch (3, 2)]
 	[NoTV]
@@ -2233,36 +2237,91 @@ namespace Intents {
 		[Field (null)]
 		None,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFather")]
 		Father,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipMother")]
 		Mother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipParent")]
 		Parent,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipBrother")]
 		Brother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSister")]
 		Sister,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipChild")]
 		Child,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFriend")]
 		Friend,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSpouse")]
 		Spouse,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipPartner")]
 		Partner,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipAssistant")]
 		Assistant,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipManager")]
 		Manager,
 
@@ -2403,11 +2462,11 @@ namespace Intents {
 	interface INBookRestaurantReservationIntent : NSCopying {
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
-#if XAMCORE_4_0
-		IntPtr Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
+#if NET
+		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
 #else
 		// This is correctly nuint but a bug in PMCS generated incorrect code which has shipped.
-		IntPtr Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, ulong partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
+		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, ulong partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
 #endif
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
@@ -2444,7 +2503,7 @@ namespace Intents {
 
 		[Export ("confirmBookRestaurantReservation:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmBookRestaurantReservation
@@ -2475,7 +2534,7 @@ namespace Intents {
 	interface INBookRestaurantReservationIntentResponse {
 
 		[Export ("initWithCode:userActivity:")]
-		IntPtr Constructor (INBookRestaurantReservationIntentCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INBookRestaurantReservationIntentCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INBookRestaurantReservationIntentCode Code { get; }
@@ -2607,7 +2666,7 @@ namespace Intents {
 
 		[Export ("initWithWorkoutName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString workoutName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString workoutName);
 
 		[NullAllowed, Export ("workoutName", ArgumentSemantic.Copy)]
 		INSpeakableString WorkoutName { get; }
@@ -2626,7 +2685,7 @@ namespace Intents {
 
 		[Export ("confirmCancelWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmCancelWorkout
@@ -2647,7 +2706,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INCancelWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INCancelWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INCancelWorkoutIntentResponseCode Code { get; }
@@ -2918,7 +2977,7 @@ namespace Intents {
 
 		[Export ("initWithAmount:currencyCode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDecimalNumber amount, string currencyCode);
+		NativeHandle Constructor (NSDecimalNumber amount, string currencyCode);
 
 		[NullAllowed, Export ("amount", ArgumentSemantic.Copy)]
 		NSDecimalNumber Amount { get; }
@@ -2987,16 +3046,22 @@ namespace Intents {
 	interface INDateComponentsRange : NSCopying, NSSecureCoding {
 
 		[Export ("initWithStartDateComponents:endDateComponents:")]
-		IntPtr Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents);
+		NativeHandle Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents);
 
 		[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
 		[Export ("initWithEKRecurrenceRule:")]
-		IntPtr Constructor (EKRecurrenceRule recurrenceRule);
+		NativeHandle Constructor (EKRecurrenceRule recurrenceRule);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
+		// Headers claim the recurrenceRule property is available in macOS, but the parameter type INRecurrenceRule is not, so...
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0), NoTV]
 		[Export ("initWithStartDateComponents:endDateComponents:recurrenceRule:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents, [NullAllowed] INRecurrenceRule recurrenceRule);
+		NativeHandle Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents, [NullAllowed] INRecurrenceRule recurrenceRule);
 
 		[NullAllowed, Export ("startDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents StartDateComponents { get; }
@@ -3004,7 +3069,13 @@ namespace Intents {
 		[NullAllowed, Export ("endDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents EndDateComponents { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
+		// Headers claim the recurrenceRule property is available in macOS, but the property type (INRecurrenceRule) is not, so...
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0), NoTV]
 		[NullAllowed, Export ("recurrenceRule", ArgumentSemantic.Copy)]
 		INRecurrenceRule RecurrenceRule { get; }
 
@@ -3014,7 +3085,7 @@ namespace Intents {
 		EKRecurrenceRule EKRecurrenceRule { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -3069,7 +3140,7 @@ namespace Intents {
 		INDateComponentsRangeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -3149,7 +3220,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol] 
 	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
 #endif
 	{
@@ -3173,7 +3244,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling 
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
 #endif
 	{
@@ -3300,7 +3371,7 @@ namespace Intents {
 
 		[Export ("initWithWorkoutName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString workoutName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString workoutName);
 
 		[NullAllowed, Export ("workoutName", ArgumentSemantic.Copy)]
 		INSpeakableString WorkoutName { get; }
@@ -3319,7 +3390,7 @@ namespace Intents {
 
 		[Export ("confirmEndWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmEndWorkout
@@ -3340,7 +3411,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INEndWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INEndWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INEndWorkoutIntentResponseCode Code { get; }
@@ -3374,7 +3445,7 @@ namespace Intents {
 
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:")]
-		IntPtr Constructor ([NullAllowed] INRestaurant restaurant);
+		NativeHandle Constructor ([NullAllowed] INRestaurant restaurant);
 
 		[NullAllowed, Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
@@ -3393,7 +3464,7 @@ namespace Intents {
 
 		[Export ("confirmGetAvailableRestaurantReservationBookingDefaults:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmAvailableRestaurantReservationBookingDefaults
@@ -3428,7 +3499,7 @@ namespace Intents {
 
 		[Export ("initWithDefaultPartySize:defaultBookingDate:code:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (nuint defaultPartySize, NSDate defaultBookingDate, INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (nuint defaultPartySize, NSDate defaultBookingDate, INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode Code { get; }
@@ -3443,7 +3514,7 @@ namespace Intents {
 
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:partySize:preferredBookingDateComponents:maximumNumberOfResults:earliestBookingDateForResults:latestBookingDateForResults:")]
-		IntPtr Constructor (INRestaurant restaurant, nuint partySize, [NullAllowed] NSDateComponents preferredBookingDateComponents, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults, [NullAllowed] NSDate latestBookingDateForResults);
+		NativeHandle Constructor (INRestaurant restaurant, nuint partySize, [NullAllowed] NSDateComponents preferredBookingDateComponents, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults, [NullAllowed] NSDate latestBookingDateForResults);
 
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
@@ -3477,7 +3548,7 @@ namespace Intents {
 
 		[Export ("confirmGetAvailableRestaurantReservationBookings:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmAvailableRestaurantReservationBookings
@@ -3503,7 +3574,7 @@ namespace Intents {
 
 		[Export ("initWithAvailableBookings:code:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INRestaurantReservationBooking [] availableBookings, INGetAvailableRestaurantReservationBookingsIntentCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INRestaurantReservationBooking [] availableBookings, INGetAvailableRestaurantReservationBookingsIntentCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetAvailableRestaurantReservationBookingsIntentCode Code { get; }
@@ -3542,7 +3613,7 @@ namespace Intents {
 
 		[Export ("confirmGetRestaurantGuest:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRestaurantGuest
@@ -3559,7 +3630,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INGetRestaurantGuestIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INGetRestaurantGuestIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[NullAllowed, Export ("guest", ArgumentSemantic.Copy)]
 		INRestaurantGuest Guest { get; set; }
@@ -3581,7 +3652,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 	}
 
 	[iOS (10, 0)]
@@ -3605,7 +3676,7 @@ namespace Intents {
 
 		[Export ("confirmGetRideStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRideStatus
@@ -3637,7 +3708,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INGetRideStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INGetRideStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetRideStatusIntentResponseCode Code { get; }
@@ -3655,11 +3726,11 @@ namespace Intents {
 
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:reservationIdentifier:maximumNumberOfResults:earliestBookingDateForResults:")]
-		IntPtr Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
+		NativeHandle Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
 
 		[iOS (11,0)]
 		[Wrap ("this (restaurant, reservationIdentifier, NSNumber.FromNInt (maximumNumberOfResults), earliestBookingDateForResults)")]
-		IntPtr Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, nint maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
+		NativeHandle Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, nint maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
 
 		[NullAllowed, Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
@@ -3687,7 +3758,7 @@ namespace Intents {
 
 		[Export ("confirmGetUserCurrentRestaurantReservationBookings:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmUserCurrentRestaurantReservationBookings
@@ -3707,7 +3778,7 @@ namespace Intents {
 
 		[Export ("initWithUserCurrentBookings:code:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INRestaurantReservationUserBooking [] userCurrentBookings, INGetUserCurrentRestaurantReservationBookingsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INRestaurantReservationUserBooking [] userCurrentBookings, INGetUserCurrentRestaurantReservationBookingsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetUserCurrentRestaurantReservationBookingsIntentResponseCode Code { get; }
@@ -3943,7 +4014,7 @@ namespace Intents {
 
 		[Export ("initWithIntent:response:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INIntent intent, [NullAllowed] INIntentResponse response);
+		NativeHandle Constructor (INIntent intent, [NullAllowed] INIntentResponse response);
 
 		[Async]
 		[Export ("donateInteractionWithCompletion:")]
@@ -4002,7 +4073,7 @@ namespace Intents {
 
 		[Export ("initWithPickupLocation:dropOffLocation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation);
+		NativeHandle Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation);
 
 		[NullAllowed, Export ("pickupLocation", ArgumentSemantic.Copy)]
 		CLPlacemark PickupLocation { get; }
@@ -4024,7 +4095,7 @@ namespace Intents {
 
 		[Export ("confirmListRideOptions:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmListRideOptions
@@ -4048,7 +4119,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INListRideOptionsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INListRideOptionsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INListRideOptionsIntentResponseCode Code { get; }
@@ -4063,7 +4134,7 @@ namespace Intents {
 		NSDate ExpirationDate { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4078,19 +4149,19 @@ namespace Intents {
 		[Watch (6,1), NoMac, iOS (13,2)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson[] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName);
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson[] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName);
 		
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:messageType:")]
-		IntPtr Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
 
 		[Export ("initWithIdentifier:content:dateSent:sender:recipients:")]
-		IntPtr Constructor (string identifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients);
+		NativeHandle Constructor (string identifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -4124,7 +4195,7 @@ namespace Intents {
 		string ServiceName { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4195,7 +4266,7 @@ namespace Intents {
 		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -4275,7 +4346,7 @@ namespace Intents {
 
 		[Export ("initWithWorkoutName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString workoutName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString workoutName);
 
 		[NullAllowed, Export ("workoutName", ArgumentSemantic.Copy)]
 		INSpeakableString WorkoutName { get; }
@@ -4294,7 +4365,7 @@ namespace Intents {
 
 		[Export ("confirmPauseWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmPauseWorkout
@@ -4315,7 +4386,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INPauseWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INPauseWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INPauseWorkoutIntentResponseCode Code { get; }
@@ -4330,7 +4401,7 @@ namespace Intents {
 
 		[Export ("initWithType:name:identificationHint:icon:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INPaymentMethodType type, [NullAllowed] string name, [NullAllowed] string identificationHint, [NullAllowed] INImage icon);
+		NativeHandle Constructor (INPaymentMethodType type, [NullAllowed] string name, [NullAllowed] string identificationHint, [NullAllowed] INImage icon);
 
 		[Export ("type", ArgumentSemantic.Assign)]
 		INPaymentMethodType Type { get; }
@@ -4359,10 +4430,10 @@ namespace Intents {
 
 		[Export ("initWithPayee:payer:currencyAmount:paymentMethod:note:status:feeAmount:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPerson payee, [NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] string note, INPaymentStatus status, [NullAllowed] INCurrencyAmount feeAmount);
+		NativeHandle Constructor ([NullAllowed] INPerson payee, [NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] string note, INPaymentStatus status, [NullAllowed] INCurrencyAmount feeAmount);
 
 		[Export ("initWithPayee:payer:currencyAmount:paymentMethod:note:status:")]
-		IntPtr Constructor ([NullAllowed] INPerson payee, [NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] string note, INPaymentStatus status);
+		NativeHandle Constructor ([NullAllowed] INPerson payee, [NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] string note, INPaymentStatus status);
 
 		[NullAllowed, Export ("payee", ArgumentSemantic.Copy)]
 		INPerson Payee { get; }
@@ -4395,17 +4466,17 @@ namespace Intents {
 	interface INPerson : NSCopying, NSSecureCoding, INSpeakable {
 
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:")]
-		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier);
+		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier);
 
 		[Watch (7,0), iOS (14,0), Mac (11,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:relationship:")]
-		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] string relationship);
+		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] string relationship);
 
 		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, bool isMe);
+		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, bool isMe);
 
 		[Internal]
 		[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -4450,7 +4521,7 @@ namespace Intents {
 		INPersonSuggestionType SuggestionType { get; }
 
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:aliases:suggestionType:")]
-		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] INPersonHandle [] aliases, INPersonSuggestionType suggestionType);
+		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] INPersonHandle [] aliases, INPersonSuggestionType suggestionType);
 
 		// Inlined from INInteraction (INPerson) Category
 
@@ -4495,16 +4566,16 @@ namespace Intents {
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
 		[Wrap ("this (value, type, label.GetConstant ())")]
-		IntPtr Constructor (string value, INPersonHandleType type, INPersonHandleLabel label);
+		NativeHandle Constructor (string value, INPersonHandleType type, INPersonHandleLabel label);
 
 		[DesignatedInitializer]
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
 		[Export ("initWithValue:type:label:"), Protected]
-		IntPtr Constructor ([NullAllowed] string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
+		NativeHandle Constructor ([NullAllowed] string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
 		[Export ("initWithValue:type:")]
-		IntPtr Constructor ([NullAllowed] string value, INPersonHandleType type);
+		NativeHandle Constructor ([NullAllowed] string value, INPersonHandleType type);
 	}
 
 	[iOS (10, 0)]
@@ -4612,7 +4683,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
-#if XAMCORE_4_0 || TVOS || __MACCATALYST__
+#if NET || TVOS || __MACCATALYST__
 	[DisableDefaultCtor]
 #endif
 	[TV (14,0)]
@@ -4645,7 +4716,7 @@ namespace Intents {
 
 		[Export ("initWithRangeBetweenPrice:andPrice:currencyCode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDecimalNumber firstPrice, NSDecimalNumber secondPrice, string currencyCode);
+		NativeHandle Constructor (NSDecimalNumber firstPrice, NSDecimalNumber secondPrice, string currencyCode);
 
 		[Internal]
 		[Export ("initWithMaximumPrice:currencyCode:")]
@@ -4656,7 +4727,7 @@ namespace Intents {
 		IntPtr InitWithMinimumPrice (NSDecimalNumber minimumPrice, string currencyCode);
 
 		[Export ("initWithPrice:currencyCode:")]
-		IntPtr Constructor (NSDecimalNumber price, string currencyCode);
+		NativeHandle Constructor (NSDecimalNumber price, string currencyCode);
 
 		[NullAllowed, Export ("minimumPrice")]
 		NSDecimalNumber MinimumPrice { get; }
@@ -4869,7 +4940,7 @@ namespace Intents {
 
 		[Export ("initWithPayer:currencyAmount:note:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] string note);
+		NativeHandle Constructor ([NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] string note);
 
 		[NullAllowed, Export ("payer", ArgumentSemantic.Copy)]
 		INPerson Payer { get; }
@@ -4894,7 +4965,7 @@ namespace Intents {
 
 		[Export ("confirmRequestPayment:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRequestPayment
@@ -4933,7 +5004,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INRequestPaymentIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INRequestPaymentIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INRequestPaymentIntentResponseCode Code { get; }
@@ -4952,12 +5023,12 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 10, 3, message: "Use the INDateComponentsRange overload")]
 		[Unavailable (PlatformName.WatchOS)]
 		[Export ("initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod:")]
-		IntPtr Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INPaymentMethod paymentMethod);
+		NativeHandle Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INPaymentMethod paymentMethod);
 
 		[iOS (10, 3)]
 		[Export ("initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod:scheduledPickupTime:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] INDateComponentsRange scheduledPickupTime);
+		NativeHandle Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] INDateComponentsRange scheduledPickupTime);
 
 		[NullAllowed, Export ("pickupLocation", ArgumentSemantic.Copy)]
 		CLPlacemark PickupLocation { get; }
@@ -4992,7 +5063,7 @@ namespace Intents {
 
 		[Export ("confirmRequestRide:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRequestRide
@@ -5026,7 +5097,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INRequestRideIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INRequestRideIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INRequestRideIntentResponseCode Code { get; }
@@ -5044,7 +5115,7 @@ namespace Intents {
 
 		[Export ("initWithLocation:name:vendorIdentifier:restaurantIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CLLocation location, string name, string vendorIdentifier, string restaurantIdentifier);
+		NativeHandle Constructor (CLLocation location, string name, string vendorIdentifier, string restaurantIdentifier);
 
 		[Export ("location", ArgumentSemantic.Copy)]
 		CLLocation Location { get; set; }
@@ -5069,7 +5140,7 @@ namespace Intents {
 
 		[Export ("initWithNameComponents:phoneNumber:emailAddress:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string phoneNumber, [NullAllowed] string emailAddress);
+		NativeHandle Constructor ([NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string phoneNumber, [NullAllowed] string emailAddress);
 
 		[NullAllowed, Export ("phoneNumber")]
 		string PhoneNumber { get; set; }
@@ -5187,7 +5258,7 @@ namespace Intents {
 
 		[Export ("initWithRestaurant:bookingDate:partySize:bookingIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INRestaurant restaurant, NSDate bookingDate, nuint partySize, string bookingIdentifier);
+		NativeHandle Constructor (INRestaurant restaurant, NSDate bookingDate, nuint partySize, string bookingIdentifier);
 
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
@@ -5232,10 +5303,10 @@ namespace Intents {
 
 		[Export ("initWithRestaurant:bookingDate:partySize:bookingIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INRestaurant restaurant, NSDate bookingDate, nuint partySize, string bookingIdentifier);
+		NativeHandle Constructor (INRestaurant restaurant, NSDate bookingDate, nuint partySize, string bookingIdentifier);
 
 		[Export ("initWithRestaurant:bookingDate:partySize:bookingIdentifier:guest:status:dateStatusModified:")]
-		IntPtr Constructor (INRestaurant restaurant, NSDate bookingDate, nuint partySize, string bookingIdentifier, INRestaurantGuest guest, INRestaurantReservationUserBookingStatus status, NSDate dateStatusModified);
+		NativeHandle Constructor (INRestaurant restaurant, NSDate bookingDate, nuint partySize, string bookingIdentifier, INRestaurantGuest guest, INRestaurantReservationUserBookingStatus status, NSDate dateStatusModified);
 
 		[Export ("guest", ArgumentSemantic.Copy)]
 		INRestaurantGuest Guest { get; set; }
@@ -5316,7 +5387,7 @@ namespace Intents {
 
 		[Export ("initWithWorkoutName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString workoutName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString workoutName);
 
 		[NullAllowed, Export ("workoutName", ArgumentSemantic.Copy)]
 		INSpeakableString WorkoutName { get; }
@@ -5335,7 +5406,7 @@ namespace Intents {
 
 		[Export ("confirmResumeWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmResumeWorkout
@@ -5356,7 +5427,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INResumeWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INResumeWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INResumeWorkoutIntentResponseCode Code { get; }
@@ -5437,12 +5508,12 @@ namespace Intents {
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber:")]
 		[Deprecated (PlatformName.iOS, 10,2, message:"Use the overload signature instead.")]
 		[Unavailable (PlatformName.WatchOS)]
-		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating, [NullAllowed] string phoneNumber);
+		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating, [NullAllowed] string phoneNumber);
 
 		[Export ("initWithPhoneNumber:nameComponents:displayName:image:rating:")]
 		[iOS (10,2)]
 		[DesignatedInitializer]
-		IntPtr Constructor (string phoneNumber, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating);
+		NativeHandle Constructor (string phoneNumber, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating);
 
 		[NullAllowed, Export ("rating")]
 		string Rating { get; }
@@ -5461,7 +5532,7 @@ namespace Intents {
 
 		[Export ("initWithTitle:price:currencyCode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, NSDecimalNumber price, string currencyCode);
+		NativeHandle Constructor (string title, NSDecimalNumber price, string currencyCode);
 
 		[Export ("title")]
 		string Title { get; }
@@ -5483,7 +5554,7 @@ namespace Intents {
 
 		[Export ("initWithName:estimatedPickupDate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, NSDate estimatedPickupDate);
+		NativeHandle Constructor (string name, NSDate estimatedPickupDate);
 
 		[Export ("name")]
 		string Name { get; set; }
@@ -5530,7 +5601,7 @@ namespace Intents {
 
 		[Export ("initWithPartySizeRange:sizeDescription:priceRange:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSRange partySizeRange, string sizeDescription, [NullAllowed] INPriceRange priceRange);
+		NativeHandle Constructor (NSRange partySizeRange, string sizeDescription, [NullAllowed] INPriceRange priceRange);
 
 		[Export ("partySizeRange")]
 		NSRange PartySizeRange { get; }
@@ -5663,7 +5734,7 @@ namespace Intents {
 
 		[Export ("confirmSaveProfileInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSaveProfileInCar
@@ -5689,13 +5760,13 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSaveProfileInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSaveProfileInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSaveProfileInCarIntentResponseCode Code { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5711,17 +5782,17 @@ namespace Intents {
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithDateCreated:recipient:callCapabilities:callTypes:unseen:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, [NullAllowed] NSNumber unseen);
+		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, [NullAllowed] NSNumber unseen);
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Wrap ("this (dateCreated, recipient, callCapabilities, callTypes, new NSNumber (unseen))")]
-		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, bool unseen);
+		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, bool unseen);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Export ("initWithCallType:dateCreated:recipient:callCapabilities:")]
-		IntPtr Constructor (INCallRecordType callType, [NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities);
+		NativeHandle Constructor (INCallRecordType callType, [NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CallTypes' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CallTypes' instead.")]
@@ -5748,7 +5819,7 @@ namespace Intents {
 		NSNumber WeakUnseen { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5767,7 +5838,7 @@ namespace Intents {
 
 		[Export ("confirmSearchCallHistory:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchCallHistory
@@ -5795,7 +5866,7 @@ namespace Intents {
 		void ResolveUnseen (INSearchCallHistoryIntent intent, Action<INBooleanResolutionResult> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5811,7 +5882,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSearchCallHistoryIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSearchCallHistoryIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSearchCallHistoryIntentResponseCode Code { get; }
@@ -5821,7 +5892,7 @@ namespace Intents {
 		INCallRecord [] CallRecords { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5837,18 +5908,18 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
-		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
+		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
 
 		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:conversationIdentifiers:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames, [NullAllowed] string [] conversationIdentifiers);
+		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames, [NullAllowed] string [] conversationIdentifiers);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:groupNames:")]
-		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] string [] groupNames);
+		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] string [] groupNames);
 
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
 		INPerson [] Recipients { get; }
@@ -5915,7 +5986,7 @@ namespace Intents {
 		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5932,7 +6003,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForMessages:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchForMessages
@@ -5962,7 +6033,7 @@ namespace Intents {
 		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5976,7 +6047,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSearchForMessagesIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSearchForMessagesIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSearchForMessagesIntentResponseCode Code { get; }
@@ -5996,7 +6067,7 @@ namespace Intents {
 
 		[Export ("initWithDateCreated:locationCreated:albumName:searchTerms:includedAttributes:excludedAttributes:peopleInPhoto:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] CLPlacemark locationCreated, [NullAllowed] string albumName, [NullAllowed] string [] searchTerms, INPhotoAttributeOptions includedAttributes, INPhotoAttributeOptions excludedAttributes, [NullAllowed] INPerson [] peopleInPhoto);
+		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] CLPlacemark locationCreated, [NullAllowed] string albumName, [NullAllowed] string [] searchTerms, INPhotoAttributeOptions includedAttributes, INPhotoAttributeOptions excludedAttributes, [NullAllowed] INPerson [] peopleInPhoto);
 
 		[NullAllowed, Export ("dateCreated", ArgumentSemantic.Copy)]
 		INDateComponentsRange DateCreated { get; }
@@ -6041,7 +6112,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForPhotos:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchForPhotos
@@ -6077,7 +6148,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSearchForPhotosIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSearchForPhotosIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSearchForPhotosIntentResponseCode Code { get; }
@@ -6097,20 +6168,20 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithRecipients:outgoingMessageType:content:speakableGroupName:conversationIdentifier:serviceName:sender:attachments:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPerson[] recipients, INOutgoingMessageType outgoingMessageType, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender, [NullAllowed] INSendMessageAttachment[] attachments);
+		NativeHandle Constructor ([NullAllowed] INPerson[] recipients, INOutgoingMessageType outgoingMessageType, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender, [NullAllowed] INSendMessageAttachment[] attachments);
 
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender:")]
-		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
+		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
 
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Export ("initWithRecipients:content:groupName:serviceName:sender:")]
-		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] string groupName, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
+		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] string groupName, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
 
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
 		INPerson [] Recipients { get; }
@@ -6157,7 +6228,7 @@ namespace Intents {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("mentionsCurrentUser")]
 		bool MentionsCurrentUser { get; set; }
@@ -6185,7 +6256,7 @@ namespace Intents {
 
 		[Export ("confirmSendMessage:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSendMessage
@@ -6216,6 +6287,9 @@ namespace Intents {
 		[Export ("resolveOutgoingMessageTypeForSendMessage:withCompletion:")]
 		void ResolveOutgoingMessageType (INSendMessageIntent intent, Action<INOutgoingMessageTypeResolutionResult> completion);
 
+#if NET
+		[NoMac] // The INSpeakableStringResolutionResult used as a parameter type is not available in macOS
+#endif
 		[Watch (4,0), iOS (11,0)]
 		[Export ("resolveSpeakableGroupNameForSendMessage:withCompletion:")]
 		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6231,11 +6305,14 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSendMessageIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSendMessageIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSendMessageIntentResponseCode Code { get; }
 
+#if NET
+		[NoMac] // The INMessage type isn't available in macOS
+#endif
 		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("sentMessage", ArgumentSemantic.Copy)]
 		INMessage SentMessage { get; set; }
@@ -6250,7 +6327,7 @@ namespace Intents {
 
 		[Export ("initWithPayee:currencyAmount:note:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPerson payee, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] string note);
+		NativeHandle Constructor ([NullAllowed] INPerson payee, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] string note);
 
 		[NullAllowed, Export ("payee", ArgumentSemantic.Copy)]
 		INPerson Payee { get; }
@@ -6275,7 +6352,7 @@ namespace Intents {
 
 		[Export ("confirmSendPayment:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSendPayment
@@ -6314,7 +6391,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSendPaymentIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSendPaymentIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSendPaymentIntentResponseCode Code { get; }
@@ -6333,7 +6410,7 @@ namespace Intents {
 
 		[Export ("initWithAudioSource:relativeAudioSourceReference:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INCarAudioSource audioSource, INRelativeReference relativeAudioSourceReference);
+		NativeHandle Constructor (INCarAudioSource audioSource, INRelativeReference relativeAudioSourceReference);
 
 		[Export ("audioSource", ArgumentSemantic.Assign)]
 		INCarAudioSource AudioSource { get; }
@@ -6356,7 +6433,7 @@ namespace Intents {
 
 		[Export ("confirmSetAudioSourceInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetAudioSourceInCar
@@ -6381,7 +6458,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetAudioSourceInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetAudioSourceInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetAudioSourceInCarIntentResponseCode Code { get; }
@@ -6398,12 +6475,12 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
-		IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
+		NativeHandle Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
 		[iOS (12,0)]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:carName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableFan, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAirConditioner, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableClimateControl, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] [BindAs (typeof (int?))] NSNumber fanSpeedIndex, [NullAllowed] [BindAs (typeof (double?))] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone, [NullAllowed] INSpeakableString carName);
+		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableFan, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAirConditioner, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableClimateControl, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] [BindAs (typeof (int?))] NSNumber fanSpeedIndex, [NullAllowed] [BindAs (typeof (double?))] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone, [NullAllowed] INSpeakableString carName);
 
 		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableFan", ArgumentSemantic.Copy)]
@@ -6424,13 +6501,13 @@ namespace Intents {
 		[Export ("airCirculationMode", ArgumentSemantic.Assign)]
 		INCarAirCirculationMode AirCirculationMode { get; }
 
-#if XAMCORE_4_0 // Adding BindAs is a breaking change
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("fanSpeedIndex", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedIndex { get; }
 
-#if XAMCORE_4_0 // Adding BindAs is a breaking change
+#if NET
 		[BindAs (typeof (double?))]
 #endif
 		[NullAllowed, Export ("fanSpeedPercentage", ArgumentSemantic.Copy)]
@@ -6467,7 +6544,7 @@ namespace Intents {
 
 		[Export ("confirmSetClimateSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetClimateSettingsInCar
@@ -6523,7 +6600,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetClimateSettingsInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetClimateSettingsInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetClimateSettingsInCarIntentResponseCode Code { get; }
@@ -6540,12 +6617,12 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnable:defroster:")]
-		IntPtr Constructor ([NullAllowed] NSNumber enable, INCarDefroster defroster);
+		NativeHandle Constructor ([NullAllowed] NSNumber enable, INCarDefroster defroster);
 
 		[iOS (12,0)]
 		[Export ("initWithEnable:defroster:carName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enable, INCarDefroster defroster, [NullAllowed] INSpeakableString carName);
+		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enable, INCarDefroster defroster, [NullAllowed] INSpeakableString carName);
 
 		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enable", ArgumentSemantic.Copy)]
@@ -6573,7 +6650,7 @@ namespace Intents {
 
 		[Export ("confirmSetDefrosterSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetDefrosterSettingsInCar
@@ -6602,7 +6679,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetDefrosterSettingsInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetDefrosterSettingsInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetDefrosterSettingsInCarIntentResponseCode Code { get; }
@@ -6617,7 +6694,7 @@ namespace Intents {
 
 		[Export ("initWithIdentifiers:attribute:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string [] identifiers, INMessageAttribute attribute);
+		NativeHandle Constructor ([NullAllowed] string [] identifiers, INMessageAttribute attribute);
 
 		[NullAllowed, Export ("identifiers", ArgumentSemantic.Copy)]
 		string [] Identifiers { get; }
@@ -6639,7 +6716,7 @@ namespace Intents {
 
 		[Export ("confirmSetMessageAttribute:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetMessageAttribute
@@ -6660,7 +6737,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetMessageAttributeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetMessageAttributeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetMessageAttributeIntentResponseCode Code { get; }
@@ -6686,9 +6763,9 @@ namespace Intents {
 		[iOS (12,0)]
 		[Export ("initWithProfileNumber:profileName:defaultProfile:carName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] [BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] [BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
+		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] [BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
 
-#if XAMCORE_4_0 // Breaking change
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
@@ -6725,7 +6802,7 @@ namespace Intents {
 
 		[Export ("confirmSetProfileInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetProfileInCar
@@ -6759,7 +6836,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetProfileInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetProfileInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetProfileInCarIntentResponseCode Code { get; }
@@ -6775,7 +6852,7 @@ namespace Intents {
 
 		[Export ("initWithRadioType:frequency:stationName:channel:presetNumber:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INRadioType radioType, [NullAllowed] NSNumber frequency, [NullAllowed] string stationName, [NullAllowed] string channel, [NullAllowed] NSNumber presetNumber);
+		NativeHandle Constructor (INRadioType radioType, [NullAllowed] NSNumber frequency, [NullAllowed] string stationName, [NullAllowed] string channel, [NullAllowed] NSNumber presetNumber);
 
 		[Export ("radioType", ArgumentSemantic.Assign)]
 		INRadioType RadioType { get; }
@@ -6807,7 +6884,7 @@ namespace Intents {
 
 		[Export ("confirmSetRadioStation:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetRadioStation
@@ -6841,7 +6918,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetRadioStationIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetRadioStationIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetRadioStationIntentResponseCode Code { get; }
@@ -6858,12 +6935,12 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected] // allow subclassing
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:")]
-		IntPtr Constructor ([NullAllowed] NSNumber enableHeating, [NullAllowed] NSNumber enableCooling, [NullAllowed] NSNumber enableMassage, INCarSeat seat, [NullAllowed] NSNumber level, INRelativeSetting relativeLevelSetting);
+		NativeHandle Constructor ([NullAllowed] NSNumber enableHeating, [NullAllowed] NSNumber enableCooling, [NullAllowed] NSNumber enableMassage, INCarSeat seat, [NullAllowed] NSNumber level, INRelativeSetting relativeLevelSetting);
 
 		[iOS (12,0)]
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:carName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableHeating, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableCooling, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableMassage, INCarSeat seat, [NullAllowed] [BindAs (typeof (int?))] NSNumber level, INRelativeSetting relativeLevelSetting, [NullAllowed] INSpeakableString carName);
+		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableHeating, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableCooling, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableMassage, INCarSeat seat, [NullAllowed] [BindAs (typeof (int?))] NSNumber level, INRelativeSetting relativeLevelSetting, [NullAllowed] INSpeakableString carName);
 
 		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableHeating", ArgumentSemantic.Copy)]
@@ -6880,7 +6957,7 @@ namespace Intents {
 		[Export ("seat", ArgumentSemantic.Assign)]
 		INCarSeat Seat { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("level", ArgumentSemantic.Copy)]
@@ -6908,7 +6985,7 @@ namespace Intents {
 
 		[Export ("confirmSetSeatSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetSeatSettingsInCar
@@ -6949,7 +7026,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetSeatSettingsInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetSeatSettingsInCarIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetSeatSettingsInCarIntentResponseCode Code { get; }
@@ -6962,7 +7039,7 @@ namespace Intents {
 	{
 		[Export ("initWithFocusStatus:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INFocusStatus focusStatus);
+		NativeHandle Constructor ([NullAllowed] INFocusStatus focusStatus);
 
 		[NullAllowed, Export ("focusStatus", ArgumentSemantic.Copy)]
 		INFocusStatus FocusStatus { get; }
@@ -6999,7 +7076,7 @@ namespace Intents {
 	{
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INShareFocusStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INShareFocusStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INShareFocusStatusIntentResponseCode Code { get; }
@@ -7023,14 +7100,14 @@ namespace Intents {
 		string PronunciationHint { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("vocabularyIdentifier")]
 		string VocabularyIdentifier { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("alternativeSpeakableMatches")]
@@ -7039,7 +7116,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
-#if !XAMCORE_4_0 // Apple made this @optional in iOS 11
+#if !NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("identifier")]
@@ -7067,10 +7144,10 @@ namespace Intents {
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
 		[Export ("initWithSpokenPhrase:")]
-		IntPtr Constructor (string spokenPhrase);
+		NativeHandle Constructor (string spokenPhrase);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7125,7 +7202,7 @@ namespace Intents {
 		INSpeakableStringResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7142,12 +7219,12 @@ namespace Intents {
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
 		[Export ("initWithContacts:")]
-		IntPtr Constructor ([NullAllowed] INPerson [] contacts);
+		NativeHandle Constructor ([NullAllowed] INPerson [] contacts);
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithDestinationType:contacts:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts);
+		NativeHandle Constructor (INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts);
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("destinationType", ArgumentSemantic.Assign)]
@@ -7157,7 +7234,7 @@ namespace Intents {
 		INPerson [] Contacts { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7176,7 +7253,7 @@ namespace Intents {
 
 		[Export ("confirmStartAudioCall:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartAudioCall
@@ -7191,7 +7268,7 @@ namespace Intents {
 		void ResolveContacts (INStartAudioCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7207,7 +7284,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INStartAudioCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INStartAudioCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INStartAudioCallIntentResponseCode Code { get; }
@@ -7224,7 +7301,7 @@ namespace Intents {
 
 		[Export ("initWithDateCreated:locationCreated:albumName:searchTerms:includedAttributes:excludedAttributes:peopleInPhoto:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] CLPlacemark locationCreated, [NullAllowed] string albumName, [NullAllowed] string [] searchTerms, INPhotoAttributeOptions includedAttributes, INPhotoAttributeOptions excludedAttributes, [NullAllowed] INPerson [] peopleInPhoto);
+		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] CLPlacemark locationCreated, [NullAllowed] string albumName, [NullAllowed] string [] searchTerms, INPhotoAttributeOptions includedAttributes, INPhotoAttributeOptions excludedAttributes, [NullAllowed] INPerson [] peopleInPhoto);
 
 		[NullAllowed, Export ("dateCreated", ArgumentSemantic.Copy)]
 		INDateComponentsRange DateCreated { get; }
@@ -7269,7 +7346,7 @@ namespace Intents {
 
 		[Export ("confirmStartPhotoPlayback:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartPhotoPlayback
@@ -7301,7 +7378,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INStartPhotoPlaybackIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INStartPhotoPlaybackIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INStartPhotoPlaybackIntentResponseCode Code { get; }
@@ -7310,7 +7387,7 @@ namespace Intents {
 		NSNumber SearchResultsCount { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7325,17 +7402,21 @@ namespace Intents {
 
 		[Export ("initWithContacts:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPerson [] contacts);
+		NativeHandle Constructor ([NullAllowed] INPerson [] contacts);
 
 		[NullAllowed, Export ("contacts", ArgumentSemantic.Copy)]
 		INPerson [] Contacts { get; }
 	}
 
-	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
+#if NET
+	[NoMac]
+#elif MONOMAC
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
+	[Mac (10, 12, 0)]
+#endif
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Protocol]
@@ -7347,7 +7428,7 @@ namespace Intents {
 
 		[Export ("confirmStartVideoCall:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartVideoCall
@@ -7358,7 +7439,7 @@ namespace Intents {
 		void ResolveContacts (INStartVideoCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7374,7 +7455,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INStartVideoCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INStartVideoCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INStartVideoCallIntentResponseCode Code { get; }
@@ -7390,7 +7471,7 @@ namespace Intents {
 		[Protected]
 		[Export ("initWithWorkoutName:goalValue:workoutGoalUnitType:workoutLocationType:isOpenEnded:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString workoutName, [NullAllowed] NSNumber goalValue, INWorkoutGoalUnitType workoutGoalUnitType, INWorkoutLocationType workoutLocationType, [NullAllowed] NSNumber isOpenEnded);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString workoutName, [NullAllowed] NSNumber goalValue, INWorkoutGoalUnitType workoutGoalUnitType, INWorkoutLocationType workoutLocationType, [NullAllowed] NSNumber isOpenEnded);
 
 		[NullAllowed, Export ("workoutName", ArgumentSemantic.Copy)]
 		INSpeakableString WorkoutName { get; }
@@ -7422,7 +7503,7 @@ namespace Intents {
 
 		[Export ("confirmStartWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartWorkout
@@ -7455,7 +7536,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INStartWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INStartWorkoutIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INStartWorkoutIntentResponseCode Code { get; }
@@ -7574,7 +7655,7 @@ namespace Intents {
 
 		[Export ("initWithLocalizedTermsAndConditionsText:privacyPolicyURL:termsAndConditionsURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string localizedTermsAndConditionsText, [NullAllowed] NSUrl privacyPolicyUrl, [NullAllowed] NSUrl termsAndConditionsUrl);
+		NativeHandle Constructor (string localizedTermsAndConditionsText, [NullAllowed] NSUrl privacyPolicyUrl, [NullAllowed] NSUrl termsAndConditionsUrl);
 
 		[Export ("localizedTermsAndConditionsText")]
 		string LocalizedTermsAndConditionsText { get; }
@@ -7782,7 +7863,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCarName:signals:")]
-		IntPtr Constructor ([NullAllowed] INSpeakableString carName, INCarSignalOptions signals);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString carName, INCarSignalOptions signals);
 
 		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString CarName { get; }
@@ -7804,7 +7885,7 @@ namespace Intents {
 
 		[Export ("confirmActivateCarSignal:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmActivateCarSignal
@@ -7830,7 +7911,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithBillType:paymentStatus:billPayee:amountDue:minimumDue:lateFee:dueDate:paymentDate:")]
-		IntPtr Constructor (INBillType billType, INPaymentStatus paymentStatus, [NullAllowed] INBillPayee billPayee, [NullAllowed] INCurrencyAmount amountDue, [NullAllowed] INCurrencyAmount minimumDue, [NullAllowed] INCurrencyAmount lateFee, [NullAllowed] NSDateComponents dueDate, [NullAllowed] NSDateComponents paymentDate);
+		NativeHandle Constructor (INBillType billType, INPaymentStatus paymentStatus, [NullAllowed] INBillPayee billPayee, [NullAllowed] INCurrencyAmount amountDue, [NullAllowed] INCurrencyAmount minimumDue, [NullAllowed] INCurrencyAmount lateFee, [NullAllowed] NSDateComponents dueDate, [NullAllowed] NSDateComponents paymentDate);
 
 		[Export ("billType", ArgumentSemantic.Assign)]
 		INBillType BillType { get; set; }
@@ -7869,7 +7950,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithNickname:number:organizationName:")]
-		IntPtr Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, [NullAllowed] INSpeakableString organizationName);
+		NativeHandle Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, [NullAllowed] INSpeakableString organizationName);
 
 		[Export ("nickname", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString Nickname { get; }
@@ -8076,7 +8157,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCarName:")]
-		IntPtr Constructor ([NullAllowed] INSpeakableString carName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString carName);
 
 		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString CarName { get; }
@@ -8095,7 +8176,7 @@ namespace Intents {
 
 		[Export ("confirmGetCarLockStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmGetCarLockStatus
@@ -8116,7 +8197,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCode:userActivity:")]
-		IntPtr Constructor (INGetCarLockStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INGetCarLockStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetCarLockStatusIntentResponseCode Code { get; }
@@ -8139,7 +8220,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCarName:")]
-		IntPtr Constructor ([NullAllowed] INSpeakableString carName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString carName);
 
 		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString CarName { get; }
@@ -8168,7 +8249,7 @@ namespace Intents {
 
 		[Export ("confirmGetCarPowerLevelStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmGetCarPowerLevelStatus
@@ -8204,7 +8285,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCode:userActivity:")]
-		IntPtr Constructor (INGetCarPowerLevelStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INGetCarPowerLevelStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetCarPowerLevelStatusIntentResponseCode Code { get; }
@@ -8315,7 +8396,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithBillPayee:fromAccount:transactionAmount:transactionScheduledDate:transactionNote:billType:dueDate:")]
-		IntPtr Constructor ([NullAllowed] INBillPayee billPayee, [NullAllowed] INPaymentAccount fromAccount, [NullAllowed] INPaymentAmount transactionAmount, [NullAllowed] INDateComponentsRange transactionScheduledDate, [NullAllowed] string transactionNote, INBillType billType, [NullAllowed] INDateComponentsRange dueDate);
+		NativeHandle Constructor ([NullAllowed] INBillPayee billPayee, [NullAllowed] INPaymentAccount fromAccount, [NullAllowed] INPaymentAmount transactionAmount, [NullAllowed] INDateComponentsRange transactionScheduledDate, [NullAllowed] string transactionNote, INBillType billType, [NullAllowed] INDateComponentsRange dueDate);
 
 		[Export ("billPayee", ArgumentSemantic.Copy), NullAllowed]
 		INBillPayee BillPayee { get; }
@@ -8348,7 +8429,7 @@ namespace Intents {
 	[Protocol]
 	interface INPayBillIntentHandling {
 
-#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+#if NET
 		[Abstract]
 #endif
 		[Export ("handlePayBill:completion:")]
@@ -8356,7 +8437,7 @@ namespace Intents {
 
 		[Export ("confirmPayBill:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmPayBill
@@ -8397,7 +8478,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCode:userActivity:")]
-		IntPtr Constructor (INPayBillIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INPayBillIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INPayBillIntentResponseCode Code { get; }
@@ -8429,12 +8510,12 @@ namespace Intents {
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Please use '.ctor (INSpeakableString, string, INAccountType, INSpeakableString, INBalanceAmount, INBalanceAmount)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Please use '.ctor (INSpeakableString, string, INAccountType, INSpeakableString, INBalanceAmount, INBalanceAmount)' instead.")]
 		[Export ("initWithNickname:number:accountType:organizationName:")]
-		IntPtr Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName);
+		NativeHandle Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName);
 
 		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithNickname:number:accountType:organizationName:balance:secondaryBalance:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName, [NullAllowed] INBalanceAmount balance, [NullAllowed] INBalanceAmount secondaryBalance);
+		NativeHandle Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName, [NullAllowed] INBalanceAmount balance, [NullAllowed] INBalanceAmount secondaryBalance);
 
 		[Export ("nickname", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString Nickname { get; }
@@ -8518,7 +8599,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithAmountType:amount:")]
-		IntPtr Constructor (INAmountType amountType, INCurrencyAmount amount);
+		NativeHandle Constructor (INAmountType amountType, INCurrencyAmount amount);
 
 		[Export ("amount", ArgumentSemantic.Copy), NullAllowed]
 		INCurrencyAmount Amount { get; }
@@ -8655,7 +8736,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithBillPayee:paymentDateRange:billType:status:dueDateRange:")]
-		IntPtr Constructor ([NullAllowed] INBillPayee billPayee, [NullAllowed] INDateComponentsRange paymentDateRange, INBillType billType, INPaymentStatus status, [NullAllowed] INDateComponentsRange dueDateRange);
+		NativeHandle Constructor ([NullAllowed] INBillPayee billPayee, [NullAllowed] INDateComponentsRange paymentDateRange, INBillType billType, INPaymentStatus status, [NullAllowed] INDateComponentsRange dueDateRange);
 
 		[Export ("billPayee", ArgumentSemantic.Copy), NullAllowed]
 		INBillPayee BillPayee { get; }
@@ -8682,7 +8763,7 @@ namespace Intents {
 	[Protocol]
 	interface INSearchForBillsIntentHandling {
 
-#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+#if NET
 		[Abstract]
 #endif
 		[Export ("handleSearchForBills:completion:")]
@@ -8690,7 +8771,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForBills:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearch
@@ -8725,7 +8806,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCode:userActivity:")]
-		IntPtr Constructor (INSearchForBillsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSearchForBillsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSearchForBillsIntentResponseCode Code { get; }
@@ -8745,7 +8826,7 @@ namespace Intents {
 		[Protected]
 		[DesignatedInitializer]
 		[Export ("initWithLocked:carName:")]
-		IntPtr Constructor ([NullAllowed] NSNumber locked, [NullAllowed] INSpeakableString carName);
+		NativeHandle Constructor ([NullAllowed] NSNumber locked, [NullAllowed] INSpeakableString carName);
 
 #if false // I wish BindAs was a thing right now
 		[BindAs (typeof (bool?))]
@@ -8771,7 +8852,7 @@ namespace Intents {
 
 		[Export ("confirmSetCarLockStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetCarLockStatus
@@ -8795,7 +8876,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCode:userActivity:")]
-		IntPtr Constructor (INSetCarLockStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetCarLockStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetCarLockStatusIntentResponseCode Code { get; }
@@ -8811,7 +8892,7 @@ namespace Intents {
 
 		[DesignatedInitializer]
 		[Export ("initWithCode:userActivity:")]
-		IntPtr Constructor (INActivateCarSignalIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INActivateCarSignalIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INActivateCarSignalIntentResponseCode Code { get; }
@@ -8871,12 +8952,12 @@ namespace Intents {
 		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithTargetTaskList:taskTitles:spatialEventTrigger:temporalEventTrigger:priority:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INTaskList targetTaskList, [NullAllowed] INSpeakableString[] taskTitles, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, INTaskPriority priority);
+		NativeHandle Constructor ([NullAllowed] INTaskList targetTaskList, [NullAllowed] INSpeakableString[] taskTitles, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, INTaskPriority priority);
 
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the constructor with 'INTaskPriority priority' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the constructor with 'INTaskPriority priority' instead.")]
 		[Export ("initWithTargetTaskList:taskTitles:spatialEventTrigger:temporalEventTrigger:")]
-		IntPtr Constructor ([NullAllowed] INTaskList targetTaskList, [NullAllowed] INSpeakableString[] taskTitles, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
+		NativeHandle Constructor ([NullAllowed] INTaskList targetTaskList, [NullAllowed] INSpeakableString[] taskTitles, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
 
 		[NullAllowed, Export ("targetTaskList", ArgumentSemantic.Copy)]
 		INTaskList TargetTaskList { get; }
@@ -8942,7 +9023,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INAddTasksIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INAddTasksIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INAddTasksIntentResponseCode Code { get; }
@@ -8962,7 +9043,7 @@ namespace Intents {
 
 		[Export ("initWithTargetNote:content:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INNote targetNote, [NullAllowed] INNoteContent content);
+		NativeHandle Constructor ([NullAllowed] INNote targetNote, [NullAllowed] INNoteContent content);
 
 		[NullAllowed, Export ("targetNote", ArgumentSemantic.Copy)]
 		INNote TargetNote { get; }
@@ -9000,7 +9081,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INAppendToNoteIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INAppendToNoteIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INAppendToNoteIntentResponseCode Code { get; }
@@ -9016,11 +9097,11 @@ namespace Intents {
 
 		[Export ("initWithAmount:balanceType:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDecimalNumber amount, INBalanceType balanceType);
+		NativeHandle Constructor (NSDecimalNumber amount, INBalanceType balanceType);
 
 		[Export ("initWithAmount:currencyCode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDecimalNumber amount, string currencyCode);
+		NativeHandle Constructor (NSDecimalNumber amount, string currencyCode);
 
 		[NullAllowed, Export ("amount", ArgumentSemantic.Copy)]
 		NSDecimalNumber Amount { get; }
@@ -9131,31 +9212,31 @@ namespace Intents {
 		[MacCatalyst (14,5)]
 		[Export ("initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:participants:numberOfCalls:isCallerIdBlocked:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] INPerson[] participants, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls, [NullAllowed] [BindAs (typeof (bool?))] NSNumber isCallerIdBlocked);
+		NativeHandle Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] INPerson[] participants, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls, [NullAllowed] [BindAs (typeof (bool?))] NSNumber isCallerIdBlocked);
 
 		[Deprecated (PlatformName.iOS, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 4, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls:")]
-		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls);
+		NativeHandle Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls);
 
 		[Watch (7,4), iOS (14,5)]
 		[MacCatalyst (14,5)]
 		[Export ("initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:numberOfCalls:")]
-		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls);
+		NativeHandle Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls);
 
 		[Deprecated (PlatformName.iOS, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 4, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 3, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:")]
-		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] NSNumber callDuration, [NullAllowed] NSNumber unseen);
+		NativeHandle Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] NSNumber callDuration, [NullAllowed] NSNumber unseen);
 
 		[Watch (7,4), iOS (14,5)]
 		[MacCatalyst (14,5)]
 		[Export ("initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:")]
-		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen);
+		NativeHandle Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -9254,7 +9335,7 @@ namespace Intents {
 
 		[Export ("initWithRideIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string rideIdentifier);
+		NativeHandle Constructor (string rideIdentifier);
 
 		[Export ("rideIdentifier")]
 		string RideIdentifier { get; }
@@ -9279,7 +9360,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INCancelRideIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INCancelRideIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INCancelRideIntentResponseCode Code { get; }
@@ -9298,7 +9379,7 @@ namespace Intents {
 
 		[Export ("initWithTitle:content:groupName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] INNoteContent content, [NullAllowed] INSpeakableString groupName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] INNoteContent content, [NullAllowed] INSpeakableString groupName);
 
 		[NullAllowed, Export ("title", ArgumentSemantic.Copy)]
 		INSpeakableString Title { get; }
@@ -9338,7 +9419,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INCreateNoteIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INCreateNoteIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INCreateNoteIntentResponseCode Code { get; }
@@ -9356,7 +9437,7 @@ namespace Intents {
 
 		[Export ("initWithTitle:taskTitles:groupName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] INSpeakableString [] taskTitles, [NullAllowed] INSpeakableString groupName);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] INSpeakableString [] taskTitles, [NullAllowed] INSpeakableString groupName);
 
 		[NullAllowed, Export ("title", ArgumentSemantic.Copy)]
 		INSpeakableString Title { get; }
@@ -9400,7 +9481,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INCreateTaskListIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INCreateTaskListIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INCreateTaskListIntentResponseCode Code { get; }
@@ -9462,7 +9543,7 @@ namespace Intents {
 
 		[Export ("initWithVisualCodeType:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INVisualCodeType visualCodeType);
+		NativeHandle Constructor (INVisualCodeType visualCodeType);
 
 		[Export ("visualCodeType", ArgumentSemantic.Assign)]
 		INVisualCodeType VisualCodeType { get; }
@@ -9494,7 +9575,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INGetVisualCodeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INGetVisualCodeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetVisualCodeIntentResponseCode Code { get; }
@@ -9508,7 +9589,7 @@ namespace Intents {
 	interface INImageNoteContent : NSSecureCoding, NSCopying {
 
 		[Export ("initWithImage:")]
-		IntPtr Constructor (INImage image);
+		NativeHandle Constructor (INImage image);
 
 		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
 		INImage Image { get; }
@@ -9564,7 +9645,7 @@ namespace Intents {
 
 		[Export ("initWithTitle:contents:groupName:createdDateComponents:modifiedDateComponents:identifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString title, INNoteContent [] contents, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
+		NativeHandle Constructor (INSpeakableString title, INNoteContent [] contents, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
 
 		[Export ("title", ArgumentSemantic.Copy)]
 		INSpeakableString Title { get; }
@@ -9777,7 +9858,7 @@ namespace Intents {
 		INNotebookItemTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -9814,7 +9895,7 @@ namespace Intents {
 		nuint GetIndex (string subKeyPath);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -9825,13 +9906,13 @@ namespace Intents {
 	interface INRecurrenceRule : NSCopying, NSSecureCoding {
 
 		[Export ("initWithInterval:frequency:")]
-		IntPtr Constructor (nuint interval, INRecurrenceFrequency frequency);
+		NativeHandle Constructor (nuint interval, INRecurrenceFrequency frequency);
 
 		[Watch (7,0), NoMac, iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithInterval:frequency:weeklyRecurrenceDays:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (nuint interval, INRecurrenceFrequency frequency, INDayOfWeekOptions weeklyRecurrenceDays);
+		NativeHandle Constructor (nuint interval, INRecurrenceFrequency frequency, INDayOfWeekOptions weeklyRecurrenceDays);
 
 		[Export ("interval")]
 		nuint Interval { get; }
@@ -9855,7 +9936,7 @@ namespace Intents {
 		INRequestPaymentCurrencyAmountResolutionResult GetUnsupported (INRequestPaymentCurrencyAmountUnsupportedReason reason);
 
 		[Export ("initWithCurrencyAmountResolutionResult:")]
-		IntPtr Constructor (INCurrencyAmountResolutionResult currencyAmountResolutionResult);
+		NativeHandle Constructor (INCurrencyAmountResolutionResult currencyAmountResolutionResult);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -9898,7 +9979,7 @@ namespace Intents {
 		INRequestPaymentPayerResolutionResult GetUnsupported (INRequestPaymentPayerUnsupportedReason reason);
 
 		[Export ("initWithPersonResolutionResult:")]
-		IntPtr Constructor (INPersonResolutionResult personResolutionResult);
+		NativeHandle Constructor (INPersonResolutionResult personResolutionResult);
 
 		// Inlined from parent class to avoid bug 43205 scenario
 		[New]
@@ -9953,7 +10034,7 @@ namespace Intents {
 
 		[Export ("initWithAccountNickname:accountType:organizationName:requestedBalanceType:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString accountNickname, INAccountType accountType, [NullAllowed] INSpeakableString organizationName, INBalanceType requestedBalanceType);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString accountNickname, INAccountType accountType, [NullAllowed] INSpeakableString organizationName, INBalanceType requestedBalanceType);
 
 		[NullAllowed, Export ("accountNickname", ArgumentSemantic.Copy)]
 		INSpeakableString AccountNickname { get; }
@@ -9999,7 +10080,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSearchForAccountsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSearchForAccountsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSearchForAccountsIntentResponseCode Code { get; }
@@ -10015,18 +10096,18 @@ namespace Intents {
 		[Deprecated (PlatformName.WatchOS, 4, 2, message: "Use the constructor with 'string notebookItemIdentifier' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the constructor with 'string notebookItemIdentifier' instead.")]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:")]
-		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType);
 
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
 		[Watch (4,2), iOS (11,2)]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:notebookItemIdentifier:")]
-		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, [NullAllowed] string notebookItemIdentifier);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, [NullAllowed] string notebookItemIdentifier);
 
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:temporalEventTriggerTypes:taskPriority:notebookItemIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, INTemporalEventTriggerTypeOptions temporalEventTriggerTypes, INTaskPriority taskPriority, [NullAllowed] string notebookItemIdentifier);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, INTemporalEventTriggerTypeOptions temporalEventTriggerTypes, INTaskPriority taskPriority, [NullAllowed] string notebookItemIdentifier);
 		
 		[NullAllowed, Export ("title", ArgumentSemantic.Copy)]
 		INSpeakableString Title { get; }
@@ -10116,7 +10197,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSearchForNotebookItemsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSearchForNotebookItemsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSearchForNotebookItemsIntentResponseCode Code { get; }
@@ -10145,7 +10226,7 @@ namespace Intents {
 		INSendMessageRecipientResolutionResult GetUnsupported (INSendMessageRecipientUnsupportedReason reason);
 
 		[Export ("initWithPersonResolutionResult:")]
-		IntPtr Constructor (INPersonResolutionResult personResolutionResult);
+		NativeHandle Constructor (INPersonResolutionResult personResolutionResult);
 
 		// Inlined from parent class to avoid bug 43205 scenario
 		[New]
@@ -10204,7 +10285,7 @@ namespace Intents {
 		INSendPaymentCurrencyAmountResolutionResult GetUnsupported (INSendPaymentCurrencyAmountUnsupportedReason reason);
 
 		[Export ("initWithCurrencyAmountResolutionResult:")]
-		IntPtr Constructor (INCurrencyAmountResolutionResult currencyAmountResolutionResult);
+		NativeHandle Constructor (INCurrencyAmountResolutionResult currencyAmountResolutionResult);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -10247,7 +10328,7 @@ namespace Intents {
 		INSendPaymentPayeeResolutionResult GetUnsupported (INSendPaymentPayeeUnsupportedReason reason);
 
 		[Export ("initWithPersonResolutionResult:")]
-		IntPtr Constructor (INPersonResolutionResult personResolutionResult);
+		NativeHandle Constructor (INPersonResolutionResult personResolutionResult);
 
 		// Inlined from parent class to avoid bug 43205 scenario
 		[New]
@@ -10303,7 +10384,7 @@ namespace Intents {
 
 		[Export ("initWithRideIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string rideIdentifier);
+		NativeHandle Constructor (string rideIdentifier);
 
 		[Export ("rideIdentifier")]
 		string RideIdentifier { get; }
@@ -10334,7 +10415,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSendRideFeedbackIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSendRideFeedbackIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSendRideFeedbackIntentResponseCode Code { get; }
@@ -10347,12 +10428,12 @@ namespace Intents {
 		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithTargetTask:taskTitle:status:priority:spatialEventTrigger:temporalEventTrigger:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INTask targetTask, [NullAllowed] INSpeakableString taskTitle, INTaskStatus status, INTaskPriority priority, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
+		NativeHandle Constructor ([NullAllowed] INTask targetTask, [NullAllowed] INSpeakableString taskTitle, INTaskStatus status, INTaskPriority priority, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
 
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the 'INTaskPriority priority' overload instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the 'INTaskPriority priority' overload instead.")]
 		[Export ("initWithTargetTask:status:spatialEventTrigger:temporalEventTrigger:")]
-		IntPtr Constructor ([NullAllowed] INTask targetTask, INTaskStatus status, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
+		NativeHandle Constructor ([NullAllowed] INTask targetTask, INTaskStatus status, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
 
 		[NullAllowed, Export ("targetTask", ArgumentSemantic.Copy)]
 		INTask TargetTask { get; }
@@ -10420,7 +10501,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSetTaskAttributeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSetTaskAttributeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSetTaskAttributeIntentResponseCode Code { get; }
@@ -10436,7 +10517,7 @@ namespace Intents {
 
 		[Export ("initWithPlacemark:event:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CLPlacemark placemark, INSpatialEvent @event);
+		NativeHandle Constructor (CLPlacemark placemark, INSpatialEvent @event);
 
 		[Export ("placemark", ArgumentSemantic.Copy)]
 		CLPlacemark Placemark { get; }
@@ -10501,10 +10582,10 @@ namespace Intents {
 		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithTitle:status:taskType:spatialEventTrigger:temporalEventTrigger:createdDateComponents:modifiedDateComponents:identifier:priority:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString title, INTaskStatus status, INTaskType taskType, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier, INTaskPriority priority);
+		NativeHandle Constructor (INSpeakableString title, INTaskStatus status, INTaskType taskType, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier, INTaskPriority priority);
 		
 		[Export ("initWithTitle:status:taskType:spatialEventTrigger:temporalEventTrigger:createdDateComponents:modifiedDateComponents:identifier:")]
-		IntPtr Constructor (INSpeakableString title, INTaskStatus status, INTaskType taskType, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
+		NativeHandle Constructor (INSpeakableString title, INTaskStatus status, INTaskType taskType, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
 
 		[Export ("title", ArgumentSemantic.Copy)]
 		INSpeakableString Title { get; }
@@ -10542,7 +10623,7 @@ namespace Intents {
 
 		[Export ("initWithTitle:tasks:groupName:createdDateComponents:modifiedDateComponents:identifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString title, INTask [] tasks, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
+		NativeHandle Constructor (INSpeakableString title, INTask [] tasks, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
 
 		[Export ("title", ArgumentSemantic.Copy)]
 		INSpeakableString Title { get; }
@@ -10710,7 +10791,7 @@ namespace Intents {
 
 		[Export ("initWithDateComponentsRange:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INDateComponentsRange dateComponentsRange);
+		NativeHandle Constructor (INDateComponentsRange dateComponentsRange);
 
 		[Export ("dateComponentsRange", ArgumentSemantic.Copy)]
 		INDateComponentsRange DateComponentsRange { get; }
@@ -10770,7 +10851,7 @@ namespace Intents {
 	interface INTextNoteContent : NSSecureCoding, NSCopying {
 
 		[Export ("initWithText:")]
-		IntPtr Constructor (string text);
+		NativeHandle Constructor (string text);
 
 		[NullAllowed, Export ("text")]
 		string Text { get; }
@@ -10785,7 +10866,7 @@ namespace Intents {
 
 		[Export ("initWithFromAccount:toAccount:transactionAmount:transactionScheduledDate:transactionNote:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPaymentAccount fromAccount, [NullAllowed] INPaymentAccount toAccount, [NullAllowed] INPaymentAmount transactionAmount, [NullAllowed] INDateComponentsRange transactionScheduledDate, [NullAllowed] string transactionNote);
+		NativeHandle Constructor ([NullAllowed] INPaymentAccount fromAccount, [NullAllowed] INPaymentAccount toAccount, [NullAllowed] INPaymentAmount transactionAmount, [NullAllowed] INDateComponentsRange transactionScheduledDate, [NullAllowed] string transactionNote);
 
 		[NullAllowed, Export ("fromAccount", ArgumentSemantic.Copy)]
 		INPaymentAccount FromAccount { get; }
@@ -10841,7 +10922,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INTransferMoneyIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INTransferMoneyIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INTransferMoneyIntentResponseCode Code { get; }
@@ -10927,7 +11008,7 @@ namespace Intents {
 
 		[Export ("initWithTitle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title);
+		NativeHandle Constructor (string title);
 	}
 
 	[Watch (5,0), TV (14,0), NoMac, iOS (12,0)]
@@ -10938,10 +11019,10 @@ namespace Intents {
 		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithIdentifier:title:type:artwork:artist:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string identifier, [NullAllowed] string title, INMediaItemType type, [NullAllowed] INImage artwork, [NullAllowed] string artist);
+		NativeHandle Constructor ([NullAllowed] string identifier, [NullAllowed] string title, INMediaItemType type, [NullAllowed] INImage artwork, [NullAllowed] string artist);
 
 		[Export ("initWithIdentifier:title:type:artwork:")]
-		IntPtr Constructor ([NullAllowed] string identifier, [NullAllowed] string title, INMediaItemType type, [NullAllowed] INImage artwork);
+		NativeHandle Constructor ([NullAllowed] string identifier, [NullAllowed] string title, INMediaItemType type, [NullAllowed] INImage artwork);
 
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; }
@@ -10967,20 +11048,20 @@ namespace Intents {
 
 		[Export ("initWithIdentifier:displayString:pronunciationHint:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string pronunciationHint);
+		NativeHandle Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string pronunciationHint);
 
 		[Export ("initWithIdentifier:displayString:")]
-		IntPtr Constructor ([NullAllowed] string identifier, string displayString);
+		NativeHandle Constructor ([NullAllowed] string identifier, string displayString);
 
 		[Watch (7,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithIdentifier:displayString:subtitleString:displayImage:")]
-		IntPtr Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string subtitleString, [NullAllowed] INImage displayImage);
+		NativeHandle Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string subtitleString, [NullAllowed] INImage displayImage);
 
 		[Watch (7,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithIdentifier:displayString:pronunciationHint:subtitleString:displayImage:")]
-		IntPtr Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string pronunciationHint, [NullAllowed] string subtitleString, [NullAllowed] INImage displayImage);
+		NativeHandle Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string pronunciationHint, [NullAllowed] string subtitleString, [NullAllowed] INImage displayImage);
 
 		// Inlined by INSpeakable
 		//[NullAllowed, Export ("identifier", ArgumentSemantic.Strong)]
@@ -11023,12 +11104,12 @@ namespace Intents {
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithMediaItems:mediaContainer:playShuffled:playbackRepeatMode:resumePlayback:playbackQueueLocation:playbackSpeed:mediaSearch:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback, INPlaybackQueueLocation playbackQueueLocation, [NullAllowed, BindAs (typeof (double?))] NSNumber playbackSpeed, [NullAllowed] INMediaSearch mediaSearch);
+		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback, INPlaybackQueueLocation playbackQueueLocation, [NullAllowed, BindAs (typeof (double?))] NSNumber playbackSpeed, [NullAllowed] INMediaSearch mediaSearch);
 		
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
 		[Export ("initWithMediaItems:mediaContainer:playShuffled:playbackRepeatMode:resumePlayback:")]
-		IntPtr Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback);
+		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback);
 
 		[NullAllowed, Export ("mediaItems", ArgumentSemantic.Copy)]
 		INMediaItem [] MediaItems { get; }
@@ -11104,7 +11185,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INPlayMediaIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INPlayMediaIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INPlayMediaIntentResponseCode Code { get; }
@@ -11134,7 +11215,7 @@ namespace Intents {
 
 		[Export ("initWithStartDate:endDate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDate startDate, [NullAllowed] NSDate endDate);
+		NativeHandle Constructor (NSDate startDate, [NullAllowed] NSDate endDate);
 	}
 
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
@@ -11147,7 +11228,7 @@ namespace Intents {
 
 		[Export ("initWithRegion:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CLRegion region);
+		NativeHandle Constructor (CLRegion region);
 	}
 
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
@@ -11160,7 +11241,7 @@ namespace Intents {
 
 		[Export ("initWithSituation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INDailyRoutineSituation situation);
+		NativeHandle Constructor (INDailyRoutineSituation situation);
 	}
 
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
@@ -11186,7 +11267,7 @@ namespace Intents {
 
 		[Export ("initWithShortcut:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INShortcut shortcut);
+		NativeHandle Constructor (INShortcut shortcut);
 	}
 
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
@@ -11215,10 +11296,10 @@ namespace Intents {
 		NSUserActivity UserActivity { get; }
 
 		[Export ("initWithIntent:")]
-		IntPtr Constructor (INIntent intent);
+		NativeHandle Constructor (INIntent intent);
 
 		[Export ("initWithUserActivity:")]
-		IntPtr Constructor (NSUserActivity userActivity);
+		NativeHandle Constructor (NSUserActivity userActivity);
 	}
 
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
@@ -11303,7 +11384,7 @@ namespace Intents {
 
 		[Export ("initWithMediaItems:mediaSearch:mediaDestination:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INMediaItem[] mediaItems, [NullAllowed] INMediaSearch mediaSearch, [NullAllowed] INMediaDestination mediaDestination);
+		NativeHandle Constructor ([NullAllowed] INMediaItem[] mediaItems, [NullAllowed] INMediaSearch mediaSearch, [NullAllowed] INMediaDestination mediaDestination);
 
 		[NullAllowed, Export ("mediaItems", ArgumentSemantic.Copy)]
 		INMediaItem [] MediaItems { get; }
@@ -11340,7 +11421,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INAddMediaIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INAddMediaIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INAddMediaIntentResponseCode Code { get; }
@@ -11356,7 +11437,7 @@ namespace Intents {
 		INAddMediaMediaItemResolutionResult GetUnsupported (INAddMediaMediaItemUnsupportedReason reason);
 
 		[Export ("initWithMediaItemResolutionResult:")]
-		IntPtr Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
+		NativeHandle Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 
@@ -11419,7 +11500,7 @@ namespace Intents {
 		INAddTasksTargetTaskListResolutionResult GetConfirmationRequired ([NullAllowed] INTaskList taskListToConfirm, INAddTasksTargetTaskListConfirmationReason reason);
 
 		[Export ("initWithTaskListResolutionResult:")]
-		IntPtr Constructor (INTaskListResolutionResult taskListResolutionResult);
+		NativeHandle Constructor (INTaskListResolutionResult taskListResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 		[New]
@@ -11476,7 +11557,7 @@ namespace Intents {
 		INAddTasksTemporalEventTriggerResolutionResult GetUnsupported (INAddTasksTemporalEventTriggerUnsupportedReason reason);
 
 		[Export ("initWithTemporalEventTriggerResolutionResult:")]
-		IntPtr Constructor (INTemporalEventTriggerResolutionResult temporalEventTriggerResolutionResult);
+		NativeHandle Constructor (INTemporalEventTriggerResolutionResult temporalEventTriggerResolutionResult);
 
 		// Inlined from parent to avoid bug like 43205
 
@@ -11531,7 +11612,7 @@ namespace Intents {
 
 		[Export ("initWithName:iataCode:icaoCode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string name, [NullAllowed] string iataCode, [NullAllowed] string icaoCode);
+		NativeHandle Constructor ([NullAllowed] string name, [NullAllowed] string iataCode, [NullAllowed] string icaoCode);
 
 		[NullAllowed, Export ("name")]
 		string Name { get; }
@@ -11550,7 +11631,7 @@ namespace Intents {
 
 		[Export ("initWithName:iataCode:icaoCode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string name, [NullAllowed] string iataCode, [NullAllowed] string icaoCode);
+		NativeHandle Constructor ([NullAllowed] string name, [NullAllowed] string iataCode, [NullAllowed] string icaoCode);
 
 		[NullAllowed, Export ("name")]
 		string Name { get; }
@@ -11569,7 +11650,7 @@ namespace Intents {
 
 		[Export ("initWithAirport:terminal:gate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INAirport airport, [NullAllowed] string terminal, [NullAllowed] string gate);
+		NativeHandle Constructor (INAirport airport, [NullAllowed] string terminal, [NullAllowed] string gate);
 
 		[Export ("airport", ArgumentSemantic.Copy)]
 		INAirport Airport { get; }
@@ -11632,7 +11713,7 @@ namespace Intents {
 
 		[Export ("initWithTaskList:tasks:all:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INTaskList taskList, [NullAllowed] INTask[] tasks, [NullAllowed] [BindAs (typeof (bool?))] NSNumber all);
+		NativeHandle Constructor ([NullAllowed] INTaskList taskList, [NullAllowed] INTask[] tasks, [NullAllowed] [BindAs (typeof (bool?))] NSNumber all);
 
 		[NullAllowed, Export ("taskList", ArgumentSemantic.Copy)]
 		INTaskList TaskList { get; }
@@ -11674,7 +11755,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INDeleteTasksIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INDeleteTasksIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INDeleteTasksIntentResponseCode Code { get; }
@@ -11695,7 +11776,7 @@ namespace Intents {
 		INDeleteTasksTaskListResolutionResult GetUnsupported (INDeleteTasksTaskListUnsupportedReason reason);
 
 		[Export ("initWithTaskListResolutionResult:")]
-		IntPtr Constructor (INTaskListResolutionResult taskListResolutionResult);
+		NativeHandle Constructor (INTaskListResolutionResult taskListResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 		[New]
@@ -11754,7 +11835,7 @@ namespace Intents {
 		INDeleteTasksTaskResolutionResult GetUnsupported (INDeleteTasksTaskUnsupportedReason reason);
 
 		[Export ("initWithTaskResolutionResult:")]
-		IntPtr Constructor (INTaskResolutionResult taskResolutionResult);
+		NativeHandle Constructor (INTaskResolutionResult taskResolutionResult);
 
 		// Inlined from parent class to avoid bug 43205 scenario
 		[New]
@@ -11913,6 +11994,10 @@ namespace Intents {
 
 		[NullAllowed, Export ("fileURL", ArgumentSemantic.Strong)]
 		NSUrl FileUrl { get; }
+
+		[Watch (8,3), Mac (12,1), iOS (15,2)]
+		[Export ("removedOnCompletion")]
+		bool RemovedOnCompletion { get; set; }
 	}
 
 	[Watch (6,0), NoTV, Mac (11,0), iOS (13,0)]
@@ -11968,7 +12053,7 @@ namespace Intents {
 
 		[Export ("initWithAirline:flightNumber:boardingTime:flightDuration:departureAirportGate:arrivalAirportGate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INAirline airline, string flightNumber, [NullAllowed] INDateComponentsRange boardingTime, INDateComponentsRange flightDuration, INAirportGate departureAirportGate, INAirportGate arrivalAirportGate);
+		NativeHandle Constructor (INAirline airline, string flightNumber, [NullAllowed] INDateComponentsRange boardingTime, INDateComponentsRange flightDuration, INAirportGate departureAirportGate, INAirportGate arrivalAirportGate);
 
 		[Export ("airline", ArgumentSemantic.Copy)]
 		INAirline Airline { get; }
@@ -11998,10 +12083,10 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:flight:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INFlight flight);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INFlight flight);
 		
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservedSeat:flight:")]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] INSeat reservedSeat, INFlight flight);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] INSeat reservedSeat, INFlight flight);
 
 		[NullAllowed, Export ("reservedSeat", ArgumentSemantic.Copy)]
 		INSeat ReservedSeat { get; }
@@ -12027,7 +12112,7 @@ namespace Intents {
 	{
 		[Export ("initWithIsFocused:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber isFocused);
+		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber isFocused);
 
 		[Export ("isFocused", ArgumentSemantic.Copy)]
 		[BindAs (typeof (bool?))]
@@ -12061,7 +12146,7 @@ namespace Intents {
 
 		[Export ("initWithReservationContainerReference:reservationItemReferences:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INSpeakableString reservationContainerReference, [NullAllowed] INSpeakableString[] reservationItemReferences);
+		NativeHandle Constructor ([NullAllowed] INSpeakableString reservationContainerReference, [NullAllowed] INSpeakableString[] reservationItemReferences);
 
 		[NullAllowed, Export ("reservationContainerReference", ArgumentSemantic.Copy)]
 		INSpeakableString ReservationContainerReference { get; }
@@ -12077,7 +12162,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INGetReservationDetailsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INGetReservationDetailsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INGetReservationDetailsIntentResponseCode Code { get; }
@@ -12141,10 +12226,10 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:lodgingBusinessLocation:reservationDuration:numberOfAdults:numberOfChildren:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, CLPlacemark lodgingBusinessLocation, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfAdults, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfChildren);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, CLPlacemark lodgingBusinessLocation, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfAdults, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfChildren);
 
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:lodgingBusinessLocation:reservationDuration:numberOfAdults:numberOfChildren:")]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, CLPlacemark lodgingBusinessLocation, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfAdults, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfChildren);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, CLPlacemark lodgingBusinessLocation, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfAdults, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfChildren);
 
 		[Export ("lodgingBusinessLocation", ArgumentSemantic.Copy)]
 		CLPlacemark LodgingBusinessLocation { get; }
@@ -12372,7 +12457,7 @@ namespace Intents {
 
 		[Export ("initWithMediaType:sortOrder:mediaName:artistName:albumName:genreNames:moodNames:releaseDate:reference:mediaIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INMediaItemType mediaType, INMediaSortOrder sortOrder, [NullAllowed] string mediaName, [NullAllowed] string artistName, [NullAllowed] string albumName, [NullAllowed] string[] genreNames, [NullAllowed] string[] moodNames, [NullAllowed] INDateComponentsRange releaseDate, INMediaReference reference, [NullAllowed] string mediaIdentifier);
+		NativeHandle Constructor (INMediaItemType mediaType, INMediaSortOrder sortOrder, [NullAllowed] string mediaName, [NullAllowed] string artistName, [NullAllowed] string albumName, [NullAllowed] string[] genreNames, [NullAllowed] string[] moodNames, [NullAllowed] INDateComponentsRange releaseDate, INMediaReference reference, [NullAllowed] string mediaIdentifier);
 
 		[Export ("mediaType", ArgumentSemantic.Assign)]
 		INMediaItemType MediaType { get; }
@@ -12519,7 +12604,7 @@ namespace Intents {
 		INPlayMediaMediaItemResolutionResult GetUnsupported (INPlayMediaMediaItemUnsupportedReason reason);
 
 		[Export ("initWithMediaItemResolutionResult:")]
-		IntPtr Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
+		NativeHandle Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 
@@ -12582,7 +12667,7 @@ namespace Intents {
 		INPlayMediaPlaybackSpeedResolutionResult UnsupportedForReason (INPlayMediaPlaybackSpeedUnsupportedReason reason);
 
 		[Export ("initWithDoubleResolutionResult:")]
-		IntPtr Constructor (INDoubleResolutionResult doubleResolutionResult);
+		NativeHandle Constructor (INDoubleResolutionResult doubleResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 
@@ -12714,7 +12799,7 @@ namespace Intents {
 
 		[Export ("initWithRentalCompanyName:type:make:model:rentalCarDescription:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string rentalCompanyName, [NullAllowed] string type, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] string rentalCarDescription);
+		NativeHandle Constructor (string rentalCompanyName, [NullAllowed] string type, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] string rentalCarDescription);
 
 		[Export ("rentalCompanyName")]
 		string RentalCompanyName { get; }
@@ -12741,10 +12826,10 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:rentalCar:rentalDuration:pickupLocation:dropOffLocation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, INRentalCar rentalCar, INDateComponentsRange rentalDuration, [NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, INRentalCar rentalCar, INDateComponentsRange rentalDuration, [NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation);
 
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:rentalCar:rentalDuration:pickupLocation:dropOffLocation:")]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, INRentalCar rentalCar, INDateComponentsRange rentalDuration, [NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, INRentalCar rentalCar, INDateComponentsRange rentalDuration, [NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation);
 
 		[Export ("rentalCar", ArgumentSemantic.Copy)]
 		INRentalCar RentalCar { get; }
@@ -12795,7 +12880,7 @@ namespace Intents {
 
 		[Export ("initWithType:validDuration:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INReservationActionType type, INDateComponentsRange validDuration, NSUserActivity userActivity);
+		NativeHandle Constructor (INReservationActionType type, INDateComponentsRange validDuration, NSUserActivity userActivity);
 
 		[Export ("type", ArgumentSemantic.Assign)]
 		INReservationActionType Type { get; }
@@ -12816,10 +12901,10 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservationDuration:partySize:restaurantLocation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber partySize, CLPlacemark restaurantLocation);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber partySize, CLPlacemark restaurantLocation);
 
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservationDuration:partySize:restaurantLocation:")]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction [] actions, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber partySize, CLPlacemark restaurantLocation);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction [] actions, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber partySize, CLPlacemark restaurantLocation);
 
 		[Export ("reservationDuration", ArgumentSemantic.Copy)]
 		INDateComponentsRange ReservationDuration { get; }
@@ -12839,7 +12924,7 @@ namespace Intents {
 
 		[Export ("initWithMediaItems:mediaSearch:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaSearch mediaSearch);
+		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaSearch mediaSearch);
 
 		[NullAllowed, Export ("mediaItems", ArgumentSemantic.Copy)]
 		INMediaItem [] MediaItems { get; }
@@ -12870,7 +12955,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSearchForMediaIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSearchForMediaIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSearchForMediaIntentResponseCode Code { get; }
@@ -12886,7 +12971,7 @@ namespace Intents {
 
 		[Export ("initWithSeatSection:seatRow:seatNumber:seatingType:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string seatSection, [NullAllowed] string seatRow, [NullAllowed] string seatNumber, [NullAllowed] string seatingType);
+		NativeHandle Constructor ([NullAllowed] string seatSection, [NullAllowed] string seatRow, [NullAllowed] string seatNumber, [NullAllowed] string seatingType);
 
 		[NullAllowed, Export ("seatSection")]
 		string SeatSection { get; }
@@ -12911,7 +12996,7 @@ namespace Intents {
 		INSetTaskAttributeTemporalEventTriggerResolutionResult GetUnsupported (INSetTaskAttributeTemporalEventTriggerUnsupportedReason reason);
 
 		[Export ("initWithTemporalEventTriggerResolutionResult:")]
-		IntPtr Constructor (INTemporalEventTriggerResolutionResult temporalEventTriggerResolutionResult);
+		NativeHandle Constructor (INTemporalEventTriggerResolutionResult temporalEventTriggerResolutionResult);
 
 		// Inlined from parent to avoid bug like 43205
 
@@ -12966,7 +13051,7 @@ namespace Intents {
 
 		[Export ("initWithTasks:nextTriggerTime:all:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INTask[] tasks, [NullAllowed] INDateComponentsRange nextTriggerTime, [NullAllowed] [BindAs (typeof (bool?))] NSNumber all);
+		NativeHandle Constructor ([NullAllowed] INTask[] tasks, [NullAllowed] INDateComponentsRange nextTriggerTime, [NullAllowed] [BindAs (typeof (bool?))] NSNumber all);
 
 		[NullAllowed, Export ("tasks", ArgumentSemantic.Copy)]
 		INTask[] Tasks { get; }
@@ -13004,7 +13089,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSnoozeTasksIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INSnoozeTasksIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INSnoozeTasksIntentResponseCode Code { get; }
@@ -13023,7 +13108,7 @@ namespace Intents {
 		INSnoozeTasksTaskResolutionResult GetUnsupported (INSnoozeTasksTaskUnsupportedReason reason);
 
 		[Export ("initWithTaskResolutionResult:")]
-		IntPtr Constructor (INTaskResolutionResult taskResolutionResult);
+		NativeHandle Constructor (INTaskResolutionResult taskResolutionResult);
 
 		// Inlined from parent class to avoid bug 43205 scenario
 		[New]
@@ -13126,7 +13211,7 @@ namespace Intents {
 		INStartCallCallCapabilityResolutionResult GetUnsupported (INStartCallCallCapabilityUnsupportedReason reason);
 
 		[Export ("initWithCallCapabilityResolutionResult:")]
-		IntPtr Constructor (INCallCapabilityResolutionResult callCapabilityResolutionResult);
+		NativeHandle Constructor (INCallCapabilityResolutionResult callCapabilityResolutionResult);
 
 		// Inlined from parent class to avoid bug 43205 scenario
 		[New]
@@ -13178,7 +13263,7 @@ namespace Intents {
 		INStartCallContactResolutionResult GetUnsupported (INStartCallContactUnsupportedReason reason);
 
 		[Export ("initWithPersonResolutionResult:")]
-		IntPtr Constructor (INPersonResolutionResult personResolutionResult);
+		NativeHandle Constructor (INPersonResolutionResult personResolutionResult);
 
 		// Inlined from parent class to avoid bug 43205 scenario
 		[New]
@@ -13234,12 +13319,12 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithCallRecordFilter:callRecordToCallBack:audioRoute:destinationType:contacts:callCapability:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INCallRecordFilter callRecordFilter, [NullAllowed] INCallRecord callRecordToCallBack, INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallCapability callCapability);
+		NativeHandle Constructor ([NullAllowed] INCallRecordFilter callRecordFilter, [NullAllowed] INCallRecord callRecordToCallBack, INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallCapability callCapability);
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
 		[Export ("initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability:")]
-		IntPtr Constructor (INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallRecordType recordTypeForRedialing, INCallCapability callCapability);
+		NativeHandle Constructor (INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallRecordType recordTypeForRedialing, INCallCapability callCapability);
 
 		[Watch (7,0), NoTV, iOS (14,0)]
 		[MacCatalyst (14,0)]
@@ -13304,7 +13389,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INStartCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INStartCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INStartCallIntentResponseCode Code { get; }
@@ -13401,7 +13486,7 @@ namespace Intents {
 
 		[Export ("initWithCategory:name:eventDuration:location:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INTicketedEventCategory category, string name, INDateComponentsRange eventDuration, [NullAllowed] CLPlacemark location);
+		NativeHandle Constructor (INTicketedEventCategory category, string name, INDateComponentsRange eventDuration, [NullAllowed] CLPlacemark location);
 
 		[Export ("category", ArgumentSemantic.Assign)]
 		INTicketedEventCategory Category { get; }
@@ -13425,10 +13510,10 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:event:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INTicketedEvent @event);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INTicketedEvent @event);
 
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservedSeat:event:")]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] INSeat reservedSeat, INTicketedEvent @event);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] INSeat reservedSeat, INTicketedEvent @event);
 
 		[Export ("event", ArgumentSemantic.Copy)]
 		INTicketedEvent Event { get; }
@@ -13488,10 +13573,10 @@ namespace Intents {
 		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:trainTrip:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INTrainTrip trainTrip);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INTrainTrip trainTrip);
 
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservedSeat:trainTrip:")]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] INSeat reservedSeat, INTrainTrip trainTrip);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] INSeat reservedSeat, INTrainTrip trainTrip);
 
 		[NullAllowed, Export ("reservedSeat", ArgumentSemantic.Copy)]
 		INSeat ReservedSeat { get; }
@@ -13507,7 +13592,7 @@ namespace Intents {
 
 		[Export ("initWithProvider:trainName:trainNumber:tripDuration:departureStationLocation:departurePlatform:arrivalStationLocation:arrivalPlatform:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string provider, [NullAllowed] string trainName, [NullAllowed] string trainNumber, INDateComponentsRange tripDuration, CLPlacemark departureStationLocation, [NullAllowed] string departurePlatform, CLPlacemark arrivalStationLocation, [NullAllowed] string arrivalPlatform);
+		NativeHandle Constructor ([NullAllowed] string provider, [NullAllowed] string trainName, [NullAllowed] string trainNumber, INDateComponentsRange tripDuration, CLPlacemark departureStationLocation, [NullAllowed] string departurePlatform, CLPlacemark arrivalStationLocation, [NullAllowed] string arrivalPlatform);
 
 		[NullAllowed, Export ("provider")]
 		string Provider { get; }
@@ -13587,7 +13672,7 @@ namespace Intents {
 
 		[Export ("initWithMediaItems:mediaSearch:affinityType:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INMediaItem[] mediaItems, [NullAllowed] INMediaSearch mediaSearch, INMediaAffinityType affinityType);
+		NativeHandle Constructor ([NullAllowed] INMediaItem[] mediaItems, [NullAllowed] INMediaSearch mediaSearch, INMediaAffinityType affinityType);
 
 		[NullAllowed, Export ("mediaItems", ArgumentSemantic.Copy)]
 		INMediaItem[] MediaItems { get; }
@@ -13624,7 +13709,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INUpdateMediaAffinityIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INUpdateMediaAffinityIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INUpdateMediaAffinityIntentResponseCode Code { get; }
@@ -13640,7 +13725,7 @@ namespace Intents {
 		INUpdateMediaAffinityMediaItemResolutionResult GetUnsupported (INUpdateMediaAffinityMediaItemUnsupportedReason reason);
 
 		[Export ("initWithMediaItemResolutionResult:")]
-		IntPtr Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
+		NativeHandle Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 
@@ -13758,7 +13843,7 @@ namespace Intents {
 		INAddMediaMediaDestinationResolutionResult GetUnsupported (INAddMediaMediaDestinationUnsupportedReason reason);
 
 		[Export ("initWithMediaDestinationResolutionResult:")]
-		IntPtr Constructor (INMediaDestinationResolutionResult mediaDestinationResolutionResult);
+		NativeHandle Constructor (INMediaDestinationResolutionResult mediaDestinationResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 
@@ -13815,7 +13900,7 @@ namespace Intents {
 		INSearchForMediaMediaItemResolutionResult GetUnsupported (INSearchForMediaMediaItemUnsupportedReason reason);
 
 		[Export ("initWithMediaItemResolutionResult:")]
-		IntPtr Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
+		NativeHandle Constructor (INMediaItemResolutionResult mediaItemResolutionResult);
 
 		// Inlined from parent class to avoid bug like 43205
 
@@ -13888,7 +13973,7 @@ namespace Intents {
 
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:boatTrip:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction [] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, [NullAllowed] INBoatTrip boatTrip);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction [] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, [NullAllowed] INBoatTrip boatTrip);
 
 		[NullAllowed, Export ("reservedSeat", ArgumentSemantic.Copy)]
 		INSeat ReservedSeat { get; }
@@ -13905,7 +13990,7 @@ namespace Intents {
 
 		[Export ("initWithProvider:boatName:boatNumber:tripDuration:departureBoatTerminalLocation:arrivalBoatTerminalLocation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string provider, [NullAllowed] string boatName, [NullAllowed] string boatNumber, INDateComponentsRange tripDuration, CLPlacemark departureBoatTerminalLocation, CLPlacemark arrivalBoatTerminalLocation);
+		NativeHandle Constructor ([NullAllowed] string provider, [NullAllowed] string boatName, [NullAllowed] string boatNumber, INDateComponentsRange tripDuration, CLPlacemark departureBoatTerminalLocation, CLPlacemark arrivalBoatTerminalLocation);
 
 		[NullAllowed, Export ("provider")]
 		string Provider { get; }
@@ -13934,7 +14019,7 @@ namespace Intents {
 
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:busTrip:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, [NullAllowed] INBusTrip busTrip);
+		NativeHandle Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, [NullAllowed] INBusTrip busTrip);
 
 		[NullAllowed, Export ("reservedSeat", ArgumentSemantic.Copy)]
 		INSeat ReservedSeat { get; }
@@ -13951,7 +14036,7 @@ namespace Intents {
 
 		[Export ("initWithProvider:busName:busNumber:tripDuration:departureBusStopLocation:departurePlatform:arrivalBusStopLocation:arrivalPlatform:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string provider, [NullAllowed] string busName, [NullAllowed] string busNumber, INDateComponentsRange tripDuration, CLPlacemark departureBusStopLocation, [NullAllowed] string departurePlatform, CLPlacemark arrivalBusStopLocation, [NullAllowed] string arrivalPlatform);
+		NativeHandle Constructor ([NullAllowed] string provider, [NullAllowed] string busName, [NullAllowed] string busNumber, INDateComponentsRange tripDuration, CLPlacemark departureBusStopLocation, [NullAllowed] string departurePlatform, CLPlacemark arrivalBusStopLocation, [NullAllowed] string arrivalPlatform);
 
 		[NullAllowed, Export ("provider")]
 		string Provider { get; }
@@ -13986,7 +14071,7 @@ namespace Intents {
 
 		[Export ("initWithParticipants:callTypes:callCapability:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] INPerson [] participants, INCallRecordTypeOptions callTypes, INCallCapability callCapability);
+		NativeHandle Constructor ([NullAllowed] INPerson [] participants, INCallRecordTypeOptions callTypes, INCallCapability callCapability);
 
 		[NullAllowed, Export ("participants", ArgumentSemantic.Copy)]
 		INPerson [] Participants { get; }
@@ -14052,7 +14137,7 @@ namespace Intents {
 
 		[Export ("initWithCarIdentifier:displayName:year:make:model:color:headUnit:supportedChargingConnectors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] string year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] CGColor color, [NullAllowed] INCarHeadUnit headUnit, [BindAs (typeof (INCarChargingConnectorType []))] NSString [] supportedChargingConnectors);
+		NativeHandle Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] string year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] CGColor color, [NullAllowed] INCarHeadUnit headUnit, [BindAs (typeof (INCarChargingConnectorType []))] NSString [] supportedChargingConnectors);
 
 		[Export ("carIdentifier")]
 		string CarIdentifier { get; }
@@ -14095,7 +14180,7 @@ namespace Intents {
 
 		[Export ("initWithBluetoothIdentifier:iAP2Identifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string bluetoothIdentifier, [NullAllowed] string iAP2Identifier);
+		NativeHandle Constructor ([NullAllowed] string bluetoothIdentifier, [NullAllowed] string iAP2Identifier);
 
 		[NullAllowed, Export ("bluetoothIdentifier")]
 		string BluetoothIdentifier { get; }
@@ -14135,7 +14220,7 @@ namespace Intents {
 
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INListCarsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+		NativeHandle Constructor (INListCarsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
 
 		[Export ("code")]
 		INListCarsIntentResponseCode Code { get; }
@@ -14162,10 +14247,10 @@ namespace Intents {
 
 		[Export ("initWithSections:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INObjectSection<ObjectType> [] sections);
+		NativeHandle Constructor (INObjectSection<ObjectType> [] sections);
 
 		[Export ("initWithItems:")]
-		IntPtr Constructor (ObjectType[] items);
+		NativeHandle Constructor (ObjectType[] items);
 	}
 
 	[Watch (7,0), NoTV, Mac (11,0), iOS (14,0)]
@@ -14183,7 +14268,7 @@ namespace Intents {
 
 		[Export ("initWithTitle:items:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, ObjectType[] items);
+		NativeHandle Constructor ([NullAllowed] string title, ObjectType[] items);
 	}
 
 	[Watch (7,0), NoTV, Mac (12,0), iOS (14,0)]
@@ -14266,7 +14351,7 @@ namespace Intents {
 		INStartCallCallRecordToCallBackResolutionResult GetUnsupported (INStartCallCallRecordToCallBackUnsupportedReason reason);
 
 		[Export ("initWithCallRecordResolutionResult:")]
-		IntPtr Constructor (INCallRecordResolutionResult callRecordResolutionResult);
+		NativeHandle Constructor (INCallRecordResolutionResult callRecordResolutionResult);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -14305,7 +14390,7 @@ namespace Intents {
 
 		[Export ("initWithGroupName:groupId:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string groupName, [NullAllowed] string groupId);
+		NativeHandle Constructor ([NullAllowed] string groupName, [NullAllowed] string groupId);
 
 		[NullAllowed, Export ("groupName")]
 		string GroupName { get; }

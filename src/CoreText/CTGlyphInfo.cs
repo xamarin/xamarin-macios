@@ -38,6 +38,10 @@ using CoreFoundation;
 using CGGlyph     = System.UInt16;
 using CGFontIndex = System.UInt16;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Glyph Info Values
@@ -52,7 +56,8 @@ namespace CoreText {
 #endregion
 
 	public class CTGlyphInfo : NativeObject {
-		internal CTGlyphInfo (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CTGlyphInfo (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}

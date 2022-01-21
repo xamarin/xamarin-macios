@@ -36,7 +36,15 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
@@ -65,16 +73,17 @@ namespace CoreFoundation {
 
 	public class CFRunLoopSource : NativeObject {
 #if !NET
-		public CFRunLoopSource (IntPtr handle)
+		public CFRunLoopSource (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 #if NET
-		internal CFRunLoopSource (IntPtr handle, bool owns)
+		internal CFRunLoopSource (NativeHandle handle, bool owns)
 #else
-		public CFRunLoopSource (IntPtr handle, bool owns)
+		public CFRunLoopSource (NativeHandle handle, bool owns)
 #endif
 			: base (handle, owns)
 		{
@@ -309,21 +318,33 @@ namespace CoreFoundation {
 		}
 
 		[Preserve (Conditional = true)]
-		internal CFRunLoop (IntPtr handle, bool owns)
+		internal CFRunLoop (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
+#if !NET
 		public static bool operator == (CFRunLoop a, CFRunLoop b)
 		{
-			return Object.Equals (a, b);
+			if (a is null)
+				return b is null;
+			else if (b is null)
+				return false;
+
+			return a.Handle == b.Handle;
 		}
 
 		public static bool operator != (CFRunLoop a, CFRunLoop b)
 		{
-			return !Object.Equals (a, b);
+			if (a is null)
+				return b is not null;
+			else if (b is null)
+				return true;
+			return a.Handle != b.Handle;
 		}
 
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override int GetHashCode ()
 		{
 			return Handle.GetHashCode ();
@@ -337,6 +358,7 @@ namespace CoreFoundation {
 
 			return cfother.Handle == Handle;
 		}
+#endif
 #endif // !COREBUILD
 	}
 }

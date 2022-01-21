@@ -36,6 +36,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// untyped enum -> CGPath.h
@@ -93,15 +97,15 @@ namespace CoreGraphics {
 		{
 		}
 
-#if !XAMCORE_4_0
-		public CGPath (IntPtr handle)
+#if !NET
+		public CGPath (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGPath (IntPtr handle, bool owns)
+		internal CGPath (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -128,17 +132,24 @@ namespace CoreGraphics {
 
 		public static bool operator == (CGPath? path1, CGPath? path2)
 		{
-			return Object.Equals (path1, path2);
+			if (path1 is null)
+				return path2 is null;
+			return path1.Equals (path2);
 		}
 
 		public static bool operator != (CGPath? path1, CGPath? path2)
 		{
-			return !Object.Equals (path1, path2);
+			if (path1 is null)
+				return path2 is not null;
+			return !path1.Equals (path2);
 		}
 
 		public override int GetHashCode ()
 		{
-			return Handle.GetHashCode ();
+			// looks weird but it's valid
+			// using the Handle property would not be since there's a special function for equality
+			// see Remarks in https://docs.microsoft.com/en-us/dotnet/api/system.object.gethashcode?view=net-6.0
+			return 0;
 		}
 
 		public override bool Equals (object? o)

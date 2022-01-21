@@ -157,7 +157,7 @@ namespace Xamarin.Bundler {
 
 		public void ValidateAssembliesBeforeLink ()
 		{
-			if (App.LinkMode != LinkMode.None) {
+			if (App.AreAnyAssembliesTrimmed) {
 				foreach (Assembly assembly in Assemblies) {
 					if ((assembly.AssemblyDefinition.MainModule.Attributes & ModuleAttributes.ILOnly) == 0)
 						throw ErrorHelper.CreateError (2014, Errors.MT2014, assembly.AssemblyDefinition.MainModule.FileName);
@@ -253,7 +253,7 @@ namespace Xamarin.Bundler {
 #endif
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
-								if (App.LinkMode != LinkMode.None) {
+								if (App.AreAnyAssembliesTrimmed) {
 									ErrorHelper.Warning (5223, Errors.MX5223, framework.Name, App.PlatformName);
 								} else {
 									Driver.Log (3, Errors.MX5223, framework.Name, App.PlatformName);
@@ -777,6 +777,8 @@ namespace Xamarin.Bundler {
 			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {
+				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
+			} else if (app.IsSimulatorBuild && ((abi & Abi.ARM64) == Abi.ARM64)) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			}
 

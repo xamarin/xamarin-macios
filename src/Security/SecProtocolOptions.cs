@@ -18,6 +18,10 @@ using sec_protocol_options_t=System.IntPtr;
 using dispatch_queue_t=System.IntPtr;
 using sec_identity_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
 #if !NET
@@ -31,7 +35,8 @@ namespace Security {
 #if !COREBUILD
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public
-		internal SecProtocolOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal SecProtocolOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_local_identity (sec_protocol_options_t handle, sec_identity_t identity);

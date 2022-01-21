@@ -154,7 +154,7 @@ namespace Extrospection {
 				log.WriteLine ("</td>");
 				if (full) {
 					string filename = $"common-{fx}.ignore";
-					var count = ProcessFile (filename);
+					var count = ProcessFile (Path.Combine (InputDirectory, filename));
 					log.Write ("<td align='center' ");
 					if (count < 1)
 						log.Write ("bgcolor='lightgreen'>-</td>");
@@ -164,7 +164,7 @@ namespace Extrospection {
 					ignored [0] += count;
 					for (int i = 0; i < Platforms.Length; i++) {
 						filename = $"{Platforms [i]}-{fx}.ignore";
-						count = ProcessFile (filename);
+						count = ProcessFile (Path.Combine (InputDirectory, filename));
 						log.Write ("<td align='center' ");
 						if (count < 1)
 							log.Write ("bgcolor='lightgreen'>-");

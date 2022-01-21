@@ -20,6 +20,10 @@ using OS_nw_browse_result=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using OS_nw_txt_record=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -31,7 +35,8 @@ namespace Network {
 #endif
 	public class NWBrowseResult : NativeObject {
 
-		internal NWBrowseResult (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWBrowseResult (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_endpoint nw_browse_result_copy_endpoint (OS_nw_browse_result result);

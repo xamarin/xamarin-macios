@@ -1,0 +1,5 @@
+## web docs <quote>In Mac apps built with Mac Catalyst, this function has no effect.</quote>
+!missing-selector! SKPaymentQueue::presentCodeRedemptionSheet not bound
+
+## web docs <quote>In Mac apps built with Mac Catalyst, this function has no effect.</quote>
+!missing-selector! SKPaymentQueue::showPriceConsentIfNeeded not bound

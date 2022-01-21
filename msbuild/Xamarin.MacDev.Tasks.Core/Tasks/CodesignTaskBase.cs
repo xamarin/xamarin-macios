@@ -60,6 +60,8 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Outputs
 
+		// This output value is not observed anywhere in our targets, but it's required for building on Windows
+		// to make sure any codesigned files other tasks depend on are copied back to the windows machine.
 		[Output]
 		public ITaskItem[] CodesignedFiles { get; set; }
 

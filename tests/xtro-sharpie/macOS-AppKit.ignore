@@ -58,6 +58,9 @@
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
 
+# NSKey comes from the Carbon framework
+!unknown-native-enum! NSKey bound
+
 ## unsorted
 
 !extra-enum-native! NSEventSubtype
@@ -289,7 +292,6 @@
 !unknown-native-enum! NSFunctionKey bound
 !unknown-native-enum! NSGlyphStorageOptions bound
 !unknown-native-enum! NSImageScale bound
-!unknown-native-enum! NSKey bound
 !unknown-native-enum! NSMenuProperty bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSRunResponse bound
@@ -300,7 +302,6 @@
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
-!unknown-native-enum! NSWindowStyle bound
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! NSSpellingState managed 4 vs native 8
 
@@ -457,7 +458,6 @@
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSBrowserCell::get_BranchImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSBrowserCell::get_HighlightedBranchImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSImageDelegate::ImageDidNotDraw(Foundation.NSObject,CoreGraphics.CGRect)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSImage AppKit.NSRunningApplication::get_Icon()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSSegmentedCell::GetImageForSegment(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSSegmentedControl::GetImage(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSSharingService::get_AlternateImage()' is missing an [NullAllowed] on return type
@@ -541,8 +541,6 @@
 !missing-null-allowed! 'AppKit.NSText AppKit.NSControl::get_CurrentEditor()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSText AppKit.NSWindow::FieldEditor(System.Boolean,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::get_ExtraLineFragmentTextContainer()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::GetTextContainer(System.nuint,System.IntPtr)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::GetTextContainer(System.nuint,System.IntPtr,System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSTypesetter::get_CurrentTextContainer()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer[] AppKit.NSTypesetter::get_TextContainers()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextInputContext AppKit.NSTextInputContext::get_CurrentInputContext()' is missing an [NullAllowed] on return type
@@ -631,12 +629,10 @@
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDocFormat(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtf(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtfd(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate AppKit.NSRunningApplication::get_LaunchDate()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSCollectionViewLayoutInvalidationContext::get_InvalidatedDecorationIndexPaths()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSCollectionViewLayoutInvalidationContext::get_InvalidatedSupplementaryIndexPaths()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSDocument::FileAttributesToWrite(Foundation.NSUrl,System.String,AppKit.NSSaveOperationType,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSGraphicsContext::get_Attributes()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary AppKit.NSLayoutManagerDelegate::ShouldUseTemporaryAttributes(AppKit.NSLayoutManager,Foundation.NSDictionary,System.Boolean,System.nint,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSRuleEditorDelegate::PredicateParts(AppKit.NSRuleEditor,Foundation.NSObject,Foundation.NSObject,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTableView::get_RegisteredNibsByIdentifier()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTrackingArea::get_UserInfo()' is missing an [NullAllowed] on return type
@@ -723,8 +719,6 @@
 !missing-null-allowed! 'Foundation.NSUndoManager AppKit.NSWindowDelegate::WillReturnUndoManager(AppKit.NSWindow)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSDocument::get_BackupFileUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSPathControlItem::get_Url()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl AppKit.NSRunningApplication::get_BundleUrl()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl AppKit.NSRunningApplication::get_ExecutableUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSSavePanel::get_Url()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSSharingService::get_PermanentLink()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSWorkspace::DesktopImageUrl(AppKit.NSScreen)' is missing an [NullAllowed] on return type
@@ -812,8 +806,6 @@
 !missing-null-allowed! 'System.String AppKit.NSPopUpButton::get_TitleOfSelectedItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSPopUpButtonCell::get_TitleOfSelectedItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSPrintInfo::get_LocalizedPaperName()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AppKit.NSRunningApplication::get_BundleIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AppKit.NSRunningApplication::get_LocalizedName()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSegmentedCell::GetLabel(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSegmentedControl::GetLabel(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSharingService::get_AccountName()' is missing an [NullAllowed] on return type
@@ -1334,6 +1326,6 @@
 # deprecated in 10.12, now removed
 !extra-enum-value! Managed value 7 for NSWindowButton.FullScreenButton not found in native headers
 
-# notifications do not respond and were added in a beta, ignoring until we can test they work:
-!missing-field! NSApplicationProtectedDataDidBecomeAvailableNotification not bound
-!missing-field! NSApplicationProtectedDataWillBecomeUnavailableNotification not bound
+# deprecated
+!extra-enum-value! Managed value 2048 for NSWindowStyle.Unscaled not found in native headers
+

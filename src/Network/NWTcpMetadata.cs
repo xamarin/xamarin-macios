@@ -15,6 +15,10 @@ using Foundation;
 using CoreFoundation;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -25,7 +29,8 @@ namespace Network {
 #endif
 	public class NWTcpMetadata : NWProtocolMetadata {
 
-		internal NWTcpMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWTcpMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public uint AvailableReceiveBuffer => nw_tcp_get_available_receive_buffer (GetCheckedHandle ());
 

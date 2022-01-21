@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
@@ -34,6 +35,7 @@ using AppKit;
 using UIKit;
 #endif
 using Foundation;
+using Xamarin.Tests;
 using Xamarin.Utils;
 
 namespace Introspection
@@ -769,8 +771,13 @@ namespace Introspection
 				return false;
 			if (mi.GetCustomAttributes<ObsoleteAttribute> (true).Any ())
 				return true;
+#if NET
+			if (mi.GetCustomAttributes<UnsupportedOSPlatformAttribute> (true).Any ((v) => v.TryParse (out ApplePlatform? platform, out var _) && platform == PlatformInfo.Host.Name))
+				return true;
+#else
 			if (mi.GetCustomAttributes<ObsoletedAttribute> (true).Any ())
 				return true;
+#endif
 			return IsObsolete (mi.DeclaringType);
 		}
 
@@ -888,8 +895,10 @@ namespace Introspection
 				message = ((AdviceAttribute)attribute).Message;
 			if (attribute is ObsoleteAttribute)
 				message = ((ObsoleteAttribute)attribute).Message;
+#if !NET
 			if (attribute is AvailabilityBaseAttribute)
 				message = ((AvailabilityBaseAttribute)attribute).Message;
+#endif
 
 			return message;
 		}
@@ -1074,14 +1083,14 @@ namespace Introspection
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
 					// Xcode 12 beta 2 does not ship these framework/headers for the simulators
-					if (Runtime.Arch == Arch.DEVICE)
+					if (TestRuntime.IsDevice)
 						Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
 #if __TVOS__
 				case "MetalPerformanceShadersLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						break;
 					goto default;
 #endif
@@ -1093,7 +1102,7 @@ namespace Introspection
 							if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
 								continue;
 							// Phone works unless Xcode 12 on simulator
-							if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+							if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0))
 								continue;
 						}
 #endif

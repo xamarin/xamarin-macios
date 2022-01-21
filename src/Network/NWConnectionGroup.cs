@@ -15,6 +15,10 @@ using OS_nw_protocol_metadata=System.IntPtr;
 using OS_nw_protocol_definition=System.IntPtr;
 using OS_nw_protocol_options=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
@@ -41,7 +45,8 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
 	public class NWConnectionGroup : NativeObject {
-		protected internal NWConnectionGroup (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		protected internal NWConnectionGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_connection_group nw_connection_group_create (OS_nw_group_descriptor group_descriptor, OS_nw_parameters parameters);

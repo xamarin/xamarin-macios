@@ -15,6 +15,10 @@ using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGPDFOperatorTable.h
@@ -38,14 +42,14 @@ namespace CoreGraphics {
 		}
 
 #if !NET
-		public CGPDFOperatorTable (IntPtr handle)
+		public CGPDFOperatorTable (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
 		[Preserve (Conditional=true)]
-		internal CGPDFOperatorTable (IntPtr handle, bool owns)
+		internal CGPDFOperatorTable (NativeHandle handle, bool owns)
 			 : base (handle, owns)
 		{
 		}

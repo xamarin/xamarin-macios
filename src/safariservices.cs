@@ -18,6 +18,11 @@ using UIKit;
 #else
 using AppKit;
 using UIImage = AppKit.NSImage;
+using UIEventAttribution = Foundation.NSObject;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace SafariServices {
@@ -65,7 +70,7 @@ namespace SafariServices {
 		[Export ("addReadingListItemWithURL:title:previewText:error:")]
 		bool Add (NSUrl url, [NullAllowed] string title, [NullAllowed] string previewText, out NSError error);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("SSReadingListErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -77,20 +82,20 @@ namespace SafariServices {
 	interface SFSafariViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[iOS (11,0)]
 		[Export ("initWithURL:configuration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
+		NativeHandle Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
 
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use '.ctor (NSUrl, SFSafariViewControllerConfiguration)' instead.")]
 		[DesignatedInitializer]
 		[Export ("initWithURL:entersReaderIfAvailable:")]
-		IntPtr Constructor (NSUrl url, bool entersReaderIfAvailable);
+		NativeHandle Constructor (NSUrl url, bool entersReaderIfAvailable);
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[NullAllowed] // by default this property is null
 		[Export ("delegate", ArgumentSemantic.Assign)]
@@ -164,6 +169,11 @@ namespace SafariServices {
 		[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
 		[Export ("activityButton", ArgumentSemantic.Copy)]
 		SFSafariViewControllerActivityButton ActivityButton { get; set; }
+
+		[NullAllowed]
+		[NoWatch, NoTV, iOS (15,2), MacCatalyst (15,2), NoMac]
+		[Export ("eventAttribution", ArgumentSemantic.Copy)]
+		UIEventAttribution EventAttribution { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -175,7 +185,7 @@ namespace SafariServices {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ASWebAuthenticationSession' instead.")]
 	interface SFAuthenticationSession {
 		[Export ("initWithURL:callbackURLScheme:completionHandler:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, SFAuthenticationCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, SFAuthenticationCompletionHandler completionHandler);
 
 		[Export ("start")]
 		bool Start ();
@@ -418,7 +428,7 @@ namespace SafariServices {
 	interface SFSafariExtensionViewController
 	{
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Mac (10,14,4)]
 		[Export ("dismissPopover")]
@@ -455,7 +465,7 @@ namespace SafariServices {
 	interface SFUniversalLink {
 
 		[Export ("initWithWebpageURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("webpageURL")]
 		NSUrl WebpageUrl { get; }
@@ -483,7 +493,7 @@ namespace SafariServices {
 	{
 		[Export ("initWithTemplateImage:extensionIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (UIImage templateImage, string extensionIdentifier);
+		NativeHandle Constructor (UIImage templateImage, string extensionIdentifier);
 
 		[NullAllowed, Export ("templateImage", ArgumentSemantic.Copy)]
 		UIImage TemplateImage { get; }

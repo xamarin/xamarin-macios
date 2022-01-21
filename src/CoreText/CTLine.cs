@@ -38,6 +38,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTLine.h
@@ -60,7 +64,8 @@ namespace CoreText {
     }
 	
 	public class CTLine : NativeObject {
-		internal CTLine (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CTLine (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}

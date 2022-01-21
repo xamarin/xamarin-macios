@@ -28,6 +28,10 @@ using ObjCRuntime;
 using Security;
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreWlan {
 
 	[NoMacCatalyst]
@@ -137,7 +141,7 @@ namespace CoreWlan {
 		bool RememberJoinedNetworks { get; }
  
 		[Export ("initWithConfiguration:")]
-		IntPtr Constructor (CWConfiguration configuration);
+		NativeHandle Constructor (CWConfiguration configuration);
 
 		[Export ("isEqualToConfiguration:")]
 		bool IsEqualToConfiguration (CWConfiguration configuration);
@@ -412,7 +416,7 @@ namespace CoreWlan {
 		 
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'CWWiFiClient.FromName' instead.")]
 		[Export ("initWithInterfaceName:")]
-		IntPtr Constructor ([NullAllowed]string name);
+		NativeHandle Constructor ([NullAllowed]string name);
 		 
 		[Export ("setPower:error:")]
 		bool SetPower (bool power, out NSError error);
@@ -600,7 +604,7 @@ namespace CoreWlan {
 		NSObject NetworkProfile ();
 
 		[Export ("initWithNetworkProfile:")]
-		IntPtr Constructor (CWNetworkProfile networkProfile);
+		NativeHandle Constructor (CWNetworkProfile networkProfile);
 
 		[Static]
 		[Export ("networkProfileWithNetworkProfile:")]

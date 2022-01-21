@@ -20,6 +20,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 #if !NET
 	[MacCatalyst (15,0)]
@@ -27,17 +31,18 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	public sealed class CGEventSource : NativeObject {
-#if !XAMCORE_4_0
-		public CGEventSource (IntPtr handle)
+#if !NET
+		public CGEventSource (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
-#if XAMCORE_4_0
-		internal CGEventSource (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+#if NET
+		internal CGEventSource (NativeHandle handle, bool owns)
 #else
-		public CGEventSource (IntPtr handle, bool owns)
+		public CGEventSource (NativeHandle handle, bool owns)
 #endif
 			: base (handle, owns)
 		{

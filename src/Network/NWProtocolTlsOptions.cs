@@ -20,6 +20,10 @@ using Security;
 using OS_nw_protocol_definition=System.IntPtr;
 using IntPtr=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 #if !NET
@@ -29,7 +33,8 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWProtocolTlsOptions : NWProtocolOptions {
-		internal NWProtocolTlsOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolTlsOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWProtocolTlsOptions () : this (nw_tls_create_options (), owns: true) {}
 

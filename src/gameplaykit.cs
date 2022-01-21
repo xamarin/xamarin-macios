@@ -27,6 +27,10 @@ using SKColor = AppKit.NSColor;
 using SKColor = UIKit.UIColor;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace GameplayKit {
 
 	[Native]
@@ -256,7 +260,7 @@ namespace GameplayKit {
 		TComponent ObjectAtIndexedSubscript (nuint idx);
 
 		[Export ("initWithComponentClass:")]
-		IntPtr Constructor (Class cls);
+		NativeHandle Constructor (Class cls);
 
 		[Export ("addComponent:")]
 		void AddComponent (TComponent component);
@@ -350,10 +354,10 @@ namespace GameplayKit {
 		GKRandomSource RandomSource { get; set; }
 
 		[Export ("initWithAttribute:")]
-		IntPtr Constructor (NSObject attribute);
+		NativeHandle Constructor (NSObject attribute);
 
 		[Export ("initWithExamples:actions:attributes:")]
-		IntPtr Constructor (NSArray<NSObject> [] examples, NSObject [] actions, NSObject [] attributes);
+		NativeHandle Constructor (NSArray<NSObject> [] examples, NSObject [] actions, NSObject [] attributes);
 
 		[Export ("findActionForAnswers:")]
 		[return: NullAllowed]
@@ -362,7 +366,7 @@ namespace GameplayKit {
 		[iOS (11,0), TV (11,0)]
 		[Mac (10,13)]
 		[Export ("initWithURL:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSError error);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSError error);
 
 		[iOS (11,0), TV (11,0)]
 		[Mac (10,13)]
@@ -377,7 +381,7 @@ namespace GameplayKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static]
 		[Export ("entity")]
@@ -419,7 +423,7 @@ namespace GameplayKit {
 	[Protocol]
 	interface GKGameModelPlayer {
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 		[Export ("playerId")]
 		nint PlayerId { get; }
@@ -545,7 +549,7 @@ namespace GameplayKit {
 		GKGraph FromNodes (GKGraphNode [] nodes);
 
 		[Export ("initWithNodes:")]
-		IntPtr Constructor (GKGraphNode [] nodes);
+		NativeHandle Constructor (GKGraphNode [] nodes);
 
 		[Export ("connectNodeToLowestCostNode:bidirectional:")]
 		void ConnectNodeToLowestCostNode (GKGraphNode node, bool bidirectional);
@@ -577,7 +581,7 @@ namespace GameplayKit {
 		GKObstacleGraph FromObstacles (GKPolygonObstacle[] obstacles, float bufferRadius);
 
 		[Export ("initWithObstacles:bufferRadius:")]
-		IntPtr Constructor (GKPolygonObstacle [] obstacles, float bufferRadius);
+		NativeHandle Constructor (GKPolygonObstacle [] obstacles, float bufferRadius);
 
 		[Internal]
 		[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -588,7 +592,7 @@ namespace GameplayKit {
 		[Internal]
 		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Export ("initWithObstacles:bufferRadius:nodeClass:")]
-		IntPtr Constructor (GKPolygonObstacle [] obstacles, float bufferRadius, Class nodeClass);
+		NativeHandle Constructor (GKPolygonObstacle [] obstacles, float bufferRadius, Class nodeClass);
 
 		[Export ("connectNodeUsingObstacles:")]
 		void ConnectNodeUsingObstacles (GKGraphNode2D node);
@@ -662,7 +666,7 @@ namespace GameplayKit {
 
 		[Export ("initFromGridStartingAt:width:height:diagonalsAllowed:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector2i position, int width, int height, bool diagonalsAllowed);
+		NativeHandle Constructor (Vector2i position, int width, int height, bool diagonalsAllowed);
 
 		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Static]
@@ -678,11 +682,11 @@ namespace GameplayKit {
 		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Export ("initFromGridStartingAt:width:height:diagonalsAllowed:nodeClass:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector2i position, int width, int height, bool diagonalsAllowed, Class aClass);
+		NativeHandle Constructor (Vector2i position, int width, int height, bool diagonalsAllowed, Class aClass);
 
 		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Wrap ("this (position, width, height, diagonalsAllowed, new Class (nodeType))")]
-		IntPtr Constructor (Vector2i position, int width, int height, bool diagonalsAllowed, Type nodeType);
+		NativeHandle Constructor (Vector2i position, int width, int height, bool diagonalsAllowed, Type nodeType);
 
 		[Internal]
 		[Export ("nodeAtGridPosition:")]
@@ -730,10 +734,10 @@ namespace GameplayKit {
 
 		[Export ("initWithBufferRadius:minCoordinate:maxCoordinate:nodeClass:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (float bufferRadius, Vector2 min, Vector2 max, Class nodeClass);
+		NativeHandle Constructor (float bufferRadius, Vector2 min, Vector2 max, Class nodeClass);
 
 		[Wrap ("this (bufferRadius, min, max, new Class (nodeType))")]
-		IntPtr Constructor (float bufferRadius, Vector2 min, Vector2 max, Type nodeType);
+		NativeHandle Constructor (float bufferRadius, Vector2 min, Vector2 max, Type nodeType);
 
 		[Static]
 		[Export ("graphWithBufferRadius:minCoordinate:maxCoordinate:")]
@@ -742,7 +746,7 @@ namespace GameplayKit {
 
 		[Export ("initWithBufferRadius:minCoordinate:maxCoordinate:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (float bufferRadius, Vector2 min, Vector2 max);
+		NativeHandle Constructor (float bufferRadius, Vector2 min, Vector2 max);
 
 		[Export ("addObstacles:")]
 		void AddObstacles (GKPolygonObstacle [] obstacles);
@@ -814,7 +818,7 @@ namespace GameplayKit {
 
 		[Export ("initWithPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector2 point);
+		NativeHandle Constructor (Vector2 point);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -837,7 +841,7 @@ namespace GameplayKit {
 
 		[Export ("initWithPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector3 point);
+		NativeHandle Constructor (Vector3 point);
 	}
 
 	[DisableDefaultCtor]
@@ -862,7 +866,7 @@ namespace GameplayKit {
 
 		[Export ("initWithGridPosition:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector2i gridPosition);
+		NativeHandle Constructor (Vector2i gridPosition);
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -908,7 +912,7 @@ namespace GameplayKit {
 
 		[Export ("initWithRadius:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (float radius);
+		NativeHandle Constructor (float radius);
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -926,7 +930,7 @@ namespace GameplayKit {
 		[Internal]
 		[Export ("initWithPoints:count:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IntPtr points, nuint numPoints);
+		NativeHandle Constructor (IntPtr points, nuint numPoints);
 
 		[Export ("vertexAtIndex:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -955,7 +959,7 @@ namespace GameplayKit {
 
 		[Export ("initWithRadius:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (float radius);
+		NativeHandle Constructor (float radius);
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -999,10 +1003,10 @@ namespace GameplayKit {
 		GKPath FromGraphNodes (GKGraphNode2D [] graphNodes, float radius);
 
 		[Export ("initWithGraphNodes:radius:")]
-		IntPtr Constructor (GKGraphNode [] nodes, float radius);
+		NativeHandle Constructor (GKGraphNode [] nodes, float radius);
 
 		[Wrap ("this (nodes: graphNodes, radius: radius)")] // Avoid breaking change
-		IntPtr Constructor (GKGraphNode2D [] graphNodes, float radius);
+		NativeHandle Constructor (GKGraphNode2D [] graphNodes, float radius);
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'GetVector2Point' instead.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'GetVector2Point' instead.")]
@@ -1038,7 +1042,7 @@ namespace GameplayKit {
 
 		[Export ("initWithRandomSource:lowestValue:highestValue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IGKRandom source, nint lowestInclusive, nint highestInclusive);
+		NativeHandle Constructor (IGKRandom source, nint lowestInclusive, nint highestInclusive);
 
 //		The following guys are already present in the GKRandom Protocol
 //		[Export ("nextInt")]
@@ -1083,11 +1087,11 @@ namespace GameplayKit {
 
 		[Export ("initWithRandomSource:lowestValue:highestValue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IGKRandom source, nint lowestInclusive, nint highestInclusive);
+		NativeHandle Constructor (IGKRandom source, nint lowestInclusive, nint highestInclusive);
 
 		[Export ("initWithRandomSource:mean:deviation:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IGKRandom source, float mean, float deviation);
+		NativeHandle Constructor (IGKRandom source, float mean, float deviation);
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -1098,7 +1102,7 @@ namespace GameplayKit {
 		// inlined from base type
 		[Export ("initWithRandomSource:lowestValue:highestValue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IGKRandom source, nint lowestInclusive, nint highestInclusive);
+		NativeHandle Constructor (IGKRandom source, nint lowestInclusive, nint highestInclusive);
 	}
 
 	interface IGKRandom { }
@@ -1131,7 +1135,7 @@ namespace GameplayKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static]
 		[Export ("sharedRandom")]
@@ -1150,7 +1154,7 @@ namespace GameplayKit {
 
 		[Export ("initWithSeed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData seed);
+		NativeHandle Constructor (NSData seed);
 
 		[Export ("dropValuesWithCount:")]
 		void DropValues (nuint count);
@@ -1165,7 +1169,7 @@ namespace GameplayKit {
 
 		[Export ("initWithSeed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ulong seed);
+		NativeHandle Constructor (ulong seed);
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -1177,7 +1181,7 @@ namespace GameplayKit {
 
 		[Export ("initWithSeed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ulong seed);
+		NativeHandle Constructor (ulong seed);
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -1187,7 +1191,7 @@ namespace GameplayKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("evaluate")]
 		void Evaluate ();
@@ -1275,7 +1279,7 @@ namespace GameplayKit {
 		NSPredicate Predicate { get; }
 
 		[Export ("initWithPredicate:")]
-		IntPtr Constructor (NSPredicate predicate);
+		NativeHandle Constructor (NSPredicate predicate);
 
 		[Export ("evaluatePredicateWithSystem:"), New]
 		bool EvaluatePredicate (GKRuleSystem system);
@@ -1290,7 +1294,7 @@ namespace GameplayKit {
 		[Protected]
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NullAllowed]
 		[Export ("stateMachine", ArgumentSemantic.Weak)]
@@ -1330,7 +1334,7 @@ namespace GameplayKit {
 
 		[Export ("initWithStates:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (GKState[] states);
+		NativeHandle Constructor (GKState[] states);
 
 		[Export ("updateWithDeltaTime:")]
 		void Update (double deltaTimeInSeconds);
@@ -1405,11 +1409,11 @@ namespace GameplayKit {
 		GKNoise FromNoiseSource (GKNoiseSource noiseSource, NSDictionary<NSNumber, SKColor> gradientColors);
 
 		[Export ("initWithNoiseSource:")]
-		IntPtr Constructor (GKNoiseSource noiseSource);
+		NativeHandle Constructor (GKNoiseSource noiseSource);
 
 		[Export ("initWithNoiseSource:gradientColors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (GKNoiseSource noiseSource, NSDictionary<NSNumber, SKColor> gradientColors);
+		NativeHandle Constructor (GKNoiseSource noiseSource, NSDictionary<NSNumber, SKColor> gradientColors);
 
 		[Static]
 		[Export ("noiseWithComponentNoises:selectionNoise:")]
@@ -1516,12 +1520,12 @@ namespace GameplayKit {
 		GKNoiseMap FromNoise (GKNoise noise, Vector2d size, Vector2d origin, Vector2i sampleCount, bool seamless);
 
 		[Export ("initWithNoise:")]
-		IntPtr Constructor (GKNoise noise);
+		NativeHandle Constructor (GKNoise noise);
 
 		[Export ("initWithNoise:size:origin:sampleCount:seamless:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (GKNoise noise, Vector2d size, Vector2d origin, Vector2i sampleCount, bool seamless);
+		NativeHandle Constructor (GKNoise noise, Vector2d size, Vector2d origin, Vector2i sampleCount, bool seamless);
 
 		[Export ("valueAtPosition:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1576,7 +1580,7 @@ namespace GameplayKit {
 
 		[Export ("initWithFrequency:octaveCount:persistence:lacunarity:seed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
+		NativeHandle Constructor (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -1593,7 +1597,7 @@ namespace GameplayKit {
 
 		[Export ("initWithFrequency:octaveCount:persistence:lacunarity:seed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
+		NativeHandle Constructor (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -1607,7 +1611,7 @@ namespace GameplayKit {
 
 		[Export ("initWithFrequency:octaveCount:lacunarity:seed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double frequency, nint octaveCount, double lacunarity, int seed);
+		NativeHandle Constructor (double frequency, nint octaveCount, double lacunarity, int seed);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -1633,7 +1637,7 @@ namespace GameplayKit {
 
 		[Export ("initWithFrequency:displacement:distanceEnabled:seed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double frequency, double displacement, bool distanceEnabled, int seed);
+		NativeHandle Constructor (double frequency, double displacement, bool distanceEnabled, int seed);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -1650,7 +1654,7 @@ namespace GameplayKit {
 
 		[Export ("initWithValue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double value);
+		NativeHandle Constructor (double value);
 	}
 
 	[iOS (10, 0), TV (10, 0), Mac (10, 12)]
@@ -1667,7 +1671,7 @@ namespace GameplayKit {
 
 		[Export ("initWithFrequency:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double frequency);
+		NativeHandle Constructor (double frequency);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -1684,7 +1688,7 @@ namespace GameplayKit {
 
 		[Export ("initWithFrequency:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double frequency);
+		NativeHandle Constructor (double frequency);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -1701,7 +1705,7 @@ namespace GameplayKit {
 
 		[Export ("initWithSquareSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double squareSize);
+		NativeHandle Constructor (double squareSize);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
@@ -1727,7 +1731,7 @@ namespace GameplayKit {
 
 		[Export ("initWithBoundingBox:minimumCellSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (GKBox box, float minCellSize);
+		NativeHandle Constructor (GKBox box, float minCellSize);
 
 		[Export ("addElement:withPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1766,7 +1770,7 @@ namespace GameplayKit {
 
 		[Export ("initWithMaxNumberOfChildren:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (nuint maxNumberOfChildren);
+		NativeHandle Constructor (nuint maxNumberOfChildren);
 
 		[Export ("addElement:boundingRectMin:boundingRectMax:splitStrategy:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1791,7 +1795,7 @@ namespace GameplayKit {
 		GKSKNodeComponent FromNode (SKNode node);
 
 		[Export ("initWithNode:")]
-		IntPtr Constructor (SKNode node);
+		NativeHandle Constructor (SKNode node);
 
 		[Export ("node", ArgumentSemantic.Strong)]
 		SKNode Node { get; set; }
@@ -1852,7 +1856,7 @@ namespace GameplayKit {
 		GKSCNNodeComponent FromNode (SCNNode node);
 
 		[Export ("initWithNode:")]
-		IntPtr Constructor (SCNNode node);
+		NativeHandle Constructor (SCNNode node);
 
 		[Export ("node")]
 		SCNNode Node { get; }
@@ -1921,7 +1925,7 @@ namespace GameplayKit {
 		[Export ("initWithBoundingQuad:minimumCellSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
-		IntPtr Constructor (GKQuad quad, float minCellSize);
+		NativeHandle Constructor (GKQuad quad, float minCellSize);
 
 		[Export ("addElement:withPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1954,7 +1958,7 @@ namespace GameplayKit {
 		[Export ("initWithMinPosition:maxPosition:minCellSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[MarshalNativeExceptions]
-		IntPtr Constructor (Vector2 min, Vector2 max, float minCellSize);
+		NativeHandle Constructor (Vector2 min, Vector2 max, float minCellSize);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]

@@ -19,6 +19,10 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
@@ -27,7 +31,8 @@ namespace CoreVideo {
 	[iOS (8,0), Mac (12,0), MacCatalyst (15,0)]
 #endif
 	public class CVMetalTexture : NativeObject {
-		internal CVMetalTexture (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CVMetalTexture (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

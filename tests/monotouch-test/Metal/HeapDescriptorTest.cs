@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.Metal {
 		[SetUp]
 		public void SetUp ()
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			TestRuntime.AssertXcodeVersion (8, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR)

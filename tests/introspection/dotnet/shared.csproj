@@ -3,12 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>Introspection</RootNamespace>
     <AssemblyName>introspection</AssemblyName>
     <MtouchLink>None</MtouchLink>
 
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
     <IntrospectionTestDirectory>$(RootTestsDirectory)\introspection</IntrospectionTestDirectory>
 
@@ -132,6 +131,9 @@
     </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
     </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>

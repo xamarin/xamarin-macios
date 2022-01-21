@@ -34,6 +34,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioToolbox
 {
 	public enum AudioConverterError // Impliclty cast to OSStatus in AudioConverter.h
@@ -98,7 +102,8 @@ namespace AudioToolbox
 
 		public event AudioConverterComplexInputData? InputData;
 
-		internal AudioConverter (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal AudioConverter (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

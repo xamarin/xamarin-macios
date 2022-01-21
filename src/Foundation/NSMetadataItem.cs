@@ -11,14 +11,17 @@ using CoreFoundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace Foundation {
 	public partial class NSMetadataItem {
-
+#if !NET
 		bool GetBool (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-			return n == null ? false : n.BoolValue;
+			return n is null ? false : n.BoolValue;
 		}
+#endif
 
 		bool? GetNullableBool (NSString key)
 		{
@@ -29,7 +32,7 @@ namespace Foundation {
 		double GetDouble (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-			return n == null ? 0 : n.DoubleValue;
+			return n is null ? 0 : n.DoubleValue;
 		}
 
 		double? GetNullableDouble (NSString key)
@@ -46,43 +49,43 @@ namespace Foundation {
 
 		// same order as NSMetadataAttributes.h
 
-		public NSString FileSystemName {
+		public NSString? FileSystemName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemFSNameKey));
 			}
 		}
 
-		public NSString DisplayName {
+		public NSString? DisplayName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemDisplayNameKey));
 			}
 		}
 
-		public NSUrl Url {
+		public NSUrl? Url {
 			get {
 				return Runtime.GetNSObject<NSUrl> (GetHandle (NSMetadataQuery.ItemURLKey));
 			}
 		}
 
-		public NSString Path {
+		public NSString? Path {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemPathKey));
 			}
 		}
 
-		public NSNumber FileSystemSize {
+		public NSNumber? FileSystemSize {
 			get {
 				return Runtime.GetNSObject<NSNumber> (GetHandle (NSMetadataQuery.ItemFSSizeKey));
 			}
 		}
 
-		public NSDate FileSystemCreationDate {
+		public NSDate? FileSystemCreationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ItemFSCreationDateKey));
 			}
 		}
 
-		public NSDate FileSystemContentChangeDate {
+		public NSDate? FileSystemContentChangeDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ItemFSContentChangeDateKey));
 			}
@@ -91,7 +94,7 @@ namespace Foundation {
 #if !NET
 		[iOS (8,0)][Mac (10,9)]
 #endif
-		public NSString ContentType {
+		public NSString? ContentType {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ContentTypeKey));
 			}
@@ -100,31 +103,45 @@ namespace Foundation {
 #if !NET
 		[iOS (8,0)][Mac (10,9)]
 #endif
-		public NSString[] ContentTypeTree {
+		public NSString?[]? ContentTypeTree {
 			get {
 				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContentTypeTreeKey)))
 					return NSArray.FromArray<NSString> (a);
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? IsUbiquitous {
+#else
 		public bool IsUbiquitous {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#else
 				return GetBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemHasUnresolvedConflicts {
+#else
 		public bool UbiquitousItemHasUnresolvedConflicts {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#endif
 			}
 		}
 
 #if !NET
 		[iOS (7,0)][Mac (10,9)]
 #endif
-#if XAMCORE_4_0
+#if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
 #else
 		public NSItemDownloadingStatus DownloadingStatus {
@@ -134,45 +151,80 @@ namespace Foundation {
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsDownloading {
+#else
 		public bool UbiquitousItemIsDownloading {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsUploaded {
+#else
 		public bool UbiquitousItemIsUploaded {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsUploading {
+#else
 		public bool UbiquitousItemIsUploading {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public double? UbiquitousItemPercentDownloaded {
+#else
 		public double UbiquitousItemPercentDownloaded {
+#endif
 			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#else
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public double? UbiquitousItemPercentUploaded {
+#else
 		public double UbiquitousItemPercentUploaded {
+#endif
 			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#else
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#endif
 			}
 		}
 
 #if !NET
 		[iOS (7,0)][Mac (10,9)]
 #endif
-		public NSError UbiquitousItemDownloadingError {
+		public NSError? UbiquitousItemDownloadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemDownloadingErrorKey));
 			}
@@ -181,36 +233,46 @@ namespace Foundation {
 #if !NET
 		[iOS (7,0)][Mac (10,9)]
 #endif
-		public NSError UbiquitousItemUploadingError {
+		public NSError? UbiquitousItemUploadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemUploadingErrorKey));
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-#if !NET
+#if NET
+		public bool? UbiquitousItemDownloadRequested {
+#else
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		public bool UbiquitousItemDownloadRequested {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-#if !NET
+#if NET
+		public bool? UbiquitousItemIsExternalDocument {
+#else
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		public bool UbiquitousItemIsExternalDocument {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#endif
 			}
 		}
 
 #if !NET
 		[iOS (8,0)][Mac (10,9)]
 #endif
-		public NSString UbiquitousItemContainerDisplayName {
+		public NSString? UbiquitousItemContainerDisplayName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
 			}
@@ -219,7 +281,7 @@ namespace Foundation {
 #if !NET
 		[iOS (8,0)][Mac (10,9)]
 #endif
-		public NSUrl UbiquitousItemUrlInLocalContainer {
+		public NSUrl? UbiquitousItemUrlInLocalContainer {
 			get {
 				return Runtime.GetNSObject<NSUrl> (GetHandle (NSMetadataQuery.UbiquitousItemURLInLocalContainerKey));
 			}
@@ -229,7 +291,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Keywords {
+		public string? []? Keywords {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.KeywordsKey));
 			}
@@ -238,7 +300,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Title {
+		public string? Title {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.TitleKey));
 			}
@@ -247,7 +309,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Authors {
+		public string? []? Authors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorsKey));
 			}
@@ -256,7 +318,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Editors {
+		public string? []? Editors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EditorsKey));
 			}
@@ -265,7 +327,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Participants {
+		public string? []? Participants {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ParticipantsKey));
 			}
@@ -274,7 +336,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Projects {
+		public string? []? Projects {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ProjectsKey));
 			}
@@ -283,7 +345,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate DownloadedDate {
+		public NSDate? DownloadedDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DownloadedDateKey));
 			}
@@ -292,7 +354,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] WhereFroms {
+		public string? []? WhereFroms {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.WhereFromsKey));
 			}
@@ -301,7 +363,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Comment {
+		public string? Comment {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CommentKey));
 			}
@@ -310,7 +372,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Copyright {
+		public string? Copyright {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CopyrightKey));
 			}
@@ -319,7 +381,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate LastUsedDate {
+		public NSDate? LastUsedDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.LastUsedDateKey));
 			}
@@ -328,7 +390,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate ContentCreationDate {
+		public NSDate? ContentCreationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ContentCreationDateKey));
 			}
@@ -337,7 +399,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate ContentModificationDate {
+		public NSDate? ContentModificationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ContentModificationDateKey));
 			}
@@ -346,7 +408,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate DateAdded {
+		public NSDate? DateAdded {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DateAddedKey));
 			}
@@ -364,7 +426,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] ContactKeywords {
+		public string? []? ContactKeywords {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContactKeywordsKey));
 			}
@@ -373,7 +435,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Version {
+		public string? Version {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.VersionKey));
 			}
@@ -409,7 +471,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string ColorSpace {
+		public string? ColorSpace {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ColorSpaceKey));
 			}
@@ -445,7 +507,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string AcquisitionMake {
+		public string? AcquisitionMake {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
 			}
@@ -454,7 +516,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string AcquisitionModel {
+		public string? AcquisitionModel {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionModelKey));
 			}
@@ -481,7 +543,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] LayerNames {
+		public string? []? LayerNames {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LayerNamesKey));
 			}
@@ -508,7 +570,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string ProfileName {
+		public string? ProfileName {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProfileNameKey));
 			}
@@ -553,7 +615,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string ExifVersion {
+		public string? ExifVersion {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifVersionKey));
 			}
@@ -562,7 +624,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string CameraOwner {
+		public string? CameraOwner {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CameraOwnerKey));
 			}
@@ -580,7 +642,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string LensModel {
+		public string? LensModel {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.LensModelKey));
 			}
@@ -589,7 +651,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string ExifGpsVersion {
+		public string? ExifGpsVersion {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
 			}
@@ -634,7 +696,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate Timestamp {
+		public NSDate? Timestamp {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.TimestampKey));
 			}
@@ -661,7 +723,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string NamedLocation {
+		public string? NamedLocation {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.NamedLocationKey));
 			}
@@ -670,7 +732,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string GpsStatus {
+		public string? GpsStatus {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsStatusKey));
 			}
@@ -679,7 +741,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string GpsMeasureMode {
+		public string? GpsMeasureMode {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
 			}
@@ -697,7 +759,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string GpsMapDatum {
+		public string? GpsMapDatum {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMapDatumKey));
 			}
@@ -742,7 +804,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string GpsProcessingMethod {
+		public string? GpsProcessingMethod {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
 			}
@@ -751,7 +813,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string GpsAreaInformation {
+		public string? GpsAreaInformation {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
 			}
@@ -760,7 +822,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate GpsDateStamp {
+		public NSDate? GpsDateStamp {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.GpsDateStampKey));
 			}
@@ -778,7 +840,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Codecs {
+		public string? []? Codecs {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CodecsKey));
 			}
@@ -787,7 +849,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] MediaTypes {
+		public string? []? MediaTypes {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.MediaTypesKey));
 			}
@@ -832,7 +894,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string DeliveryType {
+		public string? DeliveryType {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.DeliveryTypeKey));
 			}
@@ -841,7 +903,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Album {
+		public string? Album {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AlbumKey));
 			}
@@ -868,7 +930,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string MeteringMode {
+		public string? MeteringMode {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MeteringModeKey));
 			}
@@ -895,7 +957,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string ExposureProgram {
+		public string? ExposureProgram {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureProgramKey));
 			}
@@ -904,7 +966,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string ExposureTimeString {
+		public string? ExposureTimeString {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
 			}
@@ -913,7 +975,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Headline {
+		public string? Headline {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.HeadlineKey));
 			}
@@ -922,7 +984,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Instructions {
+		public string? Instructions {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.InstructionsKey));
 			}
@@ -931,7 +993,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string City {
+		public string? City {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CityKey));
 			}
@@ -940,7 +1002,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string StateOrProvince {
+		public string? StateOrProvince {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.StateOrProvinceKey));
 			}
@@ -949,7 +1011,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Country {
+		public string? Country {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CountryKey));
 			}
@@ -958,7 +1020,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string TextContent {
+		public string? TextContent {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.TextContentKey));
 			}
@@ -994,7 +1056,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string KeySignature {
+		public string? KeySignature {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.KeySignatureKey));
 			}
@@ -1003,7 +1065,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string TimeSignature {
+		public string? TimeSignature {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.TimeSignatureKey));
 			}
@@ -1012,7 +1074,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string AudioEncodingApplication {
+		public string? AudioEncodingApplication {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
 			}
@@ -1021,7 +1083,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Composer {
+		public string? Composer {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ComposerKey));
 			}
@@ -1030,7 +1092,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Lyricist {
+		public string? Lyricist {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.LyricistKey));
 			}
@@ -1048,7 +1110,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate RecordingDate {
+		public NSDate? RecordingDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.RecordingDateKey));
 			}
@@ -1057,7 +1119,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string MusicalGenre {
+		public string? MusicalGenre {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalGenreKey));
 			}
@@ -1084,7 +1146,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Organizations {
+		public string? []? Organizations {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.OrganizationsKey));
 			}
@@ -1093,7 +1155,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Languages {
+		public string? []? Languages {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LanguagesKey));
 			}
@@ -1102,7 +1164,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Rights {
+		public string? Rights {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.RightsKey));
 			}
@@ -1111,7 +1173,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Publishers {
+		public string? []? Publishers {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PublishersKey));
 			}
@@ -1120,7 +1182,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Contributors {
+		public string? []? Contributors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContributorsKey));
 			}
@@ -1129,7 +1191,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Coverage {
+		public string? []? Coverage {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CoverageKey));
 			}
@@ -1138,7 +1200,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Subject {
+		public string? Subject {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SubjectKey));
 			}
@@ -1147,7 +1209,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Theme {
+		public string? Theme {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ThemeKey));
 			}
@@ -1156,7 +1218,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Description {
+		public string? Description {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.DescriptionKey));
 			}
@@ -1165,7 +1227,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Identifier {
+		public string? Identifier {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.IdentifierKey));
 			}
@@ -1174,7 +1236,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Audiences {
+		public string? []? Audiences {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AudiencesKey));
 			}
@@ -1210,7 +1272,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string SecurityMethod {
+		public string? SecurityMethod {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.SecurityMethodKey));
 			}
@@ -1219,7 +1281,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Creator {
+		public string? Creator {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CreatorKey));
 			}
@@ -1228,7 +1290,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] EncodingApplications {
+		public string? []? EncodingApplications {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EncodingApplicationsKey));
 			}
@@ -1237,7 +1299,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public NSDate DueDate {
+		public NSDate? DueDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DueDateKey));
 			}
@@ -1255,7 +1317,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] PhoneNumbers {
+		public string? []? PhoneNumbers {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PhoneNumbersKey));
 			}
@@ -1264,7 +1326,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] EmailAddresses {
+		public string? []? EmailAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EmailAddressesKey));
 			}
@@ -1273,7 +1335,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] InstantMessageAddresses {
+		public string? []? InstantMessageAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.InstantMessageAddressesKey));
 			}
@@ -1282,7 +1344,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Kind {
+		public string? Kind {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.KindKey));
 			}
@@ -1291,7 +1353,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Recipients {
+		public string? []? Recipients {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientsKey));
 			}
@@ -1300,7 +1362,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string FinderComment {
+		public string? FinderComment {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.FinderCommentKey));
 			}
@@ -1309,7 +1371,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Fonts {
+		public string? []? Fonts {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.FontsKey));
 			}
@@ -1318,7 +1380,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string AppleLoopsRoot {
+		public string? AppleLoopsRoot {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
 			}
@@ -1327,7 +1389,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string AppleLoopsKeyFilterType {
+		public string? AppleLoopsKeyFilterType {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
 			}
@@ -1336,7 +1398,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string AppleLoopsLoopMode {
+		public string? AppleLoopsLoopMode {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
 			}
@@ -1345,7 +1407,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] AppleLoopDescriptors {
+		public string? []? AppleLoopDescriptors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey));
 			}
@@ -1354,7 +1416,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string MusicalInstrumentCategory {
+		public string? MusicalInstrumentCategory {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
 			}
@@ -1363,7 +1425,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string MusicalInstrumentName {
+		public string? MusicalInstrumentName {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
 			}
@@ -1372,7 +1434,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string CFBundleIdentifier {
+		public string? CFBundleIdentifier {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
 			}
@@ -1381,7 +1443,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Information {
+		public string? Information {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.InformationKey));
 			}
@@ -1390,7 +1452,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Director {
+		public string? Director {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.DirectorKey));
 			}
@@ -1399,7 +1461,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Producer {
+		public string? Producer {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProducerKey));
 			}
@@ -1408,7 +1470,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string Genre {
+		public string? Genre {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GenreKey));
 			}
@@ -1417,7 +1479,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] Performers {
+		public string? []? Performers {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PerformersKey));
 			}
@@ -1426,7 +1488,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string OriginalFormat {
+		public string? OriginalFormat {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalFormatKey));
 			}
@@ -1435,7 +1497,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string OriginalSource {
+		public string? OriginalSource {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalSourceKey));
 			}
@@ -1444,7 +1506,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] AuthorEmailAddresses {
+		public string? []? AuthorEmailAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey));
 			}
@@ -1453,7 +1515,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] RecipientEmailAddresses {
+		public string? []? RecipientEmailAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey));
 			}
@@ -1462,7 +1524,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] AuthorAddresses {
+		public string? []? AuthorAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorAddressesKey));
 			}
@@ -1471,7 +1533,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] RecipientAddresses {
+		public string? []? RecipientAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientAddressesKey));
 			}
@@ -1489,7 +1551,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] ExecutableArchitectures {
+		public string? []? ExecutableArchitectures {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey));
 			}
@@ -1498,7 +1560,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string ExecutablePlatform {
+		public string? ExecutablePlatform {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
 			}
@@ -1507,7 +1569,7 @@ namespace Foundation {
 #if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 #endif
-		public string [] ApplicationCategories {
+		public string? []? ApplicationCategories {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ApplicationCategoriesKey));
 			}

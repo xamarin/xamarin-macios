@@ -16,6 +16,10 @@ using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
@@ -37,7 +41,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.Ignore ("This test requires the dynamic registrar to be available.");
 
 			using (var obj = new TestClass ()) {
-				TestClass.OnCallback = ((IntPtr blockArgument, IntPtr self, IntPtr argument) => 
+				TestClass.OnCallback = ((IntPtr blockArgument, NativeHandle self, IntPtr argument) => 
 					{
 						Assert.AreNotEqual (IntPtr.Zero, blockArgument, "block");
 						Assert.AreEqual (obj.Handle, self, "self");
@@ -49,14 +53,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		class TestClass : NSObject {
 			[MonoPInvokeCallback (typeof (TestBlockCallbackDelegate))]
-			static void TestBlockCallback (IntPtr block, IntPtr self, IntPtr argument)
+			static void TestBlockCallback (IntPtr block, NativeHandle self, IntPtr argument)
 			{
 				OnCallback (block, self, argument);
 			}
 
 			static TestBlockCallbackDelegate callback = new TestBlockCallbackDelegate (TestBlockCallback);
 
-			public delegate void TestBlockCallbackDelegate (IntPtr block, IntPtr self, IntPtr argument);
+			public delegate void TestBlockCallbackDelegate (IntPtr block, NativeHandle self, IntPtr argument);
 			public static TestBlockCallbackDelegate OnCallback;
 
 			static TestClass ()
@@ -98,7 +102,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			Assert.Throws<ArgumentNullException> (() => block.SetupBlock (null, userDelegate), "null trampoline");
 
-#if !DEVICE && !MONOMAC && !AOT
+#if !DEVICE && !MONOMAC && !AOT && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR) {
 				// These checks only occur in the simulator
 				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidBlockTrampolines, userDelegate), "instance trampoline");

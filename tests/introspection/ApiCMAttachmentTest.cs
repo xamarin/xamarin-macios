@@ -15,7 +15,11 @@ using CoreMedia;
 using CoreFoundation;
 using CoreGraphics;
 using CoreText;
+#if NET
+using CFNetwork;
+#else
 using CoreServices;
+#endif
 using CoreVideo;
 using Foundation;
 using ImageIO;
@@ -26,6 +30,10 @@ using Security;
 using VideoToolbox;
 using UIKit;
 using Network;
+
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
+#endif
 
 namespace Introspection {
 
@@ -138,7 +146,11 @@ namespace Introspection {
 				nativeObj = obj;
 			}
 
+#if NET
+			public NativeHandle Handle
+#else
 			public IntPtr Handle
+#endif
 			{
 				get { return nativeObj.Handle; }
 			}

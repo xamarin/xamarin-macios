@@ -14,6 +14,10 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreMedia {
@@ -24,13 +28,14 @@ namespace CoreMedia {
 #endif
 	public class CMClock : CMClockOrTimebase
 	{
-#if !XAMCORE_4_0
-		public CMClock (IntPtr handle) : base (handle)
+#if !NET
+		public CMClock (NativeHandle handle) : base (handle)
 		{
 		}
 #endif
 
-		internal CMClock (IntPtr handle, bool owns) 
+		[Preserve (Conditional = true)]
+		internal CMClock (NativeHandle handle, bool owns) 
 			: base (handle, owns)
 		{
 		}
@@ -66,7 +71,7 @@ namespace CoreMedia {
 		{
 			IntPtr ptr;
 			clockError = CMAudioClockCreate (IntPtr.Zero, out ptr);
-			return clockError == CMClockError.None ? new CMClock (ptr) : null;
+			return clockError == CMClockError.None ? new CMClock (ptr, true) : null;
 		}
 #endif
 
@@ -111,12 +116,15 @@ namespace CoreMedia {
 #endif
 	public class CMTimebase : CMClockOrTimebase
 	{
-		public CMTimebase (IntPtr handle)
+#if !NET
+		public CMTimebase (NativeHandle handle)
 			: base (handle)
 		{
 		}
+#endif
 
-		private CMTimebase (IntPtr handle, bool owns) 
+		[Preserve (Conditional = true)]
+		private CMTimebase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -728,14 +736,15 @@ namespace CoreMedia {
 #endif
 	public class CMClockOrTimebase : NativeObject
 	{
-#if !XAMCORE_4_0
-		public CMClockOrTimebase (IntPtr handle)
+#if !NET
+		public CMClockOrTimebase (NativeHandle handle)
 			: base (handle, false)
 		{
 		}
 #endif
 
-		internal CMClockOrTimebase (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CMClockOrTimebase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

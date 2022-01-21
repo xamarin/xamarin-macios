@@ -36,20 +36,24 @@ using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
 	// CGPDFObject.h
 	public class CGPDFObject : INativeObject {
-		public IntPtr Handle { get; private set; }
+		public NativeHandle Handle { get; private set; }
 
 		// The lifetime management of CGPDFObject (and CGPDFArray, CGPDFDictionary and CGPDFStream) are tied to
 		// the containing CGPDFDocument, and not possible to handle independently, which is why this class
 		// does not subclass NativeObject (there's no way to retain/release CGPDFObject instances). It's
 		// also why this constructor doesn't have a 'bool owns' parameter: it's always owned by the containing CGPDFDocument.
 #if NET
-		internal CGPDFObject (IntPtr handle)
+		internal CGPDFObject (NativeHandle handle)
 #else
-		public CGPDFObject (IntPtr handle)
+		public CGPDFObject (NativeHandle handle)
 #endif
 		{
 			Handle = handle;

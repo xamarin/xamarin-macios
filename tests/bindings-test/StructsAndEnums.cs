@@ -9,6 +9,11 @@ using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x3 = global::OpenTK.NMatrix4x3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
+public static class LibTest {
+	[DllImport ("__Internal")]
+	public static extern int theUltimateAnswer ();
+}
+
 namespace Bindings.Test
 {
 	public static class CFunctions {

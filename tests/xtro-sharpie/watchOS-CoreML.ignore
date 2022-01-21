@@ -4,3 +4,4 @@
 !missing-selector! MLModelConfiguration::preferredMetalDevice not bound
 !missing-selector! MLModelConfiguration::setAllowLowPrecisionAccumulationOnGPU: not bound
 !missing-selector! MLModelConfiguration::setPreferredMetalDevice: not bound
+!missing-enum-value! MLMultiArrayDataType native value MLMultiArrayDataTypeFloat16 = 65552 not bound

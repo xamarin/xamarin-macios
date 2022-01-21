@@ -35,6 +35,8 @@ using System;
 using System.Runtime.InteropServices;
 #if NET
 using System.Runtime.Versioning;
+#else
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
@@ -147,12 +149,13 @@ namespace Security {
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string [] args, IntPtr FILEPtr);
+		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string? []? args, IntPtr FILEPtr);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationFree (IntPtr handle, AuthorizationFlags flags);
 		
-		internal Authorization (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal Authorization (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -165,9 +168,22 @@ namespace Security {
 		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string [] args)
+		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string []? args)
 		{
-			return AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, args, IntPtr.Zero);
+			string?[]? arguments = args!;
+
+			if (arguments is not null) {
+				// The arguments array must be null-terminated, so make sure that's the case
+				if (arguments.Length == 0) {
+					arguments = new string? [] { null };
+				} else if (arguments [arguments.Length - 1] is not null) {
+					var array = new string? [arguments.Length + 1];
+					arguments.CopyTo (array, 0);
+					arguments = array;
+				}
+			}
+
+			return AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, arguments, IntPtr.Zero);
 		}
 
 		protected override void Dispose (bool disposing)
@@ -215,7 +231,7 @@ namespace Security {
 						if (parameters.PathToSystemPrivilegeTool != null)
 							EncodeString (ref pars.ptrToAuthorization [pars.count++], "system.privilege.admin", parameters.PathToSystemPrivilegeTool);
 						if (parameters.IconPath != null)
-							EncodeString (ref pars.ptrToAuthorization [pars.count++], "prompt", parameters.IconPath);
+							EncodeString (ref pars.ptrToAuthorization [pars.count++], "icon", parameters.IconPath);
 					}
 					if (environment != null || (parameters != null && parameters.Prompt != null)){
 						penv = &env;

@@ -1,5 +1,7 @@
 // Copyright 2014-2016 Xamarin Inc. All rights reserved.
 
+#if !NET
+
 using System;
 using System.ComponentModel;
 using OpenTK;
@@ -8,8 +10,11 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AVFoundation {
-#if !XAMCORE_4_0
 	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
 
 	partial class AVAudioNode {
@@ -29,20 +34,19 @@ namespace AVFoundation {
 			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' constructor instead.");
 		}
 	}
-#endif // !XAMCORE_4_0
 #if !WATCH
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
 	{
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (); } }
+		public override NativeHandle ClassHandle { get { throw new PlatformNotSupportedException (); } }
 
 		protected AVCaptureDataOutputSynchronizer (NSObjectFlag t) : base (t)
 		{
 			throw new PlatformNotSupportedException ();
 		}
 
-		protected internal AVCaptureDataOutputSynchronizer (IntPtr handle) : base (handle)
+		protected internal AVCaptureDataOutputSynchronizer (NativeHandle handle) : base (handle)
 		{
 			throw new PlatformNotSupportedException ();
 		}
@@ -102,14 +106,14 @@ namespace AVFoundation {
 			throw new PlatformNotSupportedException ();
 		}
 
-		protected internal AVCaptureDataOutputSynchronizerDelegate (IntPtr handle) : base (handle)
+		protected internal AVCaptureDataOutputSynchronizerDelegate (NativeHandle handle) : base (handle)
 		{
 			throw new PlatformNotSupportedException ();
 		}
 
 		public abstract void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
 	}
-#endif // MONOMAC && !XAMCORE_4_0
+#endif // MONOMAC
 
 #if !XAMCORE_3_0
 	partial class AVAsset {
@@ -157,7 +161,6 @@ namespace AVFoundation {
 	}
 #endif
 
-#if !XAMCORE_4_0
 	partial class AVCaptureInputPort {
 
 		[Obsolete ("Valid instance of this type cannot be directly created.")]
@@ -214,13 +217,8 @@ namespace AVFoundation {
 
 #if TVOS
 	// tvOS removed some types - we need to keep stubs of them for binary compatibility
-#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
-#else
-	[UnsupportedOSPlatform ("tvos10.0")]
-	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public class AVAssetDownloadDelegate : NSObject, IAVAssetDownloadDelegate {
 		public AVAssetDownloadDelegate ()
 		{
@@ -234,7 +232,8 @@ namespace AVFoundation {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadDelegate (IntPtr handle)
+		protected internal AVAssetDownloadDelegate (NativeHandle handle)
+			: base (handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -285,23 +284,13 @@ namespace AVFoundation {
 		}
 	}
 
-#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
-#else
-	[UnsupportedOSPlatform ("tvos10.0")]
-	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public interface IAVAssetDownloadDelegate : INativeObject, IDisposable, INSUrlSessionTaskDelegate, INSUrlSessionDelegate {
 	}
 
-#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
-#else
-	[UnsupportedOSPlatform ("tvos10.0")]
-	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public static class AVAssetDownloadDelegate_Extensions {
 
 		public static void DidFinishDownloadingToUrl (this IAVAssetDownloadDelegate This, NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location)
@@ -320,16 +309,11 @@ namespace AVFoundation {
 		}
 	}
 
-#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
-#else
-	[UnsupportedOSPlatform ("tvos10.0")]
-	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public class AVAssetDownloadTask : NSUrlSessionTask {
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
@@ -384,19 +368,14 @@ namespace AVFoundation {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadTask (IntPtr handle)
+		protected internal AVAssetDownloadTask (NativeHandle handle)
 		{
 			throw new NotImplementedException ();
 		}
 	}
 
-#if !NET
 	[Obsolete ("Removed in tvOS 10.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
-#else
-	[UnsupportedOSPlatform ("tvos10.0")]
-	[Obsolete ("Removed in tvOS 10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public class AVAssetDownloadUrlSession : NSUrlSession {
 
 		public new static NSUrlSession SharedSession {
@@ -405,14 +384,14 @@ namespace AVFoundation {
 			}
 		}
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadUrlSession (IntPtr handle) : base (handle)
+		protected internal AVAssetDownloadUrlSession (NativeHandle handle) : base (handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -541,10 +520,9 @@ namespace AVFoundation {
 	}
 
 #endif // TVOS
-#endif // !XAMCORE_4_0
 #endif // !WATCH
 
-#if !XAMCORE_4_0 && IOS // includes __MACCATALYST__
+#if IOS // includes __MACCATALYST__
 	public partial class AVCaptureManualExposureBracketedStillImageSettings {
 		[Obsolete ("Use the static 'Create' method to create a working instance of this type.")]
 		public AVCaptureManualExposureBracketedStillImageSettings () : base (NSObjectFlag.Empty)
@@ -562,7 +540,6 @@ namespace AVFoundation {
 	}
 #endif
 
-#if !XAMCORE_4_0
 	// "compatibility shim" in xcode 12.5 were removed in xcode 13
 	public partial class AVPlayerInterstitialEventController {
 
@@ -588,25 +565,17 @@ namespace AVFoundation {
 	}
 
 	#nullable enable
-#if !NET
 	[Obsolete ("Removed in Xcode 13.")]
 	[Deprecated (PlatformName.TvOS, 15,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.MacOSX, 12,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.iOS, 15,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.MacCatalyst, 15,0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.WatchOS, 8,0, PlatformArchitecture.All)]
-#else
-		[UnsupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[Obsolete ("Removed in Xcode 13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public partial class AVPlayerInterstitialEventObserver : NSObject {
 		
 		public virtual AVPlayerInterstitialEvent[] InterstitialEvents => throw new NotImplementedException ();
 
-		public override IntPtr ClassHandle => throw new NotImplementedException ();
+		public override NativeHandle ClassHandle => throw new NotImplementedException ();
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -614,7 +583,7 @@ namespace AVFoundation {
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVPlayerInterstitialEventObserver (IntPtr handle) : base (handle) => throw new NotImplementedException ();
+		protected internal AVPlayerInterstitialEventObserver (NativeHandle handle) : base (handle) => throw new NotImplementedException ();
 
 		[DesignatedInitializer]
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -646,5 +615,6 @@ namespace AVFoundation {
 		}
 	} /* class AVPlayerInterstitialEventObserver */
 	#nullable disable
-#endif
 }
+
+#endif // !NET

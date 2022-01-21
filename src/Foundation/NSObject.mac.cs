@@ -111,7 +111,7 @@ namespace Foundation {
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif

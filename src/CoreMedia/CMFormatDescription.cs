@@ -25,6 +25,10 @@ using ObjCRuntime;
 using CoreVideo;
 using AudioToolbox;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreMedia {
 
 #if !NET
@@ -32,7 +36,7 @@ namespace CoreMedia {
 #endif
 	public class CMFormatDescription : NativeObject {
 		[Preserve (Conditional=true)]
-		internal CMFormatDescription (IntPtr handle, bool owns)
+		internal CMFormatDescription (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -289,7 +293,8 @@ namespace CoreMedia {
 	[Watch (6,0)]
 #endif
 	public class CMAudioFormatDescription : CMFormatDescription {
-		internal CMAudioFormatDescription (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CMAudioFormatDescription (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -301,7 +306,8 @@ namespace CoreMedia {
 	[Watch (6,0)]
 #endif
 	public partial class CMVideoFormatDescription : CMFormatDescription {
-		internal CMVideoFormatDescription (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CMVideoFormatDescription (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

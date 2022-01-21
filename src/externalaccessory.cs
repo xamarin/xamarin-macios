@@ -12,6 +12,10 @@ using ObjCRuntime;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ExternalAccessory {
 
 	[Mac (10, 13)][TV (10,0)]
@@ -124,7 +128,7 @@ namespace ExternalAccessory {
 	[DisableDefaultCtor]
 	interface EASession {
 		[Export ("initWithAccessory:forProtocol:")]
-		IntPtr Constructor (EAAccessory accessory, string protocol);
+		NativeHandle Constructor (EAAccessory accessory, string protocol);
 
 		[NullAllowed]
 		[Export ("accessory")]
@@ -190,7 +194,7 @@ namespace ExternalAccessory {
 		[NoTV]
 		[Export ("initWithDelegate:queue:")]
 		[DesignatedInitializer] // according to header comment (but not in attributes)
-		IntPtr Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV] // no member is available
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]

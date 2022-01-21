@@ -2,12 +2,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+
+using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 using System.Runtime.Versioning;
 
 using OS_nw_resolver_config=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr; 
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 	
@@ -18,7 +24,12 @@ namespace Network {
 #endif
 	public class NWResolverConfig : NativeObject {
 
-		public NWResolverConfig (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 		
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_resolver_config nw_resolver_config_create_https (OS_nw_endpoint urlEndpoint);

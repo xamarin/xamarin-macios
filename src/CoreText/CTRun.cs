@@ -38,6 +38,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	// defined as uint32_t - System/Library/Frameworks/CoreText.framework/Headers/CTRun.h
@@ -49,7 +53,8 @@ namespace CoreText {
 	}
 
 	public class CTRun : NativeObject {
-		internal CTRun (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CTRun (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}

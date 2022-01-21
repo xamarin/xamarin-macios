@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This file is not processed by xharness, and contains logic shared by all our test suites -->
+<!-- This file is processed by xharness, and contains logic shared by all our test suites -->
 <Project>
 	<!-- NativeLibName: the platform-specific subdirectory of tests/test-libraries/.libs where to get libraries with all the relevant architectures -->
 
@@ -16,7 +16,6 @@
 
 	<!-- Logic for tvOS -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
 		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>tvos-fat</NativeLibName>
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
@@ -45,6 +44,15 @@
 	<PropertyGroup>
 		<!-- Disable the implicit FSharp.Core reference, because sometimes the implicit reference wants a version that isn't available anywhere -->
 		<DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+
+		<!-- There's unsafe code in shared test code, which means pretty much all test suites need unsafe code -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<!-- Always use the latest C# version everywhere -->
+		<LangVersion>latest</LangVersion>
+
+		<!-- XAMCORE_3_0 is always defined for .NET -->
+		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -10,6 +10,10 @@ using OS_nw_resolution_report=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using nw_report_resolution_protocol_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
@@ -21,7 +25,8 @@ namespace Network {
 #endif
 	public class NWResolutionReport : NativeObject {
 
-		internal NWResolutionReport (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWResolutionReport (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWReportResolutionSource nw_resolution_report_get_source (OS_nw_resolution_report resolutionReport);

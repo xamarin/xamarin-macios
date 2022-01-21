@@ -29,6 +29,10 @@ using Vector3 = global::OpenTK.NVector3;
 using Matrix3 = global::OpenTK.NMatrix3;
 using Matrix4 = global::OpenTK.NMatrix4;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ARKit {
 
 	[iOS (11,0)]
@@ -336,17 +340,17 @@ namespace ARKit {
 
 		[Export ("initWithTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Matrix4 transform);
+		NativeHandle Constructor (Matrix4 transform);
 
 		[iOS (12,0)]
 		[Export ("initWithName:transform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, Matrix4 transform);
+		NativeHandle Constructor (string name, Matrix4 transform);
 
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 	}
 
 	[iOS (11,0)]
@@ -549,7 +553,7 @@ namespace ARKit {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 
@@ -671,10 +675,10 @@ namespace ARKit {
 		void Validate (Action<NSError> completionHandler);
 
 		[Export ("initWithCGImage:orientation:physicalWidth:")]
-		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, nfloat physicalWidth);
+		NativeHandle Constructor (CGImage image, CGImagePropertyOrientation orientation, nfloat physicalWidth);
 
 		[Export ("initWithPixelBuffer:orientation:physicalWidth:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, nfloat physicalWidth);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, nfloat physicalWidth);
 
 		[Static]
 		[Export ("referenceImagesInGroupNamed:bundle:")]
@@ -1444,12 +1448,12 @@ namespace ARKit {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 #if !XAMCORE_4_0
 		[Obsolete ("Constructor marked as unavailable.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 #endif
 
 		[Export ("geometry")]
@@ -1491,10 +1495,10 @@ namespace ARKit {
 	interface ARFaceGeometry : NSCopying, NSSecureCoding {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithBlendShapes:")]
-		IntPtr Constructor (NSDictionary blendShapes);
+		NativeHandle Constructor (NSDictionary blendShapes);
 
 		[Wrap ("this (blendShapes.GetDictionary ()!)")]
-		IntPtr Constructor (ARBlendShapeLocationOptions blendShapes);
+		NativeHandle Constructor (ARBlendShapeLocationOptions blendShapes);
 
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
@@ -1561,7 +1565,7 @@ namespace ARKit {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		[Export ("referenceImage", ArgumentSemantic.Strong)]
 		ARReferenceImage ReferenceImage { get; }
@@ -1639,15 +1643,15 @@ namespace ARKit {
 	interface AREnvironmentProbeAnchor {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		[Export ("initWithTransform:extent:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Matrix4 transform, Vector3 extent);
+		NativeHandle Constructor (Matrix4 transform, Vector3 extent);
 
 		[Export ("initWithName:transform:extent:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, Matrix4 transform, Vector3 extent);
+		NativeHandle Constructor (string name, Matrix4 transform, Vector3 extent);
 
 		[NullAllowed, Export ("environmentTexture", ArgumentSemantic.Strong)]
 		IMTLTexture EnvironmentTexture { get; }
@@ -1665,7 +1669,7 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARReferenceObject : NSSecureCoding {
 		[Export ("initWithArchiveURL:error:")]
-		IntPtr Constructor (NSUrl archiveUrl, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSUrl archiveUrl, [NullAllowed] out NSError error);
 
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
@@ -1722,7 +1726,7 @@ namespace ARKit {
 	interface ARObjectAnchor {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		[Export ("referenceObject", ArgumentSemantic.Strong)]
 		ARReferenceObject ReferenceObject { get; }
@@ -1767,7 +1771,7 @@ namespace ARKit {
 	interface ARBodyAnchor : ARTrackable {
 
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 		// [Export ("initWithName:")] marked as NS_UNAVAILABLE
@@ -1786,7 +1790,7 @@ namespace ARKit {
 		// inherited from UIView
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -1817,7 +1821,11 @@ namespace ARKit {
 	interface IARCoachingOverlayViewDelegate {}
 
 	[iOS (13,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof(NSObject))]
 	interface ARCoachingOverlayViewDelegate {
 
@@ -1917,7 +1925,7 @@ namespace ARKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithDevice:matteResolution:")]
-		IntPtr Constructor (IMTLDevice device, ARMatteResolution matteResolution);
+		NativeHandle Constructor (IMTLDevice device, ARMatteResolution matteResolution);
 
 		[Export ("generateMatteFromFrame:commandBuffer:")]
 		IMTLTexture GenerateMatte (ARFrame frame, IMTLCommandBuffer commandBuffer);
@@ -1933,7 +1941,7 @@ namespace ARKit {
 
 		[Export ("initWithFileAtURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[NullAllowed, Export ("canonicalWebPageURL", ArgumentSemantic.Strong)]
 		NSUrl CanonicalWebPageUrl { get; set; }
@@ -1949,7 +1957,7 @@ namespace ARKit {
 
 		[Export ("initWithOrigin:direction:allowingTarget:alignment:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector3 origin, Vector3 direction, ARRaycastTarget target, ARRaycastTargetAlignment alignment);
+		NativeHandle Constructor (Vector3 origin, Vector3 direction, ARRaycastTarget target, ARRaycastTargetAlignment alignment);
 
 		[Export ("origin")]
 		Vector3 Origin {
@@ -2142,7 +2150,7 @@ namespace ARKit {
 
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 		// [Export ("initWithName:")] marked as NS_UNAVAILABLE
@@ -2164,7 +2172,7 @@ namespace ARKit {
 
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 		// [Export ("initWithName:")] marked as NS_UNAVAILABLE
@@ -2273,7 +2281,7 @@ namespace ARKit {
 	interface ARGeoAnchor : ARTrackable {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get; }
@@ -2285,16 +2293,16 @@ namespace ARKit {
 		ARAltitudeSource AltitudeSource { get; }
 
 		[Export ("initWithCoordinate:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate);
 
 		[Export ("initWithCoordinate:altitude:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude);
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate, double altitude);
 
 		[Export ("initWithName:coordinate:")]
-		IntPtr Constructor (string name, CLLocationCoordinate2D coordinate);
+		NativeHandle Constructor (string name, CLLocationCoordinate2D coordinate);
 
 		[Export ("initWithName:coordinate:altitude:")]
-		IntPtr Constructor (string name, CLLocationCoordinate2D coordinate, double altitude);
+		NativeHandle Constructor (string name, CLLocationCoordinate2D coordinate, double altitude);
 	}
 
 	[iOS (14, 0)]
@@ -2375,7 +2383,7 @@ namespace ARKit {
 
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[Export ("initWithAnchor:")]
-		IntPtr Constructor (ARAnchor anchor);
+		NativeHandle Constructor (ARAnchor anchor);
 
 		[NullAllowed, Export ("url", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }

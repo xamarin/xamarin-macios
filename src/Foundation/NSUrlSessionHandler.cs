@@ -532,7 +532,7 @@ namespace Foundation {
 
 #if NET
 		// Properties that will be called by the default HttpClientHandler
-		public bool AutomaticDecompression {
+		public DecompressionMethods AutomaticDecompression {
 			get => throw new PlatformNotSupportedException ();
 			set => throw new PlatformNotSupportedException ();
 		}
@@ -1288,10 +1288,16 @@ namespace Foundation {
 				return base.SetCFClientFlags (inFlags, inCallback, inContextPtr);
 			}
 
+#if NET
+			public override void Schedule (NSRunLoop aRunLoop, NSString nsMode)
+#else
 			public override void Schedule (NSRunLoop aRunLoop, string mode)
+#endif
 			{
 				var cfRunLoop = aRunLoop.GetCFRunLoop ();
+#if !NET
 				var nsMode = new NSString (mode);
+#endif
 
 				cfRunLoop.AddSource (source, nsMode);
 
@@ -1303,10 +1309,16 @@ namespace Foundation {
 				notifying = false;
 			}
 
+#if NET
+			public override void Unschedule (NSRunLoop aRunLoop, NSString nsMode)
+#else
 			public override void Unschedule (NSRunLoop aRunLoop, string mode)
+#endif
 			{
 				var cfRunLoop = aRunLoop.GetCFRunLoop ();
+#if !NET
 				var nsMode = new NSString (mode);
+#endif
 
 				cfRunLoop.RemoveSource (source, nsMode);
 			}

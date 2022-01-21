@@ -36,10 +36,15 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 	public class CTFramesetter : NativeObject {
-		internal CTFramesetter (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CTFramesetter (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}

@@ -50,6 +50,8 @@ steps:
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
+- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
@@ -167,28 +169,3 @@ steps:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
-
-# only execute it on failure setting the variable later pass as part of the parameters
-- pwsh: |
-    Write-Host "##vso[task.setvariable variable=provisioningSuccess;]False"
-  displayName: 'Set provisioning as failure'
-  condition: failed()
-
-- ${{ if eq(variables['botProvisioningSuccess'], 'False') }}:
-  - bash: |
-      set -x
-      set -e
-
-      echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
-      echo '##vso[task.setvariable variable=PROVISIONING_FAILED;isOutput=true]True'
-    displayName: 'Set result variables'
-    name: runTests # Same name, why? because we want to be able to have single dep in the main stage template
-- ${{ else }}:
-  - template: run-tests.yml 
-    parameters:
-      statusContext: ${{ parameters.statusContext }}
-      testsLabels: ${{ parameters.testsLabels }}
-      useXamarinStorage: ${{ parameters.useXamarinStorage }}
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-      devicePrefix: ${{ parameters.devicePrefix }}

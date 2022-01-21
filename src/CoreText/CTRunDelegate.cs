@@ -32,6 +32,10 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Run Delegate Callbacks
@@ -78,7 +82,7 @@ namespace CoreText {
 		{
 		}
 
-#if XAMCORE_4_0
+#if NET
 		public virtual nfloat GetAscent ()
 		{
 			return 0;
@@ -175,7 +179,8 @@ namespace CoreText {
 	}
 
 	public class CTRunDelegate : NativeObject, IDisposable {
-		internal CTRunDelegate (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CTRunDelegate (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

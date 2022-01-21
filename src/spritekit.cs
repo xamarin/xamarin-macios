@@ -56,6 +56,10 @@ using UIView = global::UIKit.UIView;
 #endif
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace SpriteKit {
 
 #if WATCH
@@ -80,7 +84,7 @@ namespace SpriteKit {
 	interface SK3DNode {
 		[DesignatedInitializer]
 		[Export ("initWithViewportSize:")]
-		IntPtr Constructor (CGSize viewportSize);
+		NativeHandle Constructor (CGSize viewportSize);
 
 		[Export ("viewportSize")]
 		CGSize ViewportSize { get; set; }
@@ -143,7 +147,7 @@ namespace SpriteKit {
 #endif
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static, Export ("node")]
 		SKNode Create ();
@@ -346,7 +350,7 @@ namespace SpriteKit {
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle[] ObstaclesFromSpriteTextures (SKNode[] sprites, float accuracy);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
@@ -545,7 +549,7 @@ namespace SpriteKit {
 #endif
 	{
 		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize size);
+		NativeHandle Constructor (CGSize size);
 
 		[Static, Export ("sceneWithSize:")]
 		SKScene FromSize (CGSize size);
@@ -660,10 +664,10 @@ namespace SpriteKit {
 	[BaseType (typeof (NSObject))]
 	interface SKShader : NSCopying, NSSecureCoding {
 		[Export ("initWithSource:")]
-		IntPtr Constructor (string shaderSourceCode);
+		NativeHandle Constructor (string shaderSourceCode);
 
 		[Export ("initWithSource:uniforms:")]
-		IntPtr Constructor (string sharedSourceCode, SKUniform [] uniforms);
+		NativeHandle Constructor (string sharedSourceCode, SKUniform [] uniforms);
 
 		[NullAllowed] // by default this property is null
 		[Export ("source")]
@@ -721,17 +725,17 @@ namespace SpriteKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithTexture:color:size:")]
-		IntPtr Constructor ([NullAllowed] SKTexture texture, UIColor color, CGSize size);
+		NativeHandle Constructor ([NullAllowed] SKTexture texture, UIColor color, CGSize size);
 
 		[Export ("initWithTexture:")]
-		IntPtr Constructor ([NullAllowed] SKTexture texture);
+		NativeHandle Constructor ([NullAllowed] SKTexture texture);
 
 		// can't be null -> crash
 		[Export ("initWithImageNamed:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("initWithColor:size:")]
-		IntPtr Constructor (UIColor color, CGSize size);
+		NativeHandle Constructor (UIColor color, CGSize size);
 
 		[Export ("texture", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -818,10 +822,10 @@ namespace SpriteKit {
 		[DesignatedInitializer]
 		[Export ("initWithKeyframeValues:times:")]
 		[Internal]
-		IntPtr Constructor ([NullAllowed] NSObject [] values, [NullAllowed] NSArray times);
+		NativeHandle Constructor ([NullAllowed] NSObject [] values, [NullAllowed] NSArray times);
 
 		[Export ("initWithCapacity:")]
-		IntPtr Constructor (nuint numItems);
+		NativeHandle Constructor (nuint numItems);
 
 		[Export ("count")]
 		nuint Count { get; }
@@ -1189,7 +1193,7 @@ namespace SpriteKit {
 	interface SKReachConstraints : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithLowerAngleLimit:upperAngleLimit:")]
-		IntPtr Constructor (nfloat lowerAngleLimit, nfloat upperAngleLimit);
+		NativeHandle Constructor (nfloat lowerAngleLimit, nfloat upperAngleLimit);
 
 		[Export ("lowerAngleLimit", ArgumentSemantic.UnsafeUnretained)]
 		nfloat LowerAngleLimit { get; set; }
@@ -1203,13 +1207,13 @@ namespace SpriteKit {
 	[BaseType (typeof (NSObject))]
 	interface SKRegion : NSCopying, NSSecureCoding {
 		[Export ("initWithRadius:")]
-		IntPtr Constructor (float /* float, not CGFloat */ radius);
+		NativeHandle Constructor (float /* float, not CGFloat */ radius);
 
 		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize size);
+		NativeHandle Constructor (CGSize size);
 
 		[Export ("initWithPath:")]
-		IntPtr Constructor (CGPath path);
+		NativeHandle Constructor (CGPath path);
 
 		[Export ("path")]
 		[NullAllowed]
@@ -1244,7 +1248,7 @@ namespace SpriteKit {
 		SKLabelNode FromFont ([NullAllowed] string fontName);
 
 		[Export ("initWithFontNamed:")]
-		IntPtr Constructor ([NullAllowed] string fontName);
+		NativeHandle Constructor ([NullAllowed] string fontName);
 
 		[iOS (8,0), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[Static, Export ("labelNodeWithText:")]
@@ -1341,11 +1345,11 @@ namespace SpriteKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithFileNamed:")]
-		IntPtr Constructor (string videoFile);
+		NativeHandle Constructor (string videoFile);
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 #else
 		[Static, Export ("videoNodeWithAVPlayer:")]
 		SKVideoNode FromPlayer (AVPlayer player);
@@ -1364,7 +1368,7 @@ namespace SpriteKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithAVPlayer:")]
-		IntPtr Constructor (AVPlayer player);
+		NativeHandle Constructor (AVPlayer player);
 
 		[Export ("initWithVideoFileNamed:"), Internal]
 		IntPtr InitWithVideoFileNamed (string videoFile);
@@ -1459,7 +1463,7 @@ namespace SpriteKit {
 	partial interface SKView {
 #endif
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
@@ -1711,10 +1715,10 @@ namespace SpriteKit {
 	[DisableDefaultCtor] // cannot be created (like SKTexture) by calling `init`
 	interface SKMutableTexture {
 		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize size);
+		NativeHandle Constructor (CGSize size);
 
 		[Export ("initWithSize:pixelFormat:")]
-		IntPtr Constructor (CGSize size, CVPixelFormatType pixelFormat);
+		NativeHandle Constructor (CGSize size, CVPixelFormatType pixelFormat);
 
 		[Static, Export ("mutableTextureWithSize:")]
 		SKMutableTexture Create (CGSize size);
@@ -1768,13 +1772,13 @@ namespace SpriteKit {
 	[BaseType (typeof (NSObject))]
 	interface SKUniform : NSCopying, NSSecureCoding {
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("initWithName:texture:")]
-		IntPtr Constructor (string name, [NullAllowed] SKTexture texture);
+		NativeHandle Constructor (string name, [NullAllowed] SKTexture texture);
 
 		[Export ("initWithName:float:")]
-		IntPtr Constructor (string name, float /* float, not CGFloat */ value);
+		NativeHandle Constructor (string name, float /* float, not CGFloat */ value);
 
 		[Internal]
 		[NoWatch]
@@ -1789,7 +1793,7 @@ namespace SpriteKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[MarshalNativeExceptions]
 #if WATCH
-		IntPtr Constructor (string name, Vector2 value);
+		NativeHandle Constructor (string name, Vector2 value);
 #else
 		[Internal]
 		IntPtr InitWithNameVectorFloat2 (string name, Vector2 value);
@@ -1807,7 +1811,7 @@ namespace SpriteKit {
 		[Export ("initWithName:vectorFloat3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
-		IntPtr Constructor (string name, Vector3 value);
+		NativeHandle Constructor (string name, Vector3 value);
 #else
 		[Internal]
 		IntPtr InitWithNameVectorFloat3 (string name, Vector3 value);
@@ -1825,13 +1829,13 @@ namespace SpriteKit {
 		[Export ("initWithName:vectorFloat4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
-		IntPtr Constructor (string name, Vector4 value);
+		NativeHandle Constructor (string name, Vector4 value);
 #else
 		[Internal]
 		IntPtr InitWithNameVectorFloat4 (string name, Vector4 value);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
@@ -1840,7 +1844,7 @@ namespace SpriteKit {
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -1848,20 +1852,20 @@ namespace SpriteKit {
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
-		IntPtr Constructor (string name, Matrix2 value);
+		NativeHandle Constructor (string name, Matrix2 value);
 #else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
 #endif
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MatrixFloat2x2 value);
+		NativeHandle Constructor (string name, MatrixFloat2x2 value);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
@@ -1876,7 +1880,7 @@ namespace SpriteKit {
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
-		IntPtr Constructor (string name, Matrix3 value);
+		NativeHandle Constructor (string name, Matrix3 value);
 #else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
@@ -1887,9 +1891,9 @@ namespace SpriteKit {
 		[TV (10,0)]
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MatrixFloat3x3 value);
+		NativeHandle Constructor (string name, MatrixFloat3x3 value);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
@@ -1898,7 +1902,7 @@ namespace SpriteKit {
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the '(string, MatrixFloat4x4)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -1906,7 +1910,7 @@ namespace SpriteKit {
 		[Sealed]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
-		IntPtr Constructor (string name, Matrix4 value);
+		NativeHandle Constructor (string name, Matrix4 value);
 #else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
@@ -1917,7 +1921,7 @@ namespace SpriteKit {
 		[TV (10,0)]
 		[Export ("initWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MatrixFloat4x4 value);
+		NativeHandle Constructor (string name, MatrixFloat4x4 value);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1992,7 +1996,7 @@ namespace SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -2001,7 +2005,7 @@ namespace SpriteKit {
 		Matrix2 _FloatMatrix2Value { get; set; }
 #endif
 
-#if !XAMCORE_4_0 && WATCH
+#if !NET && WATCH
 		[Obsolete ("Use 'MatrixFloat2x2Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -2012,7 +2016,7 @@ namespace SpriteKit {
 		}
 #endif
 
-#if !XAMCORE_4_0 && WATCH
+#if !NET && WATCH
 		[Sealed] // The selector is already used in the 'FloatMatrix2x2Value' property.
 #endif
 		[iOS (10,0)][Mac (10,12)]
@@ -2023,7 +2027,7 @@ namespace SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
@@ -2032,7 +2036,7 @@ namespace SpriteKit {
 		Matrix3 _FloatMatrix3Value { get; set; }
 #endif
 
-#if !XAMCORE_4_0 && WATCH
+#if !NET && WATCH
 		[Obsolete ("Use 'MatrixFloat3x3Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -2043,7 +2047,7 @@ namespace SpriteKit {
 		}
 #endif
 
-#if !XAMCORE_4_0 && WATCH
+#if !NET && WATCH
 		[Sealed] // The selector is already used in the 'FloatMatrix3x3Value' property.
 #endif
 		[iOS (10,0)][Mac (10,12)]
@@ -2054,7 +2058,7 @@ namespace SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
@@ -2063,8 +2067,8 @@ namespace SpriteKit {
 		Matrix4 _FloatMatrix4Value { get; set; }
 #endif
 
-#if !XAMCORE_4_0 && WATCH
-		[Obsolete ("Use 'FloatMatrix4x4Value' instead.")]
+#if !NET && WATCH
+		[Obsolete ("Use 'MatrixFloat4x4Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
@@ -2074,7 +2078,7 @@ namespace SpriteKit {
 		}
 #endif
 
-#if !XAMCORE_4_0 && WATCH
+#if !NET && WATCH
 		[Sealed] // The selector is already used in the 'FloatMatrix4x4Value' property.
 #endif
 		[iOS (10,0)][Mac (10,12)]
@@ -2116,7 +2120,7 @@ namespace SpriteKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector4 value);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10, 0)]
@@ -2133,7 +2137,7 @@ namespace SpriteKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, MatrixFloat2x2 value);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the '(string, MatrixFloat3x3)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10, 0)]
@@ -2150,7 +2154,7 @@ namespace SpriteKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, MatrixFloat3x3 value);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'the '(string, MatrixFloat4x4)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10, 0)]
@@ -2950,7 +2954,7 @@ namespace SpriteKit {
 	interface SKRange : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithLowerLimit:upperLimit:")]
-		IntPtr Constructor (nfloat lowerLimit, nfloat upperLimier);
+		NativeHandle Constructor (nfloat lowerLimit, nfloat upperLimier);
 
 		[Export ("lowerLimit")]
 		nfloat LowerLimit { get; set; }
@@ -2985,13 +2989,13 @@ namespace SpriteKit {
 	interface SKAudioNode : NSSecureCoding {
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] AVAudioNode node);
+		NativeHandle Constructor ([NullAllowed] AVAudioNode node);
 
 		[Export ("initWithFileNamed:")]
-		IntPtr Constructor (string fileName);
+		NativeHandle Constructor (string fileName);
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[NullAllowed, Export ("avAudioNode", ArgumentSemantic.Retain)]
 		AVAudioNode AvAudioNode { get; set; }
@@ -3023,11 +3027,11 @@ namespace SpriteKit {
 	interface SKReferenceNode {
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSUrl url);
+		NativeHandle Constructor ([NullAllowed] NSUrl url);
 
 		[Export ("initWithFileNamed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string fileName);
+		NativeHandle Constructor ([NullAllowed] string fileName);
 
 		[Static]
 		[Export ("referenceNodeWithFileNamed:")]
@@ -3055,7 +3059,7 @@ namespace SpriteKit {
 
 		[Export ("initWithName:type:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, SKAttributeType type);
+		NativeHandle Constructor (string name, SKAttributeType type);
 
 		[Export ("name")]
 		string Name { get; }
@@ -3071,7 +3075,7 @@ namespace SpriteKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static]
 		[Export ("valueWithFloat:")]
@@ -3142,19 +3146,19 @@ namespace SpriteKit {
 		SKTileDefinition Create (SKTexture[] textures, SKTexture[] normalTextures, CGSize size, nfloat timePerFrame);
 
 		[Export ("initWithTexture:")]
-		IntPtr Constructor (SKTexture texture);
+		NativeHandle Constructor (SKTexture texture);
 
 		[Export ("initWithTexture:size:")]
-		IntPtr Constructor (SKTexture texture, CGSize size);
+		NativeHandle Constructor (SKTexture texture, CGSize size);
 
 		[Export ("initWithTexture:normalTexture:size:")]
-		IntPtr Constructor (SKTexture texture, SKTexture normalTexture, CGSize size);
+		NativeHandle Constructor (SKTexture texture, SKTexture normalTexture, CGSize size);
 
 		[Export ("initWithTextures:size:timePerFrame:")]
-		IntPtr Constructor (SKTexture[] textures, CGSize size, nfloat timePerFrame);
+		NativeHandle Constructor (SKTexture[] textures, CGSize size, nfloat timePerFrame);
 
 		[Export ("initWithTextures:normalTextures:size:timePerFrame:")]
-		IntPtr Constructor (SKTexture[] textures, SKTexture[] normalTextures, CGSize size, nfloat timePerFrame);
+		NativeHandle Constructor (SKTexture[] textures, SKTexture[] normalTextures, CGSize size, nfloat timePerFrame);
 
 		[Export ("textures", ArgumentSemantic.Copy)]
 		SKTexture[] Textures { get; set; }
@@ -3206,13 +3210,13 @@ namespace SpriteKit {
 		SKTileMapNode Create (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup[] tileGroupLayout);
 
 		[Export ("initWithTileSet:columns:rows:tileSize:")]
-		IntPtr Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize);
+		NativeHandle Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize);
 
 		[Export ("initWithTileSet:columns:rows:tileSize:fillWithTileGroup:")]
-		IntPtr Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup tileGroup);
+		NativeHandle Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup tileGroup);
 
 		[Export ("initWithTileSet:columns:rows:tileSize:tileGroupLayout:")]
-		IntPtr Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup[] tileGroupLayout);
+		NativeHandle Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup[] tileGroupLayout);
 
 		[Export ("numberOfColumns")]
 		nuint NumberOfColumns { get; set; }
@@ -3310,10 +3314,10 @@ namespace SpriteKit {
 		SKTileSet Create (SKTileGroup[] tileGroups, SKTileSetType tileSetType);
 
 		[Export ("initWithTileGroups:")]
-		IntPtr Constructor (SKTileGroup[] tileGroups);
+		NativeHandle Constructor (SKTileGroup[] tileGroups);
 
 		[Export ("initWithTileGroups:tileSetType:")]
-		IntPtr Constructor (SKTileGroup[] tileGroups, SKTileSetType tileSetType);
+		NativeHandle Constructor (SKTileGroup[] tileGroups, SKTileSetType tileSetType);
 
 		[Static]
 		[Export ("tileSetNamed:")]
@@ -3360,10 +3364,10 @@ namespace SpriteKit {
 		SKTileGroup CreateEmpty ();
 
 		[Export ("initWithTileDefinition:")]
-		IntPtr Constructor (SKTileDefinition tileDefinition);
+		NativeHandle Constructor (SKTileDefinition tileDefinition);
 
 		[Export ("initWithRules:")]
-		IntPtr Constructor (SKTileGroupRule[] rules);
+		NativeHandle Constructor (SKTileGroupRule[] rules);
 
 		[Export ("rules", ArgumentSemantic.Copy)]
 		SKTileGroupRule[] Rules { get; set; }
@@ -3383,7 +3387,7 @@ namespace SpriteKit {
 		SKTileGroupRule Create (SKTileAdjacencyMask adjacency, SKTileDefinition[] tileDefinitions);
 
 		[Export ("initWithAdjacency:tileDefinitions:")]
-		IntPtr Constructor (SKTileAdjacencyMask adjacency, SKTileDefinition[] tileDefinitions);
+		NativeHandle Constructor (SKTileAdjacencyMask adjacency, SKTileDefinition[] tileDefinitions);
 
 		[Export ("adjacency", ArgumentSemantic.Assign)]
 		SKTileAdjacencyMask Adjacency { get; set; }

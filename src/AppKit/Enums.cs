@@ -546,12 +546,14 @@ namespace AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
-#if !XAMCORE_4_0
+	// This enum is defined as an untyped enum in MacOSX.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
+	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
 	[NoMacCatalyst]
+#if NET
+	public enum NSKey {
+#else
 	[Native]
 	public enum NSKey : ulong {
-#else
-	public enum NSKey : int
 #endif
 		A              = 0x00,
 		S              = 0x01,
@@ -672,8 +674,9 @@ namespace AppKit {
 		UpArrow        = 0x7E
 	}
 
-#if !XAMCORE_4_0
+	// This is an untyped enum in AppKit's NSEvent.h
 	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSFunctionKey : ulong {
 #else
@@ -865,14 +868,11 @@ namespace AppKit {
 #endregion
 	
 #region NSWindow
+	// This enum is called NSWindowStyleMask in the headers.
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : ulong {
-#else
-	public enum NSWindowStyle : int {
-#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
@@ -881,10 +881,12 @@ namespace AppKit {
 		Utility		       					= 1 << 4,
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
-		[Advice ("'TexturedBackground' should no longer be used.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Don't use 'TexturedBackground' anymore.")]
 		TexturedBackground     				= 1 << 8,
-		[Deprecated (PlatformName.MacOSX, 10, 14)]
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Don't use, this value has no effect.")]
 		Unscaled	       					= 1 << 11,
+#endif
 		UnifiedTitleAndToolbar 				= 1 << 12,
 		Hud		       						= 1 << 13,
 		FullScreenWindow       				= 1 << 14,
@@ -924,12 +926,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : ulong {
-#else
-	public enum NSWindowNumberListOptions : int {
-#endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
 	}
@@ -1336,12 +1334,8 @@ namespace AppKit {
 #endif // !NET && MONOMAC
 
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : long {
-#else
-	public enum NSTextMovement : int {
-#endif
 		Other = 0,
 		Return = 0x10,
 		Tab = 0x11,
@@ -1381,7 +1375,7 @@ namespace AppKit {
 		AsKeyedArchive = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC // Use the one in Foundation instead, only keep this in macOS until XAMCORE_4_0.
+#if !NET && MONOMAC // Use the one in Foundation instead, only keep this in macOS until .NET.
 	[Native]
 	public enum NSUnderlineStyle : long {
 		None                = 0x00,
@@ -1517,19 +1511,17 @@ namespace AppKit {
 		Auto, Fit, Clip
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : ulong {
-#else
-	public enum NSGlyphStorageOptions : int
-#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
@@ -1720,19 +1712,17 @@ namespace AppKit {
 		Default, Regular, Small
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : long {
-#else
-	public enum NSAlertType : int {
-#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
 		DefaultReturn
 	}
+#endif // !NET
 
 #if !XAMCORE_4_0
 	[NoMacCatalyst]
@@ -2187,25 +2177,16 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-#if XAMCORE_4_0
-	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
-	public enum NSOpenGLProfile : long {
-#else
 	public enum NSOpenGLProfile : int {
-#endif
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
 		Version4_1Core  = 0x4100
 	}
 	
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertButtonReturn : long {
-#else
-	public enum NSAlertButtonReturn : int {
-#endif
 		First = 1000,
 		Second = 1001,
 		Third = 1002,
@@ -2713,12 +2694,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSFontPanelMode : ulong {
-#else
-	public enum NSFontPanelMode : int {
-#endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
 		CollectionMask = 1 << 2,

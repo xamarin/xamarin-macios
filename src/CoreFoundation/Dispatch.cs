@@ -38,6 +38,10 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// The native constants are defined in usr/include/dispatch/queue.h, but since they're
@@ -67,11 +71,9 @@ namespace CoreFoundation {
 		// Constructors and lifecycle
 		//
 		[Preserve (Conditional = true)]
-		internal DispatchObject (IntPtr handle, bool owns)
-			: base (handle, owns)
+		internal DispatchObject (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException ("handle");
 		}
 
 		internal DispatchObject ()
@@ -94,27 +96,28 @@ namespace CoreFoundation {
 			dispatch_release (Handle);
 		}
 
+#if !NET
 		public static bool operator == (DispatchObject a, DispatchObject b)
 		{
-			var oa = a as object;
-			var ob = b as object;
-			
-			if (oa == null){
-				if (ob == null)
-					return true;
+			if (a is null)
+				return b is null;
+			else if (b is null)
 				return false;
-			} else {
-				if (ob == null)
-					return false;
-				return a.Handle == b.Handle;
-			}
+
+			return a.Handle == b.Handle;
 		}
 
 		public static bool operator != (DispatchObject a, DispatchObject b)
 		{
-			return !(a == b);
+			if (a is null)
+				return b is not null;
+			else if (b is null)
+				return true;
+			return a.Handle != b.Handle;
 		}
 
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
 		{
 			var od = other as DispatchQueue;
@@ -125,8 +128,9 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
+#endif
 
 #if !XAMCORE_4_0
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -178,13 +182,15 @@ namespace CoreFoundation {
 	public sealed class DispatchQueue : DispatchObject  {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
-		internal DispatchQueue (IntPtr handle, bool owns) : base (handle, owns)
+		internal DispatchQueue (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
-		public DispatchQueue (IntPtr handle) : base (handle, false)
+#if !NET
+		public DispatchQueue (NativeHandle handle) : base (handle, false)
 		{
 		}
+#endif
 		
 		public DispatchQueue (string label)
 			: base (dispatch_queue_create (label, IntPtr.Zero), true)
@@ -575,6 +581,9 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
 
+#if !NET
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
 		{
 			DispatchQueue o = other as DispatchQueue;
@@ -582,7 +591,9 @@ namespace CoreFoundation {
 				return false;
 			return (o.Handle == Handle);
 		}
+#endif
 
+#if !NET
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
 		{
 			if ((object) left == null)
@@ -599,8 +610,9 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
+#endif
 		
 #if MONOMAC
 		//
@@ -756,7 +768,8 @@ namespace CoreFoundation {
 	public class DispatchGroup : DispatchObject
 	{
 #if !COREBUILD
-		private DispatchGroup (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		private DispatchGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

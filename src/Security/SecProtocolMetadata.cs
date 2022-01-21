@@ -17,6 +17,10 @@ using Security;
 using sec_protocol_metadata_t=System.IntPtr;
 using dispatch_queue_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 #if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
@@ -26,11 +30,14 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecProtocolMetadata : NativeObject {
-		internal SecProtocolMetadata (IntPtr handle) : base (handle, false) {}
+#if !NET
+		internal SecProtocolMetadata (NativeHandle handle) : base (handle, false) {}
+#endif
 
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public[tv
-		internal SecProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal SecProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 #if !COREBUILD
 		[DllImport (Constants.SecurityLibrary)]
