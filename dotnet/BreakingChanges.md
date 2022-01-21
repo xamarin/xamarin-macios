@@ -97,3 +97,23 @@ The following types:
 were moved from the CoreServices namespace to the CFNetwork namespace.
 
 This requires adding a `using CFNetwork;` statement to any files that uses these types.
+
+## Numerous types in ModelIO have corrected their API
+
+When we originally implemented ModelIO, we didn't notice at first that some of
+the matrix types Apple used had a column-major layout, so we accidentally
+bound many API with the wrong matrix type (with a row-major layout). This was
+troublesome, because many matrices had to be transposed for code to work
+correctly. We re-implemented all the API with the correct matrix type, but
+named differently (and worse). In .NET we've removed all the incorrectly bound
+API, and we've renamed the correctly bound API to use the best name (usually
+reflecting how Apple named these APIs).
+
+This affects methods and properties on the following classes:
+
+* MDLCamera
+* MDLMaterialProperty
+* MDLStereoscopicCamera
+* MDLTransform
+* MDLTransformComponent
+
