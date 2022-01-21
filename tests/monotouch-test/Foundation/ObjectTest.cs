@@ -269,8 +269,13 @@ namespace MonoTouchFixtures.Foundation {
 				using (var observer = o.AddObserver ("frame", NSKeyValueObservingOptions.OldNew, change => {
 					var old = ((NSValue) change.OldValue).CGRectValue;
 					var @new = ((NSValue) change.NewValue).CGRectValue;
+#if NET
+					Assert.AreEqual ("{{0, 0}, {0, 0}}", old.ToString (), "#old");
+					Assert.AreEqual ("{{0, 0}, {123, 234}}", @new.ToString (), "#new");
+#else
 					Assert.AreEqual ("{X=0,Y=0,Width=0,Height=0}", old.ToString (), "#old");
 					Assert.AreEqual ("{X=0,Y=0,Width=123,Height=234}", @new.ToString (), "#new");
+#endif
 					observed = true;
 				})) {
 					o.Frame = new CGRect (0, 0, 123, 234);

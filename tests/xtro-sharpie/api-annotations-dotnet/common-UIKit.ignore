@@ -62,10 +62,6 @@
 !missing-pinvoke! CGPointFromString is not bound
 !missing-pinvoke! CGRectFromString is not bound
 !missing-pinvoke! CGSizeFromString is not bound
-!missing-pinvoke! NSStringFromCGAffineTransform is not bound
-!missing-pinvoke! NSStringFromCGPoint is not bound
-!missing-pinvoke! NSStringFromCGRect is not bound
-!missing-pinvoke! NSStringFromCGSize is not bound
 !missing-pinvoke! NSStringFromUIOffset is not bound
 !missing-pinvoke! UIOffsetFromString is not bound
 
