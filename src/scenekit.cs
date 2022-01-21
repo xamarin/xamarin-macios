@@ -45,7 +45,7 @@ using CoreAnimation;
 using CoreImage;
 #endif
 
-#if WATCH || XAMCORE_4_0
+#if WATCH || NET
 using AnimationType = global::SceneKit.ISCNAnimationProtocol;
 #else
 using AnimationType = global::CoreAnimation.CAAnimation;
@@ -119,7 +119,7 @@ namespace SceneKit {
 	[iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
 
-#if XAMCORE_4_0
+#if NET
 	delegate void SCNAnimationDidStartHandler (SCNAnimation animation, ISCNAnimatable receiver);
 #else
 	[Obsolete ("Use 'SCNAnimationDidStartHandler2' instead.")]
@@ -128,7 +128,7 @@ namespace SceneKit {
 	delegate void SCNAnimationDidStartHandler2 (SCNAnimation animation, ISCNAnimatable receiver);
 #endif
 
-#if XAMCORE_4_0
+#if NET
 	delegate void SCNAnimationDidStopHandler (SCNAnimation animation, ISCNAnimatable receiver, bool completed);
 #else
 	[Obsolete ("Use 'SCNAnimationDidStopHandler2' instead.")]
@@ -147,7 +147,7 @@ namespace SceneKit {
 		[Abstract]
 		[NoWatch]
 		[Export ("addAnimation:forKey:")]
-#if !XAMCORE_4_0
+#if !NET
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #else
 		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
@@ -1159,7 +1159,7 @@ namespace SceneKit {
 		[Field ("SCNHitTestOptionCategoryBitMask")]
 		NSString OptionCategoryBitMaskKey { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Obsolete ("Use 'SearchModeKey' instead.")]
 		[Field ("SCNHitTestOptionSearchMode")]
@@ -2467,7 +2467,7 @@ namespace SceneKit {
 
 		[Export ("semanticForSymbol:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSString GetSemantic (string symbol);
 #else
 		NSString GetSemanticForSymbol (string symbol);
@@ -3044,7 +3044,7 @@ namespace SceneKit {
 		bool JitteringEnabled { [Bind ("isJitteringEnabled")] get; set;  }
 
 		[Abstract]
-#if XAMCORE_4_0
+#if NET
 		[Unavailable (PlatformName.WatchOS)]
 #else
 		[Obsoleted (PlatformName.WatchOS, 6, 0, message: "API removed, please do not use.")]
@@ -3561,7 +3561,7 @@ namespace SceneKit {
 		bool DrawableResizesAsynchronously { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[Mac (10,9), iOS (8,0), Watch (4,0)]
 	delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
 #endif
@@ -3572,7 +3572,7 @@ namespace SceneKit {
 	[DisableDefaultCtor]
 	interface SCNAnimationEvent {
 
-#if XAMCORE_4_0
+#if NET
 		[Static, Export ("animationEventWithKeyTime:block:")]
 		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
 #else
@@ -3879,7 +3879,7 @@ namespace SceneKit {
 		SCNActionTimingMode TimingMode { get; set; }
 
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
-#if XAMCORE_4_0
+#if NET
 		Func<float,float> TimingFunction { get; set; }
 #else
 		Func<float,float> TimingFunction2 { get; set; }
@@ -5161,7 +5161,7 @@ namespace SceneKit {
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
 	
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
 		SCNAnimationDidStartHandler2 AnimationDidStart2 { get; set; }
@@ -5171,7 +5171,7 @@ namespace SceneKit {
 		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
 		SCNAnimationDidStartHandler AnimationDidStart { get; set; }
 	
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
 		SCNAnimationDidStopHandler2 AnimationDidStop2 { get; set; }
