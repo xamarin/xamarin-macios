@@ -21,13 +21,25 @@
     #error Unknown MONOTOUCH product
   #endif
   #if TARGET_OS_WATCH
-	#define PRODUCT_DUAL_ASSEMBLY    "Xamarin.WatchOS.dll"
+    #if DOTNET
+	    #define PRODUCT_DUAL_ASSEMBLY    "Microsoft.watchOS.dll"
+    #else
+      #define PRODUCT_DUAL_ASSEMBLY    "Xamarin.WatchOS.dll"
+    #endif
   #elif TARGET_OS_MACCATALYST
-  #define PRODUCT_DUAL_ASSEMBLY    "Xamarin.MacCatalyst.dll"
+    #define PRODUCT_DUAL_ASSEMBLY    "Microsoft.MacCatalyst.dll"
   #elif TARGET_OS_IOS
-	#define PRODUCT_DUAL_ASSEMBLY    "Xamarin.iOS.dll"
+    #if DOTNET
+	    #define PRODUCT_DUAL_ASSEMBLY    "Microsoft.iOS.dll"
+    #else
+      #define PRODUCT_DUAL_ASSEMBLY    "Xamarin.iOS.dll"
+    #endif
   #elif TARGET_OS_TV
-    #define PRODUCT_DUAL_ASSEMBLY    "Xamarin.TVOS.dll"
+    #if DOTNET
+      #define PRODUCT_DUAL_ASSEMBLY    "Microsoft.tvOS.dll"
+    #else
+      #define PRODUCT_DUAL_ASSEMBLY    "Xamarin.TVOS.dll"
+    #endif
   #else
     #error Unknown MONOTOUCH product for dual assembly
   #endif
@@ -40,7 +52,11 @@
 
 #elif MONOMAC
 	#define PRODUCT                  "Xamarin.Mac"
-	#define PRODUCT_DUAL_ASSEMBLY    "Xamarin.Mac.dll"
+  #if DOTNET
+	  #define PRODUCT_DUAL_ASSEMBLY    "Microsoft.macOS.dll"
+  #else
+    #define PRODUCT_DUAL_ASSEMBLY    "Xamarin.Mac.dll"
+  #endif
 	#define PRODUCT_EXCEPTION_TYPE   "ObjCException"
 	#define ARCH_SUBDIR				
 #else

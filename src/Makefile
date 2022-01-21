@@ -232,8 +232,8 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		@$(BUILD_DIR)/ios-defines.rsp \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
-$(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%pdb $(2): $$(IOS_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
-	$$(call Q_PROF_CSC,dotnet/$(1)-bit) $(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS.dll -unsafe -optimize \
+$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%pdb $(2): $$(IOS_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
+	$$(call Q_PROF_CSC,dotnet/$(1)-bit) $(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS.dll -unsafe -optimize \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		$(3) \
@@ -254,7 +254,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%: $(IOS_BUILD_DIR)/compat/%
 	$(Q) $(CP) $< $@
 
 $(eval $(call IOS_TARGETS_template,32))
-$(eval $(call IOS_TARGETS_template,64,$(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS%dll,-refout:$(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll,$(IOS_BUILD_DIR)/reference%Xamarin.iOS.dll,-refout:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll))
+$(eval $(call IOS_TARGETS_template,64,$(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS%dll,-refout:$(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll,$(IOS_BUILD_DIR)/reference%Xamarin.iOS.dll,-refout:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll))
 
 # MonoTouch.Dialog-1
 $(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.dll | $(IOS_BUILD_DIR)/reference
@@ -331,12 +331,12 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.pdb               \
 
 DOTNET_TARGETS += \
-	$(IOS_DOTNET_BUILD_DIR)/32/Xamarin.iOS.dll \
-	$(IOS_DOTNET_BUILD_DIR)/64/Xamarin.iOS.dll \
-	$(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/net6.0/Xamarin.iOS.dll \
-	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.dll) \
-	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.pdb) \
+	$(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll \
+	$(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.dll \
+	$(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll \
+	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/net6.0/Microsoft.iOS.dll \
+	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.iOS.dll) \
+	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.iOS.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(IOS_DOTNET_BUILD_DIR) \
@@ -372,7 +372,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.pdb: $(IOS_BUILD_DIR)/r
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.config: $(IOS_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
 	$(Q) install -m 0644 $< $@
 
-$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/net6.0/Xamarin.iOS.dll: $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll | $(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/net6.0
+$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/net6.0/Microsoft.iOS.dll: $(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll | $(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/net6.0
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
@@ -388,16 +388,16 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.dll: $(IOS_BUILD_DI
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS
 	$(Q) install -m 0644 $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/32/Xamarin.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/32/Xamarin.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/64/Xamarin.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/64/Xamarin.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
 $(IOS_TARGETS_DIRS):
@@ -577,7 +577,7 @@ $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.
 	@mkdir -p $(@D)
 	$(Q) $(CP) $^ $@
 
-$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0/Xamarin.Mac.dll: $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac.dll | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0
+$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0/Microsoft.macOS.dll: $(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS.dll | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0
 	$(Q) $(CP) $< $@
 
 ### .NET ###
@@ -607,11 +607,11 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 		@$(DOTNET_BUILD_DIR)/macos-defines-dotnet.rsp \
 		> $@
 
-$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MACOS_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
+$(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS%dll $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MACOS_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_BUILD) \
-		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.dll -optimize \
 		-publicsign -keyfile:$(SN_KEY) \
-		-refout:$(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac.dll \
+		-refout:$(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS.dll \
 		$(MAC_COMMON_DEFINES) \
 		$(ARGS_64) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX),$(WARNINGS_TO_IGNORE) \
@@ -625,11 +625,11 @@ $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamari
 
 ifdef INCLUDE_MAC
 DOTNET_TARGETS += \
-	$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll \
-	$(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac.dll \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0/Xamarin.Mac.dll \
-	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.Mac.dll) \
-	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.Mac.pdb) \
+	$(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.dll \
+	$(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS.dll \
+	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0/Microsoft.macOS.dll \
+	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.macOS.dll) \
+	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.macOS.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(MACOS_DOTNET_BUILD_DIR) \
@@ -723,10 +723,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.pdb: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
 	$(Q) ln -sF ../../reference/full/$(@F) $@
 
-$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.Mac.dll): $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.macOS.dll): $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.dll | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.Mac.pdb): $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.pdb | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.macOS.pdb): $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.pdb | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc: $(TOP)/Make.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig
@@ -1148,11 +1148,11 @@ $(TVOS_DOTNET_BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.source
 		@$(DOTNET_BUILD_DIR)/tvos-defines-dotnet.rsp \
 		> $@
 
-$(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
+$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
-		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		-refout:$(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS.dll \
+		-refout:$(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS.dll \
 		$(TVOS_DEFINES) \
 		$(ARGS_64) \
 		$(TVOS_WARNINGS_TO_FIX) \
@@ -1320,11 +1320,11 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator fra
 		@$(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp \
 		> $@
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
+$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
-		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		-refout:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll \
+		-refout:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst.dll \
 		$(MACCATALYST_DEFINES) \
 		$(ARGS_64) \
 		$(MACCATALYST_WARNINGS_TO_FIX) \
@@ -1347,11 +1347,11 @@ MACCATALYST_TARGETS_DIRS +=                                                 \
 
 ifdef INCLUDE_MACCATALYST
 DOTNET_TARGETS += \
-	$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll \
-	$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll \
-	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0/Xamarin.MacCatalyst.dll \
-	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.dll) \
-	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.pdb) \
+	$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll \
+	$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst.dll \
+	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0/Microsoft.MacCatalyst.dll \
+	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.MacCatalyst.dll) \
+	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.MacCatalyst.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR) \
@@ -1367,10 +1367,10 @@ endif
 $(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0/%.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/%.dll | $(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.dll): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.MacCatalyst.dll): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.pdb): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.pdb | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.MacCatalyst.pdb): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.pdb | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
 $(MACCATALYST_TARGETS_DIRS):
@@ -1380,11 +1380,11 @@ $(MACCATALYST_TARGETS_DIRS):
 
 ifdef INCLUDE_TVOS
 DOTNET_TARGETS += \
-	$(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll \
-	$(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS.dll \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0/Xamarin.TVOS.dll \
-	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.TVOS.dll) \
-	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.TVOS.pdb) \
+	$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll \
+	$(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS.dll \
+	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0/Microsoft.tvOS.dll \
+	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.tvOS.dll) \
+	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.tvOS.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(TVOS_DOTNET_BUILD_DIR) \
@@ -1406,7 +1406,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(TVOS_BUILD_DIR)
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.config: $(TVOS_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
 	$(Q) install -m 0644 $< $@
 
-$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0/Xamarin.TVOS.dll: $(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS.dll | $(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0
+$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0/Microsoft.tvOS.dll: $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS.dll | $(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
@@ -1416,10 +1416,10 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.dll: $(TVOS_BUILD
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS
 	$(Q) install -m 0644 $< $@
 
-$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.TVOS.dll): $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.tvOS.dll): $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.TVOS.pdb): $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.pdb | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
+$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Microsoft.tvOS.pdb): $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.pdb | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
 
 $(TVOS_TARGETS_DIRS):

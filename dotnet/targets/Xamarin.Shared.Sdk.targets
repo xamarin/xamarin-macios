@@ -99,11 +99,7 @@
 	
 	<PropertyGroup>
 		<!-- Add a property that specifies the name of the platform assembly for each platform -->
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'MacCatalyst' ">Xamarin.MacCatalyst</_PlatformAssemblyName>
+		<_PlatformAssemblyName>Microsoft.$(_PlatformName)</_PlatformAssemblyName>
 
 		<!-- We have to set DebuggerSupport before importing Microsoft.NET.Sdk -->
 		<!-- That means we have to set _BundlerDebug before that, because DebuggerSupport depends on it -->
