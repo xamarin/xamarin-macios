@@ -138,6 +138,7 @@ jobs:
       runDeviceTests: false
       uploadBinlogs: false
       signAndNotarize: false
+      skipPackages: true
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
