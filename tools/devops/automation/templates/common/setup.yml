@@ -1,4 +1,4 @@
-# Template that does all the bolier plate needed to build and execute tests on macOS bots
+# Template that does all the boiler plate needed to build and execute tests on macOS bots
 
 parameters:
 
