@@ -27,6 +27,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 
 using Foundation; 
 using ObjCRuntime;
@@ -135,8 +136,15 @@ namespace CoreAnimation {
 			}
 		}
 #endif
-#if !NET
-		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#if NET
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
+		[iOS (10,0)]
 #endif
 		public CAContentsFormat ContentsFormat {
 			get { return CAContentsFormatExtensions.GetValue (_ContentsFormat); }

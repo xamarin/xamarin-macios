@@ -85,20 +85,26 @@ namespace CoreGraphics {
 		public bool? AllowsCopying { get; set; }
 		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
-#if !NET
-		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
 #endif
 		public bool? CreateLinearizedPdf { get; set; }
-#if !NET
-		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
 #endif
 		public bool? CreatePdfA2u { get; set; }
 
@@ -293,43 +299,43 @@ namespace CoreGraphics {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextBeginTag (/* CGContextRef* */ IntPtr context, CGPdfTagType tagType, /* CFDictionaryRef* _Nullable */ IntPtr tagProperties);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		public void BeginTag (CGPdfTagType tagType, NSDictionary tagProperties)
 		{
 			CGPDFContextBeginTag (Handle, tagType, tagProperties.GetHandle ());
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		public void BeginTag (CGPdfTagType tagType, CGPdfTagProperties tagProperties)
 		{
@@ -337,28 +343,28 @@ namespace CoreGraphics {
 			CGPDFContextBeginTag (Handle, tagType, d.GetHandle ());
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextEndTag (/* CGContextRef* */ IntPtr context);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		public void EndTag ()
 		{

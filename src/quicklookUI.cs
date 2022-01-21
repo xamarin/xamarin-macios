@@ -54,7 +54,7 @@ namespace QuickLookUI {
 		[Abstract]
 #endif
 		[Export ("previewItemURL")]
-#if XAMCORE_4_0
+#if NET
 		NSUrl PreviewItemUrl { get; }
 #else
 		NSUrl PreviewItemURL { get; }
