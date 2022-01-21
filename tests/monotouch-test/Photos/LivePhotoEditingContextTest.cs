@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.Photos {
 			using (var lpec = new PHLivePhotoEditingContext (cei)) {
 				// not much but it means the linker cannot remove it
 #if NET
-				Assert.Null (lpec.FrameProcessor, "FrameProcessor2");
+				Assert.Null (lpec.FrameProcessor, "FrameProcessor");
 #else
 				Assert.Null (lpec.FrameProcessor2, "FrameProcessor2");
 #endif
