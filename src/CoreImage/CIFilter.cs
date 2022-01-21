@@ -108,6 +108,7 @@
 //
 using System;
 using System.Diagnostics;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -121,7 +122,9 @@ using UIKit;
 namespace CoreImage {
 	public partial class CIFilter {
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		protected CIFilter () : base ()
