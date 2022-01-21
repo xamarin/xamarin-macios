@@ -27,6 +27,14 @@ parameters:
   type: boolean
   default: true
 
+- name: uploadBinlogs
+  type: boolean
+  default: true
+
+- name: signAndNotarize
+  type: boolean
+  default: true
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -384,11 +392,13 @@ steps:
 - ${{ if eq(parameters.enableDotnet, true) }}:
   - template: build-nugets.yml
 
-# only sign an notarize in no PR executions
-- template: sign-and-notarized.yml
-  parameters:
-    enableDotnet: ${{ parameters.enableDotnet }}
-    keyringPass: ${{ parameters.keyringPass }}
+
+- ${{ if eq(parameters.signAndNotarize, true) }}:
+  # only sign an notarize in no PR executions
+  - template: sign-and-notarized.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
+      keyringPass: ${{ parameters.keyringPass }}
 
 # publish nugets (must be done after signing)
 - ${{ if eq(parameters.enableDotnet, true) }}:
@@ -563,23 +573,25 @@ steps:
   displayName: 'Remove git creds store'
   condition: always()
 
-# Copy all the binlogs to a separate directory, keeping directory structure.
-- script: |
-    set -x
-    mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
-    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
-  displayName: Copy all binlogs
-  continueOnError: true
-  condition: succeededOrFailed()
 
-# Publish all the binlogs we collected in the previous step
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: All binlogs'
-  inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-    artifactName: all-binlogs
-  continueOnError: true
-  condition: succeededOrFailed()
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- ${{ if eq(parameters.uploadBinlogs, true) }}:
+  - script: |
+      set -x
+      mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+      rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+    displayName: Copy all binlogs
+    continueOnError: true
+    condition: succeededOrFailed()
+
+  # Publish all the binlogs we collected in the previous step
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: All binlogs'
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
+      artifactName: all-binlogs
+    continueOnError: true
+    condition: succeededOrFailed()
 
 - template: ../common/mac-agent-logs.yml
   parameters:
