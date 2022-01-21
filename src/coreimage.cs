@@ -302,7 +302,11 @@ namespace CoreImage {
 		[Export ("createCGImage:fromRect:format:colorSpace:")]
 		[return: Release ()]
 		[return: NullAllowed]
+#if NET
+		CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat /* CIFormat = int */ ciImageFormat, [NullAllowed] CGColorSpace colorSpace);
+#else
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, int /* CIFormat = int */ ciImageFormat, [NullAllowed] CGColorSpace colorSpace);
+#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]

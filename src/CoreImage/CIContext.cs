@@ -221,10 +221,12 @@ namespace CoreImage {
 			return FromOptions (options?.Dictionary);
 		}
 		
+#if !NET
 		public CGImage? CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace? colorSpace)
 		{
 			return CreateCGImage (image, fromRect, CIImage.CIFormatToInt (ciImageFormat), colorSpace);
 		}
+#endif
 #endif
 	}
 }

@@ -53,7 +53,11 @@ namespace MonoTouchFixtures.CoreImage {
 					Assert.AreEqual (1, rc, "CreateCGImage #a1");
 				}
 
+#if NET
+				using (var v = ctx.CreateCGImage (img, new CGRect (0, 0, 32, 32), CIFormat.ARGB8, null)) {
+#else
 				using (var v = ctx.CreateCGImage (img, new CGRect (0, 0, 32, 32), CIImage.FormatARGB8, null)) {
+#endif
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #b1");
 				}
