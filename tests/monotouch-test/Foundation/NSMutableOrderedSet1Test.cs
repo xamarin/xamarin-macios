@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSMutableOrderedSet Generic support
 //
 // Authors:

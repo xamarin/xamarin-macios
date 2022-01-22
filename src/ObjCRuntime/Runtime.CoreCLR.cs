@@ -45,6 +45,7 @@ namespace ObjCRuntime {
 			Foundation_NSString,
 			Foundation_NSValue,
 			ObjCRuntime_INativeObject,
+			ObjCRuntime_NativeHandle,
 		}
 
 		// Keep in sync with XamarinExceptionType in main.h
@@ -233,6 +234,9 @@ namespace ObjCRuntime {
 			case TypeLookup.ObjCRuntime_INativeObject:
 				rv = typeof (ObjCRuntime.INativeObject).IsAssignableFrom (type);
 				break;
+			case TypeLookup.ObjCRuntime_NativeHandle:
+				rv = typeof (ObjCRuntime.NativeHandle).IsAssignableFrom (type);
+				break;
 			default:
 				throw new ArgumentOutOfRangeException (nameof (type));
 			}
@@ -405,6 +409,12 @@ namespace ObjCRuntime {
 		{
 			var asm = (Assembly) GetGCHandleTarget (gchandle);
 			return Marshal.StringToHGlobalAuto (Path.GetFileName (asm.Location));
+		}
+
+		static IntPtr GetAssemblyLocation (IntPtr gchandle)
+		{
+			var asm = (Assembly) GetGCHandleTarget (gchandle);
+			return Marshal.StringToHGlobalAuto (asm.Location);
 		}
 
 		static void SetFlagsForNSObject (IntPtr gchandle, byte flags)

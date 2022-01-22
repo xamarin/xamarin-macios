@@ -1,4 +1,4 @@
-﻿namespace Xharness {
+namespace Xharness {
 	public enum TestPlatform {
 		None,
 		All,

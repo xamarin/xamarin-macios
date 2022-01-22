@@ -1,0 +1,9 @@
+## fails in introspection tests
+!missing-selector! PKPass::icon not bound
+
+## type won't load, no documentation about its usage
+!missing-selector! PKIssuerProvisioningExtensionHandler::generateAddPaymentPassRequestForPassEntryWithIdentifier:configuration:certificateChain:nonce:nonceSignature:completionHandler: not bound
+!missing-selector! PKIssuerProvisioningExtensionHandler::passEntriesWithCompletion: not bound
+!missing-selector! PKIssuerProvisioningExtensionHandler::remotePassEntriesWithCompletion: not bound
+!missing-selector! PKIssuerProvisioningExtensionHandler::statusWithCompletion: not bound
+!missing-type! PKIssuerProvisioningExtensionHandler not bound

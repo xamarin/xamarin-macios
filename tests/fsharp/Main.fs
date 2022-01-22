@@ -1,4 +1,4 @@
-﻿namespace Test
+namespace fsharp
 
 open UIKit
 
@@ -7,7 +7,7 @@ open UIKit
 module Main = 
     [<EntryPoint>]
     let main args = 
-        UIApplication.Main(args, null, "AppDelegate")
+        UIApplication.Main(args, null, typedefof<AppDelegate>)
         0
 
 #endif

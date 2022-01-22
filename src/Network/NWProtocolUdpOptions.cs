@@ -14,12 +14,23 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using Security;
+using System.Runtime.Versioning;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWProtocolUdpOptions : NWProtocolOptions {
-		internal NWProtocolUdpOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolUdpOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) {}
 

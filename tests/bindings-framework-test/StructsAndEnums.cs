@@ -21,4 +21,3 @@ namespace Bindings.Test
 		public void Bar (System.Drawing.Color color) { }
 	}
 }
-

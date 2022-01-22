@@ -33,6 +33,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -70,7 +71,13 @@ namespace AudioToolbox {
 		EnqueueDuringReset   = -66632,
 		InvalidOfflineMode   = -66626,
 		BufferEnqueuedTwice  = -66666,
-		[iOS (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		CannotStartYet       = -66665,
 		
 		// There is countless of not well documented error codes returned
@@ -234,7 +241,7 @@ namespace AudioToolbox {
 		EndOfStream        = (1 << 9),
 	}
 	
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioQueueBuffer {
 		public uint AudioDataBytesCapacity;
 		public IntPtr AudioData;
@@ -257,7 +264,7 @@ namespace AudioToolbox {
 		}
 	}
 
-	[StructLayout(LayoutKind.Explicit)]
+	[StructLayout (LayoutKind.Explicit)]
 	public struct AudioQueueParameterEvent {
 		[FieldOffset(0)]
 		[Advice ("Use Parameter.")]
@@ -277,13 +284,13 @@ namespace AudioToolbox {
 		}
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioQueueLevelMeterState {
 		public float AveragePower;
 		public float PeakPower;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioQueueChannelAssignment
 	{
 		IntPtr deviceUID; // CFString
@@ -739,7 +746,7 @@ namespace AudioToolbox {
 
 		Hashtable listeners;
 		
-		[MonoPInvokeCallback(typeof(AudioQueuePropertyListenerProc))]
+		[MonoPInvokeCallback (typeof(AudioQueuePropertyListenerProc))]
 		static void property_changed (IntPtr userData, IntPtr AQ, AudioQueueProperty id)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (userData);
@@ -1263,7 +1270,7 @@ namespace AudioToolbox {
 							    IntPtr userData, IntPtr cfrunLoop_callbackRunloop, IntPtr cfstr_runMode,
 							    uint flags, out IntPtr audioQueue);
 
-		[MonoPInvokeCallback(typeof(AudioQueueOutputCallback))]
+		[MonoPInvokeCallback (typeof(AudioQueueOutputCallback))]
 		static void output_callback (IntPtr userData, IntPtr AQ, IntPtr audioQueueBuffer)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (userData);
@@ -1348,7 +1355,7 @@ namespace AudioToolbox {
 	public class InputAudioQueue : AudioQueue {
 		static unsafe readonly AudioQueueInputCallback dInputCallback = input_callback;
 
-		[MonoPInvokeCallback(typeof(AudioQueueInputCallback))]
+		[MonoPInvokeCallback (typeof(AudioQueueInputCallback))]
 		unsafe static void input_callback (IntPtr userData, IntPtr AQ, IntPtr audioQueueBuffer,
 					    AudioTimeStamp *startTime, int descriptors, IntPtr inPacketDesc)
 		{

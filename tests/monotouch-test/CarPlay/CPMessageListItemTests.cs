@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CPMessageListItem
 //
 // Authors:
@@ -14,6 +14,7 @@ using NUnit.Framework;
 using CarPlay;
 using Foundation;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CarPlay {
 
@@ -26,7 +27,7 @@ namespace MonoTouchFixtures.CarPlay {
 		{
 			TestRuntime.AssertXcodeVersion (12, 0);
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

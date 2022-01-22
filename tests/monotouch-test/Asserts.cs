@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 #if !__WATCHOS__
 using ModelIO;
 using MetalPerformanceShaders;
@@ -640,4 +640,3 @@ public static class Asserts
 	}
 #endregion
 }
-

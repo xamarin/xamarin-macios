@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace MySceneKitLibrary
 {
     public class MyClass

@@ -174,6 +174,8 @@ namespace PassKit {
 		Contribute = 14,
 		[iOS (14,0)]
 		Tip = 15,
+		[Mac (12,0), iOS (15,0), Watch (8,0)]
+		Continue = 16,
 	}
 
 	[Mac (11,0)]
@@ -221,7 +223,8 @@ namespace PassKit {
 		Debit,
 		Credit,
 		Prepaid,
-		Store
+		Store,
+		EMoney,
 	}
 
 	[Mac (11,0)]
@@ -252,6 +255,8 @@ namespace PassKit {
 		ShippingContactInvalid = 1,
 		BillingContactInvalid,
 		ShippingAddressUnserviceable,
+		CouponCodeInvalid,
+		CouponCodeExpired,
 	}
 
 	[iOS (12,0)]

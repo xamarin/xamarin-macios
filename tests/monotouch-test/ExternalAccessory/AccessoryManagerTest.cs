@@ -14,6 +14,7 @@ using Foundation;
 using ExternalAccessory;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ExternalAccessory {
 
@@ -43,7 +44,7 @@ namespace MonoTouchFixtures.ExternalAccessory {
 		public void ShowBluetoothAccessoryPicker ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 			EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPicker (null, null);
 		}
 #endif

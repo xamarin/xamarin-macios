@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CFNotificationCenter
 //
 // Authors:
@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			using (var dummy = CreateDummy ()) {
 				var rc = CFGetRetainCount (dummy.Handle);
-				using (var clone = new CFPropertyList (dummy.Handle)) {
+				using (var clone = Runtime.GetINativeObject<CFPropertyList> (dummy.Handle, false)) {
 					Assert.AreEqual (clone.Handle, dummy.Handle, "Handle 1");
 					Assert.AreEqual (rc + 1, CFGetRetainCount (clone.Handle), "RC 1");
 				}
@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 			using (var dummy = CreateDummy ()) {
 				var rc = CFGetRetainCount (dummy.Handle);
-				using (var clone = new CFPropertyList (dummy.Handle, false)) {
+				using (var clone = Runtime.GetINativeObject<CFPropertyList> (dummy.Handle, false)) {
 					Assert.AreEqual (clone.Handle, dummy.Handle, "Handle 2");
 					Assert.AreEqual (rc + 1, CFGetRetainCount (clone.Handle), "RC 2");
 				}
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (var dummy = CreateDummy ()) {
 				CFRetain (dummy.Handle);
 				var rc = CFGetRetainCount (dummy.Handle);
-				using (var clone = new CFPropertyList (dummy.Handle, true)) {
+				using (var clone = Runtime.GetINativeObject<CFPropertyList> (dummy.Handle, true)) {
 					Assert.AreEqual (clone.Handle, dummy.Handle, "Handle 3");
 					Assert.AreEqual (rc, CFGetRetainCount (clone.Handle), "RC 3");
 				}

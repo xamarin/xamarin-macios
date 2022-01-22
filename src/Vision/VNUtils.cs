@@ -1,4 +1,4 @@
-﻿//
+//
 // VNUtils.cs
 //
 // Authors:
@@ -53,6 +53,50 @@ namespace Vision {
 
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedRectForImageRect")]
 		public static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.VisionLibrary, EntryPoint="VNImagePointForNormalizedPointUsingRegionOfInterest")]
+		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.VisionLibrary, EntryPoint="VNNormalizedPointForImagePointUsingRegionOfInterest")]
+		public static extern CGPoint GetNormalizedPoint (CGPoint imagePoint, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.VisionLibrary, EntryPoint="VNImageRectForNormalizedRectUsingRegionOfInterest")]
+		public static extern CGRect GetImageRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.VisionLibrary, EntryPoint="VNNormalizedRectForImageRectUsingRegionOfInterest")]
+		public static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 		[DllImport ("__Internal", EntryPoint = "xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string")]
 		static extern CGPoint VNNormalizedFaceBoundingBoxPointForLandmarkPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight, out IntPtr error);

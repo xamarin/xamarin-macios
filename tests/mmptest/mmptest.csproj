@@ -39,7 +39,7 @@
       <Aliases>global,mmp</Aliases>
       <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\mmp.exe</HintPath>
     </Reference>
-    <PackageReference Include="Mono.Cecil" Version="0.11.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.500" />
   </ItemGroup>
   <ItemGroup>

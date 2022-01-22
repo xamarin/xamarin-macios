@@ -565,7 +565,7 @@ namespace Xamarin.iOS.Tasks
 		public void DetectAppManifest_ExecutableProject ()
 		{
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest);
-			Assert.IsFalse (string.IsNullOrEmpty(MonoTouchProjectInstance.GetPropertyValue ("_AppManifest")), "#1");
+			Assert.That (MonoTouchProjectInstance.GetPropertyValue ("AppBundleManifest"), Is.Not.Null.And.Not.Empty, "#1");
 		}
 
 		[Test]
@@ -574,7 +574,7 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance.RemoveItems ("None");
 
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest, expectedErrorCount: 1);
-			Assert.That (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), Is.Null.Or.Empty, "#1");
+			Assert.That (MonoTouchProjectInstance.GetPropertyValue ("AppBundleManifest"), Is.Null.Or.Empty, "#1");
 		}
 
 		[Test]
@@ -586,7 +586,7 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance.AddItem ("None", "Info.plist");
 
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest);
-			Assert.AreEqual ("Info.plist", MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.AreEqual ("Info.plist", MonoTouchProjectInstance.GetPropertyValue ("AppBundleManifest"), "#1");
 		}
 
 		[Test]
@@ -599,7 +599,7 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance.AddItem ("None", linkedPlist, new Dictionary<string, string> { { "Link", "Info.plist" } });
 
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest);
-			Assert.AreEqual (linkedPlist, MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.AreEqual (linkedPlist, MonoTouchProjectInstance.GetPropertyValue ("AppBundleManifest"), "#1");
 		}
 
 		[Test]
@@ -612,14 +612,14 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance.AddItem ("None", logicalPlist, new Dictionary<string, string> { { "LogicalName", "Info.plist" } });
 
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest);
-			Assert.AreEqual (logicalPlist, MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.AreEqual (logicalPlist, MonoTouchProjectInstance.GetPropertyValue ("AppBundleManifest"), "#1");
 		}
 
 		[Test]
 		public void DetectAppManifest_LibraryProject ()
 		{
 			RunTarget (LibraryProject, TargetName.DetectAppManifest);
-			Assert.That (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), Is.Null.Or.Empty, "#1");
+			Assert.That (LibraryProjectInstance.GetPropertyValue ("AppBundleManifest"), Is.Null.Or.Empty, "#1");
 		}
 	}
 }

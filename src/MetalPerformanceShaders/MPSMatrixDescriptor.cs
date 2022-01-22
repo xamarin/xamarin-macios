@@ -14,4 +14,3 @@ namespace MetalPerformanceShaders {
 	}
 }
 #endif
-

@@ -1,4 +1,4 @@
-﻿//
+//
 // GKState.cs: Implements some nicer methods for GKState
 //
 // Authors:

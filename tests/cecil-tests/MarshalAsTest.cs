@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using NUnit.Framework;
 
@@ -26,6 +27,7 @@ namespace Cecil.Tests {
 			var checkedTypes = new List<TypeReference> ();
 			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.HasPInvokeInfo)) {
 				failures = null;
+				checkedTypes.Clear ();
 				if (!CheckMarshalAs (checkedTypes, m, ref failures)) {
 					failedMethods.Add ($"Found {failures!.Count} issues with {m.FullName}:\n\t{string.Join ("\n\t", failures)}");
 				}
@@ -86,6 +88,9 @@ namespace Cecil.Tests {
 			if (type.IsEnum)
 				return true;
 
+			if ((type.Attributes & TypeAttributes.ExplicitLayout) == TypeAttributes.ExplicitLayout)
+				return true;
+
 			foreach (var field in type.Fields) {
 				if (field.IsStatic)
 					continue;
@@ -100,7 +105,7 @@ namespace Cecil.Tests {
 
 		static string GetTypeName (TypeReference type)
 		{
-			return type.Name.ToLower ();
+			return type.Resolve ().FullName;
 		}
 
 		static bool IsDelegate (TypeReference tr)

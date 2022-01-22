@@ -1,4 +1,4 @@
-﻿#if !XAMCORE_3_0 && !MONOMAC
+#if !XAMCORE_3_0 && !MONOMAC && !NET
 
 using System;
 using System.Threading.Tasks;
@@ -26,7 +26,6 @@ namespace MediaPlayer {
 
 	}
 
-#if !XAMCORE_4_0
 	public partial class MPPlayableContentDataSource : NSObject {
 		[iOS (10, 0)]
 		[Obsolete ("Use 'MPPlayableContentDataSource_Extensions.GetContentItemAsync' instead.")]
@@ -35,7 +34,6 @@ namespace MediaPlayer {
 			return MPPlayableContentDataSource_Extensions.GetContentItemAsync (this, identifier);
 		}
 	}
-#endif
 }
 
 #endif

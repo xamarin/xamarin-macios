@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CVMetalTextureAttributes.cs
 //
 // Authors: Alex Soto (alexsoto@microsoft.com)

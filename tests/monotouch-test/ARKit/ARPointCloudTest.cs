@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for ARPointCloud
 //
 // Authors:
@@ -17,6 +17,7 @@ using AVFoundation;
 using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
@@ -78,7 +79,7 @@ namespace MonoTouchFixtures.ARKit {
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

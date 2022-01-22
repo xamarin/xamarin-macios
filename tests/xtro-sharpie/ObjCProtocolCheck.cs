@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !missing-protocol!
@@ -89,7 +89,8 @@ namespace Extrospection {
 			var name = decl.Name;
 			TypeDefinition td;
 			if (!protocol_map.TryGetValue (name, out td)) {
-				Log.On (framework).Add ($"!missing-protocol! {name} not bound");
+				if (!decl.IsDeprecated ())
+					Log.On (framework).Add ($"!missing-protocol! {name} not bound");
 				// other checks can't be done without an actual protocol to inspect
 				return;
 			}
@@ -147,46 +148,54 @@ namespace Extrospection {
 				}
 			}
 
-			var remaining = new Dictionary<string, bool> (map);
+			var deprecatedProtocol = (decl.DeclContext as Decl).IsDeprecated ();
 
-			// check that required members match the [Abstract] members
-			foreach (ObjCMethodDecl method in decl.Methods) {
-				// some members might not be part of the current platform
-				if (!method.IsAvailable ())
-					continue;
-				
-				var selector = GetSelector (method);
-				if (selector == null)
-					continue;
+			// don't report anything for deprecated protocols
+			// (we still report some errors for deprecated members of non-deprecated protocols - because abstract/non-abstract can
+			// change the managed API and we want to get things right, even if for deprecated members).
+			if (!deprecatedProtocol) {
+				var remaining = new Dictionary<string, bool> (map);
 
-				// a .NET interface cannot have constructors - so we cannot enforce that on the interface
-				if (IsInit (selector))
-					continue;
+				// check that required members match the [Abstract] members
+				foreach (ObjCMethodDecl method in decl.Methods) {
+					// some members might not be part of the current platform
+					if (!method.IsAvailable ())
+						continue;
 
-				if (method.IsClassMethod)
-					selector = "+" + selector;
+					var selector = GetSelector (method);
+					if (selector == null)
+						continue;
 
-				bool is_abstract;
-				if (map.TryGetValue (selector, out is_abstract)) {
-					bool required = method.ImplementationControl == ObjCImplementationControl.Required;
-					if (required) {
-						if (!is_abstract)
-							Log.On (framework).Add ($"!incorrect-protocol-member! {GetName (decl, method)} is REQUIRED and should be abstract");
-					} else {
-						if (is_abstract)
-							Log.On (framework).Add ($"!incorrect-protocol-member! {GetName (decl, method)} is OPTIONAL and should NOT be abstract");
+					// a .NET interface cannot have constructors - so we cannot enforce that on the interface
+					if (IsInit (selector))
+						continue;
+
+					if (method.IsClassMethod)
+						selector = "+" + selector;
+
+					bool is_abstract;
+					if (map.TryGetValue (selector, out is_abstract)) {
+						bool required = method.ImplementationControl == ObjCImplementationControl.Required;
+						if (required) {
+							if (!is_abstract)
+								Log.On (framework).Add ($"!incorrect-protocol-member! {GetName (decl, method)} is REQUIRED and should be abstract");
+						} else {
+							if (is_abstract)
+								Log.On (framework).Add ($"!incorrect-protocol-member! {GetName (decl, method)} is OPTIONAL and should NOT be abstract");
+						}
+						remaining.Remove (selector);
+					} else if (!method.IsClassMethod) {
+						// a .NET interface cannot have static methods - so we can only report missing instance methods
+						if (!decl.IsDeprecated ())
+							Log.On (framework).Add ($"!missing-protocol-member! {GetName (decl, method)} not found");
+						remaining.Remove (selector);
 					}
-					remaining.Remove (selector);
-				} else if (!method.IsClassMethod) {
-					// a .NET interface cannot have static methods - so we can only report missing instance methods
-					Log.On (framework).Add ($"!missing-protocol-member! {GetName (decl, method)} not found");
-					remaining.Remove (selector);
 				}
-			}
 
-			foreach (var selector in remaining.Keys)
-				Log.On (framework).Add ($"!extra-protocol-member! unexpected selector {decl.Name}::{selector} found");
-			remaining.Clear ();
+				foreach (var selector in remaining.Keys)
+					Log.On (framework).Add ($"!extra-protocol-member! unexpected selector {decl.Name}::{selector} found");
+				remaining.Clear ();
+			}
 			map.Clear ();
 
 			protocol_map.Remove (name);

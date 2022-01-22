@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NUnit.Framework;
 
@@ -27,4 +27,3 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
-

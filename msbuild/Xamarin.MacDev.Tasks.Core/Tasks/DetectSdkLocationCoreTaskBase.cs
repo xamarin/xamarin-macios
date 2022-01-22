@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -12,6 +12,10 @@ namespace Xamarin.MacDev.Tasks {
 		#region Inputs
 
 		public string TargetArchitectures {
+			get; set;
+		}
+
+		public string IsDotNetSimulatorBuild {
 			get; set;
 		}
 
@@ -52,11 +56,6 @@ namespace Xamarin.MacDev.Tasks {
 		// This is also an input
 		[Output]
 		public string SdkVersion {
-			get; set;
-		}
-
-		[Output]
-		public bool IsXcode8 {
 			get; set;
 		}
 
@@ -156,8 +155,6 @@ namespace Xamarin.MacDev.Tasks {
 			if (EnsureAppleSdkRoot ())
 				EnsureSdkPath ();
 			EnsureXamarinSdkRoot ();
-
-			IsXcode8 = AppleSdkSettings.XcodeVersion.Major >= 8;
 
 			return !Log.HasLoggedErrors;
 		}

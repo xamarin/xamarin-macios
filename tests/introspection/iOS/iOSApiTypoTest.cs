@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 using Foundation;
@@ -39,8 +39,7 @@ namespace Introspection {
 
 			// that's slow and there's no value to run it on devices as the API names
 			// being verified won't change from the simulator
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Typos only detected on simulator");
+			TestRuntime.AssertSimulatorOrDesktop ("Typos only detected on simulator");
 
 			base.TypoTest ();
 #endif

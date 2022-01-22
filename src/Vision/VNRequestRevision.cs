@@ -1,4 +1,4 @@
-﻿//
+//
 // VNRequestRevision.cs
 //
 // Authors:

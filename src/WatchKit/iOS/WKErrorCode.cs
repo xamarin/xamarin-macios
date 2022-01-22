@@ -1,4 +1,4 @@
-#if __IOS__
+#if __IOS__ && !NET
 using System;
 using System.ComponentModel;
 using System.Runtime.Versioning;
@@ -7,11 +7,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace WatchKit {
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-#endif
 	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public enum WKErrorCode : long {
@@ -24,11 +20,7 @@ namespace WatchKit {
 		RecordingFailedError = 6,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios")]
-#else
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-#endif
 	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	static public class WKErrorCodeExtensions {
@@ -38,4 +30,4 @@ namespace WatchKit {
 		}
 	}
 }
-#endif // __IOS__
+#endif // __IOS__ && !NET

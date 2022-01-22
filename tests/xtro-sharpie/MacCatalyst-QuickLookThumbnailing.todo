@@ -1,5 +1,0 @@
-!missing-selector! QLThumbnailRepresentation::NSImage not bound
-## appended from unclassified file
-!missing-selector! QLThumbnailReply::extensionBadge not bound
-!missing-selector! QLThumbnailReply::setExtensionBadge: not bound
-!missing-selector! QLThumbnailRepresentation::contentRect not bound

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mono.Linker;
 using Mono.Tuner;
 using Mono.Cecil;

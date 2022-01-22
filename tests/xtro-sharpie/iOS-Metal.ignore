@@ -48,27 +48,10 @@
 !incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineStates:withRange: is REQUIRED and should be abstract
 
 # Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
-!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
-!missing-selector! MTLHeapDescriptor::resourceOptions not bound
-!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
-!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
-!missing-selector! MTLHeapDescriptor::setType: not bound
-!missing-selector! MTLHeapDescriptor::type not bound
 
 # Selectors reported as not working by instrospection: https://github.com/xamarin/maccore/issues/1976
-!missing-selector! MTLRasterizationRateLayerDescriptor::horizontal not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::horizontalSampleStorage not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::sampleCount not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::vertical not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::verticalSampleStorage not bound
 
 # Selectors reported as missing by introspection:  https://github.com/xamarin/maccore/issues/1980
-!missing-selector! MTLRasterizationRateMapDescriptor::label not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::layerCount not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::layers not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::screenSize not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::setLabel: not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::setScreenSize: not bound
 
 # new methods added to a protocol, they will be abstract in XAMCORE_4
 !incorrect-protocol-member! MTLArgumentEncoder::setAccelerationStructure:atIndex: is REQUIRED and should be abstract
@@ -120,3 +103,7 @@
 !incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::areBarycentricCoordsSupported is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::compressionType is REQUIRED and should be abstract
+
+## Adding it to the icebox until it is available on all platforms
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple8 = 1008 not bound

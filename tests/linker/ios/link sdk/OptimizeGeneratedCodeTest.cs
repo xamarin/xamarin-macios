@@ -17,19 +17,21 @@ using System.Runtime.InteropServices;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+#if !__MACOS__
 using UIKit;
+#endif
 using NUnit.Framework;
 
 namespace Linker.Shared {
 
 	partial class NotPreserved {
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 		public void Bug11452 ()
 		{
 			var button = new UIButton ();
 			button.TouchCancel += delegate {
-				if (Runtime.Arch == Arch.SIMULATOR) {
+				if (TestRuntime.IsSimulatorOrDesktop) {
 					// kaboom
 				}
 			};
@@ -38,12 +40,12 @@ namespace Linker.Shared {
 	}
 
 	class NSNotPreserved : NSObject {
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 		public void Bug11452 ()
 		{
 			var button = new UIButton ();
 			button.TouchCancel += delegate {
-				if (Runtime.Arch == Arch.SIMULATOR) {
+				if (TestRuntime.IsSimulatorOrDesktop) {
 					// kaboom
 				}
 			};
@@ -63,7 +65,7 @@ namespace Linker.Shared {
 		// it's pretty likely to crash if the IL was badly rewritten so running
 		// them makes me feel better ;-)
 		
-#if !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__
+#if !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__ && !__MACOS__
 		[Test]
 		public void IsNewRefcountEnabled ()
 		{
@@ -103,7 +105,7 @@ namespace Linker.Shared {
 		// by "if (IsDirectBinding)" so modifying IL is a bit more tricky - so
 		// testing this, linked on both the simulator and on device is important
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void DoubleRuntimeArchDevice ()
 		{
@@ -114,6 +116,7 @@ namespace Linker.Shared {
 		}
 #endif // !__WATCHOS__
 
+#if !__MACOS__
 		// some UIImage bindings are now decorated with [Autorelease] and that 
 		// MUST be considered since it adds a try/finally for the C# using
 
@@ -130,8 +133,9 @@ namespace Linker.Shared {
 				// anyway we care about not crashing due to the linker optimizing the IL, not the return values
 			}
 		}
+#endif // !__MACOS__
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void AnonymousDelegate ()
 		{

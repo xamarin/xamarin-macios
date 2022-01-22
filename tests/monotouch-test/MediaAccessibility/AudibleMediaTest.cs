@@ -1,4 +1,4 @@
-﻿//
+//
 // MAAudibleMedia Unit Tests
 //
 // Authors:
@@ -14,6 +14,7 @@ using Foundation;
 using MediaAccessibility;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaAccessibility {
 
@@ -25,8 +26,8 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		[Test]
 		public void PreferredCharacteristics ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			if (TestRuntime.CheckXcodeVersion (7, 0)) {
 				Assert.NotNull (MAAudibleMedia.GetPreferredCharacteristics ());

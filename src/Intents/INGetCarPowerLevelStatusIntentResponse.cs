@@ -1,4 +1,4 @@
-﻿// INGetCarPowerLevelStatusIntentResponse.cs
+// INGetCarPowerLevelStatusIntentResponse.cs
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
@@ -7,6 +7,7 @@
 //
 
 #if IOS && !TVOS
+#if !(NET && __MACOS__)
 
 using Foundation;
 using Intents;
@@ -29,4 +30,5 @@ namespace Intents {
 	}
 }
 
+#endif // !(NET && __MACOS__)
 #endif

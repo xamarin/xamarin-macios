@@ -28,16 +28,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 using AudioToolbox;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace AudioUnit
 {
@@ -102,6 +109,11 @@ namespace AudioUnit
 			return String.Format ("Unknown error code: 0x{0:x}", k);
 		}
 		
+		internal AudioUnitException (AudioUnitStatus status)
+			: this ((int) status)
+		{
+		}
+
 		internal AudioUnitException (int k) : base (Lookup (k))
 		{
 		}
@@ -137,8 +149,8 @@ namespace AudioUnit
 
 		public SamplerInstrumentData (CFUrl fileUrl, InstrumentType instrumentType)
 		{
-			if (fileUrl == null)
-				throw new ArgumentNullException ("fileUrl");
+			if (fileUrl is null)
+				throw new ArgumentNullException (nameof (fileUrl));
 
 			this.FileUrl = fileUrl;
 			this.InstrumentType = instrumentType;
@@ -211,9 +223,9 @@ namespace AudioUnit
 	public class AudioUnitParameterInfo
 	{
 #if !COREBUILD
-		public string UnitName { get; private set; }
+		public string? UnitName { get; private set; }
 		public AudioUnitClumpID ClumpID { get; private set; }
-		public string Name { get; private set; }
+		public string? Name { get; private set; }
 		public AudioUnitParameterUnit Unit { get; private set; }
 		public float MinValue { get; private set; }
 		public float MaxValue { get; private set; }
@@ -294,52 +306,44 @@ namespace AudioUnit
 		public EventValuesStruct EventValues;
 	}
 
-	public class AudioUnit : IDisposable, ObjCRuntime.INativeObject
+	public class AudioUnit : DisposableObject
 	{
-#pragma warning disable 649 // Field 'AudioUnit.handle' is never assigned to, and will always have its default value
-		internal IntPtr handle;
-#pragma warning restore 649
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-#if COREBUILD
-		public void Dispose () { /* FAKE DURING COREBUILD */ }
-#else
+#if !COREBUILD
 		static readonly CallbackShared CreateRenderCallback = RenderCallbackImpl;
 		static readonly CallbackShared CreateInputCallback = InputCallbackImpl;
 
 		GCHandle gcHandle;
 		bool _isPlaying;
 
-		Dictionary<uint, RenderDelegate> renderer;
-		Dictionary<uint, InputDelegate> inputs;
+		Dictionary<uint, RenderDelegate>? renderer;
+		Dictionary<uint, InputDelegate>? inputs;
 
-		internal AudioUnit (IntPtr ptr)
+		[Preserve (Conditional = true)]
+		internal AudioUnit (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			handle = ptr;
-			gcHandle = GCHandle.Alloc(this);
 		}
-		
-		public AudioUnit (AudioComponent component)
+
+		static IntPtr Create (AudioComponent component)
 		{
-			if (component == null)
-				throw new ArgumentNullException ("component");
-			if (component.Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("component");
-			
-			int err = AudioComponentInstanceNew (component.handle, out handle);
+			if (component is null)
+				throw new ArgumentNullException (nameof (component));
+
+			var err = AudioComponentInstanceNew (component.GetCheckedHandle (), out var handle);
 			if (err != 0)
 				throw new AudioUnitException (err);
-			
-			gcHandle = GCHandle.Alloc(this);
+
+			return handle;
+		}
+
+		public AudioUnit (AudioComponent component)
+			: this (Create (component), true)
+		{
 		}
 
 		public AudioComponent Component {
 			get {
-				return new AudioComponent (AudioComponentInstanceGetComponent (handle));
+				return new AudioComponent (AudioComponentInstanceGetComponent (Handle), false);
 			}
 		}
 
@@ -350,7 +354,7 @@ namespace AudioUnit
 		[Obsolete ("Use 'SetFormat' instead as it has the ability of returning a status code.")]
 		public void SetAudioFormat(AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
-			var err = AudioUnitSetProperty(handle,
+			var err = AudioUnitSetProperty (Handle,
 						       AudioUnitPropertyIDType.StreamFormat,
 						       scope,
 						       audioUnitElement, 
@@ -363,7 +367,7 @@ namespace AudioUnit
 
 		public AudioUnitStatus SetFormat(AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
-			return (AudioUnitStatus) AudioUnitSetProperty(handle,
+			return (AudioUnitStatus) AudioUnitSetProperty (Handle,
 						       AudioUnitPropertyIDType.StreamFormat,
 						       scope,
 						       audioUnitElement, 
@@ -375,7 +379,7 @@ namespace AudioUnit
 		{
 			uint device = 0;
 			int size = Marshal.SizeOf (typeof (uint));
-			var err = AudioUnitGetProperty(handle,
+			var err = AudioUnitGetProperty (Handle,
 						AudioUnitPropertyIDType.CurrentDevice,
 						scope,
 						audioUnitElement,
@@ -390,9 +394,14 @@ namespace AudioUnit
 #if !MONOMAC
 		[Obsolete ("This API is not available on iOS.")]
 #endif
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[MacCatalyst (15,0)]
+#endif
 		public static uint GetCurrentInputDevice ()
 		{
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			// We need to replace AudioHardwareGetProperty since it has been deprecated since OS X 10.6 and iOS 2.0
 			// Replacing with the following implementation recommended in the following doc
 			// See Listing 4  New - Getting the default input device.
@@ -403,7 +412,7 @@ namespace AudioUnit
 			var theAddress = new AudioObjectPropertyAddress (
 				AudioObjectPropertySelector.DefaultInputDevice,
 				AudioObjectPropertyScope.Global,
-				AudioObjectPropertyElement.Master);
+				AudioObjectPropertyElement.Main);
 			uint inQualifierDataSize = 0;
 			IntPtr inQualifierData = IntPtr.Zero;
 
@@ -419,7 +428,7 @@ namespace AudioUnit
 #endif
 		public AudioUnitStatus SetCurrentDevice (uint inputDevice, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
-			return AudioUnitSetProperty(handle,
+			return AudioUnitSetProperty (Handle,
 						AudioUnitPropertyIDType.CurrentDevice,
 						scope,
 						audioUnitElement,
@@ -432,7 +441,7 @@ namespace AudioUnit
 			var audioFormat = new AudioStreamBasicDescription();
 			uint size = (uint) Marshal.SizeOf (audioFormat);
 
-			var err = AudioUnitGetProperty(handle,
+			var err = AudioUnitGetProperty (Handle,
 						       AudioUnitPropertyIDType.StreamFormat,
 						       scope,
 						       audioUnitElement,
@@ -444,37 +453,37 @@ namespace AudioUnit
 			return audioFormat;
 		}
 
-		public ClassInfoDictionary GetClassInfo (AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
+		public ClassInfoDictionary? GetClassInfo (AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
 			IntPtr ptr = new IntPtr ();
 			int size = Marshal.SizeOf (typeof (IntPtr));
-			var res = AudioUnitGetProperty (handle, AudioUnitPropertyIDType.ClassInfo, scope, audioUnitElement,
+			var res = AudioUnitGetProperty (Handle, AudioUnitPropertyIDType.ClassInfo, scope, audioUnitElement,
 				ref ptr, ref size);
 
 			if (res != 0)
 				return null;
 
-			return new ClassInfoDictionary (new NSDictionary (ptr, true));
+			return new ClassInfoDictionary (Runtime.GetNSObject<NSDictionary> (ptr, true));
 		}
 
 		public AudioUnitStatus SetClassInfo (ClassInfoDictionary preset, AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
 			var ptr = preset.Dictionary.Handle;
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.ClassInfo, scope, audioUnitElement,
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.ClassInfo, scope, audioUnitElement,
 				ref ptr, Marshal.SizeOf (typeof (IntPtr)));
 		}
 
-		public unsafe AudioUnitParameterInfo[] GetParameterList (AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
+		public unsafe AudioUnitParameterInfo[]? GetParameterList (AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
 			uint size;
 			bool writable;
-			if (AudioUnitGetPropertyInfo (handle, AudioUnitPropertyIDType.ParameterList, scope, audioUnitElement, out size, out writable) != 0)
+			if (AudioUnitGetPropertyInfo (Handle, AudioUnitPropertyIDType.ParameterList, scope, audioUnitElement, out size, out writable) != 0)
 				return null;
 
 			// Array of AudioUnitParameterID = UInt32
 			var data = new uint [size / sizeof (uint)];
 			fixed (uint* ptr = data) {
-				if (AudioUnitGetProperty (handle, AudioUnitPropertyIDType.ParameterList, scope, audioUnitElement, ptr, ref size) != 0)
+				if (AudioUnitGetProperty (Handle, AudioUnitPropertyIDType.ParameterList, scope, audioUnitElement, ptr, ref size) != 0)
 					return null;
 			}
 
@@ -483,7 +492,7 @@ namespace AudioUnit
 
 			for (int i = 0; i < data.Length; ++i) {
 				var native = new AudioUnitParameterInfoNative ();
-				if (AudioUnitGetProperty (handle, AudioUnitPropertyIDType.ParameterInfo, scope, data [i], ref native, ref size) != 0)
+				if (AudioUnitGetProperty (Handle, AudioUnitPropertyIDType.ParameterInfo, scope, data [i], ref native, ref size) != 0)
 					return null;
 
 				info [i] = AudioUnitParameterInfo.Create (native, (AudioUnitParameterType) data [i]);
@@ -494,36 +503,36 @@ namespace AudioUnit
 
 		public AudioUnitStatus LoadInstrument (SamplerInstrumentData instrumentData, AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
-			if (instrumentData == null)
-				throw new ArgumentNullException ("instrumentData");
+			if (instrumentData is null)
+				throw new ArgumentNullException (nameof (instrumentData));
 
 			var data = instrumentData.ToStruct ();
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.LoadInstrument, scope, audioUnitElement, 
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.LoadInstrument, scope, audioUnitElement, 
 				ref data, Marshal.SizeOf (typeof (AUSamplerInstrumentData)));
 		}
 
 		public AudioUnitStatus MakeConnection (AudioUnit sourceAudioUnit, uint sourceOutputNumber, uint destInputNumber)
 		{
 			var auc = new AudioUnitConnection {
-				SourceAudioUnit = sourceAudioUnit == null ? IntPtr.Zero : sourceAudioUnit.handle,
+				SourceAudioUnit = sourceAudioUnit.GetHandle (),
 				SourceOutputNumber = sourceOutputNumber,
 				DestInputNumber = destInputNumber
 			};
 
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.MakeConnection, AudioUnitScopeType.Input, 0, ref auc, Marshal.SizeOf (typeof (AudioUnitConnection)));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.MakeConnection, AudioUnitScopeType.Input, 0, ref auc, Marshal.SizeOf (typeof (AudioUnitConnection)));
 		}
 
 		public AudioUnitStatus SetEnableIO (bool enableIO, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{                         
 			// EnableIO: UInt32          
 			uint flag = enableIO ? (uint)1 : 0;
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.EnableIO, scope, audioUnitElement, ref flag, sizeof (uint));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.EnableIO, scope, audioUnitElement, ref flag, sizeof (uint));
 		}
 
 		public AudioUnitStatus SetMaximumFramesPerSlice (uint value, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			// MaximumFramesPerSlice: UInt32
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.MaximumFramesPerSlice, scope, audioUnitElement, ref value, sizeof (uint));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.MaximumFramesPerSlice, scope, audioUnitElement, ref value, sizeof (uint));
 		}
 
 		public uint GetMaximumFramesPerSlice (AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
@@ -531,7 +540,7 @@ namespace AudioUnit
 			// MaximumFramesPerSlice: UInt32
 			uint value = 0;
 			uint size = sizeof (uint);
-			var res = AudioUnitGetProperty (handle, AudioUnitPropertyIDType.MaximumFramesPerSlice, scope,
+			var res = AudioUnitGetProperty (Handle, AudioUnitPropertyIDType.MaximumFramesPerSlice, scope,
 				audioUnitElement, ref value, ref size);
 
 			if (res != 0)
@@ -543,7 +552,7 @@ namespace AudioUnit
 		public AudioUnitStatus SetElementCount (AudioUnitScopeType scope, uint count)
 		{
 			// ElementCount: UInt32
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.ElementCount, scope, 0, ref count, sizeof (uint));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.ElementCount, scope, 0, ref count, sizeof (uint));
 		}
 
 		public uint GetElementCount (AudioUnitScopeType scope)
@@ -551,7 +560,7 @@ namespace AudioUnit
 			// ElementCount: UInt32
 			uint value = 0;
 			uint size = sizeof (uint);
-			var res = AudioUnitGetProperty (handle, AudioUnitPropertyIDType.ElementCount, scope,
+			var res = AudioUnitGetProperty (Handle, AudioUnitPropertyIDType.ElementCount, scope,
 				0, ref value, ref size);
 
 			if (res != 0)
@@ -563,12 +572,12 @@ namespace AudioUnit
 		public AudioUnitStatus SetSampleRate (double sampleRate, AudioUnitScopeType scope = AudioUnitScopeType.Output, uint audioUnitElement = 0)
 		{
 			// ElementCount: Float64
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.SampleRate, scope, 0, ref sampleRate, sizeof (double));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SampleRate, scope, 0, ref sampleRate, sizeof (double));
 		}
 
 		public AudioUnitStatus MusicDeviceMIDIEvent (uint status, uint data1, uint data2, uint offsetSampleFrame = 0)
 		{
-			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
+			return MusicDeviceMIDIEvent (Handle, status, data1, data2, offsetSampleFrame);
 		}
 
 #if !XAMCORE_4_0
@@ -586,7 +595,7 @@ namespace AudioUnit
 		{
 			uint size = sizeof (double);
 			double latency = 0;
-			var err = AudioUnitGetProperty (handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, ref size);
+			var err = AudioUnitGetProperty (Handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, ref size);
 			if (err != 0)
 				throw new AudioUnitException ((int) err);
 			return latency;
@@ -596,29 +605,31 @@ namespace AudioUnit
 
 		public AudioUnitStatus SetRenderCallback (RenderDelegate renderDelegate, AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
-			if (renderer == null)
+			if (renderer is null)
 				Interlocked.CompareExchange (ref renderer, new Dictionary<uint, RenderDelegate> (), null);
 
 			renderer [audioUnitElement] = renderDelegate;
 
+			if (!gcHandle.IsAllocated)
+				gcHandle = GCHandle.Alloc (this);
+
 			var cb = new AURenderCallbackStruct ();
 			cb.Proc = CreateRenderCallback;
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.SetRenderCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetRenderCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
 		}
 
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus RenderCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
-			var au = (AudioUnit) gch.Target;
-			var renderer = au.renderer;
+			var au = (AudioUnit?) gch.Target;
+			var renderer = au?.renderer;
 
-			if (renderer == null)
+			if (renderer is null)
 				return AudioUnitStatus.Uninitialized;
 
-			RenderDelegate render;
-			if (!renderer.TryGetValue (busNumber, out render))
+			if (!renderer.TryGetValue (busNumber, out var render))
 				return AudioUnitStatus.Uninitialized;
 
 			using (var buffers = new AudioBuffers (data)) {
@@ -632,29 +643,33 @@ namespace AudioUnit
 
 		public AudioUnitStatus SetInputCallback (InputDelegate inputDelegate, AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
-			if (inputs == null)
+			if (inputs is null)
 				Interlocked.CompareExchange (ref inputs, new Dictionary<uint, InputDelegate> (), null);
 
 			inputs [audioUnitElement] = inputDelegate;
 
+			if (!gcHandle.IsAllocated)
+				gcHandle = GCHandle.Alloc (this);
+
 			var cb = new AURenderCallbackStruct ();
 			cb.Proc = CreateInputCallback;
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.SetInputCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
+			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetInputCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
 		}
 
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus InputCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
-			var au = (AudioUnit) gch.Target;
-			var inputs = au.inputs;
-
-			if (inputs == null)
+			var au =  gch.Target as AudioUnit;
+			if (au is null)
 				return AudioUnitStatus.Uninitialized;
 
-			InputDelegate input;
-			if (!inputs.TryGetValue (busNumber, out input))
+			var inputs = au.inputs;
+			if (inputs is null)
+				return AudioUnitStatus.Uninitialized;
+
+			if (!inputs.TryGetValue (busNumber, out var input))
 				return AudioUnitStatus.Uninitialized;
 
 			return input (actionFlags, timeStamp, busNumber, numberFrames, au);
@@ -663,67 +678,146 @@ namespace AudioUnit
 		#endregion
 
 #if !MONOMAC
+#if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
+#else
+		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
 
+#if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
 		{
 
-			if (name == null)
-				throw new ArgumentNullException ("name");
+			if (name is null)
+				throw new ArgumentNullException (nameof (name));
 				
-			using (CFString n = name) {
-				return AudioOutputUnitPublish (description, n.Handle, version, handle);
+			var nameHandle = CFString.CreateNative (name);
+			try {
+				return AudioOutputUnitPublish (description, nameHandle, version, Handle);
+			} finally {
+				CFString.ReleaseNative (nameHandle);
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
 
+#if !NET
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
-		public UIKit.UIImage GetHostIcon (float desiredPointSize)
+#else
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
+		public UIKit.UIImage? GetHostIcon (float desiredPointSize)
 		{
-			return new UIKit.UIImage (AudioOutputUnitGetHostIcon (handle, desiredPointSize));
+			return Runtime.GetNSObject<UIKit.UIImage> (AudioOutputUnitGetHostIcon (Handle, desiredPointSize));
 		}
 #endif
 
-		// TODO: return AudioUnitStatus
+#if NET
+		public AudioUnitStatus Initialize ()
+		{
+			return AudioUnitInitialize (Handle);
+		}
+#else
 		public int Initialize ()
 		{
-			return AudioUnitInitialize(handle);
+			return (int) AudioUnitInitialize (Handle);
 		}
+#endif
 
-		// TODO: return AudioUnitStatus
+#if NET
+		public AudioUnitStatus Uninitialize ()
+		{
+			return AudioUnitUninitialize (Handle);
+		}
+#else
 		public int Uninitialize ()
 		{
-			return AudioUnitUninitialize (handle);
+			return (int) AudioUnitUninitialize (Handle);
 		}
+#endif
 
+#if NET
+		public AudioUnitStatus Start ()
+#else
 		public void Start()
+#endif
 		{
+			AudioUnitStatus rv = 0;
 			if (! _isPlaying) {
-				AudioOutputUnitStart(handle);
+				rv = AudioOutputUnitStart (Handle);
 				_isPlaying = true;
 			}
+#if NET
+			return rv;
+#endif
 		}
 		
+#if NET
+		public AudioUnitStatus Stop ()
+#else
 		public void Stop()
+#endif
 		{
+			AudioUnitStatus rv = 0;
 			if (_isPlaying) {
-				AudioOutputUnitStop(handle);
+				rv = AudioOutputUnitStop (Handle);
 				_isPlaying = false;
 			}
+#if NET
+			return rv;
+#endif
 		}
 
 		#region Render
@@ -731,59 +825,54 @@ namespace AudioUnit
 		public AudioUnitStatus Render (ref AudioUnitRenderActionFlags actionFlags, AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, AudioBuffers data)
 		{
 			if ((IntPtr)data == IntPtr.Zero)
-				throw new ArgumentNullException ("data");
-			return AudioUnitRender (handle, ref actionFlags, ref timeStamp, busNumber, numberFrames, (IntPtr) data);
+				throw new ArgumentNullException (nameof (data));
+			return AudioUnitRender (Handle, ref actionFlags, ref timeStamp, busNumber, numberFrames, (IntPtr) data);
 		}
 
 		#endregion
 
 		public AudioUnitStatus SetParameter (AudioUnitParameterType type, float value, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
-			return AudioUnitSetParameter (handle, type, scope, audioUnitElement, value, 0);
+			return AudioUnitSetParameter (Handle, type, scope, audioUnitElement, value, 0);
 		}
 		
 		public AudioUnitStatus ScheduleParameter (AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents)
 		{
-			return AudioUnitScheduleParameters (handle, inParameterEvent, inNumParamEvents);
+			return AudioUnitScheduleParameters (Handle, inParameterEvent, inNumParamEvents);
 		}
 
-		public void Dispose()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-		
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern int AudioComponentInstanceDispose(IntPtr inInstance);
 
-		protected virtual void Dispose (bool disposing)
+		protected override void Dispose (bool disposing)
 		{
-			if (handle != IntPtr.Zero){
+			if (Handle != IntPtr.Zero && Owns) {
 				Stop ();
-				AudioUnitUninitialize (handle);
-				AudioComponentInstanceDispose (handle);
-				gcHandle.Free();
-				handle = IntPtr.Zero;
+				AudioUnitUninitialize (Handle);
+				AudioComponentInstanceDispose (Handle);
 			}
+			if (gcHandle.IsAllocated)
+				gcHandle.Free ();
+			base.Dispose (disposing);
 		}
 
 		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentInstanceNew")]
-		static extern int AudioComponentInstanceNew(IntPtr inComponent, out IntPtr inDesc);
+		static extern AudioUnitStatus AudioComponentInstanceNew(IntPtr inComponent, out IntPtr inDesc);
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentInstanceGetComponent (IntPtr inComponent);
 		
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioUnitInitialize(IntPtr inUnit);
+		static extern AudioUnitStatus AudioUnitInitialize (IntPtr inUnit);
 		
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioUnitUninitialize(IntPtr inUnit);
+		static extern AudioUnitStatus AudioUnitUninitialize (IntPtr inUnit);
 
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioOutputUnitStart(IntPtr ci);
+		static extern AudioUnitStatus AudioOutputUnitStart (IntPtr ci);
 
 		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioOutputUnitStop(IntPtr ci);
+		static extern AudioUnitStatus AudioOutputUnitStop (IntPtr ci);
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitRender(IntPtr inUnit, ref AudioUnitRenderActionFlags ioActionFlags, ref AudioTimeStamp inTimeStamp,
@@ -805,6 +894,12 @@ namespace AudioUnit
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref IntPtr inData, int inDataSize);
+
+#if NET
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
+							   ref NativeHandle inData, int inDataSize);
+#endif
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
@@ -864,8 +959,13 @@ namespace AudioUnit
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
-#if MONOMAC
-		[DllImport (Constants.AudioUnitLibrary)]
+#if MONOMAC || __MACCATALYST__
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.CoreAudioLibrary)]
 		static extern int AudioObjectGetPropertyData (
 			uint inObjectID,
 			ref AudioObjectPropertyAddress inAddress,
@@ -878,20 +978,22 @@ namespace AudioUnit
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus MusicDeviceMIDIEvent (IntPtr /* MusicDeviceComponent = void* */ inUnit, uint /* UInt32 */ inStatus, uint /* UInt32 */ inData1, uint /* UInt32 */ inData2, uint /* UInt32 */ inOffsetSampleFrame);
 
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [DllImport (Constants.AudioUnitLibrary)]
+		// static extern MusicDeviceMIDIEvent[] MusicDeviceMIDIEventList (IntPtr /* MusicDeviceComponent = void* */ inUnit, uint /* UInt32 */ inOffsetSampleFrame, MIDIEventList eventList);
+
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 			ref AUScheduledAudioFileRegion.ScheduledAudioFileRegion inData, int inDataSize);
 
 		public AudioUnitStatus SetScheduledFileRegion (AUScheduledAudioFileRegion region)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("AudioUnit");
-
-			if (region == null)
+			if (region is null)
 				throw new ArgumentNullException (nameof (region));
 
 			var safr = region.GetAudioFileRegion ();
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.ScheduledFileRegion, AudioUnitScopeType.Global, 0, ref safr, Marshal.SizeOf (safr));
+			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileRegion, AudioUnitScopeType.Global, 0, ref safr, Marshal.SizeOf (safr));
 		}
 
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -900,22 +1002,16 @@ namespace AudioUnit
 
 		public AudioUnitStatus SetScheduleStartTimeStamp (AudioTimeStamp timeStamp)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("AudioUnit");
-
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.ScheduleStartTimeStamp , AudioUnitScopeType.Global, 0, ref timeStamp, Marshal.SizeOf (timeStamp));
+			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduleStartTimeStamp , AudioUnitScopeType.Global, 0, ref timeStamp, Marshal.SizeOf (timeStamp));
 		}
 
 		public AudioUnitStatus SetScheduledFiles (AudioFile audioFile)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("AudioUnit");
-
-			if (audioFile == null)
+			if (audioFile is null)
 				throw new ArgumentNullException (nameof (audioFile));
 
 			var audioFilehandle = audioFile.Handle;
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, ref audioFilehandle,  Marshal.SizeOf (handle));
+			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, ref audioFilehandle,  Marshal.SizeOf (Handle));
 		}
 
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -924,10 +1020,7 @@ namespace AudioUnit
 
 		public unsafe AudioUnitStatus SetScheduledFiles (AudioFile[] audioFiles)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("AudioUnit");
-
-			if (audioFiles == null)
+			if (audioFiles is null)
 				throw new ArgumentNullException (nameof (audioFiles));
 
 			int count = audioFiles.Length;
@@ -936,13 +1029,13 @@ namespace AudioUnit
 				handles [i] = audioFiles [i].Handle;
 
 			fixed (IntPtr* ptr = handles)
-				return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, (IntPtr) ptr,  IntPtr.Size * count);
+				return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, (IntPtr) ptr,  IntPtr.Size * count);
 		}
 
 #endif // !COREBUILD
 	}
 
-#if !XAMCORE_3_0 || MONOMAC
+#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 	[StructLayout(LayoutKind.Sequential)]
 	struct AudioObjectPropertyAddress
 	{
@@ -966,7 +1059,7 @@ namespace AudioUnit
 		}
 #endif // !COREBUILD
 	}
-#endif // !XAMCORE_3_0 || MONOMAC
+#endif // !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 
 	public unsafe class AURenderEventEnumerator : INativeObject
 #if COREBUILD
@@ -976,25 +1069,31 @@ namespace AudioUnit
 	{
 		AURenderEvent *current;
 
-		public IntPtr Handle { get; private set; }
+		public NativeHandle Handle { get; private set; }
 		public bool IsEmpty { get { return Handle == IntPtr.Zero; } }
-		public bool IsAtEnd { get { return current == null; }}
+		public bool IsAtEnd { get { return current is null; }}
 
-		public AURenderEventEnumerator (IntPtr ptr)
+		public AURenderEventEnumerator (NativeHandle ptr)
+			: this (ptr, false)
 		{
-			Handle = ptr;
-			current = (AURenderEvent *) ptr;
+		}
+
+		[Preserve (Conditional = true)]
+		internal AURenderEventEnumerator (NativeHandle handle, bool owns)
+		{
+			Handle = handle;
+			current = (AURenderEvent *) (IntPtr) handle;
 		}
 
 		public void Dispose ()
 		{
-			Handle = IntPtr.Zero;
+			Handle = NativeHandle.Zero;
 			current = null;
 		}
 
 		public AURenderEvent * UnsafeFirst {
 			get {
-				return (AURenderEvent*) Handle;
+				return (AURenderEvent*) (IntPtr) Handle;
 			}
 		}
 
@@ -1002,7 +1101,7 @@ namespace AudioUnit
 			get {
 				if (IsEmpty)
 					throw new InvalidOperationException ("Can not get First on AURenderEventEnumerator when empty");
-				return *(AURenderEvent *) Handle;
+				return *(AURenderEvent *) (IntPtr) Handle;
 			}
 		}
 
@@ -1021,7 +1120,7 @@ namespace AudioUnit
 
 		bool IsAt (nint now)
 		{
-			return current != null && (current->Head.EventSampleTime == now);
+			return current is not null && (current->Head.EventSampleTime == now);
 		}
 
 		public IEnumerable <AURenderEvent> EnumeratorCurrentEvents (nint now)
@@ -1037,14 +1136,14 @@ namespace AudioUnit
 
 		public bool /*IEnumerator<AURenderEvent>.*/MoveNext ()
 		{
-			if (current != null)
+			if (current is not null)
 				current = ((AURenderEvent *)current)->Head.UnsafeNext;
-			return current != null;
+			return current is not null;
 		}
 
 		public void /*IEnumerator<AURenderEvent>.*/Reset ()
 		{
-			current = (AURenderEvent *) Handle;
+			current = (AURenderEvent *) (IntPtr) Handle;
 		}
 	}
 #endif // !COREBUILD
@@ -1055,6 +1154,15 @@ namespace AudioUnit
 		ParameterRamp = 2,
 		Midi = 8,
 		MidiSysEx = 9,
+#if !NET
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#endif
+		MidiEventList  = 10,
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -1064,7 +1172,7 @@ namespace AudioUnit
 
 		public AURenderEvent? Next {
 			get {
-				if (UnsafeNext != null)
+				if (UnsafeNext is not null)
 					return (AURenderEvent?) Marshal.PtrToStructure ((IntPtr)UnsafeNext, typeof (AURenderEvent));
 				return null;
 			}
@@ -1094,7 +1202,7 @@ namespace AudioUnit
 
 		public AURenderEvent? Next {
 			get {
-				if (UnsafeNext != null)
+				if (UnsafeNext is not null)
 					return (AURenderEvent?) Marshal.PtrToStructure ((IntPtr)UnsafeNext, typeof (AURenderEvent));
 				return null;
 			}
@@ -1163,7 +1271,9 @@ namespace AudioUnit
  		public float Value;
  	}
 
+#if !NET
 	[iOS (10,0), Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {
 		public ulong HostTime;

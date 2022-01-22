@@ -9,6 +9,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	
@@ -57,7 +58,7 @@ namespace MonoTouchFixtures.UIKit {
 		// if this fails ping lobrien (or doc team) since it means Apple changed the defaults we documented
 		public void LayoutManager ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UITextView tv = new UITextView ()) {
 				var lm = tv.LayoutManager;
@@ -86,6 +87,16 @@ namespace MonoTouchFixtures.UIKit {
 			// that's even more confusing since they all fails for respondToSelector tests but works in real life
 			using (UITextView tv = new UITextView ()) {
 				// this is just to show we can get and set those values (even if respondToSelector returns NO)
+#if NET
+				tv.SetAutocapitalizationType (tv.GetAutocapitalizationType ());
+				tv.SetAutocorrectionType (tv.GetAutocorrectionType ());
+				tv.SetEnablesReturnKeyAutomatically (tv.GetEnablesReturnKeyAutomatically ());
+				tv.SetKeyboardAppearance (tv.GetKeyboardAppearance ());
+				tv.SetKeyboardType (tv.GetKeyboardType ());
+				tv.SetReturnKeyType (tv.GetReturnKeyType ());
+				tv.SetSecureTextEntry (tv.GetSecureTextEntry ());
+				tv.SetSpellCheckingType (tv.GetSpellCheckingType ());
+#else
 				tv.AutocapitalizationType = tv.AutocapitalizationType;
 				tv.AutocorrectionType = tv.AutocorrectionType;
 				tv.EnablesReturnKeyAutomatically = tv.EnablesReturnKeyAutomatically;
@@ -94,6 +105,7 @@ namespace MonoTouchFixtures.UIKit {
 				tv.ReturnKeyType = tv.ReturnKeyType;
 				tv.SecureTextEntry = tv.SecureTextEntry;
 				tv.SpellCheckingType = tv.SpellCheckingType;
+#endif
 			}
 		}
 	}

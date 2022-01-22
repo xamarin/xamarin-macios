@@ -50,7 +50,7 @@ namespace Xamarin.Bundler {
 				} else if (Platform == ApplePlatform.MacOSX && !EnableDebug) {
 					// release macOS builds use the static registrar by default
 					Registrar = RegistrarMode.Static;
-				} else if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+				} else if (!AreAnyAssembliesTrimmed && IsDefaultMarshalManagedExceptionMode) {
 					// Otherwise use the partial static registrar if we can
 					Registrar = RegistrarMode.PartialStatic;
 				} else {
@@ -160,9 +160,9 @@ namespace Xamarin.Linker {
 			get { return Configuration.PlatformAssembly; }
 		}
 
-		public bool IsProductAssembly (string filename)
+		public bool IsProductAssembly (string assemblyName)
 		{
-			return Assembly.GetIdentity (filename) == Configuration.PlatformAssembly;
+			return assemblyName == Configuration.PlatformAssembly;
 		}
 
 		public bool IsProductAssembly (AssemblyDefinition assembly)
@@ -175,9 +175,9 @@ namespace Xamarin.Linker {
 			return Configuration.FrameworkAssemblies.Contains (Assembly.GetIdentity (assembly));
 		}
 
-		public bool IsSdkAssembly (string filename)
+		public bool IsSdkAssembly (string assemblyName)
 		{
-			return Configuration.FrameworkAssemblies.Contains (Assembly.GetIdentity (filename));
+			return Configuration.FrameworkAssemblies.Contains (assemblyName);
 		}
 	}
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <RootNamespace>fsharp</RootNamespace>
+    <AssemblyName>fsharp</AssemblyName>
+
+    <ApplicationTitle>FSharp</ApplicationTitle>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+    <FSharpTestDirectory>$(RootTestsDirectory)\fsharp</FSharpTestDirectory>
+
+    <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(FSharpTestDirectory)/AppDelegate.fs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
+    <Compile Include="$(FSharpTestDirectory)/FSharpTests.fs" />
+    <Compile Include="$(RootTestsDirectory)/common/mac/MacMain.fs" Condition="$(TargetFramework.EndsWith('-macos'))" />
+    <Compile Include="$(FSharpTestDirectory)/Main.fs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
+  </ItemGroup>
+</Project>

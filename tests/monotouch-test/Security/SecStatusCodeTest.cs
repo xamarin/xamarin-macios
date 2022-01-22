@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SecStatusCodeTest.cs
 //
 // Authors:

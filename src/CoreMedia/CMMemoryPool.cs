@@ -6,8 +6,11 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -15,53 +18,33 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+#if !NET
 	[Watch (6,0)]
-	public partial class CMMemoryPool : IDisposable, INativeObject
+#endif
+	public partial class CMMemoryPool : NativeObject
 	{
-		IntPtr handle;
-
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMMemoryPoolRef */ IntPtr CMMemoryPoolCreate (/* CFDictionaryRef */ IntPtr options);
 
 		public CMMemoryPool ()
+			: base (CMMemoryPoolCreate (IntPtr.Zero), true)
 		{
-			handle = CMMemoryPoolCreate (IntPtr.Zero);
 		}
 
 #if !COREBUILD
-		public CMMemoryPool (TimeSpan ageOutPeriod)
+		static IntPtr Create (TimeSpan ageOutPeriod)
 		{
 			using (var n = new NSNumber (ageOutPeriod.TotalSeconds))
 			using (var dict = new NSDictionary (AgeOutPeriodSelector, n)) {
-				handle = CMMemoryPoolCreate (dict.Handle);
+				return CMMemoryPoolCreate (dict.Handle);
 			}
+		}
+
+		public CMMemoryPool (TimeSpan ageOutPeriod)
+			: base (Create (ageOutPeriod), true)
+		{
 		}
 #endif
-
-		~CMMemoryPool ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero){
-				CFObject.CFRelease (Handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		public IntPtr Handle { 
-			get {
-				return handle;
-			}
-		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFAllocatorRef */ IntPtr CMMemoryPoolGetAllocator (/* CMMemoryPoolRef */ IntPtr pool);

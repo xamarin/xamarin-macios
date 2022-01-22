@@ -1,4 +1,4 @@
-﻿//
+//
 // MLDictionaryFeatureProvider.cs
 //
 // Authors:

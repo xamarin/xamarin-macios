@@ -3,6 +3,10 @@ using Foundation;
 using CoreFoundation;
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace PushKit 
 {
 	[Watch (6,0)]
@@ -53,7 +57,7 @@ namespace PushKit
 
 		[DesignatedInitializer]
 		[Export ("initWithQueue:")]
-		IntPtr Constructor ([NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed] DispatchQueue queue);
 	}
 	
 	[iOS (8,0)]
@@ -94,13 +98,16 @@ namespace PushKit
 
 		[NoWatch]
 		[NoMac]
+#if !NET
 		[Abstract] // now optional in iOS 11
+#endif
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use the 'DidReceiveIncomingPushWithPayload' overload accepting an 'Action' argument instead.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:"), EventArgs ("PKPushRegistryRecieved"), EventName ("IncomingPushReceived")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type);
 
 		[iOS (11,0)]
+		[MacCatalyst (10,13)]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type, Action completion);
 

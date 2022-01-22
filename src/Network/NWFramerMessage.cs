@@ -12,6 +12,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -24,11 +25,22 @@ using OS_nw_protocol_options=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using OS_nw_parameters=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
+#if !NET
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWFramerMessage : NWProtocolMetadata {
-		internal NWFramerMessage (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWFramerMessage (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
@@ -137,7 +149,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_framer_message_copy_object_value (OS_nw_protocol_metadata message, string key);
 
-		public T GetObject<T> (string key) where T : NSObject
+		public T? GetObject<T> (string key) where T : NSObject
 			=> Runtime.GetNSObject<T> (nw_framer_message_copy_object_value (GetCheckedHandle (), key), owns: true);
 	}
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // EAGLContext Unit Tests
 //
 // Authors:

@@ -1,4 +1,4 @@
-﻿//
+//
 // Contacts bindings
 //
 // Authors:
@@ -18,6 +18,10 @@ using AppKit;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ContactsUI {
 
 #if !MONOMAC
@@ -26,7 +30,7 @@ namespace ContactsUI {
 	interface CNContactPickerViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[NullAllowed] // TODO: Maybe we can Strongify this puppy
 		[Export ("displayedPropertyKeys")]
@@ -98,7 +102,7 @@ namespace ContactsUI {
 	interface CNContactViewController
 	{
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Static]
 		[Export ("descriptorForRequiredKeys")]
@@ -113,7 +117,7 @@ namespace ContactsUI {
 	interface CNContactViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Static]
 		[Export ("descriptorForRequiredKeys")]
@@ -210,4 +214,3 @@ namespace ContactsUI {
 	}
 #endif // MONOMAC
 }
-

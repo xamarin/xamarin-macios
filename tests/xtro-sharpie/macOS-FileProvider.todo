@@ -1,7 +1,0 @@
-## appended from unclassified file
-!missing-enum! NSFileProviderDomainRemovalMode not bound
-!missing-enum-value! NSFileProviderItemFields native value NSFileProviderItemTypeAndCreator = 1024 not bound
-!missing-protocol! NSFileProviderUserInteractionSuppressing not bound
-!missing-protocol-member! NSFileProviderItem::typeAndCreator not found
-!missing-selector! +NSFileProviderManager::removeDomain:mode:completionHandler: not bound
-!missing-selector! NSFileProviderDomain::backingStoreIdentity not bound

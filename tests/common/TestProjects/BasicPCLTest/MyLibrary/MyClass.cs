@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Newtonsoft.Json.Linq;
 
@@ -27,4 +27,3 @@ namespace MyLibrary
 
 	}
 }
-

@@ -1,0 +1,85 @@
+# Template that does all the boiler plate needed to build and execute tests on macOS bots
+
+parameters:
+
+- name: keyringPass
+  type: string
+
+steps:
+- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
+
+- bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
+  displayName: 'Clean workspace'
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
+  displayName: 'Clean bot'
+  env:
+    BUILD_REVISION: 'jenkins'
+  continueOnError: true
+  timeoutInMinutes: 60
+
+- powershell: |
+    Write-Host "IsMacOS: ${IsMacOS}"
+    Write-Host "IsWindows: ${IsWindows}"
+    Write-Host "IsLinux: ${IsLinux}"
+
+    if ($IsMacOS -or $IsLinux) {
+        Write-Host "HOSTNAME: $(hostname)"
+    } else {
+        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
+    }
+
+    gci env: | format-table -autosize -wrap
+  displayName: 'Show Environment'
+
+- powershell: |
+    Write-Host "Python version"
+    python --version
+
+    Write-Host "Python location"
+    which python
+
+    Write-Host "Python2 location"
+    which python2
+
+    Write-Host "Python3 location"
+    which python3
+
+    Write-Host "Pip3 version"
+    pip3 -V
+  displayName: 'Show Python information'
+
+- bash: |
+    set -x
+    sudo rm -Rf /Developer/MonoTouch
+    sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
+    sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+  displayName: 'Delete library folders'
+  timeoutInMinutes: 5
+
+- bash:
+    set -x
+    set -e
+    rm -Rvf $(Build.SourcesDirectory)/package
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
+  displayName: 'Clear results directory'
+  timeoutInMinutes: 5
+
+- bash: |
+    security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
+  env:
+    OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
+  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
+  condition: succeededOrFailed() # we do not care about the previous process cleanup
+
+# was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
+# that we can call make and generated the provisionator config files.
+- bash: |
+    XCODE_SELECT=$(xcode-select -p)
+    if [[ -d $XCODE_SELECT ]]; then
+      echo "Using Xcode in path $XCODE_SELECT"
+    else
+      echo "Setting Xcode to point to the default location."
+      xcode-select -s "/Applications/Xcode.app/Contents/Developer"
+    fi
+  displayName: 'Ensure Xcode is selected.'

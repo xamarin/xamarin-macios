@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -87,7 +87,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ObjCException ()
 		{
-#if !__WATCHOS__ && !__MACOS__
+#if !__WATCHOS__ && !__MACOS__ && !__MACCATALYST__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
@@ -136,8 +136,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Exception thrownException = null;
 
 #if !__WATCHOS__ && !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
+			TestRuntime.AssertNotDevice ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
 
 #if !DEBUG && !__WATCHOS__

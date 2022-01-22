@@ -1,7 +1,0 @@
-!deprecated-attribute-missing! SecKeyDecrypt missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeyEncrypt missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeyGeneratePair missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeyRawSign missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeyRawVerify missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecTrustGetCertificateAtIndex missing a [Deprecated] attribute
-!missing-pinvoke! SecTrustCopyCertificateChain is not bound

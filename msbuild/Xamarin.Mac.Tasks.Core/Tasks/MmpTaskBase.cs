@@ -1,4 +1,4 @@
-﻿//
+//
 // MmpTask.cs
 //
 // Author:
@@ -114,7 +114,7 @@ namespace Xamarin.Mac.Tasks
 			if (IsXPCService)
 				args.AddQuotedLine ("/xpc");
 
-			return CreateResponseFile (args, ExtraArgs == null ? null : CommandLineArgumentBuilder.Parse (ExtraArgs));
+			return args.CreateResponseFile (this, ResponseFilePath, ExtraArgs == null ? null : CommandLineArgumentBuilder.Parse (ExtraArgs));
 		}
 
 		public override bool Execute ()

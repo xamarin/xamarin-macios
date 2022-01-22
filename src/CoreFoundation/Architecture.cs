@@ -23,5 +23,5 @@ namespace CoreFoundation {
 			PPC      = 0x00000012,
 			PPC64    = 0x01000000 | PPC,
 		}
-    }
+	}
 }

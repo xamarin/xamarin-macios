@@ -1,4 +1,4 @@
-﻿//
+//
 // VSAccountManager extensions & syntax sugar
 //
 // Authors:

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Foundation;
 using AppKit;
@@ -27,4 +27,3 @@ namespace ServiceModel_Test
 		}
 	}
 }
-

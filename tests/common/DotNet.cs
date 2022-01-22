@@ -24,6 +24,30 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public static ExecutionResult AssertPack (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("pack", project, properties, true);
+		}
+
+		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string> properties = null)
+		{
+			var rv = Execute ("pack", project, properties, false);
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			return rv;
+		}
+
+		public static ExecutionResult AssertPublish (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("publish", project, properties, true);
+		}
+
+		public static ExecutionResult AssertPublishFailure (string project, Dictionary<string, string> properties = null)
+		{
+			var rv = Execute ("publish", project, properties, false);
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			return rv;
+		}
+
 		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
 		{
 			return Execute ("build", project, properties, true);
@@ -36,7 +60,37 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true)
+		public static ExecutionResult Build (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("build", project, properties, false);
+		}
+
+		public static ExecutionResult AssertNew (string outputDirectory, string template)
+		{
+			Directory.CreateDirectory (outputDirectory);
+
+			var args = new List<string> ();
+			args.Add ("new");
+			args.Add (template);
+
+			var env = new Dictionary<string, string> ();
+			env ["MSBuildSDKsPath"] = null;
+			env ["MSBUILD_EXE_PATH"] = null;
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: outputDirectory, timeout: TimeSpan.FromMinutes (10)).Result;
+			if (rv.ExitCode != 0) {
+				Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
+				Console.WriteLine (output);
+				Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
+			}
+			return new ExecutionResult {
+				StandardOutput = output,
+				StandardError = output,
+				ExitCode = rv.ExitCode,
+			};
+		}
+
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true, string target = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -45,6 +99,8 @@ namespace Xamarin.Tests {
 			switch (verb) {
 			case "clean":
 			case "build":
+			case "pack":
+			case "publish":
 				var args = new List<string> ();
 				args.Add (verb);
 				args.Add (project);
@@ -63,8 +119,11 @@ namespace Xamarin.Tests {
 						}
 					}
 				}
+				if (!string.IsNullOrEmpty (target))
+					args.Add ("/t:" + target);
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
+				Console.WriteLine ($"Binlog: {binlogPath}");
 				var env = new Dictionary<string, string> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;

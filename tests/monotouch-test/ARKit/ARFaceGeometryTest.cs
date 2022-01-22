@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for ARFaceGeometry
 //
 // Authors:
@@ -16,6 +16,7 @@ using ARKit;
 using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 using VectorFloat2 = global::OpenTK.Vector2;
 using VectorFloat3 = global::OpenTK.NVector3;
@@ -89,7 +90,7 @@ namespace MonoTouchFixtures.ARKit {
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

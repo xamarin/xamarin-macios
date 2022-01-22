@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
@@ -15,7 +15,11 @@ namespace MonoTouchFixtures.Foundation
 			TestRuntime.AssertXcodeVersion (10, 0);
 
 			NSDictionary<NSString, NSString> testValues = new NSDictionary<NSString, NSString> ((NSString)"1", (NSString)"a");
+#if NET
+			NSData data = NSKeyedArchiver.GetArchivedData (testValues, true, out NSError error);
+#else
 			NSData data = NSKeyedArchiver.ArchivedDataWithRootObject (testValues, true, out NSError error);
+#endif
 			Assert.IsNull (error);
 
 			Type dictionaryType = typeof (NSDictionary<NSString, NSString>);

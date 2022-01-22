@@ -55,8 +55,13 @@ namespace Xamarin.Mac.Tests
 		{
 			Asserts.EnsureYosemite ();
 
-			using (NSButton b = new NSButton ())
+			using (NSButton b = new NSButton ()) {
+#if NET
+				b.Appearance = null;
+#else
 				b.SetAppearance (null);
+#endif
+			}
 		}
 	}
 }

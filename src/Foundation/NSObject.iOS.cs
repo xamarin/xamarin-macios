@@ -18,7 +18,7 @@ namespace Foundation {
 	{
 #if !COREBUILD
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete ("Use 'PlatformAssembly' for easier code sharing across platforms.")]
 		public readonly static Assembly MonoTouchAssembly = typeof (NSObject).Assembly;
 #endif

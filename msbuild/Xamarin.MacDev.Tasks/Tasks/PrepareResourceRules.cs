@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks
@@ -20,4 +20,3 @@ namespace Xamarin.MacDev.Tasks
 		}
 	}
 }
-

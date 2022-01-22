@@ -3,6 +3,10 @@ parameters:
 - name: macPool
   type: string
 
+- name: useImage
+  type: boolean
+  default: false
+
 - name: stageName
   type: string
 
@@ -16,12 +20,9 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: osVersion
-  type: string
-
-- name: checkDemands
-  type: boolean
-  default: true
+- name: demands
+  type: object
+  default: []
 
 stages:
 - stage: ${{ parameters.stageName }}
@@ -31,6 +32,9 @@ stages:
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
   condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
 
+  variables:
+    MAC_TESTS_PRESENT: $[ dependencies.build_packages.outputs['macTestPkg.macTestsPresent'] ]
+
   jobs:
   - job: run_tests
     displayName: 'macOS tests'
@@ -39,11 +43,11 @@ stages:
       clean: all
 
     pool:
-      name: ${{ parameters.macPool }}
-      ${{ if eq(parameters.checkDemands, true) }}:
-        demands: 
-        - Agent.OS -equals Darwin
-        - Agent.OSVersion -equals ${{ parameters.osVersion }}
+      ${{ if eq(parameters.useImage, false) }}:
+        name: ${{ parameters.macPool }}
+        demands: ${{ parameters.demands }}
+      ${{ else }}:
+        vmImage: ${{ parameters.macPool }}
 
     steps:
     - template: build.yml

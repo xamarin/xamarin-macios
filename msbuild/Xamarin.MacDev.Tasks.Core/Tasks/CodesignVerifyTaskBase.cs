@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Collections.Specialized;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -35,13 +34,26 @@ namespace Xamarin.MacDev.Tasks
 			return File.Exists (path) ? path : ToolExe;
 		}
 
-		// Note: Xamarin.Mac and Xamarin.iOS should both override this method to do pass platform-specific verify rules
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("--verify");
 			args.Add ("-vvvv");
+
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
+				args.AddQuoted ("-R=anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.1] exists and (certificate leaf[field.1.2.840.113635.100.6.1.2] exists or certificate leaf[field.1.2.840.113635.100.6.1.4] exists)");
+				break;
+			case ApplePlatform.MacOSX:
+				args.Add ("--deep");
+				break;
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+			}
 
 			args.AddQuoted (Resource);
 

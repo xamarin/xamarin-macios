@@ -1,4 +1,4 @@
-﻿namespace FSharpXM45Library
+namespace FSharpXM45Library
 type Class1() = 
     member this.X = "F#"
 

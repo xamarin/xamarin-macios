@@ -3,7 +3,7 @@
     <PackageId>Microsoft.$(_PlatformName).Templates</PackageId>
     <PackageType>Template</PackageType>
     <Description>Templates for $(_PlatformName) platforms</Description>
-    <_packagePath>$(MSBuildThisFileDirectory)..\Microsoft.$(_PlatformName).Templates\</_packagePath>
+    <_packagePath>$(MSBuildThisFileDirectory)..\Templates\Microsoft.$(_PlatformName).Templates\</_packagePath>
   </PropertyGroup>
   <Import Project="common.csproj" />
 </Project>

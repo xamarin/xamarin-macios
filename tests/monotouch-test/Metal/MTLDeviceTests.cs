@@ -21,20 +21,33 @@ namespace MonoTouchFixtures.Metal {
 			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 		[Test]
 		public void GetAllDevicesTest ()
 		{
+#if __MACCATALYST__
+			TestRuntime.AssertXcodeVersion (13, 0);
+#endif 
 			NSObject refObj = new NSObject();
-			var devices = MTLDevice.GetAllDevices(ref refObj, (IMTLDevice device, NSString notifyName) => { });
+			var devices = MTLDevice.GetAllDevices();
+
+			// It's possible to run on a system that does not support metal,
+			// in which case we'll get an empty array of devices.
+			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
+		}
+#endif
+		
+#if __MACOS__
+		[Test]
+		public void GetAllDevicesTestOutObserver ()
+		{
+			var devices = MTLDevice.GetAllDevices ((IMTLDevice device, NSString notifyName) => { }, out var observer);
 
 			// It's possible to run on a system that does not support metal,
 			// in which case we'll get an empty array of devices.
 			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
 
-			Assert.DoesNotThrow (() => {
-				MTLDevice.RemoveObserver (refObj);
-			});
+			MTLDevice.RemoveObserver (observer);
 		}
 #endif
 
@@ -97,7 +110,7 @@ namespace MonoTouchFixtures.Metal {
 			string metallib_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "default.metallib");
 			string fragmentshader_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "fragmentShader.metallib");
 
-#if !__MACOS__
+#if !__MACOS__ && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("Metal isn't available in the simulator");
 #endif
@@ -274,9 +287,15 @@ namespace MonoTouchFixtures.Metal {
 			var url = "file://" + metallib_path;
 			url = url.Replace (" ", "%20"); // url encode!
 			using (var library = device.CreateLibrary (new NSUrl (url), out var error)) {
+#if NET
+				// Looks like creating a library with a url always fails: https://forums.developer.apple.com/thread/110416
+				Assert.IsNotNull (library, "CreateLibrary (NSUrl, NSError): Null");
+				Assert.IsNull (error, "CreateLibrary (NSUrl, NSError): NonNull error");
+#else
 				// Looks like creating a library with a url always fails: https://forums.developer.apple.com/thread/110416
 				Assert.IsNull (library, "CreateLibrary (NSUrl, NSError): Null");
 				Assert.IsNotNull (error, "CreateLibrary (NSUrl, NSError): NonNull error");
+#endif
 			}
 
 			using (var library = device.CreateArgumentEncoder (new MTLArgumentDescriptor [] { new MTLArgumentDescriptor () { DataType = MTLDataType.Int } })) {
@@ -339,14 +358,16 @@ namespace MonoTouchFixtures.Metal {
 				}
 			}
 
-			using (var library = device.CreateLibrary (fragmentshader_path, out var error))
-			using (var func = library.CreateFunction ("fragmentShader2")) {
-				using (var enc = func.CreateArgumentEncoder (0)) {
-					Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint): NonNull");
-				}
-				using (var enc = func.CreateArgumentEncoder (0, out var reflection)) {
-					Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull");
-					Assert.IsNotNull (reflection, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull reflection");
+			using (var library = device.CreateLibrary (fragmentshader_path, out var error)) {
+				Assert.IsNull (error, "MTLFunction.CreateArgumentEncoder: library creation failure");
+				using (var func = library.CreateFunction ("fragmentShader2")) {
+					using (var enc = func.CreateArgumentEncoder (0)) {
+						Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint): NonNull");
+					}
+					using (var enc = func.CreateArgumentEncoder (0, out var reflection)) {
+						Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull");
+						Assert.IsNotNull (reflection, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull reflection");
+					}
 				}
 			}
 
@@ -378,7 +399,7 @@ namespace MonoTouchFixtures.Metal {
 
 			using (var hd = new MTLHeapDescriptor ()) {
 				hd.CpuCacheMode = MTLCpuCacheMode.DefaultCache;
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 				hd.StorageMode = MTLStorageMode.Private;
 #else
 				hd.StorageMode = MTLStorageMode.Shared;
@@ -388,7 +409,7 @@ namespace MonoTouchFixtures.Metal {
 					hd.Size = sa.Size;
 
 					using (var heap = device.CreateHeap (hd)) {
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 						txt.StorageMode = MTLStorageMode.Private;
 #endif
 						using (var texture = heap.CreateTexture (txt)) {

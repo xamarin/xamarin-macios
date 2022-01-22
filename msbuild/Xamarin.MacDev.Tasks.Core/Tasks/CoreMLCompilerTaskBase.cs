@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -201,6 +201,9 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			BundleResources = bundleResources.ToArray ();
+
+			if (PartialAppManifests != null)
+				partialPlists.AddRange (PartialAppManifests);
 			PartialAppManifests = partialPlists.ToArray ();
 
 			return !Log.HasLoggedErrors;

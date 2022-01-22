@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Clang;
@@ -56,6 +56,18 @@ namespace Extrospection
 			return false;
 		}
 
+		public static bool HasUnsupportedOSPlatform (CustomAttribute attribute, Platforms platform)
+		{
+			if (attribute.Constructor.DeclaringType.Name == "UnsupportedOSPlatformAttribute")
+				return IsOSPlatformAttribute (attribute, platform);
+			return false;
+		}
+
+		public static bool HasObsolete (CustomAttribute attribute, Platforms platform)
+		{
+			return attribute.Constructor.DeclaringType.Name == "ObsoleteAttribute";
+		}
+
 		static bool GetPlatformVersion (CustomAttribute attribute, out Version version)
 		{
 			// Three different Attribute flavors
@@ -96,11 +108,36 @@ namespace Extrospection
 
 			// This allows us to accept [Deprecated (iOS)] for watch and tv, which many of our bindings currently have
 			// If we want to force seperate tv\watch attributes remove GetRelatedPlatforms and just check Helpers.Platform
-			Platforms[] platforms = GetRelatedPlatforms ();
+			if (Helpers.IsDotNet) {
+				foreach (var attribute in item.CustomAttributes) {
+					if (AttributeHelpers.HasObsolete (attribute, Helpers.Platform))
+						return true;
+					// The only related platforms for .NET is iOS for Mac Catalyst
+					if (AttributeHelpers.HasUnsupportedOSPlatform (attribute, Helpers.Platform))
+						return true;
+					if (Helpers.Platform == Platforms.MacCatalyst && AttributeHelpers.HasUnsupportedOSPlatform (attribute, Platforms.iOS))
+						return true;
+				}
+			} else {
+				Platforms [] platforms = GetRelatedPlatforms ();
+				foreach (var attribute in item.CustomAttributes) {
+					if (platforms.Any (x => AttributeHelpers.HasDeprecated (attribute, x)) || platforms.Any (x => AttributeHelpers.HasObsoleted (attribute, x)))
+						return true;
+				}
+			}
+			return false;
+		}
+
+		public static bool HasAnyObsoleted (ICustomAttributeProvider item)
+		{
+			if (Skip (item))
+				return false;
+
 			foreach (var attribute in item.CustomAttributes) {
-				if (platforms.Any (x => AttributeHelpers.HasDeprecated (attribute, x)) || platforms.Any (x => AttributeHelpers.HasObsoleted (attribute, x)))
+				if (AttributeHelpers.HasObsoleted (attribute, Helpers.Platform))
 					return true;
 			}
+
 			return false;
 		}
 
@@ -144,6 +181,18 @@ namespace Extrospection
 		static bool HasAdviced (IEnumerable<CustomAttribute> attributes)
 		{
 			return attributes.Any (x => x.Constructor.DeclaringType.Name == "AdviceAttribute");
+		}
+
+		public static bool IsOSPlatformAttribute (CustomAttribute attrib, Platforms platform)
+		{
+			switch (attrib.AttributeType.Name) {
+			case "SupportedOSPlatformAttribute":
+			case "UnsupportedOSPlatformAttribute":
+				var platformName = (string) attrib.ConstructorArguments [0].Value;
+				return platformName.StartsWith (platform.AsPlatformAttributeString (), StringComparison.OrdinalIgnoreCase);
+			default:
+				return false;
+			}
 		}
 	}
 }

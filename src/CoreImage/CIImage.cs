@@ -23,6 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
@@ -30,6 +31,10 @@ using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 using CoreVideo;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 #nullable enable
@@ -47,11 +52,15 @@ namespace CoreImage {
 
 		public CIImageOrientation? ImageOrientation;
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustCrop;
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustLevel;
@@ -116,7 +125,7 @@ namespace CoreImage {
 				return new CIFilter [0];
 			var ret = new CIFilter [count];
 			for (nuint i = 0; i < count; i++){
-				IntPtr filterHandle = filters.ValueAt (i);
+				var filterHandle = filters.ValueAt (i);
 				string? filterName = CIFilter.GetFilterName (filterHandle);
 									 
 				ret [i] = CIFilter.FromName (filterName, filterHandle);
@@ -129,8 +138,8 @@ namespace CoreImage {
 			if (colorSpace == null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorSpace));
 			
-			using (var arr = NSArray.FromIntPtrs (new IntPtr [] { colorSpace.Handle })){
-				using (var keys = NSArray.FromIntPtrs (new IntPtr [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle } )){
+			using (var arr = NSArray.FromIntPtrs (new [] { colorSpace.Handle })){
+				using (var keys = NSArray.FromIntPtrs (new [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle } )){
 					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)){
 						return FromCGImage (image, dict);
 					}

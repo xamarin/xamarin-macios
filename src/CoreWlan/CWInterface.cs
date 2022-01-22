@@ -1,9 +1,10 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
-
+#if !__MACCATALYST__
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
+using System.Runtime.Versioning;
 
 namespace CoreWlan {
 	public unsafe partial class CWInterface {
@@ -50,7 +51,9 @@ namespace CoreWlan {
 			return null;
 		}
 
+#if !NET
 		[Mac (10,13)]
+#endif
 		public CWNetwork [] ScanForNetworksWithSsid (NSData ssid, bool includeHidden, out NSError error)
 		{
 			NSSet networks = _ScanForNetworksWithSsid (ssid, includeHidden, out error);
@@ -59,7 +62,9 @@ namespace CoreWlan {
 			return null;
 		}
 
+#if !NET
 		[Mac (10,13)]
+#endif
 		public CWNetwork [] ScanForNetworksWithName (string networkName, bool includeHidden, out NSError error)
 		{
 			NSSet networks = _ScanForNetworksWithName (networkName, includeHidden, out error);
@@ -70,3 +75,4 @@ namespace CoreWlan {
 
 	}
 }
+#endif // !__MACCATALYST__

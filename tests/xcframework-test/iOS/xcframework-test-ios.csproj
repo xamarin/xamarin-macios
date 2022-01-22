@@ -160,7 +160,7 @@
       <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
       <Name>Touch.Client-iOS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\bindings-xcframework-test\bindings-xcframework-test.csproj">
+    <ProjectReference Include="..\..\bindings-xcframework-test\iOS\bindings-xcframework-test.csproj">
       <Project>{E40B0B77-3467-4891-9117-7AF8F248E307}</Project>
       <Name>bindings-xcframework-test</Name>
       <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
@@ -179,7 +179,6 @@
     <None Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="XCFrameworkTests.cs" />
   </ItemGroup>

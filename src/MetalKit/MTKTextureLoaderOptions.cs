@@ -1,4 +1,4 @@
-﻿//
+//
 // MTKTextureLoaderOptions.cs strong dictionary
 //
 // Authors:

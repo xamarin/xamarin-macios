@@ -13,4 +13,3 @@ namespace Xamarin.Tests {
 		public string? Message;
 	}
 }
-

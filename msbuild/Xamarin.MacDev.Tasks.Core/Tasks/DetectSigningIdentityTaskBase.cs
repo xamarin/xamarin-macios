@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -102,14 +102,7 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppBundleName { get; set; }
 
-		[Required]
-		public string AppManifest { get; set; }
-
-		// Single-project property that maps to CFBundleIdentifier for Apple platforms
-		public string ApplicationId { get; set; }
-
-		// Single-project property that determines whether other single-project properties should have any effect
-		public bool GenerateApplicationManifest { get; set; }
+		public string BundleIdentifier { get; set; }
 
 		public string Keychain { get; set; }
 
@@ -132,9 +125,6 @@ namespace Xamarin.MacDev.Tasks
 
 		[Output]
 		public string DetectedAppId { get; set; }
-
-		[Output]
-		public string DetectedBundleId { get; set; }
 
 		// This is input too
 		[Output]
@@ -240,7 +230,7 @@ namespace Xamarin.MacDev.Tasks
 				Log.LogMessage (MessageImportance.High, "  Code Signing Key: \"{0}\" ({1})", codesignCommonName, DetectedCodeSigningKey);
 			if (provisioningProfileName != null)
 				Log.LogMessage (MessageImportance.High, "  Provisioning Profile: \"{0}\" ({1})", provisioningProfileName, DetectedProvisioningProfile);
-			Log.LogMessage (MessageImportance.High, "  Bundle Id: {0}", DetectedBundleId);
+			Log.LogMessage (MessageImportance.High, "  Bundle Id: {0}", BundleIdentifier);
 			Log.LogMessage (MessageImportance.High, "  App Id: {0}", DetectedAppId);
 		}
 
@@ -451,7 +441,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (matches.Count == 0) {
-				Log.LogWarning (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.W0137);
+				Log.LogWarning (MSBStrings.W0137);
 				return identity;
 			}
 
@@ -481,7 +471,6 @@ namespace Xamarin.MacDev.Tasks
 			IList<MobileProvision> profiles;
 			IList<X509Certificate2> certs;
 			List<CodeSignIdentity> pairs;
-			PDictionary plist;
 
 			switch (SdkPlatform) {
 			case "AppleTVSimulator":
@@ -512,27 +501,11 @@ namespace Xamarin.MacDev.Tasks
 			else if (ProvisioningProfile == AutomaticAdHocProvision)
 				type = MobileProvisionDistributionType.AdHoc;
 
-			try {
-				plist = PDictionary.FromFile (AppManifest);
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0010, AppManifest, ex.Message);
-				return false;
-			}
-
 			DetectedCodesignAllocate = Path.Combine (DeveloperRoot, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", "codesign_allocate");
 			DetectedDistributionType = type.ToString ();
 
-			identity.BundleId = plist.GetCFBundleIdentifier ();
-			if (string.IsNullOrEmpty (identity.BundleId)) {
-				if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationId)) {
-					identity.BundleId = ApplicationId;
-				} else {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0139, AppManifest);
-					return false;
-				}
-			}
-			DetectedBundleId = identity.BundleId;
-			DetectedAppId = DetectedBundleId; // default value that can be changed below
+			identity.BundleId = BundleIdentifier;
+			DetectedAppId = BundleIdentifier; // default value that can be changed below
 
 			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
@@ -570,7 +543,7 @@ namespace Xamarin.MacDev.Tasks
 
 							identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 							if (identity.AppId == null) {
-								Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
+								Log.LogError (MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
 								return false;
 							}
 
@@ -659,7 +632,7 @@ namespace Xamarin.MacDev.Tasks
 
 				identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 				if (identity.AppId == null) {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
+					Log.LogError (MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
 					return false;
 				}
 

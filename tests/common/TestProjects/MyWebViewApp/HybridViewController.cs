@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 using Foundation;
@@ -99,4 +99,3 @@ namespace MyWebViewApp
 		}
 	}
 }
-

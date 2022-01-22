@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NLTagger
 //
 // Copyright 2018 Microsoft Corp. All rights reserved.

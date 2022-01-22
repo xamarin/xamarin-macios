@@ -1,0 +1,1 @@
+!duplicate-type-name! NWPathStatus enum exists as both NetworkExtension.NWPathStatus and Network.NWPathStatus

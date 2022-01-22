@@ -44,10 +44,11 @@ namespace LinkSdk.Aot {
 			
 			var x = new D ();
 			a.OuterMethod<D> (x);
+#if !__MACOS__
 			// fails with 5.0.2 (5.1) when running on devices with
 			// Attempting to JIT compile method 'A:InnerMethod<D, long> (D,long)' while running with --aot-only.
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
+			TestRuntime.AssertNotDevice ("only fails on devices");
+#endif
 		}
 	}
 }

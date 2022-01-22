@@ -12,6 +12,10 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ClockKit {
 
 	[Watch (7,0)]
@@ -159,7 +163,7 @@ namespace ClockKit {
 
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use the provided factories instead.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 	}
 
 	[BaseType (typeof (CLKComplicationTemplate))]
@@ -170,7 +174,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -186,7 +190,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKImageProvider imageProvider);
+		NativeHandle Constructor (CLKImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -208,7 +212,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -230,7 +234,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -252,7 +256,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -274,7 +278,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -305,7 +309,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
+		NativeHandle Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -332,19 +336,19 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:")]
-		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
+		NativeHandle Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:body2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
+		NativeHandle Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:")]
-		IntPtr Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
+		NativeHandle Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:body2TextProvider:")]
-		IntPtr Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
+		NativeHandle Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -378,7 +382,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:bodyTextProvider:")]
-		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider bodyTextProvider);
+		NativeHandle Constructor (CLKTextProvider headerTextProvider, CLKTextProvider bodyTextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -413,11 +417,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:row1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
+		NativeHandle Constructor (CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:row1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
-		IntPtr Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
+		NativeHandle Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -468,11 +472,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:row3Column1TextProvider:row3Column2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
+		NativeHandle Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithRow1ImageProvider:row1Column1TextProvider:row1Column2TextProvider:row2ImageProvider:row2Column1TextProvider:row2Column2TextProvider:row3ImageProvider:row3Column1TextProvider:row3Column2TextProvider:")]
-		IntPtr Constructor ([NullAllowed] CLKImageProvider row1ImageProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, [NullAllowed] CLKImageProvider row2ImageProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, [NullAllowed] CLKImageProvider row3ImageProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
+		NativeHandle Constructor ([NullAllowed] CLKImageProvider row1ImageProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, [NullAllowed] CLKImageProvider row2ImageProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, [NullAllowed] CLKImageProvider row3ImageProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -497,11 +501,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -522,7 +526,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKImageProvider imageProvider);
+		NativeHandle Constructor (CLKImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -544,7 +548,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -566,7 +570,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -586,11 +590,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -611,7 +615,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -627,7 +631,7 @@ namespace ClockKit {
 
 		[Watch (7,0)]
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKImageProvider imageProvider);
+		NativeHandle Constructor (CLKImageProvider imageProvider);
 
 		[Watch (7,0)]
 		[Static]
@@ -649,7 +653,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -671,7 +675,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -690,7 +694,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -709,7 +713,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -726,7 +730,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -743,7 +747,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKImageProvider imageProvider);
+		NativeHandle Constructor (CLKImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -766,7 +770,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -789,7 +793,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
-		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
+		NativeHandle Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
 		[Watch (7, 0)]
 		[Static]
@@ -812,7 +816,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -835,7 +839,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -867,7 +871,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
+		NativeHandle Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -902,7 +906,7 @@ namespace ClockKit {
 
 		[Deprecated (PlatformName.WatchOS, 7, 0)] 
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static]
 		[Export ("imageProviderWithOnePieceImage:")]
@@ -930,11 +934,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithOnePieceImage:")]
-		IntPtr Constructor (UIImage onePieceImage);
+		NativeHandle Constructor (UIImage onePieceImage);
 
 		[Watch (7, 0)]
 		[Export ("initWithOnePieceImage:twoPieceImageBackground:twoPieceImageForeground:")]
-		IntPtr Constructor (UIImage onePieceImage, [NullAllowed] UIImage twoPieceImageBackground, [NullAllowed] UIImage twoPieceImageForeground);
+		NativeHandle Constructor (UIImage onePieceImage, [NullAllowed] UIImage twoPieceImageBackground, [NullAllowed] UIImage twoPieceImageForeground);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -943,7 +947,7 @@ namespace ClockKit {
  
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use overloaded constructors.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		// FIXME: expose gracefully
 		[Static, Internal]
@@ -1001,15 +1005,15 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithText:")]
-		IntPtr Constructor (string text);
+		NativeHandle Constructor (string text);
 
 		[Watch (7, 0)]
 		[Export ("initWithText:shortText:")]
-		IntPtr Constructor (string text, [NullAllowed] string shortText);
+		NativeHandle Constructor (string text, [NullAllowed] string shortText);
 
 		[Watch (7, 0)]
 		[Export ("initWithText:shortText:accessibilityLabel:")]
-		IntPtr Constructor (string text, [NullAllowed] string shortText, [NullAllowed] string accessibilityLabel);
+		NativeHandle Constructor (string text, [NullAllowed] string shortText, [NullAllowed] string accessibilityLabel);
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -1039,11 +1043,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithDate:units:")]
-		IntPtr Constructor (NSDate date, NSCalendarUnit calendarUnits);
+		NativeHandle Constructor (NSDate date, NSCalendarUnit calendarUnits);
 
 		[Watch (7, 0)]
 		[Export ("initWithDate:units:timeZone:")]
-		IntPtr Constructor (NSDate date, NSCalendarUnit calendarUnits, [NullAllowed] NSTimeZone timeZone);
+		NativeHandle Constructor (NSDate date, NSCalendarUnit calendarUnits, [NullAllowed] NSTimeZone timeZone);
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -1066,11 +1070,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithDate:")]
-		IntPtr Constructor (NSDate date);
+		NativeHandle Constructor (NSDate date);
 
 		[Watch (7, 0)]
 		[Export ("initWithDate:timeZone:")]
-		IntPtr Constructor (NSDate date, [NullAllowed] NSTimeZone timeZone);
+		NativeHandle Constructor (NSDate date, [NullAllowed] NSTimeZone timeZone);
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -1096,11 +1100,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithStartDate:endDate:")]
-		IntPtr Constructor (NSDate startDate, NSDate endDate);
+		NativeHandle Constructor (NSDate startDate, NSDate endDate);
 
 		[Watch (7, 0)]
 		[Export ("initWithStartDate:endDate:timeZone:")]
-		IntPtr Constructor (NSDate startDate, NSDate endDate, [NullAllowed] NSTimeZone timeZone);
+		NativeHandle Constructor (NSDate startDate, NSDate endDate, [NullAllowed] NSTimeZone timeZone);
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -1121,11 +1125,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithDate:style:units:")]
-		IntPtr Constructor (NSDate date, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
+		NativeHandle Constructor (NSDate date, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
 
 		[Watch (7, 0)]
 		[Export ("initWithDate:relativeToDate:style:units:")]
-		IntPtr Constructor (NSDate date, [NullAllowed] NSDate relativeDate, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
+		NativeHandle Constructor (NSDate date, [NullAllowed] NSDate relativeDate, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1159,11 +1163,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithCircularTemplate:")]
-		IntPtr Constructor (CLKComplicationTemplateGraphicCircular circularTemplate);
+		NativeHandle Constructor (CLKComplicationTemplateGraphicCircular circularTemplate);
 
 		[Watch (7, 0)]
 		[Export ("initWithCircularTemplate:textProvider:")]
-		IntPtr Constructor (CLKComplicationTemplateGraphicCircular circularTemplate, [NullAllowed] CLKTextProvider textProvider);
+		NativeHandle Constructor (CLKComplicationTemplateGraphicCircular circularTemplate, [NullAllowed] CLKTextProvider textProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1194,7 +1198,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:imageProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1213,7 +1217,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1229,7 +1233,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKFullColorImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1251,7 +1255,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:bottomImageProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1276,7 +1280,7 @@ namespace ClockKit {
 	
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:leadingTextProvider:trailingTextProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1298,7 +1302,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:bottomTextProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1314,7 +1318,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKFullColorImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1339,11 +1343,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:imageProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:leadingTextProvider:trailingTextProvider:imageProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKFullColorImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1373,11 +1377,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:outerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider outerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider outerTextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:leadingTextProvider:trailingTextProvider:outerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKTextProvider outerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKTextProvider outerTextProvider);
 
 		[Watch (7,0)]
 		[Static]
@@ -1401,7 +1405,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithInnerTextProvider:outerTextProvider:")]
-		IntPtr Constructor (CLKTextProvider innerTextProvider, CLKTextProvider outerTextProvider);
+		NativeHandle Constructor (CLKTextProvider innerTextProvider, CLKTextProvider outerTextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1420,7 +1424,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1439,7 +1443,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
-		IntPtr Constructor (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1464,19 +1468,19 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:")]
-		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
+		NativeHandle Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:body2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
+		NativeHandle Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:")]
-		IntPtr Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
+		NativeHandle Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:body2TextProvider:")]
-		IntPtr Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
+		NativeHandle Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1516,11 +1520,11 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:gaugeProvider:")]
-		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
+		NativeHandle Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
 
 		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:gaugeProvider:")]
-		IntPtr Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
+		NativeHandle Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1558,15 +1562,15 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Watch (7, 0)]
 		[Export ("initWithFullColorImage:")]
-		IntPtr Constructor (UIImage fullColorImage);
+		NativeHandle Constructor (UIImage fullColorImage);
 
 		[Watch (7, 0)]
 		[Export ("initWithFullColorImage:tintedImageProvider:")]
-		IntPtr Constructor (UIImage fullColorImage, [NullAllowed] CLKImageProvider tintedImageProvider);
+		NativeHandle Constructor (UIImage fullColorImage, [NullAllowed] CLKImageProvider tintedImageProvider);
 	}
 
 	[Watch (5,0)]
@@ -1645,7 +1649,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1665,7 +1669,7 @@ namespace ClockKit {
 
 		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
 		[Watch (7, 0)]
 		[Static]
@@ -1688,7 +1692,7 @@ namespace ClockKit {
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKFullColorImageProvider imageProvider);
 
 		[Static]
 		[Export ("templateWithImageProvider:")]
@@ -1711,7 +1715,7 @@ namespace ClockKit {
 		CLKTextProvider Line2TextProvider { get; set; }
 
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
 		[Static]
 		[Export ("templateWithLine1TextProvider:line2TextProvider:")]
@@ -1728,7 +1732,7 @@ namespace ClockKit {
 		CLKTextProvider Line2TextProvider { get; set; }
 
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
-		IntPtr Constructor (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
+		NativeHandle Constructor (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
 		[Static]
 		[Export ("templateWithLine1ImageProvider:line2TextProvider:")]
@@ -1748,7 +1752,7 @@ namespace ClockKit {
 		CLKTextProvider CenterTextProvider { get; set; }
 
 		[Export ("initWithGaugeProvider:bottomTextProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
 
 		[Static]
 		[Export ("templateWithGaugeProvider:bottomTextProvider:centerTextProvider:")]
@@ -1771,7 +1775,7 @@ namespace ClockKit {
 		CLKTextProvider CenterTextProvider { get; set; }
 
 		[Export ("initWithGaugeProvider:leadingTextProvider:trailingTextProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
 
 		[Static]
 		[Export ("templateWithGaugeProvider:leadingTextProvider:trailingTextProvider:centerTextProvider:")]
@@ -1791,7 +1795,7 @@ namespace ClockKit {
 		CLKTextProvider CenterTextProvider { get; set; }
 
 		[Export ("initWithGaugeProvider:bottomImageProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
 
 		[Static]
 		[Export ("templateWithGaugeProvider:bottomImageProvider:centerTextProvider:")]
@@ -1805,7 +1809,7 @@ namespace ClockKit {
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
 		[Export ("initWithImageProvider:")]
-		IntPtr Constructor (CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKFullColorImageProvider imageProvider);
 
 		[Static]
 		[Export ("templateWithImageProvider:")]
@@ -1822,7 +1826,7 @@ namespace ClockKit {
 		CLKTextProvider CenterTextProvider { get; set; }
 
 		[Export ("initWithGaugeProvider:centerTextProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
 
 		[Static]
 		[Export ("templateWithGaugeProvider:centerTextProvider:")]
@@ -1839,7 +1843,7 @@ namespace ClockKit {
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
 		[Export ("initWithGaugeProvider:imageProvider:")]
-		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
+		NativeHandle Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 
 		[Static]
 		[Export ("templateWithGaugeProvider:imageProvider:")]
@@ -1867,15 +1871,14 @@ namespace ClockKit {
 		NSUserActivity UserActivity { get; }
 
 		[Export ("initWithIdentifier:displayName:supportedFamilies:")]
-		IntPtr Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies);
+		NativeHandle Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies);
 
 		[Export ("initWithIdentifier:displayName:supportedFamilies:userInfo:")]
-		IntPtr Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies, NSDictionary userInfo);
+		NativeHandle Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies, NSDictionary userInfo);
 
 		[Export ("initWithIdentifier:displayName:supportedFamilies:userActivity:")]
-		IntPtr Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies, NSUserActivity userActivity);
+		NativeHandle Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies, NSUserActivity userActivity);
 	}
 
 
 }
-

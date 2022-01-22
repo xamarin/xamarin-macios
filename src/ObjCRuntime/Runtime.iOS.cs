@@ -1,4 +1,6 @@
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -38,17 +40,21 @@ namespace ObjCRuntime {
 		#error Unknown platform
 #endif
 
+#if !__MACCATALYST__
 		public static Arch Arch; // default: = Arch.DEVICE;
+#endif
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
+#if !__MACCATALYST__
 			if (options->IsSimulator)
 				Arch = Arch.SIMULATOR;
+#endif
 
 			UIApplication.Initialize ();
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// This method is documented to be for diagnostic purposes only,
 		// and should not be considered stable API.
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -67,7 +73,7 @@ namespace ObjCRuntime {
 			
 #if TVOS || WATCH || __MACCATALYST__
 		[Advice ("This method is present only to help porting code.")]
-		public static void StartWWAN (Uri uri, Action<Exception> callback)
+		public static void StartWWAN (Uri uri, Action<Exception?> callback)
 		{
 			NSRunLoop.Main.BeginInvokeOnMainThread (() => callback (null));
 		}
@@ -77,11 +83,17 @@ namespace ObjCRuntime {
 		{
 		}
 #else
-		public static void StartWWAN (Uri uri, Action<Exception> callback)
+		public static void StartWWAN (Uri uri, Action<Exception?> callback)
 		{
+			if (uri is null)
+				throw new ArgumentNullException (nameof (uri));
+
+			if (callback is null)
+				throw new ArgumentNullException (nameof (callback));
+
 			DispatchQueue.DefaultGlobalQueue.DispatchAsync (() => 
 			{
-				Exception ex = null;
+				Exception? ex = null;
 				try {
 					StartWWAN (uri);
 				} catch (Exception x) {
@@ -97,8 +109,8 @@ namespace ObjCRuntime {
 
 		public static void StartWWAN (Uri uri)
 		{
-			if (uri == null)
-				throw new ArgumentNullException ("uri");
+			if (uri is null)
+				throw new ArgumentNullException (nameof (uri));
 
 			if (uri.Scheme != "http" && uri.Scheme != "https")
 				throw new ArgumentException ("uri is not a valid http or https uri", uri.ToString ());
@@ -112,10 +124,12 @@ namespace ObjCRuntime {
 #endif // !COREBUILD
 	}
 
+#if !__MACCATALYST__
 	public enum Arch {
 		DEVICE,
 		SIMULATOR
 	}
+#endif
 }
 
 #endif // MONOMAC

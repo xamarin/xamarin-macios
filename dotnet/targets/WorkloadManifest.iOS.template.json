@@ -2,11 +2,16 @@
 	"version": "@VERSION@",
 	"workloads": {
 		"@PLATFORM_LOWERCASE@": {
-			"description": "Microsoft @PLATFORM@ SDK for .NET",
+			"description": ".NET SDK Workload for building @PLATFORM@ applications.",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
-				"Microsoft.@PLATFORM@.Windows.Sdk",
+				"Microsoft.@PLATFORM@.Windows.Sdk.Aliased",
 				"Microsoft.@PLATFORM@.Ref",
+				"Microsoft.@PLATFORM@.Runtime.ios-arm",
+				"Microsoft.@PLATFORM@.Runtime.ios-arm64",
+				"Microsoft.@PLATFORM@.Runtime.iossimulator-x86",
+				"Microsoft.@PLATFORM@.Runtime.iossimulator-x64",
+				"Microsoft.@PLATFORM@.Runtime.iossimulator-arm64",
 				"Microsoft.@PLATFORM@.Templates"
 			],
 			"extends": [
@@ -19,11 +24,36 @@
 			"kind": "sdk",
 			"version": "@VERSION@"
 		},
-		"Microsoft.@PLATFORM@.Windows.Sdk": {
+		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased": {
 			"kind": "sdk",
-			"version": "@VERSION@"
+			"version": "@VERSION@",
+			"alias-to": {
+				"win-x64": "Microsoft.@PLATFORM@.Windows.Sdk",
+				"win-x86": "Microsoft.@PLATFORM@.Windows.Sdk",
+				"win-arm64": "Microsoft.@PLATFORM@.Windows.Sdk",
+			}
 		},
 		"Microsoft.@PLATFORM@.Ref": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.ios-arm": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.ios-arm64": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.iossimulator-x86": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.iossimulator-x64": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.iossimulator-arm64": {
 			"kind": "framework",
 			"version": "@VERSION@"
 		},

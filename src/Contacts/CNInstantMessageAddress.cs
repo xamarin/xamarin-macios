@@ -1,4 +1,4 @@
-﻿//
+//
 // CNInstantMessageAddress.cs: Implements some nicer methods for CNInstantMessageAddress
 //
 // Authors:
@@ -80,4 +80,3 @@ namespace Contacts {
 		}
 	}
 }
-

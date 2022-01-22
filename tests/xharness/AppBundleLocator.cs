@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
@@ -104,9 +105,24 @@ namespace Xharness {
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
 
-					var rv = await processManager.RunAsync (proc, getLog() ?? new ConsoleLog(), environmentVariables: env, timeout: TimeSpan.FromSeconds (120));
-					if (!rv.Succeeded)
-						throw new Exception ($"Unable to evaluate the property {evaluateProperty}, build failed with exit code {rv.ExitCode}. Timed out: {rv.TimedOut}");
+					// Don't evaluate in parallel on multiple threads to avoid overloading the mac.
+					var acquired = await evaluate_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
+					try {
+						var log = getLog () ?? new ConsoleLog ();
+						var memoryLog = new MemoryLog ();
+						var aggregated = Log.CreateAggregatedLog (memoryLog, log);
+						if (!acquired)
+							aggregated.WriteLine ("Unable to acquire lock to evaluate MSBuild property in 5 minutes; will try to evaluate anyway.");
+						var rv = await processManager.RunAsync (proc, aggregated, environmentVariables: env, timeout: TimeSpan.FromMinutes (5));
+						if (!rv.Succeeded) {
+							var msg = $"Unable to evaluate the property {evaluateProperty} in {projectPath}, build failed with exit code {rv.ExitCode}. Timed out: {rv.TimedOut}";
+							Console.WriteLine (msg + " Output: \n" + memoryLog.ToString ());
+							throw new Exception (msg);
+						}
+					} finally {
+						if (acquired)
+							evaluate_semaphore.Release ();
+					}
 					
 					return File.ReadAllText (output).Trim ();
 				}
@@ -115,6 +131,8 @@ namespace Xharness {
 				File.Delete (output);
 			}
 		}
+
+		SemaphoreSlim evaluate_semaphore = new SemaphoreSlim (1);
 
 		public string GetDotNetExecutable (string directory)
 		{

@@ -33,6 +33,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
@@ -320,7 +321,15 @@ namespace AVFoundation {
 			return del;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveInterruption' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
+#endif
 		public event EventHandler BeginInterruption {
 			add {
 				EnsureEventDelegate ().cbBeginInterruption += value;
@@ -330,7 +339,15 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveInterruption' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
+#endif
 		public event EventHandler EndInterruption {
 			add {
 				EnsureEventDelegate ().cbEndInterruption += value;
@@ -340,7 +357,15 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+#endif
 		public event EventHandler<AVCategoryEventArgs> CategoryChanged {
 			add {
 				EnsureEventDelegate ().cbCategoryChanged += value;
@@ -350,7 +375,15 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+#endif
 		public event EventHandler<AVStatusEventArgs> InputAvailabilityChanged {
 			add {
 				EnsureEventDelegate ().cbInputAvailabilityChanged += value;
@@ -360,7 +393,15 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+#endif
 		public event EventHandler<AVSampleRateEventArgs> SampleRateChanged {
 			add {
 				EnsureEventDelegate ().cbSampleRateChanged += value;
@@ -371,7 +412,15 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+#endif
 		public event EventHandler<AVChannelsEventArgs> InputChannelsChanged {
 			add {
 				EnsureEventDelegate ().cbInputChanged += value;
@@ -382,7 +431,15 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+#endif
 		public event EventHandler<AVChannelsEventArgs> OutputChannelsChanged {
 			add {
 				EnsureEventDelegate ().cbOutputChanged += value;

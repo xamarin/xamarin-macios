@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Clang;
@@ -98,7 +98,7 @@ namespace Extrospection
 
 		public void ProcessItem (ICustomAttributeProvider item, string itemName, VersionTuple objcVersion, string framework)
 		{
-			// Our bindings do not need have [Deprecated] for ancicent versions we don't support anymore
+			// Our bindings do not need have [Deprecated] for ancient versions we don't support anymore
 			if (VersionHelpers.VersionTooOldToCare (objcVersion))
 				return;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -39,6 +39,9 @@ namespace Xamarin.MacDev.Tasks
 			if (BundleResources != null) {
 				foreach (var item in BundleResources) {
 					var logicalName = item.GetMetadata ("LogicalName");
+					// if logicalName is null or empty, use the filename
+					if (string.IsNullOrEmpty (logicalName))
+						logicalName = Path.GetFileName (item.GetMetadata ("FullPath"));
 					var outputPath = item.GetMetadata ("OutputPath");
 					IList<string> tags;
 					string hash;

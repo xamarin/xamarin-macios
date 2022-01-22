@@ -39,7 +39,9 @@ namespace Introspection {
 			case "MonoTouch.MetalPerformanceShaders":
 			case "MLCompute":
 			case "MediaSetup":
-				if (Runtime.Arch == Arch.SIMULATOR)
+			case "Phase":
+			case "ThreadNetwork":
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
@@ -53,7 +55,7 @@ namespace Introspection {
 			case "PKPushCredentials":
 			case "PKPushPayload":
 			case "PKPushRegistry":
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 
 				// Requires iOS 8.2 or later in 32-bit mode
@@ -68,7 +70,7 @@ namespace Introspection {
 			case "MTLHeap":
 			case "MTLSharedTextureHandle":
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 
 				// Requires iOS 10
@@ -79,7 +81,7 @@ namespace Introspection {
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
 				// Symbol not available in simulator - but works on BigSur (others might too)
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "CMMovementDisorderManager":
@@ -131,7 +133,7 @@ namespace Introspection {
 			case "MonoTouch.CoreAudioKit":
 			case "CoreAudioKit":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 
@@ -146,7 +148,7 @@ namespace Introspection {
 
 			switch (type.Name) {
 			case "CAMetalLayer":
-				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 #if !XAMCORE_3_0
 				// mistake (base type) fixed by a breaking change
 			case "MFMailComposeViewControllerDelegate":
@@ -330,6 +332,11 @@ namespace Introspection {
 				case "HKAudiogramSensitivityPoint": // Conformance not in headers
 				case "HMAccessoryOwnershipToken": // Conformance not in headers
 				case "HMAddAccessoryRequest": // Conformance not in headers
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -439,7 +446,12 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
+				case "UISheetPresentationControllerDetent": // Conformance not in headers
+				case "UIWindowSceneActivationConfiguration": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -570,6 +582,11 @@ namespace Introspection {
 				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
 				case "HMAccessoryOwnershipToken":  // Conformance not in headers
 				case "HMAddAccessoryRequest":  // Conformance not in headers
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -677,7 +694,12 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
+				case "UISheetPresentationControllerDetent": // conformance not in headers
+				case "CAConstraintLayoutManager": // Not declared in header file
 					return true;
 				}
 				break;
@@ -717,6 +739,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.3
 				case "WKPreferences": // Conformance not in headers
+				case "QLPreviewSceneActivationConfiguration":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
@@ -740,6 +763,7 @@ namespace Introspection {
 				case "HKDiscreteQuantitySample": // Conformance not in headers
 				case "HKAudiogramSample": // Conformance not in headers
 				case "UIImage": // only complains on tvOS beta 6
+				case "HMAccessoryOwnershipToken":
 					return true;
 				// Xcode 12 beta 2
 				case "HKElectrocardiogram": // Conformance not in headers
@@ -755,10 +779,13 @@ namespace Introspection {
 					return true;
 #endif
 				// Xcode 13
+				case "PHCloudIdentifier":
+				case "PHCloudIdentifierMapping":
 				case "NSEntityMapping":
 				case "NSMappingModel":
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
+				case "UIWindowSceneActivationConfiguration":
 					return true;
 				}
 				break;
@@ -792,6 +819,7 @@ namespace Introspection {
 				// Xcode 13
 				case "NSMergePolicy":
 				case "UNNotificationSettings":
+				case "UIWindowSceneActivationConfiguration":
 					return true;
 				}
 				break;

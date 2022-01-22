@@ -14,6 +14,7 @@ using System;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -22,15 +23,26 @@ using OS_nw_ethernet_channel=System.IntPtr;
 using OS_nw_interface=System.IntPtr;
 using OS_dispatch_data=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
+#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#endif
 	public delegate void NWEthernetChannelReceiveDelegate (DispatchData? content, ushort vlanTag, string? localAddress, string? remoteAddress);
 
+#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#else
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWEthernetChannel : NativeObject {
 
-		internal NWEthernetChannel (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWEthernetChannel (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_ethernet_channel nw_ethernet_channel_create (ushort ether_type, OS_nw_interface networkInterface);

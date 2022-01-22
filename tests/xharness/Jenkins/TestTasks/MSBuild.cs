@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -48,7 +48,7 @@ namespace Xharness.Jenkins.TestTasks {
 			this.errorKnowledgeBase = errorKnowledgeBase ?? throw new ArgumentNullException (nameof (errorKnowledgeBase));
 		}
 
-		public async Task<(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure)> ExecuteAsync (
+		public async Task<(TestExecutingResult ExecutionResult, KnownIssue KnownFailure)> ExecuteAsync (
 			string projectPlatform,
 			string projectConfiguration,
 			string projectFile,
@@ -58,7 +58,7 @@ namespace Xharness.Jenkins.TestTasks {
 			ILog mainLog)
 		{
 			BuildLog = buildLog;
-			(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure) result = (TestExecutingResult.NotStarted, ((string HumanMessage, string IssueLink)?) null);
+			(TestExecutingResult ExecutionResult, KnownIssue KnownFailure) result = (TestExecutingResult.NotStarted, (KnownIssue) null);
 			var restoreResult = await RestoreNugetsAsync (buildLog, resource);
 			if ((restoreResult & TestExecutingResult.Failed) == TestExecutingResult.Failed) {
 				BuildLog.WriteLine ($"Failed to restore nugets: {restoreResult}");

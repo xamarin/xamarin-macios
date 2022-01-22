@@ -1,0 +1,87 @@
+## sharpie maps it to CFNetServicesError, but current location match other values
+!extra-enum-value! Managed value -72008 for CFNetworkErrors.NetServiceMissingRequiredConfiguration not found in native headers
+
+## removed in Xcode 10 (both headers and libs) but would work on older OS
+!unknown-field! kCFHTTPAuthenticationSchemeOAuth1 bound
+
+## unsorted
+!missing-enum! CFHostInfoType not bound
+!missing-enum! CFNetServiceBrowserFlags not bound
+!missing-enum! CFNetServiceMonitorType not bound
+!missing-enum! CFNetServiceRegisterFlags not bound
+!missing-enum! CFNetServicesError not bound
+!missing-enum! CFStreamErrorHTTP not bound
+!missing-enum! CFStreamErrorHTTPAuthentication not bound
+!missing-field! kCFDNSServiceFailureKey not bound
+!missing-field! kCFErrorDomainWinSock not bound
+!missing-field! kCFFTPStatusCodeKey not bound
+!missing-field! kCFGetAddrInfoFailureKey not bound
+!missing-field! kCFHTTPAuthenticationSchemeKerberos not bound
+!missing-field! kCFHTTPAuthenticationSchemeNegotiate2 not bound
+!missing-field! kCFHTTPAuthenticationSchemeXMobileMeAuthToken not bound
+!missing-field! kCFNetworkProxiesHTTPPort not bound
+!missing-field! kCFNetworkProxiesHTTPProxy not bound
+!missing-field! kCFNetworkProxiesProxyAutoConfigEnable not bound
+!missing-field! kCFNetworkProxiesProxyAutoConfigJavaScript not bound
+!missing-field! kCFNetworkProxiesProxyAutoConfigURLString not bound
+!missing-field! kCFProxyAutoConfigurationHTTPResponseKey not bound
+!missing-field! kCFProxyAutoConfigurationJavaScriptKey not bound
+!missing-field! kCFProxyAutoConfigurationURLKey not bound
+!missing-field! kCFProxyHostNameKey not bound
+!missing-field! kCFProxyPasswordKey not bound
+!missing-field! kCFProxyPortNumberKey not bound
+!missing-field! kCFProxyTypeAutoConfigurationJavaScript not bound
+!missing-field! kCFProxyTypeAutoConfigurationURL not bound
+!missing-field! kCFProxyTypeFTP not bound
+!missing-field! kCFProxyTypeHTTP not bound
+!missing-field! kCFProxyTypeHTTPS not bound
+!missing-field! kCFProxyTypeKey not bound
+!missing-field! kCFProxyTypeNone not bound
+!missing-field! kCFProxyTypeSOCKS not bound
+!missing-field! kCFProxyUsernameKey not bound
+!missing-field! kCFSOCKSNegotiationMethodKey not bound
+!missing-field! kCFSOCKSStatusCodeKey not bound
+!missing-field! kCFSOCKSVersionKey not bound
+!missing-field! kCFStreamErrorDomainFTP not bound
+!missing-field! kCFStreamErrorDomainHTTP not bound
+!missing-field! kCFStreamErrorDomainMach not bound
+!missing-field! kCFStreamErrorDomainNetDB not bound
+!missing-field! kCFStreamErrorDomainNetServices not bound
+!missing-field! kCFStreamErrorDomainSystemConfiguration not bound
+!missing-field! kCFStreamErrorDomainWinSock not bound
+!missing-field! kCFStreamNetworkServiceType not bound
+!missing-field! kCFStreamNetworkServiceTypeAVStreaming not bound
+!missing-field! kCFStreamNetworkServiceTypeBackground not bound
+!missing-field! kCFStreamNetworkServiceTypeResponsiveData not bound
+!missing-field! kCFStreamNetworkServiceTypeCallSignaling not bound
+!missing-field! kCFStreamNetworkServiceTypeResponsiveAV not bound
+!missing-field! kCFStreamNetworkServiceTypeVideo not bound
+!missing-field! kCFStreamNetworkServiceTypeVoice not bound
+!missing-field! kCFStreamPropertyAllowConstrainedNetworkAccess not bound
+!missing-field! kCFStreamPropertyAllowExpensiveNetworkAccess not bound
+!missing-field! kCFStreamPropertyConnectionIsCellular not bound
+!missing-field! kCFStreamPropertyConnectionIsExpensive not bound
+!missing-field! kCFStreamPropertyNoCellular not bound
+!missing-field! kCFStreamPropertyProxyLocalBypass not bound
+!missing-field! kCFStreamPropertySocketExtendedBackgroundIdleMode not bound
+!missing-field! kCFStreamPropertySocketRemoteHost not bound
+!missing-field! kCFStreamPropertySocketRemoteNetService not bound
+!missing-field! kCFStreamPropertySSLContext not bound
+!missing-field! kCFStreamPropertySSLPeerTrust not bound
+!missing-field! kCFStreamPropertySSLSettings not bound
+!missing-field! kCFStreamSSLCertificates not bound
+!missing-field! kCFStreamSSLIsServer not bound
+!missing-field! kCFStreamSSLLevel not bound
+!missing-field! kCFStreamSSLPeerName not bound
+!missing-field! kCFStreamSSLValidatesCertificateChain not bound
+!missing-field! kCFURLErrorFailingURLErrorKey not bound
+!missing-field! kCFURLErrorFailingURLStringErrorKey not bound
+!missing-pinvoke! CFHTTPAuthenticationCopyDomains is not bound
+!missing-pinvoke! CFHTTPAuthenticationCopyRealm is not bound
+!missing-pinvoke! CFHTTPMessageCopyBody is not bound
+!missing-pinvoke! CFHTTPMessageCopyHeaderFieldValue is not bound
+!missing-pinvoke! CFHTTPMessageCopyRequestMethod is not bound
+!missing-pinvoke! CFHTTPMessageCopyRequestURL is not bound
+!missing-pinvoke! CFHTTPMessageCopySerializedMessage is not bound
+!missing-pinvoke! CFHTTPMessageCreateCopy is not bound
+!missing-pinvoke! CFHTTPMessageCreateResponse is not bound

@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -21,20 +22,20 @@ namespace SceneKit {
 
 		static SCNMatrix4 []? FromNSArray (NSArray? nsa)
 		{
-			if (nsa == null)
+			if (nsa is null)
 				return null;
 
 			var count = nsa.Count;
 			var ret = new SCNMatrix4 [count];
 			for (nuint i = 0; i < count; i++)
-				ret [i] = Runtime.GetNSObject<NSValue> (nsa.ValueAt (i)).SCNMatrix4Value;
+				ret [i] = Runtime.GetNSObject<NSValue> (nsa.ValueAt (i))!.SCNMatrix4Value;
 
 			return ret;
 		}
 
 		static NSArray ToNSArray (SCNMatrix4 []? items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSArray ();
 
 			var count = items.Length;
@@ -52,12 +53,16 @@ namespace SceneKit {
 			return nsa;
 		}
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		public SCNMatrix4 []? BoneInverseBindTransforms {
 			get { return FromNSArray (_BoneInverseBindTransforms); }
 		}
 
+#if !NET
 		[Mac (10, 10)]
+#endif
 		public static SCNSkinner Create (SCNGeometry baseGeometry,
 			SCNNode [] bones, SCNMatrix4 [] boneInverseBindTransforms,
 			SCNGeometrySource boneWeights, SCNGeometrySource boneIndices)

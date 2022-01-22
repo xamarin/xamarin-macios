@@ -1,12 +1,20 @@
+#if !__MACCATALYST__ // there's a version in UIKit, use that one instead
 using System;
 using CoreGraphics;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AppKit
 {
 	public partial class NSTextContainer
 	{
+#if NET
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 use NSTextContainer.FromSize instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Obsoleted (PlatformName.MacOSX, 10, 11, message : "Use NSTextContainer.FromSize instead.")]
+#endif
 		public NSTextContainer (CGSize size)
 		{
 			Handle = InitWithContainerSize (size);
@@ -20,17 +28,28 @@ namespace AppKit
 				Handle = InitWithSize (size);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[Mac (10,11)]
+#endif
 		public static NSTextContainer FromSize (CGSize size)
 		{
 			return new NSTextContainer (size, false);
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.11")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 use NSTextContainer.FromSize instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use NSTextContainer.FromSize instead.")]
+#endif
 		public static NSTextContainer FromContainerSize (CGSize containerSize)
 		{
 			return new NSTextContainer (containerSize, true);
 		}
 	}
 }
-
+#endif // !__MACCATALYST__

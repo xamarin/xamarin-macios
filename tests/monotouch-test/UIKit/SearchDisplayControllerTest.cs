@@ -117,4 +117,3 @@ namespace MonoTouchFixtures.UIKit {
 }
 
 #endif // !XAMCORE_3_0 && !MONOMAC
-

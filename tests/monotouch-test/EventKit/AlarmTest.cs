@@ -15,6 +15,7 @@ using CoreGraphics;
 using EventKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
 	
@@ -25,7 +26,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void NullAllowedTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var alarm = EKAlarm.FromTimeInterval (1234)) {
 				alarm.AbsoluteDate = null;

@@ -80,9 +80,15 @@ bool xamarin_is_gc_coop = false;
 #endif
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
+enum XamarinTriState xamarin_log_exceptions = XamarinTriStateNone;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 bool xamarin_supports_dynamic_registration = true;
 const char *xamarin_runtime_configuration_name = NULL;
+
+#if DOTNET
+enum XamarinNativeLinkMode xamarin_libmono_native_link_mode = XamarinNativeLinkModeStaticObject;
+const char **xamarin_runtime_libraries = NULL;
+#endif
 
 /* Callbacks */
 
@@ -360,26 +366,25 @@ xamarin_get_managed_object_for_ptr_fast (id self, GCHandle *exception_gchandle)
 	return mobj;
 }
 
-void xamarin_framework_peer_lock ()
+// See comments in the following methods to explain the logic here:
+// xamarin_marshal_return_value_impl in trampolines.m
+// xamarin_release_managed_ref in runtime.m
+void xamarin_framework_peer_waypoint ()
 {
 	// COOP: CHECK
 	MONO_ASSERT_GC_UNSAFE;
-	
+
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&framework_peer_release_lock);
+	pthread_mutex_unlock (&framework_peer_release_lock);
 	MONO_EXIT_GC_SAFE;
 }
 
-// Same as xamarin_framework_peer_lock, except the current mode should be GC Safe.
-void xamarin_framework_peer_lock_safe ()
+// Same as xamarin_framework_peer_waypoint, except the current mode should be GC Safe.
+void xamarin_framework_peer_waypoint_safe ()
 {
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
-
 	pthread_mutex_lock (&framework_peer_release_lock);
-}
-
-void xamarin_framework_peer_unlock ()
-{
 	pthread_mutex_unlock (&framework_peer_release_lock);
 }
 
@@ -693,6 +698,15 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 		return;
 	}
 	
+#if DOTNET
+	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
+	"Could not find an existing managed instance for this object, "
+	"nor was it possible to create a new managed instance "
+	"(because the type '%s' does not have a constructor that takes one NativeHandle argument).\n"
+	"Additional information:\n"
+	"\tSelector: %s\n"
+	"\tMethod: %s\n";
+#else
 	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
 	"Could not find an existing managed instance for this object, "
 	"nor was it possible to create a new managed instance "
@@ -700,6 +714,7 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	"Additional information:\n"
 	"\tSelector: %s\n"
 	"\tMethod: %s\n";
+#endif
 	
 	char *method_full_name = mono_method_full_name (method, TRUE);
 	char *type_name = xamarin_lookup_managed_type_name ([self class], exception_gchandle);
@@ -1254,7 +1269,7 @@ xamarin_initialize ()
 	}
 
 	options.size = sizeof (options);
-#if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
+#if TARGET_OS_SIMULATOR
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
@@ -1318,6 +1333,23 @@ xamarin_initialize ()
 	MONO_EXIT_GC_UNSAFE;
 }
 
+static char *x_app_bundle_path = NULL;
+const char *
+xamarin_get_app_bundle_path ()
+{
+	if (x_app_bundle_path != NULL)
+		return x_app_bundle_path;
+
+	NSBundle *main_bundle = [NSBundle mainBundle];
+
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+	x_app_bundle_path = strdup ([[[main_bundle bundlePath] stringByStandardizingPath] UTF8String]);
+
+	return x_app_bundle_path;
+}
+
 static char *x_bundle_path = NULL;
 const char *
 xamarin_get_bundle_path ()
@@ -1332,7 +1364,7 @@ xamarin_get_bundle_path ()
 	if (main_bundle == NULL)
 		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
 
-#if MONOMAC
+#if TARGET_OS_MACCATALYST || TARGET_OS_OSX
 	if (xamarin_launch_mode == XamarinLaunchModeEmbedded) {
 		bundle_path = [[[NSBundle bundleForClass: [XamarinAssociatedObject class]] bundlePath] stringByAppendingPathComponent: @"Versions/Current"];
 	} else {
@@ -1837,7 +1869,7 @@ xamarin_release_managed_ref (id self, bool user_type)
 		set_flags_safe (self, (enum XamarinGCHandleFlags) (get_flags_safe (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
 		//
-		// This lock is needed so that we can safely call retainCount in the
+		// This waypoint (lock+unlock) is needed so that we can safely call retainCount in the
 		// toggleref callback.
 		//
 		// The race is between the following actions (given a managed object Z):
@@ -1902,8 +1934,8 @@ xamarin_release_managed_ref (id self, bool user_type)
 		//
 		//    This is https://github.com/xamarin/xamarin-macios/issues/3943
 		//
-		xamarin_framework_peer_lock_safe ();
-		xamarin_framework_peer_unlock ();
+		// See also comment in xamarin_marshal_return_value_impl
+		xamarin_framework_peer_waypoint_safe ();
 	}
 
 	[self release];
@@ -2131,6 +2163,34 @@ xamarin_skip_encoding_flags (const char *encoding)
 	}
 }
 
+bool
+xamarin_log_marshalled_exceptions ()
+{
+	if (xamarin_log_exceptions == XamarinTriStateNone) {
+		const char *var = getenv ("XAMARIN_LOG_MARSHALLED_EXCEPTIONS");
+		xamarin_log_exceptions = (var && *var) ? XamarinTriStateEnabled : XamarinTriStateDisabled;
+	}
+	return xamarin_log_exceptions == XamarinTriStateEnabled;
+}
+
+void
+xamarin_log_managed_exception (GCHandle handle, MarshalManagedExceptionMode mode)
+{
+	if (!xamarin_log_marshalled_exceptions ())
+		return;
+
+	NSLog (@PRODUCT ": Processing managed exception for exception marshalling (mode: %i):\n%@", mode, xamarin_print_all_exceptions (handle));
+}
+
+void
+xamarin_log_objectivec_exception (NSException *exception, MarshalObjectiveCExceptionMode mode)
+{
+	if (!xamarin_log_marshalled_exceptions ())
+		return;
+
+	NSLog (@PRODUCT ": Processing Objective-C exception for exception marshalling (mode: %i):\n%@", mode, [exception debugDescription]);
+}
+
 void
 xamarin_process_nsexception (NSException *ns_exception)
 {
@@ -2156,6 +2216,8 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	if (mode == MarshalObjectiveCExceptionModeDefault)
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
 	
+	xamarin_log_objectivec_exception (ns_exception, mode);
+
 	switch (mode) {
 	case MarshalObjectiveCExceptionModeUnwindManagedCode:
 		if (xamarin_is_gc_coop)
@@ -2228,6 +2290,8 @@ xamarin_process_managed_exception (MonoObject *exception)
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
 #endif
 	}
+
+	xamarin_log_managed_exception (handle, mode);
 
 	switch (mode) {
 #if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
@@ -2383,6 +2447,92 @@ xamarin_insert_dllmap ()
 #endif // !DOTNET
 
 #if DOTNET
+
+// List all the assemblies that we can find in the app bundle in:
+// - The bundle directory
+// - The runtimeidentifier-specific subdirectory
+// Caller must free the return value using xamarin_free.
+char *
+xamarin_compute_trusted_platform_assemblies ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *exes = [NSMutableArray array];
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
+
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (NSString *dir in directories) {
+		NSDirectoryEnumerator *enumerator = [manager enumeratorAtURL:[NSURL fileURLWithPath: dir]
+		                                  includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+		                                                     options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+		                                                     errorHandler:nil];
+		for (NSURL *file in enumerator) {
+			// skip subdirectories
+			NSNumber *isDirectory = nil;
+			if (![file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil] || [isDirectory boolValue])
+				continue;
+
+			NSString *name = nil;
+			if (![file getResourceValue:&name forKey:NSURLNameKey error:nil])
+				continue;
+
+			if ([name length] < 4)
+				continue;
+
+			// We want dlls and exes
+			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[exes addObject: [dir stringByAppendingPathComponent: name]];
+			}
+		}
+	}
+
+	// Any .exe files must be at the end, due to https://github.com/dotnet/runtime/issues/62735
+	[files addObjectsFromArray: exes];
+
+	// Join them all together with a colon separating them
+	NSString *joined = [files componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
+char *
+xamarin_compute_native_dll_search_directories ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+
+	// Native libraries might be in the app bundle
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	// They won't be in the runtimeidentifier-specific directory (because they get lipo'ed into a fat file instead)
+	// However, might also be in the Resources/lib directory
+	[directories addObject: [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"lib"]];
+
+	// Missing:
+	// * The parent app bundle if launched from an app extension. This requires adding app extension tests, which we currently don't have.
+
+	// Remove the ones that don't exist
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (int i = (int) [directories count] - 1; i >= 0; i--) {
+		NSString *dir = [directories objectAtIndex: (NSUInteger) i];
+		BOOL isDirectory;
+		if ([manager fileExistsAtPath: dir isDirectory: &isDirectory] && isDirectory)
+			continue;
+
+		[directories removeObjectAtIndex: (NSUInteger) i];
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [directories componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
 void
 xamarin_vm_initialize ()
 {
@@ -2396,17 +2546,28 @@ xamarin_vm_initialize ()
 		icu_dat_file_path = path;
 	}
 
+	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
+	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
+
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
+		"APP_CONTEXT_BASE_DIRECTORY", // path to where the managed assemblies are (usually at least - RID-specific assemblies will be in subfolders)
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
 		"ICU_DAT_FILE_PATH",
+		"TRUSTED_PLATFORM_ASSEMBLIES",
+		"NATIVE_DLL_SEARCH_DIRECTORIES",
+		"RUNTIME_IDENTIFIER",
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
+		xamarin_get_bundle_path (),
 		pinvokeOverride,
 		icu_dat_file_path,
+		trusted_platform_assemblies,
+		native_dll_search_directories,
+		RUNTIMEIDENTIFIER,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
@@ -2414,8 +2575,39 @@ xamarin_vm_initialize ()
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
 	xamarin_free (pinvokeOverride);
 
+	xamarin_free (trusted_platform_assemblies);
+	xamarin_free (native_dll_search_directories);
+
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");
+}
+
+static bool
+xamarin_is_native_library (const char *libraryName)
+{
+	if (xamarin_runtime_libraries == NULL)
+		return false;
+
+	size_t libraryNameLength = strlen (libraryName);
+	// The libraries in xamarin_runtime_libraries are extension-less, so we need to
+	// remove any .dylib extension for the library name we're comparing with too.
+	if (libraryNameLength > 6 && strcmp (libraryName + libraryNameLength - 6, ".dylib") == 0)
+		libraryNameLength -= 6;
+
+	bool rv = false;
+	for (int i = 0; xamarin_runtime_libraries [i] != NULL; i++) {
+		// Check if the start of the current xamarin_runtime_libraries entry matches libraryName
+		if (!strncmp (xamarin_runtime_libraries [i], libraryName, libraryNameLength)) {
+			// The start matches, now check if that's all there is
+			if (xamarin_runtime_libraries [i] [libraryNameLength] == 0) {
+				// If so, we've got a match
+				rv = true;
+				break;
+			}
+		}
+	}
+
+	return rv;
 }
 
 void*
@@ -2440,10 +2632,35 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined (__arm64__)
+			} else {
+				return NULL;
 			}
+		} else {
+			return NULL;
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)
+	} else if (xamarin_is_native_library (libraryName)) {
+		switch (xamarin_libmono_native_link_mode) {
+		case XamarinNativeLinkModeStaticObject:
+			// lookup the symbol in loaded memory, like __Internal does.
+			symbol = dlsym (RTLD_DEFAULT, entrypointName);
+			break;
+		case XamarinNativeLinkModeDynamicLibrary:
+			// if we're not linking statically, then don't do anything at all, let mono handle whatever needs to be done
+			return NULL;
+		case XamarinNativeLinkModeFramework:
+		default:
+			// handle this as "DynamicLibrary" for now - do nothing.
+			LOG (PRODUCT ": Unhandled libmono link mode: %i when looking up %s in %s", xamarin_libmono_native_link_mode, entrypointName, libraryName);
+			return NULL;
+		}
+	} else {
+		return NULL;
+	}
+
+	if (symbol == NULL) {
+		LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the library '%s'", entrypointName, libraryName);
 	}
 
 	return symbol;

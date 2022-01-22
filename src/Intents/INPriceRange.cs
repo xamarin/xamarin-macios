@@ -1,4 +1,4 @@
-﻿//
+//
 // INPriceRange extensions and syntax sugar
 //
 // Authors:

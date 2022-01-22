@@ -1,4 +1,4 @@
-﻿//
+//
 // AVDepthDataTests.cs
 //
 // Authors:
@@ -10,7 +10,6 @@
 
 #if !__WATCHOS__
 
-using System;
 using NUnit.Framework;
 
 using AVFoundation;

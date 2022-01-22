@@ -14,6 +14,7 @@ using System;
 using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Collections;
 
 using CoreGraphics;
@@ -79,7 +80,7 @@ namespace UIKit {
 			}
 		}
 
-#if !XAMCORE_4_0 && !__MACCATALYST__
+#if !NET && !__MACCATALYST__
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
@@ -107,9 +108,15 @@ namespace UIKit {
 				}
 			}
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 
+#if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public unsafe void ShowGlyphs (
 			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
 			CGPoint [] /* const CGPoint* */ positions,
@@ -126,7 +133,7 @@ namespace UIKit {
 			}
 		}
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !NET && !MONOMAC
 		// TextContainerForGlyphAtIndex
 		[Obsolete ("Use 'GetTextContainer' instead.")]
 		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex)
@@ -190,7 +197,7 @@ namespace UIKit {
 		{
 			return GetCharacterRange (charRange, out actualCharRange);
 		}
-#endif // !XAMCORE_4_0 && !MONOMAC
+#endif // !NET && !MONOMAC
 
 		public unsafe nuint GetLineFragmentInsertionPoints (
 			nuint /* NSUInteger */ charIndex, 

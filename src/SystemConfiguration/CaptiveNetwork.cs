@@ -141,7 +141,7 @@ namespace SystemConfiguration {
 				return StatusCodeError.SCError ();
 			}
 			
-			supportedInterfaces = NSArray.StringArrayFromHandle (array);
+			supportedInterfaces = CFArray.StringArrayFromHandle (array);
 			CFObject.CFRelease (array);
 			return StatusCode.OK;
 		}

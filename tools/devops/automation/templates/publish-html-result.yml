@@ -12,6 +12,7 @@ parameters:
 steps:
 
 - checkout: self
+  path: s/xamarin-macios
   persistCredentials: true
 
 - checkout: macios.ci 
@@ -105,7 +106,7 @@ steps:
     }
 
     # clean logs, xml, etc print those rm calls for debugging
-    $extensionsToDelete = @("*.log", "*.tmp", "*.txt", "*.xml", "*.crash", "*.css", "*.js", "*.cs", "*.binlog")
+    $extensionsToDelete = @("*.log", "*.tmp", "*.txt", "*.xml", "*.crash", "*.css", "*.js", "*.cs", "*.binlog", "*.todo.html")
     foreach ($extension in $extensionsToDelete) {
       Get-ChildItem -Path $destinationRoot -Filter $extension -Recurse -File | ForEach-Object {
         Write-Host "rm $($_.FullName)"
@@ -127,7 +128,7 @@ steps:
     git config user.name "vs-mobiletools-engineering-service2"
 
     git add $Env:PublishingPath
-    git commit -m"[CI] Add test results for build $Env:OriginalBuildId"
+    git commit -m"[CI] Add test results for branch $Env:BuildSourceBranch build $Env:OriginalBuildId"
     git push origin $Env:PublishingBranchName -f
   displayName: 'Add files and clean logs'
   timeoutInMinutes: 30

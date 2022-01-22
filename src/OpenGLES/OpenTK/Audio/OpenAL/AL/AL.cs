@@ -1,4 +1,4 @@
-﻿#region --- OpenTK.OpenAL License ---
+#region --- OpenTK.OpenAL License ---
 /* AlFunctions.cs
  * C header: \OpenAL 1.1 SDK\include\Al.h
  * Spec: http://www.openal.org/openal_webstf/specs/OpenAL11Specification.pdf

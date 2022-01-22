@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLStereoscopicCamera Unit Tests
 //
 // Authors:

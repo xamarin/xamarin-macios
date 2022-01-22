@@ -1,4 +1,4 @@
-﻿//
+//
 // PdfAnnotation Unit Tests
 //
 // Authors:

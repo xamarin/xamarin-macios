@@ -1,4 +1,4 @@
-﻿//
+//
 // ILReader to parse the byte array provided by MethodBase.GetMethodBody ().GetILAsByteArray () into better-looking IL instructions.
 //
 // Authors:

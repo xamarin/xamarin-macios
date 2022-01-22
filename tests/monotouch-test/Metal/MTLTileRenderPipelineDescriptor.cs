@@ -1,4 +1,4 @@
-﻿#if __IOS__
+#if __IOS__
 
 using System;
 
@@ -7,6 +7,7 @@ using Metal;
 using ObjCRuntime;
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Metal {
 
@@ -20,7 +21,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 			descriptor = new MTLTileRenderPipelineDescriptor ();
 		}
 

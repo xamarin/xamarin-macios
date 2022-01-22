@@ -27,5 +27,5 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' == 'true'" Directories="$(OutputPath);$(IntermediateOutputPath)" RemoveAppDir="$(RemoveAppDir)" ContinueOnError="true" />
 	</Target>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Local.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Local.targets')" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.HotRestart.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.HotRestart.targets')" /> 
 </Project>

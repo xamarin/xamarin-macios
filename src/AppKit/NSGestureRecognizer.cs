@@ -1,4 +1,4 @@
-﻿// 
+// 
 // NSGestureRecognizer: Implements some helper methods for NSGestureRecognizer
 //
 // Authors:
@@ -6,6 +6,9 @@
 //     
 // Copyright 2014 Xamarin Inc. All rights reserved
 //
+
+#if !__MACCATALYST__
+
 using System;
 using System.Collections;
 using Foundation; 
@@ -191,3 +194,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

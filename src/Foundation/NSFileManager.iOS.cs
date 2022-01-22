@@ -48,4 +48,3 @@ namespace Foundation {
 }
 
 #endif // !MONOMAC
-

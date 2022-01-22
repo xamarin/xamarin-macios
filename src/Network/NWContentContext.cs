@@ -11,9 +11,14 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
@@ -21,11 +26,21 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	//
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWContentContext : NativeObject {
 		bool global;
-		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
+#else
+		public NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 
@@ -129,9 +144,9 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		public T GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
+		public T? GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
 		{
-			if (protocolDefinition == null)
+			if (protocolDefinition is null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);

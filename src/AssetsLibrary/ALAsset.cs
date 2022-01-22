@@ -10,15 +10,20 @@
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
+using CoreFoundation;
 using CoreLocation;
 using UIKit;
 using MediaPlayer;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace AssetsLibrary {
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
+	// dotnet deprecation is handled by partial class in assetslibrary.cs
+#endif
 	public partial class ALAsset {
 		public ALAssetType AssetType {
 			get {
@@ -59,10 +64,10 @@ namespace AssetsLibrary {
 			}
 		}
 
-		public string [] Representations {
+		public string[] Representations {
 			get {
 				var k = ValueForProperty (_PropertyRepresentations);
-				return NSArray.StringArrayFromHandle (k.Handle);
+				return CFArray.StringArrayFromHandle (k.Handle)!;
 			}
 		}
 
@@ -84,4 +89,3 @@ namespace AssetsLibrary {
 	}
 
 }
-

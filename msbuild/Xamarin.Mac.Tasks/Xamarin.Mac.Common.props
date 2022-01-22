@@ -43,22 +43,11 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<CodesignProvision Condition="'$(CodesignProvision)' == ''"></CodesignProvision>
-		<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''"></CodesignEntitlements>
-		<CodesignExtraArgs Condition="'$(CodesignExtraArgs)' == ''"></CodesignExtraArgs>
-		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
 		<HttpClientHandler Condition="'$(HttpClientHandler)' == ''">HttpClientHandler</HttpClientHandler>
-		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
-		<PackageSigningKey Condition="'$(PackageSigningKey)' == ''"></PackageSigningKey>
-		<ProductDefinition Condition="'$(ProductDefinition)' == ''"></ProductDefinition>
-		<PackagingExtraArgs Condition="'$(PackagingExtraArgs)' == ''"></PackagingExtraArgs>
 		<I18n Condition="'$(I18n)' == ''"></I18n>
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
-		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
-		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
-		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
-		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
-		<Profiling Condition="'$(MtouchProfiling)' == ''">False</Profiling>
+		<Profiling Condition="'$(Profiling)' == '' And '$(MtouchProfiling)' != ''">$(MtouchProfiling)</Profiling>
+		<Profiling Condition="'$(Profiling)' == ''">False</Profiling>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">

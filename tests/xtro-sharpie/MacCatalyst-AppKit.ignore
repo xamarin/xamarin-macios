@@ -1,2 +1,0 @@
-## keep requirement since it will create code that is safer for cross-platform usage
-!extra-requires-super! NSObject::awakeFromNib is incorrectly decorated with an [RequiresSuper] attribute

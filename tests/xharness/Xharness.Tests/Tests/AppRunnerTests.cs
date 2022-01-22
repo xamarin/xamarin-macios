@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.CLI;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.Common.Utilities;
@@ -261,6 +262,7 @@ namespace Xharness.Tests {
 				mainLog.Object,
 				TimeSpan.FromHours (1),
 				null,
+				5,
 				cancellationToken));
 		}
 
@@ -304,6 +306,7 @@ namespace Xharness.Tests {
 				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
+				5,
 				null));
 		}
 
@@ -320,7 +323,7 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false))
+				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false, true))
 				.Returns (Task.FromResult(true));
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
@@ -403,7 +406,7 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false))
+				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false, true))
 				.Returns (Task.FromResult(true));
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
@@ -460,6 +463,7 @@ namespace Xharness.Tests {
 					mainLog.Object,
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
+					5,
 					It.IsAny<CancellationToken> ()))
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
@@ -505,7 +509,7 @@ namespace Xharness.Tests {
 			simulators.VerifyAll ();
 
 			captureLog.Verify (x => x.StartCapture (), Times.AtLeastOnce);
-			captureLog.Verify (x => x.StopCapture (), Times.AtLeastOnce);
+			captureLog.Verify (x => x.StopCapture (null), Times.AtLeastOnce);
 
 			// When ensureCleanSimulatorState == true
 			simulator.Verify (x => x.PrepareSimulator (It.IsAny<ILog> (), appName));
@@ -624,6 +628,7 @@ namespace Xharness.Tests {
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
+					5,
 					It.IsAny<CancellationToken> ()))
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
@@ -732,6 +737,7 @@ namespace Xharness.Tests {
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
+					5,
 					It.IsAny<CancellationToken> ()))
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 

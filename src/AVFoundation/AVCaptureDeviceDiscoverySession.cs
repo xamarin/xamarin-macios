@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVCaptureDeviceDiscoverySession.cs
 //
 // Authors:

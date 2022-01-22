@@ -103,15 +103,27 @@ oldXcodes=(
 	"/Applications/Xcode_12.2.0-beta3.app"
 	"/Applications/Xcode_12.2.0-beta.3.app"
 	"/Applications/Xcode_12.2.0-rc.app"
+	"/Applications/Xcode_12.5.0-rc.app"
+	"/Applications/Xcode_13.0.0-beta.app"
+	"/Applications/Xcode_13.0.0-beta2.app"
+	"/Applications/Xcode_13.0.0-beta3.app"
 )
 
 # remove wrongly added .xip files under /Applications, confuses provisionator and 
 # are not needed and wrong
 sudo rm -Rf /Applications/*.xip
 
+# pick the current selected xcode to make sure we do not remove it.
+XCODE_SELECT=$(xcode-select -p)
+
 for oldXcode in "${oldXcodes[@]}"; do
-    sudo rm -Rf "$oldXcode"
+	if [ "$XCODE_SELECT" != "$oldXcode/Contents/Developer" ]; then
+		sudo rm -Rf "$oldXcode"
+	else
+		echo "Not removing $oldXcode because is the currently selected one."
+	fi
 done
+
 
 
 # Print disk status after cleaning

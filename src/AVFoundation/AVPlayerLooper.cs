@@ -30,7 +30,7 @@ namespace AVFoundation {
 
 	public partial class AVPlayerLooper {
 
-#if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
+#if !NET // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
 
 		bool loopingEnabled = true;
 

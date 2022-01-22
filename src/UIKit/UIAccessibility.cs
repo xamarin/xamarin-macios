@@ -13,6 +13,7 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 using CoreGraphics;
+using System.Runtime.Versioning;
 
 using System;
 using System.Runtime.InteropServices;
@@ -273,10 +274,8 @@ namespace UIKit {
 			}
 		}
 
-#if !XAMCORE_4_0
 #if !NET
 		[iOS (8,0)]
-#endif
 		[Obsolete ("Use 'DarkerSystemColorsEnabled' instead.")]
 		public static bool DarkerSystemColosEnabled {
 			get {
@@ -301,14 +300,26 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[TV (14,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityButtonShapesEnabled ();
 
+#if !NET
 		[TV (14,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#endif
 		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled ();
 
 #if !NET
@@ -343,22 +354,44 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[TV (14,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityPrefersCrossFadeTransitions ();
 
+#if !NET
 		[TV (14,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#endif
 		public static bool PrefersCrossFadeTransitions => UIAccessibilityPrefersCrossFadeTransitions ();
 
+#if !NET
 		[iOS (13,0), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsVideoAutoplayEnabled ();
 
+#if !NET
 		[iOS (13,0), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
 		static public bool IsVideoAutoplayEnabled => UIAccessibilityIsVideoAutoplayEnabled ();
 
 #if !NET
@@ -441,20 +474,40 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[iOS (13,0), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityShouldDifferentiateWithoutColor ();
 
+#if !NET
 		[iOS (13,0), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
 		public static bool ShouldDifferentiateWithoutColor => UIAccessibilityShouldDifferentiateWithoutColor ();
 
+#if !NET
 		[iOS (13,0), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsOnOffSwitchLabelsEnabled ();
 
+#if !NET
 		[iOS (13,0), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
 		public static bool IsOnOffSwitchLabelsEnabled => UIAccessibilityIsOnOffSwitchLabelsEnabled ();
 
 #if !TVOS

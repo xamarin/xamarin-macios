@@ -550,10 +550,10 @@ function check_xcode () {
 	check_specific_xcode
 	install_coresimulator
 
-	local IOS_SDK_VERSION OSX_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
+	local IOS_SDK_VERSION MACOS_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	OSX_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
+	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
 	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
 	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
 
@@ -562,9 +562,9 @@ function check_xcode () {
 		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update IOS_SDK_VERSION in Make.config."
 	fi
 
-	local D=$XCODE_DEVELOPER_ROOT/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${OSX_SDK_VERSION}.sdk
+	local D=$XCODE_DEVELOPER_ROOT/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${MACOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
-		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update OSX_SDK_VERSION in Make.config."
+		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update MACOS_SDK_VERSION in Make.config."
 	fi
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS${TVOS_SDK_VERSION}.sdk
@@ -784,6 +784,18 @@ function check_osx_version () {
 
 	ok "Found OSX $ACTUAL_OSX_VERSION (at least $MIN_OSX_BUILD_VERSION is required)"
 }
+
+function check_checkout_dir () {
+	# use apple script to get the possibly translated special folders and check that we are not a subdir
+	for special in documents downloads desktop; do
+		path=$(osascript -e "set result to POSIX path of (path to $special folder as string)")
+		if [[ $PWD == $path* ]]; then
+			fail "Your checkout is under $path which is a special path. This can result in problems running the tests."
+		fi
+	done
+	ok "Checkout location will not result in test problems."
+}
+
 
 function install_cmake () {
 	if ! brew --version >& /dev/null; then
@@ -1045,6 +1057,7 @@ function check_dotnet ()
 echo "Checking system..."
 
 check_osx_version
+check_checkout_dir
 check_xcode
 check_homebrew
 check_autotools

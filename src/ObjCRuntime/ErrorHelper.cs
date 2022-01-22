@@ -11,28 +11,30 @@ using System.Collections.Generic;
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 
+#nullable enable
+
 #if BUNDLER || MSBUILD_TASKS
 namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {
 #endif
 	static partial class ErrorHelper {
-		public static ProductException CreateError (int code, string message, params object [] args)
+		public static ProductException CreateError (int code, string message, params object? [] args)
 		{
-			return new ProductException (code, true, message, args);
+			return new ProductException (code, true, null, message, args);
 		}
 
-		public static ProductException CreateError (int code, Exception innerException, string message, params object [] args)
+		public static ProductException CreateError (int code, Exception? innerException, string message, params object? [] args)
 		{
 			return new ProductException (code, true, innerException, message, args);
 		}
 
-		public static ProductException CreateWarning (int code, string message, params object [] args)
+		public static ProductException CreateWarning (int code, string message, params object? [] args)
 		{
-			return new ProductException (code, false, message, args);
+			return new ProductException (code, false, null, message, args);
 		}
 
-		public static ProductException CreateWarning (int code, Exception innerException, string message, params object [] args)
+		public static ProductException CreateWarning (int code, Exception? innerException, string message, params object? [] args)
 		{
 			return new ProductException (code, false, innerException, message, args);
 		}
@@ -47,9 +49,9 @@ namespace ObjCRuntime {
 
 		internal static void CollectExceptions (Exception ex, List<Exception> exceptions)
 		{
-			AggregateException ae = ex as AggregateException;
+			var ae = ex as AggregateException;
 
-			if (ae != null && ae.InnerExceptions.Count > 0) {
+			if (ae is not null && ae.InnerExceptions.Count > 0) {
 				foreach (var ie in ae.InnerExceptions)
 					CollectExceptions (ie, exceptions);
 			} else {

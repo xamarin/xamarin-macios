@@ -1,4 +1,4 @@
-﻿//
+//
 // GKGridGraph.cs: Implements some nicer methods for GKGridGraph
 //
 // Authors:

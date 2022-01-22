@@ -1,4 +1,4 @@
-﻿// Copyright 2017 Xamarin Inc.
+// Copyright 2017 Xamarin Inc.
 
 using System;
 using System.Collections.Generic;

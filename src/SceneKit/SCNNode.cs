@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using CoreAnimation;
 #endif
 using Foundation;
+using ObjCRuntime;
 
 #nullable enable
 
@@ -115,7 +116,7 @@ namespace SceneKit
 			return isPaused;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// SCNNodePredicate is defined as:
 		// 	delegate bool SCNNodePredicate (SCNNode node, out bool stop);
 		// but the actual objective-c definition of the block is

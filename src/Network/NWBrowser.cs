@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -21,20 +22,31 @@ using OS_nw_browse_descriptor=System.IntPtr;
 using OS_nw_parameters=System.IntPtr;
 using dispatch_queue_t =System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	public delegate void NWBrowserChangesDelegate (NWBrowseResult? oldResult, NWBrowseResult? newResult, bool completed);
 
 	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult? result, NWBrowseResultChange change)>? changes);
 
+#if !NET
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWBrowser : NativeObject {
 
 		bool started = false;
 		bool queueSet = false;
 		object startLock = new Object ();
 
-		internal NWBrowser (IntPtr handle, bool owns) : base (handle, owns)
+		[Preserve (Conditional = true)]
+		internal NWBrowser (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 			SetChangesHandler (InternalChangesHandler);
 		}

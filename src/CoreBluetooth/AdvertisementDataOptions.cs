@@ -30,6 +30,7 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -39,7 +40,9 @@ namespace CoreBluetooth {
 	// It's intentionally not called AdvertisementDataOptions because different options
 	// are valid in different contexts
 	//
+#if !NET
 	[Watch (4,0)]
+#endif
 	public class StartAdvertisingOptions : DictionaryContainer
 	{
 #if !COREBUILD
@@ -73,4 +76,3 @@ namespace CoreBluetooth {
 #endif
 	}
 }
-

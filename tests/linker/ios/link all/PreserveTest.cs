@@ -105,22 +105,31 @@ namespace LinkAll.Attributes {
 		public void Runtime_RegisterEntryAssembly ()
 		{
 #if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/xamarin/xamarin-macios/issues/10457");
+			TestRuntime.AssertSimulator ("https://github.com/xamarin/xamarin-macios/issues/10457");
 #endif
 
 			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// RegisterEntryAssembly is only needed for the simulator (not on devices) so it's only preserved for sim builds
 			var method = klass.GetMethod ("RegisterEntryAssembly", BindingFlags.NonPublic | BindingFlags.Static, null, new [] { typeof (Assembly) }, null);
-			Assert.That (method == null, Is.EqualTo (Runtime.Arch == Arch.DEVICE), "RegisterEntryAssembly");
+#if __MACOS__
+			var expectedNull = true;
+#else
+			var expectedNull = TestRuntime.IsDevice;
+#endif
+			Assert.That (method == null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
 		}
 
 		[Test]
 		public void MonoTouchException_Unconditional ()
 		{
-			var klass = Type.GetType ("Foundation.MonoTouchException, " + AssemblyName);
-			Assert.NotNull (klass, "MonoTouchException");
+#if __MACOS__
+			const string klassName = "ObjCException";
+#else
+			const string klassName = "MonoTouchException";
+#endif
+			var klass = Type.GetType ("Foundation." + klassName +", " + AssemblyName);
+			Assert.NotNull (klass, klassName);
 		}
 
 		[Test]

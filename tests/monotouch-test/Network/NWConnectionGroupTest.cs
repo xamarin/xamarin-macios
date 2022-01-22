@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+using System;
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
 
 using NUnit.Framework;
 
@@ -60,6 +57,58 @@ namespace MonoTouchFixtures.Network {
 			using var q = new DispatchQueue (label: "monitor");
 			Assert.DoesNotThrow (() => {
 				connectionGroup.SetQueue (q);
+			});
+		}
+
+		[Test]
+		public void GetProtocolMetadataContextTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				using var context = new NWContentContext ("test");
+				connectionGroup.GetProtocolMetadata (context);
+			});
+		}
+		
+		[Test]
+		public void GetProtocolMetadataContextDefinitionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				using var context = new NWContentContext ("test");
+				connectionGroup.GetProtocolMetadata (context);
+			});
+		}
+		
+		[Test]
+		public void ExtractConnectionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions());
+			});
+		}
+
+		[Test]
+		public void TryReinsertExtractedConnectionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var conn = connectionGroup.ExtractConnection (endpoint, new NWProtocolTcpOptions());
+				if (conn is not null) {
+					connectionGroup.TryReinsertExtractedConnection (conn);
+				}
+			});
+		}
+		
+		[Test]
+		public void SetNewConnectionHandlerTest()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				connectionGroup.SetNewConnectionHandler ((conn) => {
+					Console.WriteLine ("New connection received.");
+				});
 			});
 		}
 	}

@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !missing-requires-super!

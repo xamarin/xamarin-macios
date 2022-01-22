@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Linq;
@@ -39,38 +42,38 @@ using Foundation;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
-public class BindingTouch {
+public class BindingTouch : IDisposable {
 	TargetFramework? target_framework;
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
 	public bool skipSystemDrawing;
-	public string outfile;
+	public string? outfile;
 
-	string baselibdll;
-	string attributedll;
+	string? baselibdll;
+	string? attributedll;
 
 	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
 
-	public MetadataLoadContext universe;
+	public MetadataLoadContext? universe;
 	public TypeManager TypeManager = new TypeManager ();
-	public Frameworks Frameworks;
-	public AttributeManager AttributeManager;
-
+	public Frameworks? Frameworks;
+	public AttributeManager? AttributeManager;
+	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
 		get { return ikvm_type_lookup;  }
 	}
 
 	public TargetFramework TargetFramework {
-		get { return target_framework.Value; }
+		get { return target_framework!.Value; }
 	}
 
 	public static string ToolName {
 		get { return "bgen"; }
 	}
 
-	bool IsDotNet {
+	internal bool IsDotNet {
 		get { return TargetFramework.IsDotNet; }
 	}
 
@@ -95,7 +98,7 @@ public class BindingTouch {
 	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
-			return attributedll;
+			return attributedll!;
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -192,7 +195,7 @@ public class BindingTouch {
 
 	static int Main2 (string [] args)
 	{
-		var touch = new BindingTouch ();
+		using var touch = new BindingTouch ();
 		return touch.Main3 (args);
 	}
 
@@ -200,9 +203,9 @@ public class BindingTouch {
 	{
 		bool show_help = false;
 		bool zero_copy = false;
-		string basedir = null;
-		string tmpdir = null;
-		string ns = null;
+		string? basedir = null;
+		string? tmpdir = null;
+		string? ns = null;
 		bool delete_temp = true, debug = false;
 		bool unsafef = true;
 		bool external = false;
@@ -216,7 +219,7 @@ public class BindingTouch {
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
 		var defines = new List<string> ();
-		string generate_file_list = null;
+		string? generate_file_list = null;
 		bool process_enums = false;
 		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
 
@@ -435,6 +438,9 @@ public class BindingTouch {
 			cargs.Add ("-r:" + baselibdll);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (paths);
 			if (nostdlib) {
 				cargs.Add ("-nostdlib");
@@ -556,6 +562,9 @@ public class BindingTouch {
 			cargs.Add ("-out:" + outfile);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (g.GeneratedFiles);
 			cargs.AddRange (core_sources);
 			cargs.AddRange (extra_sources);
@@ -589,6 +598,24 @@ public class BindingTouch {
 			var di = Directory.CreateDirectory (p);
 			return di.FullName;
 		}
+	}
+
+	protected virtual void Dispose (bool disposing)
+	{
+		if (!disposedValue) {
+			if (disposing) {
+				universe?.Dispose ();
+				universe = null;
+			}
+
+			disposedValue = true;
+		}
+	}
+
+	public void Dispose ()
+	{
+		Dispose (disposing: true);
+		GC.SuppressFinalize (this);
 	}
 }
 

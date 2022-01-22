@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 
 namespace Xamarin.Mac.Tests
 {

@@ -1,44 +1,15 @@
+!missing-enum! MIDICVStatus not bound
+!missing-enum! MIDIMessageType not bound
+!missing-enum! MIDINetworkConnectionPolicy not bound
+!missing-enum! MIDINoteAttribute not bound
 !missing-enum! MIDINotificationMessageID not bound
 !missing-enum! MIDIObjectType not bound
+!missing-enum! MIDIPerNoteManagementOptions not bound
+!missing-enum! MIDIProgramChangeOptions not bound
 !missing-enum! MIDIProtocolID not bound
-!missing-pinvoke! MIDIClientCreate is not bound
-!missing-pinvoke! MIDIClientDispose is not bound
-!missing-pinvoke! MIDIDestinationCreate is not bound
-!missing-pinvoke! MIDIDeviceGetEntity is not bound
-!missing-pinvoke! MIDIDeviceGetNumberOfEntities is not bound
-!missing-pinvoke! MIDIEndpointDispose is not bound
-!missing-pinvoke! MIDIEndpointGetEntity is not bound
-!missing-pinvoke! MIDIEntityGetDestination is not bound
-!missing-pinvoke! MIDIEntityGetDevice is not bound
-!missing-pinvoke! MIDIEntityGetNumberOfDestinations is not bound
-!missing-pinvoke! MIDIEntityGetNumberOfSources is not bound
-!missing-pinvoke! MIDIEntityGetSource is not bound
-!missing-pinvoke! MIDIFlushOutput is not bound
-!missing-pinvoke! MIDIGetDestination is not bound
-!missing-pinvoke! MIDIGetDevice is not bound
-!missing-pinvoke! MIDIGetExternalDevice is not bound
-!missing-pinvoke! MIDIGetNumberOfDestinations is not bound
-!missing-pinvoke! MIDIGetNumberOfDevices is not bound
-!missing-pinvoke! MIDIGetNumberOfExternalDevices is not bound
-!missing-pinvoke! MIDIGetNumberOfSources is not bound
-!missing-pinvoke! MIDIGetSource is not bound
-!missing-pinvoke! MIDIInputPortCreate is not bound
-!missing-pinvoke! MIDIObjectFindByUniqueID is not bound
-!missing-pinvoke! MIDIObjectGetDataProperty is not bound
-!missing-pinvoke! MIDIObjectGetDictionaryProperty is not bound
-!missing-pinvoke! MIDIObjectGetIntegerProperty is not bound
-!missing-pinvoke! MIDIObjectGetProperties is not bound
-!missing-pinvoke! MIDIObjectGetStringProperty is not bound
-!missing-pinvoke! MIDIObjectRemoveProperty is not bound
-!missing-pinvoke! MIDIObjectSetDataProperty is not bound
-!missing-pinvoke! MIDIObjectSetDictionaryProperty is not bound
-!missing-pinvoke! MIDIObjectSetIntegerProperty is not bound
-!missing-pinvoke! MIDIObjectSetStringProperty is not bound
-!missing-pinvoke! MIDIOutputPortCreate is not bound
-!missing-pinvoke! MIDIPortConnectSource is not bound
-!missing-pinvoke! MIDIPortDisconnectSource is not bound
-!missing-pinvoke! MIDIPortDispose is not bound
-!missing-pinvoke! MIDIReceived is not bound
-!missing-pinvoke! MIDIRestart is not bound
-!missing-pinvoke! MIDISend is not bound
-!missing-pinvoke! MIDISourceCreate is not bound
+!missing-enum! MIDISysExStatus not bound
+!missing-enum! MIDISystemStatus not bound
+!missing-enum! MIDITransformControlType not bound
+!missing-enum! MIDITransformType not bound
+!missing-enum! MIDIUtilityStatus not bound
+!missing-pinvoke! MIDIEventListForEachEvent is not bound

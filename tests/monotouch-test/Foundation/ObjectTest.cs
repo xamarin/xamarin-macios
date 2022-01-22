@@ -25,6 +25,7 @@ using UIKit;
 using PlatformException=Foundation.MonoTouchException;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
@@ -82,7 +83,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 			var hasSecAccessControl = TestRuntime.CheckXcodeVersion (6, 0);
 #if __MACOS__
-			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10))
 				hasSecAccessControl = false;
 #endif
 			if (hasSecAccessControl) {
@@ -268,8 +269,13 @@ namespace MonoTouchFixtures.Foundation {
 				using (var observer = o.AddObserver ("frame", NSKeyValueObservingOptions.OldNew, change => {
 					var old = ((NSValue) change.OldValue).CGRectValue;
 					var @new = ((NSValue) change.NewValue).CGRectValue;
+#if NET
+					Assert.AreEqual ("{{0, 0}, {0, 0}}", old.ToString (), "#old");
+					Assert.AreEqual ("{{0, 0}, {123, 234}}", @new.ToString (), "#new");
+#else
 					Assert.AreEqual ("{X=0,Y=0,Width=0,Height=0}", old.ToString (), "#old");
 					Assert.AreEqual ("{X=0,Y=0,Width=123,Height=234}", @new.ToString (), "#new");
+#endif
 					observed = true;
 				})) {
 					o.Frame = new CGRect (0, 0, 123, 234);

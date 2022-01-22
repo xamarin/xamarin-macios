@@ -60,7 +60,7 @@ namespace CoreAnimation {
 		MaxXMaxYCorner = 1 << 3,
 	}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	// untyped enum -> CALayer.h (only on OSX headers)
 	// note: autoresizingMask is an `unsigned int` @property
 	[Flags]

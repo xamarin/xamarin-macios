@@ -6,13 +6,18 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
 
 		public enum InitMode {
 			WithConnection,
+#if NET
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[iOS (8,0)]
+#endif
 			WithNoConnection,
 		}
 

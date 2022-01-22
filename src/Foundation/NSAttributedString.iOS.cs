@@ -30,6 +30,7 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
+using System.Runtime.Versioning;
 
 #if !MONOMAC
 using UIKit;
@@ -57,7 +58,7 @@ namespace Foundation {
 		// use the best selector based on the OS version
 		public NSAttributedString (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error)
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion (9,0))
+			if (SystemVersion.CheckiOS (9,0))
 				Handle = InitWithURL (url, options, out resultDocumentAttributes, ref error);
 			else
 				Handle = InitWithFileURL (url, options, out resultDocumentAttributes, ref error);
@@ -281,7 +282,12 @@ namespace Foundation {
 #if !COREBUILD && !TVOS && !WATCH
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
+#if !NET
 		[Mac (10, 15), iOS (13, 0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public NSUrl ReadAccessUrl {
 			get {
 				Dictionary.TryGetValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey, out var value);

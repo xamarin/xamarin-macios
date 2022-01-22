@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared;
@@ -44,16 +44,6 @@ namespace Xharness {
 			return clone;
 		}
 
-		public static TestProject AsMacCatalystProject (this TestProject self)
-		{
-			var clone = self.Clone ();
-			var suffix = string.Empty;
-			if (self.IsDotNetProject)
-				suffix = "-dotnet";
-			clone.Path = Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "maccatalyst" + suffix, Path.GetFileNameWithoutExtension (self.Path) + "-maccatalyst" + Path.GetExtension (self.Path));
-			return clone;
-		}
-
 		// Get the referenced today extension project (if any)
 		public static TestProject GetTodayExtension (this TestProject self)
 		{
@@ -62,10 +52,7 @@ namespace Xharness {
 				return null;
 			if (extensions.Count () != 1)
 				throw new NotImplementedException ();
-			return new TestProject
-			{
-				Path = Path.GetFullPath (Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "today-extension", extensions.First ().Replace ('\\', '/'))),
-			};
+			return new TestProject (Path.GetFullPath (Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "today-extension", extensions.First ().Replace ('\\', '/'))));
 		}
 	}
 }

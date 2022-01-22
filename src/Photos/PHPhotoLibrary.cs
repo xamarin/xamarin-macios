@@ -1,4 +1,4 @@
-﻿//
+//
 // PHPhotoLibrary.cs: Provides a couple of overload methods
 //
 // Authors:

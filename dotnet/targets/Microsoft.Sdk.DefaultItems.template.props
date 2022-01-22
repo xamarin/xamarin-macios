@@ -33,7 +33,7 @@
 
 	<!-- Default Asset Catalog file inclusion -->
 	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
-		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.pdf;**\*.xcassets\**\*.json" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+		<ImageAsset Include="**\*.xcassets\**\*.*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.xcassets\**\*.DS_Store">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<Visible>false</Visible>
 			<IsDefaultItem>true</IsDefaultItem>
@@ -77,5 +77,13 @@
 		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<IsDefaultItem>true</IsDefaultItem>
 		</SceneKitAsset>
+	</ItemGroup>
+
+	<!-- Default font files inclusion -->
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
+		<BundleResource Include="$(_ResourcePrefix)\**\*.ttf;$(_ResourcePrefix)\**\*.otf;$(_ResourcePrefix)\**\*.ttc" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</BundleResource>
 	</ItemGroup>
 </Project>

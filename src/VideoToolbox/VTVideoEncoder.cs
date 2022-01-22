@@ -113,6 +113,28 @@ namespace VideoToolbox {
 #endif
 		public bool SupportsFrameReordering { get; private set; }
 
+#if !XAMCORE_4_0
+#if !NET
+		[NoiOS, NoTV, NoMacCatalyst, NoMac, NoWatch]
+#else
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
+		public bool SupportsMultiPass { get; private set; }
+#endif // !XAMCORE_4_0
+
+#if !NET
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+#else
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#endif
+		public bool IncludeStandardDefinitionDVEncoders { get; private set; }
+
 		internal VTVideoEncoder (NSDictionary dict)
 		{
 			CodecType = (dict [VTVideoEncoderList.CodecType] as NSNumber).Int32Value;
@@ -163,6 +185,13 @@ namespace VideoToolbox {
 			if (constant != null) {
 				var sfr = dict [constant] as NSNumber;
 				SupportsFrameReordering = sfr == null ? true : sfr.BoolValue; // optional, default true
+			}
+
+			// added in xcode 13
+			constant = VTVideoEncoderList.IncludeStandardDefinitionDVEncoders;
+			if (constant != null) {
+				var includeDef = dict [constant] as NSNumber;
+				IncludeStandardDefinitionDVEncoders = includeDef == null ? false : includeDef.BoolValue; // optional, default false 
 			}
 		}
 

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>dotnet_linker</RootNamespace>
     <DefineConstants>$(DefineConstants);BUNDLER</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\ApplePlatform.cs">
@@ -96,6 +97,9 @@
     </Compile>
     <Compile Include="..\common\PListExtensions.cs">
       <Link>external\tools\common\PListExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
+      <Link>external\tools\common\OSPlatformAttributeExtensions.cs</Link>
     </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>external\tools\common\StaticRegistrar.cs</Link>

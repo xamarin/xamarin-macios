@@ -3749,7 +3749,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the iOS version {0} to a macOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}.
         /// </summary>
         public static string MX0183 {
             get {
@@ -3758,7 +3758,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}.
         /// </summary>
         public static string MX0184 {
             get {
@@ -3782,6 +3782,15 @@ namespace Xamarin.Bundler {
         public static string MX1009 {
             get {
                 return ResourceManager.GetString("MX1009", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not decompress the file &apos;{0}&apos;. Please review the build log for more information from the native &apos;unzip&apos; command..
+        /// </summary>
+        public static string MX1306 {
+            get {
+                return ResourceManager.GetString("MX1306", resourceCulture);
             }
         }
         
@@ -4057,6 +4066,15 @@ namespace Xamarin.Bundler {
         public static string MX8040 {
             get {
                 return ResourceManager.GetString("MX8040", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to create an instance of the type {0}..
+        /// </summary>
+        public static string MX8041 {
+            get {
+                return ResourceManager.GetString("MX8041", resourceCulture);
             }
         }
     }

@@ -7,10 +7,11 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
-#if !XAMCORE_4_0
+#if !NET
 using System;
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace CoreText {
 	public static partial class CTTypesetterOptionKey {

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVUtilities.h helpers
 //
 // Authors:
@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using CoreGraphics;
 using Foundation;
@@ -20,6 +19,7 @@ using AppKit;
 using UIKit;
 #endif
 using AVFoundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AVFoundation {
@@ -40,6 +40,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		}
 	}
 
+#if __MACOS__ || !NET
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVStructTest {
@@ -56,6 +57,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorChunkInfo)), Is.EqualTo (IntPtr.Size == 8 ? 16 : 12), "AVSampleCursorChunkInfo Size");
 		}
 	}
+#endif // __MACOS__ || !NET
 }
 	
 #endif // !__WATCHOS__

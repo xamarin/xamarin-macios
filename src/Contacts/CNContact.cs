@@ -1,4 +1,4 @@
-﻿//
+//
 // CNContact.cs: Implements some nicer methods for CNContact
 //
 // Authors:
@@ -100,4 +100,3 @@ namespace Contacts {
 		}
 	}
 }
-

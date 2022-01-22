@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Tasks;
+using Microsoft.Build.Tasks;
 using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks

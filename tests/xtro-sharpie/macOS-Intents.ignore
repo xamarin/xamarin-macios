@@ -69,3 +69,6 @@
 !unknown-type! INStartAudioCallIntentResponse bound
 !unknown-type! INStartVideoCallIntent bound
 !unknown-type! INStartVideoCallIntentResponse bound
+
+## Headers say Mac (12,0) but types used in properties are still NoMac
+!missing-protocol! INStartCallIntentHandling not bound

@@ -1,4 +1,4 @@
-﻿//
+//
 // GKEntity.cs: Implements some nicer methods for GKEntity
 //
 // Authors:

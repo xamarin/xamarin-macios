@@ -16,6 +16,9 @@ namespace GeneratorTests
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
 	{
+		// Removing the following variable might make running the unit tests in VSMac fail.
+		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
+
 		[Test]
 #if !NET
 		[TestCase (Profile.macOSFull)]
@@ -204,8 +207,13 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 
+#if NET
+			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalInProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#else
 			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalInProperty.Shared getter");
 			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#endif
 		}
 
 		[Test]
@@ -571,7 +579,11 @@ namespace GeneratorTests
 		public void GHIssue3869 () => BuildFile (Profile.iOS, "ghissue3869.cs");
 
 		[Test]
+#if NET
+		[TestCase ("issue3875.cs", "api0__Issue3875_AProtocol")]
+#else
 		[TestCase ("issue3875.cs", "AProtocol")]
+#endif
 		[TestCase ("issue3875B.cs", "BProtocol")]
 		[TestCase ("issue3875C.cs", "api0__Issue3875_AProtocol")]
 		public void Issue3875 (string file, string modelName)
@@ -631,6 +643,17 @@ namespace GeneratorTests
 		public void StrongDictsNativeEnums () => BuildFile (Profile.iOS, "strong-dict-native-enum.cs");
 
 		[Test]
+		public void IgnoreUnavailableProtocol ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/ignore-unavailable-protocol.cs");
+			var myClass = bgen.ApiAssembly.MainModule.GetType ("NS", "MyClass");
+			var myProtocol = bgen.ApiAssembly.MainModule.GetType ("NS", "IMyProtocol");
+			var myClassInterfaces = myClass.Interfaces.Select (v => v.InterfaceType.Name).ToArray ();
+			Assert.That (myClassInterfaces, Does.Not.Contain ("IMyProtocol"), "IMyProtocol");
+			Assert.IsNull (myProtocol, "MyProtocol null");
+		}
+
+		[Test]
 		public void VSTS970507 ()
 		{
 			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
@@ -644,6 +667,146 @@ namespace GeneratorTests
 
 		[Test]
 		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
+
+		// looking for [BindingImpl (BindingImplOptions.Optimizable)]
+		bool IsOptimizable (MethodDefinition method)
+		{
+			const int Optimizable = 0x2; // BindingImplOptions flag
+
+			if (!method.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Name != "BindingImplAttribute")
+					continue;
+				foreach (var a in ca.ConstructorArguments)
+					return (((int) a.Value & Optimizable) == Optimizable);
+			}
+			return false;
+		}
+
+		[Test]
+		public void DisposeAttributeOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/dispose-attribute.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [Dispose] is, by default, not optimizable
+			var with_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose, "WithDispose");
+			Assert.That (IsOptimizable (with_dispose), Is.False, "WithDispose/Optimizable");
+
+			// [Dispose] can opt-in being optimizable
+			var with_dispose_optin = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDisposeOptInOptimizable").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose_optin, "WithDisposeOptInOptimizable");
+			Assert.That (IsOptimizable (with_dispose_optin), Is.True, "WithDisposeOptInOptimizable/Optimizable");
+
+			// Without a [Dispose] attribute the generated method is optimizable
+			var without_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithoutDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (without_dispose, "WitoutDispose");
+			Assert.That (IsOptimizable (without_dispose), Is.True, "WitoutDispose/Optimizable");
+		}
+
+		[Test]
+		public void SnippetAttributesOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/snippet-attributes.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [SnippetAttribute] subclasses are, by default, not optimizable
+			var not_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "NotOptimizable");
+			Assert.NotNull (not_opt, "NotOptimizable");
+			var pre_not_opt = not_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_not_opt), Is.False, "NotOptimizable/Pre");
+			var prologue_not_opt = not_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_not_opt), Is.False, "NotOptimizable/Prologue");
+			var post_not_opt = not_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_not_opt), Is.False, "NotOptimizable/Post");
+
+			// [SnippetAttribute] subclasses can opt-in being optimizable
+			var optin_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "OptInOptimizable");
+			Assert.NotNull (optin_opt, "OptInOptimizable");
+			var pre_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_optin_opt), Is.True, "OptInOptimizable/Pre");
+			var prologue_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_optin_opt), Is.True, "OptInOptimizable/Prologue");
+			var post_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_optin_opt), Is.True, "OptInOptimizable/Post");
+
+			// Without a [SnippetAttribute] subclass attribute the generated method is optimizable
+			var nothing = bgen.ApiAssembly.MainModule.GetType ("NS", "NoSnippet").Methods.First ((v) => v.Name == "Nothing");
+			Assert.NotNull (nothing, "NoSnippet");
+			Assert.That (IsOptimizable (nothing), Is.True, "Nothing/Optimizable");
+		}
+
+		[Test]
+		public void NativeEnum ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.ProcessEnums = true;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.Sources = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum-extensions.cs") }.ToList ();
+			bgen.ApiDefinitions = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum.cs") }.ToList ();
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+		}
+
+		[Test]
+		public void DelegateWithINativeObjectReturnType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/delegate-with-inativeobject-return-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("ObjCRuntime", "Trampolines").NestedTypes.First (v => v.Name == "DMyHandler");
+			Assert.NotNull (type, "DMyHandler");
+			var method = type.Methods.First (v => v.Name == "Invoke");
+#if NET
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", method.ReturnType.FullName, "Return type");
+#else
+			Assert.AreEqual ("System.IntPtr", method.ReturnType.FullName, "Return type");
+#endif
+		}
+
+		[Test]
+		public void ProtocolBindProperty ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/protocol-bind-property.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocol_Extensions");
+			Assert.NotNull (type, "MyProtocol_Extensions");
+
+			var method = type.Methods.First (v => v.Name == "GetOptionalProperty");
+			var ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isOptionalProperty", (string) ldstr.Operand, "isOptionalProperty");
+
+
+			method = type.Methods.First (v => v.Name == "SetOptionalProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setOptionalProperty:", (string) ldstr.Operand, "setOptionalProperty");
+
+			type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocolWrapper");
+			Assert.NotNull (type, "MyProtocolWrapper");
+
+			method = type.Methods.First (v => v.Name == "get_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isAbstractProperty", (string) ldstr.Operand, "isAbstractProperty");
+
+			method = type.Methods.First (v => v.Name == "set_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setAbstractProperty:", (string) ldstr.Operand, "setAbstractProperty");
+		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{

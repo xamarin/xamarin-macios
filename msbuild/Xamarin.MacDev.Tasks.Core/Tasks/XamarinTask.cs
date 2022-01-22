@@ -82,23 +82,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected string GetSdkPlatform (bool isSimulator)
 		{
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				return isSimulator ? "iPhoneSimulator" : "iPhoneOS";
-			case ApplePlatform.TVOS:
-				return isSimulator ? "AppleTVSimulator" : "AppleTVOS";
-			case ApplePlatform.WatchOS:
-				return isSimulator ? "WatchSimulator" : "WatchOS";
-			case ApplePlatform.MacOSX:
-				return "MacOSX";
-			case ApplePlatform.MacCatalyst:
-				return "MacCatalyst";
-			default:
-				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
-			}
+			return PlatformFrameworkHelper.GetSdkPlatform (Platform, isSimulator);
 		}
 
-		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true)
+		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
 			var launchEnvironment = environment == null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
@@ -106,7 +93,7 @@ namespace Xamarin.MacDev.Tasks {
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
 			Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
-			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput);
+			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory);
 			Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
 			// Show the output
@@ -132,4 +119,3 @@ namespace Xamarin.MacDev.Tasks {
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 	}
 }
-

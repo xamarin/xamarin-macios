@@ -16,6 +16,7 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
 	
@@ -155,11 +156,6 @@ namespace Introspection {
 				// compat.
 				return true;
 #endif
-			case "waitUntilExit":
-				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
-				if (type.Name == "NSTask")
-					return true;
-				break;
 			case "readInBackgroundAndNotifyForModes:":
 			case "readInBackgroundAndNotify":
 			case "readToEndOfFileInBackgroundAndNotifyForModes:":
@@ -191,10 +187,6 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 9))
 						return true;
 					break;
-				case "MPSImageDescriptor":
-					if (!Mac.CheckSystemVersion (10, 14)) // Likely to be fixed when we do MPS binding
-						return true;
-					break;
 				case "SFSafariPage":
 				case "SFSafariTab":
 				case "SFSafariToolbarItem":
@@ -210,6 +202,54 @@ namespace Introspection {
 			case "newWindowForTab:": // "This method can be implemented in the responder chain", optional but not protocol directly on NSResponder
 				switch (type.Name) {
 				case "NSViewController":
+					return true;
+				}
+				break;
+			case "startup:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipDeviceController":
+					return true;
+				}
+				break;
+			case "readAttributeFabricIdWithResponseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipGeneralCommissioning":
+					return true;
+				}
+				break;
+			case "removeAllFabrics:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "removeFabric:nodeId:vendorId:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "setFabric:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "loadedTimeRanges":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "URLAsset":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "options":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
 					return true;
 				}
 				break;
@@ -381,13 +421,15 @@ namespace Introspection {
 						return true;
 					}
 					break;
+#if !NET // NSMenuView does not exist in .NET
 				case "NSMenuView":
 					switch (selectorName) {
 					case "menuBarHeight":
 						return TestRuntime.IsVM; // skip on vms due to hadware problems
 					}
 					break;
-#if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
+#endif // !NET
+#if !XAMCORE_4_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":
 					switch (selectorName) {
@@ -414,7 +456,7 @@ namespace Introspection {
 #endif
 				case "NSMenuDelegate":
 					switch (selectorName) {
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 					case "menu:willHighlightItem:":
 						return true; // bound
 #endif
@@ -587,7 +629,7 @@ namespace Introspection {
 					break;
 				case "PdfView":
 					switch (selectorName) {
-#if !XAMCORE_3_0					
+#if !XAMCORE_4_0					
 					case "menu:willHighlightItem:":
 						return true;
 #endif
@@ -655,7 +697,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "buttonPressed":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1796
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}
@@ -668,7 +710,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "isSyncFailureHidden":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1797
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}
@@ -707,6 +749,11 @@ namespace Introspection {
 			case "Metal":
 				switch (type.Name) {
 				case "MTLCounterSampleBufferDescriptor":
+				case "MTLRasterizationRateMapDescriptor":
+				case "MTLTileRenderPipelineDescriptor":
+				case "MTLHeapDescriptor":
+				case "MTLRasterizationRateLayerDescriptor":
+				case "MTLLinkedFunctions":
 					// This whole type is implemented using a different (internal) type,
 					// and it's the internal type who knows how to respond to the selectors.
 					return true;
@@ -1171,10 +1218,6 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8))
 					return true;
 				break;
-			case "initWithString:":
-				if (declaredType.Name == "NSTextStorage")
-					return true;
-				break;
 			}
 
 			switch (declaredType.Name) {
@@ -1283,17 +1326,10 @@ namespace Introspection {
 			// QTMovie
 			case "movieWithTimeRange:error:":
 			case "initWithQuickTimeMedia:error:":
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// NSAnimation
 			case "initWithDuration:animationCurve:":
 				return true;
 #endif
-			// NSImage
-			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:
 				return base.SkipInit (selector, m);
 			}

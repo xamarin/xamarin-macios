@@ -45,7 +45,7 @@ using CoreAnimation;
 using CoreImage;
 #endif
 
-#if WATCH || XAMCORE_4_0
+#if WATCH || NET
 using AnimationType = global::SceneKit.ISCNAnimationProtocol;
 #else
 using AnimationType = global::CoreAnimation.CAAnimation;
@@ -87,6 +87,10 @@ using NSImage = global::UIKit.UIImage;
 using NSBezierPath = global::UIKit.UIBezierPath;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace SceneKit {
 
 #if WATCH
@@ -115,7 +119,7 @@ namespace SceneKit {
 	[iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
 
-#if XAMCORE_4_0
+#if NET
 	delegate void SCNAnimationDidStartHandler (SCNAnimation animation, ISCNAnimatable receiver);
 #else
 	[Obsolete ("Use 'SCNAnimationDidStartHandler2' instead.")]
@@ -124,7 +128,7 @@ namespace SceneKit {
 	delegate void SCNAnimationDidStartHandler2 (SCNAnimation animation, ISCNAnimatable receiver);
 #endif
 
-#if XAMCORE_4_0
+#if NET
 	delegate void SCNAnimationDidStopHandler (SCNAnimation animation, ISCNAnimatable receiver, bool completed);
 #else
 	[Obsolete ("Use 'SCNAnimationDidStopHandler2' instead.")]
@@ -143,13 +147,13 @@ namespace SceneKit {
 		[Abstract]
 		[NoWatch]
 		[Export ("addAnimation:forKey:")]
-#if !XAMCORE_4_0
+#if !NET
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #else
 		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
@@ -160,6 +164,13 @@ namespace SceneKit {
 		[Export ("removeAllAnimations")]
 		void RemoveAllAnimations ();
 
+#if NET
+		[Abstract]
+#endif
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("removeAllAnimationsWithBlendOutDuration:")]
+		void RemoveAllAnimationsWithBlendOutDuration (nfloat duration);
+
 		[Abstract]
 		[Export ("removeAnimationForKey:")]
 		void RemoveAnimation (NSString key);
@@ -168,7 +179,7 @@ namespace SceneKit {
 		[Export ("animationKeys")]
 		NSString [] GetAnimationKeys ();
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[return: NullAllowed]
@@ -222,13 +233,16 @@ namespace SceneKit {
 		[Export ("removeAnimationForKey:fadeOutDuration:")]
 		void RemoveAnimation (NSString key, nfloat duration);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
 		[Export ("removeAnimationForKey:blendOutDuration:")]
 		void RemoveAnimationUsingBlendOutDuration (NSString key, nfloat blendOutDuration);
 
+#if NET
+		[Abstract]
+#endif
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SCNAnimationPlayer.Speed' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use 'SCNAnimationPlayer.Speed' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use 'SCNAnimationPlayer.Speed' instead.")]
@@ -246,11 +260,11 @@ namespace SceneKit {
 	{
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (SCNAudioSource source);
+		NativeHandle Constructor (SCNAudioSource source);
 	
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioNode audioNode);
+		NativeHandle Constructor (AVAudioNode audioNode);
 	
 		[Static]
 		[Export ("audioPlayerWithSource:")]
@@ -282,11 +296,11 @@ namespace SceneKit {
 	interface SCNAudioSource : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithFileNamed:")]
-		IntPtr Constructor (string filename);
+		NativeHandle Constructor (string filename);
 	
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 	
 		[Static]
 		[Export ("audioSourceNamed:")]
@@ -1145,7 +1159,7 @@ namespace SceneKit {
 		[Field ("SCNHitTestOptionCategoryBitMask")]
 		NSString OptionCategoryBitMaskKey { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Obsolete ("Use 'SearchModeKey' instead.")]
 		[Field ("SCNHitTestOptionSearchMode")]
@@ -1203,7 +1217,7 @@ namespace SceneKit {
 #if MONOMAC
 	[iOS (8,0)]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (CAOpenGLLayer))]
 	interface SCNLayer : SCNSceneRenderer, SCNTechniqueSupport {
 //		We already pull in the Scene property from the SCNSceneRenderer protocol, no need to redefine it here.
@@ -1257,23 +1271,23 @@ namespace SceneKit {
 		SCNLight Create ();
 
 #if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[NoiOS]
 #elif !MONOMAC
 		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("attributeForKey:")]
 		[return: NullAllowed]
 		NSObject GetAttribute (NSString lightAttribute);
 
 #if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[NoiOS]
 #elif !MONOMAC
 		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("setAttribute:forKey:")]
 		void SetAttribute ([NullAllowed] NSObject value, NSString attribuetKey);
 
@@ -1476,7 +1490,7 @@ namespace SceneKit {
 	}
 
 #if MONOMAC
-	[Availability (Deprecated = Platform.Mac_10_10)]
+	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	[Static]
 	interface SCNLightAttribute {
 		[Field ("SCNLightAttenuationStartKey")]
@@ -1673,7 +1687,7 @@ namespace SceneKit {
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[NoWatch, NoTV]
 		[NullAllowed, Export ("borderColor", ArgumentSemantic.Retain)]
 		NSObject BorderColor { get; set; }
@@ -2385,14 +2399,14 @@ namespace SceneKit {
 		nint CornerSegmentCount { get; set; }
 	}
 
-#if XAMCORE_4_0
-	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
+#if NET
+	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, ISCNShadable shadable, SCNRenderer renderer);
 #else
 	[Obsolete ("Use 'SCNBufferBindingHandler2' instead.")]
 	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
 
 	delegate void SCNBufferBindingHandler2 (ISCNBufferStream buffer, SCNNode node, ISCNShadable shadable, SCNRenderer renderer);
-#endif
+#endif // NET
 
 	[iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -2415,7 +2429,7 @@ namespace SceneKit {
 		[Export ("fragmentFunctionName")]
 		string FragmentFunctionName { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handleBindingOfBufferNamed:frequency:usingBlock:")]
 		void HandleBinding (string name, SCNBufferFrequency frequency, SCNBufferBindingHandler handler);
@@ -2429,7 +2443,7 @@ namespace SceneKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handleBindingOfBufferNamed:frequency:usingBlock:")]
 		void HandleBinding (string name, SCNBufferFrequency frequency, SCNBufferBindingHandler2 handler);
-#endif
+#endif // NET
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set;  }
@@ -2453,7 +2467,7 @@ namespace SceneKit {
 
 		[Export ("semanticForSymbol:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSString GetSemantic (string symbol);
 #else
 		NSString GetSemanticForSymbol (string symbol);
@@ -2481,16 +2495,16 @@ namespace SceneKit {
 	interface SCNProgramDelegate {
 #if MONOMAC
 	#if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[Unavailable (PlatformName.iOS)]
 	#endif
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("program:bindValueForSymbol:atLocation:programID:renderer:")]
 		bool BindValue (SCNProgram program, string symbol, uint /* unsigned int */ location, uint /* unsigned int */ programID, SCNRenderer renderer);
 
 	#if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[Unavailable (PlatformName.iOS)]
 	#endif
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("program:unbindValueForSymbol:atLocation:programID:renderer:")]
 		void UnbindValue (SCNProgram program, string symbol, uint /* unsigned int */ location, uint /* unsigned int */ programID, SCNRenderer renderer);
 #endif
@@ -2500,11 +2514,11 @@ namespace SceneKit {
 
 #if MONOMAC
 	#if XAMCORE_3_0
-		[Availability (Unavailable = Platform.iOS_Version)]
+		[NoiOS]
 		[NoTV, NoWatch]
 	#endif
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the SCNProgram's Opaque property instead.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the SCNProgram's Opaque property instead.")]
+		[NoMacCatalyst]
 		[Export ("programIsOpaque:")]
 		bool IsProgramOpaque (SCNProgram program);
 #endif
@@ -2561,7 +2575,7 @@ namespace SceneKit {
 		[Export ("render")]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		void Render ();
 
 		[Mac (10,10)]
@@ -2831,17 +2845,17 @@ namespace SceneKit {
 
 		[Export ("initWithURL:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Wrap ("this (url, options.GetDictionary ())")]
-		IntPtr Constructor (NSUrl url, SCNSceneLoadingOptions options);
+		NativeHandle Constructor (NSUrl url, SCNSceneLoadingOptions options);
 
 		[Export ("initWithData:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options);
 
 		[Wrap ("this (data, options.GetDictionary ())")]
-		IntPtr Constructor (NSData data, SCNSceneLoadingOptions options);
+		NativeHandle Constructor (NSData data, SCNSceneLoadingOptions options);
 		
 		[Export ("sceneWithOptions:statusHandler:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -3030,7 +3044,7 @@ namespace SceneKit {
 		bool JitteringEnabled { [Bind ("isJitteringEnabled")] get; set;  }
 
 		[Abstract]
-#if XAMCORE_4_0
+#if NET
 		[Unavailable (PlatformName.WatchOS)]
 #else
 		[Obsoleted (PlatformName.WatchOS, 6, 0, message: "API removed, please do not use.")]
@@ -3040,7 +3054,11 @@ namespace SceneKit {
 		IntPtr Context { get;  }
 
 #if MONOMAC
-		[Availability (Deprecated = Platform.Mac_10_10, Unavailable = Platform.iOS_Version)]
+#if NET
+		[Abstract]
+#endif
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[NoiOS]
 		[Export ("currentTime")]
 		double CurrentTime { get; set; }
 #endif
@@ -3104,7 +3122,7 @@ namespace SceneKit {
 		[Export ("prepareObjects:withCompletionHandler:")]
 		void Prepare (NSObject [] objects, [NullAllowed] Action<bool> completionHandler);
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[iOS (9,0)][Mac (10,11)] // SKTransition -> SpriteKit -> only on 64 bits
@@ -3112,28 +3130,28 @@ namespace SceneKit {
 		[Export ("presentScene:withTransition:incomingPointOfView:completionHandler:")]
 		void PresentScene (SCNScene scene, SKTransition transition, [NullAllowed] SCNNode pointOfView, [NullAllowed] Action completionHandler);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("nodesInsideFrustumWithPointOfView:")]
 		SCNNode[] GetNodesInsideFrustum (SCNNode pointOfView);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("debugOptions", ArgumentSemantic.Assign)]
 		SCNDebugOptions DebugOptions { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("renderingAPI")]
 		SCNRenderingApi RenderingApi { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3141,7 +3159,7 @@ namespace SceneKit {
 		[NullAllowed, Export ("currentRenderCommandEncoder")]
 		IMTLRenderCommandEncoder CurrentRenderCommandEncoder { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3149,7 +3167,7 @@ namespace SceneKit {
 		[NullAllowed, Export ("device")]
 		IMTLDevice Device { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3157,7 +3175,7 @@ namespace SceneKit {
 		[Export ("colorPixelFormat")]
 		MTLPixelFormat ColorPixelFormat { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3165,7 +3183,7 @@ namespace SceneKit {
 		[Export ("depthPixelFormat")]
 		MTLPixelFormat DepthPixelFormat { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3173,7 +3191,7 @@ namespace SceneKit {
 		[Export ("stencilPixelFormat")]
 		MTLPixelFormat StencilPixelFormat { get; }
 
-	#if XAMCORE_4_0
+	#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[NoWatch]
@@ -3181,14 +3199,14 @@ namespace SceneKit {
 		[NullAllowed, Export ("commandQueue")]
 		IMTLCommandQueue CommandQueue { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("audioEngine")]
 		AVAudioEngine AudioEngine { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[NoWatch]
@@ -3197,7 +3215,7 @@ namespace SceneKit {
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		AVAudioEnvironmentNode AudioEnvironmentNode { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[iOS (9,0)][Mac (10,11)]
@@ -3205,21 +3223,21 @@ namespace SceneKit {
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		SCNNode AudioListener { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("temporalAntialiasingEnabled")]
 		bool TemporalAntialiasingEnabled { [Bind ("isTemporalAntialiasingEnabled")] get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("currentViewport")]
 		CGRect CurrentViewport { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -3228,7 +3246,7 @@ namespace SceneKit {
 
 		[NoWatch]
 		[TV (14,0)][Mac (10,11)][iOS (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("currentRenderPassDescriptor")]
@@ -3435,7 +3453,7 @@ namespace SceneKit {
 	[Internal] // we'll make it public if there's a need for them (beside the strong dictionary we provide)
 	interface SCNRenderingOptionsKeys {
 
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Field ("SCNPreferredRenderingAPIKey")]
 		NSString RenderingApiKey { get; }
 
@@ -3495,14 +3513,14 @@ namespace SceneKit {
 #if !WATCH
 		[iOS (9,0)][Mac (10,11)]
 		[Wrap ("this (frame, options.GetDictionary ())")]
-		IntPtr Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
+		NativeHandle Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
 #endif
 
 		[Export ("initWithFrame:options:")]
-		IntPtr Constructor (CGRect frame, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (CGRect frame, [NullAllowed] NSDictionary options);
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("play:")]
 		void Play ([NullAllowed] NSObject sender);
@@ -3543,7 +3561,7 @@ namespace SceneKit {
 		bool DrawableResizesAsynchronously { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[Mac (10,9), iOS (8,0), Watch (4,0)]
 	delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
 #endif
@@ -3554,7 +3572,7 @@ namespace SceneKit {
 	[DisableDefaultCtor]
 	interface SCNAnimationEvent {
 
-#if XAMCORE_4_0
+#if NET
 		[Static, Export ("animationEventWithKeyTime:block:")]
 		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
 #else
@@ -3706,7 +3724,7 @@ namespace SceneKit {
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("initWithChainRootNode:")]
-		IntPtr Constructor (SCNNode chainRootNode);
+		NativeHandle Constructor (SCNNode chainRootNode);
 		
 	}
 
@@ -3838,7 +3856,7 @@ namespace SceneKit {
 		[Export ("removeAllActions")]
 		void RemoveAllActions ();
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (8,0), Mac(10,10)]
@@ -3861,7 +3879,7 @@ namespace SceneKit {
 		SCNActionTimingMode TimingMode { get; set; }
 
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
-#if XAMCORE_4_0
+#if NET
 		Func<float,float> TimingFunction { get; set; }
 #else
 		Func<float,float> TimingFunction2 { get; set; }
@@ -3990,6 +4008,11 @@ namespace SceneKit {
 		[NullAllowed] // by default this property is null
 		[Wrap ("WeakShaderModifiers")]
 		SCNShaderModifiers ShaderModifiers { get; set; }
+
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0)]
+		[NullAllowed] // by default this property is null
+		[Export ("minimumLanguageVersion", ArgumentSemantic.Retain)]
+		NSNumber MinimumLanguageVersion { get; set; }
 
 		[NoWatch]
 		[NullAllowed] // by default this property is null
@@ -4865,6 +4888,11 @@ namespace SceneKit {
 		[Export ("fresnelExponent")]
 		nfloat FresnelExponent { get; set; }
 
+		[Introduced (PlatformName.MacCatalyst, 15, 0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("writesToDepthBuffer")]
+		bool WritesToDepthBuffer { get; set; }
+
 		[Export ("propertyControllers", ArgumentSemantic.Copy), NullAllowed]
 		NSDictionary WeakPropertyControllers { get; set; }
 
@@ -5021,7 +5049,7 @@ namespace SceneKit {
 	interface SCNReferenceNode : NSCoding {
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl referenceUrl);
+		NativeHandle Constructor (NSUrl referenceUrl);
 
 		[Static]
 		[Export ("referenceNodeWithURL:")]
@@ -5133,7 +5161,7 @@ namespace SceneKit {
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
 	
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
 		SCNAnimationDidStartHandler2 AnimationDidStart2 { get; set; }
@@ -5143,7 +5171,7 @@ namespace SceneKit {
 		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
 		SCNAnimationDidStartHandler AnimationDidStart { get; set; }
 	
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
 		SCNAnimationDidStopHandler2 AnimationDidStop2 { get; set; }

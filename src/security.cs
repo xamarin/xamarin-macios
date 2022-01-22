@@ -733,11 +733,10 @@ namespace Security {
 		[Field ("kSecUseOperationPrompt")]
 		IntPtr UseOperationPrompt { get; }
 
-#if !MONOMAC // Don't break compat API
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[iOS (8, 0), Deprecated (PlatformName.iOS, 9, 0)]
+		[Mac (10, 10), Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("kSecUseNoAuthenticationUI")]
 		IntPtr UseNoAuthenticationUI { get; }
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Field ("kSecUseAuthenticationUI")]

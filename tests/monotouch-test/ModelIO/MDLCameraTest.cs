@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLCamera Unit Tests
 //
 // Authors:

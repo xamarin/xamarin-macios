@@ -1,4 +1,4 @@
-﻿//
+//
 // NSArray_GameplayKit.cs: Generic extensions to NSArray
 //
 // Authors:

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGDataConsumer
 //
 // Authors:
@@ -8,7 +8,6 @@
 //
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;

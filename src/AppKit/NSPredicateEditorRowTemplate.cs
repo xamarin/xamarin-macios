@@ -7,6 +7,8 @@
 // Copyright 2013 Xamarin Inc
 //
 
+#if !__MACCATALYST__
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -129,3 +131,4 @@ namespace AppKit
 		}
 	}
 }
+#endif // !__MACCATALYST__

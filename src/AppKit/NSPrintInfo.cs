@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using PrintCore;
 
@@ -22,3 +23,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

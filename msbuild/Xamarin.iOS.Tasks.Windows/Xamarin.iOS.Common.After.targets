@@ -164,11 +164,10 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				<DsymFileName>%(_DSYMDir.Filename)%(_DSYMDir.Extension)</DsymFileName>
 			</_DSYMDir>
 		</ItemGroup>
-		<MakeDir Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" Directories="$(DeviceSpecificIntermediateOutputPath)dsym" />
 		<!--Zip Dsym folders-->
-		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)dsym" />
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)" />
 		<CopyFileFromBuildServer Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
-		<LocalUnzip Condition="Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" ExtractionPath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName)" />
+		<LocalUnzip Condition="Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" ExtractionPath="$(DeviceSpecificOutputPath)" />
 		<Delete Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" SessionId="$(BuildSessionId)" Files="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
 	</Target>
 
@@ -314,23 +313,16 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<!-- We need to use net5.0 because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
-			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net5.0').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
+			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net6.0').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
 		</PropertyGroup>
 
+		<!-- Include Debug symbols as input so those are copied to the server -->
 		<ItemGroup>
-			<!-- Include Debug symbols as input so those are copied to the server -->
-			<_ILLinkDebugSymbols Include="@(_DebugSymbolsIntermediatePath)" Condition="'$(_DebugSymbolsProduced)'=='true'" />
+			<!-- @(_PDBToLink) comes from the _ComputeManagedAssemblyToLink target, which is a dependency of this target and is included in Microsoft.NET.ILLink.targets -->
+			<!-- @(_PDBToLink) should contain the current assembly pdb and the project reference pdbs -->
+			<_ILLinkDebugSymbols Include="@(_PDBToLink)" />
 		</ItemGroup>
-
-		<ItemGroup>
-			<!-- Replace the custom steps using the remote file paths for those -->
-			<_TrimmerCustomSteps Remove="$(_AdditionalTaskAssembly)" />
-			<_TrimmerCustomSteps Include="$([System.String]::Copy('$(_AdditionalTaskAssembly)').Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))">
-				<BeforeStep>MarkStep</BeforeStep>
-				<Type>Xamarin.SetupStep</Type>
-			</_TrimmerCustomSteps>
-		</ItemGroup>
-
+		
 		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
 		<Xamarin.iOS.Tasks.ILLink 
 				SessionId="$(BuildSessionId)"

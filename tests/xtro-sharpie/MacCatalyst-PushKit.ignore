@@ -1,2 +1,0 @@
-## fails in intro (on 10.15) and deprecated with iOS 13 -> Use directly from watchOS instead.
-!missing-field! PKPushTypeComplication not bound

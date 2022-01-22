@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace Extrospection {
 		{
 		}
 
-		public void Execute (string pchFile, IEnumerable<string> assemblyNames)
+		public void Execute (string pchFile, IEnumerable<string> assemblyNames, string outputDirectory = "")
 		{
 			var managed_reader = new AssemblyReader () {
 				new ReleaseAttributeCheck (),
@@ -45,6 +45,7 @@ namespace Extrospection {
 					Helpers.Platform = Platforms.tvOS;
 				else if (name.EndsWith (".MacCatalyst", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.MacCatalyst;
+				Helpers.IsDotNet = assemblyName.Contains ("/runtimes/");
 				managed_reader.Load (assemblyName);
 			}
 			managed_reader.Process ();
@@ -60,7 +61,7 @@ namespace Extrospection {
 
 			managed_reader.End ();
 
-			Log.Save ();
+			Log.Save (outputDirectory);
 		}
 	}
 

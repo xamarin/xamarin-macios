@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -60,15 +60,19 @@ namespace Xharness.Jenkins.TestTasks {
 			if (asyncEnumerable != null)
 				await asyncEnumerable.ReadyTask;
 
-			if (!testTask.Candidates.Any ()) {
+			try {
+				if (!testTask.Candidates.Any ()) {
+					testTask.ExecutionResult = TestExecutingResult.DeviceNotFound;
+					testTask.FailureMessage = "No applicable devices found.";
+				} else {
+					testTask.Device = testTask.Candidates.First ();
+					if (testTask.Platform == TestPlatform.watchOS)
+						testTask.CompanionDevice = simulators.FindCompanionDevice (simulatorLoadLog, testTask.Device);
+				}
+			} catch (Exception e) {
 				testTask.ExecutionResult = TestExecutingResult.DeviceNotFound;
-				testTask.FailureMessage = "No applicable devices found.";
-			} else {
-				testTask.Device = testTask.Candidates.First ();
-				if (testTask.Platform == TestPlatform.watchOS)
-					testTask.CompanionDevice = simulators.FindCompanionDevice (simulatorLoadLog, testTask.Device);
+				testTask.FailureMessage = $"No applicable devices found ({e.Message})";
 			}
-
 		}
 
 		public async Task SelectSimulatorAsync ()

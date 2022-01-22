@@ -30,6 +30,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -40,8 +41,10 @@ using AudioFileID = System.IntPtr;
 namespace AudioToolbox {
 
 	// AudioFormatListItem
+#if !NET
 	[Watch (6,0)]
-	[StructLayout(LayoutKind.Sequential)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFormat
 	{
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
@@ -385,7 +388,14 @@ namespace AudioToolbox {
 		ID3TagToDictionary			= 0x69643364,	// 'id3d' // TODO:
 
 #if !MONOMAC
+#if NET
+		[UnsupportedOSPlatform ("ios8.0")]
+#if IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 8, 0)]
+#endif
 		HardwareCodecCapabilities	= 0x68776363,	// 'hwcc'
 #endif
 	}

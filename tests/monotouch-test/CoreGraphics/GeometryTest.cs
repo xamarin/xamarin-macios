@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGGeometry (and related)
 //
 // Authors:
@@ -8,7 +8,6 @@
 //
 
 using System;
-using System.Drawing;
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for FetchResult
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_PHOTOS && !__TVOS__
+#if HAS_PHOTOS && !__TVOS__ && HAS_UIKIT
 
 using System;
 using System.Linq;
@@ -20,6 +20,7 @@ using CoreGraphics;
 using AssetsLibrary;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Photos {
 
@@ -30,12 +31,12 @@ namespace MonoTouchFixtures.Photos {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 #if HAS_ASSETSLIBRARY
 			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");
 #elif __MACCATALYST__
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 			if (PHPhotoLibrary.GetAuthorizationStatus (PHAccessLevel.ReadWrite) != PHAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");
 #else

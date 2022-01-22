@@ -6,10 +6,13 @@
 // Copyright 2016 Xamarin Inc.
 //
 
+#nullable enable
+
 #if !MONOMAC && !WATCH
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -20,12 +23,20 @@ using Foundation;
 
 namespace CoreGraphics {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("tvos9.2")]
+	[SupportedOSPlatform ("ios9.3")]
+#if TVOS
+	[Obsolete ("Starting with tvos10.0 replaced by 'CGColorConversionInfoTriple'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios10.0 replaced by 'CGColorConversionInfoTriple'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[TV (9,2)]
 	[iOS (9,3)]
+	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTriple'.")]
+	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTriple'.")]
 #endif
-	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
-	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CGColorConverterTriple {
 		public CGColorSpace Space;
@@ -34,46 +45,27 @@ namespace CoreGraphics {
 	}
 
 	// CGColorConverter.h
-#if !NET
+#if NET
+	[SupportedOSPlatform ("tvos9.2")]
+	[SupportedOSPlatform ("ios9.3")]
+#if TVOS
+	[Obsolete ("Starting with tvos10.0 replaced by 'CGColorConversionInfo'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios10.0 replaced by 'CGColorConversionInfo'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[TV (9,2)]
 	[iOS (9,3)]
-#endif
 	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
 	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
-	public class CGColorConverter : INativeObject, IDisposable
+#endif
+
+	public class CGColorConverter : NativeObject
 	{
-		/* invoked by marshallers */
-		internal CGColorConverter (IntPtr handle)
-		{
-		}
-
-		[Preserve (Conditional=true)]
-		internal CGColorConverter (IntPtr handle, bool owns)
-		{
-		}
-
 		public CGColorConverter (NSDictionary options, params CGColorConverterTriple [] triples)
-		{
-		}
-
-		~CGColorConverter ()
-		{
-		}
-
-		public void Dispose ()
-		{
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return IntPtr.Zero; }
-		}
-
-		protected virtual void Dispose (bool disposing)
 		{
 		}
 	}
 }
 
 #endif // !MONOMAC && !WATCH
-

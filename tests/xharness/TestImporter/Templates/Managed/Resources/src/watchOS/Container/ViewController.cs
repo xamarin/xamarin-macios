@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using UIKit;
 
@@ -23,4 +23,3 @@ namespace Container
 		}
 	}
 }
-

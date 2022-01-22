@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVSpeechSynthesisVoice
 //
 // Authors:
@@ -8,8 +8,6 @@
 //
 
 #if !MONOMAC
-using System;
-using System.Drawing;
 using AVFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -19,6 +17,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -31,10 +30,10 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void SetUp ()
 		{
 #if __WATCHOS__
-			if (!TestRuntime.CheckSystemVersion (PlatformName.WatchOS, 3, 0))
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.WatchOS, 3, 0))
 				Assert.Inconclusive ("Requires watchOS 3.0+");
 #else
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 #endif
 		}
 

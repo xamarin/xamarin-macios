@@ -1,4 +1,4 @@
-﻿using Xamarin.Messaging.Build.Client;
+using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks
 {

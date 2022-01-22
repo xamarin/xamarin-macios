@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 using Foundation;
@@ -14,7 +14,7 @@ namespace MyTabbedApplication
 
 		public FirstViewController (IntPtr handle) : base (handle)
 		{
-			this.Title = NSBundle.MainBundle.LocalizedString ("First", "First");
+			this.Title = NSBundle.MainBundle.GetLocalizedString ("First", "First");
 			this.TabBarItem.Image = UIImage.FromBundle ("first");
 		}
 
@@ -58,4 +58,3 @@ namespace MyTabbedApplication
 		#endregion
 	}
 }
-

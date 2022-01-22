@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monotouch-test", "monotouch-test\monotouch-test.csproj", "{AC6D070F-2ED4-4701-B701-81915B931D1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "framework-test", "framework-test\framework-test.csproj", "{2ECCE3D0-AAD1-46B9-B190-B567249DCF9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "framework-test", "framework-test\iOS\framework-test-ios.csproj", "{2ECCE3D0-AAD1-46B9-B190-B567249DCF9C}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fsharp", "fsharp\fsharp.fsproj", "{7862FE5A-530A-4651-825F-C80836B0A3A1}"
 EndProject
@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedResources", "Embedd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-test", "bindings-test\iOS\bindings-test.csproj", "{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-framework-test", "bindings-framework-test\bindings-framework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E306}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-framework-test", "bindings-framework-test\iOS\bindings-framework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E306}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fsharplibrary", "fsharplibrary\fsharplibrary.fsproj", "{C7212169-BA46-413B-91CD-A32C52AD5E0D}"
 EndProject
@@ -53,9 +53,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemCoreXunit Part 2", "b
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Touch.Client-iOS", "..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj", "{F611ED96-54B5-4975-99BB-12F50AF95936}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xcframework-test", "xcframework-test\xcframework-test.csproj", "{2ECCE3D0-AAD1-46B9-B190-B567249DCF9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xcframework-test", "xcframework-test\iOS\xcframework-test-ios.csproj", "{2ECCE3D0-AAD1-46B9-B190-B567249DCF9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-xcframework-test", "bindings-xcframework-test\bindings-xcframework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E307}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-xcframework-test", "bindings-xcframework-test\iOS\bindings-xcframework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E307}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

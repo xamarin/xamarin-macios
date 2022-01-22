@@ -12,7 +12,9 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+#if !__MACOS__
 using UIKit;
+#endif
 using NUnit.Framework;
 
 namespace LinkSdk {
@@ -49,7 +51,11 @@ namespace LinkSdk {
 				// note 2: simulators also got the new libsqlite version with Xcode 9, and since Xcode 9 ships an ever newer sqlite version,
 				// we get even more API as well.
 				var hasNewerSqlite = TestRuntime.CheckXcodeVersion (9, 0);
+#if __MACOS__ || __MACCATALYST__
+				var hasNewSqlite = hasNewerSqlite || TestRuntime.CheckXcodeVersion (8, 0);
+#else
 				var hasNewSqlite = hasNewerSqlite || TestRuntime.CheckXcodeVersion (8, 0) && Runtime.Arch == Arch.DEVICE;
+#endif
 				
 				var new_symbols = new string [] {
 					"sqlite3_key",

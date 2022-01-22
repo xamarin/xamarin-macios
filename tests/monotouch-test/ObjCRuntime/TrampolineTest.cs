@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[Preserve (AllMembers = true)]
 	public class TrampolineTest {
 		public static readonly nfloat pi = 3.14159f;
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		public static bool IsX64 { get { return IntPtr.Size == 8 && !IsArm64CallingConvention; } }
 		public static bool IsX86 { get { return IntPtr.Size == 4; } }
 #else
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public static bool IsArm64 { get { return IntPtr.Size == 8 && IsArm64CallingConvention; } }
 		public static bool IsArm32 {
 			get {
-#if __WATCHOS__ || __MACOS__
+#if __WATCHOS__ || __MACOS__ || __MACCATALYST__
 				return false;
 #else
 				return IntPtr.Size == 4 && Runtime.Arch == Arch.DEVICE;
@@ -326,10 +326,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.CATransform3D_objc_msgSend_stret (out catransform3d, obj.Handle, new Selector ("testCATransform3D").Handle);
 			}
 			CATransform3D res = new CATransform3D ();
-			res.m11 = 11.1f;
-			res.m22 = 22.2f;
-			res.m33 = 33.3f;
-			res.m44 = 44.4f;
+			res.M11 = 11.1f;
+			res.M22 = 22.2f;
+			res.M33 = 33.3f;
+			res.M44 = 44.4f;
 			Assert.That (catransform3d.Equals (res), "#testCATransform3D");
 #endif // !__WATCHOS__
 			
@@ -637,7 +637,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		
 		static float ParseString (string str)
 		{
-			return float.Parse (str, new CultureInfo ("en-US").NumberFormat);
+			return float.Parse (str, CultureInfo.InvariantCulture.NumberFormat);
 		}
 		
 		[Export ("testCGRect")]
@@ -743,10 +743,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public CATransform3D Test_CATransform3D ()
 		{
 			CATransform3D res = new CATransform3D ();
-			res.m11 = 11.1f;
-			res.m22 = 22.2f;
-			res.m33 = 33.3f;
-			res.m44 = 44.4f;
+			res.M11 = 11.1f;
+			res.M22 = 22.2f;
+			res.M33 = 33.3f;
+			res.M44 = 44.4f;
 			return res;
 		}
 #endif // !__WATCHOS__

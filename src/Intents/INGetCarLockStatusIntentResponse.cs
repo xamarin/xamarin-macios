@@ -1,4 +1,4 @@
-﻿// INGetCarLockStatusIntentResponse.cs
+// INGetCarLockStatusIntentResponse.cs
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>

@@ -39,12 +39,35 @@ using CoreFoundation;
 using CoreImage;
 using CoreAnimation;
 using CoreData;
+using Intents;
+#if !__MACCATALYST__
 using OpenGL;
+#endif
 using CoreVideo;
 using CloudKit;
 using UniformTypeIdentifiers;
 
+#if __MACCATALYST__
+using UIKit;
+#else
+using UIMenu = Foundation.NSObject;
+using UIMenuElement = Foundation.NSObject;
+#endif
+
 using CGGlyph = System.UInt16;
+#if __MACCATALYST__
+using CAOpenGLLayer = Foundation.NSObject;
+using CGLContext = Foundation.NSObject;
+using CGLPixelFormat = Foundation.NSObject;
+using Color = UIKit.UIColor;
+using NSColorList = Foundation.NSObject;
+#else
+using Color = AppKit.NSColor;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace AppKit {
 	//[BaseType (typeof (NSObject))]
@@ -56,13 +79,14 @@ namespace AppKit {
 	//	void DrawAtPoint (CGPoint atPoint, CGRect fromRect, NSCompositingOperation operation, float fractionDelta);
 	//}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSCell))]
 	interface NSActionCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 	
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target  { get; set; }
@@ -75,6 +99,7 @@ namespace AppKit {
 	
 	}
 
+	[MacCatalyst (13, 0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSAlignmentFeedbackToken
@@ -85,6 +110,7 @@ namespace AppKit {
 
 	// @interface NSAlignmentFeedbackFilter : NSObject
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSAlignmentFeedbackFilter
 	{
@@ -136,11 +162,12 @@ namespace AppKit {
 		float Progress { get; } /* float, not CGFloat */
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSAnimationDelegate)})]
 	interface NSAnimation : NSCoding, NSCopying {
 		[Export ("initWithDuration:animationCurve:")]
 		[Sealed] // Just to avoid the duplicate selector error
-		IntPtr Constructor (double duration, NSAnimationCurve animationCurve);
+		NativeHandle Constructor (double duration, NSAnimationCurve animationCurve);
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use the constructor instead.")]
@@ -219,6 +246,7 @@ namespace AppKit {
 		NSString TriggerOrderOut { get; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -239,6 +267,7 @@ namespace AppKit {
 		void AnimationDidReachProgressMark (NSAnimation animation, float /* NSAnimationProgress = float */ progress);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSAnimationContext {
 		[Static]
@@ -276,12 +305,13 @@ namespace AppKit {
 		bool AllowsImplicitAnimation { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSAlertDelegate)})]
 	interface NSAlert {
 		[Static, Export ("alertWithError:")]
 		NSAlert WithError (NSError  error);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use constructor instead.")]
 		[Static, Export ("alertWithMessageText:defaultButton:alternateButton:otherButton:informativeTextWithFormat:")]
 		NSAlert WithMessage([NullAllowed] string message, [NullAllowed] string defaultButton, [NullAllowed] string alternateButton, [NullAllowed]  string otherButton, string full);
 	
@@ -331,7 +361,7 @@ namespace AppKit {
 		[Export ("runModal")]
 		nint RunModal ();
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use BeginSheetModalForWindow (NSWindow sheetWindow, Action<nint> handler) instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use BeginSheetModalForWindow (NSWindow sheetWindow, Action<nint> handler) instead.")]
 		[Export ("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
 		void BeginSheet ([NullAllowed] NSWindow  window, [NullAllowed] NSObject modalDelegate, [NullAllowed] Selector didEndSelector, IntPtr contextInfo);
 
@@ -344,6 +374,7 @@ namespace AppKit {
 		NSPanel Window  { get; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -352,6 +383,7 @@ namespace AppKit {
 		bool ShowHelp (NSAlert  alert);
 	}
 
+	[NoMacCatalyst]
 	interface NSApplicationDidFinishLaunchingEventArgs {
 		[Export ("NSApplicationLaunchIsDefaultLaunchKey")]
 		bool IsLaunchDefault { get; }
@@ -361,11 +393,12 @@ namespace AppKit {
 	}
 
 	[Mac (10,9)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSAppearance : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithAppearanceNamed:bundle:")]
-		IntPtr Constructor (string name, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor (string name, [NullAllowed] NSBundle bundle);
 
 		[Export ("name")]
 		string Name { get; }
@@ -398,7 +431,7 @@ namespace AppKit {
 		[Field ("NSAppearanceNameDarkAqua")]
 		NSString NameDarkAqua { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Field ("NSAppearanceNameLightContent")]
 		NSString NameLightContent { get; }
 
@@ -435,21 +468,28 @@ namespace AppKit {
 	interface INSAppearanceCustomization {} 
 
 	[Mac (10,9)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSAppearanceCustomization {
-
+#if NET
+		[Abstract]
+#endif
 		[Mac (10,9)]
 		[NullAllowed]
 		[Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
 
+#if NET
+		[Abstract]
+#endif
 		[Mac (10,9)]
 		[Export ("effectiveAppearance", ArgumentSemantic.Strong)]
 		NSAppearance EffectiveAppearance { get; }
 	}
 
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSApplicationDelegate) })]
 	[DisableDefaultCtor] // An uncaught exception was raised: Creating more than one Application
 	interface NSApplication : NSAccessibilityElementProtocol, NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibility, NSAppearanceCustomization {
@@ -464,7 +504,7 @@ namespace AppKit {
 		NSApplicationDelegate Delegate { get; set; }
 	
 		[Export ("context")]
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns null. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "This method always returns null. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
 		NSGraphicsContext Context { get; }
 	
 		[Export ("hide:")]
@@ -548,15 +588,15 @@ namespace AppKit {
 		[Export ("cancelUserAttentionRequest:")]
 		void CancelUserAttentionRequest (nint request);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use NSWindow.BeginSheet instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use NSWindow.BeginSheet instead.")]
 		[Export ("beginSheet:modalForWindow:modalDelegate:didEndSelector:contextInfo:")]
 		void BeginSheet (NSWindow sheet, NSWindow docWindow, [NullAllowed] NSObject modalDelegate, [NullAllowed] Selector didEndSelector, IntPtr contextInfo);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use NSWindow.EndSheet instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use NSWindow.EndSheet instead.")]
 		[Export ("endSheet:")]
 		void EndSheet (NSWindow sheet);
 	
-		[Availability (Deprecated = Platform.Mac_10_9)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("endSheet:returnCode:")]
 		void EndSheet (NSWindow  sheet, nint returnCode);
 	
@@ -581,7 +621,7 @@ namespace AppKit {
 		[Export ("discardEventsMatchingMask:beforeEvent:"), Protected]
 		void DiscardEvents (nuint mask, NSEvent lastEvent);
 	
-                [ThreadSafe]
+		[ThreadSafe]
 		[Export ("postEvent:atStart:")]
 		void PostEvent (NSEvent theEvent, bool atStart);
 	
@@ -595,7 +635,7 @@ namespace AppKit {
 		void PreventWindowOrdering ();
 	
 		[Export ("makeWindowsPerform:inOrder:")]
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "Use EnumerateWindows instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use EnumerateWindows instead.")]
 		NSWindow MakeWindowsPerform (Selector aSelector, bool inOrder);
 	
 #if !XAMCORE_4_0
@@ -778,6 +818,14 @@ namespace AppKit {
 		[Notification, Field ("NSApplicationDidChangeScreenParametersNotification")]
 		NSString DidChangeScreenParametersNotification { get; }
 
+		[Notification, Mac (12,1)]
+		[Field ("NSApplicationProtectedDataWillBecomeUnavailableNotification")]
+		NSString ProtectedDataWillBecomeUnavailableNotification { get; }
+
+		[Notification, Mac (12,1)]
+		[Field ("NSApplicationProtectedDataDidBecomeAvailableNotification")]
+		NSString ProtectedDataDidBecomeAvailableNotification { get; }
+
 		[Field ("NSApplicationLaunchIsDefaultLaunchKey")]
 		NSString LaunchIsDefaultLaunchKey  { get; }
 
@@ -830,8 +878,13 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("enumerateWindowsWithOptions:usingBlock:")]
 		void EnumerateWindows (NSWindowListOptions options, NSApplicationEnumerateWindowsHandler block);
+
+		[Mac (12,0)]
+		[Export ("protectedDataAvailable")]
+		bool ProtectedDataAvailable { [Bind ("isProtectedDataAvailable")] get; }
 	}
 
+	[NoMacCatalyst]
 	[Static]
 	interface NSAboutPanelOption {
 		[Mac (10, 13)]
@@ -863,6 +916,7 @@ namespace AppKit {
 	delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
 //#endif
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1012,8 +1066,33 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Now optional on NSApplicationDelegate.")]
 		[Export ("application:delegateHandlesKey:"), DelegateName ("NSApplicationHandlesKey"), NoDefaultValue]
 		bool HandlesKey (NSApplication sender, string key);
+
+		[Mac (12,0)]
+		[IgnoredInDelegate]
+		[Export ("applicationSupportsSecureRestorableState:")]
+		bool SupportsSecureRestorableState (NSApplication application);
+
+		[Mac (12,0)]
+		[IgnoredInDelegate]
+		[Export ("application:handlerForIntent:")]
+		[return: NullAllowed]
+		NSObject GetHandler (NSApplication application, INIntent intent);
+
+		[Mac (12,0)]
+		[IgnoredInDelegate]
+		[Export ("applicationShouldAutomaticallyLocalizeKeyEquivalents:")]
+		bool ShouldAutomaticallyLocalizeKeyEquivalents (NSApplication application);
+
+		[Mac (12,0)]
+		[Export ("applicationProtectedDataWillBecomeUnavailable:")]
+		void ProtectedDataWillBecomeUnavailable (NSNotification notification);
+
+		[Mac (12,0)]
+		[Export ("applicationProtectedDataDidBecomeAvailable:")]
+		void ProtectedDataDidBecomeAvailable (NSNotification notification);
 	}
 
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSServicesMenuRequestor
 	{
@@ -1024,6 +1103,7 @@ namespace AppKit {
 		bool ReadSelectionFromPasteboard (NSPasteboard pboard);
 	}
 
+	[NoMacCatalyst]
 	[Mac (10, 12, 2)]
 	[Category]
 	[BaseType (typeof(NSApplication))]
@@ -1040,6 +1120,7 @@ namespace AppKit {
 	}
 
 		
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObjectController))]
 	interface NSArrayController {
 		[Export ("rearrangeObjects")]
@@ -1162,6 +1243,7 @@ namespace AppKit {
 		bool SetSelectedObjects (NSObject [] objects);
 	}
 
+	[NoMacCatalyst]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSBezierPath : NSSecureCoding, NSCopying {
@@ -1295,7 +1377,7 @@ namespace AppKit {
 		[Export ("appendBezierPathWithArcFromPoint:toPoint:radius:")]
 		void AppendPathWithArc (CGPoint point1, CGPoint point2, nfloat radius);
 
-		[Availability (Obsoleted = Platform.Mac_10_13, Message = "Use 'AppendPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 13, message: "Use 'AppendPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
 		[Export ("appendBezierPathWithGlyph:inFont:")]
 		void AppendPathWithGlyph (uint /* NSGlyph = unsigned int */ glyph, NSFont font);
 
@@ -1303,7 +1385,7 @@ namespace AppKit {
 		void _AppendPathWithGlyphs (IntPtr glyphs, nint count, NSFont font);
 
 		//IntPtr is exposed because the packedGlyphs should be treated as a "black box"
-		[Availability (Obsoleted = Platform.Mac_10_13, Message = "Use 'Append (uint[], NSFont)' instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 13, message: "Use 'Append (uint[], NSFont)' instead.")]
 		[Export ("appendBezierPathWithPackedGlyphs:")]
 		void AppendPathWithPackedGlyphs (IntPtr packedGlyphs);
 
@@ -1369,26 +1451,27 @@ namespace AppKit {
 		void Append (NSBezierPath path);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSImageRep))]
 	[DisableDefaultCtor] // An uncaught exception was raised: -[NSBitmapImageRep init]: unrecognized selector sent to instance 0x686880
 	partial interface NSBitmapImageRep : NSSecureCoding {
 		[Export ("initWithFocusedViewRect:")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSView.CacheDisplay()' instead.")]
-		IntPtr Constructor (CGRect rect);
+		NativeHandle Constructor (CGRect rect);
 
 		[Export ("initWithBitmapDataPlanes:pixelsWide:pixelsHigh:bitsPerSample:samplesPerPixel:hasAlpha:isPlanar:colorSpaceName:bytesPerRow:bitsPerPixel:")]
-		IntPtr Constructor (IntPtr planes, nint width, nint height, nint bps, nint spp, bool alpha, bool isPlanar,
+		NativeHandle Constructor (IntPtr planes, nint width, nint height, nint bps, nint spp, bool alpha, bool isPlanar,
 				    string colorSpaceName, nint rBytes, nint pBits);
 
 		[Export ("initWithBitmapDataPlanes:pixelsWide:pixelsHigh:bitsPerSample:samplesPerPixel:hasAlpha:isPlanar:colorSpaceName:bitmapFormat:bytesPerRow:bitsPerPixel:")]
-		IntPtr Constructor (IntPtr planes, nint width, nint height, nint bps, nint spp, bool alpha, bool isPlanar, string colorSpaceName,
+		NativeHandle Constructor (IntPtr planes, nint width, nint height, nint bps, nint spp, bool alpha, bool isPlanar, string colorSpaceName,
 				    NSBitmapFormat bitmapFormat, nint rBytes, nint pBits);
 
 		[Export ("initWithCGImage:")]
-		IntPtr Constructor (CGImage cgImage);
+		NativeHandle Constructor (CGImage cgImage);
 
 		[Export ("initWithCIImage:")]
-		IntPtr Constructor (CIImage ciImage);
+		NativeHandle Constructor (CIImage ciImage);
 
 		[Static]
 		[Export ("imageRepsWithData:")]
@@ -1399,7 +1482,7 @@ namespace AppKit {
 		NSImageRep ImageRepFromData (NSData data);
 
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("bitmapData")]
 		IntPtr BitmapData { get; }
@@ -1532,14 +1615,19 @@ namespace AppKit {
 		[Field ("NSImageEXIFData")]
 		NSString EXIFData { get; }
 
+		[Mac (12,0)]
+		[Field ("NSImageIPTCData")]
+		NSString IptcData { get; }
+
 		[Field ("NSImageFallbackBackgroundColor")]
 		NSString FallbackBackgroundColor { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSBox {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("borderType")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Transparent' property for NSNoBorder instead.")]
@@ -1582,7 +1670,7 @@ namespace AppKit {
 		bool Transparent { [Bind ("isTransparent")] get; set; }
 
 		[Export ("setTitleWithMnemonic:")]
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "For compatability, this method still sets the Title with the ampersand stripped from it.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "For compatability, this method still sets the Title with the ampersand stripped from it.")]
 		void SetTitleWithMnemonic (string stringWithMnemonic);
 
 		[Export ("borderWidth")]
@@ -1600,11 +1688,12 @@ namespace AppKit {
 		NSColor FillColor { get; set; }
 	}
 		
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 		// , Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSBrowserDelegate)})]
 	partial interface NSBrowser {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("loadColumnZero")]
 		void LoadColumnZero ();
@@ -1709,11 +1798,11 @@ namespace AppKit {
 		[Export ("lastVisibleColumn")]
 		nint LastVisibleColumn { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the item based NSBrowser instead.")]
 		[Export ("columnOfMatrix:")]
 		nint ColumnOfMatrix (NSMatrix matrix);
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the item based NSBrowser instead.")]
 		[Export ("matrixInColumn:")]
 		NSMatrix MatrixInColumn (nint column);
 
@@ -1810,10 +1899,11 @@ namespace AppKit {
 		void EditItemAtIndexPath (NSIndexPath indexPath, NSEvent theEvent, bool select);
 
 		//Detected properties
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the item based NSBrowser instead.")]
 		[Export ("matrixClass")]
 		Class MatrixClass { get; [Bind ("setMatrixClass:")] set; }
 
@@ -1880,6 +1970,7 @@ namespace AppKit {
 		nint LastColumn { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1991,17 +2082,18 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSCell))]
 	interface NSBrowserCell {
 		[Mac (10,12)]
 		[Export ("initTextCell:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string str);
+		NativeHandle Constructor (string str);
 
 		[Mac (10,12)]
 		[Export ("initImageCell:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSImage image);
+		NativeHandle Constructor ([NullAllowed] NSImage image);
 
 		[Static]
 		[Export ("branchImage")]
@@ -2035,15 +2127,16 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell))]
 	interface NSButtonCell {
 		[DesignatedInitializer]
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[DesignatedInitializer]
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage image);
+		NativeHandle Constructor (NSImage image);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -2110,16 +2203,16 @@ namespace AppKit {
 		[Export ("drawBezelWithFrame:inView:")]
 		void DrawBezelWithFrame (CGRect frame, NSView controlView);
 
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "This method no longer does anything and should not be called.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "This method no longer does anything and should not be called.")]
 		[Export ("alternateMnemonicLocation")]
 		nint AlternateMnemonicLocation { get; set; }
 	
 		[Export ("alternateMnemonic")]
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "This method still will set Title with the ampersand stripped from the value, but does nothing else. Set the Title directly.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "This method still will set Title with the ampersand stripped from the value, but does nothing else. Set the Title directly.")]
 		string AlternateMnemonic { get; [Bind ("setAlternateTitleWithMnemonic:")] set; }
 	
 		[Export ("setGradientType:")]
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "The GradientType property is unused, and setting it has no effect.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "The GradientType property is unused, and setting it has no effect.")]
 		void SetGradientType (NSGradientType type);
 	
 		[Export ("imageDimsWhenDisabled")]
@@ -2151,10 +2244,11 @@ namespace AppKit {
 	
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression, NSUserInterfaceValidations {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Mac (10,12)]
 		[Static]
@@ -2231,7 +2325,7 @@ namespace AppKit {
 		[Export ("performKeyEquivalent:")]
 		bool PerformKeyEquivalent (NSEvent  key);
 
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "On 10.8, this method still will set the Title with the ampersand stripped from stringWithAmpersand, but does nothing else. Set the Title directly.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "On 10.8, this method still will set the Title with the ampersand stripped from stringWithAmpersand, but does nothing else. Set the Title directly.")]
 		[Export ("setTitleWithMnemonic:")]
 		void SetTitleWithMnemonic (string mnemonic);
 
@@ -2289,27 +2383,29 @@ namespace AppKit {
 		bool HasDestructiveAction { get; set; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSImageRep))]
 	[DisableDefaultCtor] // An uncaught exception was raised: -[NSCachedImageRep init]: unrecognized selector sent to instance 0x14890e0
-	[Availability (Deprecated = Platform.Mac_10_6)]
+	[Deprecated (PlatformName.MacOSX, 10, 6)]
 	interface NSCachedImageRep {
-		[Availability (Deprecated = Platform.Mac_10_6)]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Export ("initWithWindow:rect:")]
-		IntPtr Constructor (NSWindow win, CGRect rect);
+		NativeHandle Constructor (NSWindow win, CGRect rect);
 
-		[Availability (Deprecated = Platform.Mac_10_6)]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Export ("initWithSize:depth:separate:alpha:")]
-		IntPtr Constructor (CGSize size, NSWindowDepth depth, bool separate, bool alpha);
+		NativeHandle Constructor (CGSize size, NSWindowDepth depth, bool separate, bool alpha);
 
-		[Availability (Deprecated = Platform.Mac_10_6)]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Export ("window")]
 		NSWindow Window { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_6)]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Export ("rect")]
 		CGRect Rectangle { get; }
 	}
 	
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
@@ -2318,11 +2414,11 @@ namespace AppKit {
 	
 		[DesignatedInitializer]
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[DesignatedInitializer]
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 	
 		[Export ("controlView")]
 		NSView ControlView { get; set; }
@@ -2571,15 +2667,15 @@ namespace AppKit {
 		[Export ("showsFirstResponder")]
 		bool ShowsFirstResponder { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "Mnemonic methods have typically not been used.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Mnemonic methods have typically not been used.")]
 		[Export ("mnemonicLocation")]
 		nint MnemonicLocation { get; set; }
 	
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "Mnemonic methods have typically not been used.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Mnemonic methods have typically not been used.")]
 		[Export ("mnemonic")]
 		string Mnemonic { get; }
 	
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "Mnemonic methods have typically not been used.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Mnemonic methods have typically not been used.")]
 		[Export ("setTitleWithMnemonic:")]
 		void SetTitleWithMnemonic (string  stringWithAmpersand);
 	
@@ -2641,6 +2737,7 @@ namespace AppKit {
 		CGRect GetFocusRingMaskBounds (CGRect cellFrame, NSView controlView);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSImageRep))]
 	[DisableDefaultCtor] // An uncaught exception was raised: -[NSCIImageRep init]: unrecognized selector sent to instance 0x1b682a0
 	interface NSCIImageRep {
@@ -2649,17 +2746,18 @@ namespace AppKit {
 		NSCIImageRep FromCIImage (CIImage image);
 
 		[Export ("initWithCIImage:")]
-		IntPtr Constructor (CIImage image);
+		NativeHandle Constructor (CIImage image);
 
 		[Export ("CIImage")]
 		CIImage CIImage { get; }
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSGestureRecognizer))]
 	interface NSClickGestureRecognizer : NSCoding {
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor (NSObject target, Selector action);
+		NativeHandle Constructor (NSObject target, Selector action);
 
 		[Export ("buttonMask")]
 		nuint ButtonMask { get; set; }
@@ -2672,10 +2770,11 @@ namespace AppKit {
 		nint NumberOfTouchesRequired { get; set; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSClipView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
@@ -2708,7 +2807,7 @@ namespace AppKit {
 		[Export ("autoscroll:")]
 		bool Autoscroll (NSEvent  theEvent);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use ConstrainBoundsRect instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use ConstrainBoundsRect instead.")]
 		[Export ("constrainScrollPoint:")]
 		CGPoint ConstrainScrollPoint (CGPoint newOrigin);
 
@@ -2731,17 +2830,19 @@ namespace AppKit {
 		bool AutomaticallyAdjustsContentInsets { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSCoder))]
 	partial interface NSCoderAppKitAddons {
-		[Availability (Deprecated = Platform.Mac_10_9)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("decodeNXColor")]
 		NSColor DecodeNXColor ();
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController))]
 	interface NSCollectionViewItem : NSCopying {
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("collectionView")]
 		[NullAllowed]
@@ -2764,10 +2865,11 @@ namespace AppKit {
 		NSCollectionViewItemHighlightState HighlightState { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSCollectionView : NSDraggingSource, NSDraggingDestination {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("isFirstResponder")]
 		bool IsFirstResponder { get; } 
@@ -3018,6 +3120,7 @@ namespace AppKit {
 	}
 
 	// @protocol NSCollectionViewDataSource <NSObject>
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSCollectionViewDataSource
@@ -3040,6 +3143,7 @@ namespace AppKit {
 		NSView GetView (NSCollectionView collectionView, NSString kind, NSIndexPath indexPath);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -3153,6 +3257,7 @@ namespace AppKit {
 	interface INSCollectionViewElement {}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSCollectionViewElement : NSUserInterfaceItemIdentification
@@ -3174,6 +3279,7 @@ namespace AppKit {
 	}
 
 	[Static]
+	[NoMacCatalyst]
 	interface NSCollectionElementKind
 	{
 		[Mac (10,11)]
@@ -3190,6 +3296,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSCollectionViewLayoutAttributes : NSCopying
 	{
@@ -3235,6 +3342,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSCollectionViewUpdateItem
 	{
@@ -3249,6 +3357,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSCollectionViewLayoutInvalidationContext
 	{
@@ -3284,6 +3393,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSCollectionViewLayout : NSCoding
 	{
@@ -3431,6 +3541,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSCollectionViewLayoutInvalidationContext))]
 	interface NSCollectionViewFlowLayoutInvalidationContext
 	{
@@ -3442,6 +3553,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface NSCollectionViewDelegateFlowLayout: NSCollectionViewDelegate
@@ -3466,6 +3578,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewFlowLayout
 	{
@@ -3515,6 +3628,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewGridLayout
 	{
@@ -3544,6 +3658,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewTransitionLayout
@@ -3551,7 +3666,7 @@ namespace AppKit {
 #if !XAMCORE_4_0
 		[Obsolete ("Use the constructor that allows you to set currentLayout and newLayout.")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 #endif
 
 		[Export ("transitionProgress", ArgumentSemantic.Assign)]
@@ -3564,7 +3679,7 @@ namespace AppKit {
 		NSCollectionViewLayout NextLayout { get; }
 
 		[Export ("initWithCurrentLayout:nextLayout:")]
-		IntPtr Constructor (NSCollectionViewLayout currentLayout, NSCollectionViewLayout newLayout);
+		NativeHandle Constructor (NSCollectionViewLayout currentLayout, NSCollectionViewLayout newLayout);
 
 		[Export ("updateValue:forAnimatedKey:")]
 		void UpdateValue (nfloat value, string key);
@@ -3573,6 +3688,7 @@ namespace AppKit {
 		nfloat GetValue (string key);
 	}
 
+	[NoMacCatalyst]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // -colorSpaceName not valid for the NSColor <NSColor: 0x1b94780>; need to first convert colorspace.
@@ -4084,6 +4200,16 @@ namespace AppKit {
 
 		[Mac (10, 12)]
 		[Static]
+		[Export ("systemMintColor", ArgumentSemantic.Strong)]
+		NSColor SystemMintColor { get; }
+
+		[Mac (12, 0)]
+		[Static]
+		[Export ("systemCyanColor", ArgumentSemantic.Strong)]
+		NSColor SystemCyanColor { get; }
+
+		[Mac (10, 12)]
+		[Static]
 		[Export ("systemTealColor", ArgumentSemantic.Strong)]
 		NSColor SystemTealColor { get; }
 
@@ -4142,6 +4268,7 @@ namespace AppKit {
 		NSColor GetColor ([NullAllowed] string colorName, Func<NSAppearance, NSColor> dynamicProvider);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSColorList : NSSecureCoding {
 		[Static]
@@ -4153,10 +4280,10 @@ namespace AppKit {
 		NSColorList ColorListNamed (string name);
 
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("initWithName:fromFile:")]
-		IntPtr Constructor (string name, [NullAllowed] string path);
+		NativeHandle Constructor (string name, [NullAllowed] string path);
 
 		[Export ("name")]
 		string Name { get; }
@@ -4191,6 +4318,7 @@ namespace AppKit {
 		bool WriteToUrl ([NullAllowed] NSUrl url, [NullAllowed] out NSError error);
 	}
 
+	[NoMacCatalyst]
 	[Mac (10, 14)]
 	[Protocol]
 	interface NSColorChanging
@@ -4201,6 +4329,7 @@ namespace AppKit {
 		void ChangeColor ([NullAllowed] NSColorPanel sender);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSPanel))]
 	partial interface NSColorPanel {
 		[Static, Export ("sharedColorPanel")]
@@ -4255,10 +4384,11 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSColorPicker {
 		[Export ("initWithPickerMask:colorPanel:")]
-		IntPtr Constructor (NSColorPanelFlags mask, NSColorPanel owningColorPanel);
+		NativeHandle Constructor (NSColorPanelFlags mask, NSColorPanel owningColorPanel);
 
 		[Export ("colorPanel")]
 		NSColorPanel ColorPanel { get; }
@@ -4288,24 +4418,25 @@ namespace AppKit {
 		CGSize MinContentSize { get; }
 	}
 
+	[NoMacCatalyst]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSColorSpace : NSCoding, NSSecureCoding {
 		[Export ("initWithICCProfileData:")]
-		IntPtr Constructor (NSData iccData);
+		NativeHandle Constructor (NSData iccData);
 
 		[Export ("ICCProfileData")]
 		NSData ICCProfileData { get; }
 
 		// Conflicts with the built-in handle intptr
 		//[Export ("initWithColorSyncProfile:")]
-		//IntPtr Constructor (IntPtr colorSyncProfile);
+		//NativeHandle Constructor (IntPtr colorSyncProfile);
 
 		[Export ("colorSyncProfile")]
 		IntPtr ColorSyncProfile { get; }
 
 		[Export ("initWithCGColorSpace:")]
-		IntPtr Constructor (CGColorSpace cgColorSpace);
+		NativeHandle Constructor (CGColorSpace cgColorSpace);
 
 		[Export ("CGColorSpace")]
 		CGColorSpace ColorSpace { get; }
@@ -4405,10 +4536,11 @@ namespace AppKit {
 		NSString Custom { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSColorWell {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("deactivate")]
 		void Deactivate ();
@@ -4434,6 +4566,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextField),
 		Delegates = new [] { "Delegate" },
 		Events = new [] { typeof (NSComboBoxDelegate) }
@@ -4441,7 +4574,7 @@ namespace AppKit {
 	partial interface NSComboBox {
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
@@ -4547,6 +4680,7 @@ namespace AppKit {
 		NSString WillPopUpNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -4564,10 +4698,11 @@ namespace AppKit {
 		nint IndexOfItem (NSComboBox comboBox, string value);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextFieldCell))]
 	partial interface NSComboBoxCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 
 		[Export ("hasVerticalScroller")]
 		bool HasVerticalScroller { get; set; }
@@ -4661,6 +4796,7 @@ namespace AppKit {
 		
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -4678,11 +4814,12 @@ namespace AppKit {
 		nuint IndexOfItem (NSComboBoxCell comboBox, string value);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	partial interface NSControl {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("sizeToFit")]
 		void SizeToFit ();
@@ -4691,38 +4828,38 @@ namespace AppKit {
 		[Export ("calcSize")]
 		void CalcSize ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("selectedCell")]
 		NSCell SelectedCell { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("selectedTag")]
 		nint SelectedTag { get; }
 
 		[Export ("sendActionOn:")]
 		nint SendActionOn (NSEventType mask);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("setNeedsDisplay")]
 		void SetNeedsDisplay ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("updateCell:")]
 		void UpdateCell (NSCell aCell);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("updateCellInside:")]
 		void UpdateCellInside (NSCell aCell);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("drawCellInside:")]
 		void DrawCellInside (NSCell aCell);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("drawCell:")]
 		void DrawCell (NSCell aCell);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("selectCell:")]
 		void SelectCell (NSCell aCell);
 
@@ -4763,12 +4900,12 @@ namespace AppKit {
 		void InvalidateIntrinsicContentSizeForCell (NSCell cell);
 
 		//Detected properties
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("cellClass")]
 		Class CellClass { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("cell")]
 		NSCell Cell { get; set; }
 
@@ -4871,6 +5008,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSEditorRegistration
 	{
@@ -4882,6 +5020,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSObject))]
 	interface NSObject_NSEditorRegistration
@@ -4898,6 +5037,7 @@ namespace AppKit {
 	interface INSEditor {}
 
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSEditor
 	{
@@ -4918,6 +5058,7 @@ namespace AppKit {
 		bool CommitEditing ([NullAllowed] out NSError error);
 	}
 
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSController : NSCoding, NSEditorRegistration 
@@ -4952,6 +5093,7 @@ namespace AppKit {
 		bool IsEditing { get; }
 	}
 
+	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSCursor : NSCoding {
 		[Static]
@@ -5037,11 +5179,12 @@ namespace AppKit {
 		
 		[DesignatedInitializer]
 		[Export ("initWithImage:hotSpot:")]
-		IntPtr Constructor (NSImage newImage, CGPoint aPoint);
+		NativeHandle Constructor (NSImage newImage, CGPoint aPoint);
 
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "Color hints are ignored. Use NSCursor (NSImage newImage, CGPoint aPoint) instead.")]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Color hints are ignored. Use NSCursor (NSImage newImage, CGPoint aPoint) instead.")]
 		[Export ("initWithImage:foregroundColorHint:backgroundColorHint:hotSpot:")]
-		IntPtr Constructor (NSImage newImage, NSColor fg, NSColor bg, CGPoint hotSpot);
+		NativeHandle Constructor (NSImage newImage, NSColor fg, NSColor bg, CGPoint hotSpot);
 
 		[Static]
 		[Export ("hide")]
@@ -5092,52 +5235,36 @@ namespace AppKit {
 
 		[Export ("mouseEntered:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[NoMacCatalyst]
 		void MouseEntered (NSEvent theEvent);
 
 		[Export ("mouseExited:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[NoMacCatalyst]
 		void MouseExited (NSEvent theEvent);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSImageRep))]
 	[DisableDefaultCtor] // An uncaught exception was raised: -[NSCustomImageRep init]: unrecognized selector sent to instance 0x54a870
 	partial interface NSCustomImageRep {
 		[Export ("initWithDrawSelector:delegate:")]
-		IntPtr Constructor (Selector drawSelectorMethod, NSObject delegateObject);
+		NativeHandle Constructor (Selector drawSelectorMethod, NSObject delegateObject);
 
+		[NullAllowed]
 		[Export ("drawSelector")]
 		Selector DrawSelector { get; }
 		
+		[NullAllowed]
 		[Export ("delegate", ArgumentSemantic.Assign)]  
 		NSObject Delegate { get; }  
 	}	
 
-	[Mac (10,11)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
-	interface NSDataAsset : NSCopying
-	{
-		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
-
-		[Export ("initWithName:bundle:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string name, NSBundle bundle);
-
-		[Export ("name")]
-		string Name { get; }
-
-		[Export ("data", ArgumentSemantic.Copy)]
-		NSData Data { get; }
-
-		[Export ("typeIdentifier")] // Uniform Type Identifier
-		NSString TypeIdentifier { get; }
-	}
-
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (NSDatePickerCellDelegate)})]
 	interface NSDatePicker {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		//Detected properties
 		[Export ("datePickerStyle")]
@@ -5200,14 +5327,15 @@ namespace AppKit {
 		NSDatePickerCellDelegate Delegate { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (NSDatePickerCellDelegate)})]
 	interface NSDatePickerCell {
 		[DesignatedInitializer]
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		//Detected properties
 		[Export ("datePickerStyle")]
@@ -5258,6 +5386,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -5267,6 +5396,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSDictionaryControllerKeyValuePair
@@ -5284,6 +5414,7 @@ namespace AppKit {
 		bool ExplicitlyIncluded { [Bind ("isExplicitlyIncluded")] get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof(NSArrayController))]
 	interface NSDictionaryController
 	{
@@ -5311,6 +5442,7 @@ namespace AppKit {
 		string LocalizedKeyTable { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSDockTile {
 		[Export ("size")]
@@ -5333,6 +5465,7 @@ namespace AppKit {
 		string BadgeLabel { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -5341,28 +5474,31 @@ namespace AppKit {
 		[Export ("setDockTile:")]
 		void SetDockTile (NSDockTile dockTile);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("dockMenu")]
 		NSMenu DockMenu ();
 	}
 
 	delegate void NSDocumentCompletionHandler (IntPtr nsErrorPointerOrZero);
 	
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSDocument /* : NSUserActivityRestoring radar://42781537 */ {
 		[Export ("initWithType:error:")]
-		IntPtr Constructor (string typeName, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (string typeName, [NullAllowed] out NSError outError);
 
 		[Static]
 		[Export ("canConcurrentlyReadDocumentsOfType:")]
 		bool CanConcurrentlyReadDocumentsOfType (string typeName);
 
 		[Export ("initWithContentsOfURL:ofType:error:")]
-		IntPtr Constructor (NSUrl url, string typeName, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("initForURL:withContentsOfURL:ofType:error:")]
-		IntPtr Constructor ([NullAllowed] NSUrl documentUrl, NSUrl documentContentsUrl, string typeName, [NullAllowed] out NSError outError);
+		NativeHandle Constructor ([NullAllowed] NSUrl documentUrl, NSUrl documentContentsUrl, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("revertDocumentToSaved:")]
 		void RevertDocumentToSaved ([NullAllowed] NSObject sender);
@@ -5678,6 +5814,11 @@ namespace AppKit {
 		[Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
 		string [] RestorableStateKeyPaths ();
 
+		[Mac (12,0)]
+		[Static]
+		[Export ("allowedClassesForRestorableStateKeyPath:")]
+		Class[] GetAllowedClasses (string keyPath);
+
 		[Mac (10,10)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		[Export ("userActivity", ArgumentSemantic.Strong)]
@@ -5718,6 +5859,7 @@ namespace AppKit {
 
 	delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
 
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSDocumentController : NSWindowRestoration, NSCoding {
@@ -5853,6 +5995,7 @@ namespace AppKit {
 		double AutosavingDelay { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSDraggingImageComponent {
 		[Export ("key", ArgumentSemantic.Copy)]
@@ -5870,7 +6013,7 @@ namespace AppKit {
 
 		[Export ("initWithKey:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string key);
+		NativeHandle Constructor (string key);
 
 		[Field ("NSDraggingImageComponentIconKey")]
 		NSString IconKey { get; }
@@ -5879,8 +6022,10 @@ namespace AppKit {
 		NSString LabelKey { get; }
 	}
 
+	[NoMacCatalyst]
 	delegate NSDraggingImageComponent [] NSDraggingItemImagesContentProvider ();
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSDraggingItem {
 		[Export ("item", ArgumentSemantic.Strong)]
@@ -5894,7 +6039,7 @@ namespace AppKit {
 
 		[Export ("initWithPasteboardWriter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSPasteboardWriting pasteboardWriter);
+		NativeHandle Constructor (INSPasteboardWriting pasteboardWriter);
 
 		[Export ("setImageComponentsProvider:")]
 		void SetImagesContentProvider ([NullAllowed] NSDraggingItemImagesContentProvider provider);
@@ -5904,111 +6049,115 @@ namespace AppKit {
 
 	}
 	
+	[NoMacCatalyst]
 #if !XAMCORE_4_0
 	[BaseType (typeof (NSObject))]
 #endif
 	[Protocol] // Apple docs say: "you never need to create a class that implements the NSDraggingInfo protocol.", so don't add [Model]
 	interface NSDraggingInfo  {
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingDestinationWindow")]
 		NSWindow DraggingDestinationWindow { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingSourceOperationMask")]
 		NSDragOperation DraggingSourceOperationMask { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingLocation")]
 		CGPoint DraggingLocation { get; }
 	
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggedImageLocation")]
 		CGPoint DraggedImageLocation { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggedImage")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSDraggingItem' objects instead.")]
 		NSImage DraggedImage { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingPasteboard")]
 		NSPasteboard DraggingPasteboard { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingSource")]
 		NSObject DraggingSource { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingSequenceNumber")]
 		nint DraggingSequenceNumber { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("slideDraggedImageTo:")]
 		void SlideDraggedImageTo (CGPoint screenPoint);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead.")]
 		[Export ("namesOfPromisedFilesDroppedAtDestination:")]
 		string [] PromisedFilesDroppedAtDestination (NSUrl dropDestination);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("animatesToDestination")]
 		bool AnimatesToDestination { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("numberOfValidItemsForDrop")]
 		nint NumberOfValidItemsForDrop { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("draggingFormation")]
 		NSDraggingFormation DraggingFormation { get; set; } 
 
-		[Internal]
+#if NET
+		[Abstract]
+#endif
 		[Export ("enumerateDraggingItemsWithOptions:forView:classes:searchOptions:usingBlock:")]
 		void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, IntPtr classArray,
 					     NSDictionary searchOptions, NSDraggingEnumerator enumerator);
 
 		[Mac (10,11)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("springLoadingHighlight")]
 		NSSpringLoadingHighlight SpringLoadingHighlight { get; }
 
 		[Mac (10,11)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("resetSpringLoading")]
 		void ResetSpringLoading ();
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -6039,8 +6188,10 @@ namespace AppKit {
 		bool WantsPeriodicDraggingUpdates { get; }
 	}
 
+	[NoMacCatalyst]
 	delegate void NSDraggingEnumerator (NSDraggingItem draggingItem, nint idx, ref bool stop);
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // warning on dispose - created using NSView.BeginDraggingSession
 	interface NSDraggingSession {
@@ -6067,6 +6218,7 @@ namespace AppKit {
 		void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, IntPtr classArray, [NullAllowed] NSDictionary searchOptions, NSDraggingEnumerator enumerator);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -6090,16 +6242,17 @@ namespace AppKit {
 		[Export ("ignoreModifierKeysWhileDragging"), DefaultValue (false)]
 		bool IgnoreModifierKeysWhileDragging { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_1, Message = "Use DraggedImageEndedAtOperation instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 1, message: "Use DraggedImageEndedAtOperation instead.")]
 		[Export ("draggedImage:endedAt:deposited:")]
 		void DraggedImageEndedAtDeposited (NSImage image, CGPoint screenPoint, bool deposited);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSDrawerDelegate)})]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 	partial interface NSDrawer : NSAccessibilityElementProtocol, NSAccessibility {
 		[Export ("initWithContentSize:preferredEdge:")]
-		IntPtr Constructor (CGSize contentSize, NSRectEdge edge);
+		NativeHandle Constructor (CGSize contentSize, NSRectEdge edge);
 
 		[Export ("parentWindow")]
 		NSWindow ParentWindow { get; set; }
@@ -6157,6 +6310,7 @@ namespace AppKit {
 		nfloat TrailingOffset { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -6185,6 +6339,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[Mac (10, 14)]
 	[Protocol]
 	interface NSFontChanging
@@ -6197,6 +6352,7 @@ namespace AppKit {
 		NSFontPanelModeMask GetValidModes (NSFontPanel fontPanel);
 	}
 
+	[NoMacCatalyst]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash at runtime (e.g. description). Documentation state: "You don’t create NSFont objects using the alloc and init methods."
@@ -6530,6 +6686,7 @@ namespace AppKit {
 		NSFont GetFont (nfloat fontSize);
 	}
 
+	[NoMacCatalyst]
 	interface NSFontCollectionChangedEventArgs {
 		[Internal, Export ("NSFontCollectionActionKey")]
 		NSString _Action { get; }
@@ -6544,6 +6701,7 @@ namespace AppKit {
 		NSNumber _Visibility { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSFontCollection : NSSecureCoding, NSMutableCopying {
 		[Static]
@@ -6647,6 +6805,7 @@ namespace AppKit {
 		
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSFontCollection))]
 	[DisableDefaultCtor]
 	interface NSMutableFontCollection {
@@ -6688,6 +6847,7 @@ namespace AppKit {
 		NSMutableFontCollection FromName (string name, NSFontCollectionVisibility visibility);
 	}	
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSFontDescriptor : NSSecureCoding, NSCopying {
 		[Export ("postscriptName")]
@@ -6721,7 +6881,7 @@ namespace AppKit {
 		NSFontDescriptor FromNameMatrix (string fontName, NSAffineTransform matrix);
 
 		[Export ("initWithFontAttributes:")]
-		IntPtr Constructor ([NullAllowed] NSDictionary attributes);
+		NativeHandle Constructor ([NullAllowed] NSDictionary attributes);
 
 		[Export ("matchingFontDescriptorsWithMandatoryKeys:")]
 		NSFontDescriptor [] MatchingFontDescriptors (NSSet mandatoryKeys);
@@ -6762,6 +6922,7 @@ namespace AppKit {
 		NSFontDescriptor GetPreferredFont (string textStyle, NSDictionary options);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSFontManager : NSMenuItemValidation {
 		[Static, Export ("setFontPanelFactory:")]
@@ -6914,6 +7075,7 @@ namespace AppKit {
 		void OrderFrontStylesPanel (NSObject sender);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSPanel))]
 	interface NSFontPanel {
 		[Static]
@@ -6945,6 +7107,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[Static]
 	interface NSFontWeight {
 		[Field ("NSFontWeightUltraLight")]
@@ -6975,17 +7138,18 @@ namespace AppKit {
 		nfloat Black { get; }
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_10)]
+	[Deprecated (PlatformName.MacOSX, 10, 10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSMatrix))]
 	partial interface NSForm  {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("initWithFrame:mode:prototype:numberOfRows:numberOfColumns:")]
-		IntPtr Constructor (CGRect frameRect, NSMatrixMode aMode, NSCell aCell, nint rowsHigh, nint colsWide);
+		NativeHandle Constructor (CGRect frameRect, NSMatrixMode aMode, NSCell aCell, nint rowsHigh, nint colsWide);
 
 		[Export ("initWithFrame:mode:cellClass:numberOfRows:numberOfColumns:")]
-		IntPtr Constructor (CGRect frameRect, NSMatrixMode aMode, Class factoryId, nint rowsHigh, nint colsWide);
+		NativeHandle Constructor (CGRect frameRect, NSMatrixMode aMode, Class factoryId, nint rowsHigh, nint colsWide);
 
 		[Export ("indexOfSelectedItem")]
 		nint SelectedItemIndex { get; }
@@ -7045,14 +7209,15 @@ namespace AppKit {
 		void SetTextBaseWritingDirection (NSWritingDirection writingDirection);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell))]
 	partial interface NSFormCell {
 		[DesignatedInitializer]
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[Export ("isOpaque")]
 		bool IsOpaque { get; }
@@ -7082,7 +7247,7 @@ namespace AppKit {
 		[Export ("titleBaseWritingDirection")]
 		NSWritingDirection TitleBaseWritingDirection { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_8, Message = "Set Title instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Set Title instead.")]
 		[Export ("setTitleWithMnemonic:")]
 		void SetTitleWithMnemonic (string  stringWithAmpersand);
 		
@@ -7090,6 +7255,7 @@ namespace AppKit {
 		NSAttributedString AttributedTitle { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSGlyphGenerator {
 		[Export ("generateGlyphsForGlyphStorage:desiredNumberOfCharacters:glyphIndex:characterIndex:")]
@@ -7099,13 +7265,14 @@ namespace AppKit {
 		NSGlyphGenerator SharedGlyphGenerator { get; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSGradient : NSSecureCoding, NSCopying {
 		[Export ("initWithStartingColor:endingColor:")]
-		IntPtr Constructor  (NSColor startingColor, NSColor endingColor);
+		NativeHandle Constructor  (NSColor startingColor, NSColor endingColor);
 
 		[Export ("initWithColors:")]
-		IntPtr Constructor  (NSColor[] colorArray);
+		NativeHandle Constructor  (NSColor[] colorArray);
 
 		// See AppKit/NSGradiant.cs
 		//[Export ("initWithColorsAndLocations:")]
@@ -7142,6 +7309,7 @@ namespace AppKit {
 		NSColor GetInterpolatedColor(nfloat location);
 	}
 
+	[NoMacCatalyst]
 	[ThreadSafe] // CurrentContext returns a context that can be used from the current thread
 	[BaseType (typeof (NSObject))]
 	interface NSGraphicsContext {
@@ -7226,12 +7394,13 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSView))]
 	interface NSGridView
 	{
 		[Export ("initWithFrame:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Static]
 		[Export ("gridViewWithNumberOfColumns:rows:")]
@@ -7325,6 +7494,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSGridRow : NSCoding
@@ -7361,6 +7531,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSGridColumn : NSCoding
@@ -7394,6 +7565,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSGridCell : NSCoding
@@ -7424,11 +7596,13 @@ namespace AppKit {
 		NSLayoutConstraint[] CustomPlacementConstraints { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSGraphicsContext))]
 	[DisableDefaultCtor]
 	interface NSPrintPreviewGraphicsContext {
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSImageRep))]
 	[DisableDefaultCtor] // An uncaught exception was raised: -[NSEPSImageRep init]: unrecognized selector sent to instance 0x1db2d90
 	interface NSEPSImageRep {
@@ -7437,9 +7611,9 @@ namespace AppKit {
 		NSObject FromData (NSData epsData);
 
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData epsData);
+		NativeHandle Constructor (NSData epsData);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("prepareGState")]
 		void PrepareGState ();
 
@@ -7450,10 +7624,14 @@ namespace AppKit {
 		CGRect BoundingBox { get; }
 	}
 
+	[NoMacCatalyst]
 	delegate void GlobalEventHandler (NSEvent theEvent);
+	[NoMacCatalyst]
 	delegate NSEvent LocalEventHandler (NSEvent theEvent);
+	[NoMacCatalyst]
 	delegate void NSEventTrackHandler (nfloat gestureAmount, NSEventPhase eventPhase, bool isComplete, ref bool stop);
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSEvent : NSCoding, NSCopying {
 		[Export ("type")]
@@ -7471,7 +7649,7 @@ namespace AppKit {
 		[Export ("windowNumber")]
 		nint WindowNumber { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns null. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "This method always returns null. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
 		[Export ("context")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		NSGraphicsContext Context { get; }
@@ -7774,6 +7952,7 @@ namespace AppKit {
 	[Flags]
 	[Native]
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	public enum NSEventModifierFlags : ulong
 	{
 		CapsLock = 1uL << 16,
@@ -7788,15 +7967,17 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type[] {typeof (NSGestureRecognizerDelegate)})]
 	interface NSGestureRecognizer : NSCoding {
 		[DesignatedInitializer]
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor ([NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NativeHandle Constructor ([NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target { get; set; }
 
+		[NullAllowed]
 		[Export ("action")]
 		Selector Action { get; set; }
 
@@ -7924,6 +8105,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSGestureRecognizerDelegate {
@@ -7954,12 +8136,13 @@ namespace AppKit {
 		bool ShouldReceiveTouch (NSGestureRecognizer gestureRecognizer, NSTouch touch);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
 	partial interface NSMenu : NSCoding, NSCopying, NSAccessibility, NSAccessibilityElement, NSAppearanceCustomization, NSUserInterfaceItemIdentification  {
 		[DesignatedInitializer]
 		[Export ("initWithTitle:")]
-		IntPtr Constructor (string title);
+		NativeHandle Constructor (string title);
 
 		[Static]
 		[Export ("popUpContextMenu:withEvent:forView:")]
@@ -8130,6 +8313,7 @@ namespace AppKit {
 
 	interface INSMenuDelegate { }
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -8152,7 +8336,7 @@ namespace AppKit {
 		[Export ("menuDidClose:")]
 		void MenuDidClose (NSMenu menu);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("menu:willHighlightItem:")]
@@ -8162,6 +8346,7 @@ namespace AppKit {
 		CGRect ConfinementRectForMenu (NSMenu menu, NSScreen screen);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
 	interface NSMenuItem : NSCoding, NSCopying, NSAccessibility, NSAccessibilityElement, NSUserInterfaceItemIdentification, NSValidatedUserInterfaceItem {
@@ -8171,7 +8356,7 @@ namespace AppKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithTitle:action:keyEquivalent:")]
-		IntPtr Constructor (string title, [NullAllowed] Selector selectorAction, string charCode);
+		NativeHandle Constructor (string title, [NullAllowed] Selector selectorAction, string charCode);
 
 		[Export ("hasSubmenu")]
 		bool HasSubmenu { get; }
@@ -8186,7 +8371,7 @@ namespace AppKit {
 		string UserKeyEquivalent { get; }
 
 		[Export ("setTitleWithMnemonic:")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'Title' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Title' instead.")]
 		void SetTitleWithMnemonic (string stringWithAmpersand);
 
 		[Export ("isHighlighted")]
@@ -8270,16 +8455,25 @@ namespace AppKit {
 		[Mac (10, 13)]
 		[Export ("allowsKeyEquivalentWhenHidden")]
 		bool AllowsKeyEquivalentWhenHidden { get; set; }
+
+		[Mac (12, 0)]
+		[Export ("allowsAutomaticKeyEquivalentLocalization")]
+		bool AllowsAutomaticKeyEquivalentLocalization { get; set; }
+
+		[Mac (12, 0)]
+		[Export ("allowsAutomaticKeyEquivalentMirroring")]
+		bool AllowsAutomaticKeyEquivalentMirroring { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSButtonCell))]
 	interface NSMenuItemCell {
 		[DesignatedInitializer]
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[Export ("calcSize")]
 		void CalcSize ();
@@ -8330,9 +8524,12 @@ namespace AppKit {
 		[Export ("menuItem", ArgumentSemantic.Retain)]
 		NSMenuItem MenuItem { get; set; }
 
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "API only available on 32bits platforms.")]
 		[Export ("menuView")]
 		[NullAllowed]
 		NSMenuView MenuView { get; set; }
+#endif
 
 		[Export ("needsSizing")]
 		bool NeedsSizing { get; set; }
@@ -8342,7 +8539,9 @@ namespace AppKit {
 
 	}
 
+#if !NET
 	[Mac (10, 0, 0, PlatformArchitecture.Arch32)] // kept for the arch limitation
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "API only available on 32bits platforms.")]
 	[BaseType (typeof (NSView))]
 	interface NSMenuView {
@@ -8351,11 +8550,11 @@ namespace AppKit {
 		nfloat MenuBarHeight { get; }
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		// <quote>Deprecated. Tear-off menus are not supported in OS X.</quote>
 		//[Export ("initAsTearOff")]
-		//IntPtr Constructor (int tokenInitAsTearOff);
+		//NativeHandle Constructor (int tokenInitAsTearOff);
 
 		[Export ("itemChanged:")]
 		void ItemChanged (NSNotification notification);
@@ -8458,18 +8657,20 @@ namespace AppKit {
 		[Export ("horizontalEdgePadding")]
 		nfloat HorizontalEdgePadding { get; set; }
 	}
+#endif // !NET
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSNib : NSCoding {
 		[Export ("initWithContentsOfURL:")]
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
-		IntPtr Constructor (NSUrl nibFileUrl);
+		NativeHandle Constructor (NSUrl nibFileUrl);
 
 		[Export ("initWithNibNamed:bundle:")]
-		IntPtr Constructor (string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor (string nibName, [NullAllowed] NSBundle bundle);
 		
 		[Export ("initWithNibData:bundle:")]
-		IntPtr Constructor (NSData nibData, NSBundle bundle);
+		NativeHandle Constructor (NSData nibData, NSBundle bundle);
 
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("instantiateNibWithExternalNameTable:")]
@@ -8479,11 +8680,12 @@ namespace AppKit {
 		bool InstantiateNibWithOwner ([NullAllowed] NSObject owner, out NSArray topLevelObjects);
 	}	
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSController))]
 	interface NSObjectController {
 		[DesignatedInitializer]
 		[Export ("initWithContent:")]
-		IntPtr Constructor (NSObject content);
+		NativeHandle Constructor (NSObject content);
 
 		[Export ("content", ArgumentSemantic.Retain)]
 		NSObject Content { get; set; }
@@ -8555,9 +8757,10 @@ namespace AppKit {
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
+	[NoMacCatalyst]
 	interface NSOpenGLPixelFormat : NSCoding {
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData attribs);
+		NativeHandle Constructor (NSData attribs);
 
 		[Export ("getValues:forAttribute:forVirtualScreen:")]
 		void GetValue (ref int /* GLint = int32_t */ vals, NSOpenGLPixelFormatAttribute attrib, int /* GLint = int32_t */ screen);
@@ -8570,16 +8773,17 @@ namespace AppKit {
 	}
 
 	[ThreadSafe]
-	[Availability (Deprecated = Platform.Mac_10_7)]
+	[Deprecated (PlatformName.MacOSX, 10, 7)]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelBuffer {
 		[Export ("initWithTextureTarget:textureInternalFormat:textureMaxMipMapLevel:pixelsWide:pixelsHigh:")]
-		IntPtr Constructor (NSGLTextureTarget targetGlEnum, NSGLFormat format, int /* GLint = int32_t */ maxLevel, int /* GLsizei = int32_t */ pixelsWide, int /* GLsizei = int32_t */ pixelsHigh);
+		NativeHandle Constructor (NSGLTextureTarget targetGlEnum, NSGLFormat format, int /* GLint = int32_t */ maxLevel, int /* GLsizei = int32_t */ pixelsWide, int /* GLsizei = int32_t */ pixelsHigh);
 
 		// FIXME: This conflicts with our internal ctor
 		// [Export ("initWithCGLPBufferObj:")]
-		// IntPtr Constructor (IntPtr pbuffer);
+		// NativeHandle Constructor (IntPtr pbuffer);
 
 		[Export ("CGLPBufferObj")]
 		IntPtr CGLPBuffer { get; }
@@ -8604,19 +8808,20 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // warns with "invalid context" at runtime
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
+	[NoMacCatalyst]
 	interface NSOpenGLContext {
 		[Export ("initWithFormat:shareContext:")]
-		IntPtr Constructor (NSOpenGLPixelFormat format, [NullAllowed] NSOpenGLContext shareContext);
+		NativeHandle Constructor (NSOpenGLPixelFormat format, [NullAllowed] NSOpenGLContext shareContext);
 
 		// FIXME: This conflicts with our internal ctor
 		// [Export ("initWithCGLContextObj:")]
-		// IntPtr Constructor (IntPtr cglContext);
+		// NativeHandle Constructor (IntPtr cglContext);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("setFullScreen")]
 		void SetFullScreen ();
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("setOffScreen:width:height:rowbytes:")]
 		void SetOffScreen (IntPtr baseaddr, int /* GLsizei = int32_t */ width, int /* GLsizei = int32_t */ height, int /* GLint = int32_t */ rowbytes);
 
@@ -8641,7 +8846,7 @@ namespace AppKit {
 		[Export ("currentContext")]
 		NSOpenGLContext CurrentContext { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("copyAttributesFromContext:withMask:")]
 		void CopyAttributes (NSOpenGLContext context, uint /* GLbitfield = uint32_t */ mask);
 
@@ -8651,32 +8856,32 @@ namespace AppKit {
 		[Export ("getValues:forParameter:")]
 		void GetValues (IntPtr vals, NSOpenGLContextParameter param);
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("createTexture:fromView:internalFormat:")]
 		void CreateTexture (int /* GLenum = uint32_t */ targetIdentifier, NSView view, int /* GLenum = uint32_t */ format);
 
 		[Export ("CGLContextObj")]
 		CGLContext CGLContext { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("setPixelBuffer:cubeMapFace:mipMapLevel:currentVirtualScreen:")]
 		void SetPixelBuffer (NSOpenGLPixelBuffer pixelBuffer, NSGLTextureCubeMap face, int /* GLint = int32_t */ level, int /* GLint = int32_t */ screen);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("pixelBuffer")]
 		NSOpenGLPixelBuffer PixelBuffer { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("pixelBufferCubeMapFace")]
 		int PixelBufferCubeMapFace { get; } /* GLenum = uint32_t */
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("pixelBufferMipMapLevel")]
 		int PixelBufferMipMapLevel { get; } /* GLint = int32_t */
 
 		// TODO: fixme enumerations
 		// GL_FRONT, GL_BACK, GL_AUX0
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("setTextureImageToPixelBuffer:colorBuffer:")]
 		void SetTextureImage (NSOpenGLPixelBuffer pixelBuffer, NSGLColorBuffer source);
 
@@ -8693,6 +8898,7 @@ namespace AppKit {
 		NSOpenGLPixelFormat PixelFormat { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	partial interface NSOpenGLView {
@@ -8701,10 +8907,10 @@ namespace AppKit {
 		NSOpenGLPixelFormat DefaultPixelFormat { get; }
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("initWithFrame:pixelFormat:")]
-		IntPtr Constructor (CGRect frameRect, NSOpenGLPixelFormat format);
+		NativeHandle Constructor (CGRect frameRect, NSOpenGLPixelFormat format);
 
 		[Export ("clearGLContext")]
 		void ClearGLContext ();
@@ -8729,6 +8935,7 @@ namespace AppKit {
 		NSOpenGLPixelFormat PixelFormat { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSSavePanel))]
 	[DisableDefaultCtor]
 	interface NSOpenPanel {
@@ -8740,7 +8947,7 @@ namespace AppKit {
 		[Advice ("You must use 'OpenPanel' method if the application is sandboxed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All open panels now run out-of-process, use 'OpenPanel' method instead")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("URLs")]
 		NSUrl [] Urls { get; }
@@ -8759,35 +8966,36 @@ namespace AppKit {
 		bool CanChooseFiles { get; set; }
 
 		// Deprecated methods, but needed to run on pre 10.6 systems
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use Urls instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use Urls instead.")]
 		[Export ("filenames")]
 		string [] Filenames { get; }
 
 		//runModalForWindows:Completeion
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use NSApplication.RunModal instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use NSApplication.RunModal instead.")]
 		[Export ("beginSheetForDirectory:file:types:modalForWindow:modalDelegate:didEndSelector:contextInfo:")]
 		void BeginSheet ([NullAllowed] string directory, [NullAllowed] string fileName, [NullAllowed] string [] fileTypes, [NullAllowed] NSWindow modalForWindow, [NullAllowed] NSObject modalDelegate, [NullAllowed] Selector didEndSelector, IntPtr contextInfo);
 
-		[Availability (Deprecated = Platform.Mac_10_6)]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Export ("beginForDirectory:file:types:modelessDelegate:didEndSelector:contextInfo:")]
 		void Begin ([NullAllowed] string directory, [NullAllowed] string fileName, [NullAllowed] string [] fileTypes, [NullAllowed] NSObject modelessDelegate, [NullAllowed] Selector didEndSelector, IntPtr contextInfo);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use NSApplication.RunModal instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use NSApplication.RunModal instead.")]
 		[Export ("runModalForDirectory:file:types:")]
 		nint RunModal ([NullAllowed] string directory, [NullAllowed] string fileName, [NullAllowed] string [] types);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use NSApplication.RunModal instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use NSApplication.RunModal instead.")]
 		[Export ("runModalForTypes:")]
 		nint RunModal (string [] types);
 	}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !__MACCATALYST__
 	// This class doesn't show up in any documentation
 	[BaseType (typeof (NSOpenPanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
 	interface NSRemoteOpenPanel {}
 #endif
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -8810,27 +9018,28 @@ namespace AppKit {
 		[Export ("panelSelectionDidChange:"), EventArgs ("NSOpenSaveSelectionChanged")]
 		void SelectionDidChange (NSSavePanel panel);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use ValidateUrl instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use ValidateUrl instead.")]
 		[Export ("panel:isValidFilename:"), DelegateName ("NSOpenSaveFilename"), DefaultValue (true)]
 		bool IsValidFilename (NSSavePanel panel, string fileName);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use DidChangeToDirectory instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use DidChangeToDirectory instead.")]
 		[Export ("panel:directoryDidChange:"), EventArgs ("NSOpenSaveFilename")]
 		void DirectoryDidChange (NSSavePanel panel, string path);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "This method does not control sorting order.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "This method does not control sorting order.")]
 		[Export ("panel:compareFilename:with:caseSensitive:"), DelegateName ("NSOpenSaveCompare"), DefaultValue (NSComparisonResult.Same)]
 		NSComparisonResult CompareFilenames (NSSavePanel panel, string name1, string name2, bool caseSensitive);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use ShouldEnableUrl instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use ShouldEnableUrl instead.")]
 		[Export ("panel:shouldShowFilename:"), DelegateName ("NSOpenSaveFilename"), DefaultValue (true)]
 		bool ShouldShowFilename (NSSavePanel panel, string filename);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTableView))]
 	partial interface NSOutlineView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("outlineTableColumn"), NullAllowed]
 		NSTableColumn OutlineTableColumn { get; set; }
@@ -8929,6 +9138,7 @@ namespace AppKit {
 		bool StronglyReferencesItems { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -9047,6 +9257,7 @@ namespace AppKit {
 		NSTintConfiguration GetTintConfiguration (NSOutlineView outlineView, NSObject item);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -9090,6 +9301,7 @@ namespace AppKit {
 		string [] FilesDropped (NSOutlineView outlineView, NSUrl dropDestination, NSArray items);
 	}
 
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSHapticFeedbackPerformer
@@ -9102,6 +9314,7 @@ namespace AppKit {
 	interface INSHapticFeedbackPerformer { }
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSHapticFeedbackManager
 	{
@@ -9110,6 +9323,7 @@ namespace AppKit {
 		INSHapticFeedbackPerformer DefaultPerformer { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSHelpManager {
 		[Static]
@@ -9143,28 +9357,34 @@ namespace AppKit {
 		bool ContextHelpModeActive { [Bind ("isContextHelpModeActive")]get; set; }
 	}
 
-	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSImageDelegate)})]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }
+#if !__MACCATALYST__
+		, Events=new Type [] { typeof (NSImageDelegate) }
+#endif
+	)]
 	[ThreadSafe]
 	partial interface NSImage : NSCopying, NSSecureCoding, NSPasteboardReading, NSPasteboardWriting {
+		[return: NullAllowed]
 		[Static]
 		[Export ("imageNamed:")]
 		NSImage ImageNamed (string name);
 
 		[DesignatedInitializer]
 		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize aSize);
+		NativeHandle Constructor (CGSize aSize);
 
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithContentsOfFile:")]
-		IntPtr Constructor (string fileName);
+		NativeHandle Constructor (string fileName);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		//[Export ("initByReferencingURL:")]
-		//IntPtr Constructor (NSUrl url);
+		//NativeHandle Constructor (NSUrl url);
 
 		[Sealed, Export ("initWithContentsOfFile:"), Internal]
 		IntPtr InitWithContentsOfFile (string fileName);
@@ -9172,8 +9392,9 @@ namespace AppKit {
 		[Export ("initByReferencingFile:"), Internal]
 		IntPtr InitByReferencingFile (string name);
 
+		[NoMacCatalyst]
 		[Export ("initWithPasteboard:")]
-		IntPtr Constructor (NSPasteboard pasteboard);
+		NativeHandle Constructor (NSPasteboard pasteboard);
 
 		[Export ("initWithData:"), Internal]
 		[Sealed]
@@ -9182,12 +9403,15 @@ namespace AppKit {
 		[Export ("initWithDataIgnoringOrientation:"), Internal]
 		IntPtr InitWithDataIgnoringOrientation (NSData data);
 
+		[NoMacCatalyst]
 		[Export ("drawAtPoint:fromRect:operation:fraction:")]
 		void Draw (CGPoint point, CGRect fromRect, NSCompositingOperation op, nfloat delta);
 
+		[NoMacCatalyst]
 		[Export ("drawInRect:fromRect:operation:fraction:")]
 		void Draw (CGRect rect, CGRect fromRect, NSCompositingOperation op, nfloat delta);
 
+		[NoMacCatalyst]
 		[Export ("drawInRect:fromRect:operation:fraction:respectFlipped:hints:")]
 		void Draw (CGRect dstSpacePortionRect, CGRect srcSpacePortionRect, NSCompositingOperation op, nfloat requestedAlpha, bool respectContextIsFlipped, [NullAllowed] NSDictionary hints);
 
@@ -9195,27 +9419,34 @@ namespace AppKit {
 		[Export ("drawInRect:")]
 		void Draw (CGRect rect);
 
+		[NoMacCatalyst]
 		[Export ("drawRepresentation:inRect:")]
 		bool Draw (NSImageRep imageRep, CGRect rect);
 
 		[Export ("recache")]
 		void Recache ();
 
+		[return: NullAllowed]
 		[Export ("TIFFRepresentation")]
 		NSData AsTiff ();
 
+		[NoMacCatalyst]
 		[Export ("TIFFRepresentationUsingCompression:factor:")]
 		NSData AsTiff (NSTiffCompression comp, float /* float, not CGFloat */ aFloat);
 
+		[NoMacCatalyst]
 		[Export ("representations")]
 		NSImageRep [] Representations ();
 
+		[NoMacCatalyst]
 		[Export ("addRepresentations:")]
 		void AddRepresentations (NSImageRep [] imageReps);
 
+		[NoMacCatalyst]
 		[Export ("addRepresentation:")]
 		void AddRepresentation (NSImageRep imageRep);
 
+		[NoMacCatalyst]
 		[Export ("removeRepresentation:")]
 		void RemoveRepresentation (NSImageRep imageRep);
 
@@ -9231,25 +9462,28 @@ namespace AppKit {
 		[Export ("unlockFocus")]
 		void UnlockFocus ();
 
+		[NoMacCatalyst]
 		[Export ("bestRepresentationForDevice:")]
 		NSImageRep BestRepresentationForDevice ([NullAllowed] NSDictionary deviceDescription);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageUnfilteredFileTypes")]
 		NSObject [] ImageUnfilteredFileTypes ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageUnfilteredPasteboardTypes")]
 		string [] ImageUnfilteredPasteboardTypes ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageFileTypes")]
 		string [] ImageFileTypes { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imagePasteboardTypes")]
 		string [] ImagePasteboardTypes { get; }
@@ -9262,6 +9496,7 @@ namespace AppKit {
 		[Export ("imageUnfilteredTypes", ArgumentSemantic.Copy)]
 		string [] ImageUnfilteredTypes { get; }
 		
+		[NoMacCatalyst]
 		[Static]
 		[Export ("canInitWithPasteboard:")]
 		bool CanInitWithPasteboard (NSPasteboard pasteboard);
@@ -9269,18 +9504,22 @@ namespace AppKit {
 		[Export ("cancelIncrementalLoad")]
 		void CancelIncrementalLoad ();
 
+		[NullAllowed]
 		[Export ("accessibilityDescription")]
 		string AccessibilityDescription	 { get; set; }
 
 		[Export ("initWithCGImage:size:")]
-		IntPtr Constructor (CGImage cgImage, CGSize size);
+		NativeHandle Constructor (CGImage cgImage, CGSize size);
 
+		[NoMacCatalyst]
 		[Export ("CGImageForProposedRect:context:hints:")]
 		CGImage AsCGImage (ref CGRect proposedDestRect, [NullAllowed] NSGraphicsContext referenceContext, [NullAllowed] NSDictionary hints);
 
+		[NoMacCatalyst]
 		[Export ("bestRepresentationForRect:context:hints:")]
 		NSImageRep BestRepresentation (CGRect rect, [NullAllowed] NSGraphicsContext referenceContext, [NullAllowed] NSDictionary hints);
 
+		[NoMacCatalyst]
 		[Export ("hitTestRect:withImageDestinationRect:context:hints:flipped:")]
 		bool HitTestRect (CGRect testRectDestSpace, CGRect imageRectDestSpace, NSGraphicsContext context, NSDictionary hints, bool flipped);
 
@@ -9288,14 +9527,15 @@ namespace AppKit {
 		[Export ("size")]
 		CGSize Size { get; set; }
 
+		[return: NullAllowed]
 		[Export ("name"), Internal]
 		string GetName ();
 
 		[Export ("setName:"), Internal]
-		bool SetName (string aString);
+		bool SetName ([NullAllowed] string aString);
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
-		NSColor BackgroundColor { get; set; }
+		Color BackgroundColor { get; set; }
 
 		[Export ("usesEPSOnResolutionMismatch")]
 		bool UsesEpsOnResolutionMismatch { get; set; }
@@ -9312,10 +9552,12 @@ namespace AppKit {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
+		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		NSImageDelegate Delegate { get; set; }
 
+		[NoMacCatalyst]
 		[Export ("cacheMode")]
 		NSImageCacheMode CacheMode { get; set; }
 
@@ -9325,11 +9567,12 @@ namespace AppKit {
 		[Export ("template")]
 		bool Template { [Bind ("isTemplate")]get; set; }
 
+		[NoMacCatalyst]
 		[Export ("drawInRect:fromRect:operation:fraction:")]
 		[Sealed]
 		void DrawInRect (CGRect dstRect, CGRect srcRect, NSCompositingOperation operation, nfloat delta);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use DrawInRect with respectContextIsFlipped instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use DrawInRect with respectContextIsFlipped instead.")]
 		[Export ("flipped")]
 		bool Flipped { [Bind ("isFlipped")] get; set; }
 
@@ -9338,6 +9581,7 @@ namespace AppKit {
 		NSEdgeInsets CapInsets { get; set; }
 
 		[Mac (10,10)]
+		[NoMacCatalyst]
 		[Export ("resizingMode")]
 		NSImageResizingMode ResizingMode { get; set; }
 
@@ -9354,11 +9598,18 @@ namespace AppKit {
 		NSImage GetSystemSymbol (string symbolName, [NullAllowed] string accessibilityDescription);
 
 		[Mac (11,0)]
+		[NoMacCatalyst]
 		[Export ("imageWithSymbolConfiguration:")]
 		[return: NullAllowed]
 		NSImage GetImage (NSImageSymbolConfiguration configuration);
+
+		[Mac (12,0)]
+		[NoMacCatalyst]
+		[Export ("symbolConfiguration", ArgumentSemantic.Copy)]
+		NSImageSymbolConfiguration SymbolConfiguration { get; }
 	}
 
+	[MacCatalyst (13, 0)]
 	public enum NSImageName 
 	{
 		[Field ("NSImageNameQuickLookTemplate")]
@@ -9367,6 +9618,7 @@ namespace AppKit {
 		[Field ("NSImageNameBluetoothTemplate")]
 		BluetoothTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameIChatTheaterTemplate")]
 		IChatTheaterTemplate,
 
@@ -9376,12 +9628,14 @@ namespace AppKit {
 		[Field ("NSImageNameActionTemplate")]
 		ActionTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameSmartBadgeTemplate")]
 		SmartBadgeTemplate,
 
 		[Field ("NSImageNamePathTemplate")]
 		PathTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameInvalidDataFreestandingTemplate")]
 		InvalidDataFreestandingTemplate,
 
@@ -9397,9 +9651,11 @@ namespace AppKit {
 		[Field ("NSImageNameGoLeftTemplate")]
 		GoLeftTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameRightFacingTriangleTemplate")]
 		RightFacingTriangleTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameLeftFacingTriangleTemplate")]
 		LeftFacingTriangleTemplate,
 
@@ -9409,36 +9665,45 @@ namespace AppKit {
 		[Field ("NSImageNameRemoveTemplate")]
 		RemoveTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameRevealFreestandingTemplate")]
 		RevealFreestandingTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameFollowLinkFreestandingTemplate")]
 		FollowLinkFreestandingTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameEnterFullScreenTemplate")]
 		EnterFullScreenTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameExitFullScreenTemplate")]
 		ExitFullScreenTemplate,
 
 		[Field ("NSImageNameStopProgressTemplate")]
 		StopProgressTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStopProgressFreestandingTemplate")]
 		StopProgressFreestandingTemplate,
 
 		[Field ("NSImageNameRefreshTemplate")]
 		RefreshTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameRefreshFreestandingTemplate")]
 		RefreshFreestandingTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameFolder")]
 		Folder,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameTrashEmpty")]
 		TrashEmpty,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameTrashFull")]
 		TrashFull,
 
@@ -9448,33 +9713,43 @@ namespace AppKit {
 		[Field ("NSImageNameBookmarksTemplate")]
 		BookmarksTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameCaution")]
 		Caution,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusAvailable")]
 		StatusAvailable,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusPartiallyAvailable")]
 		StatusPartiallyAvailable,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusUnavailable")]
 		StatusUnavailable,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameStatusNone")]
 		StatusNone,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameApplicationIcon")]
 		ApplicationIcon,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameMenuOnStateTemplate")]
 		MenuOnStateTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameMenuMixedStateTemplate")]
 		MenuMixedStateTemplate,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameUserGuest")]
 		UserGuest,
 
+		[NoMacCatalyst]
 		[Field ("NSImageNameMobileMe")]
 		MobileMe,
 
@@ -9634,6 +9909,7 @@ namespace AppKit {
 		TouchBarPauseTemplate,
 
 		[Mac (10, 12, 2)]
+		[NoMacCatalyst]
 		[Field ("NSImageNameTouchBarPlayheadTemplate")]
 		TouchBarPlayheadTemplate,
 
@@ -9794,6 +10070,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst] // Also defined in foundation.cs, use that declaration instead
 	[ThreadSafe]
 	[Mac (10,11)]
 	[BaseType (typeof(NSObject))]
@@ -9809,6 +10086,7 @@ namespace AppKit {
 		CGRect TotalBounds { get; }
 	}
 
+	[NoMacCatalyst] // Also defined in uikit.cs, use that declaration instead
 	[ThreadSafe]
 	[Category, BaseType (typeof (NSString))]
 	interface NSStringDrawing_NSString {
@@ -9843,28 +10121,9 @@ namespace AppKit {
 		[Export ("drawInRect:")]
 		void DrawInRect (CGRect rect);
 	}
-		
-	[ThreadSafe]
-	[Category, BaseType (typeof (NSString))]
-	interface NSExtendedStringDrawing {
-		[Mac (10,11)]
-		[Export ("drawWithRect:options:attributes:context:")]
-		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
-		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Export ("boundingRectWithSize:options:attributes:context:")]
-		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
-		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
-	}
 
 	// @interface NSExtendedStringDrawing (NSAttributedString)
+	[NoMacCatalyst]
 	[ThreadSafe]
 	[Category]
 	[BaseType (typeof(NSAttributedString))]
@@ -9881,6 +10140,7 @@ namespace AppKit {
 
 	// Pending: @interface NSAttributedString (NSExtendedStringDrawing)
 
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSMutableAttributedString))]
 	interface NSMutableAttributedStringAppKitAddons {
 		[Export ("readFromURL:options:documentAttributes:error:")]
@@ -9938,6 +10198,7 @@ namespace AppKit {
 		void UpdateAttachmentsFromPath (string path);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -9958,6 +10219,7 @@ namespace AppKit {
 		void DidLoadRepresentation (NSImage image, NSImageRep rep, NSImageLoadStatus status);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSCell))]
 	interface NSImageCell {
 		//Detected properties
@@ -9972,12 +10234,13 @@ namespace AppKit {
 
 		// Inlined from parent
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 	}
 
+	[NoMacCatalyst]
 	[Static]
 	partial interface NSImageHint {
 		[Field ("NSImageHintCTM")]
@@ -9991,6 +10254,7 @@ namespace AppKit {
 		NSString UserInterfaceLayoutDirection { get; }
 	}
 
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSImageRep : NSCoding, NSCopying {
@@ -10024,12 +10288,12 @@ namespace AppKit {
 		[Export ("registeredImageRepClasses")]
 		Class [] GetRegisteredImageRepClasses ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageRepClassForFileType:")]
 		Class ImageRepClassForFileType (string type);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageRepClassForPasteboardType:")]
 		Class ImageRepClassForPasteboardType (string type);
@@ -10046,22 +10310,22 @@ namespace AppKit {
 		[Export ("canInitWithData:")]
 		bool CanInitWithData (NSData data);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageUnfilteredFileTypes")]
 		string [] ImageUnfilteredFileTypes { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageUnfilteredPasteboardTypes")]
 		string [] ImageUnfilteredPasteboardTypes { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageFileTypes")]
 		string [] ImageFileTypes { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imagePasteboardTypes")]
 		string [] ImagePasteboardTypes { get; }
@@ -10130,10 +10394,11 @@ namespace AppKit {
 		NSImageLayoutDirection LayoutDirection { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSImageView : NSAccessibilityImage, NSMenuItemValidation {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		//Detected properties
 		[Export ("image", ArgumentSemantic.Retain)]
@@ -10173,16 +10438,17 @@ namespace AppKit {
 		NSImageSymbolConfiguration SymbolConfiguration { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSMatrixDelegate)})]
 	partial interface NSMatrix {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("initWithFrame:mode:prototype:numberOfRows:numberOfColumns:")]
-		IntPtr Constructor (CGRect frameRect, NSMatrixMode aMode, NSCell aCell, nint rowsHigh, nint colsWide);
+		NativeHandle Constructor (CGRect frameRect, NSMatrixMode aMode, NSCell aCell, nint rowsHigh, nint colsWide);
 
 		[Export ("initWithFrame:mode:cellClass:numberOfRows:numberOfColumns:")]
-		IntPtr Constructor (CGRect frameRect, NSMatrixMode aMode, Class factoryId, nint rowsHigh, nint colsWide);
+		NativeHandle Constructor (CGRect frameRect, NSMatrixMode aMode, Class factoryId, nint rowsHigh, nint colsWide);
 
 		[Export ("makeCellAtRow:column:")]
 		NSCell MakeCell (nint row, nint col);
@@ -10395,6 +10661,7 @@ namespace AppKit {
 		[Export ("drawsBackground")]
 		bool DrawsBackground { get; set; }
 
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
@@ -10419,10 +10686,11 @@ namespace AppKit {
 		NSObject KeyCell { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSLevelIndicator {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("minValue")]
 		double MinValue { get; set; }
@@ -10488,16 +10756,17 @@ namespace AppKit {
 		bool Editable { [Bind ("isEditable")] get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell))]
 	interface NSLevelIndicatorCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[Export ("initWithLevelIndicatorStyle:")]
-		IntPtr Constructor (NSLevelIndicatorStyle levelIndicatorStyle);
+		NativeHandle Constructor (NSLevelIndicatorStyle levelIndicatorStyle);
 
 		[Export ("levelIndicatorStyle")]
 		NSLevelIndicatorStyle LevelIndicatorStyle { get; set; }
@@ -10542,185 +10811,7 @@ namespace AppKit {
 #endif
 
 	[Mac (10,11)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor] // Handle is nil
-	interface NSLayoutAnchor<AnchorType> : NSCoding, NSCopying
-	{
-		[Export ("constraintEqualToAnchor:")]
-		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutAnchor<AnchorType> anchor);
-
-		[Export ("constraintGreaterThanOrEqualToAnchor:")]
-		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor);
-
-		[Export ("constraintLessThanOrEqualToAnchor:")]
-		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor);
-
-		// -(NSLayoutConstraint *)constraintEqualToAnchor:(NSLayoutAnchor *)anchor constant:(CGFloat)c;
-		[Export ("constraintEqualToAnchor:constant:")]
-		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
-
-		[Export ("constraintGreaterThanOrEqualToAnchor:constant:")]
-		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
-
-		[Export ("constraintLessThanOrEqualToAnchor:constant:")]
-		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
-
-		[Mac (10, 12)]
-		[Export ("name")]
-		string Name { get; }
-
-		[Mac (10, 12)]
-		[NullAllowed, Export ("item", ArgumentSemantic.Weak)]
-		NSObject Item { get; }
-
-		[Mac (10, 12)]
-		[Export ("hasAmbiguousLayout")]
-		bool HasAmbiguousLayout { get; }
-
-		[Mac (10, 12)]
-		[Export ("constraintsAffectingLayout")]
-		NSLayoutConstraint[] ConstraintsAffectingLayout { get; }
-	}
-
-	[Mac (10,11)]
-	[BaseType (typeof(NSLayoutAnchor<NSLayoutXAxisAnchor>))]
-	[DisableDefaultCtor] // Handle is nil
-	interface NSLayoutXAxisAnchor
-	{
-		[Mac (10,12)]
-		[Export ("anchorWithOffsetToAnchor:")]
-		NSLayoutDimension GetAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
-
-		[Mac (11,0)]
-		[Export ("constraintEqualToSystemSpacingAfterAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
-
-		[Mac (11,0)]
-		[Export ("constraintGreaterThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
-
-		[Mac (11,0)]
-		[Export ("constraintLessThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
-	}
-
-	[Mac (10,11)]
-	[BaseType (typeof(NSLayoutAnchor<NSLayoutYAxisAnchor>))]
-	[DisableDefaultCtor] // Handle is nil
-	interface NSLayoutYAxisAnchor
-	{
-		[Mac (10,12)]
-		[Export ("anchorWithOffsetToAnchor:")]
-		NSLayoutDimension GetAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
-
-		[Mac (11,0)]
-		[Export ("constraintEqualToSystemSpacingBelowAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
-
-		[Mac (11,0)]
-		[Export ("constraintGreaterThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
-
-		[Mac (11,0)]
-		[Export ("constraintLessThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
-	}
-
-	[Mac (10,11)]
-	[BaseType (typeof(NSLayoutAnchor<NSLayoutDimension>))]
-	[DisableDefaultCtor] // Handle is nil
-	interface NSLayoutDimension
-	{
-		[Export ("constraintEqualToConstant:")]
-		NSLayoutConstraint ConstraintEqualToConstant (nfloat constant);
-
-		[Export ("constraintGreaterThanOrEqualToConstant:")]
-		NSLayoutConstraint ConstraintGreaterThanOrEqualToConstant (nfloat constant);
-
-		[Export ("constraintLessThanOrEqualToConstant:")]
-		NSLayoutConstraint ConstraintLessThanOrEqualToConstant (nfloat constant);
-
-		[Export ("constraintEqualToAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier);
-
-		[Export ("constraintGreaterThanOrEqualToAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier);
-
-		[Export ("constraintLessThanOrEqualToAnchor:multiplier:")]
-		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier);
-
-		[Export ("constraintEqualToAnchor:multiplier:constant:")]
-		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
-
-		[Export ("constraintGreaterThanOrEqualToAnchor:multiplier:constant:")]
-		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
-
-		[Export ("constraintLessThanOrEqualToAnchor:multiplier:constant:")]
-		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
-	}
-
-	[BaseType (typeof (NSObject))]
-	interface NSLayoutConstraint : NSAnimatablePropertyContainer {
-		[Static]
-		[Export ("constraintsWithVisualFormat:options:metrics:views:")]
-		NSLayoutConstraint [] FromVisualFormat (string format, NSLayoutFormatOptions formatOptions, [NullAllowed] NSDictionary metrics, NSDictionary views);
-
-		[Static]
-		[Export ("constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:")]
-		NSLayoutConstraint Create (NSObject view1, NSLayoutAttribute attribute1, NSLayoutRelation relation, [NullAllowed] NSObject view2, NSLayoutAttribute attribute2, nfloat multiplier, nfloat constant);
-		
-		[Export ("priority")]
-		float Priority { get; set;  } /* NSLayoutPriority = float */
-
-		[Export ("shouldBeArchived")]
-		bool ShouldBeArchived { get; set;  }
-
-		[Export ("firstItem", ArgumentSemantic.Assign)]
-		NSObject FirstItem { get;  }
-
-		[Export ("firstAttribute")]
-		NSLayoutAttribute FirstAttribute { get;  }
-
-		[Export ("relation")]
-		NSLayoutRelation Relation { get;  }
-
-		[Export ("secondItem", ArgumentSemantic.Assign)]
-		NSObject SecondItem { get;  }
-
-		[Export ("secondAttribute")]
-		NSLayoutAttribute SecondAttribute { get;  }
-
-		[Export ("multiplier")]
-		nfloat Multiplier { get;  }
-
-		[Export ("constant")]
-		nfloat Constant { get; set;  }
-
-		[Mac (10,10)]
-		[Export ("active")]
-		bool Active { [Bind ("isActive")] get; set; }
-
-		[Mac (10,10)]
-		[Static, Export ("activateConstraints:")]
-		void ActivateConstraints (NSLayoutConstraint [] constraints);
-
-		[Mac (10,10)]
-		[Static, Export ("deactivateConstraints:")]
-		void DeactivateConstraints (NSLayoutConstraint [] constraints);
-
-		[Mac (10, 12)]
-		[Export ("firstAnchor", ArgumentSemantic.Copy)]
-		NSLayoutAnchor<NSObject> FirstAnchor { get; }
-
-		[Mac (10, 12)]
-		[NullAllowed, Export ("secondAnchor", ArgumentSemantic.Copy)]
-		NSLayoutAnchor<NSObject> SecondAnchor { get; }
-
-		[NullAllowed, Export ("identifier")]
-		string Identifier { get; set; }
-	}
-
-	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSLayoutGuide : NSCoding, NSUserInterfaceItemIdentification
 	{
@@ -10770,21 +10861,24 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSGestureRecognizer))]
 	interface NSMagnificationGestureRecognizer {
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor (NSObject target, Selector action);
+		NativeHandle Constructor (NSObject target, Selector action);
 
 		[Export ("magnification")]
 		nfloat Magnification { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol]
 	interface NSMatrixDelegate : NSControlTextEditingDelegate {
 	}
 
+	[NoMacCatalyst]
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol]
@@ -10820,6 +10914,7 @@ namespace AppKit {
 		void ControlTextDidChange (NSNotification obj);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPageLayout {
 		[Static]
@@ -10848,6 +10943,7 @@ namespace AppKit {
 		NSPrintInfo PrintInfo { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSWindow))]
 	interface NSPanel {
 		//Detected properties
@@ -10861,14 +10957,15 @@ namespace AppKit {
 		bool WorksWhenModal { get; set; }
 
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
-		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
+		NativeHandle Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSGestureRecognizer))]
 	interface NSPanGestureRecognizer : NSCoding {
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor (NSObject target, Selector action);
+		NativeHandle Constructor (NSObject target, Selector action);
 
 		[Export ("buttonMask")]
 		nuint ButtonMask { get; set; }
@@ -10888,10 +10985,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSGestureRecognizer))]
 	interface NSPressGestureRecognizer {
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor (NSObject target, Selector action);
+		NativeHandle Constructor (NSObject target, Selector action);
 
 		[Export ("buttonMask")]
 		nuint ButtonMask { get; set; }
@@ -10908,6 +11006,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSPasteboardTypeOwner
 	{
@@ -10919,6 +11018,7 @@ namespace AppKit {
 		void PasteboardChangedOwner (NSPasteboard sender);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[NSPasteboard alloc]: unrecognized selector sent to class 0xac3dcbf0
 	partial interface NSPasteboard // NSPasteboard does _not_ implement NSPasteboardReading/NSPasteboardWriting
@@ -11072,23 +11172,23 @@ namespace AppKit {
 		// Pasteboard names: for NSPasteboard.FromName()
 
 		[Field ("NSGeneralPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameGeneral' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSPasteboardNameGeneral' instead.")]
 		NSString NSGeneralPasteboardName { get; }
 
 		[Field ("NSFontPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFont' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSPasteboardNameFont' instead.")]
 		NSString NSFontPasteboardName { get; }
 
 		[Field ("NSRulerPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameRuler' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSPasteboardNameRuler' instead.")]
 		NSString NSRulerPasteboardName { get; }
 
 		[Field ("NSFindPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFind' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSPasteboardNameFind' instead.")]
 		NSString NSFindPasteboardName { get; }
 
 		[Field ("NSDragPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameDrag' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSPasteboardNameDrag' instead.")]
 		NSString NSDragPasteboardName { get; }
 
 		[Mac (10, 13)]
@@ -11170,20 +11270,28 @@ namespace AppKit {
 		nint PrepareForNewContents (NSPasteboardContentsOptions options);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
 	interface NSPasteboardWriting {
+#if NET
+		[Abstract]
+#endif
 		[Export ("writableTypesForPasteboard:")]
 		string [] GetWritableTypesForPasteboard (NSPasteboard pasteboard);
 
 		[Export ("writingOptionsForType:pasteboard:")]
 		NSPasteboardWritingOptions GetWritingOptionsForType (string type, NSPasteboard pasteboard);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("pasteboardPropertyListForType:")]
 		NSObject GetPasteboardPropertyListForType (string type);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPasteboardItem : NSPasteboardWriting, NSPasteboardReading {
 		[Export ("types")]
@@ -11214,6 +11322,7 @@ namespace AppKit {
 		NSObject GetPropertyListForType (string type);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -11222,7 +11331,9 @@ namespace AppKit {
 		[Export ("pasteboard:item:provideDataForType:")]
 		void ProvideDataForType (NSPasteboard pasteboard, NSPasteboardItem item, string type);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("pasteboardFinishedWithDataProvider:")]
 		void FinishedWithDataProvider (NSPasteboard pasteboard);
 	}
@@ -11230,6 +11341,7 @@ namespace AppKit {
 	interface INSPasteboardReading {}
 	interface INSPasteboardWriting {}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 #if !XAMCORE_4_0
 	// A class that implements only NSPasteboardReading does not make sense, it's
@@ -11238,6 +11350,8 @@ namespace AppKit {
 #endif
 	[Protocol]
 	interface NSPasteboardReading {
+		// This method is required, but we don't generate the correct code for required static methods
+		// [Abstract]
 		[Static]
 		[Export ("readableTypesForPasteboard:")]
 		string [] GetReadableTypesForPasteboard (NSPasteboard pasteboard);
@@ -11253,18 +11367,19 @@ namespace AppKit {
 		[Obsolete ("It will never be called.")]
 		NSObject InitWithPasteboardPropertyList (NSObject propertyList, string type);
 #else
-		FIXME: (compiler error to not forget)
-		FIXME: figure out how to bind constructors in protocols.
+#error		FIXME: (compiler error to not forget)
+#error		FIXME: figure out how to bind constructors in protocols.
 #endif
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell), Events=new Type [] { typeof (NSPathCellDelegate) }, Delegates=new string [] { "WeakDelegate" })]
 	interface NSPathCell : NSMenuItemValidation {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[Export ("pathStyle")]
 		NSPathStyle PathStyle { get; set; }
@@ -11307,6 +11422,7 @@ namespace AppKit {
 		[Export ("mouseExited:withFrame:inView:")]
 		void MouseExited (NSEvent evt, CGRect frame, NSView view);
 
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
@@ -11323,6 +11439,7 @@ namespace AppKit {
 		void SetControlSize (NSControlSize size);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -11334,10 +11451,11 @@ namespace AppKit {
 		void WillPopupMenu (NSPathCell pathCell, NSMenu menu);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextFieldCell))]
 	interface NSPathComponentCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 
 		[Export ("image", ArgumentSemantic.Copy)]
 		NSImage Image { get; set; }
@@ -11346,29 +11464,30 @@ namespace AppKit {
 		NSUrl Url { get; set; }
 	}
 
-
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSPathControl {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Please use ClickedPathItem instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Please use ClickedPathItem instead.")]
 		[Export ("clickedPathComponentCell")]
 		NSPathComponentCell ClickedPathComponentCell { get; }
 
 		[Export ("setDraggingSourceOperationMask:forLocal:")]
 		void SetDraggingSource (NSDragOperation operationMask, bool isLocal);
 
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
 		[Export ("pathStyle")]
 		NSPathStyle PathStyle { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Please use PathItems instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Please use PathItems instead.")]
 		[Export ("pathComponentCells")]
 		NSPathComponentCell [] PathComponentCells { get; set; }
 
@@ -11412,6 +11531,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -11437,6 +11557,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPathControlItem 
 	{
@@ -11453,12 +11574,15 @@ namespace AppKit {
 		NSUrl Url { get; }
 	}
 
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSResponder))]
 	interface NSPopover : NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility {
+#if !NET
 		[Obsolete ("Use 'GetAppearance' and 'SetAppearance' methods instead.")]
 		[Export ("appearance", ArgumentSemantic.Retain)]
 		new NSPopoverAppearance Appearance { get; set;  }
+#endif
 
 		[Export ("behavior")]
 		NSPopoverBehavior Behavior { get; set;  }
@@ -11525,6 +11649,7 @@ namespace AppKit {
 		NSString _Reason { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -11552,10 +11677,11 @@ namespace AppKit {
 		void DidDetach (NSPopover popover);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSButton))]
 	partial interface NSPopUpButton {
 		[Export ("initWithFrame:pullsDown:")]
-		IntPtr Constructor (CGRect buttonFrame, bool pullsDown);
+		NativeHandle Constructor (CGRect buttonFrame, bool pullsDown);
 
 		[Export ("addItemWithTitle:")]
 		void AddItem (string title);
@@ -11657,18 +11783,18 @@ namespace AppKit {
 		nint SelectedTag { get; }
 	}
 
-
+	[NoMacCatalyst]
 	[BaseType (typeof (NSMenuItemCell))]
 	partial interface NSPopUpButtonCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[DesignatedInitializer]
 		[Export ("initTextCell:pullsDown:")]
-		IntPtr Constructor (string stringValue, bool pullDown);
+		NativeHandle Constructor (string stringValue, bool pullDown);
 
 		[Export ("addItemWithTitle:")]
 		void AddItem (string title);
@@ -11787,6 +11913,7 @@ namespace AppKit {
 		NSObject ObjectValue { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPrinter : NSCoding, NSCopying {
 		[Static]
@@ -11857,11 +11984,12 @@ namespace AppKit {
 		NSDictionary DeviceDescription { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPrintInfo : NSCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithDictionary:")]
-		IntPtr Constructor (NSDictionary attributes);
+		NativeHandle Constructor (NSDictionary attributes);
 
 		[Export ("dictionary")]
 		NSMutableDictionary Dictionary { get; }
@@ -11958,7 +12086,7 @@ namespace AppKit {
 
 	}
 
-
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSPrintOperation {
 		[Static]
@@ -12053,6 +12181,7 @@ namespace AppKit {
 		NSPrintInfo PrintInfo { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -12061,11 +12190,14 @@ namespace AppKit {
 		[Export ("localizedSummaryItems")]
 		NSDictionary [] LocalizedSummaryItems ();
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("keyPathsForValuesAffectingPreview")]
 		NSSet KeyPathsForValuesAffectingPreview ();
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPrintPanel {
 		[Static]
@@ -12107,10 +12239,11 @@ namespace AppKit {
 		string JobStyleHint { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSProgressIndicator : NSAccessibilityProgressIndicator {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("incrementBy:")]
 		void IncrementBy (double delta);
@@ -12159,6 +12292,7 @@ namespace AppKit {
 	// Technically on NSResponder but responder subclasses can implement any that make sense
 	// So bound for user classes but not added to NSResponder binding
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSStandardKeyBindingResponding
 	{
@@ -12448,6 +12582,7 @@ namespace AppKit {
 		void QuickLookPreviewItems ([NullAllowed] NSObject sender);
 	}
 
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSResponder : NSCoding, NSTouchBarProvider /* radar://42781537 , NSUserActivityRestoring */ {
@@ -12593,6 +12728,11 @@ namespace AppKit {
 		[Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
 		string [] RestorableStateKeyPaths ();
 
+		[Mac (12,0)]
+		[Static]
+		[Export ("allowedClassesForRestorableStateKeyPath:")]
+		Class[] GetAllowedClassesForRestorableStateKeyPath (string keyPath);
+
 		[Export ("wantsForwardedScrollEventsForAxis:")]
 		bool WantsForwardedScrollEventsForAxis (NSEventGestureAxis axis);
 
@@ -12642,12 +12782,14 @@ namespace AppKit {
 // 		void RestoreUserActivityState (NSUserActivity userActivity);
 // 	}
 
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSResponder))]
 	interface NSResponder_NSTouchBarProvider : INSTouchBarProvider
 	{
 		[Mac (10, 12, 2)]
 		[Export ("touchBar")]
+		[return: NullAllowed]
 		NSTouchBar GetTouchBar ();
 
 		[Mac (10, 12, 2)]
@@ -12660,10 +12802,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSGestureRecognizer))]
 	interface NSRotationGestureRecognizer {
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor (NSObject target, Selector action);
+		NativeHandle Constructor (NSObject target, Selector action);
 
 		[Export ("rotation")]
 		nfloat Rotation { get; set; }
@@ -12672,11 +12815,12 @@ namespace AppKit {
 		nfloat RotationInDegrees { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSRulerMarker : NSCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithRulerView:markerLocation:image:imageOrigin:")]
-		IntPtr Constructor (NSRulerView ruler, nfloat location, NSImage image, CGPoint imageOrigin);
+		NativeHandle Constructor (NSRulerView ruler, nfloat location, NSImage image, CGPoint imageOrigin);
 
 		[Export ("ruler")]
 		NSRulerView Ruler { get; }
@@ -12716,10 +12860,11 @@ namespace AppKit {
 		NSObject RepresentedObject { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	partial interface NSRulerView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Static]
 		[Export ("registerUnitWithName:abbreviation:unitToPointsConversionFactor:stepUpCycle:stepDownCycle:")]
@@ -12727,7 +12872,7 @@ namespace AppKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithScrollView:orientation:")]
-		IntPtr Constructor (NSScrollView scrollView, NSRulerOrientation orientation);
+		NativeHandle Constructor (NSScrollView scrollView, NSRulerOrientation orientation);
 
 		[Export ("baselineLocation")]
 		nfloat BaselineLocation { get; }
@@ -12778,10 +12923,12 @@ namespace AppKit {
 		nfloat ReservedThicknessForAccessoryView { get; set; }
 
 		[Export ("measurementUnits")]
-#if XAMCORE_4_0
-		[BindAs (typeof (NSRulerViewUnits))] 
-#endif
+#if NET
+		[BindAs (typeof (NSRulerViewUnits))]
+		NSString MeasurementUnits { get; set; }
+#else
 		string MeasurementUnits { get; set; }
+#endif
 
 		[Export ("originOffset")]
 		nfloat OriginOffset { get; set; }
@@ -12797,6 +12944,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 13)]
+	[NoMacCatalyst]
 	enum NSRulerViewUnits
 	{
 		[Field ("NSRulerViewUnitInches")]
@@ -12814,6 +12962,7 @@ namespace AppKit {
 
 	delegate void NSSavePanelComplete (nint result);
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSPanel), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSOpenSavePanelDelegate)})]
 	[DisableDefaultCtor]
 	interface NSSavePanel {
@@ -12825,7 +12974,7 @@ namespace AppKit {
 		[Advice ("You must use 'SavePanel' method if the application is sandboxed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All save panels now run out-of-process, use 'SavePanel' method instead")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("URL")]
 		NSUrl Url { get; }
@@ -12855,7 +13004,7 @@ namespace AppKit {
 		[Export ("directoryURL", ArgumentSemantic.Copy)]
 		NSUrl DirectoryUrl { get; set; }
 
-		[Advice ("Use 'AllowedContentTypes' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'AllowedContentTypes' instead.")]
 		[Export ("allowedFileTypes")]
 		string [] AllowedFileTypes { get; set; }
 	
@@ -12906,23 +13055,23 @@ namespace AppKit {
 		[Export ("showsHiddenFiles")]
 		bool ShowsHiddenFiles { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use Url instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use Url instead.")]
 		[Export ("filename")]
 		string Filename { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use DirectoryUrl instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use DirectoryUrl instead.")]
 		[Export ("directory")]
 		string Directory { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use AllowedFileTypes instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use AllowedFileTypes instead.")]
 		[Export ("requiredFileType")]
 		string RequiredFileType { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use Begin with the callback instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use Begin with the callback instead.")]
 		[Export ("beginSheetForDirectory:file:modalForWindow:modalDelegate:didEndSelector:contextInfo:")]
 		void Begin (string directory, string filename, NSWindow docWindow, NSObject modalDelegate, Selector selector, IntPtr context);
 
-		[Availability (Deprecated = Platform.Mac_10_6, Message = "Use RunModal without parameters instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use RunModal without parameters instead.")]
 		[Export ("runModalForDirectory:file:")]
 		nint RunModal ([NullAllowed] string directory, [NullAllowed]  string filename);
 
@@ -12936,13 +13085,14 @@ namespace AppKit {
 		
 	}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !__MACCATALYST__
 	// This class doesn't show up in any documentation.
 	[BaseType (typeof (NSSavePanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
 	interface NSRemoteSavePanel {}
 #endif
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSScreen {
 
@@ -12984,7 +13134,7 @@ namespace AppKit {
 		[Export ("supportedWindowDepths"), Internal]
 		IntPtr GetSupportedWindowDepths ();
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("userSpaceScaleFactor")]
 		nfloat UserSpaceScaleFactor { get; }
 
@@ -13030,19 +13180,55 @@ namespace AppKit {
 		[Mac (10, 15)]
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get; }
+
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("safeAreaInsets")]
+		NSEdgeInsets SafeAreaInsets { get; }
+
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("auxiliaryTopLeftArea")]
+		CGRect AuxiliaryTopLeftArea { get; }
+
+		[ThreadSafe]
+		[Mac (12,0)]
+		[Export ("auxiliaryTopRightArea")]
+		CGRect AuxiliaryTopRightArea { get; }
+
+		[Mac (12,0)]
+		[Export ("maximumFramesPerSecond")]
+		nint MaximumFramesPerSecond { get; }
+
+		[Mac (12,0)]
+		[Export ("minimumRefreshInterval")]
+		double MinimumRefreshInterval { get; }
+
+		[Mac (12,0)]
+		[Export ("maximumRefreshInterval")]
+		double MaximumRefreshInterval { get; }
+
+		[Mac (12,0)]
+		[Export ("displayUpdateGranularity")]
+		double DisplayUpdateGranularity { get; }
+
+		[Mac (12,0)]
+		[Export ("lastDisplayUpdateTimestamp")]
+		double LastDisplayUpdateTimestamp { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSScroller {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use GetScrollerWidth instead.")]
 		[Static]
 		[Export ("scrollerWidth")]
 		nfloat ScrollerWidth { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use GetScrollerWidth instead.")]
 		[Static]
 		[Export ("scrollerWidthForControlSize:")]
 		nfloat ScrollerWidthForControlSize (NSControlSize controlSize);
@@ -13125,14 +13311,15 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	partial interface NSScrollView : NSTextFinderBarContainer {
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Static]
 		[Export ("frameSizeForContentSize:hasHorizontalScroller:hasVerticalScroller:borderType:")]
 		CGSize FrameSizeForContentSize (CGSize cSize, bool hFlag, bool vFlag, NSBorderType aType);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Static]
 		[Export ("contentSizeForFrameSize:hasHorizontalScroller:hasVerticalScroller:borderType:")]
 		CGSize ContentSizeForFrame (CGSize fSize, bool hFlag, bool vFlag, NSBorderType aType);
@@ -13142,7 +13329,7 @@ namespace AppKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("contentSize")]
 		CGSize ContentSize { get; }
@@ -13158,7 +13345,7 @@ namespace AppKit {
 
 		//Detected properties
 		[Export ("documentView", ArgumentSemantic.Retain), NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSView DocumentView { get; set; }
 #else
 		NSObject DocumentView { get; set; }
@@ -13311,10 +13498,11 @@ namespace AppKit {
 		void AddFloatingSubview (NSView view, NSEventGestureAxis axis);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextField), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSSearchFieldDelegate)})]
 	interface NSSearchField {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("recentSearches")]
 		string [] RecentSearches { get; set; }
@@ -13341,18 +13529,18 @@ namespace AppKit {
 		[Export ("sendsSearchStringImmediately")]
 		bool SendsSearchStringImmediately { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'SearchTextBounds' instead.")]
 		[Mac (10,11)]
-		[Advice ("Use 'SearchTextBounds' instead.")]
 		[Export ("rectForSearchTextWhenCentered:")]
 		CGRect GetRectForSearchText (bool isCentered);
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'SearchButtonBounds' instead.")]
 		[Mac (10,11)]
-		[Advice ("Use 'SearchButtonBounds' instead.")]
 		[Export ("rectForSearchButtonWhenCentered:")]
 		CGRect GetRectForSearchButton (bool isCentered);
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CancelButtonBounds' instead.")]
 		[Mac (10,11)]
-		[Advice ("Use 'CancelButtonBounds' instead.")]
 		[Export ("rectForCancelButtonWhenCentered:")]
 		CGRect GetRectForCancelButton (bool isCentered);
 
@@ -13364,8 +13552,8 @@ namespace AppKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
 		NSObject WeakDelegate { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "No longer availabile, now a no-op.")]
 		[Mac (10,11)]
-		[Advice ("No longer availabile, now a no-op.")]
 		[Export ("centersPlaceholder")]
 		bool CentersPlaceholder { get; set; }
 
@@ -13382,6 +13570,7 @@ namespace AppKit {
 		CGRect CancelButtonBounds { get; }
 	}
 		
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface NSSearchFieldDelegate : NSTextFieldDelegate
@@ -13395,11 +13584,12 @@ namespace AppKit {
 		void SearchingEnded (NSSearchField sender);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextFieldCell))]
 	interface NSSearchFieldCell {
 		[DesignatedInitializer]
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 
 		[Export ("searchButtonCell", ArgumentSemantic.Retain)]
 		NSButtonCell SearchButtonCell { get; set; }
@@ -13441,10 +13631,11 @@ namespace AppKit {
 		bool SendsSearchStringImmediately { get; set; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSSegmentedControl : NSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("selectSegmentWithTag:")]
 		bool SelectSegment (nint tag);
@@ -13567,13 +13758,14 @@ namespace AppKit {
 		NSSegmentDistribution SegmentDistribution { get; set; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell))]
 	interface NSSegmentedCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[Export ("selectSegmentWithTag:")]
 		bool SelectSegment (nint tag);
@@ -13657,10 +13849,11 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSSlider : NSAccessibilitySlider {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("vertical")]
 		// Radar 27222357
@@ -13751,13 +13944,14 @@ namespace AppKit {
 		NSColor TrackFillColor { get; set; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell))]
 	interface NSSliderCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[Static]
 		[Export ("prefersTrackingUntilMouseUp")]
@@ -13848,14 +14042,16 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSSliderTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
+		[NoMacCatalyst]
 		[Export ("slider", ArgumentSemantic.Strong)]
 		NSSlider Slider { get; set; }
 
@@ -13877,10 +14073,12 @@ namespace AppKit {
 		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
 		Selector Action { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
 		[Mac (10,13)]
+		[NoMacCatalyst]
 		[Export ("view")]
 		INSUserInterfaceCompression View { get; }
 
@@ -13897,6 +14095,7 @@ namespace AppKit {
 		nfloat MaximumSliderWidth { get; set; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSSpeechRecognizer {
 		[Export ("startListening")]
@@ -13926,6 +14125,7 @@ namespace AppKit {
 		bool BlocksOtherRecognizers { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -13934,10 +14134,11 @@ namespace AppKit {
 		void DidRecognizeCommand (NSSpeechRecognizer sender, string command);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSSpeechSynthesizer {
 		[Export ("initWithVoice:")]
-		IntPtr Constructor (string voice);
+		NativeHandle Constructor (string voice);
 
 		[Export ("startSpeakingString:")]
 		bool StartSpeakingString (string theString);
@@ -14012,6 +14213,7 @@ namespace AppKit {
 		bool UsesFeedbackWindow { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -14032,6 +14234,7 @@ namespace AppKit {
 		void DidEncounterSyncMessage (NSSpeechSynthesizer sender, string message);
 	}
 
+	[NoMacCatalyst]
 	[StrongDictionary ("NSTextCheckingKey")]
 	interface NSTextCheckingOptions {
 		NSOrthography Orthography { get; set; }
@@ -14044,6 +14247,7 @@ namespace AppKit {
 		string DocumentAuthor { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Internal, Static]
 	interface NSTextCheckingKey {
 		[Field ("NSTextCheckingOrthographyKey")]
@@ -14064,6 +14268,7 @@ namespace AppKit {
 		NSString DocumentAuthorKey { get; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSSpellChecker {
 		[Static]
@@ -14223,6 +14428,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSSoundDelegate) })]
 	[DisableDefaultCtor] // no valid handle is returned
 	partial interface NSSound : NSSecureCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting
@@ -14232,13 +14438,13 @@ namespace AppKit {
 		NSSound FromName (string name);
 
 		[Export ("initWithContentsOfURL:byReference:")]
-		IntPtr Constructor (NSUrl url, bool byRef);
+		NativeHandle Constructor (NSUrl url, bool byRef);
 
 		[Export ("initWithContentsOfFile:byReference:")]
-		IntPtr Constructor (string path, bool byRef);
+		NativeHandle Constructor (string path, bool byRef);
 
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Static]
 		[Export ("canInitWithPasteboard:")]
@@ -14249,7 +14455,7 @@ namespace AppKit {
 		string [] SoundUnfilteredTypes ();
 
 		[Export ("initWithPasteboard:")]
-		IntPtr Constructor (NSPasteboard pasteboard);
+		NativeHandle Constructor (NSPasteboard pasteboard);
 
 		[Export ("writeToPasteboard:")]
 		void WriteToPasteboard (NSPasteboard pasteboard);
@@ -14303,6 +14509,7 @@ namespace AppKit {
 		NSObject ChannelMapping { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
 	interface NSSoundDelegate {
@@ -14310,10 +14517,11 @@ namespace AppKit {
 		void DidFinishPlaying (NSSound sound, bool finished);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	partial interface NSSplitView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("drawDividerInRect:")]
 		void DrawDivider (CGRect rect);
@@ -14394,10 +14602,11 @@ namespace AppKit {
 	interface INSSplitViewDelegate {}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController))]
 	interface NSSplitViewController : NSSplitViewDelegate, NSUserInterfaceValidations {
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("splitView", ArgumentSemantic.Strong)]
 		NSSplitView SplitView { get; set; }
@@ -14457,6 +14666,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSSplitViewItem : NSAnimatablePropertyContainer, NSCoding {
 		[Export ("viewController", ArgumentSemantic.Strong)]
@@ -14521,6 +14731,7 @@ namespace AppKit {
 		NSTitlebarSeparatorStyle TitlebarSeparatorStyle { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface NSSplitViewDelegate {
@@ -14563,6 +14774,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSSpringLoadingDestination
@@ -14589,10 +14801,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,9)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSStackView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -14619,7 +14832,7 @@ namespace AppKit {
 		[Export ("spacing")]
 		nfloat Spacing { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Set Distribution to NSStackViewDistribution.EqualSpacing instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Set Distribution to NSStackViewDistribution.EqualSpacing instead.")]
 		[Export ("hasEqualSpacing")]
 		bool HasEqualSpacing { get; set; }
 
@@ -14691,6 +14904,7 @@ namespace AppKit {
 		void RemoveArrangedSubview (NSView view);
 	}
 
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSStackViewDelegate {
@@ -14701,6 +14915,7 @@ namespace AppKit {
 		void DidReattachViews (NSStackView stackView, NSView [] views);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSStatusBar {
 		[Static, Export ("systemStatusBar")]
@@ -14720,15 +14935,17 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSButton))]
 	interface NSStatusBarButton {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("appearsDisabled")]
 		bool AppearsDisabled { get; set; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[PrivateDefaultCtor]
 	partial interface NSStatusItem {
@@ -14738,11 +14955,11 @@ namespace AppKit {
 		[Export ("length")]
 		nfloat Length { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("action"), NullAllowed]
 		Selector Action { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("sendActionOn:")]
 		nint SendActionOn (NSTouchPhase mask);
 
@@ -14755,27 +14972,28 @@ namespace AppKit {
 		void DrawStatusBarBackground (CGRect rect, bool highlight);
 
 		//Detected properties
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("target", ArgumentSemantic.Assign), NullAllowed]
 		NSObject Target { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("title")]
 		string Title { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("attributedTitle")]
 		NSAttributedString AttributedTitle { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("image")]
 		NSImage Image { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("alternateImage")]
 		NSImage AlternateImage { get; set; }
 
@@ -14783,19 +15001,19 @@ namespace AppKit {
 		[NullAllowed]
 		NSMenu Menu { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")]get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("highlightMode")]
 		bool HighlightMode { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("view")]
 		[NullAllowed]
 		NSView View { get; set; }
@@ -14817,25 +15035,8 @@ namespace AppKit {
 		string AutosaveName { get; set; }
 	}
 
-	[DesignatedDefaultCtor]
-	[BaseType (typeof (NSObject))]
-	interface NSShadow : NSSecureCoding, NSCopying {
-		[Export ("set")]
-		void Set ();
-
-		//Detected properties
-		[Export ("shadowOffset")]
-		CGSize ShadowOffset { get; set; }
-
-		[Export ("shadowBlurRadius")]
-		nfloat ShadowBlurRadius { get; set; }
-
-		[Export ("shadowColor", ArgumentSemantic.Copy)]
-		NSColor ShadowColor { get; set; }
-
-	}
-
 	[Static]
+	[NoMacCatalyst]
 	interface NSStringAttributeKey {
 		[Field ("NSFontAttributeName")]
 		NSString Font { get; }
@@ -15006,6 +15207,7 @@ namespace AppKit {
 	delegate NSObject NSStoryboardControllerCreator (NSCoder coder);
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSStoryboard {
 		[Static, Export ("storyboardWithName:bundle:")]
@@ -15033,11 +15235,12 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSStoryboardSegue {
 		[DesignatedInitializer]
 		[Export ("initWithIdentifier:source:destination:")]
-		IntPtr Constructor (string identifier, NSObject sourceController, NSObject destinationController);
+		NativeHandle Constructor (string identifier, NSObject sourceController, NSObject destinationController);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -15056,6 +15259,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSSeguePerforming {
@@ -15069,14 +15273,15 @@ namespace AppKit {
 		bool ShouldPerformSegue (string identifier, NSObject sender);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSController))]
 	interface NSUserDefaultsController {
 		[DesignatedInitializer]
 		[Export ("initWithDefaults:initialValues:")]
-		IntPtr Constructor ([NullAllowed] NSUserDefaults defaults, [NullAllowed] NSDictionary initialValues);
+		NativeHandle Constructor ([NullAllowed] NSUserDefaults defaults, [NullAllowed] NSDictionary initialValues);
 //
 //		[Export ("initWithCoder:")]
-//		IntPtr Constructor (NSCoder coder);
+//		NativeHandle Constructor (NSCoder coder);
 //
 		[Export ("defaults", ArgumentSemantic.Strong)]
 		NSUserDefaults Defaults { get; }
@@ -15108,119 +15313,150 @@ namespace AppKit {
 
 	interface INSUserInterfaceItemIdentification {}
 
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSUserInterfaceItemIdentification {
+#if NET
+		[Abstract]
+#endif
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		string Identifier { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Protocol]
-#if !XAMCORE_4_0
+#if !NET
 	[Model]
 	[BaseType (typeof (NSObject))]
 #endif
 	partial interface NSTextFinderClient {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("editable")]
 		bool Editable { [Bind ("isEditable")] get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("string", ArgumentSemantic.Copy)]
 		string String { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("firstSelectedRange")]
 		NSRange FirstSelectedRange { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("selectedRanges", ArgumentSemantic.Copy)]
 		NSArray SelectedRanges { get; set;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("visibleCharacterRanges", ArgumentSemantic.Copy)]
 		NSArray VisibleCharacterRanges { get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("selectable")]
 		bool Selectable { [Bind ("isSelectable")] get;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("stringAtIndex:effectiveRange:endsWithSearchBoundary:")]
+#if NET
+		string GetString (nuint index, out NSRange effectiveRange, bool endsWithSearchBoundary);
+#else
 		string StringAtIndexeffectiveRangeendsWithSearchBoundary (nuint characterIndex, ref NSRange outRange, bool outFlag);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("stringLength")]
+#if NET
+		nuint StringLength { get; }
+#else
 		nuint StringLength ();
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("scrollRangeToVisible:")]
 		void ScrollRangeToVisible (NSRange range);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("shouldReplaceCharactersInRanges:withStrings:")]
+#if NET
+		bool ShouldReplaceCharacters (NSArray ranges, NSArray strings);
+#else
 		bool ShouldReplaceCharactersInRangeswithStrings (NSArray ranges, NSArray strings);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("replaceCharactersInRange:withString:")]
+#if NET
+		void ReplaceCharacters (NSRange range, string str);
+#else
 		void ReplaceCharactersInRangewithString (NSRange range, string str);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("didReplaceCharacters")]
 		void DidReplaceCharacters ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("contentViewAtIndex:effectiveCharacterRange:")]
+#if NET
+		NSView GetContentView (nuint index, out NSRange outRange);
+#else
 		NSView ContentViewAtIndexeffectiveCharacterRange (nuint index, ref NSRange outRange);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("rectsForCharacterRange:")]
+#if NET
+		NSArray GetRects (NSRange characterRange);
+#else
 		NSArray RectsForCharacterRange (NSRange range);
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
+#endif
 		[Export ("drawCharactersInRange:forContentView:")]
+#if !NET
 		void DrawCharactersInRangeforContentView (NSRange range, NSView view);
 #else
-		[Export ("drawCharactersInRange:forContentView:")]
 		void DrawCharacters (NSRange range, NSView view);
 #endif
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject)), Model, Protocol]
 	partial interface NSTextFinderBarContainer {
 		[Abstract, Export ("findBarVisible")]
@@ -15236,6 +15472,7 @@ namespace AppKit {
 		NSView ContentView { get; }
 	}
 
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextFinder : NSCoding {
@@ -15273,11 +15510,12 @@ namespace AppKit {
 		void NoteClientStringWillChange ();
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder))]
 	partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("window")]
 		NSWindow Window { get; }
@@ -15337,16 +15575,16 @@ namespace AppKit {
 		void WillRemoveSubview ([NullAllowed] NSView subview);
 
 		[Export ("removeFromSuperview")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperview ();
 
 		[Export ("replaceSubview:with:")][PostGet ("Subviews")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
@@ -15409,27 +15647,27 @@ namespace AppKit {
 		[Export ("centerScanRect:")]
 		CGRect CenterScanRect (CGRect aRect);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("convertPointToBase:")]
 		CGPoint ConvertPointToBase (CGPoint aPoint);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("convertPointFromBase:")]
 		CGPoint ConvertPointFromBase (CGPoint aPoint);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("convertSizeToBase:")]
 		CGSize ConvertSizeToBase (CGSize aSize);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("convertSizeFromBase:")]
 		CGSize ConvertSizeFromBase (CGSize aSize);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("convertRectToBase:")]
 		CGRect ConvertRectToBase (CGRect aRect);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("convertRectFromBase:")]
 		CGRect ConvertRectFromBase (CGRect aRect);
 
@@ -15500,23 +15738,23 @@ namespace AppKit {
 		[Export ("viewWillDraw")]
 		void ViewWillDraw ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("gState")]
 		nint GState ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("allocateGState")]
 		void AllocateGState ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("releaseGState")]
 		void ReleaseGState ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("setUpGState")]
 		void SetUpGState ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("renewGState")]
 		void RenewGState ();
 
@@ -15599,7 +15837,7 @@ namespace AppKit {
 		[Export ("updateTrackingAreas")]
 		void UpdateTrackingAreas ();
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("shouldDrawColor")]
 		bool ShouldDrawColor { get; }
 
@@ -15739,7 +15977,7 @@ namespace AppKit {
 		[Export ("beginDraggingSessionWithItems:event:source:")]
 		NSDraggingSession BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source);
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use BeginDraggingSession instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use BeginDraggingSession instead.")]
 		[Export ("dragImage:at:offset:event:pasteboard:source:slideBack:")]
 		void DragImage (NSImage anImage, CGPoint viewLocation, CGSize initialOffset, NSEvent theEvent, NSPasteboard pboard, NSObject sourceObj, bool slideFlag);
 
@@ -15874,7 +16112,7 @@ namespace AppKit {
 		[Export ("exerciseAmbiguityInLayout")]
 		void ExerciseAmbiguityInLayout ();
 
-		[Availability (Deprecated = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("performMnemonic:")]
 		bool PerformMnemonic (string mnemonic);
 
@@ -16191,10 +16429,11 @@ namespace AppKit {
 		NSLayoutGuide LayoutMarginsGuide { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSAnimation))]
 	interface NSViewAnimation { 
 		[Export ("initWithViewAnimations:")]
-		IntPtr Constructor (NSDictionary [] viewAnimations);
+		NativeHandle Constructor (NSDictionary [] viewAnimations);
 	
 		[Export ("viewAnimations", ArgumentSemantic.Copy)]
 		NSDictionary [] ViewAnimations { get; set; }
@@ -16231,6 +16470,7 @@ namespace AppKit {
 		NSString FadeOutEffect { get; }
 	}
 
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSView))]
 	interface NSView_NSTouchBar
@@ -16243,12 +16483,13 @@ namespace AppKit {
 		void SetAllowedTouchTypes (NSTouchTypeMask touchTypes);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder))]
 	interface NSViewController : NSResponder, NSUserInterfaceItemIdentification, NSEditor, NSSeguePerforming , NSExtensionRequestHandling
 	{
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("loadView")]
 		void LoadView ();
@@ -16407,6 +16648,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSViewControllerPresentationAnimator {
@@ -16421,13 +16663,14 @@ namespace AppKit {
 
 	interface INSViewControllerPresentationAnimator {}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController),
 		Delegates = new [] { "WeakDelegate" },
 		Events = new [] { typeof (NSPageControllerDelegate) })]
 	partial interface NSPageController : NSAnimatablePropertyContainer {
 
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -16464,6 +16707,7 @@ namespace AppKit {
 		void NavigateForward (NSObject sender);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject)), Model, Protocol]
 	partial interface NSPageControllerDelegate {
 
@@ -16489,11 +16733,12 @@ namespace AppKit {
 		void DidEndLiveTransition (NSPageController pageController);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSImageRep), Name="NSPDFImageRep")]
 	[DisableDefaultCtor] // -[NSPDFImageRep init]: unrecognized selector sent to instance 0x2652460
 	interface NSPdfImageRep {
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData pdfData);
+		NativeHandle Constructor (NSData pdfData);
 
 		[Export ("PDFRepresentation", ArgumentSemantic.Retain)]
 		NSData PdfRepresentation { get; }
@@ -16508,17 +16753,18 @@ namespace AppKit {
 		nint PageCount { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTableColumn : NSUserInterfaceItemIdentification, NSCoding {
 		[Export ("initWithIdentifier:")]
 		[Sealed]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[DesignatedInitializer]
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (NSString identifier);
+		NativeHandle Constructor (NSString identifier);
 
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("dataCellForRow:")]
 		NSCell DataCellForRow (nint row);
 		
@@ -16563,10 +16809,11 @@ namespace AppKit {
 		string Title { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSTableRowView : NSAccessibilityRow {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("selectionHighlightStyle")]
 		NSTableViewSelectionHighlightStyle SelectionHighlightStyle { get; set;  }
@@ -16625,10 +16872,11 @@ namespace AppKit {
 		bool NextRowSelected { [Bind ("isNextRowSelected")] get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	partial interface NSTableCellView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("backgroundStyle")]
 		NSBackgroundStyle BackgroundStyle {
@@ -16661,13 +16909,15 @@ namespace AppKit {
 		}
 	}
 
+	[NoMacCatalyst]
 	delegate void NSTableViewRowHandler (NSTableRowView rowView, nint row);
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTableViewDelegate)})]
 	partial interface NSTableView : NSDraggingSource, NSAccessibilityTable {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("noteHeightOfRowsWithIndexesChanged:")]
 		void NoteHeightOfRowsWithIndexesChanged (NSIndexSet indexSet );
@@ -16742,7 +16992,11 @@ namespace AppKit {
 		bool CanDragRows (NSIndexSet rowIndexes, CGPoint mouseDownPoint );
 	
 		[Export ("dragImageForRowsWithIndexes:tableColumns:event:offset:")]
+#if NET
+		NSImage DragImageForRows (NSIndexSet dragRows, NSTableColumn [] tableColumns, NSEvent dragEvent, ref CGPoint dragImageOffset);
+#else
 		NSImage DragImageForRowsWithIndexestableColumnseventoffset (NSIndexSet dragRows, NSTableColumn [] tableColumns, NSEvent dragEvent, ref CGPoint dragImageOffset);
+#endif
 	
 		[Export ("setDraggingSourceOperationMask:forLocal:")]
 		void SetDraggingSourceOperationMask (NSDragOperation mask, bool isLocal);
@@ -16813,35 +17067,35 @@ namespace AppKit {
 		[Export ("frameOfCellAtColumn:row:")]
 		CGRect GetCellFrame (nint column, nint row);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use View Based TableView and GetView.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use View Based TableView and GetView.")]
 		[Export ("preparedCellAtColumn:row:")]
 		NSCell GetCell (nint column, nint row );
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView with an NSTextField.")]
 		[Export ("textShouldBeginEditing:")]
 		bool TextShouldBeginEditing (NSText textObject);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView with an NSTextField.")]
 		[Export ("textShouldEndEditing:")]
 		bool TextShouldEndEditing (NSText textObject);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView with an NSTextField.")]
 		[Export ("textDidBeginEditing:")]
 		void TextDidBeginEditing (NSNotification notification);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView with an NSTextField.")]
 		[Export ("textDidEndEditing:")]
 		void TextDidEndEditing (NSNotification notification);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView with an NSTextField.")]
 		[Export ("textDidChange:")]
 		void TextDidChange (NSNotification notification);
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; observe the window’s firstResponder for focus change notifications.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView; observe the window’s firstResponder for focus change notifications.")]
 		[Export ("shouldFocusCell:atColumn:row:")]
 		bool ShouldFocusCell (NSCell cell, nint column, nint row );
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; directly interact with a particular view as required and call PerformClick on it, if necessary.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView; directly interact with a particular view as required and call PerformClick on it, if necessary.")]
 		[Export ("performClickOnCellAtColumn:row:")]
 		void PerformClick (nint column, nint row );
 	
@@ -16908,6 +17162,7 @@ namespace AppKit {
 		[Export ("rowHeight")]
 		nfloat RowHeight { get; set; }
 	
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 	
@@ -16944,7 +17199,7 @@ namespace AppKit {
 		[Export ("autosaveTableColumns")]
 		bool AutosaveTableColumns { get; set; }
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; observe the window’s firstResponder.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use a View Based TableView; observe the window’s firstResponder.")]
 		[Export ("focusedColumn")]
 		nint FocusedColumn { get; set; }
 
@@ -17044,6 +17299,7 @@ namespace AppKit {
 		NSTableViewStyle EffectiveStyle { get; }
 	} 
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -17135,6 +17391,7 @@ namespace AppKit {
 		NSTableViewRowAction[] RowActions (NSTableView tableView, nint row, NSTableRowActionEdge edge);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -17181,6 +17438,7 @@ namespace AppKit {
 	//
 	// This is the mixed NSTableViewDataSource and NSTableViewDelegate
 	//
+	[NoMacCatalyst]
 	[Model]
 	[Synthetic]
 	[BaseType (typeof (NSObject))]
@@ -17312,10 +17570,11 @@ namespace AppKit {
 		void UpdateDraggingItems (NSTableView tableView, [Protocolize (4)] NSDraggingInfo draggingInfo);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextFieldCell))]
 	interface NSTableHeaderCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 
 		[Export ("drawSortIndicatorWithFrame:inView:ascending:priority:")]
 		void DrawSortIndicator (CGRect cellFrame, NSView controlView, bool ascending, nint priority );
@@ -17324,10 +17583,11 @@ namespace AppKit {
 		CGRect GetSortIndicatorRect (CGRect theRect );
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSTableHeaderView : NSViewToolTipOwner {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("draggedColumn")]
 		nint DraggedColumn { get; }
@@ -17350,6 +17610,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSTableViewRowAction : NSCopying
 	{
@@ -17372,10 +17633,11 @@ namespace AppKit {
 		NSColor BackgroundColor { get; set; }
 	}
 		
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTabViewDelegate)})]
 	partial interface NSTabView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("selectTabViewItem:")]
 		void Select (NSTabViewItem tabViewItem);
@@ -17482,10 +17744,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController))]
 	interface NSTabViewController : NSTabViewDelegate, NSToolbarDelegate {
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("tabStyle")]
 		NSTabViewControllerTabStyle TabStyle { get; set; }
@@ -17493,11 +17756,12 @@ namespace AppKit {
 		[Export ("tabView", ArgumentSemantic.Strong)]
 		NSTabView TabView { get; set; }
 
-//		[FAIL] Selector not found for AppKit.NSTabViewController : segmentedControl
-//		[FAIL] Selector not found for AppKit.NSTabViewController : setSegmentedControl:
-		[Availability (Obsoleted = Platform.Mac_10_11)] // Test failures on El Capitan
+#if !XAMCORE_4_0 && MONOMAC
+		// This property does not exist in any stable header - it was probably added in a beta and then removed.
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Do not use; this API was removed.")]
 		[Export ("segmentedControl", ArgumentSemantic.Strong)]
 		NSSegmentedControl SegmentedControl { get; set; }
+#endif
 
 		[Export ("transitionOptions")]
 		NSViewControllerTransitionOptions TransitionOptions { get; set; }
@@ -17539,6 +17803,7 @@ namespace AppKit {
 		new void DidSelect (NSTabView tabView, NSTabViewItem item);
 
 		// 'new' since it's inlined from NSToolbarViewDelegate as this instance needs [RequiresSuper]
+		[return: NullAllowed]
 		[RequiresSuper]
 		[Export ("toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:"), DelegateName ("NSToolbarWillInsert")]
 		new NSToolbarItem WillInsertItem (NSToolbar toolbar, string itemIdentifier, bool willBeInserted);
@@ -17559,6 +17824,7 @@ namespace AppKit {
 		new string [] SelectableItemIdentifiers (NSToolbar toolbar);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface NSTabViewDelegate {
@@ -17575,10 +17841,11 @@ namespace AppKit {
 		void NumberOfItemsChanged (NSTabView tabView);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSTabViewItem : NSCoding {
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (NSObject identifier);
+		NativeHandle Constructor (NSObject identifier);
 
 		[Export ("identifier", ArgumentSemantic.Retain)]
 		NSObject Identifier { get; set; }
@@ -17623,11 +17890,12 @@ namespace AppKit {
 		NSTabViewItem GetTabViewItem (NSViewController viewController);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextDelegate)})]
 	partial interface NSText {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("replaceCharactersInRange:withString:")]
 		void Replace (NSRange range, string aString);
@@ -17788,6 +18056,7 @@ namespace AppKit {
 		bool VerticallyResizable { [Bind ("isVerticallyResizable")]get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -17808,98 +18077,73 @@ namespace AppKit {
 		void TextDidChange (NSNotification notification);
 	}
 
-	[BaseType (typeof (NSCell))]
-	interface NSTextAttachmentCell {
-		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+	/* 	We are presuming that Apple will be adding this to new classes in the future.
+	Because they want NSTextAttachmentCell to conform to this, they are essentially
+	implementing this protocol in the past. So, we have decided to do the same. */
+	[NoMacCatalyst]
+	[Protocol (Name="NSTextAttachmentCell")]
+	interface NSTextAttachmentCellProtocol { 
 
-		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		[Abstract]
+		[Export ("drawWithFrame:inView:")]
+		void DrawWithFrame (CGRect cellFrame, [NullAllowed] NSView controlView);
 
+		[Abstract]
 		[Export ("wantsToTrackMouse")]
 		bool WantsToTrackMouse ();
 
+		[Abstract]
+		[Export ("drawWithFrame:inView:characterIndex:")]
+		void DrawWithFrame (CGRect cellFrame, [NullAllowed] NSView controlView, nuint charIndex);
+
+		[Abstract]
+		[Export ("drawWithFrame:inView:characterIndex:layoutManager:")]
+		void DrawWithFrame (CGRect cellFrame, [NullAllowed] NSView controlView, nuint charIndex, NSLayoutManager layoutManager);
+
+		[Abstract]
 		[Export ("highlight:withFrame:inView:")]
 		void Highlight (bool highlight, CGRect cellFrame, NSView controlView);
 
+		[Abstract]
 		[Export ("trackMouse:inRect:ofView:untilMouseUp:")]
 		bool TrackMouse (NSEvent theEvent, CGRect cellFrame, NSView controlView, bool untilMouseUp);
 
+		[Abstract]
 		[Export ("cellSize")]
 		CGSize CellSize { get; }
 
+		[Abstract]
 		[Export ("cellBaselineOffset")]
 		CGPoint CellBaselineOffset { get; }
 
-		[Export ("drawWithFrame:inView:characterIndex:")]
-		void DrawWithFrame (CGRect cellFrame, NSView controlView, nuint charIndex);
+		[Abstract]
+		[Export ("attachment")][NullAllowed]
+		NSTextAttachment Attachment { get; set; }
 
-		[Export ("drawWithFrame:inView:characterIndex:layoutManager:")]
-		void DrawWithFrame (CGRect cellFrame, NSView controlView, nuint charIndex, NSLayoutManager layoutManager);
-
+		[Abstract]
 		[Export ("wantsToTrackMouseForEvent:inRect:ofView:atCharacterIndex:")]
 		bool WantsToTrackMouse (NSEvent theEvent, CGRect cellFrame, NSView controlView, nuint charIndex);
 
+		[Abstract]
 		[Export ("trackMouse:inRect:ofView:atCharacterIndex:untilMouseUp:")]
 		bool TrackMouse (NSEvent theEvent, CGRect cellFrame, NSView controlView, nuint charIndex, bool untilMouseUp);
 
+		[Abstract]
 		[Export ("cellFrameForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
 		CGRect CellFrameForTextContainer (NSTextContainer textContainer, CGRect lineFrag, CGPoint position, nuint charIndex);
-
-		//Detected properties
-		[Export ("attachment")][NullAllowed]
-		NSTextAttachment Attachment { get; set; }
 	}
 
-	[BaseType (typeof (NSObject))]
-	interface NSTextAttachment : NSCoding, NSSecureCoding {
-		[Export ("initWithFileWrapper:")]
-		IntPtr Constructor (NSFileWrapper fileWrapper);
+	[NoMacCatalyst]
+	[BaseType (typeof (NSCell))]
+	interface NSTextAttachmentCell : NSTextAttachmentCellProtocol {
+		[Export ("initImageCell:")]
+		NativeHandle Constructor (NSImage image);
 
-		[Mac (10,11)]
-		[Export ("initWithData:ofType:")]
-		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
-
-		//Detected properties
-		[Export ("fileWrapper", ArgumentSemantic.Retain)]
-		NSFileWrapper FileWrapper { get; set; }
-
-		[Export ("attachmentCell", ArgumentSemantic.Retain)]
-		NSTextAttachmentCell AttachmentCell { get; set; }
-
-		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : contents
-		[NullAllowed, Export ("contents", ArgumentSemantic.Copy)]
-		NSData Contents { get; set; }
-
-		[Mac (10,11)]
-		[NullAllowed, Export ("fileType")]
-		string FileType { get; set; }
-
-		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : image
-		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
-		NSImage Image { get; set; }
-
-		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : bounds
-		[Export ("bounds", ArgumentSemantic.Assign)]
-		CGRect Bounds { get; set; }
+		[Export ("initTextCell:")]
+		NativeHandle Constructor (string aString);
 	}
 
-	[Mac (10,11)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface NSTextAttachmentContainer
-	{
-		[Abstract]
-		[Export ("imageForBounds:textContainer:characterIndex:")]
-		[return: NullAllowed]
-		NSImage GetImage (CGRect imageBounds, [NullAllowed] NSTextContainer textContainer, nuint charIndex);
-
-		[Abstract]
-		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
-		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect lineFrag, CGPoint position, nuint charIndex);
-	}
-
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTextBlock : NSCoding, NSCopying, NSSecureCoding {
@@ -17960,10 +18204,11 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextFieldDelegate)})]
 	partial interface NSTextField : NSAccessibilityNavigableStaticText, NSUserInterfaceValidations, NSTextContent {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 		
 		[Export ("selectText:")]
 		void SelectText (NSObject sender);
@@ -18077,6 +18322,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 1)]
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSTextField))]
 	interface NSTextField_NSTouchBar
@@ -18095,16 +18341,17 @@ namespace AppKit {
 		void SetAllowsCharacterPickerTouchBarItem (bool allows);
 	}
 
-
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextField))]
 	interface NSSecureTextField 
 	{
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 	}
 
 	interface INSTextFieldDelegate { }
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -18153,6 +18400,7 @@ namespace AppKit {
 		bool ShouldSelectCandidate (NSTextField textField, NSTextView textView, nuint index);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextFieldDelegate))]
 	[Model]
 	[Protocol]
@@ -18170,6 +18418,7 @@ namespace AppKit {
 		void SelectionIsChanging (NSNotification notification);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[Model]
 	[Protocol]
@@ -18206,14 +18455,15 @@ namespace AppKit {
 		NSTokenStyle GetStyle (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSActionCell))]
 	interface NSTextFieldCell {
 		[DesignatedInitializer]
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		NativeHandle Constructor (NSImage  image);
 
 		[Export ("setUpFieldEditorAttributes:")]
 		NSText SetUpFieldEditorAttributes (NSText textObj);
@@ -18245,11 +18495,12 @@ namespace AppKit {
 		bool WantsNotificationForMarkedText { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof(NSTextFieldCell))]
 	[DisableDefaultCtor]
 	interface NSTokenFieldCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 
 		[Export ("tokenStyle")]
 		NSTokenStyle TokenStyle { get; set; }
@@ -18276,10 +18527,11 @@ namespace AppKit {
 		NSTokenFieldCellDelegate Delegate { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextFieldCell))]
 	interface NSSecureTextFieldCell {
 		[Export ("initTextCell:")]
-		IntPtr Constructor (string aString);
+		NativeHandle Constructor (string aString);
 
 		[Export ("echosBullets")]
 		bool EchosBullets { get; set; }
@@ -18287,11 +18539,12 @@ namespace AppKit {
 
 	interface INSTextInputClient {}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextInputContext {
 		[Export ("initWithClient:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([Protocolize]NSTextInputClient client);
+		NativeHandle Constructor ([Protocolize]NSTextInputClient client);
 
 		[Static]
 		[Export ("currentInputContext")]
@@ -18332,17 +18585,18 @@ namespace AppKit {
 		string LocalizedNameForInputSource (string inputSourceIdentifier);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
 		[Export ("initWithMarkerFormat:options:")]
-		IntPtr Constructor (
+		NativeHandle Constructor (
 #if XAMCORE_4_0
 		[BindAs (typeof (NSTextListMarkerFormats))] 
 #endif
 		string format, NSTextListOptions mask);
 
 		[Wrap ("this (format.GetConstant(), mask)")]
-		IntPtr Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
+		NativeHandle Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
 
 #if XAMCORE_4_0
 		[BindAs (typeof (NSTextListMarkerFormats))] 
@@ -18362,6 +18616,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	enum NSTextListMarkerFormats
 	{
 		[Mac (10, 13)]
@@ -18433,12 +18688,13 @@ namespace AppKit {
 		Decimal,
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextBlock))]
 	[DisableDefaultCtor]
 	interface NSTextTableBlock {
 		[DesignatedInitializer]
 		[Export ("initWithTable:startingRow:rowSpan:startingColumn:columnSpan:")]
-		IntPtr Constructor (NSTextTable table, nint row, nint rowSpan, nint col, nint colSpan);
+		NativeHandle Constructor (NSTextTable table, nint row, nint rowSpan, nint col, nint colSpan);
 
 		[Export ("table")]
 		NSTextTable Table { get; }
@@ -18456,6 +18712,7 @@ namespace AppKit {
 		nint ColumnSpan { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextBlock))]
 	interface NSTextTable {
 		[Export ("rectForBlock:layoutAtPoint:inRect:textContainer:characterRange:")]
@@ -18481,173 +18738,7 @@ namespace AppKit {
 		bool HidesEmptyCells { get; set; }
 	}
 
-	[BaseType (typeof (NSObject))]
-	partial interface NSTextContainer : NSSecureCoding {
-		[Export ("initWithContainerSize:"), Internal]
-		[Sealed]
-		IntPtr InitWithContainerSize (CGSize size);
-
-		[Mac (10,11)]
-		[Export ("initWithSize:"), Internal]
-		[Sealed]
-		IntPtr InitWithSize (CGSize size);
-
-		[Export ("replaceLayoutManager:")]
-		void ReplaceLayoutManager (NSLayoutManager newLayoutManager);
-
-		// FIXME: Binding
-		//[Export ("lineFragmentRectForProposedRect:sweepDirection:movementDirection:remainingRect:")]
-		//CGRect LineFragmentRect (CGRect proposedRect, NSLineSweepDirection sweepDirection, NSLineMovementDirection movementDirection, NSRectPointer remainingRect);
-
-		[Export ("isSimpleRectangularTextContainer")]
-		bool IsSimpleRectangularTextContainer { get; }
-
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		[Export ("containsPoint:")]
-		bool ContainsPoint (CGPoint point);
-
-		//Detected properties
-		[Export ("layoutManager")]
-		NSLayoutManager LayoutManager { get; set; }
-
-		[Export ("textView", ArgumentSemantic.Weak)]
-		NSTextView TextView { get; set; }
-
-		[Export ("widthTracksTextView")]
-		bool WidthTracksTextView { get; set; }
-
-		[Export ("heightTracksTextView")]
-		bool HeightTracksTextView { get; set; }
-
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
-		[Export ("containerSize")]
-		CGSize ContainerSize { get; set; }
-
-		[Export ("lineFragmentPadding")]
-		nfloat LineFragmentPadding { get; set; }
-
-		[Mac (10,11)]
-		[Export ("size", ArgumentSemantic.Assign)]
-		CGSize Size { get; set; }
-
-		[Mac (10,11)]
-		[Export ("exclusionPaths", ArgumentSemantic.Copy)]
-		// [Verify (StronglyTypedNSArray)]
-		NSBezierPath[] ExclusionPaths { get; set; }
-
-		[Mac (10,11)]
-		[Export ("lineBreakMode", ArgumentSemantic.Assign)]
-		NSLineBreakMode LineBreakMode { get; set; }
-
-		[Mac (10,11)]
-		[Export ("maximumNumberOfLines", ArgumentSemantic.Assign)]
-		nuint MaximumNumberOfLines { get; set; }
-
-		[Mac (10,11)]
-		[Export ("lineFragmentRectForProposedRect:atIndex:writingDirection:remainingRect:")]
-		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, ref CGRect remainingRect);
-	}
-
-	[BaseType (typeof (NSMutableAttributedString), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextStorageDelegate)})]
-	partial interface NSTextStorage {
-		[Export ("initWithString:")]
-		IntPtr Constructor (string str);
-
-		[Export ("addLayoutManager:")][PostGet ("LayoutManagers")]
-		void AddLayoutManager (NSLayoutManager obj);
-
-		[Export ("removeLayoutManager:")][PostGet ("LayoutManagers")]
-		void RemoveLayoutManager (NSLayoutManager obj);
-
-		[Export ("layoutManagers")]
-		NSLayoutManager [] LayoutManagers { get; }
-
-		[Export ("edited:range:changeInLength:")]
-		void Edited (nuint editedMask, NSRange range, nint delta);
-
-		[Export ("processEditing")]
-		void ProcessEditing ();
-
-		[Export ("invalidateAttributesInRange:")]
-		void InvalidateAttributes (NSRange range);
-
-		[Export ("ensureAttributesAreFixedInRange:")]
-		void EnsureAttributesAreFixed (NSRange range);
-
-		[Export ("fixesAttributesLazily")]
-		bool FixesAttributesLazily { get; }
-
-		[Export ("editedMask")]
-#if !XAMCORE_4_0
-		NSTextStorageEditedFlags EditedMask { get; }
-#else
-		NSTextStorageEditActions EditedMask { get; }
-#endif
-
-		[Export ("editedRange")]
-		NSRange EditedRange { get; }
-
-		[Export ("changeInLength")]
-		nint ChangeInLength { get; }
-
-		//Detected properties
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDelegate { get; set; }
-
-		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSTextStorageDelegate Delegate { get; set; }
-
-	}
-
-	[BaseType (typeof (NSObject))]
-	[Model]
-	[Protocol]
-	interface NSTextStorageDelegate {
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use WillProcessEditing instead.")]
-		[Export ("textStorageWillProcessEditing:")]
-		void TextStorageWillProcessEditing (NSNotification notification);
-
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use DidProcessEditing instead.")]
-		[Export ("textStorageDidProcessEditing:")]
-		void TextStorageDidProcessEditing (NSNotification notification);
-
-		[Mac (10,11)]
-		[Export ("textStorage:willProcessEditing:range:changeInLength:"), EventArgs ("NSTextStorage")]
-		void WillProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
-
-		[Mac (10,11)]
-		[Export ("textStorage:didProcessEditing:range:changeInLength:"), EventArgs ("NSTextStorage")]
-		void DidProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
-	}
-
-	[BaseType (typeof (NSObject))]
-	interface NSTextTab : NSSecureCoding, NSCopying {
-		[DesignatedInitializer]
-		[Export ("initWithTextAlignment:location:options:")]
-		IntPtr Constructor (NSTextAlignment alignment, nfloat loc, NSDictionary options);
-
-		[Export ("alignment")]
-		NSTextAlignment Alignment { get; }
-
-		[Export ("options")]
-		NSDictionary Options { get; }
-
-		[Export ("initWithType:location:")]
-		IntPtr Constructor (NSTextTabType type, nfloat loc);
-
-		[Export ("location")]
-		nfloat Location { get; }
-
-		[Export ("tabStopType")]
-		NSTextTabType TabStopType { get; }
-
-		[Mac (10,11)]
-		[Static]
-		[Export ("columnTerminatorsForLocale:")]
-		NSCharacterSet GetColumnTerminators ([NullAllowed] NSLocale locale);
-	}
-
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSTextInput
 	{
@@ -18656,12 +18747,8 @@ namespace AppKit {
 		[Export ("insertText:")]
 		void InsertText (NSObject insertString);
 
-		// DoCommandBySelector conflicts with NSTextViewDelegate in generated code
-#if XAMCORE_4_0
-		[Abstract]
-		[Export ("doCommandBySelector:")]
-		void DoCommandBySelector (Selector selector);
-#endif
+		// The doCommandBySelector: conflicts with NSTextViewDelegate in generated code
+		// It's also deprecated in NSTextInput, and why we're not adding it here
 
 		[Abstract]
 		[Export ("setMarkedText:selectedRange:")]
@@ -18704,6 +18791,7 @@ namespace AppKit {
 		NSString [] ValidAttributesForMarkedText { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
 	partial interface NSTextView : NSTextInputClient, NSTextLayoutOrientationProvider, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate, NSMenuItemValidation, NSUserInterfaceValidations, NSTextInput, NSTextContent
 #if XAMCORE_4_0
@@ -18712,10 +18800,10 @@ namespace AppKit {
 	{
 		[DesignatedInitializer]
 		[Export ("initWithFrame:textContainer:")]
-		IntPtr Constructor (CGRect frameRect, NSTextContainer container);
+		NativeHandle Constructor (CGRect frameRect, NSTextContainer container);
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("replaceTextContainer:")]
 		void ReplaceTextContainer (NSTextContainer newContainer);
@@ -18731,6 +18819,16 @@ namespace AppKit {
 
 		[Export ("textStorage")]
 		NSTextStorage TextStorage { get; }
+
+		[Mac (12,0)]
+		[NullAllowed]
+		[Export ("textLayoutManager", ArgumentSemantic.Weak)]
+		NSTextLayoutManager TextLayoutManager { get; }
+
+		[Mac (12,0)]
+		[NullAllowed]
+		[Export ("textContentStorage", ArgumentSemantic.Weak)]
+		NSTextContentStorage TextContentStorage { get; }
 
 		[Export ("setConstrainedFrameSize:")]
 		void SetConstrainedFrameSize (CGSize desiredSize);
@@ -19261,37 +19359,68 @@ namespace AppKit {
 		}
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface NSTextInputClient
 	{
+#if NET
+		[Abstract]
+#endif
 		[Export ("insertText:replacementRange:")]
 		void InsertText (NSObject text, NSRange replacementRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("setMarkedText:selectedRange:replacementRange:")]
 		void SetMarkedText (NSObject text, NSRange selectedRange, NSRange replacementRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("unmarkText")]
 		void UnmarkText ();
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("selectedRange")]
 		NSRange SelectedRange { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("markedRange")]
 		NSRange MarkedRange { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("hasMarkedText")]
 		bool HasMarkedText { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("attributedSubstringForProposedRange:actualRange:")]
 		NSAttributedString GetAttributedSubstring (NSRange proposedRange, out NSRange actualRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("validAttributesForMarkedText")]
 		NSString [] ValidAttributesForMarkedText { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("firstRectForCharacterRange:actualRange:")]
 		CGRect GetFirstRect (NSRange characterRange, out NSRange actualRange);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("characterIndexForPoint:")]
 		nuint GetCharacterIndex (CGPoint point);
 
@@ -19311,6 +19440,7 @@ namespace AppKit {
 		bool DrawsVertically (nuint charIndex);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextDelegate))]
 	[Model]
 	[Protocol]
@@ -19374,12 +19504,12 @@ namespace AppKit {
 		[Export ("textView:didCheckTextInRange:types:options:results:orthography:wordCount:"), DelegateName ("NSTextViewTextChecked"), DefaultValueFromArgument ("results")]
 		NSTextCheckingResult [] DidCheckText (NSTextView view, NSRange range, NSTextCheckingTypes checkingTypes, NSDictionary options, NSTextCheckingResult [] results, NSOrthography orthography, nint wordCount);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("textView:draggedCell:inRect:event:"), EventArgs ("NSTextViewDraggedCell")]
 		void DraggedCell (NSTextView view, NSTextAttachmentCell cell, CGRect rect, NSEvent theevent);
 #else
-		[Export ("textView:draggedCell:inRect:event:"), EventArgs ("NSTextViewDraggedCell")]
-		void DraggedCell (NSTextView view, NSTextAttachmentCell cell, CGRect rect, NSEvent theEvent);
+		[Export ("textView:draggedCell:inRect:event:atIndex:"), EventArgs ("NSTextViewDraggedCell")]
+		void DraggedCell (NSTextView view, NSTextAttachmentCell cell, CGRect rect, NSEvent theEvent, nuint charIndex);
 #endif
 
 		[Export ("undoManagerForTextView:"), DelegateName ("NSTextViewGetUndoManager"), DefaultValue (null)]
@@ -19404,11 +19534,11 @@ namespace AppKit {
 
 	}
 	
-	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTextField))]
 	interface NSTokenField {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("tokenStyle")]
 		NSTokenStyle TokenStyle { get; set; }
@@ -19436,6 +19566,7 @@ namespace AppKit {
 		NSCharacterSet CharacterSet { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -19473,16 +19604,17 @@ namespace AppKit {
 
 	}
 
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSToolbarDelegate)})]
 	[DisableDefaultCtor] // init was added in 10.13
 	partial interface NSToolbar {
 		[Mac (10, 13)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("insertItemWithItemIdentifier:atIndex:")]
 		void InsertItem (string itemIdentifier, nint index);
@@ -19491,7 +19623,7 @@ namespace AppKit {
 		void RemoveItem (nint index);
 
 		[Export ("runCustomizationPalette:")]
-		void RunCustomizationPalette (NSObject sender);
+		void RunCustomizationPalette ([NullAllowed] NSObject sender);
 
 		[Export ("customizationPaletteIsRunning")]
 		bool IsCustomizationPaletteRunning { get; }
@@ -19502,6 +19634,7 @@ namespace AppKit {
 		[Export ("items")]
 		NSToolbarItem [] Items { get; }
 
+		[NullAllowed]
 		[Export ("visibleItems")]
 		NSToolbarItem [] VisibleItems { get; }
 
@@ -19543,6 +19676,7 @@ namespace AppKit {
 		[Export ("autosavesConfiguration")]
 		bool AutosavesConfiguration { get; set; }
 
+		[NoMacCatalyst]
 		[Field ("NSToolbarSeparatorItemIdentifier")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Ignored by system.")]
 		NSString NSToolbarSeparatorItemIdentifier { get; }
@@ -19559,6 +19693,7 @@ namespace AppKit {
 		[Field ("NSToolbarShowFontsItemIdentifier")]
 		NSString NSToolbarShowFontsItemIdentifier { get; }
 		
+		[NoMacCatalyst]
 		[Field ("NSToolbarCustomizeToolbarItemIdentifier")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Ignored by system.")]
 		NSString NSToolbarCustomizeToolbarItemIdentifier { get; }
@@ -19582,14 +19717,27 @@ namespace AppKit {
 		[NullAllowed, Export ("centeredItemIdentifier")]
 		string CenteredItemIdentifier { get; set; }
 
+		[NoMacCatalyst]
 		[Mac (11, 0)]
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
+
+		// https://github.com/xamarin/xamarin-macios/issues/12871
+		// [MacCatalyst (14,0)][NoMac]
+		// [Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier")]
+		// NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
+
+		// https://github.com/xamarin/xamarin-macios/issues/12871
+		// [MacCatalyst (14,0)][NoMac]
+		// [Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
+		// NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
 	}
 
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface NSToolbarDelegate {
+		[return: NullAllowed]
 		[Export ("toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:"), DelegateName ("NSToolbarWillInsert"), DefaultValue (null)]
 		NSToolbarItem WillInsertItem (NSToolbar toolbar, string itemIdentifier, bool willBeInserted);
 
@@ -19609,6 +19757,7 @@ namespace AppKit {
 		void DidRemoveItem (NSNotification notification);
 	}
 
+	[NoMacCatalyst]
 	[Mac (10, 14)]
 	[Protocol]
 	interface NSToolbarItemValidation
@@ -19619,6 +19768,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSObject))]
 	interface NSObject_NSToolbarItemValidation
@@ -19627,15 +19777,17 @@ namespace AppKit {
 		bool ValidateToolbarItem (NSToolbarItem item);
 	}
 
+	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSToolbarItem : NSCopying, NSMenuItemValidation, NSValidatedUserInterfaceItem {
 		[DesignatedInitializer]
 		[Export ("initWithItemIdentifier:")]
-		IntPtr Constructor (string itemIdentifier);
+		NativeHandle Constructor (string itemIdentifier);
 
 		[Export ("itemIdentifier")]
 		string Identifier { get; }
 
+		[NullAllowed]
 		[Export ("toolbar")]
 		NSToolbar Toolbar { get; }
 
@@ -19655,6 +19807,7 @@ namespace AppKit {
 		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
+		[NoMacCatalyst]
 		[Export ("menuFormRepresentation", ArgumentSemantic.Retain)]
 		NSMenuItem MenuFormRepresentation { get; set; }
 
@@ -19677,15 +19830,16 @@ namespace AppKit {
 		[Export ("image", ArgumentSemantic.Retain), NullAllowed]
 		NSImage Image { get; set; }
 
+		[NoMacCatalyst]
 		[Export ("view", ArgumentSemantic.Retain)]
 		NSView View { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use system constraints instead.")]
 		[Export ("minSize")]
-		[Advice ("Use system constraints instead.")]
 		CGSize MinSize { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use system constraints instead.")]
 		[Export ("maxSize")]
-		[Advice ("Use system constraints instead.")]
 		CGSize MaxSize { get; set; }
 
 		[Export ("visibilityPriority")]
@@ -19705,14 +19859,21 @@ namespace AppKit {
 		[Mac (11, 0), iOS (14, 0)]
 		[Export ("navigational")]
 		bool Navigational { [Bind ("isNavigational")] get; set; }
+
+		[NoMac]
+		[MacCatalyst (13, 0)]
+		[Export ("itemMenuFormRepresentation", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		UIMenuElement ItemMenuFormRepresentation { get; set; }
 	}
 
+	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSToolbarItemGroup
 	{
 		[Export ("initWithItemIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string itemIdentifier);
+		NativeHandle Constructor (string itemIdentifier);
 
 		[Export ("subitems", ArgumentSemantic.Copy)]
 		NSToolbarItem[] Subitems { get; set; }
@@ -19748,6 +19909,7 @@ namespace AppKit {
 		bool GetSelected (nint index);
 	}
 
+	[NoMacCatalyst]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTouch : NSCopying {
@@ -19771,6 +19933,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSTouch))]
 	interface NSTouch_NSTouchBar
@@ -19787,6 +19950,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[Mac (10,12,2)]
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof(NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTouchBarDelegate)})]
 	interface NSTouchBar : NSCoding
 	{
@@ -19811,6 +19975,7 @@ namespace AppKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INSTouchBarDelegate Delegate { get; set; }
 
+		[return: NullAllowed]
 		[Export ("itemForIdentifier:")]
 		NSTouchBarItem GetItemForIdentifier (string identifier);
 
@@ -19828,6 +19993,7 @@ namespace AppKit {
 
 	interface INSTouchBarDelegate { }
 
+	[MacCatalyst (13, 0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSTouchBarDelegate
@@ -19838,16 +20004,17 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSTouchBarItem : NSCoding
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Wrap ("this (identifier.GetConstant ())")]
-		IntPtr Constructor (NSTouchBarItemIdentifier identifier);
+		NativeHandle Constructor (NSTouchBarItemIdentifier identifier);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -19855,9 +20022,11 @@ namespace AppKit {
 		[Export ("visibilityPriority")]
 		float VisibilityPriority { get; set; }
 
+		[NoMacCatalyst]
 		[NullAllowed, Export ("view")]
 		NSView View { get; }
 
+		[NoMacCatalyst]
 		[NullAllowed, Export ("viewController")]
 		NSViewController ViewController { get; }
 
@@ -19871,41 +20040,53 @@ namespace AppKit {
 	[Mac (10,12,2)]
 	public enum NSTouchBarItemIdentifier
 	{
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierFixedSpaceSmall")]
 		FixedSpaceSmall,
 
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierFixedSpaceLarge")]
 		FixedSpaceLarge,
 
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierFlexibleSpace")]
 		FlexibleSpace,
 
+		[MacCatalyst (13, 0)]
 		[Field ("NSTouchBarItemIdentifierOtherItemsProxy")]
 		OtherItemsProxy,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierCharacterPicker")]
 		CharacterPicker,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextColorPicker")]
 		TextColorPicker,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextStyle")]
 		TextStyle,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextAlignment")]
 		TextAlignment,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextList")]
 		TextList,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierTextFormat")]
 		TextFormat,
 
+		[NoMacCatalyst]
 		[Field ("NSTouchBarItemIdentifierCandidateList")]
 		CandidateList
 	}
 
 	[Mac (10, 12, 2)]
+	[MacCatalyst (13, 0)]
 	[Protocol]
 	interface NSTouchBarProvider
 	{
@@ -19916,10 +20097,11 @@ namespace AppKit {
 
 	interface INSTouchBarProvider { }
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSTrackingArea : NSCoding, NSCopying {
 		[Export ("initWithRect:options:owner:userInfo:")]
-		IntPtr Constructor (CGRect rect, NSTrackingAreaOptions options, NSObject owner, [NullAllowed] NSDictionary userInfo);
+		NativeHandle Constructor (CGRect rect, NSTrackingAreaOptions options, NSObject owner, [NullAllowed] NSDictionary userInfo);
 		
 		[Export ("rect")]
 		CGRect Rect { get; }
@@ -19934,13 +20116,14 @@ namespace AppKit {
 		NSDictionary UserInfo { get; }
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSTreeNode {
 		[Static, Export ("treeNodeWithRepresentedObject:")]
 		NSTreeNode FromRepresentedObject (NSObject modelObject);
 
 		[Export ("initWithRepresentedObject:")]
-		IntPtr Constructor (NSObject modelObject);
+		NativeHandle Constructor (NSObject modelObject);
 
 		[Export ("representedObject")]
 		NSObject RepresentedObject { get; }
@@ -19968,6 +20151,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObjectController))]
 	interface NSTreeController {
 		[Export ("rearrangeObjects")]
@@ -20083,6 +20267,7 @@ namespace AppKit {
 		string LeafKeyPathForNode (NSTreeNode node);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTypesetter {
 
@@ -20090,6 +20275,7 @@ namespace AppKit {
 
 	delegate void NSWindowTrackEventsMatchingCompletionHandler (NSEvent evt, ref bool stop);
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSWindowDelegate)})]
 	[DisableDefaultCtor]
 	partial interface NSWindow : NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility, NSMenuItemValidation, NSUserInterfaceValidations {
@@ -20115,17 +20301,17 @@ namespace AppKit {
 		CGRect ContentRectFor (CGRect frameRect);
 
 		[Export ("init")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
-		IntPtr Constructor ();
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
+		NativeHandle Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
-		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
+		NativeHandle Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	
 		[Export ("initWithContentRect:styleMask:backing:defer:screen:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
-		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen  screen);
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
+		NativeHandle Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen  screen);
 	
 		[Export ("title")]
 		string Title  { get; set; }
@@ -20145,7 +20331,7 @@ namespace AppKit {
 		[Export ("isExcludedFromWindowsMenu")]
 		bool ExcludedFromWindowsMenu { get; } 
 	
-		[Export ("contentView", ArgumentSemantic.Retain)]
+		[Export ("contentView", ArgumentSemantic.Retain)][NullAllowed]
 		NSView ContentView  { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
@@ -20213,7 +20399,7 @@ namespace AppKit {
 		[Export ("contentAspectRatio")]
 		CGSize ContentAspectRatio  { get; set; }
 	
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("useOptimizedDrawing:")]
 		void UseOptimizedDrawing (bool flag);
 	
@@ -20264,9 +20450,10 @@ namespace AppKit {
 	
 		[Export ("resizeFlags")]
 		nint ResizeFlags { get; }
-	
-		[Export ("keyDown:")]
-		void KeyDown (NSEvent  theEvent);
+
+		// Inherits from NSResponder
+		// [Export ("keyDown:")]
+		// void KeyDown (NSEvent  theEvent);
 	
 		/* NSWindow.Close by default calls [window release]
 		 * This will cause a double free in our code since we're not aware of this
@@ -20398,11 +20585,11 @@ namespace AppKit {
 		[Export ("preventsApplicationTerminationWhenModal")]
 		bool PreventsApplicationTerminationWhenModal  { get; set; }
 	
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use ConvertRectToScreen instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use ConvertRectToScreen instead.")]
 		[Export ("convertBaseToScreen:")]
 		CGPoint ConvertBaseToScreen (CGPoint aPoint);
 	
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use ConvertRectFromScreen instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use ConvertRectFromScreen instead.")]
 		[Export ("convertScreenToBase:")]
 		CGPoint ConvertScreenToBase (CGPoint aPoint);
 	
@@ -20415,7 +20602,7 @@ namespace AppKit {
 		[Export ("performZoom:")]
 		void PerformZoom ([NullAllowed] NSObject sender);
 	
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("gState")]
 		nint GState ();
 	
@@ -20476,7 +20663,7 @@ namespace AppKit {
 		[Export ("deepestScreen")]
 		NSScreen DeepestScreen { get; }
 	
-		[Availability (Deprecated = Platform.Mac_10_10)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("canStoreColor")]
 		bool CanStoreColor { get; }
 	
@@ -20600,14 +20787,18 @@ namespace AppKit {
 		[Export ("mouseLocationOutsideOfEventStream")]
 		CGPoint MouseLocationOutsideOfEventStream { get; }
 	
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "This method does not do anything and should not be called.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "This method does not do anything and should not be called.")]
 		[Static]
 		[Export ("menuChanged:")]
 		void MenuChanged (NSMenu  menu);
 	
 		[Export ("windowController")]
 		[NullAllowed]
+#if NET
+		NSWindowController WindowController { get; set; }
+#else
 		NSObject WindowController { get; set; }
+#endif
 	
 		[Export ("isSheet")]
 		bool IsSheet { get; }
@@ -20638,7 +20829,7 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Add instances of NSView to display content in a window.")]
 		NSGraphicsContext GraphicsContext { get; }
 	
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("userSpaceScaleFactor")]
 		nfloat UserSpaceScaleFactor { get; }
 	
@@ -20763,91 +20954,121 @@ namespace AppKit {
 		[Export ("animationBehavior")]
 		NSWindowAnimationBehavior AnimationBehavior { get; set; }
 
-#if !MONOMAC
 		//
 		// Fields
 		//
+
 		[Field ("NSWindowDidBecomeKeyNotification")]
+		[Notification]
 		NSString DidBecomeKeyNotification { get; }
 
 		[Field ("NSWindowDidBecomeMainNotification")]
+		[Notification]
 		NSString DidBecomeMainNotification { get; }
 
 		[Field ("NSWindowDidChangeScreenNotification")]
+		[Notification]
 		NSString DidChangeScreenNotification { get; }
 
 		[Field ("NSWindowDidDeminiaturizeNotification")]
+		[Notification]
 		NSString DidDeminiaturizeNotification { get; }
 
 		[Field ("NSWindowDidExposeNotification")]
+		[Notification (typeof (NSWindowExposeEventArgs))]
 		NSString DidExposeNotification { get; }
 
 		[Field ("NSWindowDidMiniaturizeNotification")]
+		[Notification]
 		NSString DidMiniaturizeNotification { get; }
 
 		[Field ("NSWindowDidMoveNotification")]
+		[Notification]
 		NSString DidMoveNotification { get; }
 
 		[Field ("NSWindowDidResignKeyNotification")]
+		[Notification]
 		NSString DidResignKeyNotification { get; }
 
 		[Field ("NSWindowDidResignMainNotification")]
+		[Notification]
 		NSString DidResignMainNotification { get; }
 
 		[Field ("NSWindowDidResizeNotification")]
+		[Notification]
 		NSString DidResizeNotification { get; }
 
 		[Field ("NSWindowDidUpdateNotification")]
+		[Notification]
 		NSString DidUpdateNotification { get; }
 
 		[Field ("NSWindowWillCloseNotification")]
+		[Notification]
 		NSString WillCloseNotification { get; }
 
 		[Field ("NSWindowWillMiniaturizeNotification")]
+		[Notification]
 		NSString WillMiniaturizeNotification { get; }
 
 		[Field ("NSWindowWillMoveNotification")]
+		[Notification]
 		NSString WillMoveNotification { get; }
 
 		[Field ("NSWindowWillBeginSheetNotification")]
+		[Notification]
 		NSString WillBeginSheetNotification { get; }
 
 		[Field ("NSWindowDidEndSheetNotification")]
+		[Notification]
 		NSString DidEndSheetNotification { get; }
 
 		[Field ("NSWindowDidChangeScreenProfileNotification")]
+		[Notification]
 		NSString DidChangeScreenProfileNotification { get; }
 
 		[Field ("NSWindowWillStartLiveResizeNotification")]
+		[Notification]
 		NSString WillStartLiveResizeNotification { get; }
 
 		[Field ("NSWindowDidEndLiveResizeNotification")]
+		[Notification]
 		NSString DidEndLiveResizeNotification { get; }
 
 		[Field ("NSWindowWillEnterFullScreenNotification")]
+		[Notification]
 		NSString WillEnterFullScreenNotification { get; }
 
 		[Field ("NSWindowDidEnterFullScreenNotification")]
+		[Notification]
 		NSString DidEnterFullScreenNotification { get; }
 
 		[Field ("NSWindowWillExitFullScreenNotification")]
+		[Notification]
 		NSString WillExitFullScreenNotification { get; }
 
 		[Field ("NSWindowDidExitFullScreenNotification")]
+		[Notification]
 		NSString DidExitFullScreenNotification { get; }
 
 		[Field ("NSWindowWillEnterVersionBrowserNotification")]
+		[Notification]
 		NSString WillEnterVersionBrowserNotification { get; }
 
 		[Field ("NSWindowDidEnterVersionBrowserNotification")]
+		[Notification]
 		NSString DidEnterVersionBrowserNotification { get; }
 
 		[Field ("NSWindowWillExitVersionBrowserNotification")]
+		[Notification]
 		NSString WillExitVersionBrowserNotification { get; }
 
 		[Field ("NSWindowDidExitVersionBrowserNotification")]
+		[Notification]
 		NSString DidExitVersionBrowserNotification { get; }
-#endif
+
+		[Field ("NSWindowDidChangeBackingPropertiesNotification")]
+		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
+		NSString DidChangeBackingPropertiesNotification { get; }
 
 		// 10.10
 		[Mac (10,10)]
@@ -20981,10 +21202,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController))]
 	interface NSTitlebarAccessoryViewController : NSAnimationDelegate, NSAnimatablePropertyContainer {
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("layoutAttribute")]
 		NSLayoutAttribute LayoutAttribute { get; set; }
@@ -21014,10 +21236,11 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface NSVisualEffectView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("material")]
 		NSVisualEffectMaterial Material { get; set; }
@@ -21047,29 +21270,33 @@ namespace AppKit {
 		bool Emphasized { [Bind ("isEmphasized")] get; set; }
 	}
 	
+	[NoMacCatalyst]
 	delegate void NSWindowCompletionHandler (NSWindow window, NSError error);
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
 	partial interface NSWindowRestoration {
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static]
 		[Export ("restoreWindowWithIdentifier:state:completionHandler:")]
 		void RestoreWindow (string identifier, NSCoder state, NSWindowCompletionHandler onCompletion);
-
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder))]
 	interface NSWindowController : NSCoding, NSSeguePerforming {
 		[DesignatedInitializer]
 		[Export ("initWithWindow:")]
-		IntPtr Constructor (NSWindow  window);
+		NativeHandle Constructor (NSWindow  window);
 	
 		[Export ("initWithWindowNibName:")]
-		IntPtr Constructor (string  windowNibName);
+		NativeHandle Constructor (string  windowNibName);
 	
 		[Export ("initWithWindowNibName:owner:")]
-		IntPtr Constructor (string  windowNibName, NSObject owner);
+		NativeHandle Constructor (string  windowNibName, NSObject owner);
 	
 		[Export ("windowNibName")]
 		string WindowNibName { get; }
@@ -21136,6 +21363,7 @@ namespace AppKit {
 		void DismissController (NSObject sender);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -21285,6 +21513,7 @@ namespace AppKit {
 		void DidChangeBackingProperties (NSNotification notification);
 	}
 
+	[NoMacCatalyst]
 	interface NSWorkspaceRenamedEventArgs {
 		[Export ("NSWorkspaceVolumeLocalizedNameKey")]
 		string VolumeLocalizedName { get; }
@@ -21299,6 +21528,7 @@ namespace AppKit {
 		NSUrl OldVolumeUrl { get; }
 	}
 
+	[NoMacCatalyst]
 	interface NSWorkspaceMountEventArgs {
 		[Export ("NSWorkspaceVolumeLocalizedNameKey")]
 		string VolumeLocalizedName { get; }
@@ -21307,11 +21537,13 @@ namespace AppKit {
 		NSUrl VolumeUrl { get; }
 	}
 
+	[NoMacCatalyst]
 	interface NSWorkspaceApplicationEventArgs {
 		[Export ("NSWorkspaceApplicationKey")]
 		NSRunningApplication Application { get; }
 	}
 
+	[NoMacCatalyst]
 	interface NSWorkspaceFileOperationEventArgs {
 		[Export ("NSOperationNumber")]
 		nint FileType { get; }
@@ -21319,6 +21551,7 @@ namespace AppKit {
 	
 	delegate void NSWorkspaceUrlHandler (NSDictionary newUrls, NSError error);
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSWorkspace : NSWorkspaceAccessibilityExtensions {
 		[Static]
@@ -21376,8 +21609,8 @@ namespace AppKit {
 		[Export ("noteFileSystemChanged:")]
 		void NoteFileSystemChanged (string path);
 		
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'NSWorkspace.UrlForApplication' or 'NSUrl.GetResourceValue' instead.")]
 		[Export ("getInfoForFile:application:type:"), ThreadSafe]
-		[Advice ("Use 'NSWorkspace.UrlForApplication' or 'NSUrl.GetResourceValue' instead.")]
 		bool GetInfo (string fullPath, out string appName, out string fileType);
 		
 		[Export ("isFilePackageAtPath:"), ThreadSafe]
@@ -21389,6 +21622,7 @@ namespace AppKit {
 		[Export ("iconForFiles:"), ThreadSafe]
 		NSImage IconForFiles (string[] fullPaths);
 		
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'NSWorkspace.GetIcon' instead.")]
 		[Export ("iconForFileType:"), ThreadSafe, Internal]
 		NSImage IconForFileType (IntPtr fileTypeOrTypeCode);
 		
@@ -21439,6 +21673,43 @@ namespace AppKit {
 		
 		[Export ("URLForApplicationToOpenURL:"), ThreadSafe]
 		NSUrl UrlForApplication (NSUrl url );
+
+		[Mac (12,0)]
+		[Export ("URLsForApplicationsWithBundleIdentifier:")]
+		NSUrl[] GetUrlsForApplications (string bundleIdentifier);
+
+		[Mac (12,0)]
+		[Export ("URLsForApplicationsToOpenURL:")]
+		NSUrl[] GetUrlsForApplications (NSUrl url);
+
+		[Async]
+		[Mac (12,0)]
+		[Export ("setDefaultApplicationAtURL:toOpenContentTypeOfFileAtURL:completionHandler:")]
+		void SetDefaultApplicationToOpenContentType (NSUrl applicationUrl, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[Mac (12,0)]
+		[Export ("setDefaultApplicationAtURL:toOpenURLsWithScheme:completionHandler:")]
+		void SetDefaultApplicationToOpenUrls (NSUrl applicationUrl, string urlScheme, [NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[Mac (12,0)]
+		[Export ("setDefaultApplicationAtURL:toOpenFileAtURL:completionHandler:")]
+		void SetDefaultApplicationToOpenFile (NSUrl applicationUrl, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
+
+		[Mac (12,0)]
+		[Export ("URLForApplicationToOpenContentType:")]
+		[return: NullAllowed]
+		NSUrl GetUrlForApplicationToOpenContentType (UTType contentType);
+
+		[Mac (12,0)]
+		[Export ("URLsForApplicationsToOpenContentType:")]
+		NSUrl[] GetUrlsForApplicationsToOpenContentType (UTType contentType);
+
+		[Async]
+		[Mac (12,0)]
+		[Export ("setDefaultApplicationAtURL:toOpenContentType:completionHandler:")]
+		void SetDefaultApplicationToOpenContentType (NSUrl applicationUrl, UTType contentType, [NullAllowed] Action<NSError> completionHandler);
 		
 		[Export ("absolutePathForAppBundleWithIdentifier:"), ThreadSafe]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'UrlForApplication' method instead.")]
@@ -21461,23 +21732,23 @@ namespace AppKit {
 		[Export ("activeApplication")]
 		NSDictionary ActiveApplication { get; }
 		
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'NSUrl.GetResourceValue' instead.")]
 		[Export ("typeOfFile:error:"), ThreadSafe]
-		[Advice ("Use 'NSUrl.GetResourceValue' instead.")]
 		string TypeOfFile (string absoluteFilePath, out NSError outError);
 		
-		[Advice ("Use 'UTType.LocalizedDescription' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'UTType.LocalizedDescription' instead.")]
 		[Export ("localizedDescriptionForType:"), ThreadSafe]
 		string LocalizedDescription (string typeName);
 		
-		[Advice ("Use 'UTType.PreferredFilenameExtension' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'UTType.PreferredFilenameExtension' instead.")]
 		[Export ("preferredFilenameExtensionForType:"), ThreadSafe]
 		string PreferredFilenameExtension (string typeName);
 		
-		[Advice ("Compare against 'UTType.GetTypes' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Compare against 'UTType.GetTypes' instead.")]
 		[Export ("filenameExtension:isValidForType:"), ThreadSafe]
 		bool IsFilenameExtensionValid (string filenameExtension, string typeName);
 		
-		[Advice ("Use 'UTType.ConformsToType' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'UTType.ConformsToType' instead.")]
 		[Export ("type:conformsToType:"), ThreadSafe]
 		bool TypeConformsTo (string firstTypeName, string secondTypeName);
 		
@@ -21660,11 +21931,13 @@ namespace AppKit {
 	}
 	
 	[Mac (10,14)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSWorkspaceAuthorization {
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe] // NSRunningApplication is documented to be thread-safe.
 	partial interface NSRunningApplication {
@@ -21679,28 +21952,34 @@ namespace AppKit {
 		
 		[Export ("active")]
 		bool Active { [Bind ("isActive")] get;  }
-		
+
 		[Export ("activationPolicy")]
 		NSApplicationActivationPolicy ActivationPolicy { get;  }
-		
+
+		[NullAllowed]
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get;  }
-		
+
+		[NullAllowed]
 		[Export ("bundleIdentifier", ArgumentSemantic.Copy)]
 		string BundleIdentifier { get;  }
-		
+
+		[NullAllowed]
 		[Export ("bundleURL", ArgumentSemantic.Copy)]
 		NSUrl BundleUrl { get;  }
-		
+
+		[NullAllowed]
 		[Export ("executableURL", ArgumentSemantic.Copy)]
 		NSUrl ExecutableUrl { get;  }
 
 		[Export ("processIdentifier")]
 		int ProcessIdentifier { get;  } /* pid_t = int */
-		
+
+		[NullAllowed]
 		[Export ("launchDate", ArgumentSemantic.Copy)]
 		NSDate LaunchDate { get;  }
 		
+		[NullAllowed]
 		[Export ("icon", ArgumentSemantic.Strong)]
 		NSImage Icon { get;  }
 		
@@ -21738,10 +22017,11 @@ namespace AppKit {
 		bool OwnsMenuBar { get; }
 	}	
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
 	interface NSStepper : NSAccessibilityStepper {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		//Detected properties
 		[Export ("minValue")]
@@ -21761,6 +22041,7 @@ namespace AppKit {
 
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof(NSActionCell))]
 	interface NSStepperCell
 	{
@@ -21780,7 +22061,7 @@ namespace AppKit {
 		bool Autorepeat { get; set; }
 	}
 
-	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPredicateEditorRowTemplate : NSCoding, NSCopying {
 		[Export ("matchForPredicate:")]
@@ -21800,14 +22081,14 @@ namespace AppKit {
 
 		[Export ("initWithLeftExpressions:rightExpressions:modifier:operators:options:")]
 		//NSObject InitWithLeftExpressionsrightExpressionsmodifieroperatorsoptions (NSArray leftExpressions, NSArray rightExpressions, NSComparisonPredicateModifier modifier, NSArray operators, uint options);
-		IntPtr Constructor (NSExpression[] leftExpressions, NSExpression[] rightExpressions, NSComparisonPredicateModifier modifier, NSObject[] operators, NSComparisonPredicateOptions options);
+		NativeHandle Constructor (NSExpression[] leftExpressions, NSExpression[] rightExpressions, NSComparisonPredicateModifier modifier, NSObject[] operators, NSComparisonPredicateOptions options);
 
 		[Export ("initWithLeftExpressions:rightExpressionAttributeType:modifier:operators:options:")]
 		//NSObject InitWithLeftExpressionsrightExpressionAttributeTypemodifieroperatorsoptions (NSArray leftExpressions, NSAttributeType attributeType, NSComparisonPredicateModifier modifier, NSArray operators, uint options);
-		IntPtr Constructor (NSExpression[] leftExpressions, NSAttributeType attributeType, NSComparisonPredicateModifier modifier, NSObject[] operators, NSComparisonPredicateOptions options);
+		NativeHandle Constructor (NSExpression[] leftExpressions, NSAttributeType attributeType, NSComparisonPredicateModifier modifier, NSObject[] operators, NSComparisonPredicateOptions options);
 
 		[Export ("initWithCompoundTypes:")]
-		IntPtr Constructor (NSNumber[] compoundTypes);
+		NativeHandle Constructor (NSNumber[] compoundTypes);
 
 		[Export ("leftExpressions")]
 		NSExpression[] LeftExpressions { get; }
@@ -21838,6 +22119,7 @@ namespace AppKit {
 	}
 
 	[Mac(10,10,3)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSPressureConfiguration
 	{
@@ -21846,16 +22128,17 @@ namespace AppKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithPressureBehavior:")]
-		IntPtr Constructor (NSPressureBehavior pressureBehavior);
+		NativeHandle Constructor (NSPressureBehavior pressureBehavior);
 
 		[Export ("set")]
 		void Set ();
 	}
    
+	[NoMacCatalyst]
 	[BaseType (typeof (NSControl), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSRuleEditorDelegate)})]
 	partial interface NSRuleEditor {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("reloadCriteria")]
 		void ReloadCriteria ();
@@ -21953,6 +22236,7 @@ namespace AppKit {
 		string DisplayValuesKeyPath { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -21969,11 +22253,15 @@ namespace AppKit {
 		[Export ("ruleEditor:displayValueForCriterion:inRow:"), DelegateName ("NSRulerEditorDisplayValue"), DefaultValue(null)]
 		NSObject DisplayValue (NSRuleEditor editor, NSObject criterion, nint row);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("ruleEditor:predicatePartsForCriterion:withDisplayValue:inRow:"), DelegateName ("NSRulerEditorPredicateParts"), DefaultValue(null)]
 		NSDictionary PredicateParts (NSRuleEditor editor, NSObject criterion, NSObject value, nint row);
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("ruleEditorRowsDidChange:"), EventArgs ("NSNotification")]
 		void RowsDidChange (NSNotification notification);
 		
@@ -21988,6 +22276,7 @@ namespace AppKit {
 
 	}
    
+	[NoMacCatalyst]
 	[BaseType (typeof (NSRuleEditor))]
 	interface NSPredicateEditor {
 		//Detected properties
@@ -22000,6 +22289,7 @@ namespace AppKit {
 	
 	delegate void NSSharingServiceHandler ();
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSSharingServiceDelegate) })]
@@ -22030,7 +22320,7 @@ namespace AppKit {
 		
 		[DesignatedInitializer]
 		[Export ("initWithTitle:image:alternateImage:handler:")]
-		IntPtr Constructor (string title, NSImage image, NSImage alternateImage, NSSharingServiceHandler handler);
+		NativeHandle Constructor (string title, NSImage image, NSImage alternateImage, NSSharingServiceHandler handler);
 		
 		[Export ("canPerformWithItems:")]
 		bool CanPerformWithItems ([NullAllowed] NSObject [] items);
@@ -22067,6 +22357,7 @@ namespace AppKit {
 		NSUrl [] AttachmentFileUrls { get; }
 	}
 
+	[NoMacCatalyst]
 	enum NSSharingServiceName {
 
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
@@ -22147,6 +22438,7 @@ namespace AppKit {
 		UseAsLinkedInProfileImage,
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -22179,6 +22471,7 @@ namespace AppKit {
 
 	[Protocol, Model]
 	[Mac (10, 12)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSSharingServiceDelegate))]
 	interface NSCloudSharingServiceDelegate
 	{
@@ -22195,6 +22488,7 @@ namespace AppKit {
 		void Stopped (NSSharingService sharingService, CKShare share);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSSharingServicePickerDelegate) })]
@@ -22209,7 +22503,7 @@ namespace AppKit {
 		
 		[DesignatedInitializer]
 		[Export ("initWithItems:")]
-		IntPtr Constructor (NSObject [] items);
+		NativeHandle Constructor (NSObject [] items);
 		
 		[Export ("showRelativeToRect:ofView:preferredEdge:")]
 		void ShowRelativeToRect (CGRect rect, NSView view, NSRectEdge preferredEdge);
@@ -22217,6 +22511,7 @@ namespace AppKit {
 
 	interface INSSharingServicePickerDelegate {}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -22232,6 +22527,7 @@ namespace AppKit {
 		void DidChooseSharingService (NSSharingServicePicker sharingServicePicker, NSSharingService service);
 	}
 	
+	[NoMacCatalyst]
 	[BaseType (typeof (NSTypesetter))]
 	interface NSATSTypesetter {
 		[Static]
@@ -22239,6 +22535,7 @@ namespace AppKit {
 		NSATSTypesetter SharedTypesetter { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSTypesetter {
 		[Export ("substituteFontForFont:")]
 		NSFont GetSubstituteFont (NSFont originalFont);
@@ -22428,6 +22725,7 @@ namespace AppKit {
 		void SetBidiLevels (IntPtr levels, NSRange glyphRange);
 	}
 
+	[NoMacCatalyst]
 	partial interface NSCollectionViewDelegate {
 		[Export ("collectionView:pasteboardWriterForItemAtIndex:")]
 		INSPasteboardWriting PasteboardWriterForItem (NSCollectionView collectionView, nuint index);
@@ -22444,6 +22742,7 @@ namespace AppKit {
 			CGPoint screenPoint, NSDragOperation dragOperation);
 	}
 
+	[NoMacCatalyst]
 	partial interface NSColor {
 		[Static, Export ("colorWithGenericGamma22White:alpha:")]
 		NSColor FromGamma22White (nfloat white, nfloat alpha);
@@ -22455,6 +22754,7 @@ namespace AppKit {
 		NSString SystemColorsChanged { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSDocumentController {
 		[Export ("duplicateDocumentWithContentsOfURL:copying:displayName:error:")]
 		NSDocument DuplicateDocumentWithContentsOfUrl (NSUrl url, bool duplicateByCopying,
@@ -22465,12 +22765,7 @@ namespace AppKit {
 			bool displayDocument, OpenDocumentCompletionHandler completionHandler);
 	}
 
-	[Model]
-	interface NSTextLayoutOrientationProvider {
-		[Export ("layoutOrientation")]
-		NSTextLayoutOrientation LayoutOrientation { get; }
-	}
-
+	[NoMacCatalyst]
 	partial interface NSLayoutManager {
 		// FIXME: This may need some generator work, or use IntPtr for glyphs?
 		//
@@ -22503,6 +22798,7 @@ namespace AppKit {
 		NSObject Item { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSOutlineView : NSAccessibilityOutline {
 
 		[Notification, Field ("NSOutlineViewSelectionDidChangeNotification")]
@@ -22556,6 +22852,7 @@ namespace AppKit {
 		void MoveRow (nint oldIndex, nint newIndex);
 	}
 
+	[NoMacCatalyst]
 	partial interface NSOutlineViewDataSource {
 		// - (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item NS_AVAILABLE_MAC(10_7);
 		[Export ("outlineView:pasteboardWriterForItem:")]
@@ -22587,122 +22884,8 @@ namespace AppKit {
 		NSColorSpace OldColorSpace { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSWindow {
-		//
-		// Fields + Notifications
-		//
-		[Field ("NSWindowDidBecomeKeyNotification")]
-		[Notification]
-		NSString DidBecomeKeyNotification { get; }
-
-		[Field ("NSWindowDidBecomeMainNotification")]
-		[Notification]
-		NSString DidBecomeMainNotification { get; }
-
-		[Field ("NSWindowDidChangeScreenNotification")]
-		[Notification]
-		NSString DidChangeScreenNotification { get; }
-
-		[Field ("NSWindowDidDeminiaturizeNotification")]
-		[Notification]
-		NSString DidDeminiaturizeNotification { get; }
-
-		[Field ("NSWindowDidExposeNotification")]
-		[Notification (typeof (NSWindowExposeEventArgs))]
-		NSString DidExposeNotification { get; }
-
-		[Field ("NSWindowDidMiniaturizeNotification")]
-		[Notification]
-		NSString DidMiniaturizeNotification { get; }
-
-		[Field ("NSWindowDidMoveNotification")]
-		[Notification]
-		NSString DidMoveNotification { get; }
-
-		[Field ("NSWindowDidResignKeyNotification")]
-		[Notification]
-		NSString DidResignKeyNotification { get; }
-
-		[Field ("NSWindowDidResignMainNotification")]
-		[Notification]
-		NSString DidResignMainNotification { get; }
-
-		[Field ("NSWindowDidResizeNotification")]
-		[Notification]
-		NSString DidResizeNotification { get; }
-
-		[Field ("NSWindowDidUpdateNotification")]
-		[Notification]
-		NSString DidUpdateNotification { get; }
-
-		[Field ("NSWindowWillCloseNotification")]
-		[Notification]
-		NSString WillCloseNotification { get; }
-
-		[Field ("NSWindowWillMiniaturizeNotification")]
-		[Notification]
-		NSString WillMiniaturizeNotification { get; }
-
-		[Field ("NSWindowWillMoveNotification")]
-		[Notification]
-		NSString WillMoveNotification { get; }
-
-		[Field ("NSWindowWillBeginSheetNotification")]
-		[Notification]
-		NSString WillBeginSheetNotification { get; }
-
-		[Field ("NSWindowDidEndSheetNotification")]
-		[Notification]
-		NSString DidEndSheetNotification { get; }
-
-		[Field ("NSWindowDidChangeScreenProfileNotification")]
-		[Notification]
-		NSString DidChangeScreenProfileNotification { get; }
-
-		[Field ("NSWindowWillStartLiveResizeNotification")]
-		[Notification]
-		NSString WillStartLiveResizeNotification { get; }
-
-		[Field ("NSWindowDidEndLiveResizeNotification")]
-		[Notification]
-		NSString DidEndLiveResizeNotification { get; }
-
-		[Field ("NSWindowWillEnterFullScreenNotification")]
-		[Notification]
-		NSString WillEnterFullScreenNotification { get; }
-
-		[Field ("NSWindowDidEnterFullScreenNotification")]
-		[Notification]
-		NSString DidEnterFullScreenNotification { get; }
-
-		[Field ("NSWindowWillExitFullScreenNotification")]
-		[Notification]
-		NSString WillExitFullScreenNotification { get; }
-
-		[Field ("NSWindowDidExitFullScreenNotification")]
-		[Notification]
-		NSString DidExitFullScreenNotification { get; }
-
-		[Field ("NSWindowWillEnterVersionBrowserNotification")]
-		[Notification]
-		NSString WillEnterVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidEnterVersionBrowserNotification")]
-		[Notification]
-		NSString DidEnterVersionBrowserNotification { get; }
-
-		[Field ("NSWindowWillExitVersionBrowserNotification")]
-		[Notification]
-		NSString WillExitVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidExitVersionBrowserNotification")]
-		[Notification]
-		NSString DidExitVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidChangeBackingPropertiesNotification")]
-		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
-		NSString DidChangeBackingPropertiesNotification { get; }
-
 		[Mac (10, 12)]
 		[Static]
 		[Export ("allowsAutomaticWindowTabbing")]
@@ -22766,12 +22949,14 @@ namespace AppKit {
 		NSWindowTabGroup TabGroup { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSPrintOperation {
 		[Export ("preferredRenderingQuality")]
 		NSPrintRenderingQuality PreferredRenderingQuality { get; }
 	}
 
 #if !XAMCORE_4_0
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSResponder))]
  	partial interface NSControlEditingSupport {
  		[Export ("validateProposedFirstResponder:forEvent:")]
@@ -22779,6 +22964,7 @@ namespace AppKit {
  	}
 #endif
 
+	[NoMacCatalyst]
 	partial interface NSResponder {
 		[Export ("wantsScrollEventsForSwipeTrackingOnAxis:")]
 		bool WantsScrollEventsForSwipeTrackingOnAxis (NSEventGestureAxis axis);
@@ -22801,12 +22987,14 @@ namespace AppKit {
 		void ChangeMode (NSEvent withEvent);
 	}
 
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSResponder))]
 	partial interface NSStandardKeyBindingMethods {
 		[Export ("quickLookPreviewItems:")]
 		void QuickLookPreviewItems (NSObject sender);
 	}
 
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSView))]
 	partial interface NSRulerMarkerClientViewDelegation {
 		[Export ("rulerView:locationForPoint:")]
@@ -22816,12 +23004,14 @@ namespace AppKit {
 		CGPoint RulerViewPoint (NSRulerView ruler, nfloat pointForLocation);
 	}
 
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSResponder))]
 	partial interface NSTextFinderSupport {
 		[Export ("performTextFinderAction:")]
 		void PerformTextFinderAction ([NullAllowed] NSObject sender);
 	}
 
+	[NoMacCatalyst]
 	partial interface NSRunningApplication {
 		[Static, Export ("terminateAutomaticallyTerminableApplications")]
 		void TerminateAutomaticallyTerminableApplications ();
@@ -22829,6 +23019,7 @@ namespace AppKit {
 
 	delegate void NSSpellCheckerShowCorrectionIndicatorOfTypeHandler (string acceptedString);
 
+	[NoMacCatalyst]
 	partial interface NSSpellChecker {
 		[Export ("correctionForWordRange:inString:language:inSpellDocumentWithTag:")]
 		string GetCorrection (NSRange forWordRange, string inString, string language, nint inSpellDocumentWithTag);
@@ -22919,6 +23110,7 @@ namespace AppKit {
 		NSTextView NewView { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSTextView : NSTextLayoutOrientationProvider {
 		[Export ("setLayoutOrientation:")]
 		void SetLayoutOrientation (NSTextLayoutOrientation theOrientation);
@@ -22952,11 +23144,20 @@ namespace AppKit {
 		[Notification, Field ("NSTextViewDidChangeTypingAttributesNotification")]
 		NSString DidChangeTypingAttributesNotification { get; }
 
+		[Mac (12,0)]
+		[Notification, Field ("NSTextViewWillSwitchToNSLayoutManagerNotification")]
+		NSString WillSwitchToNSLayoutManagerNotification { get; }
+
+		[Mac (12,0)]
+		[Notification, Field ("NSTextViewDidSwitchToNSLayoutManagerNotification")]
+		NSString DidSwitchToNSLayoutManagerNotification { get; }
+
 		[Mac (10, 14)]
 		[Export ("usesAdaptiveColorMappingForDarkAppearance")]
 		bool UsesAdaptiveColorMappingForDarkAppearance { get; set; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSView {
 
 		[Export ("wantsUpdateLayer")]
@@ -22970,6 +23171,7 @@ namespace AppKit {
 	}
 
 #if !XAMCORE_4_0
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSApplication))]
 	partial interface NSRemoteNotifications_NSApplication {
 
@@ -22983,6 +23185,7 @@ namespace AppKit {
 		NSTextView FieldEditor { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSControl {
 
 		[Notification (typeof (NSControlTextEditingEventArgs))]
@@ -23002,6 +23205,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSViewToolTipOwner
 	{
@@ -23010,24 +23214,28 @@ namespace AppKit {
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
 
+	[NoMacCatalyst]
 	partial interface NSMatrix : NSUserInterfaceValidations, NSViewToolTipOwner {
 
 		[Export ("autorecalculatesCellSize")]
 		bool AutoRecalculatesCellSize { get; set; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSForm {
 
 		[Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSFormCell {
 
 		[Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSColor {
 
 		[Static, Export ("underPageBackgroundColor")]
@@ -23039,10 +23247,11 @@ namespace AppKit {
 
 	delegate bool NSCustomImageRepDrawingHandler (CGRect dstRect);
 
+	[NoMacCatalyst]
 	partial interface NSCustomImageRep {
 
 		[Export ("initWithSize:flipped:drawingHandler:")]
-		IntPtr Constructor (CGSize size, bool flipped, NSCustomImageRepDrawingHandler drawingHandler);
+		NativeHandle Constructor (CGSize size, bool flipped, NSCustomImageRepDrawingHandler drawingHandler);
 
 		[Export ("drawingHandler")]
 		NSCustomImageRepDrawingHandler DrawingHandler { get; }
@@ -23055,6 +23264,7 @@ namespace AppKit {
 	delegate void NSDocumentLockCompletionHandler (NSError error);
 	delegate void NSDocumentUnlockCompletionHandler (NSError error);
 
+	[NoMacCatalyst]
 	partial interface NSDocument : NSEditorRegistration, NSFilePresenter, NSMenuItemValidation
 #if XAMCORE_4_0
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
@@ -23122,6 +23332,7 @@ namespace AppKit {
 	delegate void NSDocumentControllerOpenPanelWithCompletionHandler (NSArray urlsToOpen);
 	delegate void NSDocumentControllerOpenPanelResultHandler (nint result);
 
+	[NoMacCatalyst]
 	partial interface NSDocumentController : NSMenuItemValidation 
 #if XAMCORE_4_0
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
@@ -23161,6 +23372,7 @@ namespace AppKit {
 		// int? DividerIndex { get; }
 	}
 
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSSegmentedCell))]
 	partial interface NSSegmentBackgroundStyle_NSSegmentedCell {
 
@@ -23210,6 +23422,7 @@ namespace AppKit {
 		NSString SharingServiceNamePostVideoOnTudou { get; }
 	}
 
+	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSTextView))]
 	partial interface NSTextView_SharingService {
 
@@ -23229,11 +23442,12 @@ namespace AppKit {
 		string AlternativeString { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextAlternatives : NSSecureCoding {
 
 		[Export ("initWithPrimaryString:alternativeStrings:")]
-		IntPtr Constructor (string primaryString, NSArray alternativeStrings);
+		NativeHandle Constructor (string primaryString, NSArray alternativeStrings);
 
 		[Export ("primaryString", ArgumentSemantic.Copy)]
 		string PrimaryString { get; }
@@ -23249,6 +23463,7 @@ namespace AppKit {
 		NSString SelectedAlternativeStringNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	partial interface NSGlyphInfo : NSCoding, NSCopying, NSSecureCoding {
 
@@ -23285,22 +23500,26 @@ namespace AppKit {
 		string BaseString { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSTableViewDelegate {
 
 		[Export ("tableView:toolTipForCell:rect:tableColumn:row:mouseLocation:"), DelegateName ("NSTableViewToolTip"), DefaultValue ("null")]
 		NSString GetToolTip (NSTableView tableView, NSCell cell, ref CGRect rect, [NullAllowed] NSTableColumn tableColumn, nint row, CGPoint mouseLocation);
 	}
 
+	[NoMacCatalyst]
 	partial interface NSBrowser {
 		[Notification, Field ("NSBrowserColumnConfigurationDidChangeNotification")]
 		NSString ColumnConfigurationChangedNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSColorPanel {
 		[Notification, Field ("NSColorPanelColorDidChangeNotification")]
 		NSString ColorChangedNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSFont {
 		[Notification, Field ("NSAntialiasThresholdChangedNotification")]
 		NSString AntialiasThresholdChangedNotification { get; }
@@ -23309,6 +23528,7 @@ namespace AppKit {
 		NSString FontSetChangedNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSHelpManager {
 		[Notification, Field ("NSContextHelpModeDidActivateNotification")]
 		NSString ContextHelpModeDidActivateNotification { get; }
@@ -23317,6 +23537,7 @@ namespace AppKit {
 		NSString ContextHelpModeDidDeactivateNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSDrawer {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 		[Notification, Field ("NSDrawerWillOpenNotification")]
@@ -23345,6 +23566,7 @@ namespace AppKit {
 		NSMenu MenuItem { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSMenu {
 		[Notification (typeof (NSMenuItemEventArgs))]
 		[Field ("NSMenuWillSendActionNotification")]
@@ -23373,26 +23595,31 @@ namespace AppKit {
 		NSString DidEndTrackingNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSPopUpButtonCell : NSMenuItemValidation {
 		[Notification, Field ("NSPopUpButtonCellWillPopUpNotification")]
 		NSString WillPopUpNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSPopUpButton {
 		[Notification, Field ("NSPopUpButtonWillPopUpNotification")]
 		NSString WillPopUpNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSRuleEditor {
 		[Notification, Field ("NSRuleEditorRowsDidChangeNotification")]
 		NSString RowsDidChangeNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSScreen {
 		[Notification, Field ("NSScreenColorSpaceDidChangeNotification")]
 		NSString ColorSpaceDidChangeNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSTableView : NSUserInterfaceValidations {
 		[Notification, Field ("NSTableViewSelectionDidChangeNotification")]
 		NSString SelectionDidChangeNotification { get; }
@@ -23409,6 +23636,7 @@ namespace AppKit {
 		NSString ColumnDidResizeNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSTextDidEndEditingEventArgs {
 		// FIXME: I think this is essentially a flags value
 		// of movements and characters. The docs are a bit
@@ -23417,6 +23645,7 @@ namespace AppKit {
 		nint Movement { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSText {
 		[Notification, Field ("NSTextDidBeginEditingNotification")]
 		NSString DidBeginEditingNotification { get; }
@@ -23433,17 +23662,10 @@ namespace AppKit {
 		NSString MovementUserInfoKey { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSTextInputContext {
 		[Notification, Field ("NSTextInputContextKeyboardSelectionDidChangeNotification")]
 		NSString KeyboardSelectionDidChangeNotification { get; }
-	}
-
-	partial interface NSTextStorage {
-		[Notification, Field ("NSTextStorageWillProcessEditingNotification")]
-		NSString WillProcessEditingNotification { get; }
-
-		[Notification, Field ("NSTextStorageDidProcessEditingNotification")]
-		NSString DidProcessEditingNotification { get; }
 	}
 
 	partial interface NSToolbarItemEventArgs {
@@ -23451,6 +23673,7 @@ namespace AppKit {
 		NSToolbarItem Item { get; }
 	}
 
+	[MacCatalyst (13,0)]
 	partial interface NSToolbar {
 		[Notification (typeof (NSToolbarItemEventArgs))]
 		[Field ("NSToolbarWillAddItemNotification")]
@@ -23461,6 +23684,7 @@ namespace AppKit {
 		NSString NSToolbarDidRemoveItemNotification { get; }
 	}
 
+	[NoMacCatalyst]
 	partial interface NSImageRep {
 		[Notification, Field ("NSImageRepRegistryDidChangeNotification")]
 		NSString RegistryDidChangeNotification { get; }
@@ -23469,8 +23693,66 @@ namespace AppKit {
 	interface INSAccessibility {};
 	interface INSAccessibilityElement {};
 
+	[Mac (10,10)]
+	[NoMacCatalyst]
+	[Native]
+	public enum NSAccessibilityOrientation : long
+	{
+		Unknown = 0,
+		Vertical = 1,
+		Horizontal = 2,
+	}
+
+	[Mac (10,10)]
+	[NoMacCatalyst]
+	[Native]
+	public enum NSAccessibilitySortDirection : long
+	{
+		Unknown = 0,
+		Ascending = 1,
+		Descending = 2,
+	}
+
+	[Mac (10,10)]
+	[NoMacCatalyst]
+	[Native]
+	public enum NSAccessibilityRulerMarkerType : long
+	{
+		Unknown = 0,
+		TabStopLeft = 1,
+		TabStopRight = 2,
+		TabStopCenter = 3,
+		TabStopDecimal = 4,
+		IndentHead = 5,
+		IndentTail = 6,
+		IndentFirstLine = 7,
+	}
+
+	[Mac (10,10)]
+	[NoMacCatalyst]
+	[Native]
+	public enum NSAccessibilityUnits : long
+	{
+		Unknown = 0,
+		Inches = 1,
+		Centimeters = 2,
+		Points = 3,
+		Picas = 4,
+	}
+
+	[Mac (10,9)]
+	[NoMacCatalyst]
+	[Native]
+	public enum NSAccessibilityPriorityLevel : long
+	{
+		Low = 10,
+		Medium = 50,
+		High = 90,
+	}
+
 	// 10.9 for fields/notification but 10.10 for protocol
 	// attributes added to both cases in NSAccessibility.cs
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibility
 	{
@@ -24199,7 +24481,7 @@ namespace AppKit {
 		bool IsAccessibilitySelectorAllowed (Selector selector);
 
 		[Mac (10, 12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("accessibilityRequired")]
@@ -24338,27 +24620,28 @@ namespace AppKit {
 		NSString AnnouncementRequestedNotification { get; }
 
 		[Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("accessibilityChildrenInNavigationOrder", ArgumentSemantic.Copy)]
 		NSAccessibilityElement[] AccessibilityChildrenInNavigationOrder { get; set; }
 
 		[Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("accessibilityCustomRotors", ArgumentSemantic.Copy)]
 		NSAccessibilityCustomRotor[] AccessibilityCustomRotors { get; set; }
 
 		[Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("accessibilityCustomActions", ArgumentSemantic.Copy)]
 		NSAccessibilityCustomAction[] AccessibilityCustomActions { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSCollectionViewSectionHeaderView : NSCollectionViewElement
 	{
@@ -24368,6 +24651,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 10)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSAccessibilityElement : NSAccessibility {
 		[Export ("accessibilityAddChildElement:")]
@@ -24380,6 +24664,7 @@ namespace AppKit {
 		CGRect AccessibilityFrameInParentSpace { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Static]
 	partial interface NSAccessibilityAttributes {
 		[Mac (10, 10)]
@@ -24870,6 +25155,7 @@ namespace AppKit {
 
 	[Static]
 	[Mac (10, 13)]
+	[NoMacCatalyst]
 	partial interface NSAccessibilityAnnotationAttributeKey {
 		[Field ("NSAccessibilityAnnotationLabel")]
 		NSString AnnotationLabel { get; }
@@ -24882,6 +25168,7 @@ namespace AppKit {
 	}
 
 	[Static]
+	[NoMacCatalyst]
 	interface NSAccessibilityFontKeys {
 		[Field ("NSAccessibilityFontNameKey")]
 		NSString FontNameKey { get; }
@@ -24897,6 +25184,7 @@ namespace AppKit {
 	}
 
 	[Static]
+	[NoMacCatalyst]
 	interface NSAccessibilityRoles {
 		[Field ("NSAccessibilityUnknownRole")]
 		NSString UnknownRole { get; }
@@ -25067,6 +25355,7 @@ namespace AppKit {
 	}
 
 	[Static]
+	[NoMacCatalyst]
 	interface NSAccessibilitySubroles {
 		[Field ("NSAccessibilityUnknownSubrole")]
 		NSString UnknownSubrole { get; }
@@ -25173,6 +25462,7 @@ namespace AppKit {
 
 #if !XAMCORE_4_0
 	[Static]
+	[NoMacCatalyst]
 	interface NSAccessibilityNotifications {
 		[Field ("NSAccessibilityMainWindowChangedNotification")]
 		NSString MainWindowChangedNotification { get; }
@@ -25276,6 +25566,7 @@ namespace AppKit {
 	}
 
 	[Static]
+	[NoMacCatalyst]
 	interface NSWorkspaceAccessibilityNotifications {
 		[Mac (10, 10)]
 		[Field ("NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification")]
@@ -25284,6 +25575,7 @@ namespace AppKit {
 #endif
 
 	[Static]
+	[NoMacCatalyst]
 	interface NSAccessibilityNotificationUserInfoKeys {
 		[Mac (10, 9)]
 		[Field ("NSAccessibilityUIElementsKey")]
@@ -25298,6 +25590,7 @@ namespace AppKit {
 	}
 
 	[Static]
+	[NoMacCatalyst]
 	interface NSAccessibilityActions {
 		[Field ("NSAccessibilityPressAction")]
 		NSString PressAction { get; }
@@ -25336,6 +25629,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol (Name = "NSAccessibilityElement")] // exists both as a type and a protocol in ObjC, Swift uses NSAccessibilityElementProtocol
 	interface NSAccessibilityElementProtocol {
 		[Abstract]
@@ -25354,11 +25648,13 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityGroup : NSAccessibilityElementProtocol {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityButton : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -25371,6 +25667,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilitySwitch : NSAccessibilityButton {
 		[Abstract]
@@ -25385,6 +25682,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityRadioButton : NSAccessibilityButton {
 		[Abstract]
@@ -25393,6 +25691,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityCheckBox : NSAccessibilityButton
 	{
@@ -25402,6 +25701,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityStaticText : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -25417,6 +25717,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityNavigableStaticText : NSAccessibilityStaticText {
 		[Abstract]
@@ -25438,6 +25739,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityProgressIndicator : NSAccessibilityGroup {
 		[Abstract]
@@ -25446,6 +25748,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityStepper : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -25465,6 +25768,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilitySlider : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -25485,6 +25789,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityImage : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -25493,6 +25798,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityContainsTransientUI : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -25511,6 +25817,7 @@ namespace AppKit {
 	interface INSAccessibilityRow {}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityTable : NSAccessibilityGroup {
 		[Abstract]
@@ -25554,16 +25861,19 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityOutline : NSAccessibilityTable {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityList : NSAccessibilityTable {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityRow : NSAccessibilityGroup {
 		[Abstract]
@@ -25575,6 +25885,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityLayoutArea : NSAccessibilityGroup {
 		[Abstract]
@@ -25595,50 +25906,52 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityLayoutItem : NSAccessibilityGroup {
 		[Export ("setAccessibilityFrame:")]
 		void SetAccessibilityFrame (CGRect frame);
 	}
 
+	[NoMacCatalyst]
 	interface NSObjectAccessibilityExtensions {
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeNames")]
 		NSArray AccessibilityAttributeNames { get; }
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeValue:")]
 		NSObject GetAccessibilityValue (NSString attribute);
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityIsAttributeSettable:")]
 		bool IsAccessibilityAttributeSettable (NSString attribute);
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilitySetValue:forAttribute:")]
 		void SetAccessibilityValue (NSString attribute, NSObject value);
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityParameterizedAttributeNames")]
 		NSArray AccessibilityParameterizedAttributeNames { get; }
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeValue:forParameter:")]
 		NSObject GetAccessibilityValue (NSString attribute, NSObject parameter);
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityActionNames")]
 		NSArray AccessibilityActionNames { get; }
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityActionDescription:")]
 		NSString GetAccessibilityActionDescription (NSString action);
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityPerformAction:")]
 		void AccessibilityPerformAction (NSString action);
 
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityIsIgnored")]
 		bool AccessibilityIsIgnored { get; }
 
@@ -25664,6 +25977,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 10)]
+	[NoMacCatalyst]
 	interface NSWorkspaceAccessibilityExtensions {
 		[Export ("accessibilityDisplayShouldIncreaseContrast")]
 		bool AccessibilityDisplayShouldIncreaseContrast { get; }
@@ -25695,6 +26009,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[Mac (10,12)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSFilePromiseProvider : NSPasteboardWriting
 	{
@@ -25708,10 +26023,11 @@ namespace AppKit {
 		NSObject UserInfo { get; set; }
 
 		[Export ("initWithFileType:delegate:")]
-		IntPtr Constructor (string fileType, INSFilePromiseProviderDelegate @delegate);
+		NativeHandle Constructor (string fileType, INSFilePromiseProviderDelegate @delegate);
 	}
 
 	[Mac (10,12)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSFilePromiseProviderDelegate
@@ -25720,6 +26036,9 @@ namespace AppKit {
 		[Export ("filePromiseProvider:fileNameForType:")]
 		string GetFileNameForDestination (NSFilePromiseProvider filePromiseProvider, string fileType);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
 		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
@@ -25728,6 +26047,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSFilePromiseReceiver : NSPasteboardReading
 	{
@@ -25747,6 +26067,7 @@ namespace AppKit {
 
 	interface INSValidatedUserInterfaceItem { }
 
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSValidatedUserInterfaceItem
 	{
@@ -25759,6 +26080,7 @@ namespace AppKit {
 		nint Tag { get; }
 	}
 
+	[NoMacCatalyst]
 	[Protocol]
 	[Mac (10,12)]
 	interface NSCloudSharingValidation
@@ -25769,6 +26091,7 @@ namespace AppKit {
 		CKShare GetCloudShare (INSValidatedUserInterfaceItem item);
 	}
 
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
 	[BaseType (typeof(CAOpenGLLayer))]
 	interface NSOpenGLLayer
@@ -25795,6 +26118,7 @@ namespace AppKit {
 		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
 	}
 
+	[NoMacCatalyst]
 	[Protocol (IsInformal=true)]
 	interface NSToolTipOwner
 	{
@@ -25809,6 +26133,7 @@ namespace AppKit {
 
 	[Protocol]
 	[Mac (10,11)]
+	[NoMacCatalyst]
 	interface NSUserInterfaceValidations
 	{
 		[Abstract]
@@ -25816,6 +26141,7 @@ namespace AppKit {
 		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem item);
 	}
 
+	[NoMacCatalyst]
 	[Protocol (IsInformal=true)]
 	interface NSMenuValidation
 	{
@@ -25825,6 +26151,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 14)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSMenuItemValidation
 	{
@@ -25838,13 +26165,14 @@ namespace AppKit {
 	delegate NSAttributedString AttributedStringForCandidateHandler (NSObject candidate, nint index);
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSCandidateListTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[NullAllowed, Export ("client", ArgumentSemantic.Weak)]
 		INSTextInputClient Client { get; set; }
@@ -25876,10 +26204,12 @@ namespace AppKit {
 		[Export ("setCandidates:forSelectedRange:inString:")]
 		void SetCandidates (NSObject[] candidates, NSRange selectedRange, [NullAllowed] string originalString);
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSCandidateListTouchBarItemDelegate
@@ -25901,6 +26231,7 @@ namespace AppKit {
 		void ChangedCandidateListVisibility (NSCandidateListTouchBarItem anItem, bool isVisible);
 	}
 
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSView))]
 	interface NSView_NSCandidateListTouchBarItem
@@ -25909,15 +26240,16 @@ namespace AppKit {
 		[Export ("candidateListTouchBarItem")]
 		NSCandidateListTouchBarItem GetCandidateListTouchBarItem (); 
 	}
-
+	
 	[Mac (10,12,2)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSColorPickerTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Static]
 		[Export ("colorPickerWithIdentifier:")]
@@ -25936,14 +26268,16 @@ namespace AppKit {
 		NSColorPickerTouchBarItem CreateColorPicker (string identifier, NSImage image);
 
 		[Export ("color", ArgumentSemantic.Copy)]
-		NSColor Color { get; set; }
+		Color Color { get; set; }
 
 		[Export ("showsAlpha")]
 		bool ShowsAlpha { get; set; }
 
+		[NoMacCatalyst]
 		[Export ("colorList", ArgumentSemantic.Strong)]
 		NSColorList ColorList { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -25957,18 +26291,20 @@ namespace AppKit {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
 		[Mac (10, 13)]
+		[NoMacCatalyst]
 		[NullAllowed, Export ("allowedColorSpaces", ArgumentSemantic.Copy)]
 		NSColorSpace[] AllowedColorSpaces { get; set; }
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSCustomTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("view", ArgumentSemantic.Strong)]
 		NSView View { get; set; }
@@ -25976,10 +26312,12 @@ namespace AppKit {
 		[Export ("viewController", ArgumentSemantic.Strong)]
 		NSViewController ViewController { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
 
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSGestureRecognizer))]
 	interface NSGestureRecognizer_NSTouchBar
@@ -25994,13 +26332,14 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSGroupTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Static]
 		[Export ("groupItemWithIdentifier:items:")]
@@ -26009,10 +26348,12 @@ namespace AppKit {
 		[Export ("groupTouchBar", ArgumentSemantic.Strong)]
 		NSTouchBar GroupTouchBar { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
 		[Mac (10,13)]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("groupItemWithIdentifier:items:allowedCompressionOptions:")]
 		NSGroupTouchBarItem CreateGroupItem (string identifier, NSTouchBarItem[] items, NSUserInterfaceCompressionOptions allowedCompressionOptions);
@@ -26023,6 +26364,7 @@ namespace AppKit {
 		NSGroupTouchBarItem CreateAlertStyleGroupItem (string identifier);
 
 		[Mac (10, 13)]
+		[NoMacCatalyst]
 		[Export ("groupUserInterfaceLayoutDirection", ArgumentSemantic.Assign)]
 		NSUserInterfaceLayoutDirection GroupUserInterfaceLayoutDirection { get; set; }
 
@@ -26035,29 +26377,34 @@ namespace AppKit {
 		nfloat PreferredItemWidth { get; set; }
 
 		[Mac (10, 13)]
+		[NoMacCatalyst]
 		[Export ("effectiveCompressionOptions")]
 		NSUserInterfaceCompressionOptions EffectiveCompressionOptions { get; }
 
 		[Mac (10, 13)]
+		[NoMacCatalyst]
 		[Export ("prioritizedCompressionOptions", ArgumentSemantic.Copy)]
 		NSUserInterfaceCompressionOptions[] PrioritizedCompressionOptions { get; set; }
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSPopoverTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("popoverTouchBar", ArgumentSemantic.Strong)]
 		NSTouchBar PopoverTouchBar { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
+		[NoMacCatalyst]
 		[Export ("collapsedRepresentation", ArgumentSemantic.Strong)]
 		NSView CollapsedRepresentation { get; set; }
 
@@ -26079,6 +26426,7 @@ namespace AppKit {
 		[Export ("dismissPopover:")]
 		void DismissPopover ([NullAllowed] NSObject sender);
 
+		[NoMacCatalyst]
 		[Export ("makeStandardActivatePopoverGestureRecognizer")]
 		NSGestureRecognizer MakeStandardActivatePopoverGestureRecognizer ();
 	}
@@ -26086,6 +26434,7 @@ namespace AppKit {
 	interface INSScrubberDataSource {}
 	interface INSScrubberDelegate {}
 
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSScrubberDataSource
@@ -26101,6 +26450,7 @@ namespace AppKit {
 		NSScrubberItemView GetViewForItem (NSScrubber scrubber, nint index);
 	}
 
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSScrubberDelegate
@@ -26132,6 +26482,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSScrubberSelectionStyle : NSCoding
 	{
@@ -26148,6 +26499,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSView))]
 	interface NSScrubber
 	{
@@ -26201,7 +26553,7 @@ namespace AppKit {
 
 		[Export ("initWithFrame:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("reloadData")]
 		void ReloadData ();
@@ -26238,11 +26590,12 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSView))]
 	interface NSScrubberArrangedView
 	{
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("selected")]
 		bool Selected { [Bind ("isSelected")] get; set; }
@@ -26257,18 +26610,21 @@ namespace AppKit {
 
 	// These are empty but types used in other bindings
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSScrubberArrangedView))]
 	interface NSScrubberItemView
 	{
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSScrubberArrangedView))]
 	interface NSScrubberSelectionView
 	{
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSScrubberItemView))]
 	interface NSScrubberTextItemView
 	{
@@ -26280,6 +26636,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSScrubberItemView))]
 	interface NSScrubberImageItemView
 	{
@@ -26294,6 +26651,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSScrubberLayoutAttributes : NSCopying
 	{
@@ -26313,6 +26671,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSScrubberLayout : NSCoding
 	{
@@ -26355,6 +26714,7 @@ namespace AppKit {
 		bool AutomaticallyMirrorsInRightToLeftLayout { get; }
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface NSScrubberFlowLayoutDelegate : NSScrubberDelegate
@@ -26364,6 +26724,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSScrubberLayout))]
 	interface NSScrubberFlowLayout
 	{
@@ -26378,6 +26739,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSScrubberLayout))]
 	interface NSScrubberProportionalLayout
 	{
@@ -26386,11 +26748,12 @@ namespace AppKit {
 
 		[Export ("initWithNumberOfVisibleItems:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (nint numberOfVisibleItems);
+		NativeHandle Constructor (nint numberOfVisibleItems);
 	}
 
 	public interface INSSharingServicePickerTouchBarItemDelegate {}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface NSSharingServicePickerTouchBarItemDelegate : NSSharingServicePickerDelegate
@@ -26401,14 +26764,16 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSSharingServicePickerTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
+		[NoMacCatalyst]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INSSharingServicePickerTouchBarItemDelegate Delegate { get; set; }
 
@@ -26423,6 +26788,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElementProtocol
@@ -26447,6 +26813,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSSliderAccessoryBehavior : NSCoding, NSCopying
 	{
@@ -26475,14 +26842,15 @@ namespace AppKit {
 	}
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSAccessibilityCustomAction
 	{
 		[Export ("initWithName:handler:")]
-		IntPtr Constructor (string name, [NullAllowed] Func<bool> handler);
+		NativeHandle Constructor (string name, [NullAllowed] Func<bool> handler);
 
 		[Export ("initWithName:target:selector:")]
-		IntPtr Constructor (string name, NSObject target, Selector selector);
+		NativeHandle Constructor (string name, NSObject target, Selector selector);
 
 		[Export ("name")]
 		string Name { get; set; }
@@ -26499,14 +26867,15 @@ namespace AppKit {
 	}
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSAccessibilityCustomRotor
 	{
 		[Export ("initWithLabel:itemSearchDelegate:")]
-		IntPtr Constructor (string label, INSAccessibilityCustomRotorItemSearchDelegate itemSearchDelegate);
+		NativeHandle Constructor (string label, INSAccessibilityCustomRotorItemSearchDelegate itemSearchDelegate);
 
 		[Export ("initWithRotorType:itemSearchDelegate:")]
-		IntPtr Constructor (NSAccessibilityCustomRotorType rotorType, INSAccessibilityCustomRotorItemSearchDelegate itemSearchDelegate);
+		NativeHandle Constructor (NSAccessibilityCustomRotorType rotorType, INSAccessibilityCustomRotorItemSearchDelegate itemSearchDelegate);
 
 		[Export ("type", ArgumentSemantic.Assign)]
 		NSAccessibilityCustomRotorType Type { get; set; }
@@ -26522,6 +26891,7 @@ namespace AppKit {
 	}
 	
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSAccessibilityCustomRotorSearchParameters
 	{
@@ -26536,17 +26906,18 @@ namespace AppKit {
 	}
 	
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSAccessibilityCustomRotorItemResult
 	{
 		[Export ("initWithTargetElement:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSAccessibilityElement targetElement);
+		NativeHandle Constructor (NSAccessibilityElement targetElement);
 
 		[Export ("initWithItemLoadingToken:customLabel:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSSecureCoding itemLoadingToken, string customLabel);
+		NativeHandle Constructor (INSSecureCoding itemLoadingToken, string customLabel);
 
 		[NullAllowed, Export ("targetElement", ArgumentSemantic.Weak)]
 		NSAccessibilityElement TargetElement { get; }
@@ -26564,6 +26935,7 @@ namespace AppKit {
 	interface INSAccessibilityCustomRotorItemSearchDelegate {}
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NSAccessibilityCustomRotorItemSearchDelegate
@@ -26577,6 +26949,7 @@ namespace AppKit {
 	interface INSAccessibilityElementLoading {}
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityElementLoading
 	{
@@ -26592,6 +26965,7 @@ namespace AppKit {
 	interface INSCollectionViewPrefetching { }
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSCollectionViewPrefetching
 	{
@@ -26606,13 +26980,14 @@ namespace AppKit {
 	delegate bool DownloadFontAssetsRequestCompletionHandler (NSError error);
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSFontAssetRequest : INSProgressReporting
 	{
 		[Export ("initWithFontDescriptors:options:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSFontDescriptor[] fontDescriptors, NSFontAssetRequestOptions options);
+		NativeHandle Constructor (NSFontDescriptor[] fontDescriptors, NSFontAssetRequestOptions options);
 
 		[Export ("downloadedFontDescriptors", ArgumentSemantic.Copy)]
 		NSFontDescriptor[] DownloadedFontDescriptors { get; }
@@ -26624,6 +26999,7 @@ namespace AppKit {
 		void DownloadFontAssets (DownloadFontAssetsRequestCompletionHandler completionHandler);
 	}
 
+	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof(NSObject))]
 	interface NSObject_NSFontPanelValidationAdditions
@@ -26634,16 +27010,17 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSUserInterfaceCompressionOptions : NSCopying, NSCoding
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("initWithCompressionOptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSSet<NSUserInterfaceCompressionOptions> options);
+		NativeHandle Constructor (NSSet<NSUserInterfaceCompressionOptions> options);
 
 		[Export ("containsOptions:")]
 		bool Contains (NSUserInterfaceCompressionOptions options);
@@ -26684,6 +27061,7 @@ namespace AppKit {
 	interface INSUserInterfaceCompression { }
 
 	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSUserInterfaceCompression
 	{
@@ -26701,6 +27079,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	interface NSWindowTab
 	{
@@ -26718,6 +27097,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,13)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSWindowTabGroup
@@ -26748,21 +27128,14 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[Native]
-	public enum NSTextScalingType : long
-	{
-		Standard = 0,
-		iOS,
-	}
-
-	[Mac (10,15)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSButtonTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:title:target:action:")]
@@ -26783,7 +27156,7 @@ namespace AppKit {
 		NSImage Image { get; set; }
 
 		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
-		NSColor BezelColor { get; set; }
+		Color BezelColor { get; set; }
 
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
@@ -26794,11 +27167,13 @@ namespace AppKit {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
 
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Native]
 	public enum NSCollectionLayoutSectionOrthogonalScrollingBehavior : long
 	{
@@ -26810,19 +27185,8 @@ namespace AppKit {
 		GroupPagingCentered,
 	}
 
-	[Flags, Mac (10,15)]
-	[Native]
-	public enum NSDirectionalRectEdge : ulong
-	{
-		None = 0x0,
-		Top = 1uL << 0,
-		Leading = 1uL << 1,
-		Bottom = 1uL << 2,
-		Trailing = 1uL << 3,
-		All = Top | Leading | Bottom | Trailing,
-	}
-
 	[Mac (10,15)]
+	[MacCatalyst (13,0)]
 	[Native]
 	public enum NSPickerTouchBarItemControlRepresentation : long
 	{
@@ -26832,6 +27196,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
+	[MacCatalyst (13,0)]
 	[Native]
 	public enum NSPickerTouchBarItemSelectionMode : long
 	{
@@ -26841,21 +27206,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[Native]
-	public enum NSRectAlignment : long
-	{
-		None = 0,
-		Top,
-		TopLeading,
-		Leading,
-		BottomLeading,
-		Bottom,
-		BottomTrailing,
-		Trailing,
-		TopTrailing,
-	}
-
-	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Native]
 	public enum NSTextInputTraitType : long
 	{
@@ -26865,6 +27216,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
+	[MacCatalyst (13,0)]
 	[Native]
 	public enum NSToolbarItemGroupControlRepresentation : long
 	{
@@ -26874,6 +27226,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
+	[MacCatalyst (13,0)]
 	[Native]
 	public enum NSToolbarItemGroupSelectionMode : long
 	{
@@ -26883,73 +27236,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutAnchor : NSCopying, INSCopying
-	{
-		[Static]
-		[Export ("layoutAnchorWithEdges:")]
-		NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges);
-
-		[Static]
-		[Export ("layoutAnchorWithEdges:absoluteOffset:"), Internal]
-		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
-
-		[Static]
-		[Export ("layoutAnchorWithEdges:fractionalOffset:"), Internal]
-		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
-
-		[Export ("edges")]
-		NSDirectionalRectEdge Edges { get; }
-
-		[Export ("offset")]
-		CGPoint Offset { get; }
-
-		[Export ("isAbsoluteOffset")]
-		bool IsAbsoluteOffset { get; }
-
-		[Export ("isFractionalOffset")]
-		bool IsFractionalOffset { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutDimension : NSCopying, INSCopying
-	{
-		[Static]
-		[Export ("fractionalWidthDimension:")]
-		NSCollectionLayoutDimension CreateFractionalWidthDimension (nfloat fractionalWidth);
-
-		[Static]
-		[Export ("fractionalHeightDimension:")]
-		NSCollectionLayoutDimension CreateFractionalHeightDimension (nfloat fractionalHeight);
-
-		[Static]
-		[Export ("absoluteDimension:")]
-		NSCollectionLayoutDimension CreateAbsoluteDimension (nfloat absoluteDimension);
-
-		[Static]
-		[Export ("estimatedDimension:")]
-		NSCollectionLayoutDimension CreateEstimatedDimension (nfloat estimatedDimension);
-
-		[Export ("isFractionalWidth")]
-		bool IsFractionalWidth { get; }
-
-		[Export ("isFractionalHeight")]
-		bool IsFractionalHeight { get; }
-
-		[Export ("isAbsolute")]
-		bool IsAbsolute { get; }
-
-		[Export ("isEstimated")]
-		bool IsEstimated { get; }
-
-		[Export ("dimension")]
-		nfloat Dimension { get; }
-	}
-
-	[Mac (10,15)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSPickerTouchBarItem
@@ -26975,7 +27262,7 @@ namespace AppKit {
 		nint SelectedIndex { get; set; }
 
 		[NullAllowed, Export ("selectionColor", ArgumentSemantic.Copy)]
-		NSColor SelectionColor { get; set; }
+		Color SelectionColor { get; set; }
 
 		[Export ("selectionMode", ArgumentSemantic.Assign)]
 		NSPickerTouchBarItemSelectionMode SelectionMode { get; set; }
@@ -27012,186 +27299,13 @@ namespace AppKit {
 		[Export ("isEnabledAtIndex:")]
 		bool GetEnabled (nint index);
 
+		[NullAllowed]
 		[Export ("customizationLabel", ArgumentSemantic.Copy)]
 		string CustomizationLabel { get; set; }
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutSize : NSCopying, INSCopying
-	{
-		[Static]
-		[Export ("sizeWithWidthDimension:heightDimension:")]
-		NSCollectionLayoutSize Create (NSCollectionLayoutDimension width, NSCollectionLayoutDimension height);
-
-		[Export ("widthDimension")]
-		NSCollectionLayoutDimension WidthDimension { get; }
-
-		[Export ("heightDimension")]
-		NSCollectionLayoutDimension HeightDimension { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutSpacing : NSCopying, INSCopying
-	{
-		[Static]
-		[Export ("flexibleSpacing:")]
-		NSCollectionLayoutSpacing CreateFlexibleSpacing (nfloat flexibleSpacing);
-
-		[Static]
-		[Export ("fixedSpacing:")]
-		NSCollectionLayoutSpacing CreateFixedSpacing (nfloat fixedSpacing);
-
-		[Export ("spacing")]
-		nfloat Spacing { get; }
-
-		[Export ("isFlexibleSpacing")]
-		bool IsFlexibleSpacing { get; }
-
-		[Export ("isFixedSpacing")]
-		bool IsFixedSpacing { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutEdgeSpacing : NSCopying, INSCopying
-	{
-		[Static]
-		[Export ("spacingForLeading:top:trailing:bottom:")]
-		NSCollectionLayoutEdgeSpacing CreateSpacing ([NullAllowed] NSCollectionLayoutSpacing leading, [NullAllowed] NSCollectionLayoutSpacing top, [NullAllowed] NSCollectionLayoutSpacing trailing, [NullAllowed] NSCollectionLayoutSpacing bottom);
-
-		[NullAllowed, Export ("leading")]
-		NSCollectionLayoutSpacing Leading { get; }
-
-		[NullAllowed, Export ("top")]
-		NSCollectionLayoutSpacing Top { get; }
-
-		[NullAllowed, Export ("trailing")]
-		NSCollectionLayoutSpacing Trailing { get; }
-
-		[NullAllowed, Export ("bottom")]
-		NSCollectionLayoutSpacing Bottom { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSCollectionLayoutItem))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutSupplementaryItem : NSCopying
-	{
-		[Static]
-		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:")]
-		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor);
-
-		[Static]
-		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:itemAnchor:")]
-		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor, NSCollectionLayoutAnchor itemAnchor);
-
-		[Export ("zIndex")]
-		nint ZIndex { get; set; }
-
-		[Export ("elementKind")]
-		string ElementKind { get; }
-
-		[Export ("containerAnchor")]
-		NSCollectionLayoutAnchor ContainerAnchor { get; }
-
-		[NullAllowed, Export ("itemAnchor")]
-		NSCollectionLayoutAnchor ItemAnchor { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutItem : NSCopying
-	{
-		[Static]
-		[Export ("itemWithLayoutSize:")]
-		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize);
-
-		[Static]
-		[Export ("itemWithLayoutSize:supplementaryItems:")]
-		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize, NSCollectionLayoutSupplementaryItem[] supplementaryItems);
-
-		[Export ("contentInsets", ArgumentSemantic.Assign)]
-		NSDirectionalEdgeInsets ContentInsets { get; set; }
-
-		[NullAllowed, Export ("edgeSpacing", ArgumentSemantic.Copy)]
-		NSCollectionLayoutEdgeSpacing EdgeSpacing { get; set; }
-
-		[Export ("layoutSize")]
-		NSCollectionLayoutSize LayoutSize { get; }
-
-		[Export ("supplementaryItems")]
-		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSCollectionLayoutSupplementaryItem))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutBoundarySupplementaryItem : NSCopying
-	{
-		[Static]
-		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:")]
-		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment);
-
-		[Static]
-		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:absoluteOffset:")]
-		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment, CGPoint absoluteOffset);
-
-		[Export ("extendsBoundary")]
-		bool ExtendsBoundary { get; set; }
-
-		[Export ("pinToVisibleBounds")]
-		bool PinToVisibleBounds { get; set; }
-
-		[Export ("alignment")]
-		NSRectAlignment Alignment { get; }
-
-		[Export ("offset")]
-		CGPoint Offset { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSCollectionLayoutItem))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutDecorationItem : NSCopying
-	{
-		[Static]
-		[Export ("backgroundDecorationItemWithElementKind:")]
-		NSCollectionLayoutDecorationItem Create (string elementKind);
-
-		[Export ("zIndex")]
-		nint ZIndex { get; set; }
-
-		[Export ("elementKind")]
-		string ElementKind { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroupCustomItem : NSCopying
-	{
-		[Static]
-		[Export ("customItemWithFrame:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame);
-
-		[Static]
-		[Export ("customItemWithFrame:zIndex:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame, nint zIndex);
-
-		[Export ("frame")]
-		CGRect Frame { get; }
-
-		[Export ("zIndex")]
-		nint ZIndex { get; }
-	}
-
-	[Mac (10,15)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSCollectionViewCompositionalLayoutConfiguration : NSCopying
 	{
@@ -27206,6 +27320,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSColorSampler
 	{
@@ -27213,6 +27328,7 @@ namespace AppKit {
 		void ShowSampler (Action<NSColor> selectionHandler);
 	}
 
+	[NoMacCatalyst]
 	[Mac (10,15)]
 	[BaseType (typeof (NSControl))]
 	[DesignatedDefaultCtor]
@@ -27222,195 +27338,51 @@ namespace AppKit {
 		nint State { get; set; }
 	}
 
-	interface INSCollectionLayoutContainer { }
-
 	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutContainer
-	{
-		[Abstract]
-		[Export ("contentSize")]
-		CGSize ContentSize { get; }
-
-		[Abstract]
-		[Export ("effectiveContentSize")]
-		CGSize EffectiveContentSize { get; }
-
-		[Abstract]
-		[Export ("contentInsets")]
-		NSDirectionalEdgeInsets ContentInsets { get; }
-
-		[Abstract]
-		[Export ("effectiveContentInsets")]
-		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
-	}
-
-	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutEnvironment
-	{
-		[Abstract]
-		[Export ("container")]
-		INSCollectionLayoutContainer Container { get; }
-	}
-
-	interface INSCollectionLayoutEnvironment { }
-
-	delegate NSCollectionLayoutGroupCustomItem[] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layout);
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSCollectionLayoutItem))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroup : NSCopying
-	{
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
-
-		[Static]
-		[Export ("customGroupWithLayoutSize:itemProvider:")]
-		NSCollectionLayoutGroup CreateCustomGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
-
-		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; set; }
-
-		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
-
-		[Export ("subitems")]
-		NSCollectionLayoutItem[] Subitems { get; }
-
-		[Export ("visualDescription")]
-		string VisualDescription { get; }
-	}
-
-	[Mac (10,15)]
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem
 	{
+		[NoMacCatalyst]
 		[Export ("menu", ArgumentSemantic.Strong)]
 		NSMenu Menu { get; set; }
 
 		[Export ("showsIndicator")]
 		bool ShowsIndicator { get; set; }
+
+		[MacCatalyst (13, 0)]
+		[NoMac]
+		[Export ("itemMenu", ArgumentSemantic.Copy)]
+		UIMenu ItemMenu { get; set; }
 	}
 
-	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutVisibleItem
-	{
-		[Abstract]
-		[Export ("alpha")]
-		nfloat Alpha { get; set; }
-
-		[Abstract]
-		[Export ("zIndex")]
-		nint ZIndex { get; set; }
-
-		[Abstract]
-		[Export ("hidden")]
-		bool Hidden { [Bind ("isHidden")] get; set; }
-
-		[Abstract]
-		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint Center { get; set; }
-
-		[Abstract]
-		[Export ("name")]
-		string Name { get; }
-
-		[Abstract]
-		[Export ("indexPath")]
-		NSIndexPath IndexPath { get; }
-
-		[Abstract]
-		[Export ("frame")]
-		CGRect Frame { get; }
-
-		[Abstract]
-		[Export ("bounds")]
-		CGRect Bounds { get; }
-
-		[Abstract]
-		[Export ("representedElementCategory")]
-		NSCollectionElementCategory RepresentedElementCategory { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("representedElementKind")]
-		string RepresentedElementKind { get; }
-	}
-
-	interface INSCollectionLayoutVisibleItem { }
-
-	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem[] items, CGPoint point, INSCollectionLayoutEnvironment layout);
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutSection : NSCopying
-	{
-		[Static]
-		[Export ("sectionWithGroup:")]
-		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
-
-		[Export ("contentInsets", ArgumentSemantic.Assign)]
-		NSDirectionalEdgeInsets ContentInsets { get; set; }
-
-		[Export ("interGroupSpacing")]
-		nfloat InterGroupSpacing { get; set; }
-
-		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
-		NSCollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
-
-		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
-
-		[Export ("supplementariesFollowContentInsets")]
-		bool SupplementariesFollowContentInsets { get; set; }
-
-		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
-
-		[Export ("decorationItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutDecorationItem[] DecorationItems { get; set; }
-	}
-
+	[NoMacCatalyst]
 	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, INSCollectionLayoutEnvironment layout);
 
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSCollectionViewLayout))]
 	[DisableDefaultCtor]
 	interface NSCollectionViewCompositionalLayout
 	{
 		[Export ("initWithSection:")]
-		IntPtr Constructor (NSCollectionLayoutSection section);
+		NativeHandle Constructor (NSCollectionLayoutSection section);
 
 		[Export ("initWithSection:configuration:")]
-		IntPtr Constructor (NSCollectionLayoutSection section, NSCollectionViewCompositionalLayoutConfiguration configuration);
+		NativeHandle Constructor (NSCollectionLayoutSection section, NSCollectionViewCompositionalLayoutConfiguration configuration);
 
 		[Export ("initWithSectionProvider:")]
-		IntPtr Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider);
+		NativeHandle Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider);
 
 		[Export ("initWithSectionProvider:configuration:")]
-		IntPtr Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider, NSCollectionViewCompositionalLayoutConfiguration configuration);
+		NativeHandle Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider, NSCollectionViewCompositionalLayoutConfiguration configuration);
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		NSCollectionViewCompositionalLayoutConfiguration Configuration { get; set; }
 	}
 
 	[Mac (10,15)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSStepperTouchBarItem
@@ -27441,12 +27413,14 @@ namespace AppKit {
 		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
 		Selector Action { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
 
 	[Protocol]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	interface NSTextInputTraits
 	{
 		[Export ("autocorrectionType", ArgumentSemantic.Assign)]
@@ -27484,6 +27458,7 @@ namespace AppKit {
 
 	[Protocol]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	interface NSTextCheckingClient : NSTextInputTraits, NSTextInputClient
 	{
 		[Abstract]
@@ -27522,6 +27497,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSWorkspaceOpenConfiguration : NSCopying
@@ -27579,13 +27555,14 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextCheckingController
 	{
 		[Export ("initWithClient:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSTextCheckingClient client);
+		NativeHandle Constructor (INSTextCheckingClient client);
 
 		[Export ("client")]
 		INSTextCheckingClient Client { get; }
@@ -27647,11 +27624,14 @@ namespace AppKit {
 		nint SpellCheckerDocumentTag { get; set; }
 	}
 
+	[NoMacCatalyst]
 	delegate NSCollectionViewItem NSCollectionViewDiffableDataSourceItemProvider (NSCollectionView collectionView, NSIndexPath indexPath, NSObject itemIdentifierType);
 
+	[NoMacCatalyst]
 	delegate NSView NSCollectionViewDiffableDataSourceSupplementaryViewProvider (NSCollectionView collectionView, string str, NSIndexPath indexPath);
 
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType> : NSCollectionViewDataSource
@@ -27659,7 +27639,7 @@ namespace AppKit {
 		where ItemIdentifierType : NSObject {
 
 		[Export ("initWithCollectionView:itemProvider:")]
-		IntPtr Constructor (NSCollectionView collectionView, NSCollectionViewDiffableDataSourceItemProvider itemProvider);
+		NativeHandle Constructor (NSCollectionView collectionView, NSCollectionViewDiffableDataSourceItemProvider itemProvider);
 
 		[Export ("snapshot")]
 		NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
@@ -27680,6 +27660,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
+	[NoMacCatalyst]
 	public enum NSFontDescriptorSystemDesign 
 	{
 		[Field ("NSFontDescriptorSystemDesignDefault")]
@@ -27696,6 +27677,7 @@ namespace AppKit {
 	}
 
 	[Mac (11, 0)]
+	[NoMacCatalyst]
 	public enum NSFontTextStyle
 	{
 		[Field ("NSFontTextStyleLargeTitle")]
@@ -27732,14 +27714,17 @@ namespace AppKit {
 		Caption2,
 	}
 
-	[Mac (10,15), iOS (10,13)]
+	[Mac (10,15)]
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSSharingServicePickerToolbarItem
 	{
+		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		INSSharingServicePickerToolbarItemDelegate Delegate { get; set; }
 
+		[NoMacCatalyst]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 	}
@@ -27747,7 +27732,12 @@ namespace AppKit {
 	public interface INSSharingServicePickerToolbarItemDelegate { }
 
 	[Mac (10,15)]
+	[NoMacCatalyst]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSSharingServicePickerDelegate))]
 	interface NSSharingServicePickerToolbarItemDelegate
 	{
@@ -27756,7 +27746,7 @@ namespace AppKit {
 		NSObject[] GetItems (NSSharingServicePickerToolbarItem pickerToolbarItem);
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
+	[NoMacCatalyst]
 	[Mac (11,0)]
 	[BaseType (typeof(NSToolbarItem))]
 	[DisableDefaultCtor]
@@ -27764,8 +27754,9 @@ namespace AppKit {
 	{
 		[DesignatedInitializer]
 		[Export ("initWithItemIdentifier:")]
-		IntPtr Constructor (string itemIdentifier);
+		NativeHandle Constructor (string itemIdentifier);
 
+		[NoMacCatalyst]
 		[Export ("searchField", ArgumentSemantic.Strong)]
 		NSSearchField SearchField { get; set; }
 
@@ -27782,18 +27773,22 @@ namespace AppKit {
 		void EndSearchInteraction ();
 	}
 
+	[NoMacCatalyst]
 	delegate NSView NSTableViewDiffableDataSourceCellProvider (NSTableView tableView, NSTableColumn column, nint row, NSObject itemId);
+	[NoMacCatalyst]
 	delegate NSTableRowView NSTableViewDiffableDataSourceRowProvider (NSTableView tableView, nint row, NSObject identifier);
+	[NoMacCatalyst]
 	delegate NSView NSTableViewDiffableDataSourceSectionHeaderViewProvider (NSTableView tableView, nint row, NSObject sectionId);
 
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSTableViewDiffableDataSource<SectionIdentifierType,ItemIdentifierType> : NSTableViewDataSource
 		where SectionIdentifierType : NSObject
 		where ItemIdentifierType : NSObject {
 		[Export ("initWithTableView:cellProvider:")]
-		IntPtr Constructor (NSTableView tableView, NSTableViewDiffableDataSourceCellProvider cellProvider);
+		NativeHandle Constructor (NSTableView tableView, NSTableViewDiffableDataSourceCellProvider cellProvider);
 
 		[Export ("snapshot")]
 		NSDiffableDataSourceSnapshot<SectionIdentifierType,ItemIdentifierType> Snapshot ();
@@ -27830,6 +27825,7 @@ namespace AppKit {
 	}
 
 	[Mac (11, 0)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSTextContent
 	{
@@ -27843,6 +27839,7 @@ namespace AppKit {
 	}
 
 	[Mac (11, 0)]
+	[NoMacCatalyst]
 	enum NSTextContentType {
 		[Field ("NSTextContentTypeUsername")]
 		Username,
@@ -27855,6 +27852,7 @@ namespace AppKit {
 	}
 
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSTintConfiguration : NSCopying, NSSecureCoding
@@ -27886,13 +27884,14 @@ namespace AppKit {
 	}
 
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSToolbarItem))]
 	[DisableDefaultCtor]
 	interface NSTrackingSeparatorToolbarItem
 	{
 		[DesignatedInitializer]
 		[Export ("initWithItemIdentifier:")]
-		IntPtr Constructor (string itemIdentifier);
+		NativeHandle Constructor (string itemIdentifier);
 		
 		[Static]
 		[Export ("trackingSeparatorToolbarItemWithIdentifier:splitView:dividerIndex:")]
@@ -27906,9 +27905,10 @@ namespace AppKit {
 	}
 
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSImageSymbolConfiguration : NSCopying
+	interface NSImageSymbolConfiguration : NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("configurationWithPointSize:weight:scale:")]
@@ -27929,5 +27929,24 @@ namespace AppKit {
 		[Static]
 		[Export ("configurationWithScale:")]
 		NSImageSymbolConfiguration Create (NSImageSymbolScale scale);
+
+		[Mac (12,0)]
+		[Static]
+		[Export ("configurationWithHierarchicalColor:")]
+		NSImageSymbolConfiguration Create (NSColor hierarchicalColor);
+
+		[Mac (12,0)]
+		[Static]
+		[Export ("configurationWithPaletteColors:")]
+		NSImageSymbolConfiguration Create (NSColor[] paletteColors);
+
+		[Mac (12,0)]
+		[Static]
+		[Export ("configurationPreferringMulticolor")]
+		NSImageSymbolConfiguration Create ();
+
+		[Mac (12,0)]
+		[Export ("configurationByApplyingConfiguration:")]
+		NSImageSymbolConfiguration Create (NSImageSymbolConfiguration configuration);
 	}
 }

@@ -1,0 +1,13 @@
+# Types removed in 10.10
+!unknown-type! CW8021XProfile bound
+!unknown-type! CWWirelessProfile bound
+
+# It's named `CWErr` in the header file 
+!unknown-native-enum! CWStatus bound
+!missing-enum! CWErr not bound
+
+# removed in Xcode 12 - marked as deprecated in bindings
+!extra-enum-value! Managed value 9 for CWEventType.VirtualInterfaceStateChanged not found in native headers
+!extra-enum-value! Managed value 10 for CWEventType.RangingReportEvent not found in native headers
+
+!missing-pinvoke! CWMergeNetworks is not bound

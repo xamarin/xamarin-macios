@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
@@ -348,6 +348,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "AutomaticAssessmentConfiguration", Version = "13.4" },
 					new { Framework = "CoreLocationUI", Version = "15.0" },
 					new { Framework = "Chip", Version = "15.0" },
+					new { Framework = "ThreadNetwork", Version = "15.0" },
 				};
 				foreach (var framework in invalidFrameworks)
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
@@ -841,21 +842,17 @@ public struct FooF { public NSObject Obj; }
 			}
 		}
 
-
 		[Test]
 		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
 		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
 		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
 		//[TestCase (Profile.WatchOS, "watchOS")] // MT0077 interferes
-		public void MT4162 (Profile profile, string name, MTouchLinker linker)
+		public void MT4162_msg (Profile profile, string name, MTouchLinker linker)
 		{
 			var code = @"
 	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
 	[Introduced (PlatformName.TvOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
 	[Introduced (PlatformName.WatchOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
-	[Introduced (PlatformName.iOS, 89, 0, 0, PlatformArchitecture.All)]
-	[Introduced (PlatformName.TvOS, 89, 0, 0, PlatformArchitecture.All)]
-	[Introduced (PlatformName.WatchOS, 89, 0, 0, PlatformArchitecture.All)]
 	[Register (IsWrapper = true)]
 	class FutureType : NSObject
 	{
@@ -904,13 +901,141 @@ public struct FooF { public NSObject Obj; }
 				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" }, usings: "using System;\nusing Foundation;\nusing ObjCRuntime;\n");
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
+		//[TestCase (Profile.WatchOS, "watchOS")] // MT0077 interferes
+		public void MT4162 (Profile profile, string name, MTouchLinker linker)
+		{
+			var code = @"
+	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.TvOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.WatchOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Register (IsWrapper = true)]
+	class FutureType : NSObject
+	{
+		public FutureType () {}
+	}
+
+	class CurrentType : FutureType
+	{
+		[Export (""foo:"")]
+		public void Foo (FutureType ft)
+		{
+		}
+
+		[Export (""bar"")]
+		public FutureType Bar ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Export (""zap"")]
+		public FutureType Zap { get; set; }
+
+		// This is actually working now, but only because we erase the generic argument when converting to ObjC.
+		[Export (""zaps"")]
+		public NSSet<FutureType> Zaps { get; set; }
+	}
+
+	[Protocol (Name = ""FutureProtocol"")]
+	[ProtocolMember (IsRequired = false, IsProperty = true, IsStatic = false, Name = ""FutureProperty"", Selector = ""futureProperty"", PropertyType = typeof (FutureEnum), GetterSelector = ""futureProperty"", SetterSelector = ""setFutureProperty:"", ArgumentSemantic = ArgumentSemantic.UnsafeUnretained)]
+	[ProtocolMember (IsRequired = true, IsProperty = false, IsStatic = false, Name = ""FutureMethod"", Selector = ""futureMethod"", ReturnType = typeof (FutureEnum), ParameterType = new Type [] { typeof (FutureEnum) }, ParameterByRef = new bool [] { false })]
+	public interface IFutureProtocol : INativeObject, IDisposable
+	{
+	}
+
+	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.TvOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.WatchOS, 99, 0, 0, PlatformArchitecture.All)]
+	public enum FutureEnum {
+	}
+";
+			
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.Linker = linker;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" }, usings: "using System;\nusing Foundation;\nusing ObjCRuntime;\n");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
+		public void MT4162_dotnet (Profile profile, string name, MTouchLinker linker)
+		{
+			var code = @"
+	[SupportedOSPlatform (""ios77.0"")]
+	[SupportedOSPlatform (""tvos77.0"")]
+	[SupportedOSPlatform (""macos77.0"")]
+	[SupportedOSPlatform (""maccatalyst77.0"")]
+	[Register (IsWrapper = true)]
+	class FutureType : NSObject
+	{
+		public FutureType () {}
+	}
+
+	class CurrentType : FutureType
+	{
+		[Export (""foo:"")]
+		public void Foo (FutureType ft)
+		{
+		}
+
+		[Export (""bar"")]
+		public FutureType Bar ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Export (""zap"")]
+		public FutureType Zap { get; set; }
+
+		// This is actually working now, but only because we erase the generic argument when converting to ObjC.
+		[Export (""zaps"")]
+		public NSSet<FutureType> Zaps { get; set; }
+	}
+
+	[Protocol (Name = ""FutureProtocol"")]
+	[ProtocolMember (IsRequired = false, IsProperty = true, IsStatic = false, Name = ""FutureProperty"", Selector = ""futureProperty"", PropertyType = typeof (FutureEnum), GetterSelector = ""futureProperty"", SetterSelector = ""setFutureProperty:"", ArgumentSemantic = ArgumentSemantic.UnsafeUnretained)]
+	[ProtocolMember (IsRequired = true, IsProperty = false, IsStatic = false, Name = ""FutureMethod"", Selector = ""futureMethod"", ReturnType = typeof (FutureEnum), ParameterType = new Type [] { typeof (FutureEnum) }, ParameterByRef = new bool [] { false })]
+	public interface IFutureProtocol : INativeObject, IDisposable
+	{
+	}
+
+	[SupportedOSPlatform (""ios99.0"")]
+	[SupportedOSPlatform (""tvos99.0"")]
+	[SupportedOSPlatform (""macos99.0"")]
+	[SupportedOSPlatform (""maccatalyst99.0"")]
+	public enum FutureEnum {
+	}
+";
+			
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.IsDotNet = true;
+				mtouch.Profile = profile;
+				mtouch.Linker = linker;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" }, usings: "using System;\nusing Foundation;\nusing ObjCRuntime;\nusing System.Runtime.Versioning;\n");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
 			}
 		}
 
@@ -1859,4 +1984,3 @@ class C : NSObject {
 		}
 	}
 }
-

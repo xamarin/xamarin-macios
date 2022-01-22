@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AUParameterNode
 //
 // Authors:
@@ -170,7 +170,7 @@ namespace monotouchtest {
 
 			using (var parameter = CreateAUParameter ()) {
 				parameter.ImplementorDisplayNameWithLengthCallback = new AUImplementorDisplayNameWithLengthCallback ((node, desiredLength) => {
-					Assert.True (length == desiredLength, "Passed length value is incorrect.");
+					Assert.AreEqual ((nint) length, (nint) desiredLength, "Passed length value is incorrect.");
 					Assert.True (node.Identifier == parameter.Identifier,
 						$"Passed AUParameterNode was incorrect. Expected {parameter.Identifier} but was {node.Identifier}");
 

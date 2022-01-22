@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -90,7 +90,8 @@ namespace Xamarin.MMP.Tests
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $"--native-reference={frameworkPath}");
 
-				StripTestCore (test, debugStrips, releaseStrips, "Contents/Frameworks/Foo.framework/Foo", shouldWarn: true);
+				var frameworkName = Path.GetFileNameWithoutExtension (frameworkPath);
+				StripTestCore (test, debugStrips, releaseStrips, $"Contents/Frameworks/{frameworkName}.framework/{frameworkName}", shouldWarn: true);
 			});
 		}
 

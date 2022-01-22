@@ -1,6 +1,0 @@
-## QTKit headers were removed - but our API still exists for binary compatibility (and the linker can remove them)
-
-!unknown-native-enum! QTCaptureDestination bound
-!unknown-native-enum! QTCaptureDeviceControlsSpeed bound
-!unknown-native-enum! QTCaptureDevicePlaybackMode bound
-!unknown-native-enum! QTError bound

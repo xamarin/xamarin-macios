@@ -3,7 +3,7 @@ TOP=../..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-BUILD_DIR=bin/Debug/net5.0
+BUILD_DIR=bin/Debug/net6.0
 
 DOTNET_TARGETS += \
 	$(BUILD_DIR)/dotnet-linker.dll \
@@ -21,6 +21,7 @@ dotnet-linker.csproj.inc: global.json
 
 $(BUILD_DIR)/dotnet-linker%dll $(BUILD_DIR)/dotnet-linker%pdb: Makefile global.json $(dotnet_linker_dependencies)
 	$(Q_DOTNET_BUILD) $(DOTNET6) build dotnet-linker.csproj $(DOTNET_BUILD_VERBOSITY)
+	$(Q) touch $(BUILD_DIR)/dotnet-linker.dll $(BUILD_DIR)/dotnet-linker.pdb
 
 define InstallTemplate
 $(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/dotnet-linker

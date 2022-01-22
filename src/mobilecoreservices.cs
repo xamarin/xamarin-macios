@@ -516,6 +516,11 @@ namespace MobileCoreServices {
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }
 
+		[NoWatch]
+		[iOS (15,0), Mac(12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("kUTTypeUniversalSceneDescriptionMobile", "ModelIO")]
+		NSString UniversalSceneDescriptionMobile { get; }
+
 		[Watch (2,2)]
 		[iOS (9,1)][TV (9,0)]
 		[NoMac]

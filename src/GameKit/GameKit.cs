@@ -144,6 +144,7 @@ namespace GameKit {
 		FriendListDescriptionMissing = 100,
 		FriendListRestricted = 101,
 		FriendListDenied = 102,
+		FriendRequestNotAvailable = 103,
 	}
 
 	[Native]
@@ -261,6 +262,8 @@ namespace GameKit {
 		LocalPlayerProfile = 3,
 		[iOS (14,0)][TV (14,0)]
 		Dashboard = 4,
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0), NoWatch]
+		LocalPlayerFriendsList = 5,
 	}
 
 	// NSInteger -> GKMatchmaker.h
@@ -343,6 +346,8 @@ namespace GameKit {
 		Default = 0,
 		NearbyOnly = 1,
 		AutomatchOnly = 2,
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		InviteOnly = 3,
 	}
 
 	[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]

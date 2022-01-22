@@ -68,4 +68,3 @@ namespace MonoTouchFixtures.PassKit {
 }
 
 #endif
-

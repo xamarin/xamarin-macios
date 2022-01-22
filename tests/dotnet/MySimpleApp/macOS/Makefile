@@ -1,9 +1,10 @@
-TOP=../../../..
+include ../shared.mk
 
-include $(TOP)/Make.config
+coreclr:
+	$(Q) $(MAKE) build BUILD_ARGUMENTS="/p:UseMonoRuntime=false"
 
-build:
-	$(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY)
+coreclr-universal:
+	$(Q) $(MAKE) build BUILD_ARGUMENTS='/p:RuntimeIdentifiers=\"osx-arm64\;osx-x64\" /p:UseMonoRuntime=false'
 
-run:
-	$(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY) -t:Run
+universal:
+	$(Q) $(MAKE) build BUILD_ARGUMENTS='/p:RuntimeIdentifiers=\"osx-arm64\;osx-x64\"'

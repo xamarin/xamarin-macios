@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CIImageInitializationOptions
 //
 // Authors:
@@ -21,6 +21,7 @@ using UIKit;
 #endif
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreImage {
 
@@ -49,7 +50,7 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void WithMetadataDefaults ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var options = new CIImageInitializationOptionsWithMetadata ();
 			Assert.That (options.Dictionary.Count, Is.EqualTo ((nuint) 0), "Count");
@@ -59,7 +60,7 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void WithMetadataProperties ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var suboptions = new CGImageProperties () {
 				ProfileName = "Xamarin"

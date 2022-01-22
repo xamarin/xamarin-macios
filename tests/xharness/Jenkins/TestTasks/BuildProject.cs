@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -115,7 +115,7 @@ namespace Xharness.Jenkins.TestTasks {
 				var references = GetNestedReferenceProjects (TestProject.Path);
 				foreach (var referenceProject in references) {
 					var execResult = await RestoreNugetsAsync (referenceProject, log); // do the replace in case we use win paths
-					if (execResult == TestExecutingResult.TimedOut) {
+					if ((execResult & TestExecutingResult.TimedOut) == TestExecutingResult.TimedOut) {
 						return execResult;
 					}
 				}

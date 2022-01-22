@@ -1,4 +1,4 @@
-﻿namespace Xamarin.Messaging.Build.Contracts {
+namespace Xamarin.Messaging.Build.Contracts {
 	public class VerifyXcodeVersionResult {
 		public bool IsCompatibleVersion { get; set; }
 

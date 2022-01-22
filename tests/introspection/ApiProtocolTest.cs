@@ -45,6 +45,14 @@ namespace Introspection {
 			case "MTLCounterSet":
 				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
 #endif
+			case "MPSImageLaplacianPyramid":
+			case "MPSImageLaplacianPyramidSubtract":
+			case "MPSImageLaplacianPyramidAdd":
+			case "MPSCnnYoloLossNode":
+				// The presence of these seem to depend on hardware capabilities, and not only OS version.
+				// Unfortunately I couldn't find any documentation related to determining exactly which
+				// hardware capability these need (or how to detect them), so just ignore them.
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -126,6 +134,13 @@ namespace Introspection {
 				// Xcode 12.5
 				case "HMCharacteristicMetadata":
 				case "HMAccessoryCategory":
+					return true;
+				// Xcode 13
+				case "HKVerifiableClinicalRecord":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassProperties":
+				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -247,6 +262,19 @@ namespace Introspection {
 					return true;
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
+				// Xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -364,6 +392,19 @@ namespace Introspection {
 					return true;
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
+				// xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -515,7 +556,7 @@ namespace Introspection {
 					if (!supports) {
 #if __IOS__
 						// broken in xcode 12 beta 1 simulator (only)
-						if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12,0)) {
+						if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12,0)) {
 							switch (type.Name) {
 							case "ARFaceGeometry":
 							case "ARPlaneGeometry":
@@ -617,7 +658,7 @@ namespace Introspection {
 					case "SKRenderer":
 						// was not possible in iOS 11.4 (current minimum) simulator
 						if (!TestRuntime.CheckXcodeVersion (12,0)) {
-							if (Runtime.Arch == Arch.SIMULATOR)
+							if (TestRuntime.IsSimulatorOrDesktop)
 								continue;
 						}
 						break;

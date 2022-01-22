@@ -46,7 +46,7 @@ namespace LinkSdk {
 			Assert.NotNull (t.GetMethod ("ParseValue", BindingFlags.Instance | BindingFlags.NonPublic), "Parse");
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void MonoTouch ()
 		{

@@ -9,29 +9,19 @@
 
 ## unsorted
 
-!missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSCharacterSet Foundation.NSMutableCharacterSet::FromFile(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData Foundation.NSNetService::GetTxtRecordData()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSUbiquitousKeyValueStore::GetData(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData[] Foundation.NSNetService::get_Addresses()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUbiquitousKeyValueStore::GetDictionary(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSUbiquitousKeyValueStore::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject[] Foundation.NSUbiquitousKeyValueStore::GetArray(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrlConnection Foundation.NSUrlConnection::FromRequest(Foundation.NSUrlRequest,Foundation.INSUrlConnectionDelegate)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'Foundation.NSUrlConnection Foundation.NSUrlConnection::FromRequest(Foundation.NSUrlRequest,Foundation.INSUrlConnectionDelegate)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Boolean Foundation.NSNetService::SetTxtRecordData(Foundation.NSData)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.String Foundation.NSNetService::get_HostName()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSUbiquitousKeyValueStore::GetString(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetArray(Foundation.NSObject[],System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetData(Foundation.NSData,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetDictionary(Foundation.NSDictionary,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetString(System.String,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUrlConnection::.ctor(Foundation.NSUrlRequest,Foundation.INSUrlConnectionDelegate)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void Foundation.NSUrlConnection::.ctor(Foundation.NSUrlRequest,Foundation.INSUrlConnectionDelegate,System.Boolean)' is missing an [NullAllowed] on parameter #1

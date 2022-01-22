@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,4 +37,3 @@ namespace Xamarin.iOS.Tasks {
 		}
 	}
 }
-

@@ -1,6 +1,7 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Threading;
+
 using Network;
 using CoreFoundation;
 using Foundation;
@@ -101,7 +102,12 @@ namespace monotouchtest.Network
 				monitor.Start ();
 			}, () => isNewPathSet);
 
-			Assert.AreNotEqual (oldPath, newPath, "'CurrentPath' wasn't updated when a new SnapshotHandler was assigned");
+			Assert.True (isOldPathSet, "isOldPathSet (no timeout)");
+			Assert.True (isNewPathSet, "isNewPathSet (no timeout)");
+			// they might be the same native objects (happens on macOS and Catalyst) and,
+			// in such case, they will have the same `Handle` value, making them equal on the
+			// .net profile. However what we want to know here is if the path was updated
+			Assert.False (Object.ReferenceEquals (oldPath, newPath), "different instances");
 		}
 
 		[TearDown]
@@ -110,6 +116,15 @@ namespace monotouchtest.Network
 			monitor?.Dispose ();
 		}
 
+
+		[Test]
+		public void ProhibitInterfaceTypeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				monitor.ProhibitInterfaceType (NWInterfaceType.Wifi);
+			});
+		}
 	}
 }
 #endif

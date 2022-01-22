@@ -1,4 +1,4 @@
-﻿//
+//
 // HKObjectType.cs: methods that live technically in HKObjectType, but we are going to put
 // in classes where they make more sense (they are factory methods on HKObejctType, taking
 // strings, we are going to add factory methods in the relevant classes, that tkae the kind
@@ -50,4 +50,3 @@ namespace HealthKit
 	}
 #endif
 }
-

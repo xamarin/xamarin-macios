@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -67,19 +67,23 @@ namespace Xharness.Jenkins.TestTasks {
 					testTask.ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				testTask.FailureMessage = BuildTask.FailureMessage;
-				if (BuildTask.KnownFailure.HasValue)
+				if (BuildTask.KnownFailure is not null)
 					testTask.KnownFailure = BuildTask.KnownFailure;
 				if (generateXmlFailures && BuildTask.BuildLog != null && File.Exists (BuildTask.BuildLog.FullPath)) {
-					var logReader = BuildTask.BuildLog.GetReader ();
-					ResultParser.GenerateFailure (
-						logs: testTask.Logs,
-						source: "build",
-						appName: testTask.TestName,
-						variation: testTask.Variation,
-						title: $"App Build {testTask.TestName} {testTask.Variation}",
-						message: $"App could not be built {testTask.FailureMessage}.",
-						stderrReader: logReader,
-						jargon: xmlResultJargon);
+					try {
+						var logReader = BuildTask.BuildLog.GetReader ();
+						ResultParser.GenerateFailure (
+							logs: testTask.Logs,
+							source: "build",
+							appName: testTask.TestName,
+							variation: testTask.Variation,
+							title: $"App Build {testTask.TestName} {testTask.Variation}",
+							message: $"App could not be built {testTask.FailureMessage}.",
+							stderrReader: logReader,
+							jargon: xmlResultJargon);
+					} catch (Exception e) {
+						testTask.FailureMessage += $" (failed to parse the logs: {e.Message})";
+					}
 				}
 			} else {
 				testTask.ExecutionResult = TestExecutingResult.Built;

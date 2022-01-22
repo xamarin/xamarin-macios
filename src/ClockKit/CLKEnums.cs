@@ -1,4 +1,4 @@
-﻿//
+//
 // ClockKit Enums
 //
 // Authors:
@@ -89,4 +89,3 @@ namespace ClockKit {
 		Fill,
 	}
 }
-

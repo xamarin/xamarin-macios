@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLTransformComponent Unit Tests
 //
 // Authors:
