@@ -27,11 +27,19 @@ namespace CoreServices {
 #endif
 
 	// all fields constants that this is using are deprecated in Xcode 7
-#if !NET
+#if NET
+	[UnsupportedOSPlatform ("macos10.11")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.11 use 'NSUrlSession'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use 'NSUrlSession'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession'.")]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession'.")]
-	// Dotnet attributes are included in partial class inside cfnetwork.cs
 #endif
+	// Dotnet attributes are included in partial class inside cfnetwork.cs
 	public partial class CFHTTPStream : CFReadStream {
 
 		[Preserve (Conditional = true)]

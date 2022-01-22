@@ -45,7 +45,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreAnimation {
 
 	partial class CAAnimation {
-		[DllImport(Constants.QuartzLibrary, EntryPoint="CACurrentMediaTime")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint="CACurrentMediaTime")]
 		public extern static /* CFTimeInterval */ double CurrentMediaTime ();
 	}
 
