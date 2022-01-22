@@ -36,6 +36,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWProtocolStack : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWProtocolStack (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else

@@ -54,10 +54,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
-
-				if (TestRuntime.CheckXcodeVersion (5, 0))
-					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
-
+#if NET
+				Assert.Null (cs.GetIccProfile (), "GetIccProfile");
+#else
+				Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+#endif
 				if (TestRuntime.CheckXcodeVersion (8, 0)) {
 					// kCGColorSpaceDeviceGray is not a public constant, e.g. from CGColorSpaceNames.*
 					Assert.That (cs.Name, Is.EqualTo ("kCGColorSpaceDeviceGray"), "Name");
@@ -77,10 +78,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
-
-				if (TestRuntime.CheckXcodeVersion (5, 0))
-					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
-
+#if NET
+				Assert.Null (cs.GetIccProfile (), "GetIccProfile");
+#else
+				Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+#endif
 				if (TestRuntime.CheckXcodeVersion (8, 0)) {
 					// kCGColorSpaceDeviceRGB is not a public constant
 					Assert.That (cs.Name, Is.EqualTo ("kCGColorSpaceDeviceRGB"), "Name");
@@ -100,10 +102,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
-
-				if (TestRuntime.CheckXcodeVersion (5, 0))
-					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
-
+#if NET
+				Assert.Null (cs.GetIccProfile (), "GetIccProfile");
+#else
+				Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+#endif
 				if (TestRuntime.CheckXcodeVersion (8, 0)) {
 					// kCGColorSpaceDeviceCMYK is not a public constant
 					Assert.That (cs.Name, Is.EqualTo ("kCGColorSpaceDeviceCMYK"), "Name");
@@ -132,10 +135,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.That (base_cs.Model, Is.EqualTo (bcs.Model), "GetBaseColorSpace");
 				var new_table = cs.GetColorTable ();
 				Assert.That (table, Is.EqualTo (new_table), "GetColorTable");
-
-				if (TestRuntime.CheckXcodeVersion (5, 0))
-					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
-
+#if NET
+				Assert.Null (cs.GetIccProfile (), "GetIccProfile");
+#else
+				Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+#endif
 				if (TestRuntime.CheckXcodeVersion (8, 0)) {
 					Assert.Null (cs.Name, "Name");
 					Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
@@ -161,8 +165,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
 
+#if NET
+				using (var icc_profile = cs.GetIccProfile ())
+					Assert.That (icc_profile.Length, Is.EqualTo ((nuint) 3144), "GetIccProfile");
+#else
 				using (var icc_profile = cs.GetICCProfile ())
 					Assert.That (icc_profile.Length, Is.EqualTo ((nuint) 3144), "GetICCProfile");
+#endif
 
 				Assert.That (cs.Name, Is.EqualTo (CGColorSpaceNames.ExtendedSrgb.ToString ()), "Name");
 				Assert.True (cs.IsWideGamutRgb, "IsWideGamutRgb");
@@ -189,7 +198,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Unknown), "Unknown");
 			Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
+#if NET
+			Assert.Null (cs.GetIccProfile (), "GetIccProfile");
+#else
 			Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+#endif
 			Assert.Null (cs.Name, "Name");
 			Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
 			Assert.False (cs.SupportsOutput, "SupportsOutput");
@@ -205,6 +218,15 @@ namespace MonoTouchFixtures.CoreGraphics {
 			// that should work on the iOS simulator - at least some as I'm not sure every Mac
 			// has the file(s) so we're not trying (and fialing) to copy it into the bundle
 			using (var icc = NSData.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc")))
+#if NET
+			using (var cs = CGColorSpace.CreateIccProfile (icc)) {
+				TestICC (cs);
+			}
+
+			using (var space = CGColorSpace.CreateIccProfile ((NSData) null)) {
+				Assert.IsNull (space, "null data");
+			}
+#else
 			using (var cs = CGColorSpace.CreateICCProfile (icc)) {
 				TestICC (cs);
 			}
@@ -212,6 +234,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var space = CGColorSpace.CreateICCProfile ((NSData) null)) {
 				Assert.IsNull (space, "null data");
 			}
+#endif
 		}
 
 		void TestICC (CGColorSpace cs)
@@ -222,10 +245,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 			// not indexed so no color table
 			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
 
-			if (TestRuntime.CheckXcodeVersion (5, 0)) {
-				using (var icc_profile = cs.GetICCProfile ())
-					Assert.That (icc_profile.Length, Is.EqualTo ((nuint) 3284), "GetICCProfile");
-			}
+#if NET
+			using (var icc_profile = cs.GetIccProfile ())
+				Assert.That (icc_profile.Length, Is.EqualTo ((nuint) 3284), "GetIccProfile");
+#else
+			using (var icc_profile = cs.GetICCProfile ())
+				Assert.That (icc_profile.Length, Is.EqualTo ((nuint) 3284), "GetICCProfile");
+#endif
 
 			if (TestRuntime.CheckXcodeVersion (8, 0)) {
 				Assert.Null (cs.Name, "Name");

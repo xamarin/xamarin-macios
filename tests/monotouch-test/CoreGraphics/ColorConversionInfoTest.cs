@@ -14,6 +14,10 @@ using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
 
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
+#endif
+
 namespace MonoTouchFixtures.CoreGraphics {
 
 	[TestFixture]

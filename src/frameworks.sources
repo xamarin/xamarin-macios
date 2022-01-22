@@ -318,6 +318,7 @@ BUSINESSCHAT_SOURCES = \
 # CallKit
 
 CALLKIT_SOURCES = \
+	CallKit/CXCompat.cs \
 	CallKit/CXProvider.cs \
 
 # CarPlay
@@ -491,6 +492,9 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGImageProperties.cs \
 	CoreGraphics/CGLayer.cs \
 	CoreGraphics/CGPath.cs \
+	CoreGraphics/CGPoint.cs \
+	CoreGraphics/CGRect.cs \
+	CoreGraphics/CGSize.cs \
 	CoreGraphics/CGVector.cs \
 	CoreGraphics/CGPDFDocument.cs \
 	CoreGraphics/CGPDFPage-2.cs \
@@ -943,6 +947,7 @@ HOMEKIT_SOURCES = \
 	HomeKit/HMCharacteristic.cs \
 	HomeKit/HMCharacteristicMetadata.cs \
 	HomeKit/HMCharacteristicProperties.cs \
+	HomeKit/HMCompat.cs \
 	HomeKit/HMEventTrigger.cs \
 	HomeKit/HMHome.cs \
 	HomeKit/HMService.cs \
@@ -1467,6 +1472,7 @@ SCENEKIT_API_SOURCES = \
 
 SCENEKIT_CORE_SOURCES = \
 	SceneKit/SCNMatrix4.cs \
+	SceneKit/SCNMatrix4_dotnet.cs \
 	SceneKit/SCNQuaternion.cs \
 	SceneKit/SCNVector3.cs \
 	SceneKit/SCNVector4.cs \

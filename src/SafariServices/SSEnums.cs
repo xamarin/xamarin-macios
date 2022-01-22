@@ -68,7 +68,7 @@ namespace SafariServices {
 		CanceledLogin = 1,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Enum not used by any API.")]
 	[NoiOS]
 	[Mac (10,12,4)]

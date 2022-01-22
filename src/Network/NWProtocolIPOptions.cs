@@ -35,6 +35,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWProtocolIPOptions : NWProtocolOptions {
+		[Preserve (Conditional = true)]
 		internal NWProtocolIPOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public void SetVersion (NWIPVersion version)

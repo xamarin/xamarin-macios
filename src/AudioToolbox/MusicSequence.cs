@@ -43,6 +43,7 @@ namespace AudioToolbox {
 	public class MusicSequence : DisposableObject
 	{
 #if !COREBUILD
+		[Preserve (Conditional = true)]
 		internal MusicSequence (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

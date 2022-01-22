@@ -64,6 +64,7 @@ namespace CoreText {
     }
 	
 	public class CTLine : NativeObject {
+		[Preserve (Conditional = true)]
 		internal CTLine (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{

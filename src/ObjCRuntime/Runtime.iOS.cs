@@ -40,13 +40,13 @@ namespace ObjCRuntime {
 		#error Unknown platform
 #endif
 
+#if !__MACCATALYST__
 		public static Arch Arch; // default: = Arch.DEVICE;
+#endif
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
-#if __MACCATALYST__
-			Arch = Arch.SIMULATOR;
-#else
+#if !__MACCATALYST__
 			if (options->IsSimulator)
 				Arch = Arch.SIMULATOR;
 #endif
@@ -54,7 +54,7 @@ namespace ObjCRuntime {
 			UIApplication.Initialize ();
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// This method is documented to be for diagnostic purposes only,
 		// and should not be considered stable API.
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -124,10 +124,12 @@ namespace ObjCRuntime {
 #endif // !COREBUILD
 	}
 
+#if !__MACCATALYST__
 	public enum Arch {
 		DEVICE,
 		SIMULATOR
 	}
+#endif
 }
 
 #endif // MONOMAC

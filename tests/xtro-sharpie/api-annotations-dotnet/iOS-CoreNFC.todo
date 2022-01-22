@@ -1,1 +1,0 @@
-!incorrect-protocol-member! NFCTagReaderSessionDelegate::tagReaderSession:didDetectTags: is OPTIONAL and should NOT be abstract

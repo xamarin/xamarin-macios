@@ -211,8 +211,12 @@ namespace AudioToolbox {
 				del ();
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlayAlertSound (Action onCompletion)
@@ -231,8 +235,12 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		public Task PlayAlertSoundAsync ()
 		{
@@ -243,8 +251,12 @@ namespace AudioToolbox {
 			return tcs.Task;
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlaySystemSound (Action onCompletion)
@@ -263,8 +275,12 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		public Task PlaySystemSoundAsync ()
 		{
@@ -275,14 +291,22 @@ namespace AudioToolbox {
 			return tcs.Task;
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);

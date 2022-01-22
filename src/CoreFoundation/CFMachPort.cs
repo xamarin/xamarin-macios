@@ -50,6 +50,7 @@ namespace CoreFoundation
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal CFMachPort (NativeHandle handle, bool owns)
 #else

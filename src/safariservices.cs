@@ -18,6 +18,7 @@ using UIKit;
 #else
 using AppKit;
 using UIImage = AppKit.NSImage;
+using UIEventAttribution = Foundation.NSObject;
 #endif
 
 #if !NET
@@ -69,7 +70,7 @@ namespace SafariServices {
 		[Export ("addReadingListItemWithURL:title:previewText:error:")]
 		bool Add (NSUrl url, [NullAllowed] string title, [NullAllowed] string previewText, out NSError error);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("SSReadingListErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -168,6 +169,11 @@ namespace SafariServices {
 		[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
 		[Export ("activityButton", ArgumentSemantic.Copy)]
 		SFSafariViewControllerActivityButton ActivityButton { get; set; }
+
+		[NullAllowed]
+		[NoWatch, NoTV, iOS (15,2), MacCatalyst (15,2), NoMac]
+		[Export ("eventAttribution", ArgumentSemantic.Copy)]
+		UIEventAttribution EventAttribution { get; set; }
 	}
 
 	[iOS (11,0)]

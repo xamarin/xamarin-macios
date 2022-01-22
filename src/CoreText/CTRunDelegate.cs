@@ -82,7 +82,7 @@ namespace CoreText {
 		{
 		}
 
-#if XAMCORE_4_0
+#if NET
 		public virtual nfloat GetAscent ()
 		{
 			return 0;
@@ -179,6 +179,7 @@ namespace CoreText {
 	}
 
 	public class CTRunDelegate : NativeObject, IDisposable {
+		[Preserve (Conditional = true)]
 		internal CTRunDelegate (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

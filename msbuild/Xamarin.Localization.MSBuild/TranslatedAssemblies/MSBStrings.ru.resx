@@ -716,6 +716,9 @@
   <data name="E0188" xml:space="preserve">
         <value>Не удалось сопоставить версию Mac Catalyst {0} с соответствующей версией macOS. Допустимые версии Mac Catalyst: {1}</value>
     </data>
+  <data name="E0189" xml:space="preserve">
+        <value>Не удалось проанализировать настраиваемые аргументы компоновщика "-{0}": {1}</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Не удалось разрешить IP-адреса узлов для параметров отладчика Wi-Fi.
         </value>
@@ -1081,5 +1084,12 @@
   <data name="W7087" xml:space="preserve">
         <value>Ожидался файл manifest в каталоге {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>Платформа {0} является платформой статических библиотек и не будет скопирована в приложение.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>Недопустимая платформа файла "{0}": {1}</value>
     </data>
 </root>

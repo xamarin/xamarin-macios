@@ -35,7 +35,9 @@ namespace MonoTouchFixtures.AVFoundation {
 #if !MONOMAC // No Type property for Mac
 				Assert.AreEqual (AVMetadataObjectType.Face, obj.Type, "Type");
 #endif
+#if !NET
 				Assert.AreEqual (AVMetadataObject.TypeFace, obj.WeakType, "WeakType");
+#endif
 			}
 
 #if !MONOMAC // iOS only

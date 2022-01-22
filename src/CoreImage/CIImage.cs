@@ -23,6 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
@@ -51,11 +52,15 @@ namespace CoreImage {
 
 		public CIImageOrientation? ImageOrientation;
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustCrop;
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustLevel;

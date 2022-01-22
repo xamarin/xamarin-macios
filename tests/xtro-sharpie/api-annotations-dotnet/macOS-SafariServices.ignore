@@ -1,3 +1,4 @@
+!missing-enum! SFSafariServicesVersion not bound
 !missing-field! _SFSafariServicesAvailable not bound
 !missing-field! _SFSafariServicesVersion not bound
 !missing-selector! +SFSafariExtensionManager::getStateOfSafariExtensionWithIdentifier:completionHandler: not bound

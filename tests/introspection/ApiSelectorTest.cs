@@ -195,21 +195,21 @@ namespace Introspection {
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "ARBodyTrackingConfiguration":
 			case "ARGeoTrackingConfiguration":
 			switch (selectorName) {
 				case "supportsAppClipCodeTracking": // Only available on device
-					return Runtime.Arch == Arch.SIMULATOR;
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			case "CSImportExtension":
 				switch (selectorName) {
 				case "beginRequestWithExtensionContext:": 
 				case "updateAttributes:forFileAtURL:error:":
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -217,7 +217,7 @@ namespace Introspection {
 			case "HKQuery":
 				switch (selectorName) {
 				case "predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:": // not available in the sim
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -273,6 +273,17 @@ namespace Introspection {
 				case "initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:":
 				case "initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:":
 					return true;
+				}
+				break;
+			case "NSOperationQueue":
+				switch (selectorName) {
+				case "progress":
+					// The "progress" property comes from the NSProgressReporting protocol, where it was introduced a long time ago.
+					// Then NSOperationQueue started implementing the NSProgressReporting, but only in iOS 13, which means that
+					// this selector does not exist on earlier iOS versions, even to the managed property (from the protocol) claims so.
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSImage":
@@ -822,7 +833,7 @@ namespace Introspection {
 				case "defaultBody2DSkeletonDefinition":
 				case "defaultBody3DSkeletonDefinition":
 					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					break;
 				}
@@ -852,6 +863,13 @@ namespace Introspection {
 				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
 				if (selectorName == "waitUntilExit")
 					return true;
+				break;
+			case "NSTextStorage":
+				switch (selectorName) {
+				// declared in a superclass, and implemented in a concrete subclass, so it doesn't show up during inspection of NSTextStorage itself.
+				case "initWithString:":
+					return true;
+				}
 				break;
 			case "MPSImageDescriptor":
 				switch (selectorName) {

@@ -10,7 +10,7 @@
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
     <MtouchExtraArgs Condition="$(Configuration.Contains('Debug'))">$(MtouchExtraArgs) --optimize=-remove-uithread-checks</MtouchExtraArgs>
     <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
   </PropertyGroup>
 
@@ -82,6 +82,11 @@
     <Compile Include="$(ThisTestDirectory)\..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
       <Link>NetworkResources.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(ThisTestDirectory)\..\..\..\monotouch-test\Tamarin.pdf">
+      <Link>Tamarin.pdf</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="$(ThisTestDirectory)\LaunchScreen.storyboard" />

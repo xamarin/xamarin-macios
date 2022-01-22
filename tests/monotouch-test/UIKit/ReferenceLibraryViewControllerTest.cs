@@ -22,8 +22,10 @@ namespace MonoTouchFixtures.UIKit {
 
 		public void InitWithTerm ()
 		{
+#if !__MACCATALYST__
 			if (Runtime.Arch == Arch.DEVICE && TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9, 0))
 				Assert.Ignore ("crash on iOS9 devices");
+#endif
 			using (UIReferenceLibraryViewController rlvc = new UIReferenceLibraryViewController ("Mono")) {
 			}
 		}

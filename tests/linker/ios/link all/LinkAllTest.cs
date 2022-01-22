@@ -27,6 +27,9 @@ using ObjCRuntime;
 #if !__WATCHOS__
 using StoreKit;
 #endif
+#if __MACOS__ || __IOS__
+using PdfKit;
+#endif
 #if !__MACOS__
 using UIKit;
 #endif
@@ -411,10 +414,7 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_Compare ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Single.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Single.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -423,10 +423,7 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_ToString ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			var ci = CultureInfo.InvariantCulture;
 #if NET
 			Assert.That (Single.Epsilon.ToString (ci), Is.EqualTo ("1E-45"), "Epsilon.ToString()");
@@ -440,10 +437,7 @@ namespace LinkAll {
 		[Test]
 		public void DoubleEpsilon_Compare ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Double.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Double.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -452,10 +446,7 @@ namespace LinkAll {
 		[Test]
 		public void DoubleEpsilon_ToString ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			var ci = CultureInfo.InvariantCulture;
 			// note: unlike Single this works on both my iPhone5S and iPodTouch5
 #if NET
@@ -684,6 +675,19 @@ namespace LinkAll {
 			var suffix = Path.Combine (bundleName, bundleLocation, corelib);
 			Assert.That (corlib, Does.EndWith (suffix), corlib);
 		}
+
+#if __MACOS__ || __IOS__
+		[Test]
+		public void CGPdfPage ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+			var pdfPath = NSBundle.MainBundle.PathForResource ("Tamarin", "pdf");
+			using var view = new PdfView ();
+			view.Document = new PdfDocument (NSUrl.FromFilename (pdfPath));
+			using var page = view.CurrentPage;
+			Assert.IsNotNull (page.Page, "Page");
+		}
+#endif
 	}
 
 #if NET

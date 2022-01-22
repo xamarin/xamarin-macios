@@ -48,7 +48,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.DetectSdkLocations" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetFiles" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetMlaunchArguments" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.MTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ParseDeviceSpecificBuildInformation" AssemblyFile="$(_TaskAssemblyName)" />
@@ -81,6 +80,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectFrameworks" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileEntitlements" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleLocation" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
@@ -94,6 +94,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFiles" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFileSystemEntries" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFullPath" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="$(_TaskAssemblyName)" />
@@ -293,6 +294,41 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)bundler.stamp" />
 	</Target>
 
+	<Target Name="_CleanAppBundleRootDirectory" Condition="'$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS'">
+		<!-- There shouldn't be any files in the root directory of the app bundle for macOS or Mac Catalyst (signing will fail) -->
+
+		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
+		<!-- Use a task to collect the files, so that we get the correct behavior on Windows -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="mono_crash.*"
+			Recursive="false"
+			IncludeDirectories="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
+		</GetFileSystemEntries>
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
+			Files="@(_MonoCrashDumpsInAppBundle)"
+		/>
+
+		<!-- Warn about any files that are left -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS')"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="*"
+			Recursive="false"
+			IncludeDirectories="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_FilesInAppBundleRootDirectory" />
+		</GetFileSystemEntries>
+		<Warning Text="Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:%0a@(_FilesInAppBundleRootDirectory, '%0a')" Condition="@(_FilesInAppBundleRootDirectory->Count()) &gt; 0"/>
+	</Target>
+
 	<Target Name="_CleanBindingResourcePackage">
 		<RemoveDir Directories="$(BindingResourcePath);" />  
 	</Target>
@@ -352,6 +388,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<_CollectBundleResourcesDependsOn>
 			$(_CollectBundleResourcesDependsOn);
 			_ComputeTargetArchitectures;
+			_ComputeTargetFrameworkMoniker;
 		</_CollectBundleResourcesDependsOn>
 		<_CollectBundleResourcesDependsOn Condition="'$(IsBindingProject)' != 'true'">
 			$(_CollectBundleResourcesDependsOn);
@@ -387,6 +424,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			BundleResources="@(Content);@(BundleResource)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</CollectBundleResources>
@@ -1289,7 +1327,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</MetalLib>
 	</Target>
 
-	<Target Name="_DetectAppManifest" DependsOnTargets="_GenerateBundleName">
+	<Target Name="_DetectAppManifest" DependsOnTargets="_GenerateBundleName;_ComputeTargetFrameworkMoniker">
 		<!--
 			This targets runs for Library projects as well, so that Library
 			projects can specify an Info.plist with MinimumOSVersion to pass
@@ -1302,7 +1340,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
-			Items="@(None)">
+			Items="@(None)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
 			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
 		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
@@ -1310,7 +1350,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
-			Items="@(BundleResource)">
+			Items="@(BundleResource)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
 			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
 		<FindItemWithLogicalName Condition="'$(AppManifestDetectionEnabled)' != 'false' And '$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
@@ -1318,7 +1360,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
-			Items="@(Content)">
+			Items="@(Content)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
 			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
 		<Error Condition="'$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
@@ -1680,14 +1724,28 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<!-- Code signing -->
 
 	<PropertyGroup>
+		<_CodesignAppBundleDependsOn>
+			$(_CodesignAppBundleDependsOn);
+			_CleanAppBundleRootDirectory;
+			_EmbedProvisionProfile;
+			_CodesignNativeLibraries;
+			_CollectFrameworks;
+			_CodesignFrameworks;
+			_ReadAppExtensionCodesignProperties;
+			_CodesignAppExtensions;
+			_PrepareCodesignAppExtension;
+		</_CodesignAppBundleDependsOn>
+
 		<CoreCodesignDependsOn>
 			$(CoreCodesignDependsOn);
+			$(_CodesignAppBundleDependsOn);
 			_CodesignAppBundle;
 			_CodesignVerify;
 		</CoreCodesignDependsOn>
 
 		<CodesignDependsOn>
 			$(CodesignDependsOn);
+			_CreateAppBundle;
 			BeforeCodeSign;
 			CoreCodeSign;
 			AfterCodeSign;
@@ -1794,9 +1852,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 			<Output TaskParameter="Frameworks" ItemName="_Frameworks"/>
 		</CollectFrameworks>
+		<PropertyGroup>
+			<_MustCodesignFrameworks Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == 'true' And '@(_Frameworks)' != ''">true</_MustCodesignFrameworks>
+			<_MustCodesignFrameworks Condition="'$(_PlatformName)' != 'macOS' And '$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''">true</_MustCodesignFrameworks>
+		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
+	<Target Name="_CodesignFrameworks" Condition="'$(_MustCodesignFrameworks)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
 		Inputs="%(_Frameworks.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)">
 
 		<PropertyGroup>
@@ -1831,6 +1893,134 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
+	</Target>
+
+	<Target Name="_ReadAppExtensionCodesignProperties">
+		<ReadItemsFromFile File="%(_ResolvedAppExtensionReferences.Identity)\..\codesign.items" Condition="Exists('%(_ResolvedAppExtensionReferences.Identity)\..\codesign.items')">
+			<Output TaskParameter="Items" ItemName="_AppExtensionCodesignProperties" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CodesignAppExtensions" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
+		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
+		Inputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
+		Outputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
+
+		<PropertyGroup>
+			<_CodesignAppExtensionsLibraryPath>$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_CodesignAppExtensionsLibrary
+				Include="$(_CodesignAppExtensionsLibraryPath)**\*.dylib;$(_CodesignAppExtensionsLibraryPath)**\*.metallib"
+				Exclude="$(_CodesignAppExtensionsLibraryPath)Watch\**;$(_CodesignAppExtensionsLibraryPath)$(_AppPlugInsRelativePath)\**"
+				>
+			</_CodesignAppExtensionsLibrary>
+		</ItemGroup>
+
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			Resources="@(_CodesignAppExtensionsLibrary)"
+			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
+			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
+			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
+			SigningKey="%(_AppExtensionCodesignProperties.LibrarySigningKey)"
+			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
+			>
+		</Codesign>
+
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != ''"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
+			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
+			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
+			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
+			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
+			Resources="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)"
+			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
+			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
+			>
+		</Codesign>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_CanOutputAppBundle)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != '') And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
+			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist"
+		/>
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources')"
+			Files="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources"
+		/>
+	</Target>
+
+	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
+		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
+		<PropertyGroup>
+			<_CompiledEntitlementsFullPath></_CompiledEntitlementsFullPath>
+			<_ResourceRulesFullPath></_ResourceRulesFullPath>
+		</PropertyGroup>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(AppBundleDir)">
+			<Output TaskParameter="FullPath" PropertyName="_AppBundleFullPath" />
+		</GetFullPath>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledCodesignEntitlements)' != ''" RelativePath="$(_CompiledCodesignEntitlements)">
+			<Output TaskParameter="FullPath" PropertyName="_CompiledEntitlementsFullPath" />
+		</GetFullPath>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_PreparedResourceRules)' != ''" RelativePath="$(_PreparedResourceRules)">
+			<Output TaskParameter="FullPath" PropertyName="_ResourceRulesFullPath" />
+		</GetFullPath>
+
+		<GetFiles SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(_AppBundleFullPath)" Pattern="*.*" Option="AllDirectories">
+			<Output TaskParameter="Files" ItemName="_AppExtensionBundleFiles" />
+		</GetFiles>
+
+		<PropertyGroup>
+			<!-- [System.IO.Path]::GetFileName() is safe to use -->
+			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
+			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
+
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
+
+			<_CodesignAppExtensionInputs>@(_AppExtensionBundleFiles);$(_EntitlementsFullPath)</_CodesignAppExtensionInputs>
+
+			<_LibrarySigningKey>$(_CodeSigningKey)</_LibrarySigningKey>
+			<_LibrarySigningKey Condition="'$(_LibrarySigningKey)' == ''">-</_LibrarySigningKey>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_AppExtensionCodesignPropertiesToWrite Include="$(_AppBundleFileName)">
+				<CodesignAppExtensionInputs>$(_CodesignAppExtensionInputs)</CodesignAppExtensionInputs>
+				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<DisableTimestamp>$(_CodesignDisableTimestamp)</DisableTimestamp>
+				<Entitlements>$(_CompiledEntitlementsFullPath)</Entitlements>
+				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
+				<Keychain>$(CodesignKeychain)</Keychain>
+				<LibrarySigningKey>$(_LibrarySigningKey)</LibrarySigningKey>
+				<SigningKey>$(_CodeSigningKey)</SigningKey>
+				<ExtraArgs>$(CodesignExtraArgs)</ExtraArgs>
+			</_AppExtensionCodesignPropertiesToWrite>
+		</ItemGroup>
+
+		<WriteItemsToFile
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Items="@(_AppExtensionCodesignPropertiesToWrite)"
+			ItemName="_AppExtensionCodesignProperties"
+			File="$(DeviceSpecificOutputPath)codesign.items"
+			IncludeMetadata="true"
+			Overwrite="true"
+		/>
 	</Target>
 
 	<!-- LinkMode -->
@@ -1990,6 +2180,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ToolPath="$(DittoPath)"
 			Source="@(_ResolvedAppExtensionReferences)"
 			Destination="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
+			TouchDestinationFiles="true"
 		/>
 
 		<!-- Delete any code signatures and dSYM dirs since they are now invalid -->
@@ -2259,11 +2450,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 		<PropertyGroup>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-			<_AppResourcesPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
-			<_AppResourcesPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_AppBundlePath)</_AppResourcesPath>
+			<_AppResourcesRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\Resources\</_AppResourcesRelativePath>
+			<_AppResourcesRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'"></_AppResourcesRelativePath>
+			<_AppResourcesPath>$(_AppBundlePath)$(_AppResourcesRelativePath)</_AppResourcesPath>
 
-			<_AppContentsPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_AppBundlePath)Contents\$(_CustomBundleName)</_AppContentsPath>
-			<_AppContentsPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_AppBundlePath)</_AppContentsPath>
+			<_AppContentsRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\$(_CustomBundleName)</_AppContentsRelativePath>
+			<_AppContentsRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'"></_AppContentsRelativePath>
+			<_AppContentsPath>$(_AppBundlePath)$(_AppContentsRelativePath)</_AppContentsPath>
+
+			<_AppFrameworksRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\Frameworks\</_AppFrameworksRelativePath>
+			<_AppFrameworksRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">Frameworks\</_AppFrameworksRelativePath>
+			<_AppFrameworksPath>$(_AppBundlePath)$(_AppFrameworksRelativePath)</_AppFrameworksPath>
+
+			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\PlugIns\</_AppPlugInsRelativePath>
+			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">PlugIns\</_AppPlugInsRelativePath>
+			<_AppPlugInsPath>$(_AppBundlePath)$(_AppPlugInsRelativePath)</_AppPlugInsPath>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(IsAppExtension)' == 'true'">
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->

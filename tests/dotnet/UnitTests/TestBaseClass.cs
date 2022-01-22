@@ -102,7 +102,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		protected bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
+		protected static bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -123,6 +123,36 @@ namespace Xamarin.Tests {
 				return true;
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetRelativeResourcesDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return "Resources";
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine ("Contents", "Resources");
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetRelativeAssemblyDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return string.Empty;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine ("Contents", "MonoBundle");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
 		}
 
@@ -213,6 +243,31 @@ namespace Xamarin.Tests {
 			appPath = Path.Combine (dir, "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, name + ".app");
 
 			return csproj;
+		}
+
+		protected void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		{
+			if (!CanExecute (platform, runtimeIdentifiers))
+				return;
+
+			ExecuteWithMagicWordAndAssert (executable);
+		}
+
+		protected void ExecuteWithMagicWordAndAssert (string executable)
+		{
+			if (!File.Exists (executable))
+				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
+
+			var magicWord = Guid.NewGuid ().ToString ();
+			var env = new Dictionary<string, string?> {
+				{ "MAGIC_WORD", magicWord },
+				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
+			};
+
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
+			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 		}
 	}
 }

@@ -47,6 +47,7 @@ namespace SearchKit
 
 	public class SKSearch : NativeObject
 	{
+		[Preserve (Conditional = true)]
 		internal SKSearch (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -134,6 +135,7 @@ namespace SearchKit
 		{
 		}
 
+		[Preserve (Conditional = true)]
 		internal SKDocument (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -197,6 +199,7 @@ namespace SearchKit
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static void SKIndexClose (IntPtr handle);
 
+		[Preserve (Conditional = true)]
 		SKIndex (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -490,6 +493,7 @@ namespace SearchKit
 
 	public class SKSummary : NativeObject
 	{
+		[Preserve (Conditional = true)]
 		internal SKSummary (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

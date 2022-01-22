@@ -33,6 +33,7 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecCertificate2 : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal SecCertificate2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
