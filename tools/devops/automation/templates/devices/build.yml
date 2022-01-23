@@ -50,29 +50,9 @@ steps:
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
-  displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
-  continueOnError: true
-  timeoutInMinutes: 60
-
-- bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
-  displayName: 'Clean workspace'
-
-- pwsh : |
-    Write-Host "IsMacOS: ${IsMacOS}"
-    Write-Host "IsWindows: ${IsWindows}"
-    Write-Host "IsLinux: ${IsLinux}"
-
-    if ($IsMacOS -or $IsLinux) {
-        Write-Host "HOSTNAME: $(hostname)"
-    } else {
-        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
-    }
-
-    gci env: | format-table -autosize -wrap
-  displayName: 'Show Environment'
+- template: ../common/setup.yml
+  parameters:
+    keyringPass: ${{ parameters.keyringPass }}
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:

@@ -24,7 +24,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 // CFHTTPMessage is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
-#if XAMCORE_4_0
+#if NET
 namespace CFNetwork {
 #else
 namespace CoreServices {
@@ -289,22 +289,25 @@ namespace CoreServices {
 			Negotiate,
 			NTLM,
 			Digest,
-#if !NET
-			[Mac (10, 9)][iOS (7,0)]
-			[Deprecated (PlatformName.iOS, 12,0, message: "Not available anymore.")]
-			[Deprecated (PlatformName.TvOS, 12,0, message: "Not available anymore.")]
-			[Deprecated (PlatformName.MacOSX, 10,14, message: "Not available anymore.")]
-#else
-			[UnsupportedOSPlatform ("ios12.0")]
+#if NET
+			[SupportedOSPlatform ("macos10.9")]
+			[SupportedOSPlatform ("ios7.0")]
 			[UnsupportedOSPlatform ("tvos12.0")]
 			[UnsupportedOSPlatform ("macos10.14")]
-#if IOS
-			[Obsolete ("Starting with ios12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
+			[UnsupportedOSPlatform ("ios12.0")]
+#if TVOS
 			[Obsolete ("Starting with tvos12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
 			[Obsolete ("Starting with macos10.14 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+			[Obsolete ("Starting with ios12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+			[Mac (10, 9)]
+			[iOS (7,0)]
+			[Deprecated (PlatformName.iOS, 12,0, message: "Not available anymore.")]
+			[Deprecated (PlatformName.TvOS, 12,0, message: "Not available anymore.")]
+			[Deprecated (PlatformName.MacOSX, 10,14, message: "Not available anymore.")]
 #endif
 			OAuth1,
 		}

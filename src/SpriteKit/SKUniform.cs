@@ -76,7 +76,7 @@ namespace SpriteKit {
 				InitializeHandle (InitWithNameFloatVector4 (name, value), "initWithName:floatVector4:");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// Apple deprecated initWithName:floatMatrix2: in macOS10.12/iOS10.0
 		// and made available initWithName:matrixFloat2x2: so we invoke
 		// the right one at runtime depending on which OS version we are running
@@ -133,7 +133,7 @@ namespace SpriteKit {
 			else
 				InitializeHandle (InitWithNameFloatMatrix4 (name, value), "initWithName:floatMatrix4:");
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 		// Apple deprecated floatVector2Value in macOS10.12/iOS10.0
 		// and made available vectorFloat2Value so we invoke
@@ -192,7 +192,7 @@ namespace SpriteKit {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// Apple deprecated floatMatrix2Value in macOS10.12/iOS10.0
 		// and made available matrixFloat2x2Value so we invoke
 		// the right one at runtime depending on which OS version we are running
@@ -273,7 +273,7 @@ namespace SpriteKit {
 					_FloatMatrix4Value = value;
 			}
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 	}
 }
 #endif // !WATCH

@@ -434,7 +434,7 @@ namespace Xamarin.Tests {
 			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
 			Assert.That (appPath, Does.Exist, "There is an .app");
 			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
-			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Exist, "Xamarin.iOS.dll is in the bundle");
+			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Not.Exist, "Xamarin.iOS.dll is in the bundle");
 		}
 
 		[Test]
@@ -726,31 +726,6 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
-		}
-
-		internal static void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
-		{
-			if (!CanExecute (platform, runtimeIdentifiers))
-				return;
-
-			ExecuteWithMagicWordAndAssert (executable);
-		}
-
-		static void ExecuteWithMagicWordAndAssert (string executable)
-		{
-			if (!File.Exists (executable))
-				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
-
-			var magicWord = Guid.NewGuid ().ToString ();
-			var env = new Dictionary<string, string?> {
-				{ "MAGIC_WORD", magicWord },
-				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
-			};
-
-			var output = new StringBuilder ();
-			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
-			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 		}
 
 		void AssertThatLinkerExecuted (ExecutionResult result)

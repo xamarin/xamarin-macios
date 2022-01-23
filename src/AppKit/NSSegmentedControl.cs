@@ -22,7 +22,9 @@ namespace AppKit {
 			set { base.Cell = value; }
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[Mac (10,12)]
 #endif
 		public static NSSegmentedControl FromLabels (string[] labels, NSSegmentSwitchTracking trackingMode, Action action)
@@ -33,7 +35,9 @@ namespace AppKit {
 			return control;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[Mac (10,12)]
 #endif
 		public static NSSegmentedControl FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, Action action)

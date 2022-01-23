@@ -50,11 +50,11 @@ namespace QuickLookUI {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewItem {
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("previewItemURL")]
-#if XAMCORE_4_0
+#if NET
 		NSUrl PreviewItemUrl { get; }
 #else
 		NSUrl PreviewItemURL { get; }
@@ -168,7 +168,7 @@ namespace QuickLookUI {
 	[Mac (10,13)]
 	[Protocol]
 	interface QLPreviewingController {
-#if !XAMCORE_4_0 // This is optional in headers
+#if !NET
 		[Abstract]
 #endif
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]

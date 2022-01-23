@@ -680,7 +680,11 @@ namespace LinkSdk {
 		public void WebProxy_Leak ()
 		{
 			// note: needs to be executed under Instrument to verify it does not leak
+#if NET
+			Assert.NotNull (global::CoreFoundation.CFNetwork.GetSystemProxySettings (), "should not leak");
+#else
 			Assert.NotNull (CFNetwork.GetSystemProxySettings (), "should not leak");
+#endif
 		}
 #endif // !__TVOS__ && !__WATCHOS__
 		
@@ -826,13 +830,13 @@ namespace LinkSdk {
 		{
 			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=21882
 #if NET
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 			var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64;
 			Assert.That (mem, Is.EqualTo (0), "PrivateMemorySize64");
 #else
 			// It's not entirely clear, but it appears this is not implemented, and won't be, for mobile platforms: https://github.com/dotnet/runtime/issues/28990
 			Assert.Throws<PlatformNotSupportedException> (() => { var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64; }, "PrivateMemorySize64");
-#endif // __MACOS__
+#endif // __MACOS__ || __MACCATALYST__
 #else
 			var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64;
 			// the above used a mach call that iOS samdbox did *not* allow (sandbox) on device

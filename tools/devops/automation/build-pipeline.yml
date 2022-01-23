@@ -18,11 +18,17 @@ parameters:
   default: true
 
 - name: runDeviceTests
-  displayName: Run Device Tests (includes macOS)
+  displayName: Run Device Tests 
+  type: boolean
+  default: true
+
+- name: runOldMacOSTests
+  displayName: Run Tests on older macOS versions 
   type: boolean
   default: true
 
 - name: runGovernanceTests
+  displayName: Run Governance Checks
   type: boolean
   default: true 
 
@@ -33,6 +39,11 @@ parameters:
   
 - name: enableDotnet
   displayName: Build Dotnet 
+  type: boolean
+  default: true
+
+- name: enableAPIDiff
+  displayName: Enable API diff generation
   type: boolean
   default: true
 
@@ -257,6 +268,7 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
+        enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 # .NET 6 Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(parameters.forceInsertion, true))) }}:
@@ -282,6 +294,8 @@ stages:
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
 
+- ${{ if eq(parameters.runOldMacOSTests, true) }}:
+  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
     - ${{ each config in parameters.macTestsConfigurations }}:
       - template: templates/mac/stage.yml
         parameters:

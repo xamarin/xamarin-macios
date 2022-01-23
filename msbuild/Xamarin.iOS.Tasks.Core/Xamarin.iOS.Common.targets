@@ -102,13 +102,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
 			$(_CodesignAppBundleDependsOn);
-			_EmbedProvisionProfile;
-			_CodesignNativeLibraries;
-			_CollectFrameworks;
-			_CodesignFrameworks;
-			_ReadAppExtensionCodesignProperties;
-			_CodesignAppExtensions;
-			_PrepareCodesignAppExtension;
 			_CalculateCodesignAppBundleInputs;
 		</_CodesignAppBundleDependsOn>
 
@@ -116,11 +109,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			$(_CodesignAppBundleDependsOn);
 			$(CoreCodesignDependsOn);
 		</CoreCodesignDependsOn>
-
-		<CodesignDependsOn>
-			_CreateAppBundle;
-			$(CodesignDependsOn);
-		</CodesignDependsOn>
 	</PropertyGroup>
 
 	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
@@ -448,136 +436,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolPath="$(DittoPath)"
 			Source="@(_ResolvedWatchAppReferences)"
 			Destination="$(_AppBundlePath)Watch\%(_ResolvedWatchAppReferences.FileName)%(_ResolvedWatchAppReferences.Extension)"
-		/>
-	</Target>
-
-	<Target Name="_ReadAppExtensionCodesignProperties">
-		<ReadItemsFromFile File="%(_ResolvedAppExtensionReferences.Identity)\..\codesign.items" Condition="Exists('%(_ResolvedAppExtensionReferences.Identity)\..\codesign.items')">
-			<Output TaskParameter="Items" ItemName="_AppExtensionCodesignProperties" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CodesignAppExtensions" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
-		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
-		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
-		Outputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
-
-		<PropertyGroup>
-			<_CodesignAppExtensionsLibraryPath>$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
-		</PropertyGroup>
-
-		<ItemGroup>
-			<_CodesignAppExtensionsLibrary
-				Include="$(_CodesignAppExtensionsLibraryPath)**\*.dylib;$(_CodesignAppExtensionsLibraryPath)**\*.metallib"
-				Exclude="$(_CodesignAppExtensionsLibraryPath)Watch\**;$(_CodesignAppExtensionsLibraryPath)PlugIns\**"
-				>
-			</_CodesignAppExtensionsLibrary>
-		</ItemGroup>
-
-		<Codesign
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			Resources="@(_CodesignAppExtensionsLibrary)"
-			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
-			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
-			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
-			SigningKey="%(_AppExtensionCodesignProperties.LibrarySigningKey)"
-			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
-			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
-			>
-		</Codesign>
-
-		<Codesign
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != ''"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
-			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
-			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
-			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
-			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
-			Resources="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
-			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
-			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
-			>
-		</Codesign>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And ('$(_CanOutputAppBundle)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != '') And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
-			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist"
-		/>
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources')"
-			Files="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources"
-		/>
-	</Target>
-
-	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
-		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
-		<PropertyGroup>
-			<_CompiledEntitlementsFullPath></_CompiledEntitlementsFullPath>
-			<_ResourceRulesFullPath></_ResourceRulesFullPath>
-		</PropertyGroup>
-
-		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(AppBundleDir)">
-			<Output TaskParameter="FullPath" PropertyName="_AppBundleFullPath" />
-		</GetFullPath>
-
-		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledCodesignEntitlements)' != ''" RelativePath="$(_CompiledCodesignEntitlements)">
-			<Output TaskParameter="FullPath" PropertyName="_CompiledEntitlementsFullPath" />
-		</GetFullPath>
-
-		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_PreparedResourceRules)' != ''" RelativePath="$(_PreparedResourceRules)">
-			<Output TaskParameter="FullPath" PropertyName="_ResourceRulesFullPath" />
-		</GetFullPath>
-
-		<GetFiles SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(_AppBundleFullPath)" Pattern="*.*" Option="AllDirectories">
-			<Output TaskParameter="Files" ItemName="_AppExtensionBundleFiles" />
-		</GetFiles>
-
-		<PropertyGroup>
-			<!-- [System.IO.Path]::GetFileName() is safe to use -->
-			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
-			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
-
-			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
-
-			<_CodesignAppExtensionInputs>@(_AppExtensionBundleFiles);$(_EntitlementsFullPath)</_CodesignAppExtensionInputs>
-
-			<_LibrarySigningKey>$(_CodeSigningKey)</_LibrarySigningKey>
-			<_LibrarySigningKey Condition="'$(_LibrarySigningKey)' == ''">-</_LibrarySigningKey>
-		</PropertyGroup>
-
-		<ItemGroup>
-			<_AppExtensionCodesignProperties Remove="@(_AppExtensionCodesignProperties)" />
-
-			<_AppExtensionCodesignProperties Include="$(_AppBundleFileName)">
-				<CodesignAppExtensionInputs>$(_CodesignAppExtensionInputs)</CodesignAppExtensionInputs>
-				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
-				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
-				<DisableTimestamp>$(_CodesignDisableTimestamp)</DisableTimestamp>
-				<Entitlements>$(_CompiledEntitlementsFullPath)</Entitlements>
-				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
-				<Keychain>$(CodesignKeychain)</Keychain>
-				<LibrarySigningKey>$(_LibrarySigningKey)</LibrarySigningKey>
-				<SigningKey>$(_CodeSigningKey)</SigningKey>
-				<ExtraArgs>$(CodesignExtraArgs)</ExtraArgs>
-			</_AppExtensionCodesignProperties>
-		</ItemGroup>
-
-		<WriteItemsToFile
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_AppExtensionCodesignProperties)"
-			ItemName="_AppExtensionCodesignProperties"
-			File="$(DeviceSpecificOutputPath)codesign.items"
-			IncludeMetadata="true"
-			Overwrite="true"
 		/>
 	</Target>
 

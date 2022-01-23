@@ -141,7 +141,7 @@ namespace Foundation {
 #if !NET
 		[iOS (7,0)][Mac (10,9)]
 #endif
-#if XAMCORE_4_0
+#if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
 #else
 		public NSItemDownloadingStatus DownloadingStatus {

@@ -39,6 +39,18 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreMidi {
 
+
+	[Mac (10,14)]
+	[Watch (8,0)]
+	[TV (15,0)]
+	// NSUInteger -> MIDINetworkSession.h
+	[Native]
+	public enum MidiNetworkConnectionPolicy : ulong {
+		NoOne,
+		HostsInContactsList,
+		Anyone,
+	}
+
 	[Mac (11, 0), iOS (14, 0)]
 	public enum MidiProtocolId {
 		Protocol_1_0 = 1,

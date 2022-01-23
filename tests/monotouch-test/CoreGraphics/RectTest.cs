@@ -7,6 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+using System;
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
@@ -72,6 +73,17 @@ namespace MonoTouchFixtures.CoreGraphics
 			} finally {
 				Dlfcn.dlclose (handle);
 			}
+		}
+
+		[Test]
+		public void ToStringTest ()
+		{
+			var rect = new CGRect ((nfloat)1, (nfloat)2, (nfloat)3, (nfloat)4);
+#if NET
+			Assert.AreEqual ("{{1, 2}, {3, 4}}", rect.ToString (), "ToString");
+#else
+			Assert.AreEqual ("{X=1,Y=2,Width=3,Height=4}", rect.ToString (), "ToString");
+#endif
 		}
 	}
 }
