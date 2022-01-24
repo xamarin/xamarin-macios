@@ -83,11 +83,19 @@ namespace CoreServices
 	{
 		#region Locating an Application
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForURL (IntPtr inUrl, LSRoles inRole, /*out*/ IntPtr outError);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[Mac (10, 10)]
+#endif
 		public static NSUrl GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
 			if (url == null)
@@ -98,11 +106,19 @@ namespace CoreServices
 			);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForContentType (IntPtr inContentType, LSRoles inRole, /*out*/ IntPtr outError);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[Mac (10, 10)]
+#endif
 		public static NSUrl GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
 			if (contentType == null)
@@ -152,11 +168,19 @@ namespace CoreServices
 			return CanUrlAcceptUrl (itemUrl, targetUrl, roles, acceptanceFlags, out result);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyApplicationURLsForBundleIdentifier (IntPtr inBundleIdentifier, /*out*/ IntPtr outError);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[Mac (10, 10)]
+#endif
 		public static NSUrl [] GetApplicationUrlsForBundleIdentifier (string bundleIdentifier)
 		{
 			if (bundleIdentifier == null)
@@ -258,11 +282,25 @@ namespace CoreServices
 			);
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllHandlersForURLScheme (IntPtr inUrlScheme);
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'GetApplicationUrlsForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
+#endif
 		public static string [] GetAllHandlersForUrlScheme (string urlScheme)
 		{
 			if (urlScheme == null)
@@ -273,11 +311,25 @@ namespace CoreServices
 			);
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultHandlerForURLScheme (IntPtr inUrlScheme);
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'GetDefaultApplicationUrlForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetDefaultApplicationUrlForUrl' instead.")]
+#endif
 		public static string GetDefaultHandlerForUrlScheme (string urlScheme)
 		{
 			if (urlScheme == null)

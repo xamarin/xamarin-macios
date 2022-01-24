@@ -29,11 +29,23 @@ namespace CoreServices
 		WatchRoot = 0x00000004,
 		IgnoreSelf = 0x00000008,
 		FileEvents = 0x00000010,
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[Mac (10,9)]
+#endif
 		MarkSelf = 0x00000020,
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10,13)]
+#endif
 		UseExtendedData = 0x00000040,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Mac (11,0)]
+#endif
 		FullHistory = 0x00000080,
 	}
 
@@ -63,7 +75,11 @@ namespace CoreServices
 		OwnEvent  = 0x00080000,
 		ItemIsHardlink = 0x00100000,
 		ItemIsLastHardlink = 0x00200000,
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+#else
 		[Mac (10,14)]
+#endif
 		ItemCloned = 0x00400000,
 	}
 
