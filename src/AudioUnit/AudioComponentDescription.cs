@@ -271,8 +271,12 @@ namespace AudioUnit
 		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentType ComponentType;
 		
-		[MarshalAs (UnmanagedType.U4)]
+		[MarshalAs(UnmanagedType.U4)]
+#if NET && !COREBUILD
+		public AudioUnitSubType ComponentSubType;
+#else
 		public int ComponentSubType;
+#endif
         
 		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentManufacturerType ComponentManufacturer;
@@ -283,7 +287,11 @@ namespace AudioUnit
 		internal AudioComponentDescription (AudioComponentType type, int subType)
 		{
 			ComponentType = type;
+#if NET && !COREBUILD
+			ComponentSubType = (AudioUnitSubType) subType;
+#else
 			ComponentSubType = subType;
+#endif
 			ComponentManufacturer = AudioComponentManufacturerType.Apple;
 			ComponentFlags = (AudioComponentFlag) 0;
 			ComponentFlagsMask = 0;

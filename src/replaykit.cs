@@ -69,7 +69,7 @@ namespace ReplayKit {
 	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0 || MONOMAC
+#if NET || MONOMAC
 	[Sealed]
 #endif
 	interface RPScreenRecorder {

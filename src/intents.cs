@@ -173,7 +173,7 @@ namespace Intents {
 		All
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -354,7 +354,7 @@ namespace Intents {
 		FailurePreviousRideNeedsFeedback,
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -373,7 +373,7 @@ namespace Intents {
 		Played,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -642,7 +642,7 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -668,7 +668,7 @@ namespace Intents {
 		Success,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -794,7 +794,11 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
+#if NET
+	[NoMac]
+#else
 	[Mac (10, 12, 0)]
+#endif
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Native]
@@ -866,7 +870,7 @@ namespace Intents {
 		Authorized,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -912,7 +916,7 @@ namespace Intents {
 		FailureAppConfigurationRequired,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -1343,7 +1347,7 @@ namespace Intents {
 		ByLocationTrigger,
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -2225,11 +2229,7 @@ namespace Intents {
 		School,
 	}
 
-#if XAMCORE_4_0
-	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
+	[Mac (10, 15)] // headers say nothing, documentation says introduced macOS 12.1, but both headers and documents say some enum fields were available in macOS 10.15, so let's go with that for the enum itself as well.
 	[iOS (10, 2)]
 	[Watch (3, 2)]
 	[NoTV]
@@ -2237,36 +2237,91 @@ namespace Intents {
 		[Field (null)]
 		None,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFather")]
 		Father,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipMother")]
 		Mother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipParent")]
 		Parent,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipBrother")]
 		Brother,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSister")]
 		Sister,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipChild")]
 		Child,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipFriend")]
 		Friend,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipSpouse")]
 		Spouse,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipPartner")]
 		Partner,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipAssistant")]
 		Assistant,
 
+#if NET
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Field ("INPersonRelationshipManager")]
 		Manager,
 
@@ -2407,7 +2462,7 @@ namespace Intents {
 	interface INBookRestaurantReservationIntent : NSCopying {
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
-#if XAMCORE_4_0
+#if NET
 		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
 #else
 		// This is correctly nuint but a bug in PMCS generated incorrect code which has shipped.
@@ -2448,7 +2503,7 @@ namespace Intents {
 
 		[Export ("confirmBookRestaurantReservation:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmBookRestaurantReservation
@@ -2630,7 +2685,7 @@ namespace Intents {
 
 		[Export ("confirmCancelWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmCancelWorkout
@@ -2997,7 +3052,13 @@ namespace Intents {
 		[Export ("initWithEKRecurrenceRule:")]
 		NativeHandle Constructor (EKRecurrenceRule recurrenceRule);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
+		// Headers claim the recurrenceRule property is available in macOS, but the parameter type INRecurrenceRule is not, so...
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0), NoTV]
 		[Export ("initWithStartDateComponents:endDateComponents:recurrenceRule:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents, [NullAllowed] INRecurrenceRule recurrenceRule);
@@ -3008,7 +3069,13 @@ namespace Intents {
 		[NullAllowed, Export ("endDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents EndDateComponents { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
+		// Headers claim the recurrenceRule property is available in macOS, but the property type (INRecurrenceRule) is not, so...
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0), NoTV]
 		[NullAllowed, Export ("recurrenceRule", ArgumentSemantic.Copy)]
 		INRecurrenceRule RecurrenceRule { get; }
 
@@ -3018,7 +3085,7 @@ namespace Intents {
 		EKRecurrenceRule EKRecurrenceRule { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -3073,7 +3140,7 @@ namespace Intents {
 		INDateComponentsRangeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -3153,7 +3220,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol] 
 	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
 #endif
 	{
@@ -3177,7 +3244,7 @@ namespace Intents {
 	[NoTV]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling 
-#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
 #endif
 	{
@@ -3323,7 +3390,7 @@ namespace Intents {
 
 		[Export ("confirmEndWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmEndWorkout
@@ -3397,7 +3464,7 @@ namespace Intents {
 
 		[Export ("confirmGetAvailableRestaurantReservationBookingDefaults:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmAvailableRestaurantReservationBookingDefaults
@@ -3481,7 +3548,7 @@ namespace Intents {
 
 		[Export ("confirmGetAvailableRestaurantReservationBookings:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmAvailableRestaurantReservationBookings
@@ -3546,7 +3613,7 @@ namespace Intents {
 
 		[Export ("confirmGetRestaurantGuest:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRestaurantGuest
@@ -3609,7 +3676,7 @@ namespace Intents {
 
 		[Export ("confirmGetRideStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRideStatus
@@ -3691,7 +3758,7 @@ namespace Intents {
 
 		[Export ("confirmGetUserCurrentRestaurantReservationBookings:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmUserCurrentRestaurantReservationBookings
@@ -4028,7 +4095,7 @@ namespace Intents {
 
 		[Export ("confirmListRideOptions:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmListRideOptions
@@ -4067,7 +4134,7 @@ namespace Intents {
 		NSDate ExpirationDate { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4128,7 +4195,7 @@ namespace Intents {
 		string ServiceName { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -4199,7 +4266,7 @@ namespace Intents {
 		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+#if NET
 	[NoMac]
 #else
 	[Mac (10, 12, 0)]
@@ -4298,7 +4365,7 @@ namespace Intents {
 
 		[Export ("confirmPauseWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmPauseWorkout
@@ -4616,7 +4683,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
-#if XAMCORE_4_0 || TVOS || __MACCATALYST__
+#if NET || TVOS || __MACCATALYST__
 	[DisableDefaultCtor]
 #endif
 	[TV (14,0)]
@@ -4898,7 +4965,7 @@ namespace Intents {
 
 		[Export ("confirmRequestPayment:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRequestPayment
@@ -4996,7 +5063,7 @@ namespace Intents {
 
 		[Export ("confirmRequestRide:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmRequestRide
@@ -5339,7 +5406,7 @@ namespace Intents {
 
 		[Export ("confirmResumeWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmResumeWorkout
@@ -5667,7 +5734,7 @@ namespace Intents {
 
 		[Export ("confirmSaveProfileInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSaveProfileInCar
@@ -5699,7 +5766,7 @@ namespace Intents {
 		INSaveProfileInCarIntentResponseCode Code { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5752,7 +5819,7 @@ namespace Intents {
 		NSNumber WeakUnseen { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5771,7 +5838,7 @@ namespace Intents {
 
 		[Export ("confirmSearchCallHistory:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchCallHistory
@@ -5799,7 +5866,7 @@ namespace Intents {
 		void ResolveUnseen (INSearchCallHistoryIntent intent, Action<INBooleanResolutionResult> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5825,7 +5892,7 @@ namespace Intents {
 		INCallRecord [] CallRecords { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5919,7 +5986,7 @@ namespace Intents {
 		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -5936,7 +6003,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForMessages:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchForMessages
@@ -5966,7 +6033,7 @@ namespace Intents {
 		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -6045,7 +6112,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForPhotos:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearchForPhotos
@@ -6189,7 +6256,7 @@ namespace Intents {
 
 		[Export ("confirmSendMessage:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSendMessage
@@ -6220,6 +6287,9 @@ namespace Intents {
 		[Export ("resolveOutgoingMessageTypeForSendMessage:withCompletion:")]
 		void ResolveOutgoingMessageType (INSendMessageIntent intent, Action<INOutgoingMessageTypeResolutionResult> completion);
 
+#if NET
+		[NoMac] // The INSpeakableStringResolutionResult used as a parameter type is not available in macOS
+#endif
 		[Watch (4,0), iOS (11,0)]
 		[Export ("resolveSpeakableGroupNameForSendMessage:withCompletion:")]
 		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6240,6 +6310,9 @@ namespace Intents {
 		[Export ("code")]
 		INSendMessageIntentResponseCode Code { get; }
 
+#if NET
+		[NoMac] // The INMessage type isn't available in macOS
+#endif
 		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("sentMessage", ArgumentSemantic.Copy)]
 		INMessage SentMessage { get; set; }
@@ -6279,7 +6352,7 @@ namespace Intents {
 
 		[Export ("confirmSendPayment:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSendPayment
@@ -6360,7 +6433,7 @@ namespace Intents {
 
 		[Export ("confirmSetAudioSourceInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetAudioSourceInCar
@@ -6428,13 +6501,13 @@ namespace Intents {
 		[Export ("airCirculationMode", ArgumentSemantic.Assign)]
 		INCarAirCirculationMode AirCirculationMode { get; }
 
-#if XAMCORE_4_0 // Adding BindAs is a breaking change
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("fanSpeedIndex", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedIndex { get; }
 
-#if XAMCORE_4_0 // Adding BindAs is a breaking change
+#if NET
 		[BindAs (typeof (double?))]
 #endif
 		[NullAllowed, Export ("fanSpeedPercentage", ArgumentSemantic.Copy)]
@@ -6471,7 +6544,7 @@ namespace Intents {
 
 		[Export ("confirmSetClimateSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetClimateSettingsInCar
@@ -6577,7 +6650,7 @@ namespace Intents {
 
 		[Export ("confirmSetDefrosterSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetDefrosterSettingsInCar
@@ -6643,7 +6716,7 @@ namespace Intents {
 
 		[Export ("confirmSetMessageAttribute:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetMessageAttribute
@@ -6692,7 +6765,7 @@ namespace Intents {
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] [BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] [BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
 
-#if XAMCORE_4_0 // Breaking change
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
@@ -6729,7 +6802,7 @@ namespace Intents {
 
 		[Export ("confirmSetProfileInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetProfileInCar
@@ -6811,7 +6884,7 @@ namespace Intents {
 
 		[Export ("confirmSetRadioStation:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetRadioStation
@@ -6884,7 +6957,7 @@ namespace Intents {
 		[Export ("seat", ArgumentSemantic.Assign)]
 		INCarSeat Seat { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[BindAs (typeof (int?))]
 #endif
 		[NullAllowed, Export ("level", ArgumentSemantic.Copy)]
@@ -6912,7 +6985,7 @@ namespace Intents {
 
 		[Export ("confirmSetSeatSettingsInCar:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetSeatSettingsInCar
@@ -7027,14 +7100,14 @@ namespace Intents {
 		string PronunciationHint { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("vocabularyIdentifier")]
 		string VocabularyIdentifier { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("alternativeSpeakableMatches")]
@@ -7043,7 +7116,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
-#if !XAMCORE_4_0 // Apple made this @optional in iOS 11
+#if !NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("identifier")]
@@ -7074,7 +7147,7 @@ namespace Intents {
 		NativeHandle Constructor (string spokenPhrase);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7129,7 +7202,7 @@ namespace Intents {
 		INSpeakableStringResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7161,7 +7234,7 @@ namespace Intents {
 		INPerson [] Contacts { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7180,7 +7253,7 @@ namespace Intents {
 
 		[Export ("confirmStartAudioCall:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartAudioCall
@@ -7195,7 +7268,7 @@ namespace Intents {
 		void ResolveContacts (INStartAudioCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7273,7 +7346,7 @@ namespace Intents {
 
 		[Export ("confirmStartPhotoPlayback:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartPhotoPlayback
@@ -7314,7 +7387,7 @@ namespace Intents {
 		NSNumber SearchResultsCount { get; set; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7335,11 +7408,15 @@ namespace Intents {
 		INPerson [] Contacts { get; }
 	}
 
-	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
+#if NET
+	[NoMac]
+#elif MONOMAC
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
+	[Mac (10, 12, 0)]
+#endif
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Protocol]
@@ -7351,7 +7428,7 @@ namespace Intents {
 
 		[Export ("confirmStartVideoCall:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartVideoCall
@@ -7362,7 +7439,7 @@ namespace Intents {
 		void ResolveContacts (INStartVideoCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -7426,7 +7503,7 @@ namespace Intents {
 
 		[Export ("confirmStartWorkout:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmStartWorkout
@@ -7808,7 +7885,7 @@ namespace Intents {
 
 		[Export ("confirmActivateCarSignal:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmActivateCarSignal
@@ -8099,7 +8176,7 @@ namespace Intents {
 
 		[Export ("confirmGetCarLockStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmGetCarLockStatus
@@ -8172,7 +8249,7 @@ namespace Intents {
 
 		[Export ("confirmGetCarPowerLevelStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmGetCarPowerLevelStatus
@@ -8352,7 +8429,7 @@ namespace Intents {
 	[Protocol]
 	interface INPayBillIntentHandling {
 
-#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+#if NET
 		[Abstract]
 #endif
 		[Export ("handlePayBill:completion:")]
@@ -8360,7 +8437,7 @@ namespace Intents {
 
 		[Export ("confirmPayBill:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmPayBill
@@ -8686,7 +8763,7 @@ namespace Intents {
 	[Protocol]
 	interface INSearchForBillsIntentHandling {
 
-#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+#if NET
 		[Abstract]
 #endif
 		[Export ("handleSearchForBills:completion:")]
@@ -8694,7 +8771,7 @@ namespace Intents {
 
 		[Export ("confirmSearchForBills:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSearch
@@ -8775,7 +8852,7 @@ namespace Intents {
 
 		[Export ("confirmSetCarLockStatus:completion:")]
 		void
-#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
 		Confirm
 #else
 		ConfirmSetCarLockStatus
@@ -9781,7 +9858,7 @@ namespace Intents {
 		INNotebookItemTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -9818,7 +9895,7 @@ namespace Intents {
 		nuint GetIndex (string subKeyPath);
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoMac]
 #elif MONOMAC
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 using NUnit.Framework;
 
@@ -347,6 +348,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string XamarinCatalystDll {
+			get {
+				return Path.Combine (mt_root, "lib", "mono", "Xamarin.MacCatalyst", "Xamarin.MacCatalyst.dll");
+			}
+		}
+
 		public static string XamarinWatchOSDll {
 			get {
 				return Path.Combine (mt_root, "lib", "mono", "Xamarin.WatchOS", "Xamarin.WatchOS.dll");
@@ -409,11 +416,15 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string GetRefNuGetName (TargetFramework targetFramework)
-		{
-			switch (targetFramework.Platform) {
+		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
+
+		static string GetRefNuGetName (ApplePlatform platform)
+        {
+			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Microsoft.iOS.Ref";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Ref";
 			case ApplePlatform.TVOS:
 				return "Microsoft.tvOS.Ref";
 			case ApplePlatform.WatchOS:
@@ -421,7 +432,7 @@ namespace Xamarin.Tests
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Ref";
 			default:
-				throw new InvalidOperationException (targetFramework.ToString ());
+				throw new InvalidOperationException (platform.ToString ());
 			}
 		}
 
@@ -465,6 +476,11 @@ namespace Xamarin.Tests
 		public static string GetDotNetRoot ()
 		{
 			return Path.Combine (SourceRoot, "_build");
+		}
+
+		public static string GetRefDirectory (ApplePlatform platform)
+		{
+			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
@@ -635,7 +651,7 @@ namespace Xamarin.Tests
 			return GetBaseLibraryName (targetFramework.Platform);
 		}
 
-		static string GetBaseLibraryName (ApplePlatform platform)
+		public static string GetBaseLibraryName (ApplePlatform platform)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -716,6 +732,27 @@ namespace Xamarin.Tests
 				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
 				yield return Path.Combine (libdir, GetBaseLibraryName (platform));
 			}
+		}
+
+
+		public static IEnumerable<string> GetRefLibraries ()
+		{
+			foreach (var platform in GetIncludedPlatforms (true))
+				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform));
+		}
+
+		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
+		{
+			if (include_ios)
+				yield return ApplePlatform.iOS;
+			if (include_tvos)
+				yield return ApplePlatform.TVOS;
+			if (include_mac)
+				yield return ApplePlatform.MacOSX;
+			if (include_maccatalyst)
+				yield return ApplePlatform.MacCatalyst;
+			if (include_watchos && !dotnet)
+				yield return ApplePlatform.WatchOS;
 		}
 
 		public static string GetTargetFramework (Profile profile)
@@ -982,5 +1019,36 @@ namespace Xamarin.Tests
 
 			return Path.Combine (SourceRoot, "tests", "test-libraries", ".libs", dir);
 		}
+
+		// This implementation of Touch is to update a timestamp (not to make sure a certain file exists).
+		public static void Touch (string file)
+		{
+			if (!File.Exists (file))
+				throw new FileNotFoundException ($"Can't touch the file '{file}' because it doesn't exist.");
+			EnsureFilestampChange ();
+			File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
+			EnsureFilestampChange ();
+		}
+
+		static bool? is_apfs;
+		static bool IsAPFS {
+			get {
+				if (!is_apfs.HasValue) {
+					var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
+					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
+				}
+				return is_apfs.Value;
+			}
+		}
+
+		// Some file systems have a rather low resolution for file timestamps, so make sure enough time passes that
+		// touching a file will update the timestamp.
+		static void EnsureFilestampChange ()
+		{
+			if (IsAPFS)
+				return; // APFS has high resolution timestamps, so no need to wait at all.
+			Thread.Sleep (1000);
+		}
+
 	}
 }

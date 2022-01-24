@@ -1,4 +1,0 @@
-!deprecated-attribute-missing! SKNode::attributeValues missing a [Deprecated] attribute
-!deprecated-attribute-missing! SKNode::setAttributeValues: missing a [Deprecated] attribute
-!deprecated-attribute-missing! SKNode::setValue:forAttributeNamed: missing a [Deprecated] attribute
-!deprecated-attribute-missing! SKNode::valueForAttributeNamed: missing a [Deprecated] attribute

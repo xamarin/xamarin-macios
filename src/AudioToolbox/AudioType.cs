@@ -81,12 +81,15 @@ namespace AudioToolbox {
 		AES3                    = 0x61657333, // 'aes3'
 		EnhancedAES3            = 0x65632d33, // 'ec-3'
 		Flac                    = 0x666c6163, // 'flac'
-#if !NET
-		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[NoWatch]
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
 #endif
 		LatmInLoas              = 0x6c6f6173, // 'loas'
 		Opus                    = 0x6f707573, // 'opus'
@@ -136,7 +139,7 @@ namespace AudioToolbox {
 #endif
 
 	[DebuggerDisplay ("{FormatName}")]
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioStreamBasicDescription {
 		public double SampleRate;
 		public AudioFormatType Format;
@@ -154,17 +157,17 @@ namespace AudioToolbox {
 		const int AudioUnitSampleFractionBits = 24;
 		const AudioFormatFlags AudioFormatFlagIsBigEndian = 0;
 
-#if !NET
+#if NET
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.10 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
-#else
-		[UnsupportedOSPlatform ("ios8.0")]
-		[UnsupportedOSPlatform ("macos10.10")]
-#if IOS
-		[Obsolete ("Starting with ios8.0 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.10 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 		public static readonly AudioFormatFlags AudioFormatFlagsAudioUnitCanonical = AudioFormatFlags.IsSignedInteger | (BitConverter.IsLittleEndian ? 0 : AudioFormatFlags.IsBigEndian) |
 			AudioFormatFlags.IsPacked | AudioFormatFlags.IsNonInterleaved | (AudioFormatFlags) (AudioUnitSampleFractionBits << (int)AudioFormatFlags.LinearPCMSampleFractionShift);
@@ -349,7 +352,7 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioStreamPacketDescription {
 		public long  StartOffset;
 		public int  VariableFramesInPacket;
@@ -1127,7 +1130,7 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
-	[Flags]      
+	[Flags]
 	public enum SmpteTimeFlags : uint { // UInt32
 		Unknown = 0,
 		TimeValid = 1 << 0,
@@ -1149,7 +1152,7 @@ namespace AudioToolbox {
 		Hvxc = 9
 	}
 	
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct SmpteTime { // CoreAudio.framework - CoreAudioTypes.h
 		public short Subframes;
 		public short SubframeDivisor;
@@ -1205,7 +1208,7 @@ namespace AudioToolbox {
 		Type2398      = 11,
 	}
 	
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioTimeStamp {
 
 		[Flags]
@@ -1263,7 +1266,7 @@ namespace AudioToolbox {
 		}
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioBuffer {
 		public int NumberChannels;
 		public int DataByteSize;

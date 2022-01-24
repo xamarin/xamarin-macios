@@ -33,7 +33,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Net;
 
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 using CoreFoundation;
 using CF=CoreFoundation;

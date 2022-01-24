@@ -1502,7 +1502,9 @@ namespace UIKit {
 	[Protocol]
 	interface UIInputViewAudioFeedback {
 		[Export ("enableInputClicksWhenVisible")]
-		[Abstract] // it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
+#if !NET
+		[Abstract]
+#endif
 		bool EnableInputClicksWhenVisible { get; }
 	}
 
@@ -2140,6 +2142,7 @@ namespace UIKit {
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Should not be used for applications that support multiple scenes because it returns a key window across all connected scenes.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Should not be used for applications that support multiple scenes because it returns a key window across all connected scenes.")]
+		[NullAllowed]
 		[Export ("keyWindow")]
 		[Transient]
 		UIWindow KeyWindow { get; }
@@ -3127,7 +3130,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[Export ("application:didFailToContinueUserActivityWithType:error:")]
-#if XAMCORE_4_0
+#if NET
 		void DidFailToContinueUserActivity (UIApplication application, string userActivityType, NSError error);
 #else
 		void DidFailToContinueUserActivitiy (UIApplication application, string userActivityType, NSError error);
@@ -5102,13 +5105,13 @@ namespace UIKit {
 	[Protocol]
 	[Model]
 	interface UIDynamicAnimatorDelegate {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("dynamicAnimatorWillResume:")]
 		void WillResume (UIDynamicAnimator animator);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("dynamicAnimatorDidPause:")]
@@ -9865,9 +9868,10 @@ namespace UIKit {
 		[Export ("numberOfItems")]
 		nint Count { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Export ("pasteboardTypesForItemSet:")]
-		NSArray<NSString> [] GetPasteBoardTypes (NSIndexSet itemSet);
+		[return: NullAllowed]
+		NSArray<NSString> [] GetPasteBoardTypes ([NullAllowed] NSIndexSet itemSet);
 #else
 		[Export ("pasteboardTypesForItemSet:")]
 		NSArray [] PasteBoardTypesForSet (NSIndexSet itemSet);
@@ -10048,12 +10052,18 @@ namespace UIKit {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
 
-		[NullAllowed] // by default this property is null
+#if NET
+		[NullAllowed]
 		[Export ("dataSource", ArgumentSemantic.Assign)]
-#if XAMCORE_4_0
+		NSObject WeakDataSource { get; set; }
+
+		[NullAllowed]
+		[Wrap ("WeakDataSource")]
 		IUIPickerViewDataSource DataSource { get; set; }
 #else
 		// should have been WeakDataSource
+		[NullAllowed] // by default this property is null
+		[Export ("dataSource", ArgumentSemantic.Assign)]
 		NSObject DataSource { get; set; }
 #endif
 
@@ -10097,7 +10107,7 @@ namespace UIKit {
 		// 	inlined both + UIPickerView.cs implements IUITableViewDataSource
 
 		[Export ("tableView:numberOfRowsInSection:")]
-#if XAMCORE_4_0
+#if NET
 		nint RowsInSection (UITableView tableView, nint section);
 #else
 		nint RowsInSection (UITableView tableview, nint section);
@@ -10173,6 +10183,8 @@ namespace UIKit {
 		[Abstract]
 		nint GetRowsInComponent (UIPickerView pickerView, nint component);
 	}
+
+	interface IUIPickerViewDataSource { }
 
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -12682,7 +12694,7 @@ namespace UIKit {
 	interface UITableViewSource {
 		[Export ("tableView:numberOfRowsInSection:")]
 		[Abstract]
-#if XAMCORE_4_0
+#if NET
 		nint RowsInSection (UITableView tableView, nint section);
 #else
 		nint RowsInSection (UITableView tableview, nint section);
@@ -15059,33 +15071,29 @@ namespace UIKit {
 		[Export ("shouldPerformSegueWithIdentifier:sender:")]
 		bool ShouldPerformSegue (string segueIdentifier, NSObject sender);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
-#endif // !XAMCORE_4_0
+#endif
 		[Export ("canPerformUnwindSegueAction:fromViewController:withSender:")]
-		bool
-#if !XAMCORE_4_0
-		CanPerformUnwind
+#if !NET
+		bool CanPerformUnwind (Selector segueAction, UIViewController fromViewController, NSObject sender);
 #else
-		CanPerformUnwindDeprecated
-#endif // !XAMCORE_4_0
-		(Selector segueAction, UIViewController fromViewController, NSObject sender);
+		bool CanPerformUnwindDeprecated (Selector segueAction, UIViewController fromViewController, NSObject sender);
+#endif
 
 		// Apple decided to rename the selector and it clashes with our current one
-		// we will get the right name 'CanPerformUnwind' if XAMCORE_4_0 happens, use CanPerformUnwindSegueAction for now.
+		// we will get the right name 'CanPerformUnwind' if NET happens, use CanPerformUnwindSegueAction for now.
 		[TV (13,0), iOS (13,0)]
 		[Export ("canPerformUnwindSegueAction:fromViewController:sender:")]
-		bool
-#if !XAMCORE_4_0
-		CanPerformUnwindSegueAction
+#if !NET
+		bool CanPerformUnwindSegueAction (Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
 #else
-		CanPerformUnwind
-#endif // !XAMCORE_4_0
-		(Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
+		bool CanPerformUnwind (Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
+#endif
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("viewControllerForUnwindSegueAction:fromViewController:withSender:")]
@@ -15489,7 +15497,7 @@ namespace UIKit {
 		CGAffineTransform TargetTransform { get; }
 
 
-#if XAMCORE_4_0 // Can't break the world right now
+#if NET // Can't break the world right now
 		[Abstract]
 #endif
 		[iOS (10,0), TV (10,0)]
@@ -15837,7 +15845,7 @@ namespace UIKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		UIView GetTransitionViewControllerForKey (NSString key);
 
-#if XAMCORE_4_0 // This is abstract in headers but is a breaking change
+#if NET // This is abstract in headers but is a breaking change
 		[Abstract]
 #endif
 		[iOS (10, 0)]
@@ -15867,7 +15875,7 @@ namespace UIKit {
 		[Export ("notifyWhenInteractionEndsUsingBlock:")]
 		void NotifyWhenInteractionEndsUsingBlock (Action<IUIViewControllerTransitionCoordinatorContext> handler);
 
-#if XAMCORE_4_0 // This is abstract in headers but is a breaking change
+#if NET // This is abstract in headers but is a breaking change
 		[Abstract]
 #endif
 		[iOS (10,0)]
@@ -16544,16 +16552,18 @@ namespace UIKit {
 	[iOS (8,0)]
 	[Protocol]
 	interface UIPopoverBackgroundViewMethods {
-		//
-		// These must be overwritten by users, using the [Export ("...")] on the
-		// static method
-		//
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static, Export ("arrowHeight")]
 		nfloat GetArrowHeight ();
 
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static, Export ("arrowBase")]
 		nfloat GetArrowBase ();
 
+		// This method is required, but we don't generate the correct code for required static methods.
+		// [Abstract]
 		[Static, Export ("contentViewInsets")]
 		UIEdgeInsets GetContentViewInsets ();
 	}
@@ -17525,14 +17535,14 @@ namespace UIKit {
 		void AdjustTextPositionByCharacterOffset (nint offset);		
 
 		[iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // Adding required members is a breaking change
 #endif
 		[Export ("setMarkedText:selectedRange:")]
 		void SetMarkedText (string markedText, NSRange selectedRange);
 
 		[iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // Adding required members is a breaking change
 #endif
 		[Export ("unmarkText")]
@@ -17540,7 +17550,7 @@ namespace UIKit {
 
 		// Another abstract that was introduced on this released, breaking ABI
 		// Radar: 26867207
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10, 0)]
@@ -17549,7 +17559,7 @@ namespace UIKit {
 
 		// New abstract, breaks ABI
 		// Radar: 33685383
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0)]
@@ -17558,7 +17568,7 @@ namespace UIKit {
 
 		// New abstract, breaks ABI
 		// Radar: 33685383
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0)]
@@ -17623,7 +17633,7 @@ namespace UIKit {
 
 		[iOS (9,0)]
 		[Export ("topAnchor", ArgumentSemantic.Strong)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -17631,7 +17641,7 @@ namespace UIKit {
 
 		[iOS (9,0)]
 		[Export ("bottomAnchor", ArgumentSemantic.Strong)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -17639,7 +17649,7 @@ namespace UIKit {
 
 		[iOS (9,0)]
 		[Export ("heightAnchor", ArgumentSemantic.Strong)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -17752,7 +17762,7 @@ namespace UIKit {
 		NSString ResponseTypedTextKey { get; }
 	}
 #else
-#if !XAMCORE_4_0 // No longer present in watchOS 7.0
+#if !NET // No longer present in watchOS 7.0
 	[Watch (2,0)]
 	[Static]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' or 'UserNotifications.UNTextInputNotificationAction' instead.")]
@@ -17761,7 +17771,7 @@ namespace UIKit {
 		[Field ("UIUserNotificationActionResponseTypedTextKey")]
 		NSString ResponseTypedTextKey { get; }
 	}
-#endif // !XAMCORE_4_0
+#endif // !NET
 #endif
 
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' instead.")]
@@ -17837,7 +17847,7 @@ namespace UIKit {
 		[Export ("documentMenu:didPickDocumentPicker:"), EventArgs ("UIDocumentMenuDocumentPicked")]
 		void DidPickDocumentPicker (UIDocumentMenuViewController documentMenu, UIDocumentPickerViewController documentPicker);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("documentMenuWasCancelled:")]
@@ -17917,7 +17927,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	partial interface UIDocumentPickerDelegate {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Implement 'DidPickDocument (UIDocumentPickerViewController, NSUrl[])' instead.")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("documentPicker:didPickDocumentAtURL:"), EventArgs ("UIDocumentPicked")]
@@ -18144,7 +18154,7 @@ namespace UIKit {
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121416
 		[TV (12, 0), iOS (12, 0), NoWatch]
-#if XAMCORE_4_0 
+#if NET
 		[Abstract]
 #endif
 		[Export ("frame")]
@@ -18395,10 +18405,9 @@ namespace UIKit {
 	[iOS (9,0)]
 	[Protocol]
 	interface UIFocusEnvironment {
-		// Apple moved this member to @optional since they deprecated it
-		// but that's a breaking change for us, so it remains [Abstract]
-		// and we need to teach the intro and xtro tests about it
+#if !NET
 		[Abstract]
+#endif
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		[iOS (9,0)] // duplicated so it's inlined properly
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
@@ -18424,7 +18433,7 @@ namespace UIKit {
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 26825293
 		//
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10, 0)]
@@ -18440,14 +18449,14 @@ namespace UIKit {
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121293
 		[TV (12, 0), iOS (12, 0)]
-#if XAMCORE_4_0 
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("parentFocusEnvironment", ArgumentSemantic.Weak)]
 		IUIFocusEnvironment ParentFocusEnvironment { get; }
 
 		[TV (12, 0), iOS (12, 0)]
-#if XAMCORE_4_0 
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("focusItemContainer")]

@@ -174,7 +174,7 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
-			if (!completed)
+			if (!completed || managedCookieResult.Contains ("502 Bad Gateway") || nativeCookieResult.Contains ("502 Bad Gateway"))
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");

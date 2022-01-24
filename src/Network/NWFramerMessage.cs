@@ -39,6 +39,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWFramerMessage : NWProtocolMetadata {
+		[Preserve (Conditional = true)]
 		internal NWFramerMessage (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

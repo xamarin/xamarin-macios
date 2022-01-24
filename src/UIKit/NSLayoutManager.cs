@@ -80,44 +80,18 @@ namespace UIKit {
 			}
 		}
 
-#if !XAMCORE_4_0 && !__MACCATALYST__
+#if !NET && !__MACCATALYST__
 #if MONOMAC
-#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use the overload that takes 'nint glyphCount' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use the overload that takes 'nint glyphCount' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use the overload that takes 'nint glyphCount' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 		public unsafe void ShowGlyphs (
 #else
-#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 		public unsafe void ShowCGGlyphs (
 #endif // MONOMAC
 			short[] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
@@ -134,7 +108,7 @@ namespace UIKit {
 				}
 			}
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 #if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -159,97 +133,61 @@ namespace UIKit {
 			}
 		}
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !NET && !MONOMAC
 		// TextContainerForGlyphAtIndex
-#if !NET
 		[Obsolete ("Use 'GetTextContainer' instead.")]
-#else
-		[Obsolete ("Use 'GetTextContainer' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex)
 		{
 			return GetTextContainer (glyphIndex);
 		}
 		
-#if !NET
 		[Obsolete ("Use 'GetTextContainer' instead.")]
-#else
-		[Obsolete ("Use 'GetTextContainer' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
 			return GetTextContainer (glyphIndex, out effectiveGlyphRange);
 		}
 
 		// LineFragmentRectForGlyphAtIndex
-#if !NET
 		[Obsolete ("Use 'GetLineFragmentRect' instead.")]
-#else
-		[Obsolete ("Use 'GetLineFragmentRect' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public CGRect LineFragmentRectForGlyphAtIndex (nuint glyphIndex)
 		{
 			return GetLineFragmentRect (glyphIndex);
 		}
 
-#if !NET
 		[Obsolete ("Use 'GetLineFragmentRect' instead.")]
-#else
-		[Obsolete ("Use 'GetLineFragmentRect' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public CGRect LineFragmentRectForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
 			return GetLineFragmentRect (glyphIndex, out effectiveGlyphRange);
 		}
 
 		// LineFragmentUsedRectForGlyphAtIndex
-#if !NET
 		[Obsolete ("Use 'GetLineFragmentUsedRect' instead.")]
-#else
-		[Obsolete ("Use 'GetLineFragmentUsedRect' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public CGRect LineFragmentUsedRectForGlyphAtIndex (nuint glyphIndex)
 		{
 			return GetLineFragmentUsedRect (glyphIndex);
 		}
 
-#if !NET
 		[Obsolete ("Use 'GetLineFragmentUsedRect' instead.")]
-#else
-		[Obsolete ("Use 'GetLineFragmentUsedRect' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public CGRect LineFragmentUsedRectForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
 			return GetLineFragmentUsedRect (glyphIndex, out effectiveGlyphRange);
 		}
 
 		// GlyphRangeForCharacterRange
-#if !NET
 		[Obsolete ("Use 'GetGlyphRange' instead.")]
-#else
-		[Obsolete ("Use 'GetGlyphRange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public NSRange GlyphRangeForCharacterRange (NSRange charRange)
 		{
 			return GetGlyphRange (charRange);
 		}
 
-#if !NET
 		[Obsolete ("Use 'GetGlyphRange' instead.")]
-#else
-		[Obsolete ("Use 'GetGlyphRange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public NSRange GlyphRangeForCharacterRange (NSRange charRange, ref NSRange actualCharRange)
 		{
 			return GetGlyphRange (charRange, out actualCharRange);
 		}
 		
 		// CharacterRangeForGlyphRange
-#if !NET
 		[Obsolete ("Use 'GetCharacterRange' instead.")]
-#else
-		[Obsolete ("Use 'GetCharacterRange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public NSRange CharacterRangeForGlyphRange (NSRange charRange)
 		{
 			return GetCharacterRange (charRange);
@@ -259,7 +197,7 @@ namespace UIKit {
 		{
 			return GetCharacterRange (charRange, out actualCharRange);
 		}
-#endif // !XAMCORE_4_0 && !MONOMAC
+#endif // !NET && !MONOMAC
 
 		public unsafe nuint GetLineFragmentInsertionPoints (
 			nuint /* NSUInteger */ charIndex, 

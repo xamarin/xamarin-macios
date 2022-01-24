@@ -59,6 +59,7 @@ namespace CoreFoundation {
 		}
 #endif
 
+		[Preserve (Conditional = true)]
 #if NET
 		internal CFAllocator (NativeHandle handle, bool owns)
 #else

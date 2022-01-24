@@ -35,6 +35,7 @@ namespace Network {
 #endif
 	public class NWProtocolTcpOptions : NWProtocolOptions {
 		
+		[Preserve (Conditional = true)]
 		internal NWProtocolTcpOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWProtocolTcpOptions () : this (nw_tcp_create_options (), owns: true) {}

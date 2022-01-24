@@ -58,6 +58,7 @@ namespace CoreFoundation {
 	
 	public class CFNotificationCenter : NativeObject {
 		// If this becomes public for some reason, and more than three instances are created, you should revisit the lookup code
+		[Preserve (Conditional = true)]
 		internal CFNotificationCenter (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{

@@ -38,7 +38,7 @@ namespace Xamarin.MacDev.Tasks {
 				arguments,
 				output: out var output,
 				working_directory: null,
-				timeout: TimeSpan.FromSeconds (30),
+				timeout: TimeSpan.FromSeconds (120),
 				environment_variables: environment);
 			if (rv != 0) {
 				var failure = $"'make {StringUtils.FormatArguments (StringUtils.QuoteForProcess (arguments))}' exited with exit code {rv}:";

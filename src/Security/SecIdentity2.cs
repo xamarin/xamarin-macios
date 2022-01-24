@@ -34,9 +34,11 @@ namespace Security {
 #endif
 	public class SecIdentity2 : NativeObject {
 #if NET
+		[Preserve (Conditional = true)]
 		internal SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
 		internal SecIdentity2 (NativeHandle handle) : base (handle, false) {}
+		[Preserve (Conditional = true)]
 		public SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 

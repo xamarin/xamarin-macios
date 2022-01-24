@@ -36,6 +36,7 @@ namespace Network {
 #endif
 	public class NWWebSocketMetadata : NWProtocolMetadata {
 
+		[Preserve (Conditional = true)]
 		internal NWWebSocketMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

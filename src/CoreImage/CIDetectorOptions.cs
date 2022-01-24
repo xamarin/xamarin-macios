@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
@@ -19,8 +20,12 @@ namespace CoreImage {
 		public FaceDetectorAccuracy? Accuracy { get; set; }
 		public float? MinFeatureSize { get; set; }
 
-#if !NET
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 #endif
 		public int? MaxFeatureCount { get; set; }
 

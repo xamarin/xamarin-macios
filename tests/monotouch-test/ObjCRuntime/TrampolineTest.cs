@@ -326,10 +326,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.CATransform3D_objc_msgSend_stret (out catransform3d, obj.Handle, new Selector ("testCATransform3D").Handle);
 			}
 			CATransform3D res = new CATransform3D ();
-			res.m11 = 11.1f;
-			res.m22 = 22.2f;
-			res.m33 = 33.3f;
-			res.m44 = 44.4f;
+			res.M11 = 11.1f;
+			res.M22 = 22.2f;
+			res.M33 = 33.3f;
+			res.M44 = 44.4f;
 			Assert.That (catransform3d.Equals (res), "#testCATransform3D");
 #endif // !__WATCHOS__
 			
@@ -743,10 +743,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public CATransform3D Test_CATransform3D ()
 		{
 			CATransform3D res = new CATransform3D ();
-			res.m11 = 11.1f;
-			res.m22 = 22.2f;
-			res.m33 = 33.3f;
-			res.m44 = 44.4f;
+			res.M11 = 11.1f;
+			res.M22 = 22.2f;
+			res.M33 = 33.3f;
+			res.M44 = 44.4f;
 			return res;
 		}
 #endif // !__WATCHOS__

@@ -29,6 +29,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWProtocolUdpOptions : NWProtocolOptions {
+		[Preserve (Conditional = true)]
 		internal NWProtocolUdpOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) {}

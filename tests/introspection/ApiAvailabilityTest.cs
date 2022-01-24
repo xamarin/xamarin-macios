@@ -553,8 +553,10 @@ namespace Introspection {
 					s = aa.ToString ();
 #endif
 				if (s.Length > 0) {
+#if !NET
 					if (type_level.Contains (s))
 						AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
+#endif
 					if (member_level.Contains (s))
 						AddErrorLine ($"[FAIL] '{m}' is decorated more than once with `{s}`.");
 					else

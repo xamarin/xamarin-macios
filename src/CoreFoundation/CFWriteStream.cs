@@ -48,6 +48,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreFoundation {
 
 	public class CFWriteStream : CFStream {
+		[Preserve (Conditional = true)]
 		internal CFWriteStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
