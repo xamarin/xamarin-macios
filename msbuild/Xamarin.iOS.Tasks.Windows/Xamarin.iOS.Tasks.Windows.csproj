@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <MergeSystemAssemblies>false</MergeSystemAssemblies>
     <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../product.snk</AssemblyOriginatorKeyFile>
