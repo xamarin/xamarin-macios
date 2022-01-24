@@ -25,9 +25,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreMedia {
 
-#if !NET
 	[Watch (6,0)]
-#endif
 	public class CMBlockBuffer : NativeObject, ICMAttachmentBearer {
 		CMCustomBlockAllocator? customAllocator;
 

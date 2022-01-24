@@ -15,9 +15,7 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if !NET
 	[Watch (6,0)]
-#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public partial struct CMTime {
 		// CMTimeFlags -> uint32_t -> CMTime.h
@@ -226,16 +224,12 @@ namespace CoreMedia {
 			return CMTimeMultiplyByFloat64 (time, multiplier);
 		}
 
-#if !NET
 		[iOS (7,1)][Mac (10,10)]
-#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeMultiplyByRatio (CMTime time, /* int32_t */ int multiplier, /* int32_t */ int divisor);
 
-#if !NET
 		[iOS (7,1)]
 		[Mac (10, 10)]
-#endif
 		public static CMTime Multiply (CMTime time, int multiplier, int divisor)
 		{
 			return CMTimeMultiplyByRatio (time, multiplier, divisor);
@@ -302,21 +296,11 @@ namespace CoreMedia {
 			return CMTimeMinimum (time1, time2);
 		}
 
-#if !NET
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeFoldIntoRange (CMTime time, CMTimeRange foldRange);
 
-#if !NET
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		public static CMTime Fold (CMTime time, CMTimeRange foldRange)
 		{
 			return CMTimeFoldIntoRange (time, foldRange);

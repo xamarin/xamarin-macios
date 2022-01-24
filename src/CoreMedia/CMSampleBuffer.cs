@@ -39,9 +39,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreMedia {
 
-#if !NET
 	[Watch (6,0)]
-#endif
 	public class CMSampleBuffer : NativeObject, ICMAttachmentBearer
 	{
 #if !COREBUILD
@@ -630,15 +628,11 @@ namespace CoreMedia {
 			return CMSampleBufferTrackDataReadiness (Handle, bufferToTrack.GetHandle ());
 		}
 
-#if !NET
 		[iOS (7,0)][Mac (10,9)]
-#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCopyPCMDataIntoAudioBufferList (/* CMSampleBufferRef */ IntPtr sbuf, /* int32_t */ int frameOffset, /* int32_t */ int numFrames, /* AudioBufferList* */ IntPtr bufferList);
 
-#if !NET
 		[iOS (7,0)][Mac (10,9)]
-#endif
 		public CMSampleBufferError CopyPCMDataIntoAudioBufferList (int frameOffset, int numFrames, AudioBuffers bufferList)
 		{
 			if (bufferList is null)
@@ -647,9 +641,7 @@ namespace CoreMedia {
 			return CMSampleBufferCopyPCMDataIntoAudioBufferList (Handle, frameOffset, numFrames, (IntPtr) bufferList);
 		}
 
-#if !NET
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMAudioSampleBufferCreateReadyWithPacketDescriptions (
 			/* CFAllocatorRef */ IntPtr allocator,
@@ -660,9 +652,7 @@ namespace CoreMedia {
 			/* AudioStreamPacketDescription* */ AudioStreamPacketDescription[]? packetDescriptions,
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-#if !NET
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		public static CMSampleBuffer? CreateReadyWithPacketDescriptions (CMBlockBuffer dataBuffer, CMFormatDescription formatDescription, int samplesCount,
 			CMTime sampleTimestamp, AudioStreamPacketDescription[]? packetDescriptions, out CMSampleBufferError error)
 		{
@@ -682,9 +672,7 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-#if !NET
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReady (
 			/* CFAllocatorRef */ IntPtr allocator,
@@ -697,9 +685,7 @@ namespace CoreMedia {
 			/* size_t* */ nuint[]? sampleSizeArray,					// can be null
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-#if !NET
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		public static CMSampleBuffer? CreateReady (CMBlockBuffer dataBuffer, CMFormatDescription? formatDescription, 
 			int samplesCount, CMSampleTimingInfo[]? sampleTimingArray, nuint[]? sampleSizeArray, 
 			out CMSampleBufferError error)
@@ -722,9 +708,7 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-#if !NET
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReadyWithImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
@@ -735,12 +719,8 @@ namespace CoreMedia {
 
 #if !XAMCORE_4_0
 #if !WATCH
-#if !NET
 		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		[iOS (8,0)][Mac (10,10)]
-#else
-		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
 			CMFormatDescription formatDescription, CMSampleTimingInfo[] sampleTiming, out CMSampleBufferError error)
 		{
@@ -752,9 +732,7 @@ namespace CoreMedia {
 		}
 #endif // !WATCH
 #endif // !XAMCORE_4_0
-#if !NET
 		[iOS (8,0)][Mac (10,10)]
-#endif
 		public static CMSampleBuffer? CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
 			CMFormatDescription formatDescription, ref CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
 		{
@@ -935,9 +913,7 @@ namespace CoreMedia {
 		}
 
 #if !WATCH
-#if !NET
 		[iOS (9,0)]
-#endif
 		public LensStabilizationStatus StillImageLensStabilizationStatus {
 			get {
 				var reason = GetStringValue (CMSampleAttachmentKey.StillImageLensStabilizationInfo);

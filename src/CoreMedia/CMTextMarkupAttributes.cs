@@ -37,9 +37,7 @@ using ObjCRuntime;
 namespace CoreMedia {
 
 	// Convenience structure
-#if !NET
 	[Watch (6,0)]
-#endif
 	public struct TextMarkupColor
 	{
 		public TextMarkupColor (float red, float green, float blue, float alpha)
@@ -66,9 +64,7 @@ namespace CoreMedia {
 		public float Alpha { get; private set; }
 	}
 
-#if !NET
 	[Watch (6,0)]
-#endif
 	public class CMTextMarkupAttributes : DictionaryContainer
 	{
 		public CMTextMarkupAttributes ()

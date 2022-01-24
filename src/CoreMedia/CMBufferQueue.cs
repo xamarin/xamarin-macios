@@ -25,9 +25,7 @@ namespace CoreMedia {
 	public delegate bool   CMBufferGetBool (INativeObject buffer);
 	public delegate int    CMBufferCompare (INativeObject first, INativeObject second);
 
-#if !NET
 	[iOS (7,1), Watch (6,0)]
-#endif
 	public delegate nint   CMBufferGetSize (INativeObject buffer);
 
 	public class CMBufferQueue : NativeObject
@@ -280,16 +278,12 @@ namespace CoreMedia {
 			}
 		}
 		
-#if !NET
 		[iOS (7,1)][Mac (10,10)]
-#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* size_t */ nint CMBufferQueueGetTotalSize (/* CMBufferQueueRef */ IntPtr queue);
 
-#if !NET
 		[iOS (7,1)]
 		[Mac (10, 10)]
-#endif
 		public nint GetTotalSize ()
 		{
 			return CMBufferQueueGetTotalSize (Handle);
@@ -369,9 +363,7 @@ namespace CoreMedia {
 		}
 #endif // !COREBUILD
 
-#if !NET
 		[Watch (6,0)]
-#endif
 		public enum TriggerCondition {
 			WhenDurationBecomesLessThan = 1,
 			WhenDurationBecomesLessThanOrEqualTo = 2,
