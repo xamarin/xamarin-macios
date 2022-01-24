@@ -187,7 +187,6 @@ steps:
           Set-GitHubStatus -Status "error" -Description $info.Error -Context $info.Context
       }
     }
-    
     if ($Env:ENABLE_DOTNET -eq "True" -and  $Env:SkipNugets -ne "True") {
       $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
       Write-Host $nugets 
