@@ -16,7 +16,9 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+#if !NET
 	[Watch (6,0)]
+#endif
 	public class CMCustomBlockAllocator : IDisposable {
 
 		GCHandle gch;
@@ -95,7 +97,9 @@ namespace CoreMedia {
 
 	// This class is used internally by a couple of CMBlockBuffer methods
 	// that take a managed array as input parameter
+#if !NET
 	[Watch (6,0)]
+#endif
 	internal class CMManagedArrayBlockAllocator : CMCustomBlockAllocator {
 
 		GCHandle dataHandle;

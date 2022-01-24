@@ -31,7 +31,9 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreMedia {
 
+#if !NET
 	[Watch (6,0)]
+#endif
 	public class CMFormatDescription : NativeObject {
 		[Preserve (Conditional=true)]
 		internal CMFormatDescription (NativeHandle handle, bool owns)
@@ -39,7 +41,7 @@ namespace CoreMedia {
 		{
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CMFormatDescriptionGetExtensions (/* CMFormatDescriptionRef */ IntPtr desc);
 
 #if !COREBUILD
@@ -50,7 +52,7 @@ namespace CoreMedia {
 			return Runtime.GetNSObject<NSDictionary> (cfDictRef);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFPropertyListRef */ IntPtr CMFormatDescriptionGetExtension (/* CMFormatDescriptionRef */ IntPtr desc, /* CFStringRef */ IntPtr extensionkey);
 
 		public NSObject? GetExtension (string extensionKey)
@@ -64,7 +66,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* FourCharCode */ uint CMFormatDescriptionGetMediaSubType (/* CMFormatDescriptionRef */ IntPtr desc);
 
 		public uint MediaSubType
@@ -117,7 +119,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMMediaType CMFormatDescriptionGetMediaType (/* CMFormatDescriptionRef */ IntPtr desc);
 		
 		public CMMediaType MediaType
@@ -128,7 +130,7 @@ namespace CoreMedia {
 			}
 		}
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFTypeID */ nint CMFormatDescriptionGetTypeID ();
 		
 		public static nint GetTypeID ()
@@ -287,7 +289,9 @@ namespace CoreMedia {
 #endif
 	}
 
+#if !NET
 	[Watch (6,0)]
+#endif
 	public class CMAudioFormatDescription : CMFormatDescription {
 		[Preserve (Conditional = true)]
 		internal CMAudioFormatDescription (NativeHandle handle, bool owns)
@@ -298,7 +302,9 @@ namespace CoreMedia {
 		// TODO: Move more audio specific methods here
 	}
 
+#if !NET
 	[Watch (6,0)]
+#endif
 	public partial class CMVideoFormatDescription : CMFormatDescription {
 		[Preserve (Conditional = true)]
 		internal CMVideoFormatDescription (NativeHandle handle, bool owns)
@@ -355,7 +361,13 @@ namespace CoreMedia {
 			return new CMVideoFormatDescription (desc, true);
 		}
 
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromH264ParameterSets (
 			/* CFAllocatorRef */ IntPtr allocator, 
@@ -365,7 +377,13 @@ namespace CoreMedia {
 			/* int */ int NALUnitHeaderLength,
 			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
 
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		public static CMVideoFormatDescription? FromH264ParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
 			if (parameterSets is null)
@@ -402,7 +420,13 @@ namespace CoreMedia {
 			}
 		}
 
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetH264ParameterSetAtIndex (
 			/* CMFormatDescriptionRef */ IntPtr videoDesc, 
@@ -412,7 +436,13 @@ namespace CoreMedia {
 			/* size_t* */ out nuint parameterSetCountOut,
 			/* int* */ out int nalUnitHeaderLengthOut);
 
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		public byte[]? GetH264ParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
 			IntPtr ret;
@@ -450,7 +480,15 @@ namespace CoreMedia {
 			return CMVideoFormatDescriptionMatchesImageBuffer (Handle, imageBuffer.Handle);
 		}
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromHEVCParameterSets (
 			/* CFAllocatorRef */ IntPtr allocator, 
@@ -461,7 +499,15 @@ namespace CoreMedia {
 			/* CFDictionaryRef */ IntPtr extensions,
 			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+#endif
 		public static CMVideoFormatDescription? FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions, out CMFormatDescriptionError error)
 		{
 			if (parameterSets is null)
@@ -498,7 +544,15 @@ namespace CoreMedia {
 			}
 		}
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (
 			/* CMFormatDescriptionRef */ IntPtr videoDesc,
@@ -508,7 +562,15 @@ namespace CoreMedia {
 			/* size_t* */ out nuint parameterSetCountOut,
 			/* int* */ out int nalUnitHeaderLengthOut);
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+#endif
 		public byte []? GetHevcParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
 			IntPtr ret;

@@ -39,7 +39,9 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreMedia {
 
+#if !NET
 	[Watch (6,0)]
+#endif
 	public class CMSampleBuffer : NativeObject, ICMAttachmentBearer
 	{
 #if !COREBUILD
@@ -59,7 +61,7 @@ namespace CoreMedia {
 			base.Dispose (disposing);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMSampleBufferError CMAudioSampleBufferCreateWithPacketDescriptions (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CMBlockBufferRef */ IntPtr dataBuffer,
@@ -95,7 +97,7 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe static extern OSStatus CMSampleBufferCreateCopyWithNewTiming (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CMSampleBufferRef */ IntPtr originalSBuf,
@@ -130,7 +132,7 @@ namespace CoreMedia {
 		// CMSampleBufferCallBlockForEachSample is not bound because it's signature is problematic wrt AOT and
 		// we can provide the same managed API using CMSampleBufferCallForEachSample
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe static extern CMSampleBufferError CMSampleBufferCallForEachSample (
 			/* CMSampleBufferRef */ IntPtr sbuf,
 			CMSampleBufferCallForEachSampleCallback callback, 
@@ -198,7 +200,7 @@ namespace CoreMedia {
 		);
 		*/
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMSampleBufferError CMSampleBufferCreateForImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
@@ -231,7 +233,7 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSampleBufferDataIsReady (/* CMSampleBufferRef */ IntPtr sbuf);
 		
@@ -270,7 +272,7 @@ namespace CoreMedia {
 		   uint *packetDescriptionsSizeOut
 		);*/
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMBlockBufferRef */ IntPtr CMSampleBufferGetDataBuffer (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public CMBlockBuffer? GetDataBuffer ()
@@ -286,7 +288,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMSampleBufferGetDecodeTimeStamp (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public CMTime DecodeTimeStamp
@@ -297,7 +299,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMSampleBufferGetDuration (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public CMTime Duration
@@ -308,7 +310,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMFormatDescriptionRef */ IntPtr CMSampleBufferGetFormatDescription (/* CMSampleBufferRef */ IntPtr sbuf);
 
 		public CMAudioFormatDescription? GetAudioFormatDescription ()
@@ -329,7 +331,7 @@ namespace CoreMedia {
 			return new CMVideoFormatDescription (descHandle, false);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CVImageBufferRef */ IntPtr CMSampleBufferGetImageBuffer (/* CMSampleBufferRef */ IntPtr sbuf);
 
 		public CVImageBuffer? GetImageBuffer ()
@@ -344,7 +346,7 @@ namespace CoreMedia {
 			return new CVImageBuffer (ib, false);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMItemCount */ nint CMSampleBufferGetNumSamples (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public nint NumSamples
@@ -355,7 +357,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMSampleBufferGetOutputDecodeTimeStamp (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public CMTime OutputDecodeTimeStamp
@@ -366,7 +368,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMSampleBufferGetOutputDuration (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public CMTime OutputDuration
@@ -377,7 +379,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMSampleBufferGetOutputPresentationTimeStamp (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public CMTime OutputPresentationTimeStamp
@@ -388,7 +390,7 @@ namespace CoreMedia {
 			}
 		}
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetOutputPresentationTimeStamp (/* CMSampleBufferRef */ IntPtr sbuf, CMTime outputPresentationTimeStamp);
 
 		/*[DllImport(Constants.CoreMediaLibrary)]
@@ -399,7 +401,7 @@ namespace CoreMedia {
 		   int *timingArrayEntriesNeededOut
 		);*/
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMSampleBufferGetPresentationTimeStamp (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public CMTime PresentationTimeStamp {
@@ -413,7 +415,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFArrayRef */ IntPtr CMSampleBufferGetSampleAttachmentsArray (/* CMSampleBufferRef */ IntPtr sbuf, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool createIfNecessary);
 		
 		public CMSampleBufferAttachmentSettings? [] GetSampleAttachments (bool createIfNecessary)
@@ -429,7 +431,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* size_t */ nuint CMSampleBufferGetSampleSize (/* CMSampleBufferRef */ IntPtr sbuf, /* CMItemIndex */ nint sampleIndex);
 		
 		public nuint GetSampleSize (nint sampleIndex)
@@ -453,7 +455,7 @@ namespace CoreMedia {
 		);
 		*/
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe static extern OSStatus CMSampleBufferGetSampleTimingInfoArray (
 			/* CMSampleBufferRef */ IntPtr sbuf,
 			/* CMItemCount */ nint timingArrayEntries,
@@ -498,7 +500,7 @@ namespace CoreMedia {
 			return new NSError (NSError.OsStatusErrorDomain, (nint) status).LocalizedDescription;
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* size_t */ nuint CMSampleBufferGetTotalSampleSize (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public nuint TotalSampleSize
@@ -509,7 +511,7 @@ namespace CoreMedia {
 			}
 		}
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFTypeID */ nint CMSampleBufferGetTypeID ();
 		
 		public static nint GetTypeID ()
@@ -517,7 +519,7 @@ namespace CoreMedia {
 			return CMSampleBufferGetTypeID ();
 		}
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferInvalidate (/* CMSampleBufferRef */ IntPtr sbuf);
 
 		public CMSampleBufferError Invalidate ()
@@ -525,7 +527,7 @@ namespace CoreMedia {
 			return CMSampleBufferInvalidate (Handle);
 		}
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSampleBufferIsValid (/* CMSampleBufferRef */ IntPtr sbuf);
 		
@@ -537,7 +539,7 @@ namespace CoreMedia {
 			}
 		}
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferMakeDataReady (IntPtr handle);
 
 		public CMSampleBufferError MakeDataReady ()
@@ -545,7 +547,7 @@ namespace CoreMedia {
 			return CMSampleBufferMakeDataReady (Handle);
 		}
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetDataBuffer (IntPtr handle, IntPtr dataBufferHandle);
 		
 		public CMSampleBufferError SetDataBuffer (CMBlockBuffer dataBuffer)
@@ -562,7 +564,7 @@ namespace CoreMedia {
 		   const AudioBufferList *bufferList
 		);*/
 		
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetDataReady (/* CMSampleBufferRef */ IntPtr sbuf);
 
 		public CMSampleBufferError SetDataReady ()
@@ -579,7 +581,7 @@ namespace CoreMedia {
 #endif
 		// however there was already a similar call that we did not bound (not sure why) 
 		// and can provide the same feature (since iOS 4 not 8.0)
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetInvalidateCallback (
 			/* CMSampleBufferRef */ IntPtr sbuf,
 			/* CMSampleBufferInvalidateCallback */ CMSampleBufferInvalidateCallback? invalidateCallback,
@@ -620,7 +622,7 @@ namespace CoreMedia {
 			return CMSampleBufferSetInvalidateCallback (Handle, invalidate_handler, (ulong)(IntPtr)invalidate);
 		}
 							
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferTrackDataReadiness (/* CMSampleBufferRef */ IntPtr sbuf, /* CMSampleBufferRef */ IntPtr sbufToTrack);
 
 		public CMSampleBufferError TrackDataReadiness (CMSampleBuffer bufferToTrack)
@@ -628,11 +630,23 @@ namespace CoreMedia {
 			return CMSampleBufferTrackDataReadiness (Handle, bufferToTrack.GetHandle ());
 		}
 
-		[iOS (7,0)][Mac (10,9)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCopyPCMDataIntoAudioBufferList (/* CMSampleBufferRef */ IntPtr sbuf, /* int32_t */ int frameOffset, /* int32_t */ int numFrames, /* AudioBufferList* */ IntPtr bufferList);
 
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		public CMSampleBufferError CopyPCMDataIntoAudioBufferList (int frameOffset, int numFrames, AudioBuffers bufferList)
 		{
 			if (bufferList is null)
@@ -641,8 +655,14 @@ namespace CoreMedia {
 			return CMSampleBufferCopyPCMDataIntoAudioBufferList (Handle, frameOffset, numFrames, (IntPtr) bufferList);
 		}
 
-		[iOS (8,0)][Mac (10,10)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMAudioSampleBufferCreateReadyWithPacketDescriptions (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CMBlockBufferRef */ IntPtr dataBuffer,
@@ -652,7 +672,13 @@ namespace CoreMedia {
 			/* AudioStreamPacketDescription* */ AudioStreamPacketDescription[]? packetDescriptions,
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
 		public static CMSampleBuffer? CreateReadyWithPacketDescriptions (CMBlockBuffer dataBuffer, CMFormatDescription formatDescription, int samplesCount,
 			CMTime sampleTimestamp, AudioStreamPacketDescription[]? packetDescriptions, out CMSampleBufferError error)
 		{
@@ -672,8 +698,14 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-		[iOS (8,0)][Mac (10,10)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReady (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CMBlockBufferRef */ IntPtr dataBuffer,
@@ -685,7 +717,13 @@ namespace CoreMedia {
 			/* size_t* */ nuint[]? sampleSizeArray,					// can be null
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
 		public static CMSampleBuffer? CreateReady (CMBlockBuffer dataBuffer, CMFormatDescription? formatDescription, 
 			int samplesCount, CMSampleTimingInfo[]? sampleTimingArray, nuint[]? sampleSizeArray, 
 			out CMSampleBufferError error)
@@ -708,8 +746,14 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-		[iOS (8,0)][Mac (10,10)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReadyWithImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
@@ -719,8 +763,14 @@ namespace CoreMedia {
 
 #if !XAMCORE_4_0
 #if !WATCH
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
 		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
-		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
 			CMFormatDescription formatDescription, CMSampleTimingInfo[] sampleTiming, out CMSampleBufferError error)
 		{
@@ -732,7 +782,13 @@ namespace CoreMedia {
 		}
 #endif // !WATCH
 #endif // !XAMCORE_4_0
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
 		public static CMSampleBuffer? CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
 			CMFormatDescription formatDescription, ref CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
 		{
@@ -913,7 +969,11 @@ namespace CoreMedia {
 		}
 
 #if !WATCH
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
+#endif
 		public LensStabilizationStatus StillImageLensStabilizationStatus {
 			get {
 				var reason = GetStringValue (CMSampleAttachmentKey.StillImageLensStabilizationInfo);
