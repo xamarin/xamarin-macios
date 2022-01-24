@@ -86,14 +86,7 @@ namespace CoreLocation {
 		Restricted,
 		Denied,
 
-#if NET
-		[UnsupportedOSPlatform ("ios8.0")]
-#if IOS
-		[Obsolete ("Starting with ios8.0 use 'AuthorizedAlways' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'AuthorizedAlways' instead.")]
-#endif
 		Authorized,
 		AuthorizedAlways = Authorized,
 		AuthorizedWhenInUse			
@@ -106,30 +99,12 @@ namespace CoreLocation {
 		AutomotiveNavigation,
  		Fitness,
 		OtherNavigation,
-#if NET
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
-#else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
-		[Mac (10,14)]
-#endif
+		[iOS (12,0)][TV (12,0)][Watch (5,0)][Mac (10,14)]
 		Airborne,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-#else
-	[Watch (7, 0)]
-	[TV (14, 0)]
-	[Mac (11, 0)]
-	[iOS (14, 0)]
-#endif
 	[Native]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	public enum CLAccuracyAuthorization : long {
 		FullAccuracy,
 		ReducedAccuracy,
