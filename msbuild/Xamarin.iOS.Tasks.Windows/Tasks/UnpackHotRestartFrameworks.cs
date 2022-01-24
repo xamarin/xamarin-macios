@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using Xamarin.iOS.Tasks.Windows;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
 	public class UnpackFrameworks : Task {
@@ -50,18 +51,9 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 						embeddedFramework.GetResourceStream ().CopyTo (fileStream);
 					}
 
-					//Directory.Delete will fail if a file with the same path already exist
-					if (File.Exists (frameworkPath)) {
-						File.Delete (frameworkPath);
-					}
-
-					//ZipFile.ExtractToDirectory will fail if the directory already exist
-					if (Directory.Exists (frameworkPath)) {
-						Directory.Delete (frameworkPath, recursive: true);
-					}
-
-					ZipFile.ExtractToDirectory (frameworkZipPath, frameworkPath);
+					Zip.Extract (frameworkZipPath, frameworkPath);
 					File.Delete (frameworkZipPath);
+
 					frameworks.Add (new TaskItem (frameworkPath));
 				}
 			}

@@ -21,19 +21,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 			try {
 				Log.LogMessage (Resources.Unzip_Unzipping, ZipFilePath);
 
-				// We use a temp dir because the extraction dir should not exist for the ZipFile API to work
-				var tempExtractionPath = Path.Combine (Path.GetTempPath(), "Xamarin", "Archive", Guid.NewGuid().ToString());
-
-				ZipFile.ExtractToDirectory (ZipFilePath, tempExtractionPath);
-
-				CopyDirectory (tempExtractionPath, ExtractionPath);
-
-				// Fixes last write time of all files in the Zip, because the files keep the last write time from the Mac.
-				foreach (var filePath in Directory.EnumerateFiles (ExtractionPath, "*.*", SearchOption.AllDirectories)) {
-					new FileInfo (filePath).LastWriteTime = DateTime.Now;
-				}
-
-				Directory.Delete (tempExtractionPath, true);
+				Zip.Extract (ZipFilePath, ExtractionPath);
 
 				Log.LogMessage (Resources.Unzip_Unzipped, ZipFilePath);
 			} catch (Exception ex) {
@@ -47,21 +35,6 @@ namespace Xamarin.iOS.Tasks.Windows {
 		void LogTaskProperty (string propertyName, string value)
 		{
 			Log.LogMessage (MessageImportance.Normal, "  {0}: {1}", propertyName, value ?? "<null>");
-		}
-
-		void CopyDirectory (string sourceDir, string destDir)
-		{
-			var sourceDirInfo = new DirectoryInfo (sourceDir);
-
-			Directory.CreateDirectory (destDir);
-
-			foreach (var file in sourceDirInfo.GetFiles ()) {
-				file.CopyTo (Path.Combine (destDir, file.Name));
-			}
-
-			foreach (var dir in sourceDirInfo.GetDirectories()) {
-				CopyDirectory (dir.FullName, Path.Combine (destDir, dir.Name));
-			}
 		}
 	}
 }
