@@ -571,9 +571,9 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("macos10.8")]
+		[SupportedOSPlatform ("ios6.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -585,9 +585,9 @@ namespace CoreMedia {
 		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (9,0)]
+		[Mac (10,8)]
+		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -597,9 +597,9 @@ namespace CoreMedia {
 		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
 
 #if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("macos10.8")]
+		[SupportedOSPlatform ("ios6.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -611,9 +611,9 @@ namespace CoreMedia {
 		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (9,0)]
+		[Mac (10,8)]
+		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -628,9 +628,9 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("macos10.8")]
+		[SupportedOSPlatform ("ios6.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -642,9 +642,9 @@ namespace CoreMedia {
 		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (9,0)]
+		[Mac (10,8)]
+		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -654,9 +654,9 @@ namespace CoreMedia {
 		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
 
 #if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("macos10.8")]
+		[SupportedOSPlatform ("ios6.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -668,9 +668,9 @@ namespace CoreMedia {
 		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (9,0)]
+		[Mac (10,8)]
+		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
