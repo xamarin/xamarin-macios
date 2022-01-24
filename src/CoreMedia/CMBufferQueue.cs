@@ -25,7 +25,12 @@ namespace CoreMedia {
 	public delegate bool   CMBufferGetBool (INativeObject buffer);
 	public delegate int    CMBufferCompare (INativeObject first, INativeObject second);
 
-	[iOS (7,1), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("ios7.1")]
+#else
+	[iOS (7,1)]
+	[Watch (6,0)]
+#endif
 	public delegate nint   CMBufferGetSize (INativeObject buffer);
 
 	public class CMBufferQueue : NativeObject
