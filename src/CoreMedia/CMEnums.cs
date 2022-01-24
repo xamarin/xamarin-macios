@@ -15,9 +15,7 @@ using ObjCRuntime;
 namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMMediaType : uint
 	{
 		Video         = 1986618469, // 'vide'
@@ -32,9 +30,7 @@ namespace CoreMedia {
 	}
 
 	// FourCharCode -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMClosedCaptionFormatType : uint
 	{
 		CEA608	= 0x63363038, // 'c608',
@@ -43,9 +39,7 @@ namespace CoreMedia {
 	}
 
 	// FourCharCode -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMMuxedStreamType : uint
 	{
 		MPEG1System		= 0x6D703173, // 'mp1s',
@@ -55,9 +49,7 @@ namespace CoreMedia {
 	}
 
 	// FourCharCode -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMSubtitleFormatType : uint
 	{
 		Text3G  = 0x74783367, // 'tx3g'
@@ -65,9 +57,7 @@ namespace CoreMedia {
 	}
 
 	// FourCharCode -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMMetadataFormatType : uint
 	{
 		ICY   = 0x69637920, // 'icy '
@@ -77,9 +67,7 @@ namespace CoreMedia {
 	}
 
 	// FourCharCode -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMTimeCodeFormatType : uint
 	{
 		TimeCode32	= 0x746D6364, // 'tmcd',
@@ -89,9 +77,7 @@ namespace CoreMedia {
 	}
 
 	// uint32_t -> CMTime.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMTimeRoundingMethod : uint
 	{
 		RoundHalfAwayFromZero = 1,
@@ -104,9 +90,7 @@ namespace CoreMedia {
 	}
 
 	// FourCharCode -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMVideoCodecType : uint
 	{
 		YUV422YpCbCr8    = 0x32767579,
@@ -121,16 +105,7 @@ namespace CoreMedia {
 		Mpeg4Video       = 0x6d703476,
 		Mpeg2Video       = 0x6d703276,
 		Mpeg1Video       = 0x6d703176,
-#if NET
-		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
-#else
-		[iOS (14,0)]
-		[TV (14,0)]
-		[Watch (7,0)]
-		[Mac (11,0)]
-#endif
+		[iOS (14,0), TV (14,0), Watch (7,0), Mac (11,0)]
 		VP9              = 0x76703039,
 		DvcNtsc          = 0x64766320,
 		DvcPal           = 0x64766370,
@@ -149,25 +124,14 @@ namespace CoreMedia {
 		AppleProRes422LT = 0x61706373,
 		AppleProRes422Proxy = 0x6170636f,
 		Hevc             = 0x68766331,
-#if NET
-		[SupportedOSPlatform ("ios14.5")]
-		[SupportedOSPlatform ("tvos14.5")]
-		[SupportedOSPlatform ("macos11.3")]
-#else
-		[iOS (14,5)]
-		[TV (14,5)]
-		[Watch (7,4)]
-		[Mac (11,3)]
-#endif
+		[iOS (14,5)][TV (14,5)][Watch (7,4)][Mac (11,3)]
 		DolbyVisionHevc  = 0x64766831,
 		DisparityHevc    = 0x64697368,
 		DepthHevc        = 0x64657068,
 	}
 
 	// UInt32 enum => CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMPixelFormat : uint
 	{
 		AlphaRedGreenBlue32bits = 32,
@@ -188,18 +152,14 @@ namespace CoreMedia {
 		IndexedGrayWhiteIsZero_8bits = 40,
 	}
 
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMAttachmentMode : uint {
 		ShouldNotPropagate    = 0,
 		ShouldPropagate       = 1,
 	};
 
 	// untyped enum (used as OSStatus) -> CMBlockBuffer.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMBlockBufferError : int {
 		None						= 0,
 		StructureAllocationFailed	= -12700,
@@ -214,10 +174,8 @@ namespace CoreMedia {
 	}
 
 	// uint32_t -> CMBlockBuffer.h
-#if !NET
-	[Watch (6,0)]
-#endif
 	[Flags]
+	[Watch (6,0)]
 	public enum CMBlockBufferFlags : uint {
 		AssureMemoryNow			= (1<<0),
 		AlwaysCopyData			= (1<<1),
@@ -226,9 +184,7 @@ namespace CoreMedia {
 	}
 
 	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMFormatDescriptionError : int {
 		None				= 0,
 		InvalidParameter	= -12710,
@@ -237,9 +193,7 @@ namespace CoreMedia {
 	}
 
 	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMSampleBufferError : int {
 		None							= 0,
 		AllocationFailed				= -12730,
@@ -270,9 +224,7 @@ namespace CoreMedia {
 #endif
 
 	// untyped enum (used as OSStatus) -> CMSync.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMClockError : int {
 		None = 0,
 		MissingRequiredParameter	= -12745,
@@ -282,9 +234,7 @@ namespace CoreMedia {
 	}
 
 	// untyped enum (used as OSStatus) -> CMSync.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMTimebaseError : int {
 		None = 0,
 		MissingRequiredParameter	= -12748,
@@ -295,9 +245,7 @@ namespace CoreMedia {
 	}
 
 	// untyped enum (used as OSStatus) -> CMSync.h
-#if !NET
 	[Watch (6,0)]
-#endif
 	public enum CMSyncError : int {
 		None = 0,
 		MissingRequiredParameter	= -12752,
