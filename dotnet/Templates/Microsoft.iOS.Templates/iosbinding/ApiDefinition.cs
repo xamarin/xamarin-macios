@@ -1,7 +1,7 @@
 namespace iOSBinding1
 {
 
-// The first step to creating a binding is to add your native library ("libNativeLibrary.a")
+// The first step to creating a binding is to add your native framework ("MyLibrary.xcframework")
 // to the project.
 // Open your binding csproj and add a section like this
 // <ItemGroup>
@@ -14,7 +14,7 @@ namespace iOSBinding1
 // Once you've added it, you will need to customize it for your specific library:
 //  - Change the Include to the correct path/name of your library
 //  - Change Kind to Static (.a) or Framework (.framework/.xcframework) based upon the library kind and extension.
-//    - Dynamic (.dylib) is a third option but rarely if ever valid
+//    - Dynamic (.dylib) is a third option but rarely if ever valid, and only on macOS and Mac Catalyst
 //  - If your library depends on other frameworks, add them inside <Frameworks></Frameworks>
 // Example:
 // <NativeReference Include="libs\MyTestFramework.xcframework">
@@ -53,7 +53,7 @@ namespace iOSBinding1
 // You would add a method definition to the C# interface like so:
 //
 //     [Export ("doSomething:atIndex:")]
-//     void DoSomething (NSObject object, int index);
+//     void DoSomething (NSObject object, nint index);
 //
 // Objective-C "constructors" such as:
 //
