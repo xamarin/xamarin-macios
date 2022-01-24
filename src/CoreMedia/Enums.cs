@@ -5,9 +5,7 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 	// keys names got changed at some point, but they all refer to a CMSampleBuffer (there is not CMSample obj)
-#if !NET
 	[Watch (6,0)]
-#endif
 	enum CMSampleBufferAttachmentKey { 
 		[Field ("kCMSampleAttachmentKey_NotSync")]
 		NotSync,
@@ -25,48 +23,16 @@ namespace CoreMedia {
 		DisplayImmediately,
 		[Field ("kCMSampleAttachmentKey_DoNotDisplay")]
 		DoNotDisplay,
-#if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
-#else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
-#endif
+		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalLevelInfo")]
 		HevcTemporalLevelInfo,
-#if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
-#else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
-#endif
+		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalSubLayerAccess")]
 		HevcTemporalSubLayerAccess,
-#if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
-#else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
-#endif
+		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleAttachmentKey_HEVCStepwiseTemporalSubLayerAccess")]
 		HevcStepwiseTemporalSubLayerAccess,
-#if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
-#else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
-#endif
+		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleAttachmentKey_HEVCSyncSampleNALUnitType")]
 		HevcSyncSampleNalUnitType,
 		[Field ("kCMSampleBufferAttachmentKey_ResetDecoderBeforeDecoding")]
@@ -103,45 +69,19 @@ namespace CoreMedia {
 		SampleReferenceByteOffset, 
 		[Field ("kCMSampleBufferAttachmentKey_GradualDecoderRefresh")]
 		GradualDecoderRefresh,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-#else
 		[Mac (10,14)]
-#endif
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		DroppedFrameReason,
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.14")]
-#else
-		[iOS (9,0)]
-		[Mac (10,14)]
-#endif
+		[iOS (9,0)][Mac (10,14)]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		StillImageLensStabilizationInfo,
-#if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("tvos11.0")]
-#else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
-#endif
+		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		CameraIntrinsicMatrix,
-#if NET
-		[SupportedOSPlatform ("macos10.14")]
-#else
 		[Mac (10,14)]
-#endif
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo")]
 		DroppedFrameReasonInfo,
-#if NET
-		[SupportedOSPlatform ("macos10.10")]
-#else
 		[Mac (10,10)]
-#endif
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		ForceKeyFrame,
 	}
