@@ -8,12 +8,7 @@ using Foundation;
 
 namespace CoreMidi {
 
-#if NET
-	[SupportedOSPlatform ("ios12.0")]
-	[UnsupportedOSPlatform ("tvos")]
-#else
 	[NoWatch, NoTV, Mac (10,14), iOS (12,0)]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiCIDeviceIdentification {
 		[MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
