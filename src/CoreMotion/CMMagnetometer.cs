@@ -12,7 +12,11 @@ using System.Runtime.Versioning;
 namespace CoreMotion {
 
 	// CMMagnetometer.h
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+#else
 	[Mac (10,15)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMMagneticField {
 		public double X, Y, Z;
