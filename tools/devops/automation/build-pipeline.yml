@@ -290,7 +290,7 @@ stages:
           statusContext: ${{ config['statusContext'] }} 
           iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-          keyringPass: $(pass--lab--mac--builder--keychain)
+          keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
 
