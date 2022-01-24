@@ -90,7 +90,7 @@ namespace TVMLKit {
 	public enum TVElementUpdateType : long {
 		None,
 		Subtree,
-#if XAMCORE_4_0
+#if NET
 		[TV (10,0)]
 		Styles,
 		Children,

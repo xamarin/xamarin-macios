@@ -68,14 +68,13 @@ namespace AppKit {
 		AdobeKorea1 = 5
 	}
 
-	// Untyped enum (NSAttributedString.h). Only used as a convience enum in our API.
 	[NoMacCatalyst]
 	[Flags]
-	public enum NSSpellingState :
-#if XAMCORE_4_0
-		nint
+#if NET
+	[Native]
+	public enum NSSpellingState : long
 #else
-		int
+	public enum NSSpellingState : int
 #endif
 	{
 		None = 0x0,

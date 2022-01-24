@@ -51,9 +51,11 @@ namespace Introspection {
 			case "System.Drawing":
 				return true;
 #if __IOS__
+#if !NET
 			// Some CF* types that requires CFNetwork which we always link with
 			// ref: tools/common/CompilerFlags.cs
 			case "CoreServices":
+#endif
 #if !NET
 			case "WatchKit": // Apple removed WatchKit from iOS
 #endif

@@ -1,9 +1,3 @@
-!incorrect-protocol-member! CPBarButtonProviding::backButton is REQUIRED and should be abstract
-!incorrect-protocol-member! CPBarButtonProviding::setBackButton: is REQUIRED and should be abstract
-!incorrect-protocol-member! CPSessionConfigurationDelegate::sessionConfiguration:limitedUserInterfacesChanged: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! CPListTemplateItem::isEnabled is REQUIRED and should be abstract
-!incorrect-protocol-member! CPListTemplateItem::setEnabled: is REQUIRED and should be abstract
-
 # Removed in iOS 14
 !unknown-field! CPMaximumListItemImageSize bound
 

@@ -95,5 +95,38 @@ namespace ObjCRuntime {
 				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
 			return handle;
 		}
+
+#if NET
+		public override int GetHashCode ()
+		{
+			return handle.GetHashCode ();
+		}
+
+		public override bool Equals (object? obj)
+		{
+			if (obj is DisposableObject d)
+				return handle.Equals (d.handle);
+
+			return false;
+		}
+
+		public static bool operator == (DisposableObject? a, DisposableObject? b)
+		{
+			if (a is null)
+				return b is null;
+			else if (b is null)
+				return false;
+			return a.Handle == b.Handle;
+		}
+
+		public static bool operator != (DisposableObject? a, DisposableObject? b)
+		{
+			if (a is null)
+				return b is not null;
+			else if (b is null)
+				return true;
+			return a.Handle != b.Handle;
+		}
+#endif
 	}
 }
