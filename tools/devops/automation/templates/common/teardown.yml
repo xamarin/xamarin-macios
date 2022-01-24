@@ -5,6 +5,8 @@ parameters:
 - name: keyringPass
   type: string
 
+steps:
+
 - pwsh: |
     # should we need sudo, no, but someone did something wrong in the images..
     sudo rm -Rf "$HOME/.git-credentials"
