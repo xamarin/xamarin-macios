@@ -27,7 +27,7 @@ namespace CoreMedia {
 	public delegate int    CMBufferCompare (INativeObject first, INativeObject second);
 
 #if NET
-	[SupportedOSPlatform ("ios7.1")]
+	// [SupportedOSPlatform ("ios7.1")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
 #else
 	[iOS (7,1)]
 	[Watch (6,0)]
