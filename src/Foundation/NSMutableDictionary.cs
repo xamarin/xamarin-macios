@@ -342,12 +342,12 @@ namespace Foundation {
 			LowlevelSetObject (obj.Handle, key);
 		}
 
-		public void LowlevelSetObject (string obj, IntPtr key)
+		public void LowlevelSetObject (string str, IntPtr key)
 		{
-			if (obj is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (obj));
+			if (str is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (str));
 
-			var ptr = CFString.CreateNative (obj);
+			var ptr = CFString.CreateNative (str);
 			LowlevelSetObject (ptr, key);
 			CFString.ReleaseNative (ptr);
 		}
