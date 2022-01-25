@@ -130,26 +130,48 @@ steps:
     displayName: 'Sign .msi'
     condition: ${{ parameters.condition }}
 
-- bash: |
-    security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-    PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
-    echo "Packages found at $PACKAGES"
-    if [[ "$SYSTEM_DEBUG" == "true" ]]; then
-      export ESRP_TEMP="$WORKING_DIR/esrp"
-      echo "Temp dir is $ESRP_TEMP"
-      mkdir -p "$ESRP_TEMP"
-    fi
+- ${{ if eq(variables['IsPR'], 'True') }}:
+  - bash: |
+      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
+      PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
+      echo "Packages found at $PACKAGES"
 
-    echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
-    ls -R $(Build.SourcesDirectory)/package
-  env:
-    WORKING_DIR: $(System.DefaultWorkingDirectory)
-    PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
-    MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
-  name: notarize
-  displayName: 'Signing Release Build'
-  timeoutInMinutes: 180
-  condition: ${{ parameters.condition }}
+      echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    env:
+      PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+      MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
+      APP_ID: $(XamarinAppId)
+      INSTALL_ID: $(XamarinAppId)
+      APPLE_ACCOUNT: $(XamarinUserId)
+      APPLE_PASS: $(XamarinPassword)
+      TEAM_ID: $(TeamID)
+      KEYCHAIN: $(SigningKeychain)
+    name: notarize
+    displayName: 'Signing PR Build'
+    timeoutInMinutes: 180
+    condition: ${{ parameters.condition }}
+
+- ${{ else }}:
+  - bash: |
+      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
+      PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
+      echo "Packages found at $PACKAGES"
+      if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+        export ESRP_TEMP="$WORKING_DIR/esrp"
+        echo "Temp dir is $ESRP_TEMP"
+        mkdir -p "$ESRP_TEMP"
+      fi
+
+      echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
+      ls -R $(Build.SourcesDirectory)/package
+    env:
+      WORKING_DIR: $(System.DefaultWorkingDirectory)
+      PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+      MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
+    name: notarize
+    displayName: 'Signing Release Build (ESRP)'
+    timeoutInMinutes: 180
+    condition: ${{ parameters.condition }}
 
 - task: ArchiveFiles@1
   displayName: 'Archive ESRP temp'

@@ -103,7 +103,7 @@ namespace CoreGraphics {
 		extern static /* CGShadingRef */ IntPtr CGShadingRelease (/* CGShadingRef */ IntPtr shading);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGShadingRetain (/* CGShadingRef */ IntPtr shading);
+		extern static /* CGShadingRef */ IntPtr CGShadingRetain (/* CGShadingRef */ IntPtr shading);
 #endif // !COREBUILD
 	}
 }

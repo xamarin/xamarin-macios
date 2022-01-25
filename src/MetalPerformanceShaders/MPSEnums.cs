@@ -23,7 +23,7 @@ namespace MetalPerformanceShaders {
 		InsertDebugGroups = 1 << 3,
 		[iOS (11,0), TV (11,0)]
 		Verbose = 1 << 4,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'AllowReducedPrecision' instead.")]
 		MPSKernelOptionsAllowReducedPrecision = AllowReducedPrecision,
 #endif
@@ -168,7 +168,7 @@ namespace MetalPerformanceShaders {
 		Logarithm,
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		GeLU,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("The value changes when newer versions are released. It will be removed in the future.")]
 		Count, // must always be last
 #endif
