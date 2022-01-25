@@ -39,6 +39,10 @@ parameters:
   type: boolean
   default: false 
 
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -333,6 +337,7 @@ steps:
   - template: sign-and-notarized.yml
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
+      skipESRP: ${{ parameters.skipESRP }}
       keyringPass: ${{ parameters.keyringPass }}
 
 # publish nugets (must be done after signing)
