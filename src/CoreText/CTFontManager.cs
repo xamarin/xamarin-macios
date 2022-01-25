@@ -220,9 +220,9 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("ios13.0")]
+		// [SupportedOSPlatform ("tvos13.0")] - Not valid delegate declaration
+		// [SupportedOSPlatform ("macos10.15")]
+		// [SupportedOSPlatform ("ios13.0")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -764,9 +764,9 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
+		// [SupportedOSPlatform ("ios13.0")] - Not valid delegate declaration
+		// [UnsupportedOSPlatform ("tvos")]
+		// [UnsupportedOSPlatform ("macos")]
 #else
 		[NoWatch]
 		[NoTV]
