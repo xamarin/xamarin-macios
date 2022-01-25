@@ -8493,7 +8493,7 @@ namespace AppKit {
 
 		[Export ("stateImageWidth")]
 #if NET
-		nfloat StateImageWidth { get; set; }
+		nfloat StateImageWidth { get; }
 #else
 		nfloat StateImageWidth ();
 #endif
