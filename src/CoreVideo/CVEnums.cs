@@ -36,18 +36,14 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// uint32_t -> CVBuffer.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	public enum CVAttachmentMode : uint {
 		ShouldNotPropagate    = 0,
 		ShouldPropagate       = 1,
 	}
 
-#if !NET
-	[Watch (4,0)]
-#endif
 	[Flags]
+	[Watch (4,0)]
 #if XAMCORE_4_0
 	public enum CVPixelBufferLock : ulong {
 #else
@@ -60,9 +56,7 @@ namespace CoreVideo {
 	}	
 
 	// int32_t -> CVReturn.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	public enum CVReturn : int {
 		Success = 0,
 		First = -6660,
@@ -88,25 +82,19 @@ namespace CoreVideo {
 
 
 	// uint64_t -> CVBase.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	public enum CVOptionFlags : long {
 		None = 0,
 	}
 
-#if !NET
-	[Watch (4,0)]
-#endif
 	[Flags]
+	[Watch (4,0)]
 	public enum CVTimeFlags : int {
 		IsIndefinite = 1 << 0,
 	}
 
-#if !NET
-	[Watch (4,0)]
-#endif
 	[Flags]
+	[Watch (4,0)]
 	public enum CVTimeStampFlags : ulong {
 		VideoTimeValid              = (1 << 0),
 		HostTimeValid               = (1 << 1),
@@ -119,18 +107,14 @@ namespace CoreVideo {
 		IsInterlaced                = (TopField | BottomField),
 	}	
 
-#if !NET
-	[Watch (4,0)]
-#endif
 	[Flags]
+	[Watch (4,0)]
 	public enum CVSMPTETimeFlags : uint {
 		Valid     = (1 << 0),
 		Running   = (1 << 1)
 	}
 
-#if !NET
 	[Watch (4,0)]
-#endif
 	public enum CVSMPTETimeType : uint {
 		Type24        = 0,
 		Type25        = 1,
@@ -143,28 +127,14 @@ namespace CoreVideo {
 	}
 
 	// CVOptionFlags (uint64_t) -> CVPixelBufferPool.h
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
 	[Watch (4,0)]
-	[iOS (9,0)]
-	[Mac (10,11)]
-#endif
+	[iOS (9,0)][Mac (10,11)]
 	public enum CVPixelBufferPoolFlushFlags : ulong {
 		FlushExcessBuffers = 1,
 	} 
 
 #if !WATCH
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0)]
 	public enum CVImageBufferAlphaChannelMode {
 		[Field ("kCVImageBufferAlphaChannelMode_StraightAlpha")]
 		Straight,
