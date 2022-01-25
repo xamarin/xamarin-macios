@@ -236,4 +236,5 @@ jobs:
       statusContext: "Build"
       runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      enableAPIDiff: ${{ parameters.enableAPIDiff }}
       devicePrefix: sim

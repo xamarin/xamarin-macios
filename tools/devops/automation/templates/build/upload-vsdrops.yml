@@ -39,7 +39,7 @@ steps:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: 'DropMetadata-APIDiff'
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/APIDiff'
-    sourcePath: $(STABLE_APIDDIFF_PATH)
+    sourcePath: $(STABLE_APIDIFF_PATH)
     detailedLog: true
     usePat: true
 
