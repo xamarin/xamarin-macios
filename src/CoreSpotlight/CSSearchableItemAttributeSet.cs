@@ -21,11 +21,7 @@ namespace CoreSpotlight {
 		}
 
 		// Manually deal with these properties until we get BindAs working
-#if !NET
 		[iOS (11,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public bool? IsUserCreated { 
 			get {
 				return _IsUserCreated?.BoolValue;
@@ -34,11 +30,7 @@ namespace CoreSpotlight {
 			}
 		}
 
-#if !NET
 		[iOS (11,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public bool? IsUserOwned {
 			get {
 				return _IsUserOwned?.BoolValue;
@@ -47,11 +39,7 @@ namespace CoreSpotlight {
 			}
 		}
 
-#if !NET
 		[iOS (11,0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public bool? IsUserCurated { 
 			get {
 				return _IsUserCurated?.BoolValue;
