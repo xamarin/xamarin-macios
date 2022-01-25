@@ -41,7 +41,7 @@ namespace CoreMedia {
 		{
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CMFormatDescriptionGetExtensions (/* CMFormatDescriptionRef */ IntPtr desc);
 
 #if !COREBUILD
@@ -52,7 +52,7 @@ namespace CoreMedia {
 			return Runtime.GetNSObject<NSDictionary> (cfDictRef);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFPropertyListRef */ IntPtr CMFormatDescriptionGetExtension (/* CMFormatDescriptionRef */ IntPtr desc, /* CFStringRef */ IntPtr extensionkey);
 
 		public NSObject? GetExtension (string extensionKey)
@@ -66,7 +66,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* FourCharCode */ uint CMFormatDescriptionGetMediaSubType (/* CMFormatDescriptionRef */ IntPtr desc);
 
 		public uint MediaSubType
@@ -119,7 +119,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMMediaType CMFormatDescriptionGetMediaType (/* CMFormatDescriptionRef */ IntPtr desc);
 		
 		public CMMediaType MediaType
@@ -130,7 +130,7 @@ namespace CoreMedia {
 			}
 		}
 		
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFTypeID */ nint CMFormatDescriptionGetTypeID ();
 		
 		public static nint GetTypeID ()

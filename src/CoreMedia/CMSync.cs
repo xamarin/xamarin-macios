@@ -41,7 +41,7 @@ namespace CoreMedia {
 		}
 #if !COREBUILD
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMClockGetHostTimeClock ();
 
 		public static CMClock HostTimeClock {
@@ -50,7 +50,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMClockGetTime (/* CMClockRef */ IntPtr clock);
 
 		public CMTime CurrentTime {
@@ -66,7 +66,7 @@ namespace CoreMedia {
 #else
 		[Mac (10,10)]
 #endif
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMClockError CMAudioClockCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef* */ out IntPtr clockOut);
 
 		public static CMClock? CreateAudioClock (out CMClockError clockError)
@@ -77,7 +77,7 @@ namespace CoreMedia {
 		}
 #endif
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMClockError CMClockGetAnchorTime (/* CMClockRef */ IntPtr clock, out CMTime outClockTime, out CMTime outReferenceClockTime);
 
 		public CMClockError GetAnchorTime (out CMTime clockTime, out CMTime referenceClockTime)
@@ -85,7 +85,7 @@ namespace CoreMedia {
 			return CMClockGetAnchorTime (Handle, out clockTime, out referenceClockTime);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMClockMightDrift (/* CMClockRef */ IntPtr clock, /* CMClockRef */ IntPtr otherClock);
 
@@ -97,7 +97,7 @@ namespace CoreMedia {
 			return CMClockMightDrift (Handle, otherClock.Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static void CMClockInvalidate (/* CMClockRef */ IntPtr clock);
 
 		public void Invalidate ()
@@ -105,10 +105,10 @@ namespace CoreMedia {
 			CMClockInvalidate (Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary, EntryPoint="CMClockConvertHostTimeToSystemUnits")]
+		[DllImport(Constants.CoreMediaLibrary, EntryPoint="CMClockConvertHostTimeToSystemUnits")]
 		public extern static /* uint64_t */ ulong ConvertHostTimeToSystemUnits (CMTime hostTime);
 
-		[DllImport (Constants.CoreMediaLibrary, EntryPoint="CMClockMakeHostTimeFromSystemUnits")]
+		[DllImport(Constants.CoreMediaLibrary, EntryPoint="CMClockMakeHostTimeFromSystemUnits")]
 		public extern static CMTime CreateHostTimeFromSystemUnits (/* uint64_t */ ulong hostTime);
 #endif // !COREBUILD
 	}
@@ -290,7 +290,7 @@ namespace CoreMedia {
 		{
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* Float64 */ double CMTimebaseGetEffectiveRate (/* CMTimebaseRef */ IntPtr timebase);
 
 		public double EffectiveRate {
@@ -299,10 +299,10 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* Float64 */ double CMTimebaseGetRate (/* CMTimebaseRef */ IntPtr timebase);
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseSetRate (/* CMTimebaseRef */ IntPtr timebase, /* Float64 */ double rate);
 
 		public double Rate {
@@ -316,10 +316,10 @@ namespace CoreMedia {
 			}
 		} 
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimebaseGetTime (/* CMTimebaseRef */ IntPtr timebase);
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseSetTime (/* CMTimebaseRef */ IntPtr timebase, CMTime time);
 
 		public new CMTime Time {
@@ -479,7 +479,7 @@ namespace CoreMedia {
 		}
 #endif
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimebaseGetTimeWithTimeScale (/* CMTimebaseRef */ IntPtr timebase, CMTimeScale timescale, CMTimeRoundingMethod method);
 
 		public CMTime GetTime (CMTimeScale timeScale, CMTimeRoundingMethod roundingMethod)
@@ -487,7 +487,7 @@ namespace CoreMedia {
 			return CMTimebaseGetTimeWithTimeScale (Handle, timeScale, roundingMethod);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseSetAnchorTime (/* CMTimebaseRef */ IntPtr timebase, CMTime timebaseTime, CMTime immediateMasterTime);
 
 		public CMTimebaseError SetAnchorTime (CMTime timebaseTime, CMTime immediateMasterTime)
@@ -495,7 +495,7 @@ namespace CoreMedia {
 			return CMTimebaseSetAnchorTime (Handle, timebaseTime, immediateMasterTime);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseGetTimeAndRate (/* CMTimebaseRef */ IntPtr timebase, out CMTime time, /* Float64* */ out double rate);
 
 		public CMTimebaseError GetTimeAndRate (out CMTime time, out double rate)
@@ -503,7 +503,7 @@ namespace CoreMedia {
 			return CMTimebaseGetTimeAndRate (Handle, out time, out rate);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */  CMTimebaseError CMTimebaseSetRateAndAnchorTime (/* CMTimebaseRef */ IntPtr timebase, /* Float64 */ double rate, CMTime timebaseTime, CMTime immediateMasterTime);
 
 		public CMTimebaseError SetRateAndAnchorTime (double rate, CMTime timebaseTime, CMTime immediateMasterTime)
@@ -511,7 +511,7 @@ namespace CoreMedia {
 			return CMTimebaseSetRateAndAnchorTime (Handle, rate, timebaseTime, immediateMasterTime);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseNotificationBarrier (/* CMTimebaseRef */ IntPtr timebase);
 
 		public CMTimebaseError NotificationBarrier ()
@@ -522,7 +522,7 @@ namespace CoreMedia {
 		public const double VeryLongTimeInterval = 256.0 * 365.0 * 24.0 * 60.0 * 60.0;
 
  #if !COREBUILD
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseAddTimer (/* CMTimebaseRef */ IntPtr timebase, /* CFRunLoopTimerRef */ IntPtr timer, /* CFRunLoopRef */ IntPtr runloop);
 
 		public CMTimebaseError AddTimer (NSTimer timer, NSRunLoop runloop)
@@ -537,7 +537,7 @@ namespace CoreMedia {
 				return CMTimebaseAddTimer (Handle, timer.Handle, cf.Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseRemoveTimer (/* CMTimebaseRef */ IntPtr timebase, /* CFRunLoopTimerRef */ IntPtr timer);
 
 		public CMTimebaseError RemoveTimer (NSTimer timer)
@@ -548,7 +548,7 @@ namespace CoreMedia {
 			return CMTimebaseRemoveTimer (Handle, timer.Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseSetTimerNextFireTime (/* CMTimebaseRef */ IntPtr timebase, /* CFRunLoopTimerRef */ IntPtr timer, CMTime fireTime, /* uint32_t */ uint flags);
 
 		public CMTimebaseError SetTimerNextFireTime (NSTimer timer, CMTime fireTime)
@@ -559,7 +559,7 @@ namespace CoreMedia {
 			return CMTimebaseSetTimerNextFireTime (Handle, timer.Handle, fireTime, 0);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseSetTimerToFireImmediately (/* CMTimebaseRef */ IntPtr timebase, /* CFRunLoopTimerRef */ IntPtr timer);
 
 		public CMTimebaseError SetTimerToFireImmediately (NSTimer timer)
@@ -898,7 +898,7 @@ namespace CoreMedia {
 		}
 
 #if !COREBUILD
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMSyncGetTime (/* CMClockOrTimebaseRef */ IntPtr clockOrTimebase);
 
 		public CMTime Time { 
@@ -907,7 +907,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* Float64 */ double CMSyncGetRelativeRate (/* CMClockOrTimebaseRef */ IntPtr ofClockOrTimebase, /* CMClockOrTimebaseRef */ IntPtr relativeToClockOrTimebase);
 
 		public static double GetRelativeRate (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
@@ -921,7 +921,7 @@ namespace CoreMedia {
 			return CMSyncGetRelativeRate (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSyncError CMSyncGetRelativeRateAndAnchorTime (
 			/* CMClockOrTimebaseRef */ IntPtr ofClockOrTimebase, 
 			/* CMClockOrTimebaseRef */ IntPtr relativeToClockOrTimebase,
@@ -940,7 +940,7 @@ namespace CoreMedia {
 			return CMSyncGetRelativeRateAndAnchorTime (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle, out relativeRate, out timeA, out timeB);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMSyncConvertTime (CMTime time, /* CMClockOrTimebaseRef */ IntPtr fromClockOrTimebase, /* CMClockOrTimebaseRef */ IntPtr toClockOrTimebase);
 
 		public static CMTime ConvertTime (CMTime time, CMClockOrTimebase from, CMClockOrTimebase to)
@@ -953,7 +953,7 @@ namespace CoreMedia {
 			return CMSyncConvertTime (time, from.Handle, to.Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSyncMightDrift (/* CMClockOrTimebaseRef */ IntPtr clockOrTimebase1, /* CMClockOrTimebaseRef */ IntPtr clockOrTimebase2);
 

@@ -89,10 +89,10 @@ namespace CoreMedia {
 
 		// CMItemCount -> CMBase.h (looks weird but it's 4 bytes in 32bits and 8 bytes in 64bits, x86_64 and ARM64)
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMItemCount */ nint capacity, CMBufferCallbacks cbacks, /* CMBufferQueueRef* */ out IntPtr result);
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMItemCount */ nint capacity, /* CMBufferCallbacks */ IntPtr cbacks, /* CMBufferQueueRef* */ out IntPtr result);
 
 		CMBufferQueue (IntPtr handle, bool owns, int count)
@@ -147,7 +147,7 @@ namespace CoreMedia {
 			return null;
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		unsafe extern static /* CMBufferCallbacks */ IntPtr CMBufferQueueGetCallbacksForUnsortedSampleBuffers ();
 		
 		public static CMBufferQueue? CreateUnsorted (int count)
@@ -165,7 +165,7 @@ namespace CoreMedia {
 			return null;
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueEnqueue (/* CMBufferQueueRef */ IntPtr queue, /* CMBufferRef */ IntPtr buf);
 		
 		//
@@ -183,7 +183,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMBufferRef */ IntPtr CMBufferQueueDequeueAndRetain (/* CMBufferQueueRef */ IntPtr queue);
 
 		public INativeObject? Dequeue ()
@@ -206,7 +206,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMBufferRef */ IntPtr CMBufferQueueDequeueIfDataReadyAndRetain (/* CMBufferQueueRef */ IntPtr queue);
 		
 		public INativeObject? DequeueIfDataReady ()
@@ -229,7 +229,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static byte CMBufferQueueIsEmpty (/* CMBufferQueueRef */ IntPtr queue);
 		public bool IsEmpty {
 			get {
@@ -238,14 +238,14 @@ namespace CoreMedia {
 		}
 
 		
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueMarkEndOfData (/* CMBufferQueueRef */ IntPtr queue);
 		public int MarkEndOfData ()
 		{
 			return CMBufferQueueMarkEndOfData (Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static byte CMBufferQueueContainsEndOfData (/* CMBufferQueueRef */ IntPtr queue);
 		public bool ContainsEndOfData {
 			get {
@@ -253,7 +253,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static byte CMBufferQueueIsAtEndOfData (/* CMBufferQueueRef */ IntPtr queue);
 		public bool IsAtEndOfData {
 			get {
@@ -261,14 +261,14 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static OSStatus CMBufferQueueReset (/* CMBufferQueueRef */ IntPtr queue);
 		public OSStatus Reset ()
 		{
 			return CMBufferQueueReset (Handle);
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static nint CMBufferQueueGetBufferCount (/* CMBufferQueueRef */ IntPtr queue);
 		public nint BufferCount {
 			get {
@@ -276,7 +276,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
+		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMBufferQueueGetDuration (/* CMBufferQueueRef */ IntPtr queue);
 		public CMTime Duration {
 			get {

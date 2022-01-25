@@ -19,7 +19,7 @@ namespace CoreMedia {
 #if !NET
 	[Watch (6,0)]
 #endif
-	[StructLayout (LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct CMSampleTimingInfo
 	{
 		public CMTime Duration;
@@ -31,7 +31,7 @@ namespace CoreMedia {
 #if !NET
 	[Watch (6,0)]
 #endif
-	[StructLayout (LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct CMTimeRange {
 		public CMTime Start;
 		public CMTime Duration;
@@ -222,7 +222,7 @@ namespace CoreMedia {
 #if !NET
 	[Watch (6,0)]
 #endif
-	[StructLayout (LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct CMTimeScale
 	{
 		// CMTime.h
