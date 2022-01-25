@@ -27,9 +27,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreVideo {
 
-#if !NET
 	[iOS (8,0), Mac (12,0), MacCatalyst (15,0)]
-#endif
 	public class CVMetalTexture : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CVMetalTexture (NativeHandle handle, bool owns)

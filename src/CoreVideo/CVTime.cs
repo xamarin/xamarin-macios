@@ -36,9 +36,7 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// CVBase.h
-#if !NET
 	[Watch (4,0)]
-#endif
 	public struct CVTime {
 
 		public /* int64_t */ long TimeValue;
