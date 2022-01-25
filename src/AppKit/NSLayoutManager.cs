@@ -46,12 +46,8 @@ namespace UIKit {
 		}
 #endif // MONOMAC
 
-#if !XAMCORE_4_0 && MONOMAC
-#if !NET
+#if !NET && MONOMAC
 		[Obsolete ("Use 'GetIntAttribute' instead.")]
-#else
-		[Obsolete ("Use 'GetIntAttribute' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif // !NET
 		public virtual nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex)
 		{
 			return GetIntAttribute (attributeTag, glyphIndex);

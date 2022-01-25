@@ -39,6 +39,10 @@ parameters:
   type: boolean
   default: false 
 
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -68,50 +72,9 @@ steps:
     git remote # don't add -v else we see the pat
   displayName: 'Clean git mess from VSTS'
 
-- powershell: |
-    Write-Host "IsMacOS: ${IsMacOS}"
-    Write-Host "IsWindows: ${IsWindows}"
-    Write-Host "IsLinux: ${IsLinux}"
-
-    if ($IsMacOS -or $IsLinux) {
-        Write-Host "HOSTNAME: $(hostname)"
-    } else {
-        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
-    }
-
-    gci env: | format-table -autosize -wrap
-  displayName: 'Show Environment'
-
-- powershell: |
-    Write-Host "Python version"
-    python --version
-
-    Write-Host "Python location"
-    which python
-
-    Write-Host "Python2 location"
-    which python2
-
-    Write-Host "Python3 location"
-    which python3
-
-    Write-Host "Pip3 version"
-    pip3 -V
-  displayName: 'Show Python information'
-
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
-  displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
-  continueOnError: true
-  timeoutInMinutes: 60
-
-- bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
-  env:
-    OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
-  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
+- template: ../common/setup.yml
+  parameters:
+    keyringPass: ${{ parameters.keyringPass }}
 
 - template: install-certificates.yml@templates
   parameters:
@@ -121,8 +84,6 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
-- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
-
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
@@ -130,18 +91,6 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
   enabled: true
-
-# was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
-# that we can call make and generated the provisionator config files.
-- bash: |
-    XCODE_SELECT=$(xcode-select -p)
-    if [[ -d $XCODE_SELECT ]]; then
-      echo "Using Xcode in path $XCODE_SELECT"
-    else
-      echo "Setting Xcode to point to the default location."
-      xcode-select -s "/Applications/Xcode.app/Contents/Developer"
-    fi
-  displayName: 'Ensure Xcode is selected.'
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -159,22 +108,6 @@ steps:
     set -e
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
   displayName: 'Provision simulators'
-
-- bash: |
-    set -x
-    sudo rm -Rf /Developer/MonoTouch
-    sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
-    sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
-  displayName: 'Delete library folders'
-  timeoutInMinutes: 5
-
-- bash:
-    set -x
-    set -e
-    rm -Rvf $(Build.SourcesDirectory)/package
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
-  displayName: 'Clear results directory'
-  timeoutInMinutes: 5
 
 # Use the env variables that were set by the label parsing in the configure step
 # print some useful logging to allow to know what is going on AND allow make some
@@ -404,6 +337,7 @@ steps:
   - template: sign-and-notarized.yml
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
+      skipESRP: ${{ parameters.skipESRP }}
       keyringPass: ${{ parameters.keyringPass }}
 
 # publish nugets (must be done after signing)
@@ -570,17 +504,6 @@ steps:
     continueOnError: true
     condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
-# this will always be executed, is the default condition in the template
-- template: uninstall-certificates/v1.yml@templates
-  parameters:
-    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
-
-- pwsh: |
-    # should we need sudo, no, but someone did something wrong in the images..
-    sudo rm -Rf "$HOME/.git-credentials"
-  displayName: 'Remove git creds store'
-  condition: always()
-
 - ${{ if eq(parameters.uploadBinlogs, true) }}:
   # Copy all the binlogs to a separate directory, keeping directory structure.
   - script: |
@@ -600,6 +523,7 @@ steps:
     continueOnError: true
     condition: succeededOrFailed()
 
-- template: ../common/mac-agent-logs.yml
+# clean the bot after we use it
+- template: ../common/teardown.yml
   parameters:
-    outputPath: agent-logs.log
+    keyringPass: ${{ parameters.keyringPass }}

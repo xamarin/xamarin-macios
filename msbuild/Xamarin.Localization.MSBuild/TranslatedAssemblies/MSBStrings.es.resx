@@ -1085,11 +1085,41 @@
         <value>Se esperaba un archivo "manifest" en el directorio {0}.</value>
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
+  <data name="E7088" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+  <data name="E7089" xml:space="preserve">
+        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+  <data name="E7090" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
   <data name="W7091" xml:space="preserve">
         <value>El marco {0} es un marco de bibliotecas estáticas y no se copiará en la aplicación.</value>
     </data>
   <!-- This is the same as MT0140 -->
   <data name="E7092" xml:space="preserve">
         <value>El archivo "{0}" no es un marco válido: {1}</value>
+    </data>
+  <data name="W7093" xml:space="preserve">
+        <value>The binding resource package {0} does not exist.</value>
+    </data>
+  <data name="E7094" xml:space="preserve">
+        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
     </data>
 </root>

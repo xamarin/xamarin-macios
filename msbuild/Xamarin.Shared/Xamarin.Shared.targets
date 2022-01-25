@@ -1731,6 +1731,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_CodesignNativeLibraries;
 			_CollectFrameworks;
 			_CodesignFrameworks;
+			_ReadAppExtensionCodesignProperties;
+			_CodesignAppExtensions;
+			_PrepareCodesignAppExtension;
+			_CalculateCodesignAppBundleInputs;
 		</_CodesignAppBundleDependsOn>
 
 		<CoreCodesignDependsOn>
@@ -1890,6 +1894,140 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
+	</Target>
+
+	<Target Name="_ReadAppExtensionCodesignProperties">
+		<ReadItemsFromFile File="%(_ResolvedAppExtensionReferences.Identity)\..\codesign.items" Condition="Exists('%(_ResolvedAppExtensionReferences.Identity)\..\codesign.items')">
+			<Output TaskParameter="Items" ItemName="_AppExtensionCodesignProperties" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CodesignAppExtensions" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
+		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
+		Inputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
+		Outputs="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
+
+		<PropertyGroup>
+			<_CodesignAppExtensionsLibraryPath>$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_CodesignAppExtensionsLibrary
+				Include="$(_CodesignAppExtensionsLibraryPath)**\*.dylib;$(_CodesignAppExtensionsLibraryPath)**\*.metallib"
+				Exclude="$(_CodesignAppExtensionsLibraryPath)Watch\**;$(_CodesignAppExtensionsLibraryPath)$(_AppPlugInsRelativePath)\**"
+				>
+			</_CodesignAppExtensionsLibrary>
+		</ItemGroup>
+
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			Resources="@(_CodesignAppExtensionsLibrary)"
+			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
+			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
+			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
+			SigningKey="%(_AppExtensionCodesignProperties.LibrarySigningKey)"
+			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
+			>
+		</Codesign>
+
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != ''"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
+			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
+			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
+			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
+			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
+			Resources="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)"
+			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
+			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
+			>
+		</Codesign>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_CanOutputAppBundle)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != '') And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
+			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist"
+		/>
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources')"
+			Files="$(_AppPlugInsPath)%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources"
+		/>
+	</Target>
+
+	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
+		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
+		<PropertyGroup>
+			<_CompiledEntitlementsFullPath></_CompiledEntitlementsFullPath>
+			<_ResourceRulesFullPath></_ResourceRulesFullPath>
+		</PropertyGroup>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(AppBundleDir)">
+			<Output TaskParameter="FullPath" PropertyName="_AppBundleFullPath" />
+		</GetFullPath>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledCodesignEntitlements)' != ''" RelativePath="$(_CompiledCodesignEntitlements)">
+			<Output TaskParameter="FullPath" PropertyName="_CompiledEntitlementsFullPath" />
+		</GetFullPath>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_PreparedResourceRules)' != ''" RelativePath="$(_PreparedResourceRules)">
+			<Output TaskParameter="FullPath" PropertyName="_ResourceRulesFullPath" />
+		</GetFullPath>
+
+		<GetFiles SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(_AppBundleFullPath)" Pattern="*.*" Option="AllDirectories">
+			<Output TaskParameter="Files" ItemName="_AppExtensionBundleFiles" />
+		</GetFiles>
+
+		<PropertyGroup>
+			<!-- [System.IO.Path]::GetFileName() is safe to use -->
+			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
+			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
+
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
+
+			<_CodesignAppExtensionInputs>@(_AppExtensionBundleFiles);$(_EntitlementsFullPath)</_CodesignAppExtensionInputs>
+
+			<_LibrarySigningKey>$(_CodeSigningKey)</_LibrarySigningKey>
+			<_LibrarySigningKey Condition="'$(_LibrarySigningKey)' == ''">-</_LibrarySigningKey>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_AppExtensionCodesignPropertiesToWrite Include="$(_AppBundleFileName)">
+				<CodesignAppExtensionInputs>$(_CodesignAppExtensionInputs)</CodesignAppExtensionInputs>
+				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<DisableTimestamp>$(_CodesignDisableTimestamp)</DisableTimestamp>
+				<Entitlements>$(_CompiledEntitlementsFullPath)</Entitlements>
+				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
+				<Keychain>$(CodesignKeychain)</Keychain>
+				<LibrarySigningKey>$(_LibrarySigningKey)</LibrarySigningKey>
+				<SigningKey>$(_CodeSigningKey)</SigningKey>
+				<ExtraArgs>$(CodesignExtraArgs)</ExtraArgs>
+			</_AppExtensionCodesignPropertiesToWrite>
+		</ItemGroup>
+
+		<WriteItemsToFile
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Items="@(_AppExtensionCodesignPropertiesToWrite)"
+			ItemName="_AppExtensionCodesignProperties"
+			File="$(DeviceSpecificOutputPath)codesign.items"
+			IncludeMetadata="true"
+			Overwrite="true"
+		/>
+	</Target>
+
+	<Target Name="_CalculateCodesignAppBundleInputs" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
+		<ItemGroup>
+			<_CodesignAppBundleInputs Include="$(_AppBundlePath)**\*.*" Exclude="$(_AppCodeSignaturePath)_CodeSignature\CodeResources" />
+		</ItemGroup>
 	</Target>
 
 	<!-- LinkMode -->
@@ -2330,6 +2468,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppFrameworksRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\Frameworks\</_AppFrameworksRelativePath>
 			<_AppFrameworksRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">Frameworks\</_AppFrameworksRelativePath>
 			<_AppFrameworksPath>$(_AppBundlePath)$(_AppFrameworksRelativePath)</_AppFrameworksPath>
+
+			<_AppCodeSignatureRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\</_AppCodeSignatureRelativePath>
+			<_AppCodeSignatureRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'"></_AppCodeSignatureRelativePath>
+			<_AppCodeSignaturePath>$(_AppBundlePath)$(_AppCodeSignatureRelativePath)</_AppCodeSignaturePath>
 
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\PlugIns\</_AppPlugInsRelativePath>
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">PlugIns\</_AppPlugInsRelativePath>

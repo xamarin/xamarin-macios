@@ -221,7 +221,7 @@ namespace NetworkExtension {
 		[Export ("isBound")]
 		bool IsBound { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("NEAppProxyErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -561,7 +561,7 @@ namespace NetworkExtension {
 		[Export ("grade", ArgumentSemantic.Assign)]
 		NEFilterManagerGrade Grade { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("NEFilterErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -1087,7 +1087,7 @@ namespace NetworkExtension {
 		NEAppRule[] CopyAppRules ();
 
 		// CopyAppRules was incorrectly bound to AppRules and it is only available on macOS
-#if XAMCORE_4_0 || MONOMAC || __MACCATALYST__
+#if NET || MONOMAC || __MACCATALYST__
 		[NoWatch, NoTV, NoiOS, Mac (10,15,4), MacCatalyst (15,0)]
 		[Export ("appRules", ArgumentSemantic.Copy)]
 		NEAppRule[] AppRules { get; set; }
@@ -1115,7 +1115,7 @@ namespace NetworkExtension {
 		[Export ("contactsDomains", ArgumentSemantic.Copy)]
 		string[] ContactsDomains { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("NETunnelProviderErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -1183,7 +1183,7 @@ namespace NetworkExtension {
 		[Export ("setAuthorization:")]
 		void _SetAuthorization (IntPtr auth);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("NEVPNErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -1707,7 +1707,7 @@ namespace NetworkExtension {
 		[Export ("socketFamily")]
 		int SocketFamily {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented] set;
 #endif
 		}
@@ -1715,7 +1715,7 @@ namespace NetworkExtension {
 		[Export ("socketType")]
 		int SocketType {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented] set;
 #endif
 		}
@@ -1723,7 +1723,7 @@ namespace NetworkExtension {
 		[Export ("socketProtocol")]
 		int SocketProtocol {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented] set;
 #endif
 		}
