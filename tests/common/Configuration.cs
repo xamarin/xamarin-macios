@@ -669,6 +669,37 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static ApplePlatform GetPlatform (string assemblyName, bool isDotNet)
+		{
+			if (isDotNet) {
+				switch (Path.GetFileNameWithoutExtension (assemblyName)) {
+				case "Microsoft.iOS":
+					return ApplePlatform.iOS;
+				case "Microsoft.MacCatalyst":
+					return ApplePlatform.MacCatalyst;
+				case "Microsoft.tvOS":
+					return ApplePlatform.TVOS;
+				case "Microsoft.macOS":
+					return ApplePlatform.MacOSX;
+				default:
+					throw new NotSupportedException ($"Unknown assembly: {assemblyName}");
+				}
+			} else {
+				switch (Path.GetFileNameWithoutExtension (assemblyName)) {
+				case "Xamarin.iOS":
+					return ApplePlatform.iOS;
+				case "Xamarin.WatchOS":
+					return ApplePlatform.WatchOS;
+				case "Xamarin.TVOS":
+					return ApplePlatform.TVOS;
+				case "Xamarin.Mac":
+					return ApplePlatform.MacOSX;
+				default:
+					throw new NotSupportedException ($"Unknown assembly: {assemblyName}");
+				}
+			}
+		}		
+
 		public static string GetBaseLibrary (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
