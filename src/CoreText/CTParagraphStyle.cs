@@ -89,8 +89,18 @@ namespace CoreText {
 		LineHeightMultiple      = 7,
 		MaximumLineHeight       = 8,
 		MinimumLineHeight       = 9,
+#if NET
+		[UnsupportedOSPlatform ("macos10.8")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.8 use 'MaximumLineSpacing' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios6.0 use 'MaximumLineSpacing' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'MaximumLineSpacing' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'MaximumLineSpacing' instead.")]
+#endif
 		LineSpacing             = 10,
 		ParagraphSpacing        = 11,
 		ParagraphSpacingBefore  = 12,
@@ -112,10 +122,14 @@ namespace CoreText {
 
 	[StructLayout (LayoutKind.Explicit)]
 	internal struct CTParagraphStyleSettingValue {
-		[FieldOffset (0)] public byte int8;
-		[FieldOffset (0)] public nfloat single;
-		[FieldOffset (0)] public nuint  native_uint;
-		[FieldOffset (0)] public IntPtr pointer;
+		[FieldOffset (0)]
+		public byte int8;
+		[FieldOffset (0)]
+		public nfloat single;
+		[FieldOffset (0)]
+		public nuint  native_uint;
+		[FieldOffset (0)]
+		public IntPtr pointer;
 	}
 
 	internal abstract class CTParagraphStyleSpecifierValue {

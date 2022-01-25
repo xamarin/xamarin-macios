@@ -157,11 +157,29 @@ namespace CoreText {
 			get {return CTGlyphInfoGetCharacterCollection (Handle);}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
+		[Watch (6,0)]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
 		static extern ushort /* CGGlyph */ CTGlyphInfoGetGlyph (IntPtr /* CTGlyphInfoRef */ glyphInfo);
 
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
+		[Watch (6,0)]
+#endif
 		public CGGlyph GetGlyph ()
 		{
 			return CTGlyphInfoGetGlyph (Handle);

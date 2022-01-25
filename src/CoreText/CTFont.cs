@@ -183,8 +183,18 @@ namespace CoreText {
 		AllTypographicFeatures   = 0,
 		Ligatures                = 1,
 		CursiveConnection        = 2,
+#if NET
+		[UnsupportedOSPlatform ("macos10.7")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
+#endif
 		LetterCase               = 3,
 		VerticalSubstitution     = 4,
 		LinguisticRearrangement  = 5,
@@ -476,8 +486,18 @@ namespace CoreText {
 		}
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("macos10.7")]
+	[UnsupportedOSPlatform ("ios6.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 7)]
+#endif
 	public class CTFontFeatureLetterCase : CTFontFeatureSelectors
 	{
 		public enum Selector
@@ -1053,11 +1073,31 @@ namespace CoreText {
 	{
 		public enum Selector
 		{
+#if NET
+			[UnsupportedOSPlatform ("macos10.8")]
+			[UnsupportedOSPlatform ("ios5.1")]
+#if MONOMAC
+			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#endif
 			NoRubyKana           = 0,
+#if NET
+			[UnsupportedOSPlatform ("macos10.8")]
+			[UnsupportedOSPlatform ("ios5.1")]
+#if MONOMAC
+			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#endif
 			RubyKana             = 1,
 			RubyKanaOn           = 2,
 			RubyKanaOff          = 3
@@ -1147,11 +1187,31 @@ namespace CoreText {
 	{
 		public enum Selector
 		{
+#if NET
+			[UnsupportedOSPlatform ("macos10.8")]
+			[UnsupportedOSPlatform ("ios5.1")]
+#if MONOMAC
+			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#endif
 			NoCJKItalicRoman     = 0,
+#if NET
+			[UnsupportedOSPlatform ("macos10.8")]
+			[UnsupportedOSPlatform ("ios5.1")]
+#if MONOMAC
+			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#endif
 			CJKItalicRoman       = 1,
 			CJKItalicRomanOn     = 2,
 			CJKItalicRomanOff    = 3
@@ -1425,7 +1485,16 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Name, value);}
 		}
 
-		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[Watch (4,0)]
+		[TV (11,0)]
+#endif
 		public bool? Hidden {
 			get { return Adapter.GetBoolValue (Dictionary, CTFontVariationAxisKey.Hidden); }
 			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Hidden, value); }
@@ -1535,7 +1604,11 @@ namespace CoreText {
 		{
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, IntPtr matrix, nuint options);
 
@@ -1554,13 +1627,21 @@ namespace CoreText {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (string name, nfloat size, CTFontOptions options)
 			: base (Create (name, size, options), true)
 		{
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, ref CGAffineTransform matrix, nuint options);
 
@@ -1579,13 +1660,21 @@ namespace CoreText {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (string name, nfloat size, ref CGAffineTransform matrix, CTFontOptions options)
 			: base (Create (name, size, ref matrix, options), true)
 		{
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, IntPtr matrix, nuint options);
 
@@ -1599,13 +1688,21 @@ namespace CoreText {
 			return handle;
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options)
 			: base (Create (descriptor, size, options), true)
 		{
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, ref CGAffineTransform matrix, nuint options);
 
@@ -1619,7 +1716,11 @@ namespace CoreText {
 			return handle;
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options, ref CGAffineTransform matrix)
 			: base (Create (descriptor, size, options, ref matrix), true)
 		{
@@ -1789,7 +1890,16 @@ namespace CoreText {
 			}
 		}
 
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
+		[Watch (6,0)]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontRef */ IntPtr CTFontCreateForStringWithLanguage (
 			/* CTFontRef */ IntPtr currentFont,
@@ -1797,7 +1907,16 @@ namespace CoreText {
 			NSRange range,
 			/* CFStringRef _Nullable */ IntPtr language);
 
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
+		[Watch (6,0)]
+#endif
 		public CTFont? ForString (string value, NSRange range, string? language)
 		{
 			if (value is null)
@@ -1970,11 +2089,29 @@ namespace CoreText {
 			return GetGlyphsForCharacters (characters, glyphs, Math.Min (characters.Length, glyphs.Length));
 		}
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[Watch (7,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[iOS (14,0)]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe /* CFStringRef _Nullable */ IntPtr CTFontCopyNameForGlyph (/* CTFontRef */ IntPtr font, CGGlyph glyph);
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[Watch (7,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[iOS (14,0)]
+#endif
 		public string? GetGlyphName (CGGlyph glyph)
 		{
 			return CFString.FromHandle (CTFontCopyNameForGlyph (Handle, glyph), releaseHandle: true);
