@@ -125,14 +125,14 @@ namespace AudioUnit
 	delegate AudioUnitStatus CallbackShared (IntPtr /* void* */ clientData, ref AudioUnitRenderActionFlags /* AudioUnitRenderActionFlags* */ actionFlags, ref AudioTimeStamp /* AudioTimeStamp* */ timeStamp, uint /* UInt32 */ busNumber, uint /* UInt32 */ numberFrames, IntPtr /* AudioBufferList* */ data);
 #endif // !COREBUILD
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AURenderCallbackStruct
 	{
 		public Delegate Proc;
 		public IntPtr ProcRefCon; 
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioUnitConnection
 	{
 		public IntPtr SourceAudioUnit;
@@ -175,7 +175,7 @@ namespace AudioUnit
 #endif // !COREBUILD
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AUSamplerInstrumentData
 	{
 		public IntPtr FileUrl;
@@ -190,7 +190,7 @@ namespace AudioUnit
 		public byte PresetID;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	unsafe struct AudioUnitParameterInfoNative // AudioUnitParameterInfo in Obj-C
 	{
 		fixed byte /* char[52] */ name[52]; // unused
@@ -678,38 +678,48 @@ namespace AudioUnit
 		#endregion
 
 #if !MONOMAC
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.MacCatalyst, 14,0)]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
 
-#if !NET
-		[iOS (7,0)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
-		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#if __MACCATALYST__
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #endif
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
 		{
@@ -725,38 +735,48 @@ namespace AudioUnit
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
 		[Deprecated (PlatformName.MacCatalyst, 14,0)]
-#else
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
 
-#if !NET
-		[iOS (7,0)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
-		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
-#else
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#if __MACCATALYST__
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #endif
 		public UIKit.UIImage? GetHostIcon (float desiredPointSize)
 		{
@@ -841,7 +861,7 @@ namespace AudioUnit
 			return AudioUnitScheduleParameters (Handle, inParameterEvent, inNumParamEvents);
 		}
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int AudioComponentInstanceDispose(IntPtr inInstance);
 
 		protected override void Dispose (bool disposing)
@@ -859,7 +879,7 @@ namespace AudioUnit
 		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentInstanceNew")]
 		static extern AudioUnitStatus AudioComponentInstanceNew(IntPtr inComponent, out IntPtr inDesc);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentInstanceGetComponent (IntPtr inComponent);
 		
 		[DllImport(Constants.AudioUnitLibrary)]
@@ -874,24 +894,24 @@ namespace AudioUnit
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioOutputUnitStop (IntPtr ci);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitRender(IntPtr inUnit, ref AudioUnitRenderActionFlags ioActionFlags, ref AudioTimeStamp inTimeStamp,
 						  uint inOutputBusNumber, uint inNumberFrames, IntPtr ioData);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref AudioStreamBasicDescription inData,
 						       uint inDataSize);
         
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref uint inData, uint inDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref double inData, uint inDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref IntPtr inData, int inDataSize);
 
@@ -901,44 +921,44 @@ namespace AudioUnit
 							   ref NativeHandle inData, int inDataSize);
 #endif
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref AURenderCallbackStruct inData, int inDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref AudioUnitConnection inData, int inDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref AUSamplerInstrumentData inData, int inDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref AudioStreamBasicDescription outData,
 						       ref uint ioDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 							   ref IntPtr outData,
 						       ref int ioDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						ref uint outData,
 						ref int ioDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern unsafe AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       uint* outData,
 						       ref uint ioDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern unsafe AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 						       ref AudioUnitParameterInfoNative outData,
 						       ref uint ioDataSize);
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int AudioUnitGetProperty(IntPtr inUnit,
 						       [MarshalAs(UnmanagedType.U4)] AudioUnitPropertyIDType inID,
 						       [MarshalAs(UnmanagedType.U4)] AudioUnitScopeType inScope,
@@ -960,10 +980,10 @@ namespace AudioUnit
 		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
 #if MONOMAC || __MACCATALYST__
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.CoreAudioLibrary)]
 		static extern int AudioObjectGetPropertyData (
@@ -1036,7 +1056,7 @@ namespace AudioUnit
 	}
 
 #if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioObjectPropertyAddress
 	{
 #if !COREBUILD
@@ -1154,13 +1174,16 @@ namespace AudioUnit
 		ParameterRamp = 2,
 		Midi = 8,
 		MidiSysEx = 9,
-#if !NET
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
 #endif
 		MidiEventList  = 10,
 	}
@@ -1271,8 +1294,12 @@ namespace AudioUnit
  		public float Value;
  	}
 
-#if !NET
-	[iOS (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[Mac (10,12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {
