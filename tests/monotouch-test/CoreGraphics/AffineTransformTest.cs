@@ -530,6 +530,16 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual (sizeof (CGAffineTransform), Marshal.SizeOf (typeof (CGAffineTransform)));
 		}
 
+		[Test]
+		public void ToStringTest ()
+		{
+			var transform = new CGAffineTransform ((nfloat)1, (nfloat)2, (nfloat)3, (nfloat)4, (nfloat)5, (nfloat)6);
+#if NET
+			Assert.AreEqual ("[1, 2, 3, 4, 5, 6]", transform.ToString (), "ToString");
+#else
+			Assert.AreEqual ("xx:1.0 yx:2.0 xy:3.0 yy:4.0 x0:5.0 y0:6.0", transform.ToString (), "ToString");
+#endif
+		}
 	}
 
 

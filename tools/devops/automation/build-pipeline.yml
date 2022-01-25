@@ -42,6 +42,11 @@ parameters:
   type: boolean
   default: true
 
+- name: enableAPIDiff
+  displayName: Enable API diff generation
+  type: boolean
+  default: true
+
 - name: forceInsertion
   displayName: Force Insertion 
   type: boolean
@@ -263,6 +268,7 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
+        enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 # .NET 6 Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(parameters.forceInsertion, true))) }}:
@@ -284,7 +290,7 @@ stages:
           statusContext: ${{ config['statusContext'] }} 
           iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-          keyringPass: $(pass--lab--mac--builder--keychain)
+          keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
 

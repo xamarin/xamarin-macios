@@ -106,7 +106,7 @@ namespace UIKit {
 		ParagraphBreak = (1 << 4),
 		ContainerBreak = (1 << 5),
 
-#if !XAMCORE_4_0 && !__MACCATALYST__ && !MONOMAC
+#if !NET && !__MACCATALYST__ && !MONOMAC
 		[Obsolete ("Use 'ZeroAdvancement' instead.")]
 		ZeroAdvancementAction = ZeroAdvancement,
 		[Obsolete ("Use 'Whitespace' instead.")]
@@ -308,7 +308,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	partial interface NSLayoutManager : NSSecureCoding {
 
-#if !XAMCORE_4_0
+#if !NET
 		// This was removed in the headers in the macOS 10.11 SDK
 		[NoiOS][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'TextStorage' instead.")]
@@ -401,7 +401,7 @@ namespace UIKit {
 		[Export ("invalidateDisplayForGlyphRange:")]
 		void InvalidateDisplayForGlyphRange (NSRange glyphRange);
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharacterRange, nint delta, NSRange invalidatedCharacterRange) instead).")]
@@ -435,7 +435,7 @@ namespace UIKit {
 		[Export ("ensureLayoutForBoundingRect:inTextContainer:")]
 		void EnsureLayoutForBoundingRect (CGRect bounds, NSTextContainer container);
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
@@ -443,7 +443,7 @@ namespace UIKit {
 		void InsertGlyph (NSGlyph glyph, nint glyphIndex, nint charIndex);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
@@ -451,7 +451,7 @@ namespace UIKit {
 		void ReplaceGlyphAtIndex (nint glyphIndex, NSGlyph newGlyph);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
@@ -459,7 +459,7 @@ namespace UIKit {
 		void DeleteGlyphs (NSRange glyphRange);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
@@ -467,7 +467,7 @@ namespace UIKit {
 		void SetCharacterIndex (nint charIndex, nint glyphIndex);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
@@ -475,7 +475,7 @@ namespace UIKit {
 		void SetIntAttribute (nint attributeTag, nint value, nint glyphIndex);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'SetGlyphs' instead.")]
@@ -490,27 +490,31 @@ namespace UIKit {
 		/* NSUInteger */ nint NumberOfGlyphs { get; }
 #endif
 
-#if !XAMCORE_4_0
 		[Export ("glyphAtIndex:isValidIndex:")]
-#if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
-		NSGlyph GlyphAtIndex (nint glyphIndex, ref bool isValidIndex);
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+#if MONOMAC
+#if NET
+		NSGlyph GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
 #else
- 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+		NSGlyph GlyphAtIndex (nint glyphIndex, ref bool isValidIndex);
+#endif
+#else
 		CGGlyph GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
 #endif // MONOMAC
-#endif // !XAMCORE_4_0
 
-#if !XAMCORE_4_0
 		[Export ("glyphAtIndex:")]
-#if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
-		NSGlyph GlyphAtIndex (nint glyphIndex);
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+#if MONOMAC
+#if NET
+		NSGlyph GlyphAtIndex (nuint glyphIndex);
 #else
- 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+		NSGlyph GlyphAtIndex (nint glyphIndex);
+#endif
+#else
 		CGGlyph GlyphAtIndex (nuint glyphIndex);
 #endif // MONOMAC
-#endif // !XAMCORE_4_0
 
 		[Export ("isValidGlyphIndex:")]
 #if NET
@@ -539,7 +543,7 @@ namespace UIKit {
 		nuint GlyphIndexForCharacterAtIndex (nuint charIndex);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetGlyphs' instead).")]
 		[Export ("intAttribute:forGlyphAtIndex:")]
@@ -1118,7 +1122,7 @@ namespace UIKit {
 		void AddTemporaryAttribute (string attrName, NSObject value, NSRange charRange);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoiOS][NoTV]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
@@ -1637,7 +1641,7 @@ namespace UIKit {
 		[Export ("defaultWritingDirectionForLanguage:")]
 		NSWritingDirection GetDefaultWritingDirection ([NullAllowed] string languageName);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use the 'GetDefaultWritingDirection' method instead.")]
 		[Static]
 		[Export ("defaultWritingDirectionForLanguage:")]
@@ -1648,7 +1652,7 @@ namespace UIKit {
 		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
 		NSParagraphStyle Default { get; }
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use the 'Default' property instead.")]
 		[Static]
 		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]

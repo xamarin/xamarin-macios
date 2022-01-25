@@ -60,4 +60,4 @@ steps:
     ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Add summaries'
   condition: always()
-  timeoutInMinutes: 1
+  timeoutInMinutes: 15

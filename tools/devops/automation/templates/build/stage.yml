@@ -25,6 +25,10 @@ parameters:
   type: boolean
   default: false
 
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -105,6 +109,42 @@ jobs:
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
+      enableAPIDiff: false # this step should never execute the api diff, that should be left for the parallel job
+
+- job: api_diff
+  dependsOn:
+  - AgentPoolSelector
+  - configure
+  displayName: 'Generate API diff'
+  timeoutInMinutes: 1000
+  variables:
+    AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+  pool:
+    name: $(AgentPoolComputed)
+    demands:
+    - Agent.OS -equals Darwin
+    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+  workspace:
+    clean: all
+
+  steps:
+  - template: build.yml
+    parameters:
+      runTests: false
+      runDeviceTests: false
+      uploadBinlogs: false
+      signAndNotarize: false
+      skipPackages: true
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      keyringPass: ${{ parameters.keyringPass }}
+      gitHubToken: ${{ parameters.gitHubToken }}
+      xqaCertPass: ${{ parameters.xqaCertPass }}
+      enableDotnet: ${{ parameters.enableDotnet }}
+      enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
@@ -131,11 +171,13 @@ jobs:
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'
   timeoutInMinutes: 1000
-  dependsOn: build # can start as soon as the tests are done
+  dependsOn: # can start as soon as the tests are done and the api diff
+  - build 
+  - api_diff
   condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
   variables:
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+    API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
 
   pool:
     vmImage: 'windows-latest'
@@ -168,6 +210,7 @@ jobs:
   dependsOn: # has to wait for the tests to be done AND the data to be uploaded
   - configure
   - build
+  - api_diff
   - upload_azure_blob
   - upload_vsdrops
   - upload_vsts_tests
@@ -178,10 +221,10 @@ jobs:
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
     TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
-    APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
-    APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
-    API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
+    APIDIFF_MESSAGE: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_MESSAGE'] ]
+    APIDIFF_BUILT: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_BUILT'] ]
+    API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+    API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
   pool:
     vmImage: 'windows-latest'

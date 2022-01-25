@@ -18,7 +18,7 @@ using CoreGraphics;
 namespace CoreAnimation {
 
 	// CATransform3D.h
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct CATransform3D {
 #if NET
 		public nfloat M11, M12, M13, M14;
@@ -89,7 +89,7 @@ namespace CoreAnimation {
 #endif
 		}
 		
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DIsIdentity (CATransform3D t);
 
@@ -99,7 +99,7 @@ namespace CoreAnimation {
 			}
 		}
 
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
 
@@ -173,10 +173,10 @@ namespace CoreAnimation {
 			return r;
 		}
 		
-		[DllImport(Constants.QuartzLibrary, EntryPoint="CATransform3DMakeRotation")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint="CATransform3DMakeRotation")]
 		public extern static CATransform3D MakeRotation (nfloat angle, nfloat x, nfloat y, nfloat z);
 
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DTranslate (CATransform3D t, nfloat tx, nfloat ty, nfloat tz);
 
 		public CATransform3D Translate (nfloat tx, nfloat ty, nfloat tz)
@@ -184,7 +184,7 @@ namespace CoreAnimation {
 			return CATransform3DTranslate (this, tx, ty, tz);
 		}
 		
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DScale (CATransform3D t, nfloat sx, nfloat sy, nfloat sz);
 
 		public CATransform3D Scale (nfloat sx, nfloat sy, nfloat sz)
@@ -196,7 +196,7 @@ namespace CoreAnimation {
 			return CATransform3DScale (this, s, s, s);
 		}
 		
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DRotate (CATransform3D t, nfloat angle, nfloat x, nfloat y, nfloat z);
 
 		public CATransform3D Rotate (nfloat angle, nfloat x, nfloat y, nfloat z)
@@ -204,7 +204,7 @@ namespace CoreAnimation {
 			return CATransform3DRotate (this, angle, x, y, z);
 		}
 		
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DConcat (CATransform3D a, CATransform3D b);
 
 		public CATransform3D Concat (CATransform3D b)
@@ -212,7 +212,7 @@ namespace CoreAnimation {
 			return CATransform3DConcat (this, b);
 		}
 		
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DInvert (CATransform3D t);
 
 #if !XAMCORE_4_0
@@ -227,11 +227,11 @@ namespace CoreAnimation {
 			return CATransform3DInvert (this);
 		}
 
-		[DllImport(Constants.QuartzLibrary, EntryPoint="CATransform3DMakeAffineTransform")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint="CATransform3DMakeAffineTransform")]
 		public extern static CATransform3D MakeFromAffine (CGAffineTransform m);
 		
 
-		[DllImport(Constants.QuartzLibrary)]
+		[DllImport (Constants.QuartzLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DIsAffine (CATransform3D t);
 
@@ -241,7 +241,7 @@ namespace CoreAnimation {
 			}
 		}
 
-		[DllImport(Constants.QuartzLibrary, EntryPoint="CATransform3DGetAffineTransform")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint="CATransform3DGetAffineTransform")]
 		public extern static CGAffineTransform GetAffine (CATransform3D t);
 
 		public override string ToString ()

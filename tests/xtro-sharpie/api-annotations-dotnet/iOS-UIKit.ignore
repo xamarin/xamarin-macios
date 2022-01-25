@@ -96,8 +96,6 @@
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray Foundation.NSBundle::LoadNib(System.String,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::get_CurrentAttributedTitle()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::GetAttributedTitle(UIKit.UIControlState)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIPickerViewDelegate::GetAttributedTitle(UIKit.UIPickerView,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type

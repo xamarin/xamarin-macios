@@ -38,7 +38,9 @@ namespace AppKit {
 	public partial class NSSlider {
 		NSActionDispatcher dispatcher;
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[Mac (10,12)]
 #endif
 		public static NSSlider FromTarget (Action action)
@@ -49,7 +51,9 @@ namespace AppKit {
 			return control;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[Mac (10,12)]
 #endif
 		public static NSSlider FromValue (double value, double minValue, double maxValue, Action action)
