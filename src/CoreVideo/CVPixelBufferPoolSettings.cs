@@ -36,7 +36,9 @@ using System.Runtime.Versioning;
 
 namespace CoreVideo {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public class CVPixelBufferPoolSettings : DictionaryContainer
 	{
 #if !COREBUILD
@@ -70,7 +72,9 @@ namespace CoreVideo {
 #endif
 	}
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public partial class CVPixelBufferPoolAllocationSettings : DictionaryContainer {
 #if !COREBUILD
 		public CVPixelBufferPoolAllocationSettings ()

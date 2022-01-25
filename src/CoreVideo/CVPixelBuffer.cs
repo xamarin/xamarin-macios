@@ -26,7 +26,9 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreVideo {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public partial class CVPixelBuffer : CVImageBuffer {
 #if !COREBUILD
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVPixelBufferGetTypeID")]
@@ -99,11 +101,33 @@ namespace CoreVideo {
 			return Runtime.GetNSObject<NSDictionary> (resolvedDictionaryOut);
 		}
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CFDictionaryRef CVPixelBufferCopyCreationAttributes (CVPixelBufferRef pixelBuffer);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[NoMacCatalyst]
+#endif
 		public CVPixelBufferAttributes? GetPixelBufferCreationAttributes () {
 			var attrs = Runtime.GetNSObject<NSDictionary> (CVPixelBufferCopyCreationAttributes (Handle), true);
 			if (attrs is null)

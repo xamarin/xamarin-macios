@@ -42,7 +42,9 @@ using NativeHandle = System.IntPtr;
 namespace CoreVideo {
 
 	// CVImageBuffer.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public partial class CVImageBuffer : CVBuffer {
 #if !COREBUILD
 		[Preserve (Conditional=true)]
@@ -93,8 +95,16 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CVImageBufferGetColorSpace (/* CVImageBufferRef */ IntPtr imageBuffer);
 		
+#if NET
+		[UnsupportedOSPlatform ("macos10.4")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("ios")]
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		[Unavailable (PlatformName.iOS)]
+#endif
 		public CGColorSpace? ColorSpace {
 			get {
 				var h = CVImageBufferGetColorSpace (Handle);
@@ -127,63 +137,159 @@ namespace CoreVideo {
 		}
 #endif
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static int CVYCbCrMatrixGetIntegerCodePointForString (IntPtr yCbCrMatrixString);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		public static int GetCodePoint (CVImageBufferYCbCrMatrix yCbCrMatrix)
 		{
 			return CVYCbCrMatrixGetIntegerCodePointForString (yCbCrMatrix.GetConstant ()!.Handle);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static int CVColorPrimariesGetIntegerCodePointForString (IntPtr colorPrimariesString);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		public static int GetCodePoint (CVImageBufferColorPrimaries color)
 		{
 			return CVColorPrimariesGetIntegerCodePointForString (color.GetConstant ()!.Handle);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static int CVTransferFunctionGetIntegerCodePointForString (IntPtr colorPrimariesString);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		public static int GetCodePoint (CVImageBufferTransferFunction function)
 		{
 			return CVTransferFunctionGetIntegerCodePointForString (function.GetConstant ()!.Handle);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static IntPtr CVYCbCrMatrixGetStringForIntegerCodePoint (int yCbCrMatrixCodePoint);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		public static CVImageBufferYCbCrMatrix GetYCbCrMatrixOption (int yCbCrMatrixCodePoint)
 		{
 			var ret = Runtime.GetNSObject<NSString> (CVYCbCrMatrixGetStringForIntegerCodePoint (yCbCrMatrixCodePoint));
 			return CVImageBufferYCbCrMatrixExtensions.GetValue (ret);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static IntPtr CVColorPrimariesGetStringForIntegerCodePoint (int colorPrimariesCodePoint);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		public static CVImageBufferColorPrimaries GetColorPrimariesOption (int colorPrimariesCodePoint)
 		{
 			var ret = Runtime.GetNSObject<NSString> (CVColorPrimariesGetStringForIntegerCodePoint (colorPrimariesCodePoint));
 			return CVImageBufferColorPrimariesExtensions.GetValue (ret);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static IntPtr CVTransferFunctionGetStringForIntegerCodePoint (int transferFunctionCodePoint);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
+#endif
 		public static CVImageBufferTransferFunction GetTransferFunctionOption (int transferFunctionCodePoint)
 		{
 			var ret = Runtime.GetNSObject<NSString> (CVTransferFunctionGetStringForIntegerCodePoint (transferFunctionCodePoint));

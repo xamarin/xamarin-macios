@@ -26,7 +26,9 @@ using NativeHandle = System.IntPtr;
 namespace CoreVideo {
 
 	// CVPixelBufferPool.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public partial class CVPixelBufferPool : NativeObject
 	{
 #if !COREBUILD
@@ -149,12 +151,24 @@ namespace CoreVideo {
 		}
 
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern void CVPixelBufferPoolFlush (/* CVPixelBufferPoolRef __nonnull */ IntPtr pool,
 			CVPixelBufferPoolFlushFlags options);
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		public void Flush (CVPixelBufferPoolFlushFlags options)
 		{
 			CVPixelBufferPoolFlush (Handle, options);

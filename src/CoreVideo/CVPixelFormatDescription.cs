@@ -36,7 +36,9 @@ using Foundation;
 
 namespace CoreVideo {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public static class CVPixelFormatDescription {
 #if !COREBUILD
 		public static readonly NSString NameKey;
@@ -66,21 +68,66 @@ namespace CoreVideo {
    
 		public static readonly NSString FillExtendedPixelsCallbackKey;
 
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
 		public static readonly NSString ContainsRgb;
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
 		public static readonly NSString ContainsYCbCr;
 
-		[iOS (9,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (9,0)]
+		[Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeKey;
-		[iOS (9,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (9,0)]
+		[Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeFullRangeKey;
-		[iOS (9,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (9,0)]
+		[Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeVideoRangeKey;
-		[iOS (9,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (9,0)]
+		[Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeWideRangeKey;
 
-		[iOS (12,0)][TV (12,0)][Watch (5,0)][Mac (10,14)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+#else
+		[iOS (12,0)]
+		[TV (12,0)]
+		[Watch (5,0)]
+		[Mac (10,14)]
+#endif
 		public static readonly NSString ContainsGrayscaleKey;
 
 		static CVPixelFormatDescription ()
