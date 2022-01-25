@@ -95,21 +95,11 @@ namespace CoreText {
 					constraints, out fitRange);
 		}
 #endregion
-#if !NET
 		[Mac (10,14), iOS (12,0), TV (12,0), Watch (5,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateWithTypesetter (IntPtr typesetter);
 
-#if !NET
 		[Mac (10,14), iOS (12,0), TV (12,0), Watch (5,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		public static CTFramesetter? Create (CTTypesetter typesetter)
 		{
 			if (typesetter is null)
