@@ -9,6 +9,7 @@ using UIKit;
 using ObjCRuntime;
 
 #if NET
+using CoreGraphics;
 using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
 using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
 using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
@@ -68,7 +69,6 @@ namespace MonoTouchFixtures.SpriteKit
 				Asserts.AreEqual (Vector2.Zero, obj.FloatVector2Value, "1 FloatVector2Value");
 				Asserts.AreEqual (Vector3.Zero, obj.FloatVector3Value, "1 FloatVector3Value");
 				Asserts.AreEqual (Vector4.Zero, obj.FloatVector4Value, "1 FloatVector4Value");
-#if !NET
 				Asserts.AreEqual (Matrix2.Zero, obj.FloatMatrix2Value, "1 FloatMatrix2Value");
 #endif
 				Asserts.AreEqual (N2Zero, obj.MatrixFloat2x2Value, "1 MatrixFloat2x2Value");
@@ -109,26 +109,21 @@ namespace MonoTouchFixtures.SpriteKit
 				obj.FloatVector4Value = V4;
 				Asserts.AreEqual (V4, obj.FloatVector4Value, "2 FloatVector4Value");
 
-#if !NET
 				obj.FloatMatrix2Value = M2;
 				Asserts.AreEqual (M2, obj.FloatMatrix2Value, "2 FloatMatrix2Value");
-#endif
 				obj.MatrixFloat2x2Value = M2x2;
 				Asserts.AreEqual (M2x2, obj.MatrixFloat2x2Value, "2 MatrixFloat2x2Value");
 
-#if !NET
 				obj.FloatMatrix3Value = M3;
 				Asserts.AreEqual (M3, obj.FloatMatrix3Value, "2 FloatMatrix3Value");
-#endif
 				obj.MatrixFloat3x3Value = M3x3;
 				Asserts.AreEqual (M3x3, obj.MatrixFloat3x3Value, "2 MatrixFloat3x3Value");
 
-#if !NET
 				obj.FloatMatrix4Value = M4;
 				Asserts.AreEqual (M4, obj.FloatMatrix4Value, "2 FloatMatrix4Value");
-#endif
 				obj.MatrixFloat4x4Value = M4x4;
 				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4Value, "2 MatrixFloat4x4Value");
+#endif
 			}
 
 			bool hasSimdConstructors = TestRuntime.CheckXcodeVersion (8, 0);

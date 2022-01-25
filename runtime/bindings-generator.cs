@@ -99,6 +99,7 @@ namespace Xamarin.BindingMethods.Generator
 			Types.Vector2i = isDotNet ? Types.NVector2i : Types.OpenTK_Vector2i;
 			Types.Vector3i = isDotNet ? Types.NVector3i : Types.OpenTK_Vector3i;
 			Types.Vector4i = isDotNet ? Types.NVector4i : Types.OpenTK_Vector4i;
+			Types.Matrix3f = isDotNet ? Types.RMatrix3f : Types.OpenTK_Matrix3f;
 			Types.Matrix4f = isDotNet ? Types.Numerics_Matrix4f : Types.OpenTK_Matrix4f;
 			Types.QuatD = isDotNet ? Types.NQuaterniond : Types.OpenTK_QuatD;
 
@@ -2705,6 +2706,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix3":
+			case "RMatrix3":
 			case "NMatrix3":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
 				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
@@ -2852,6 +2854,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix3":
+			case "RMatrix3":
 			case "NMatrix3":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
 				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
@@ -3463,8 +3466,18 @@ namespace Xamarin.BindingMethods.Generator
 				IsX86Stret = true,
 				IsX64Stret = false,
 			};
-			public static TypeData Matrix3f = new TypeData {
+			public static TypeData Matrix3f;
+			public static TypeData OpenTK_Matrix3f = new TypeData {
 				ManagedType = "Matrix3",
+				NativeType = "matrix_float3x3",
+				NativeWrapperType = "struct Matrix3f",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
+			};
+			public static TypeData RMatrix3f = new TypeData {
+				ManagedType = "RMatrix3",
 				NativeType = "matrix_float3x3",
 				NativeWrapperType = "struct Matrix3f",
 				RequireMarshal = true,

@@ -1867,6 +1867,7 @@ SHARED_CORE_SOURCES = \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
 	Simd/MatrixFloat3x3.cs \
+	Simd/MatrixFloat3x3RM.cs \
 	Simd/MatrixFloat4x3.cs \
 	Simd/MatrixFloat4x4.cs \
 	Simd/VectorDouble2.cs \

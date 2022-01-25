@@ -36,6 +36,8 @@ using ModelIO;
 #if NET
 using Vector3 = global::System.Numerics.Vector3;
 using Vector4 = global::System.Numerics.Vector4;
+using Matrix3 = global::CoreGraphics.RMatrix3;
+using Matrix4 = global::System.Numerics.Matrix4x4;
 #else
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
@@ -87,10 +89,9 @@ namespace GLKit {
 		[Export ("useConstantColor", ArgumentSemantic.Assign)]
 		bool UseConstantColor { get; set;  }
 
-#if !NET
 		[Export ("transform")]
 		GLKEffectPropertyTransform Transform { get;  }
-#endif
+
 		[Export ("light0")]
 		GLKEffectPropertyLight Light0 { get;  }
 
@@ -200,11 +201,9 @@ namespace GLKit {
 		[Export ("quadraticAttenuation", ArgumentSemantic.Assign)]
 		float QuadraticAttenuation { get; set;  } /* GLfloat = float */
 
-#if !NET
 		[NullAllowed] // by default this property is null
 		[Export ("transform", ArgumentSemantic.Retain)]
 		GLKEffectPropertyTransform Transform { get; set;  }
-#endif
 
 		[Export ("enabled", ArgumentSemantic.Assign)]
 		bool Enabled { get; set; }
@@ -251,7 +250,6 @@ namespace GLKit {
 
 	}
 
-#if !NET
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
@@ -266,7 +264,6 @@ namespace GLKit {
 		[Export ("projectionMatrix", ArgumentSemantic.Assign)]
 		Matrix4 ProjectionMatrix { [Align (16)] get; set; }
 	}
-#endif
 
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
@@ -373,10 +370,8 @@ namespace GLKit {
 		[Export ("textureCubeMap")]
 		GLKEffectPropertyTexture TextureCubeMap { get;  }
 
-#if !NET
 		[Export ("transform")]
 		GLKEffectPropertyTransform Transform { get;  }
-#endif
 
 		[NullAllowed] // by default this property is null
 		[Export ("label", ArgumentSemantic.Copy)]
