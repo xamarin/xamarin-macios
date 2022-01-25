@@ -64,7 +64,7 @@ namespace CoreMedia {
 			// From docs targetBuffer must not be null unless the PermitEmptyReference flag is set
 			if (!flags.HasFlag (CMBlockBufferFlags.PermitEmptyReference))
 				if (targetBuffer is null)
-					throw new ArgumentNullException (nameof (targetBuffer));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetBuffer));
 			
 			IntPtr buffer;
 			error = CMBlockBufferCreateWithBufferReference (IntPtr.Zero, targetBuffer.GetHandle (), offsetToData, dataLength, flags, out buffer);
@@ -87,7 +87,7 @@ namespace CoreMedia {
 			// From docs targetBuffer must not be null unless the PermitEmptyReference flag is set
 			if (!flags.HasFlag (CMBlockBufferFlags.PermitEmptyReference)) {
 				if (targetBuffer is null)
-					throw new ArgumentNullException (nameof (targetBuffer));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetBuffer));
 			}
 
 			return CMBlockBufferAppendBufferReference (GetCheckedHandle (), targetBuffer.GetHandle (), offsetToData, dataLength, flags);
@@ -154,7 +154,7 @@ namespace CoreMedia {
 		public unsafe CMBlockBufferError ReplaceDataBytes (byte [] sourceBytes, nuint offsetIntoDestination)
 		{
 			if (sourceBytes is null)
-				throw new ArgumentNullException (nameof (sourceBytes));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceBytes));
 
 			fixed (byte* ptr = sourceBytes)
 				return ReplaceDataBytes ((IntPtr) ptr, offsetIntoDestination, (nuint) sourceBytes.Length);
@@ -262,7 +262,7 @@ namespace CoreMedia {
 		public static CMBlockBuffer? FromMemoryBlock (byte [] data, nuint offsetToData, CMBlockBufferFlags flags, out CMBlockBufferError error)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			var allocator = new CMManagedArrayBlockAllocator (data);
 			return FromMemoryBlock (IntPtr.Zero, (uint) data.Length, allocator, offsetToData, (uint) data.Length, flags, out error);
@@ -293,7 +293,7 @@ namespace CoreMedia {
 		public static CMBlockBuffer? CreateContiguous (CMBlockBuffer sourceBuffer, CMCustomBlockAllocator? customBlockSource, nuint offsetToData, nuint dataLength, CMBlockBufferFlags flags, out CMBlockBufferError error)
 		{
 			if (sourceBuffer is null)
-				throw new ArgumentNullException (nameof (sourceBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceBuffer));
 
 			IntPtr buffer;
 			if (customBlockSource is null)
@@ -343,7 +343,7 @@ namespace CoreMedia {
 		public CMBlockBufferError AppendMemoryBlock (byte [] data, nuint offsetToData, CMBlockBufferFlags flags)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			var allocator = new CMManagedArrayBlockAllocator (data);
 			return AppendMemoryBlock (IntPtr.Zero, (uint) data.Length, allocator, offsetToData, (uint) data.Length, flags);
