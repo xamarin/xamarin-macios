@@ -134,42 +134,59 @@ steps:
     $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
     Write-Host "mac PKG is $macPkg"
 
-    if (Test-Path "$pkgsPath\$iOSPkg" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description $iOSPkg -TargetUrl "$pkgsVirtualUrl/$iOSPkg" -Context "PKG-Xamarin.iOS"
-    } else {
-        Set-GitHubStatus -Status "error" -Description "xamarin.ios pkg not found" -Context "PKG-Xamarin.iOS"
-    }
+    # create an array with objects so that we can set each of the statuses:
+    $statusInfo = @(
+      @{
+        Path = "$pkgsPath\\$iOSPkg";
+        Context = "PKG-Xamarin.iOS";
+        Description = $iOSPkg;
+        TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
+        Error = "xamarin.ios pkg not found";
+      },
+      @{
+        Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
+        Context = "PKG-Xamarin.iOS-notarized"
+        Description = "$iOSPkg (Notarized)" ;
+        TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
+        Error = "Notarized xamarin.ios pkg not found" ;
+      },
+      @{
+        Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
+        Context = "PKG-Xamarin.Mac" ;
+        Description = "$macPkg" ;
+        TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
+        Error = "xamarin.mac pkg not found." ;
+      },
+      @{
+        Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
+        Context = "PKG-Xamarin.Mac-notarized" ;
+        Description = "$macPkg (Notarized)" ;
+        TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
+        Error = "Notarized xamarin.mac pkg not found." ;
+      },
+      @{
+        Path = "$pkgsPath\bundle.zip" ;
+        Context = "bundle.zip" ;
+        Description = "bundle.zip" ;
+        TargetUrl = "$pkgsVirtualUrl/bundle.zip" ;
+        Error = "bundle.zip not found." ;
+      },
+      @{
+        Path = "$pkgsPath\msbuild.zip" ;
+        Context = "msbuild.zip" ;
+        Description = "msbuild.zip" ;
+        TargetUrl = "$pkgsVirtualUrl/msbuild.zip" ;
+        Error = "msbuild.zip not found." ;
+      },
+    )
 
-    if (Test-Path "$pkgsPath\notarized\xamarin.ios-*.pkg" -PathType Leaf) {
-       Set-GitHubStatus -Status "success" -Description "$iOSPkg (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$iOSPkg" -Context "PKG-Xamarin.iOS-notarized"
-    } else {
-        Set-GitHubStatus -Status "error" -Description "Notarized xamarin.ios pkg not found" -Context "PKG-Xamarin.iOS-notarized"
+    foreach ($info in $statusInfo) {
+      if (Test-Path $info.Path -PathType Leaf) {
+          Set-GitHubStatus -Status "success" -Description $info.Description -TargetUrl $info.TargetUrl  -Context $info.Context
+      } else {
+          Set-GitHubStatus -Status "error" -Description $info.Error -Context $info.Context
+      }
     }
-
-    if (Test-Path "$pkgsPath\xamarin.mac-*.pkg" -PathType Leaf) {
-       Set-GitHubStatus -Status "success" -Description "$macPkg" -TargetUrl "$pkgsVirtualUrl/$macPkg" -Context "PKG-Xamarin.Mac"
-    } else {
-       Set-GitHubStatus -Status "error" -Description "xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac"
-    }
-
-    if (Test-Path "$pkgsPath\notarized\xamarin.mac-*.pkg" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description "$macPkg (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$macPkg" -Context "PKG-Xamarin.Mac-notarized"
-    } else {
-       Set-GitHubStatus -Status "error" -Description "Notarized xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac-notarized"
-    }
-
-    if (Test-Path "$pkgsPath\bundle.zip" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description "bundle.zip" -TargetUrl "$pkgsVirtualUrl/bundle.zip" -Context "bundle.zip"
-    } else {
-       Set-GitHubStatus -Status "error" -Description "bundle.zip not found." -Context "bundle.zip"
-    }
-
-    if (Test-Path "$pkgsPath\msbuild.zip" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description "msbuild.zip" -TargetUrl "$pkgsVirtualUrl/msbuild.zip" -Context "msbuild.zip"
-    } else {
-       Set-GitHubStatus -Status "error" -Description "msbuild.zip not found." -Context "msbuild.zip"
-    }
-
     if ($Env:ENABLE_DOTNET -eq "True" -and  $Env:SkipNugets -ne "True") {
       $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
       Write-Host $nugets 
