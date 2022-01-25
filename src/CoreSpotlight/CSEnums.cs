@@ -13,9 +13,17 @@ using Foundation;
 
 namespace CoreSpotlight {
 	// NSInteger -> CNContact.h
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("macos10.13")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoTV] // CS_TVOS_UNAVAILABLE
-	[iOS (9,0), Mac (10,11)]
+	[iOS (9,0)]
+	[Mac (10,11)]
 	[Mac (10,13)]
+#endif
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
 	public enum CSIndexErrorCode : long {
@@ -28,8 +36,15 @@ namespace CoreSpotlight {
 		IndexingUnsupported = -1005,
 	}
 
-	[NoTV][iOS (10,0)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[iOS (10,0)]
 	[Mac (10,13)]
+#endif
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
 	[Native]
 	public enum CSSearchQueryErrorCode : long {
@@ -39,8 +54,15 @@ namespace CoreSpotlight {
 		Cancelled = -2003
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
 	[iOS (9,0)]
-	[NoTV][NoMac]
+	[NoTV]
+	[NoMac]
+#endif
 	public enum CSFileProtection {
 		None,
 		Complete,
