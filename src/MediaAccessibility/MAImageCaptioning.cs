@@ -10,13 +10,7 @@ using Foundation;
 
 namespace MediaAccessibility {
 
-#if NET
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-#else
 	[TV (13,0), Mac (10,15), iOS (13,0)]
-#endif
 	public static partial class MAImageCaptioning {
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
