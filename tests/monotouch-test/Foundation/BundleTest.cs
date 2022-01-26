@@ -107,19 +107,31 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void PathForImageResource ()
 		{
+#if NET
+			Assert.Throws<ObjCException> (() => main.PathForImageResource ("basn3p08.png"));
+#else
 			Assert.Throws<MonoTouchException> (() => main.PathForImageResource ("basn3p08.png"));
+#endif
 		}
 
 		[Test]
 		public void PathForSoundResource ()
 		{
+#if NET
+			Assert.Throws<ObjCException> (() => main.PathForSoundResource ("basn3p08.png"));
+#else
 			Assert.Throws<MonoTouchException> (() => main.PathForSoundResource ("basn3p08.png"));
+#endif
 		}
 
 		[Test]
 		public void LoadNib ()
 		{
+#if NET
+			Assert.Throws<ObjCException> (() => NSBundle.LoadNib (String.Empty, main));
+#else
 			Assert.Throws<MonoTouchException> (() => NSBundle.LoadNib (String.Empty, main));
+#endif
 		}
 #endif
 		[Test]

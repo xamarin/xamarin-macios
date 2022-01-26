@@ -8,10 +8,14 @@ using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
 
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#else
 #if MONOMAC
 using PlatformException = Foundation.ObjCException;
 #else
 using PlatformException = Foundation.MonoTouchException;
+#endif
 #endif
 
 namespace MonoTouchFixtures.Foundation {

@@ -13,10 +13,14 @@ using Bindings.Test;
 
 using NUnit.Framework;
 
+#if NET
+using ObjCException = ObjCRuntime.ObjCException;
+#else
 #if __MACOS__
 using ObjCException = Foundation.ObjCException;
 #else
 using ObjCException = Foundation.MonoTouchException;
+#endif
 #endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
