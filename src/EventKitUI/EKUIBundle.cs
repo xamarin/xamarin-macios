@@ -14,7 +14,11 @@ using Foundation;
 using ObjCRuntime;
 
 namespace EventKitUI {
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+#else
 	[iOS (11,0)]
+#endif
 	public static class EKUIBundle {
 
 		[DllImport (Constants.EventKitUILibrary)]
