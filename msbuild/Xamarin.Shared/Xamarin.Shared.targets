@@ -2046,8 +2046,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 
-			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(IntermediateOutputPath)Entitlements.xcent</_AppBundleCodesignEntitlements>
-			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">$(_CompiledCodesignEntitlements)</_AppBundleCodesignEntitlements>
+			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' == 'macOS'">$(IntermediateOutputPath)Entitlements.xcent</_AppBundleCodesignEntitlements>
+			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' != 'macOS'">$(_CompiledCodesignEntitlements)</_AppBundleCodesignEntitlements>
 		</PropertyGroup>
 
 		<Codesign
