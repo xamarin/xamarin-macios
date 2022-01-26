@@ -51,7 +51,11 @@ namespace CoreWlan {
 			return null;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10,13)]
+#endif
 		public CWNetwork [] ScanForNetworksWithSsid (NSData ssid, bool includeHidden, out NSError error)
 		{
 			NSSet networks = _ScanForNetworksWithSsid (ssid, includeHidden, out error);
@@ -60,7 +64,11 @@ namespace CoreWlan {
 			return null;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10,13)]
+#endif
 		public CWNetwork [] ScanForNetworksWithName (string networkName, bool includeHidden, out NSError error)
 		{
 			NSSet networks = _ScanForNetworksWithName (networkName, includeHidden, out error);

@@ -11,7 +11,11 @@ using System.Runtime.Versioning;
 
 namespace CoreWlan {
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
 	public enum CWStatus : long {
@@ -51,7 +55,11 @@ namespace CoreWlan {
 		Status = -3931,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWPhyMode : ulong {
 		None = 0,
@@ -63,7 +71,11 @@ namespace CoreWlan {
 		AX = 6,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWInterfaceMode : ulong {
 		None = 0,
@@ -72,7 +84,11 @@ namespace CoreWlan {
 		HostAP = 3,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWSecurity : ulong {
 		None = 0,
@@ -86,17 +102,40 @@ namespace CoreWlan {
 		WPAEnterpriseMixed = 8,
 		WPA2Enterprise = 9,
 		Enterprise = 10,
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
+#endif
 		Wpa3Personal = 11,
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
+#endif
 		Wpa3Enterprise = 12,
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
+#endif
 		Wpa3Transition = 13,
 		Unknown = long.MaxValue,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("macos11.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 	[Native]
 	public enum CWIbssModeSecurity : ulong {
 		None = 0,
@@ -104,7 +143,11 @@ namespace CoreWlan {
 		WEP104 = 2,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWChannelWidth : ulong {
 		Unknown = 0,
@@ -114,7 +157,11 @@ namespace CoreWlan {
 		OneHundredSixtyMHz = 4,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWChannelBand : ulong {
 		Unknown = 0,
@@ -122,7 +169,11 @@ namespace CoreWlan {
 		FiveGHz = 2,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWCipherKeyFlags : ulong {
 		None = 0,
@@ -132,7 +183,11 @@ namespace CoreWlan {
 		Rx = 1 << 4,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWKeychainDomain : ulong {
 		None = 0,
@@ -140,7 +195,11 @@ namespace CoreWlan {
 		System = 2,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
 	[NoMacCatalyst]
+#endif
 	[Native]
 	public enum CWEventType : long {
 		None = 0,
@@ -153,10 +212,26 @@ namespace CoreWlan {
 		ModeDidChange = 7,
 		ScanCacheUpdated = 8,
 
+#if NET
+		[UnsupportedOSPlatform ("macos11.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		VirtualInterfaceStateChanged = 9,
 
+#if NET
+		[UnsupportedOSPlatform ("macos11.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		RangingReportEvent = 10,
 		Unknown = long.MaxValue
 	}
