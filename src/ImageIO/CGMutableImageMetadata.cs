@@ -19,9 +19,7 @@ using ObjCRuntime;
 
 namespace ImageIO {
 
-#if !NET
 	[iOS (7,0)]
-#endif
 	public class CGMutableImageMetadata : CGImageMetadata {
 
 		[DllImport (Constants.ImageIOLibrary)]
