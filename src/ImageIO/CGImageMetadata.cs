@@ -23,7 +23,11 @@ using NativeHandle = System.IntPtr;
 
 namespace ImageIO {
 
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[iOS (7,0)]
+#endif
 	public partial class CGImageMetadataEnumerateOptions {
 
 		public bool Recursive { get; set; }
@@ -43,7 +47,11 @@ namespace ImageIO {
 	public delegate bool CGImageMetadataTagBlock (NSString path, CGImageMetadataTag tag);
 
 	// CGImageMetadata.h
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[iOS (7,0)]
+#endif
 	public partial class CGImageMetadata : NativeObject {
 #if !NET
 		public CGImageMetadata (NativeHandle handle)

@@ -66,7 +66,13 @@ namespace ImageIO {
 
 		public bool ShouldCache { get; set; }
 
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		public bool ShouldCacheImmediately { get; set; }
 
 		public bool ShouldAllowFloat { get; set; }
@@ -95,7 +101,13 @@ namespace ImageIO {
 		public int? MaxPixelSize { get; set; }
 		public bool CreateThumbnailWithTransform { get; set; }
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		public int? SubsampleFactor { get; set; }
 
 		internal override NSMutableDictionary ToDictionary ()
@@ -354,11 +366,29 @@ namespace ImageIO {
 			return CGImageSourceGetStatusAtIndex (Handle, index);
 		}
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4, 0)]
+		[TV (11, 0)]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
+#endif
 		[DllImport (Constants.ImageIOLibrary)]
 		static extern IntPtr /* CFDictionaryRef* */ CGImageSourceCopyAuxiliaryDataInfoAtIndex (IntPtr /* CGImageSourceRef* */ isrc, nuint index, IntPtr /* CFStringRef* */ auxiliaryImageDataType);
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4, 0)]
+		[TV (11, 0)]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
+#endif
 		public CGImageAuxiliaryDataInfo? CopyAuxiliaryDataInfo (nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
 		{
 			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (Handle, index, auxiliaryImageDataType.GetConstant ().GetHandle ());
@@ -369,11 +399,29 @@ namespace ImageIO {
 			return new CGImageAuxiliaryDataInfo (dictionary);
 		}
 
-		[Mac (10,14), iOS (12,0), TV (12,0), Watch (5,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[Mac (10,14)]
+		[iOS (12,0)]
+		[TV (12,0)]
+		[Watch (5,0)]
+#endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static nuint CGImageSourceGetPrimaryImageIndex (IntPtr /* CGImageSource */ src);
 
-		[Mac (10,14), iOS (12,0), TV (12,0), Watch (5,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[Mac (10,14)]
+		[iOS (12,0)]
+		[TV (12,0)]
+		[Watch (5,0)]
+#endif
 		public nuint GetPrimaryImageIndex ()
 		{
 			return CGImageSourceGetPrimaryImageIndex (Handle);

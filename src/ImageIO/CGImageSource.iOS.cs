@@ -27,15 +27,23 @@ namespace ImageIO {
 			/* CGImageSourceRef __nonnull */ IntPtr isrc, /* size_t */ nint idx,
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public CGImageMetadata? CopyMetadata (nint index, NSDictionary? options)
 		{
 			var result = CGImageSourceCopyMetadataAtIndex (Handle, index, options.GetHandle ());
 			return (result == IntPtr.Zero) ? null : new CGImageMetadata (result, true);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public CGImageMetadata? CopyMetadata (nint index, CGImageOptions? options)
 		{
 			using var o = options?.ToDictionary ();
@@ -43,12 +51,20 @@ namespace ImageIO {
 		}
 
 		// CGImageSource.h
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceRemoveCacheAtIndex (/* CGImageSourceRef __nonnull */ IntPtr isrc,
 			/* size_t */ nint index);
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public void RemoveCache (nint index)
 		{
 			CGImageSourceRemoveCacheAtIndex (Handle, index);
