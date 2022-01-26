@@ -10,7 +10,12 @@ using NSErrorRef = System.IntPtr;
 
 namespace HealthKit {
 
-	[Watch (8,0), iOS (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+#else
+	[Watch (8,0)]
+	[iOS (15,0)]
+#endif
 	public static class HKAppleWalkingSteadiness
 	{
 

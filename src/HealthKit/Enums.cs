@@ -6,8 +6,12 @@ using System;
 namespace HealthKit
 {
 	// NSInteger -> HKDefines.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKUpdateFrequency : long {
 		Immediate = 1,
@@ -17,8 +21,12 @@ namespace HealthKit
 	}
 
 	// NSInteger -> HKDefines.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKAuthorizationStatus : long {
 		NotDetermined = 0,
@@ -27,20 +35,32 @@ namespace HealthKit
 	}
 
 	// NSInteger -> HKDefines.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKBiologicalSex : long {
 		NotSet = 0,
 		Female,
 		Male,
+#if NET
+		[SupportedOSPlatform ("ios8.2")]
+#else
 		[iOS (8,2)]
+#endif
 		Other
 	}
 
 	// NSInteger -> HKDefines.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKBloodType : long {
 		NotSet = 0,
@@ -55,8 +75,12 @@ namespace HealthKit
 	}
 
 	// NSInteger -> HKMetadata.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKBodyTemperatureSensorLocation : long {
 		Other = 0,
@@ -74,8 +98,12 @@ namespace HealthKit
 	}
 
 	// NSInteger -> HKMetadata.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKHeartRateSensorLocation : long {
 		Other = 0,
@@ -88,36 +116,76 @@ namespace HealthKit
 	}
 
 	// NSInteger -> HKObjectType.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKQuantityAggregationStyle : long {
 		Cumulative = 0,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		DiscreteArithmetic,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if IOS
+		[Obsolete ("Starting with ios13.0 use 'HKQuantityAggregationStyle.DiscreteArithmetic'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
+#endif
 		Discrete = DiscreteArithmetic,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		DiscreteTemporallyWeighted,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		DiscreteEquivalentContinuousLevel,
 	}
 
 	// NSInteger -> HKObjectType.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKCategoryValueSleepAnalysis : long {
 		InBed,
 		Asleep,
-		[Watch (3,0), iOS (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[Watch (3,0)]
+		[iOS (10,0)]
+#endif
 		Awake,
 	}
 
 	// NSUInteger -> HKQuery.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	[Flags]
 	public enum HKQueryOptions : ulong {
@@ -127,8 +195,12 @@ namespace HealthKit
 	}
 
 	// NSUInteger -> HKStatistics.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	[Flags]
 	public enum HKStatisticsOptions : ulong {
@@ -138,15 +210,29 @@ namespace HealthKit
 		DiscreteMin               = 1 << 2,
 		DiscreteMax               = 1 << 3,
 		CumulativeSum             = 1 << 4,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		MostRecent                = 1 << 5,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		Duration                  = 1 << 6,
 	}
 
 	// NSInteger -> HKUnit.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
 	[Native]
 	public enum HKMetricPrefix : long {
 		None = 0,
@@ -162,13 +248,22 @@ namespace HealthKit
 		Mega,
 		Giga,
 		Tera,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		Femto,
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
+	[Native]
 	public enum HKWorkoutActivityType : ulong {
 		AmericanFootball = 1,
 		Archery,
@@ -184,8 +279,16 @@ namespace HealthKit
 		Curling,
 		Cycling,
 		Dance,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios10.0")]
+#if IOS
+		[Obsolete ("Starting with ios10.0 use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.")]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.")]
+#endif
 		DanceInspiredTraining,
 		Elliptical,
 		EquestrianSports,
@@ -201,8 +304,16 @@ namespace HealthKit
 		Lacrosse,
 		MartialArts,
 		MindAndBody,
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios11.0")]
+#if IOS
+		[Obsolete ("Starting with ios11.0 use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
+#endif
 		MixedMetabolicCardioTraining,
 		PaddleSports,
 		Play,
@@ -231,85 +342,246 @@ namespace HealthKit
 		WaterSports,
 		Wrestling,
 		Yoga,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Barre,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		CoreTraining,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		CrossCountrySkiing,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		DownhillSkiing,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Flexibility,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		HighIntensityIntervalTraining,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		JumpRope,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Kickboxing,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Pilates,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Snowboarding,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Stairs,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		StepTraining,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		WheelchairWalkPace,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		WheelchairRunPace,
-		[iOS (11,0), Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[iOS (11,0)]
+		[Watch (4,0)]
+#endif
 		TaiChi,
-		[iOS (11, 0), Watch (4, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[iOS (11, 0)]
+		[Watch (4, 0)]
+#endif
 		MixedCardio,
-		[iOS (11, 0), Watch (4, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[iOS (11, 0)]
+		[Watch (4, 0)]
+#endif
 		HandCycling,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		DiscSports,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		FitnessGaming,
-		[iOS (14,0)][Watch (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[iOS (14,0)]
+		[Watch (7,0)]
+#endif
 		CardioDance = 77,
-		[iOS (14,0)][Watch (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[iOS (14,0)]
+		[Watch (7,0)]
+#endif
 		SocialDance = 78,
-		[iOS (14,0)][Watch (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[iOS (14,0)]
+		[Watch (7,0)]
+#endif
 		Pickleball = 79,
-		[iOS (14,0)][Watch (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[iOS (14,0)]
+		[Watch (7,0)]
+#endif
 		Cooldown = 80,
+#if NET
+		[SupportedOSPlatform ("ios8.2")]
+#else
 		[iOS (8,2)]
+#endif
 		Other = 3000
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (2,0)]
 	[iOS (8,0)]
+#endif
+	[Native]
 	public enum HKWorkoutEventType : long {
 		Pause = 1,
 		Resume,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Lap,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		Marker,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		MotionPaused,
-		[iOS (10,0), Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[iOS (10,0)]
+		[Watch (3,0)]
+#endif
 		MotionResumed,
-		[iOS (11, 0), Watch (4, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[iOS (11, 0)]
+		[Watch (4, 0)]
+#endif
 		Segment,
-		[iOS (11, 0), Watch (4, 0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[iOS (11, 0)]
+		[Watch (4, 0)]
+#endif
 		PauseOrResumeRequest,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[Watch (2,0)]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum HKCategoryValue : long {
 		NotApplicable = 0
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[Watch (2,0)]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum HKCategoryValueCervicalMucusQuality : long {
 		NotApplicable = 0,
@@ -320,8 +592,12 @@ namespace HealthKit
 		EggWhite
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[Watch (2,0)]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum HKCategoryValueMenstrualFlow : long {
 		NotApplicable = 0,
@@ -329,43 +605,82 @@ namespace HealthKit
 		Light,
 		Medium,
 		Heavy,
-		[iOS (12,0)][Watch (5,0)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+#else
+		[iOS (12,0)]
+		[Watch (5,0)]
+#endif
 		None,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[Watch (2,0)]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum HKCategoryValueOvulationTestResult : long {
 		NotApplicable = 0,
 		Negative = 1,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		LuteinizingHormoneSurge = 2,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if IOS
+		[Obsolete ("Starting with ios13.0 use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
+#endif
 		Positive = LuteinizingHormoneSurge,
 		Indeterminate = 3,
-		[iOS (13, 0), Watch (6, 0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[iOS (13, 0)]
+		[Watch (6, 0)]
+#endif
 		EstrogenSurge = 4,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[Watch (2,0)]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum HKCategoryValueAppleStandHour : long {
 		Stood = 0,
 		Idle
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+#else
 	[iOS (13,0)]
 	[Watch (6,0)]
+#endif
 	[Native]
 	public enum HKCategoryValueAudioExposureEvent : long {
 		LoudEnvironment = 1,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[Watch (2,0)]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum HKFitzpatrickSkinType : long {
 		NotSet = 0,
@@ -377,7 +692,12 @@ namespace HealthKit
 		VI
 	}
 
-	[Watch (3,0), iOS (10,0)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
+	[Watch (3,0)]
+	[iOS (10,0)]
+#endif
 	[Native]
 	public enum HKWheelchairUse : long {
 		NotSet = 0,
@@ -385,7 +705,12 @@ namespace HealthKit
 		Yes,
 	}
 
-	[Watch (3,0), iOS (10,0)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
+	[Watch (3,0)]
+	[iOS (10,0)]
+#endif
 	[Native]
 	public enum HKWeatherCondition : long {
 		None = 0,
@@ -418,7 +743,12 @@ namespace HealthKit
 		Tornado,
 	}
 
-	[Watch (3,0), iOS (10,0)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
+	[Watch (3,0)]
+	[iOS (10,0)]
+#endif
 	[Native]
 	public enum HKWorkoutSwimmingLocationType : long {
 		Unknown = 0,
@@ -426,7 +756,12 @@ namespace HealthKit
 		OpenWater,
 	}
 
-	[Watch (3,0), iOS (10,0)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
+	[Watch (3,0)]
+	[iOS (10,0)]
+#endif
 	[Native]
 	public enum HKSwimmingStrokeStyle : long {
 		Unknown = 0,
@@ -437,7 +772,12 @@ namespace HealthKit
 		Butterfly,
 	}
 
-	[Watch (4, 0), iOS (11, 0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4, 0)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum HKInsulinDeliveryReason : long {
 		Basal = 1,
@@ -450,7 +790,12 @@ namespace HealthKit
 #endif
 	}
 
-	[Watch (4, 0), iOS (11, 0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4, 0)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum HKBloodGlucoseMealTime : long {
 		Preprandial = 1,
@@ -463,7 +808,12 @@ namespace HealthKit
 #endif
 	}
 
-	[Watch (4, 0), iOS (11, 0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4, 0)]
+	[iOS (11, 0)]
+#endif
 	[Native]
 	public enum HKVO2MaxTestType : long {
 		MaxExercise = 1,
@@ -471,7 +821,12 @@ namespace HealthKit
 		PredictionNonExercise,
 	}
  
-	[NoWatch, iOS (12, 0)]
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[NoWatch]
+	[iOS (12, 0)]
+#endif
 	public enum HKFhirResourceType {
 		[Field ("HKFHIRResourceTypeAllergyIntolerance")]
 		AllergyIntolerance,
@@ -489,15 +844,28 @@ namespace HealthKit
 		Observation,
 		[Field ("HKFHIRResourceTypeProcedure")]
 		Procedure,
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
 		[iOS (14, 0)]
+#endif
 		[Field ("HKFHIRResourceTypeMedicationRequest")]
 		MedicationRequest,
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
 		[iOS (14, 0)]
+#endif
 		[Field ("HKFHIRResourceTypeCoverage")]
 		Coverage,
 	}
 
-	[Watch (5, 0), iOS (12, 0)]
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[Watch (5, 0)]
+	[iOS (12, 0)]
+#endif
 	public enum HKClinicalTypeIdentifier {
 
 		[Field ("HKClinicalTypeIdentifierAllergyRecord")]
@@ -514,12 +882,22 @@ namespace HealthKit
 		ProcedureRecord,
 		[Field ("HKClinicalTypeIdentifierVitalSignRecord")]
 		VitalSignRecord,
-		[Watch (7, 0), iOS (14, 0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[Watch (7, 0)]
+		[iOS (14, 0)]
+#endif
 		[Field ("HKClinicalTypeIdentifierCoverageRecord")]
 		CoverageRecord,
 	}
 
-	[Watch (5,0), iOS (12,0)]
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[Watch (5,0)]
+	[iOS (12,0)]
+#endif
 	[Native]
 	public enum HKAuthorizationRequestStatus : long 
 	{
@@ -528,7 +906,12 @@ namespace HealthKit
 		Unnecessary,
 	}
 
-	[Watch (7,0), iOS (13,6)]
+#if NET
+	[SupportedOSPlatform ("ios13.6")]
+#else
+	[Watch (7,0)]
+	[iOS (13,6)]
+#endif
 	[Native]
 	public enum HKCategoryValueAppetiteChanges : long {
 		Unspecified = 0,
@@ -537,27 +920,47 @@ namespace HealthKit
 		Increased,
 	}
 
-	[Watch (7,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum HKAppleEcgAlgorithmVersion : long {
 		Version1 = 1,
 		Version2 = 2,
 	}
 
-	[Watch (7,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum HKCategoryValueEnvironmentalAudioExposureEvent : long {
 		MomentaryLimit = 1,
 	}
 
-	[Watch (7,0), iOS (13,6)]
+#if NET
+	[SupportedOSPlatform ("ios13.6")]
+#else
+	[Watch (7,0)]
+	[iOS (13,6)]
+#endif
 	[Native]
 	public enum HKCategoryValuePresence : long {
 		Present = 0,
 		NotPresent,
 	}
 
-	[Watch (7,0), iOS (13,6)]
+#if NET
+	[SupportedOSPlatform ("ios13.6")]
+#else
+	[Watch (7,0)]
+	[iOS (13,6)]
+#endif
 	[Native]
 	public enum HKCategoryValueSeverity : long {
 		Unspecified = 0,
@@ -567,7 +970,12 @@ namespace HealthKit
 		Severe,
 	}
 
-	[Watch (7,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum HKDevicePlacementSide : long {
 		Unknown = 0,
@@ -576,7 +984,12 @@ namespace HealthKit
 		Central,
 	}
 
-	[Watch (7,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum HKElectrocardiogramClassification : long {
 		NotSet = 0,
@@ -589,13 +1002,23 @@ namespace HealthKit
 		Unrecognized = 100,
 	}
 
-	[Watch (7,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum HKElectrocardiogramLead : long {
 		AppleWatchSimilarToLeadI = 1,
 	}
 
-	[Watch (7,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Watch (7,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum HKElectrocardiogramSymptomsStatus : long {
 		NotSet = 0,
@@ -603,7 +1026,12 @@ namespace HealthKit
 		Present = 2,
 	}
 
-	[NoWatch, iOS (14, 0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[iOS (14, 0)]
+#endif
 	public enum HKFhirRelease {
 		[Field ("HKFHIRReleaseDSTU2")]
 		Dstu2,
