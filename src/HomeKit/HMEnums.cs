@@ -4,15 +4,9 @@ using Foundation;
 
 namespace HomeKit {
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMError : long {
 		UnexpectedError                         = -1,
@@ -128,15 +122,9 @@ namespace HomeKit {
 
 	
 	// conveniance enum (ObjC uses NSString)
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	public enum HMCharacteristicType {
 		None,
 
@@ -196,60 +184,21 @@ namespace HomeKit {
 		[Field ("HMCharacteristicTypeName")]
 		Name,
 
-#if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos11.0 use 'HMAccessory.Manufacturer' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'HMAccessory.Manufacturer' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'HMAccessory.Manufacturer' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'HMAccessory.Manufacturer' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HMAccessory.Manufacturer' instead.")]
-#endif
 		[Field ("HMCharacteristicTypeManufacturer")]
 		Manufacturer,
 
-#if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos11.0 use 'HMAccessory.Model' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'HMAccessory.Model' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'HMAccessory.Model' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'HMAccessory.Model' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HMAccessory.Model' instead.")]
-#endif
 		[Field ("HMCharacteristicTypeModel")]
 		Model,
 
-#if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos11.0 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "No longer supported.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "No longer supported.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "No longer supported.")]
-#endif
 		[Field ("HMCharacteristicTypeSerialNumber")]
 		SerialNumber,
 
@@ -295,1019 +244,404 @@ namespace HomeKit {
 		[Field ("HMCharacteristicTypeLockManagementAutoSecureTimeout")]
 		LockManagementAutoSecureTimeout,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeAirParticulateDensity")]
 		AirParticulateDensity,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeAirParticulateSize")]
 		AirParticulateSize,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeAirQuality")]
 		AirQuality,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeBatteryLevel")]
 		BatteryLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCarbonDioxideDetected")]
 		CarbonDioxideDetected,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCarbonDioxideLevel")]
 		CarbonDioxideLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCarbonDioxidePeakLevel")]
 		CarbonDioxidePeakLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCarbonMonoxideDetected")]
 		CarbonMonoxideDetected,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCarbonMonoxideLevel")]
 		CarbonMonoxideLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCarbonMonoxidePeakLevel")]
 		CarbonMonoxidePeakLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeChargingState")]
 		ChargingState,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeContactState")]
 		ContactState,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCurrentSecuritySystemState")]
 		CurrentSecuritySystemState,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCurrentHorizontalTilt")]
 		CurrentHorizontalTilt,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCurrentLightLevel")]
 		CurrentLightLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCurrentPosition")]
 		CurrentPosition,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeCurrentVerticalTilt")]
 		CurrentVerticalTilt,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos11.0 use 'HMAccessory.FirmwareVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'HMAccessory.FirmwareVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[iOS (9,0)]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
-#endif
 		[Field ("HMCharacteristicTypeFirmwareVersion")]
 		FirmwareVersion,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeHardwareVersion")]
 		HardwareVersion,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeHoldPosition")]
 		HoldPosition,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeInputEvent")]
 		InputEvent,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeLeakDetected")]
 		LeakDetected,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeOccupancyDetected")]
 		OccupancyDetected,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeOutputState")]
 		OutputState,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypePositionState")]
 		PositionState,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeSmokeDetected")]
 		SmokeDetected,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeSoftwareVersion")]
 		SoftwareVersion,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeStatusActive")]
 		StatusActive,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeStatusFault")]
 		StatusFault,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeStatusJammed")]
 		StatusJammed,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeStatusLowBattery")]
 		StatusLowBattery,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeStatusTampered")]
 		StatusTampered,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeTargetSecuritySystemState")]
 		TargetSecuritySystemState,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeTargetHorizontalTilt")]
 		TargetHorizontalTilt,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeTargetPosition")]
 		TargetPosition,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeTargetVerticalTilt")]
 		TargetVerticalTilt,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeStreamingStatus")]
 		StreamingStatus,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeSetupStreamEndpoint")]
 		SetupStreamEndpoint,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeSupportedVideoStreamConfiguration")]
 		SupportedVideoStreamConfiguration,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeSupportedAudioStreamConfiguration")]
 		SupportedAudioStreamConfiguration,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeSupportedRTPConfiguration")]
 		SupportedRtpConfiguration,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeSelectedStreamConfiguration")]
 		SelectedStreamConfiguration,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeVolume")]
 		Volume,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeMute")]
 		Mute,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeNightVision")]
 		NightVision,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeOpticalZoom")]
 		OpticalZoom,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeDigitalZoom")]
 		DigitalZoom,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeImageRotation")]
 		ImageRotation,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMCharacteristicTypeImageMirroring")]
 		ImageMirroring,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeActive")]
 		Active,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentAirPurifierState")]
 		CurrentAirPurifierState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetAirPurifierState")]
 		TargetAirPurifierState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentFanState")]
 		CurrentFanState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentHeaterCoolerState")]
 		CurrentHeaterCoolerState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentHumidifierDehumidifierState")]
 		CurrentHumidifierDehumidifierState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentSlatState")]
 		CurrentSlatState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeWaterLevel")]
 		WaterLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterChangeIndication")]
 		FilterChangeIndication,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterLifeLevel")]
 		FilterLifeLevel,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterResetChangeIndication")]
 		FilterResetChangeIndication,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeLockPhysicalControls")]
 		LockPhysicalControls,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSwingMode")]
 		SwingMode,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetHeaterCoolerState")]
 		TargetHeaterCoolerState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetHumidifierDehumidifierState")]
 		TargetHumidifierDehumidifierState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetFanState")]
 		TargetFanState,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSlatType")]
 		SlatType,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentTilt")]
 		CurrentTilt,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetTilt")]
 		TargetTilt,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeOzoneDensity")]
 		OzoneDensity,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeNitrogenDioxideDensity")]
 		NitrogenDioxideDensity,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSulphurDioxideDensity")]
 		SulphurDioxideDensity,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypePM2_5Density")]
 		PM2_5Density,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypePM10Density")]
 		PM10Density,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeVolatileOrganicCompoundDensity")]
 		VolatileOrganicCompoundDensity,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeDehumidifierThreshold")]
 		DehumidifierThreshold,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeHumidifierThreshold")]
 		HumidifierThreshold,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMCharacteristicTypeSecuritySystemAlarmType")]
 		SecuritySystemAlarmType,
 
-#if NET
-		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("tvos10.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,3)]
-		[Watch (3,2)]
-		[TV (10,2)]
-#endif
+		[iOS (10,3), Watch (3,2), TV (10,2)]
 		[Field ("HMCharacteristicTypeLabelNamespace")]
 		LabelNamespace,
 
-#if NET
-		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("tvos10.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,3)]
-		[Watch (3,2)]
-		[TV (10,2)]
-#endif
+		[iOS (10,3), Watch (3,2), TV (10,2)]
 		[Field ("HMCharacteristicTypeLabelIndex")]
 		LabelIndex,
 
-#if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (11,0)]
-		[Watch (4,0)]
-		[TV (11,0)]
-#endif
+		[iOS (11,0), Watch (4,0), TV (11,0)]
 		[Field ("HMCharacteristicTypeColorTemperature")]
 		ColorTemperature,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMCharacteristicTypeProgramMode")]
 		ProgramMode,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMCharacteristicTypeInUse")]
 		InUse,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMCharacteristicTypeSetDuration")]
 		SetDuration,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMCharacteristicTypeRemainingDuration")]
 		RemainingDuration,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMCharacteristicTypeValveType")]
 		ValveType,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMCharacteristicTypeIsConfigured")]
 		IsConfigured,
 	}
 
 	// conveniance enum (ObjC uses NSString)
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
-#endif
 	public enum HMCharacteristicMetadataUnits {
 		None,
 		Celsius,
 		Fahrenheit,
 		Percentage,
 		ArcDegree,
-#if NET
-		[SupportedOSPlatform ("ios8.3")]
-		[SupportedOSPlatform ("tvos10.0")]
-#else
 		[iOS (8,3)]
-#endif
 		Seconds,
-#if NET
-		[SupportedOSPlatform ("ios9.3")]
-		[SupportedOSPlatform ("tvos10.0")]
-#else
-		[iOS (9,3)]
-		[Watch (2,2)]
-#endif
+		[iOS (9,3)][Watch(2,2)]
 		Lux,
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		PartsPerMillion,
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		MicrogramsPerCubicMeter,
 	}
 
 	// conveniance enum (ObjC uses NSString)
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Flags]
 	public enum HMServiceType {
 		None,
@@ -1339,370 +673,148 @@ namespace HomeKit {
 		[Field ("HMServiceTypeLockManagement")]
 		LockManagement,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeAirQualitySensor")]
 		AirQualitySensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeBattery")]
 		Battery,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeCarbonDioxideSensor")]
 		CarbonDioxideSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeCarbonMonoxideSensor")]
 		CarbonMonoxideSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeContactSensor")]
 		ContactSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeDoor")]
 		Door,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeHumiditySensor")]
 		HumiditySensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeLeakSensor")]
 		LeakSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeLightSensor")]
 		LightSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeMotionSensor")]
 		MotionSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeOccupancySensor")]
 		OccupancySensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeSecuritySystem")]
 		SecuritySystem,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeStatefulProgrammableSwitch")]
 		StatefulProgrammableSwitch,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeStatelessProgrammableSwitch")]
 		StatelessProgrammableSwitch,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeSmokeSensor")]
 		SmokeSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeTemperatureSensor")]
 		TemperatureSensor,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeWindow")]
 		Window,
 
-#if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[iOS (9,0)]
-#endif
 		[Field ("HMServiceTypeWindowCovering")]
 		WindowCovering,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMServiceTypeCameraRTPStreamManagement")]
 		CameraRtpStreamManagement,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMServiceTypeCameraControl")]
 		CameraControl,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMServiceTypeMicrophone")]
 		Microphone,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMServiceTypeSpeaker")]
 		Speaker,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMServiceTypeDoorbell")]
 		Doorbell,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeAirPurifier")]
 		AirPurifier,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeVentilationFan")]
 		VentilationFan,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeFilterMaintenance")]
 		FilterMaintenance,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeHeaterCooler")]
 		HeaterCooler,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeHumidifierDehumidifier")]
 		HumidifierDehumidifier,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeSlats")]
 		Slats,
 
-#if NET
-		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("tvos10.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,3)]
-		[Watch (3,2)]
-		[TV (10,2)]
-#endif
+		[iOS (10,3), Watch (3,2), TV (10,2)]
 		[Field ("HMServiceTypeLabel")]
 		Label,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMServiceTypeIrrigationSystem")]
 		IrrigationSystem,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMServiceTypeValve")]
 		Valve,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMServiceTypeFaucet")]
 		Faucet,
 	}
 
 	// conveniance enum (ObjC uses NSString)
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
-#endif
 	public enum HMCharacteristicMetadataFormat {
 		None,
 		Bool,
@@ -1719,15 +831,9 @@ namespace HomeKit {
 		Tlv8
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueDoorState : long {
 		Open = 0,
@@ -1737,15 +843,9 @@ namespace HomeKit {
 		Stopped
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueHeatingCooling : long {
 		Off = 0,
@@ -1754,45 +854,27 @@ namespace HomeKit {
 		Auto
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueRotationDirection : long {
 		Clockwise = 0,
 		CounterClockwise
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueTemperatureUnit : long {
 		Celsius = 0,
 		Fahrenheit
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueLockMechanismState : long {
 		Unsecured = 0,
@@ -1801,15 +883,9 @@ namespace HomeKit {
 		Unknown
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	// in iOS 8.3 this was renamed HMCharacteristicValueLockMechanismLastKnownAction but that would be a breaking change for us
 	public enum HMCharacteristicValueLockMechanism : long {
@@ -1826,30 +902,18 @@ namespace HomeKit {
 		LastKnownActionUnsecuredUsingPhysicalMovement,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueAirParticulate : long {
 		Size2_5 = 0,
 		Size10
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueCurrentSecuritySystemState : long {
 		StayArm = 0,
@@ -1859,15 +923,9 @@ namespace HomeKit {
 		Triggered
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValuePositionState : long {
 		Closing = 0,
@@ -1875,15 +933,9 @@ namespace HomeKit {
 		Stopped
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueTargetSecuritySystemState : long {
 		StayArm = 0,
@@ -1892,202 +944,86 @@ namespace HomeKit {
 		Disarm
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueBatteryStatus : long {
 		Normal = 0,
 		Low
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueJammedStatus : long {
 		None = 0,
 		Jammed
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueTamperedStatus : long {
 		None = 0,
 		Tampered
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueLeakStatus : long {
 		None = 0,
 		Detected
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueSmokeDetectionStatus : long {
 		None = 0,
 		Detected
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueChargingState : long {
 		None = 0,
 		InProgress,
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,2)]
-		[Watch (3,1,1)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), Watch (3,1,1), TV (10,1)]
 		NotChargeable,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueContactState : long {
 		Detected = 0,
 		None,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueStatusFault : long {
 		NoFault = 0,
 		GeneralFault
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueCarbonMonoxideDetectionStatus : long {
 		NotDetected = 0,
 		Detected
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueCarbonDioxideDetectionStatus : long {
 		NotDetected = 0,
 		Detected
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueOccupancyStatus : long {
 		NotOccupied = 0,
 		Occupied
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,0)]
-	[TV (10,0)]
-	[iOS (10,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueSecuritySystemAlarmType : long {
 		NoAlarm = 0,
@@ -2095,13 +1031,8 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
-#endif
 	public enum HMActionSetType {
 		Unknown = -1,
 		WakeUp,
@@ -2109,25 +1040,13 @@ namespace HomeKit {
 		HomeDeparture,
 		HomeArrival,
 		UserDefined,
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		TriggerOwned,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	// conveniance enum (ObjC uses NSString)
 	public enum HMAccessoryCategoryType {
 		[Field ("HMAccessoryCategoryTypeOther")]
@@ -2180,145 +1099,59 @@ namespace HomeKit {
 		[Field ("HMAccessoryCategoryTypeWindowCovering")]
 		WindowCovering,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMAccessoryCategoryTypeRangeExtender")]
 		RangeExtender,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMAccessoryCategoryTypeIPCamera")]
 		IPCamera,
 
-#if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (10,0)]
-		[Watch (3,0)]
-#endif
+		[iOS (10,0), Watch (3,0)]
 		[Field ("HMAccessoryCategoryTypeVideoDoorbell")]
 		VideoDoorbell,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirPurifier")]
 		AirPurifier,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirHeater")]
 		AirHeater,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirConditioner")]
 		AirConditioner,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirHumidifier")]
 		AirHumidifier,
 
-#if NET
-		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 		[Watch (3,1,1)]
-		[iOS (10,2)]
-		[TV (10,1)]
-#endif
+		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirDehumidifier")]
 		AirDehumidifier,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMAccessoryCategoryTypeSprinkler")]
 		Sprinkler,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMAccessoryCategoryTypeFaucet")]
 		Faucet,
 
-#if NET
-		[SupportedOSPlatform ("tvos11.2")]
-		[SupportedOSPlatform ("ios11.2")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[Watch (4,2)]
-		[TV (11,2)]
-		[iOS (11,2)]
-#endif
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		[Field ("HMAccessoryCategoryTypeShowerHead")]
 		ShowerHead,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	public enum HMSignificantEvent {
 
 		[Field ("HMSignificantEventSunrise")]
@@ -2328,18 +1161,7 @@ namespace HomeKit {
 		Sunset,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("macos")]
-#else
-	[iOS (13,0)]
-	[TV (13,0)]
-	[Watch (6,0)]
-	[NoMac]
-	[MacCatalyst (14,0)]
-#endif
+	[iOS (13,0), TV (13,0), Watch (6,0), NoMac, MacCatalyst (14,0)]
 	[Flags]
 	[Native]
 	public enum HMHomeManagerAuthorizationStatus : ulong {
@@ -2348,15 +1170,9 @@ namespace HomeKit {
 		Authorized = 1 << 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueAirQuality : long {
 		Unknown = 0,
@@ -2367,15 +1183,9 @@ namespace HomeKit {
 		Poor
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (10,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCameraStreamState : ulong
 	{
@@ -2385,15 +1195,9 @@ namespace HomeKit {
 		NotStreaming = 4
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[iOS (10,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCameraAudioStreamSetting : ulong
 	{
@@ -2402,32 +1206,16 @@ namespace HomeKit {
 		BidirectionalAudioAllowed = 3
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueLockPhysicalControlsState : long {
 		NotLocked = 0,
 		Locked,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentAirPurifierState : long {
 		Inactive = 0,
@@ -2435,32 +1223,16 @@ namespace HomeKit {
 		Active,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueTargetAirPurifierState : long {
 		Manual = 0,
 		Automatic,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentSlatState : long {
 		Stationary = 0,
@@ -2468,48 +1240,24 @@ namespace HomeKit {
 		Oscillating,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueSlatType : long {
 		Horizontal = 0,
 		Vertical,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueFilterChange : long {
 		NotNeeded = 0,
 		Needed,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentFanState : long {
 		Inactive = 0,
@@ -2517,32 +1265,16 @@ namespace HomeKit {
 		Active,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueTargetFanState : long {
 		Manual = 0,
 		Automatic,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentHeaterCoolerState : long {
 		Inactive = 0,
@@ -2551,16 +1283,8 @@ namespace HomeKit {
 		Cooling,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueTargetHeaterCoolerState : long {
 		Automatic = 0,
@@ -2568,16 +1292,8 @@ namespace HomeKit {
 		Cool,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentHumidifierDehumidifierState : long {
 		Inactive = 0,
@@ -2586,16 +1302,8 @@ namespace HomeKit {
 		Dehumidifying,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueTargetHumidifierDehumidifierState : long {
 		Automatic = 0,
@@ -2603,48 +1311,24 @@ namespace HomeKit {
 		Dehumidify,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[TV (10,1), iOS (10,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueSwingMode : long {
 		Disabled = 0,
 		Enabled,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.1")]
-	[SupportedOSPlatform ("ios10.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
 	[Watch (3,1,1)]
-	[TV (10,1)]
-	[iOS (10,2)]
+	[TV (10,1), iOS (10,2)]
 	[MacCatalyst (14,0)]
-#endif
 	[Native]
 	public enum HMCharacteristicValueActivationState : long {
 		Inactive = 0,
 		Active,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("ios10.3")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,2)]
-	[TV (10,2)]
-	[iOS (10,3)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,2), TV (10,2), iOS (10,3), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueInputEvent : long {
 		SinglePress = 0,
@@ -2652,32 +1336,14 @@ namespace HomeKit {
 		LongPress,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("ios10.3")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (3,2)]
-	[TV (10,2)]
-	[iOS (10,3)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (3,2), TV (10,2), iOS (10,3), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueLabelNamespace : long {
 		Dot = 0,
 		Numeral,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,0)]
-	[TV (11,0)]
-	[iOS (11,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMEventTriggerActivationState : ulong {
 		Disabled = 0,
@@ -2687,16 +1353,7 @@ namespace HomeKit {
 		Enabled = 4,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,0)]
-	[TV (11,0)]
-	[iOS (11,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMHomeHubState : ulong {
 		NotAvailable = 0,
@@ -2704,16 +1361,7 @@ namespace HomeKit {
 		Disconnected,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,0)]
-	[TV (11,0)]
-	[iOS (11,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMPresenceEventType : ulong {
 		EveryEntry = 1,
@@ -2724,16 +1372,7 @@ namespace HomeKit {
 		NotAtHome = LastExit,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,0)]
-	[TV (11,0)]
-	[iOS (11,0)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
 	[Native]
 	public enum HMPresenceEventUserType : ulong {
 		CurrentUser = 1,
@@ -2741,16 +1380,7 @@ namespace HomeKit {
 		CustomUsers = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.2")]
-	[SupportedOSPlatform ("ios11.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,2)]
-	[TV (11,2)]
-	[iOS (11,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,2), TV (11,2), iOS (11,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueProgramMode : long {
 		NotScheduled = 0,
@@ -2758,32 +1388,14 @@ namespace HomeKit {
 		ScheduleOverriddenToManual,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.2")]
-	[SupportedOSPlatform ("ios11.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,2)]
-	[TV (11,2)]
-	[iOS (11,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,2), TV (11,2), iOS (11,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueUsageState : long {
 		NotInUse = 0,
 		InUse,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.2")]
-	[SupportedOSPlatform ("ios11.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,2)]
-	[TV (11,2)]
-	[iOS (11,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,2), TV (11,2), iOS (11,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueValveType : long {
 		GenericValve = 0,
@@ -2792,34 +1404,15 @@ namespace HomeKit {
 		WaterFaucet,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.2")]
-	[SupportedOSPlatform ("ios11.2")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (4,2)]
-	[TV (11,2)]
-	[iOS (11,2)]
-	[MacCatalyst (14,0)]
-#endif
+	[Watch (4,2), TV (11,2), iOS (11,2), MacCatalyst (14,0)]
 	[Native]
 	public enum HMCharacteristicValueConfigurationState : long {
 		NotConfigured = 0,
 		Configured,
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios8.0")]
-	[UnsupportedOSPlatform ("macos")]
-#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Watch (2,0)]
-	[TV (10,0)]
-	[NoMac]
-	[iOS (8,0)]
-#endif
+	[Watch (2,0), TV (10,0), NoMac, iOS (8,0)]
 	[Native]
 	public enum HMCharacteristicValueTargetDoorState : long
 	{
@@ -2827,18 +1420,8 @@ namespace HomeKit {
 		Closed = 1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios8.0")]
-	[UnsupportedOSPlatform ("macos")]
-#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Watch (2,0)]
-	[TV (10,0)]
-	[NoMac]
-	[iOS (8,0)]
-#endif
+	[Watch (2,0), TV (10,0), NoMac, iOS (8,0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentHeatingCooling : long
 	{
@@ -2847,18 +1430,8 @@ namespace HomeKit {
 		Cool = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios8.0")]
-	[UnsupportedOSPlatform ("macos")]
-#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Watch (2,0)]
-	[TV (10,0)]
-	[NoMac]
-	[iOS (8,0)]
-#endif
+	[Watch (2,0), TV (10,0), NoMac, iOS (8,0)]
 	[Native]
 	public enum HMCharacteristicValueTargetLockMechanismState : long
 	{
