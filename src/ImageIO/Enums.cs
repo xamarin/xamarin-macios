@@ -15,11 +15,7 @@ namespace ImageIO {
 
 	// untyped enum -> CGImageMetadata.h
 	// note: not used in any API
-#if NET
-	[SupportedOSPlatform ("ios7.0")]
-#else
 	[iOS (7,0)]
-#endif
 	[ErrorDomain ("kCFErrorDomainCGImageMetadata")]
 	public enum CGImageMetadataErrors {
 		Unknown = 0,
@@ -30,11 +26,7 @@ namespace ImageIO {
 	}
 
 	// untyped enum -> CGImageMetadata.h
-#if NET
-	[SupportedOSPlatform ("ios7.0")]
-#else
 	[iOS (7,0)]
-#endif
 	public enum CGImageMetadataType {
 		Invalid = -1,
 		Default = 0,
@@ -59,13 +51,7 @@ namespace ImageIO {
 
 	// untyped enum / #defines
 	// used with kCGImagePropertyPNGCompressionFilter
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
-	[iOS (9,0)]
-	[Mac (10,11)]
-#endif
+	[iOS (9,0)][Mac (10,11)]
 	[Flags]
 	public enum CGImagePropertyPngFilters {
 		No = 0,
@@ -76,16 +62,7 @@ namespace ImageIO {
 		Paeth = 0x80
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
-#else
-	[Mac (10, 15)]
-	[iOS (13, 0)]
-	[TV (13, 0)]
-	[Watch (6, 0)]
-#endif
+	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	public enum CGImageAnimationStatus
 	{
 		Ok = 0,
@@ -97,16 +74,7 @@ namespace ImageIO {
 	}
 
 	// Yes, no [Native] here
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.1")]
-	[SupportedOSPlatform ("tvos14.2")]
-#else
-	[Mac (11,0)]
-	[iOS (14,1)]
-	[TV (14,2)]
-	[Watch (7,1)]
-#endif
+	[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 	public enum CGImagePropertyTgaCompression : uint {
 		None = 0,
 		Rle,
