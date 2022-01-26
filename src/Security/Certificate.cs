@@ -696,7 +696,7 @@ namespace Security {
 				dic = new NSMutableDictionary (publicAndPrivateKeyAttrs.GetDictionary ()!);
 			else
 				dic = new NSMutableDictionary ();
-			dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
+			dic.LowlevelSetObject ((NSObject) type.GetConstant ()!, SecAttributeKey.Type);
 			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			return GenerateKeyPair (dic, out publicKey, out privateKey);
 #endif
@@ -708,7 +708,7 @@ namespace Security {
 				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
 
 			using (var dic = new NSMutableDictionary ()) {
-				dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
+				dic.LowlevelSetObject ((NSObject) type.GetConstant ()!, SecAttributeKey.Type);
 				using (var ksib = new NSNumber (keySizeInBits)) {
 					dic.LowlevelSetObject (ksib, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 					if (publicKeyAttrs is not null)
@@ -1015,7 +1015,7 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters is null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject (keyType.GetConstant (), SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
+				md.LowlevelSetObject ((NSObject) keyType.GetConstant ()!, SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
 				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 				return CreateRandomKey (md, out error);
 			}
@@ -1065,8 +1065,8 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters is null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject (keyType.GetConstant (), SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
-				md.LowlevelSetObject (keyClass.GetConstant (), SecAttributeKey.KeyClass);
+				md.LowlevelSetObject ((NSObject) keyType.GetConstant ()!, SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
+				md.LowlevelSetObject ((NSObject) keyClass.GetConstant ()!, SecAttributeKey.KeyClass);
 				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 				return Create (keyData, md, out error);
 			}
