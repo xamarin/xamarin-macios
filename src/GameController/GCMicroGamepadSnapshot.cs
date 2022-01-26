@@ -11,6 +11,8 @@ using Foundation;
 
 namespace GameController {
 
+	// GCMicroGamepadSnapshot.h
+	// float_t are 4 bytes (at least for ARM64)
 #if NET
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("macos10.12")]

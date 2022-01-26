@@ -120,6 +120,7 @@ namespace GameController {
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 #endif
+	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	public struct GCExtendedGamepadSnapshotData {
 
