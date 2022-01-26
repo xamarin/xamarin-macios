@@ -26,9 +26,14 @@ namespace Chip {
 	[Register ("CHIPError", SkipRegistration = true)]
 	public class ChipError : NSObject {
 
-		public virtual NSError Create (int errorCode) => throw new InvalidOperationException ();
-		public virtual int ConvertToChipErrorCode (NSError errorCode) => throw new InvalidOperationException ();
-	
+		public override IntPtr ClassHandle => throw new InvalidOperationException (Constants.RemovedFromChip);
+
+		protected ChipError (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		protected ChipError (IntPtr handle) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		
+		public virtual int ConvertToChipErrorCode (NSError errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual NSError? Create (int errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		
 	} /* class ChipError */
 
 #if !MONOMAC
@@ -36,22 +41,22 @@ namespace Chip {
 	[Register ("CHIPContentLaunch", SkipRegistration = true)]
 	public class ChipContentLaunch : NSObject {
 
-		public override IntPtr ClassHandle => throw new InvalidOperationException ();
+		public override IntPtr ClassHandle => throw new InvalidOperationException (Constants.RemovedFromChip);
 
-		protected ChipContentLaunch (NSObjectFlag t) => throw new InvalidOperationException ();
-		protected ChipContentLaunch (IntPtr handle) => throw new InvalidOperationException ();
-		public ChipContentLaunch (ChipDevice device, byte endpoint, DispatchQueue queue) => throw new InvalidOperationException ();
+		protected ChipContentLaunch (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		protected ChipContentLaunch (IntPtr handle) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public ChipContentLaunch (ChipDevice device, byte endpoint, DispatchQueue queue) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		
-		public virtual void LaunchContent (byte autoPlay, string data, ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> LaunchContentAsync (byte autoPlay, string data) => throw new InvalidOperationException ();
-		public virtual void LaunchUrl (string contentUrl, string displayString, ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> LaunchUrlAsync (string contentUrl, string displayString) => throw new InvalidOperationException ();
-		public virtual void ReadAttributeAcceptsHeaderList (ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> ReadAttributeAcceptsHeaderListAsync () => throw new InvalidOperationException ();
-		public virtual void ReadAttributeSupportedStreamingTypes (ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> ReadAttributeSupportedStreamingTypesAsync () => throw new InvalidOperationException ();
-		public virtual void ReadAttributeClusterRevision (ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> ReadAttributeClusterRevisionAsync () => throw new InvalidOperationException ();
+		public virtual void LaunchContent (byte autoPlay, string data, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> LaunchContentAsync (byte autoPlay, string data) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual void LaunchUrl (string contentUrl, string displayString, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> LaunchUrlAsync (string contentUrl, string displayString) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual void ReadAttributeAcceptsHeaderList (ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> ReadAttributeAcceptsHeaderListAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual void ReadAttributeSupportedStreamingTypes (ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> ReadAttributeSupportedStreamingTypesAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual void ReadAttributeClusterRevision (ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> ReadAttributeClusterRevisionAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 	} /* class ChipContentLaunch */
 #endif // !MONOMAC
@@ -61,18 +66,18 @@ namespace Chip {
 	[Register ("CHIPTrustedRootCertificates", SkipRegistration = true)]
 	public class ChipTrustedRootCertificates : NSObject
 	{
-		public override IntPtr ClassHandle => throw new InvalidOperationException ();
+		public override IntPtr ClassHandle => throw new InvalidOperationException (Constants.RemovedFromChip);
 
-		protected ChipTrustedRootCertificates (NSObjectFlag t) => throw new InvalidOperationException ();
-		protected ChipTrustedRootCertificates (IntPtr handle) => throw new InvalidOperationException ();
-		public ChipTrustedRootCertificates (ChipDevice device, byte endpoint, DispatchQueue queue) => throw new InvalidOperationException ();
+		protected ChipTrustedRootCertificates (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		protected ChipTrustedRootCertificates (IntPtr handle) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public ChipTrustedRootCertificates (ChipDevice device, byte endpoint, DispatchQueue queue) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
-		public virtual void AddTrustedRootCertificate (NSData rootCertificate, ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> AddTrustedRootCertificateAsync (NSData rootCertificate) => throw new InvalidOperationException ();
-		public virtual void RemoveTrustedRootCertificate (NSData trustedRootIdentifier, ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> RemoveTrustedRootCertificateAsync (NSData trustedRootIdentifier) => throw new InvalidOperationException ();
-		public virtual void ReadAttributeClusterRevision (ChipResponseHandler responseHandler) => throw new InvalidOperationException ();
-		public virtual Task<ChipReadAttributeResult> ReadAttributeClusterRevisionAsync () => throw new InvalidOperationException ();
+		public virtual void AddTrustedRootCertificate (NSData rootCertificate, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> AddTrustedRootCertificateAsync (NSData rootCertificate) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual void RemoveTrustedRootCertificate (NSData trustedRootIdentifier, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> RemoveTrustedRootCertificateAsync (NSData trustedRootIdentifier) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual void ReadAttributeClusterRevision (ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> ReadAttributeClusterRevisionAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 	}
 #endif // !MONOMAC

@@ -42,7 +42,6 @@ namespace Chip {
 		WrongAddressType = 7,
 		IntegrityCheckFailed = 8,
 		DuplicateExists = 9,
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		UnsupportedAttribute = 10,
 	}
 
@@ -162,11 +161,13 @@ namespace Chip {
 		[Export ("readAttributeCatalogVendorIdWithResponseHandler:")]
 		void ReadAttributeCatalogVendorId (ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed, use 'ReadAttributeApplicationStatus' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ReadAttributeApplicationSatus (ChipResponseHandler responseHandler);
+#endif
 
 		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
@@ -1040,10 +1041,12 @@ namespace Chip {
 		[Export ("setRegulatoryConfig:countryCode:breadcrumb:timeoutMs:responseHandler:")]
 		void SetRegulatoryConfig (byte location, string countryCode, ulong breadcrumb, uint timeoutMs, ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ReadAttributeFabricId (ChipResponseHandler responseHandler);
+#endif
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeBreadcrumbWithResponseHandler:")]
@@ -1563,17 +1566,19 @@ namespace Chip {
 		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 #endif
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void AddOpCert (NSData noc, NSData iCACertificate, NSData iPKValue, ulong caseAdminNode, ushort adminVendorId, ChipResponseHandler responseHandler);
+#endif
 
 		// Parameter names are left to match header files. Without documentation, we cannot know what the parameters signify for certain.
 		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addNOC:iPKValue:caseAdminNode:adminVendorId:responseHandler:")]
-		void AddNOC (NSData nOCArray, NSData iPKValue, ulong caseAdminNode, ushort adminVendorId, ChipResponseHandler responseHandler);
+		void AddNoc (NSData nocArray, NSData iPKValue, ulong caseAdminNode, ushort adminVendorId, ChipResponseHandler responseHandler);
 
 		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
@@ -1584,20 +1589,26 @@ namespace Chip {
 		[Export ("opCSRRequest:responseHandler:")]
 		void OpCsrRequest (NSData csrNonce, ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void RemoveAllFabrics (ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void SetFabric (ushort vendorId, ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void RemoveFabric (ulong fabricId, ulong nodeId, ushort vendorId, ChipResponseHandler responseHandler);
+#endif
 
 		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
@@ -1616,7 +1627,7 @@ namespace Chip {
 		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("updateNOC:responseHandler:")]
-		void UpdateNOC (NSData nOCArray, ChipResponseHandler responseHandler);
+		void UpdateNoc (NSData nocArray, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeFabricsListWithResponseHandler:")]
@@ -2360,10 +2371,12 @@ namespace Chip {
 		[Export ("isRunning")]
 		bool IsRunning { get; }
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromChip) : false", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		bool PairDevice (ulong deviceId, ushort discriminator, uint setupPinCode, [NullAllowed] out NSError error);
+#endif
 
 		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Export ("pairDevice:discriminator:setupPINCode:csrNonce:error:")]
@@ -2413,9 +2426,11 @@ namespace Chip {
 		[Export ("setPairingDelegate:queue:")]
 		void SetPairingDelegate (IChipDevicePairingDelegate @delegate, DispatchQueue queue);
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromChip) : false", IsVirtual = true)]
 		bool Startup ([NullAllowed] IChipPersistentStorageDelegate storageDelegate);
+#endif
 
 		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Export ("startup:vendorId:nocSigner:")]
@@ -2442,7 +2457,7 @@ namespace Chip {
 
 		[Abstract]
 		[Export ("ECDSA_sign_hash:")]
-		NSData ECDSA_sign_hash (NSData hash);
+		NSData EcdsaSignHash (NSData hash);
 
 		[Abstract]
 		[Export ("pubkey")]
@@ -3263,11 +3278,13 @@ namespace Chip {
 		[Export ("mediaSkipForward:responseHandler:")]
 		void SkipForward (ulong deltaPositionMilliseconds, ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void SkipSeek (ulong position, ChipResponseHandler responseHandler);
+#endif
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("mediaStartOver:")]
@@ -3825,17 +3842,21 @@ namespace Chip {
 		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 #endif
 
+#if !NET
 		[Obsolete ("This method is removed, use 'DownOrClose' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void DownClose (ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void GoToLiftPercentage (byte percentageLiftValue, ChipResponseHandler responseHandler);
+#endif
 
 		[Internal]
 		[NoMac] // fails on macOS 12 beta 6
@@ -3843,11 +3864,13 @@ namespace Chip {
 		[Export ("windowCoveringGoToLiftValue:responseHandler:")]
 		void _OldGoToLiftValue (ushort liftValue, ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void GoToTiltPercentage (byte percentageTiltValue, ChipResponseHandler responseHandler);
+#endif
 
 		[Internal]
 		[NoMac] // fails on macOS 12 beta 6
@@ -3855,35 +3878,45 @@ namespace Chip {
 		[Export ("windowCoveringGoToTiltValue:responseHandler:")]
 		void _OldGoToTiltValue (ushort tiltValue, ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed, use 'StopMotion' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void Stop (ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed, use 'UpOrOpen' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void UpOpen (ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed, use 'ReadAttributeType' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ReadAttributeWindowCoveringType (ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ConfigureAttributeWindowCoveringType (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ReportAttributeWindowCoveringType (ChipResponseHandler responseHandler);
+#endif
 
 		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
@@ -3931,49 +3964,61 @@ namespace Chip {
 		[Export ("readAttributeCurrentPositionLiftWithResponseHandler:")]
 		void ReadAttributeCurrentPositionLift (ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed, use 'ConfigureAttributeCurrentPositionLiftPercentage' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ConfigureAttributeCurrentPositionLift (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed, use 'ReportAttributeCurrentPositionLiftPercentage' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ReportAttributeCurrentPositionLift (ChipResponseHandler responseHandler);
+#endif
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCurrentPositionTiltWithResponseHandler:")]
 		void ReadAttributeCurrentPositionTilt (ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed, use 'ConfigureAttributeCurrentPositionTiltPercentage' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ConfigureAttributeCurrentPositionTilt (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed, use 'ReportAttributeCurrentPositionTiltPercentage' instead.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ReportAttributeCurrentPositionTilt (ChipResponseHandler responseHandler);
+#endif
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeConfigStatusWithResponseHandler:")]
 		void ReadAttributeConfigStatus (ChipResponseHandler responseHandler);
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ConfigureAttributeConfigStatus (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
+#endif
 
+#if !NET
 		[Obsolete ("This method is removed.")]
 		[Wrap ("throw new InvalidOperationException (Constants.RemovedFromChip)", IsVirtual = true)]
 		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		void ReportAttributeConfigStatus (ChipResponseHandler responseHandler);
+#endif
 
 		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
