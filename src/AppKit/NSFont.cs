@@ -21,7 +21,9 @@ namespace AppKit {
 			return new NSFont (font.Handle);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10,13)]
 #endif
 		public unsafe CGRect [] GetBoundingRects (CGGlyph [] glyphs)
@@ -40,7 +42,9 @@ namespace AppKit {
 			return bounds;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10,13)]
 #endif
 		public unsafe CGSize [] GetAdvancements (CGGlyph [] glyphs)
@@ -148,11 +152,14 @@ namespace AppKit {
 			var ptr = _ControlContentFontOfSize (fontSize);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
-#if !NET
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-#else
+
+#if NET
 		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
 		public virtual NSFont PrinterFont { 
 			get {
@@ -160,11 +167,14 @@ namespace AppKit {
 				return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 			}
 		}
- 
-#if !NET
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-#else
+
+#if NET
 		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
 		public virtual NSFont ScreenFont {
 			get {
@@ -172,11 +182,14 @@ namespace AppKit {
 				return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 			}
 		}
- 
-#if !NET
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-#else
+
+#if NET
 		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
 		public virtual NSFont ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode)
 		{
@@ -189,18 +202,22 @@ namespace AppKit {
 			var ptr = _GetVerticalFont ();
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
-#if !NET
- 		[Mac (10,11)]
+
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[Mac (10,11)]
 #endif
 		public static NSFont SystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
 			var ptr = _SystemFontOfSize (fontSize, weight);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
-#if !NET
- 		[Mac (10,11)]
+
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[Mac (10,11)]
 #endif
 		public static NSFont MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
@@ -208,10 +225,10 @@ namespace AppKit {
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
 
-#if !NET
-		[Mac (10,15)]
-#else
+#if NET
 		[SupportedOSPlatform ("macos10.15")]
+#else
+		[Mac (10,15)]
 #endif
 		public static NSFont MonospacedSystemFont (nfloat fontSize, nfloat weight)
 		{

@@ -429,7 +429,7 @@ namespace MetricKit {
 	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[Protocol]
 	interface MXMetricManagerSubscriber {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[NoMac]

@@ -213,6 +213,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\monotouch-test\Tamarin.pdf">
+      <Link>Tamarin.pdf</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 #endif
 	public class NWError : NativeObject {
+		[Preserve (Conditional = true)]
 #if NET
 		internal NWError (NativeHandle handle, bool owns) : base (handle, owns)
 #else

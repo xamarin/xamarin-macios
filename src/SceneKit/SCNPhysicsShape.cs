@@ -35,7 +35,7 @@ namespace SceneKit
 			return Create (shapes, t);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Create' method that takes a 'SCNMatrix4 []'.")]
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNVector3 [] transforms)
 		{

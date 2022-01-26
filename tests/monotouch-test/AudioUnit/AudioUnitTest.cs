@@ -26,9 +26,17 @@ namespace MonoTouchFixtures.AudioUnit
 			AudioComponentDescription cd = new AudioComponentDescription () {
 				ComponentType = AudioComponentType.Output,
 #if MONOMAC
+#if NET
+				ComponentSubType = AudioUnitSubType.VoiceProcessingIO,
+#else
 				ComponentSubType = (int)AudioUnitSubType.VoiceProcessingIO,
+#endif
+#else
+#if NET
+				ComponentSubType = (AudioUnitSubType) AudioTypeOutput.Remote,
 #else
 				ComponentSubType = 0x72696f63, // Remote_IO
+#endif
 #endif
 				ComponentManufacturer = AudioComponentManufacturerType.Apple
 			};
@@ -55,9 +63,17 @@ namespace MonoTouchFixtures.AudioUnit
 			AudioComponentDescription cd = new AudioComponentDescription () {
 				ComponentType = AudioComponentType.Output,
 #if MONOMAC
+#if NET
+				ComponentSubType = AudioUnitSubType.VoiceProcessingIO,
+#else
 				ComponentSubType = (int)AudioUnitSubType.VoiceProcessingIO,
+#endif
+#else
+#if NET
+				ComponentSubType = (AudioUnitSubType) AudioTypeOutput.Remote,
 #else
 				ComponentSubType = 0x72696f63, // Remote_IO
+#endif
 #endif
 				ComponentManufacturer = AudioComponentManufacturerType.Apple
 			};

@@ -47,19 +47,19 @@ using NativeHandle = System.IntPtr;
 
 namespace AddressBook {
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9,0)]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9,0)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	static class ABMultiValue {
 		public const uint Mask = (1 << 8);
@@ -115,19 +115,19 @@ namespace AddressBook {
 		public static extern bool RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
 	}
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public struct ABMultiValueEntry<T>
 	{
@@ -200,25 +200,26 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMultiValue<T> : NativeObject, IEnumerable<ABMultiValueEntry<T>>
 	{
 		internal Converter<NativeHandle, T> toManaged;
 		internal Converter<T, NativeHandle> toNative;
 
+		[Preserve (Conditional = true)]
 		internal ABMultiValue (NativeHandle handle, bool owns)
 			: this (handle, 
 					v => (T) (object) Runtime.GetNSObject (v)!,
@@ -299,22 +300,23 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMutableMultiValue<T> : ABMultiValue<T>
 	{
+		[Preserve (Conditional = true)]
 		internal ABMutableMultiValue (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -355,19 +357,19 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMutableDateMultiValue : ABMutableMultiValue<NSDate> {
 		public ABMutableDateMultiValue ()
@@ -376,19 +378,19 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMutableDictionaryMultiValue : ABMutableMultiValue<NSDictionary> {
 		public ABMutableDictionaryMultiValue ()
@@ -397,19 +399,19 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMutableStringMultiValue : ABMutableMultiValue<string> {
 		public ABMutableStringMultiValue ()

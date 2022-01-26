@@ -37,6 +37,7 @@ namespace Network {
 	[SupportedOSPlatform ("macos10.15")]
 #endif
 	public class NWTxtRecord : NativeObject {
+		[Preserve (Conditional = true)]
 		internal NWTxtRecord (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]

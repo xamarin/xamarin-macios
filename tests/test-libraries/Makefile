@@ -1,11 +1,17 @@
 TOP=../..
 include $(TOP)/Make.config
 
-SUBDIRS += custom-type-assembly
+SUBDIRS += custom-type-assembly frameworks nugets libraries
 
 # without this many compiler warnings about unused functions and variables
 # in system headers show up.
 export CCACHE_CPP2=1
+
+ifeq ($(V),)
+ZIP=zip --symlinks --quiet
+else
+ZIP=zip --symlinks
+endif
 
 GENERATED_FILES = \
 	libtest.structs.h \
@@ -256,7 +262,7 @@ endif
 .libs/$(1)/libtest.dylib: .libs/$(2)/libtest.dylib .libs/$(3)/libtest.dylib | .libs/$(1)
 	$(Q) ./lipo-remove-sim-arm64.sh $$@ $$^
 
-$(3)_TARGETS += \
+$(4)_TARGETS += \
 	.libs/$(1)/XTest.framework$($(4)_BINARY_INFIX)/XTest \
 	.libs/$(1)/XTest.framework$($(4)_INFO_PLIST_INFIX)/Info.plist \
 	.libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest \
@@ -265,7 +271,7 @@ $(3)_TARGETS += \
 	.libs/$(1)/libtest.a \
 	.libs/$(1)/libtest2.a \
 
-all-local:: $$($(3)_TARGETS)
+all-local:: $$($(4)_TARGETS)
 endef
 
 $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator,IPHONESIMULATOR))
@@ -295,12 +301,12 @@ define FatFrameworkSymlinksTemplate
 	$(Q) mkdir -p $$(dir $$@)
 	$(Q) ln -fs A $$@
 
-$(3)_TARGETS += \
+$(4)_TARGETS += \
 	.libs/$(1)/XTest.framework/XTest \
 	.libs/$(1)/XTest.framework/Resources \
 	.libs/$(1)/XTest.framework/Versions/Current \
 
-all-local:: $$($(3)_TARGETS)
+all-local:: $$($(4)_TARGETS)
 endef
 
 ifdef INCLUDE_MACCATALYST
@@ -325,6 +331,32 @@ endif
 ifdef INCLUDE_MACCATALYST
 XCPLATFORMS+= maccatalyst
 endif
+
+define ZippedFrameworkTemplate
+.libs/$(1)/XTest.framework.zip: $$($(2)_TARGETS)
+	$$(Q_ZIP) cd .libs/$(1) && $(ZIP) -r XTest.framework.zip XTest.framework
+
+ZIPPED_TARGETS += .libs/$(1)/XTest.framework.zip
+endef
+
+ifdef INCLUDE_IOS
+$(eval $(call ZippedFrameworkTemplate,ios-fat,IPHONESIMULATOR))
+endif
+ifdef INCLUDE_TVOS
+$(eval $(call ZippedFrameworkTemplate,tvos-fat,TVSIMULATOR))
+endif
+ifdef INCLUDE_WATCH
+$(eval $(call ZippedFrameworkTemplate,watchos-fat,WATCHSIMULATOR))
+endif
+ifdef INCLUDE_MACCATALYST
+$(eval $(call ZippedFrameworkTemplate,maccatalyst-fat,MACCATALYST))
+endif
+ifdef INCLUDE_MAC
+$(eval $(call ZippedFrameworkTemplate,macos-fat,MACOS))
+endif
+
+all-local:: $(ZIPPED_TARGETS)
+zip: $(ZIPPED_TARGETS)
 
 XTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework)
 XTEST_XCTARGETS += \
@@ -351,6 +383,11 @@ LIBTEST2_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/lib
 	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach lib,$(LIBTEST2_XCFRAMEWORKS),-library $(lib)) -output $@
 
 all-local:: .libs/libtest2.xcframework
+
+.libs/XTest.xcframework.zip: .libs/XTest.xcframework
+	$(Q_ZIP) cd .libs && $(ZIP) -r "$(notdir $@)" "$(notdir $<)"
+
+all-local:: .libs/XTest.xcframework.zip
 
 # Xamarin.Mac
 

@@ -39,6 +39,7 @@ namespace Network {
 #endif
 	public class NWEstablishmentReport : NativeObject {
 
+		[Preserve (Conditional = true)]
 		internal NWEstablishmentReport (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]

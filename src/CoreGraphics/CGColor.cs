@@ -145,13 +145,15 @@ namespace CoreGraphics {
 			return handle;
 		}
 
-#if !NET
-		[iOS (14,0)][TV (14,0)][Watch (7,0)]
-		[MacCatalyst (14,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[MacCatalyst (14,0)]
 #endif
 		public CGColor (CGConstantColor color)
 			: base (Create (color), true)
@@ -200,17 +202,24 @@ namespace CoreGraphics {
 
 		public static bool operator == (CGColor color1, CGColor color2)
 		{
-			return Object.Equals (color1, color2);
+			if (color1 is null)
+				return color2 is null;
+			return color1.Equals (color2);
 		}
 
 		public static bool operator != (CGColor color1, CGColor color2)
 		{
-			return !Object.Equals (color1, color2);
+			if (color1 is null)
+				return color2 is not null;
+			return !color1.Equals (color2);
 		}
 
 		public override int GetHashCode ()
 		{
-			return Handle.GetHashCode ();
+			// looks weird but it's valid
+			// using the Handle property would not be since there's a special function for equality
+			// see Remarks in https://docs.microsoft.com/en-us/dotnet/api/system.object.gethashcode?view=net-6.0
+			return 0;
 		}
 
 		public override bool Equals (object? o)
@@ -284,16 +293,24 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGColorRelease (/* CGColorRef */ IntPtr color);
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef __nullable */ IntPtr CGColorCreateCopyByMatchingToColorSpace (
 			/* __nullable CGColorSpaceRef* */ IntPtr space, CGColorRenderingIntent intent,
 			/* CGColorRef __nullable */ IntPtr color, /* __nullable CFDictionaryRef */ IntPtr options);
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		static public CGColor? CreateByMatchingToColorSpace (CGColorSpace space, CGColorRenderingIntent intent,
 			CGColor color, NSDictionary options)
@@ -302,28 +319,28 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateSRGB (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		static public CGColor? CreateSrgb (nfloat red, nfloat green, nfloat blue, nfloat alpha)
 		{
@@ -331,28 +348,28 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		static public CGColor? CreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha)
 		{
@@ -360,26 +377,32 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
-#if !NET
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
-		[MacCatalyst (14,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 #endif
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef */ IntPtr CGColorCreateGenericCMYK (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha);
 
-#if !NET
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
-		[MacCatalyst (14,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 #endif
 		static public CGColor? CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
 		{
@@ -387,26 +410,32 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
-#if !NET
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
-		[MacCatalyst (14,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 #endif
 		[DllImport (Constants.AccessibilityLibrary)]
 		static extern /* NSString */ IntPtr AXNameFromColor (/* CGColorRef */ IntPtr color);
 
-#if !NET
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
-		[MacCatalyst (14,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 #endif
 		public string? AXName => CFString.FromHandle (AXNameFromColor (Handle));
 

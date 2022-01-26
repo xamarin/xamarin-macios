@@ -1,18 +1,3 @@
-# fixed in XAMCORE_4_0 - API break
-!incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLTransformComponent::resetsTransform is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLTransformComponent::setResetsTransform: is REQUIRED and should be abstract
-
-## old @optional methods that became @required (abstract) in existing types (breaking changes)
-!incorrect-protocol-member! MDLMeshBuffer::allocator is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBuffer::length is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBuffer::type is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBuffer::zone is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBufferZone::allocator is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBufferZone::capacity is REQUIRED and should be abstract
-
 ## we only export the overload that expose an NSError
 !missing-selector! MDLAsset::exportAssetToURL: not bound
 

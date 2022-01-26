@@ -10,7 +10,7 @@ parameters:
 
 - name: outputPath 
   type: string 
-  default: ''
+  default: 'agent-logs.log'
 
 - name: predicate
   type: string
@@ -25,17 +25,17 @@ parameters:
     - json
     - syslog
 
+- name: uploadLogs
+  type: boolean
+  default: true
+
 steps:
 
 - pwsh: |
     $style=$Env:STYLE
     $output=$Env:OUTPUT
-    if (-not $output) {
-      Write-Host "Not output path provided using default path: agent-logs.log"
-      $output="agent-logs.log"
-    } else {
-      Write-Host "output path: $output"
-    }
+
+    Write-Host "output path: $output"
 
     # there is no var that gives us the start time, but we can use the rest api to get the time when
     # the build started
@@ -51,7 +51,7 @@ steps:
 
     $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
 
-    $end=Get-Date -Format "yyyy-mm-dd HH:mm:ss"
+    $end=Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     Write-Host "end time: $end"
 
     $predicate=$Env:PREDICATE
@@ -69,3 +69,16 @@ steps:
     STYLE: ${{ parameters.style }}
   ${{ if ne(parameters.workingDirectory, '') }}:
     workingDirectory: ${{ parameters.workingDirectory }}
+
+# only upload when told so
+- ${{ if eq(parameters.uploadLogs, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: Agent logs'
+    inputs:
+      # add or not the working dir to the upload
+      ${{ if eq(parameters.workingDirectory, '') }}:
+        targetPath: ${{ parameters.outputPath }}
+      ${{ else }}:
+        targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
+      artifactName: $(Agent.Name)-${{ parameters.outputPath }} 
+    continueOnError: true

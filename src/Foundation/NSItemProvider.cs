@@ -9,7 +9,7 @@ namespace Foundation
 #if MONOMAC || IOS
 	public partial class NSItemProvider
 	{
-#if !XAMCORE_4_0 && MONOMAC
+#if !NET && MONOMAC
 		[Obsolete ("Use RegisterCloudKitShare (CloudKitRegistrationPreparationAction) instead.")]
 		public virtual void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler)
 		{

@@ -132,17 +132,24 @@ namespace CoreGraphics {
 
 		public static bool operator == (CGPath? path1, CGPath? path2)
 		{
-			return Object.Equals (path1, path2);
+			if (path1 is null)
+				return path2 is null;
+			return path1.Equals (path2);
 		}
 
 		public static bool operator != (CGPath? path1, CGPath? path2)
 		{
-			return !Object.Equals (path1, path2);
+			if (path1 is null)
+				return path2 is not null;
+			return !path1.Equals (path2);
 		}
 
 		public override int GetHashCode ()
 		{
-			return Handle.GetHashCode ();
+			// looks weird but it's valid
+			// using the Handle property would not be since there's a special function for equality
+			// see Remarks in https://docs.microsoft.com/en-us/dotnet/api/system.object.gethashcode?view=net-6.0
+			return 0;
 		}
 
 		public override bool Equals (object? o)
@@ -611,16 +618,24 @@ namespace CoreGraphics {
 			return MakeMutable (CGPathCreateWithRoundedRect (rectangle, cornerWidth, cornerHeight, transform), true);
 		}
 
-#if !NET
-		[Mac(10,9)][iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios7.0")]
+#else
+		[Mac (10,9)]
+		[iOS (7,0)]
 #endif
 		static unsafe public CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight)
 		{
 			return _FromRoundedRect (rectangle, cornerWidth, cornerHeight, null);
 		}
 
-#if !NET
-		[Mac(10,9)][iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios7.0")]
+#else
+		[Mac (10,9)]
+		[iOS (7,0)]
 #endif
 		static public unsafe CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform transform)
 		{
@@ -630,16 +645,24 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static void CGPathAddRoundedRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *transform, CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight);
 
-#if !NET
-		[Mac(10,9)][iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios7.0")]
+#else
+		[Mac (10,9)]
+		[iOS (7,0)]
 #endif
 		public unsafe void AddRoundedRect (CGAffineTransform transform, CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{
 			CGPathAddRoundedRect (Handle, &transform, rect, cornerWidth, cornerHeight);
 		}
 
-#if !NET
-		[Mac(10,9)][iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios7.0")]
+#else
+		[Mac (10,9)]
+		[iOS (7,0)]
 #endif
 		public unsafe void AddRoundedRect (CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{

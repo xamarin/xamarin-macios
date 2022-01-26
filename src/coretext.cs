@@ -79,7 +79,7 @@ namespace CoreText {
 
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Field ("kCTTypesetterOptionDisableBidiProcessing")]
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		NSString _DisableBidiProcessing { get; }
 #else
@@ -87,7 +87,7 @@ namespace CoreText {
 #endif
 
 		[Field ("kCTTypesetterOptionForcedEmbeddingLevel")]
-#if !XAMCORE_4_0
+#if !NET
 		[Internal]
 		NSString _ForceEmbeddingLevel { get; }
 #else

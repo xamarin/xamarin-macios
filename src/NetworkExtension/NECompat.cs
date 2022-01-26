@@ -4,7 +4,7 @@ using Foundation;
 
 namespace NetworkExtension {
 
-#if !XAMCORE_4_0
+#if !NET
 	public partial class NEPacketTunnelNetworkSettings {
 
 		[Obsolete ("This constructor does not create a valid instance of the type.")]

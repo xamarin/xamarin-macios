@@ -31,6 +31,7 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using CoreVideo;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
@@ -205,7 +206,9 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public double? MaxKeyFrameIntervalDuration {
@@ -218,7 +221,9 @@ namespace AVFoundation {
 		}
 
 #if !MONOMAC
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public bool? AllowFrameReordering {
@@ -230,7 +235,9 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public AVVideoH264EntropyMode? EntropyEncoding {
@@ -268,7 +275,9 @@ namespace AVFoundation {
 		}
 			
 		// frame rate can be floating point (29.97 is common for instance)
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public float? ExpectedSourceFrameRate {
@@ -281,7 +290,9 @@ namespace AVFoundation {
 		}
 
 		// frame rate can be floating point (29.97 is common for instance)
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public float? AverageNonDroppableFrameRate {

@@ -275,6 +275,17 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSOperationQueue":
+				switch (selectorName) {
+				case "progress":
+					// The "progress" property comes from the NSProgressReporting protocol, where it was introduced a long time ago.
+					// Then NSOperationQueue started implementing the NSProgressReporting, but only in iOS 13, which means that
+					// this selector does not exist on earlier iOS versions, even to the managed property (from the protocol) claims so.
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
+				}
+				break;
 			case "NSImage":
 				switch (selectorName) {
 				case "initByReferencingFile:":
@@ -852,6 +863,13 @@ namespace Introspection {
 				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
 				if (selectorName == "waitUntilExit")
 					return true;
+				break;
+			case "NSTextStorage":
+				switch (selectorName) {
+				// declared in a superclass, and implemented in a concrete subclass, so it doesn't show up during inspection of NSTextStorage itself.
+				case "initWithString:":
+					return true;
+				}
 				break;
 			case "MPSImageDescriptor":
 				switch (selectorName) {

@@ -3,6 +3,3 @@
 
 ## web docs <quote>In Mac apps built with Mac Catalyst, this function has no effect.</quote>
 !missing-selector! SKPaymentQueue::showPriceConsentIfNeeded not bound
-
-## deprecated or not used on catalyst
-!missing-selector! SKProduct::contentVersion not bound

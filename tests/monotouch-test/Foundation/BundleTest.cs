@@ -29,32 +29,38 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void LocalizedString2 ()
 		{
+#if NET
+			string s = main.GetLocalizedString (null, "value");
+			Assert.That (s, Is.EqualTo ("value"), "key");
+#else
 			string s = main.LocalizedString (null, "comment");
 			Assert.That (s, Is.Empty, "key");
+#endif
 
-			s = main.LocalizedString ("key", null);
-			Assert.That (s, Is.EqualTo ("key"), "comment");
+			s = main.GetLocalizedString ("key", null);
+			Assert.That (s, Is.EqualTo ("key"), "key");
 
-			s = main.LocalizedString (null, null);
+			s = main.GetLocalizedString (null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
 
 		[Test]
 		public void LocalizedString3 ()
 		{
-			string s = main.LocalizedString (null, "value", "table");
+			string s = main.GetLocalizedString (null, "value", "table");
 			Assert.That (s, Is.EqualTo ("value"), "key");
 
-			s = NSBundle.MainBundle.LocalizedString ("key", null, "table");
+			s = NSBundle.MainBundle.GetLocalizedString ("key", null, "table");
 			Assert.That (s, Is.EqualTo ("key"), "value");
 
-			s = NSBundle.MainBundle.LocalizedString (null, "value", null);
+			s = NSBundle.MainBundle.GetLocalizedString (null, "value", null);
 			Assert.That (s, Is.EqualTo ("value"), "comment");
 			
-			s = main.LocalizedString (null, null, null);
+			s = main.GetLocalizedString (null, null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
 
+#if !NET
 		[Test]
 		public void LocalizedString4 ()
 		{
@@ -73,6 +79,7 @@ namespace MonoTouchFixtures.Foundation {
 			s = main.LocalizedString (null, null, null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
+#endif
 		
 		// http://developer.apple.com/library/ios/#documentation/uikit/reference/NSBundle_UIKitAdditions/Introduction/Introduction.html
 		
@@ -144,7 +151,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Does.EndWith ("eceipt"), "AppStoreReceiptUrl");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Test]
 		public void LocalizedString ()
 		{
