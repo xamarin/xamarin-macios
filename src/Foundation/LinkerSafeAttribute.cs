@@ -26,6 +26,9 @@ using System;
 
 namespace Foundation {
 
+#if NET
+	[Obsolete ("Replace with '[assembly: System.Reflection.AssemblyMetadata (\"IsTrimmable\", \"True\")]'.")]
+#endif
 	[AttributeUsage (AttributeTargets.Assembly)]
 	public sealed class LinkerSafeAttribute : Attribute {
 		
