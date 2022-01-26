@@ -52,8 +52,12 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
-	[StructLayout (LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+#else
 	[Mac (10,9)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct MKCoordinateRegion {
 		public CLLocationCoordinate2D Center;
 		public MKCoordinateSpan Span;
@@ -79,8 +83,12 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
-	[StructLayout (LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+#else
 	[Mac (10,9)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapPoint {
 		public double X, Y;
 
@@ -142,7 +150,11 @@ namespace MapKit {
 			Height = height;
 		}
 
+#if NET
+		[SupportedOSPlatform ("tvos9.2")]
+#else
 		[TV (9,2)]
+#endif
 		public static MKMapSize World { get { return new MKMapSize (0x10000000, 0x10000000); }}
 		
 		// MKMapSizeEqualToSize
@@ -179,10 +191,19 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
-	[StructLayout (LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+#else
 	[Mac (10,9)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapRect {
+#if NET
+		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[TV (9,2)]
+#endif
 		public static readonly MKMapRect Null = new MKMapRect (double.PositiveInfinity, double.PositiveInfinity, 0, 0);
 
 		public MKMapPoint Origin;
@@ -273,7 +294,12 @@ namespace MapKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[TV (9,2)]
+#endif
 		public MKMapRect World {
 			get {
 				return new MKMapRect (0, 0, 0x10000000, 0x10000000);
@@ -384,7 +410,11 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+#else
 	[Mac (10,9)]
+#endif
 	public static class MKGeometry {
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapPointsPerMeterAtLatitude")]
