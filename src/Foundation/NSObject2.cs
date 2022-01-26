@@ -51,11 +51,18 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+
+#if NET
+	public enum NSObjectFlag {
+		Empty,
+	}
+#else
 	public class NSObjectFlag {
 		public static readonly NSObjectFlag Empty;
 		
 		NSObjectFlag () {}
 	}
+#endif
 
 #if NET && !COREBUILD
 	[ObjectiveCTrackedType]
