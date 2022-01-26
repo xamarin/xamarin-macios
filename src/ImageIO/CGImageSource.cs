@@ -78,7 +78,7 @@ namespace ImageIO {
 			var dict = new NSMutableDictionary ();
 			
 			if (BestGuessTypeIdentifier is not null)
-				dict.LowlevelSetObject (new NSString (BestGuessTypeIdentifier), kTypeIdentifierHint);
+				dict.LowlevelSetObject (BestGuessTypeIdentifier, kTypeIdentifierHint);
 			if (!ShouldCache)
 				dict.LowlevelSetObject (CFBoolean.FalseHandle, kShouldCache);
 			if (ShouldAllowFloat)
