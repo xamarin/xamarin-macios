@@ -114,9 +114,17 @@ namespace CoreText {
 			return CTFontManagerIsSupportedFont (url.Handle);
 		}
 #elif !XAMCORE_3_0
-		[Obsolete ("API not available on iOS, it will always return false.")]
+#if NET
+		[UnsupportedOSPlatform ("macos10.6")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.6.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("ios")]
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Unavailable (PlatformName.iOS)]
+#endif
+		[Obsolete ("API not available on iOS, it will always return false.")]
 		public static bool IsFontSupported (NSUrl url)
 		{
 			if (url == null)
