@@ -20,7 +20,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ToStringTest ()
 		{
+#if NO_NFLOAT_OPERATORS
+			var vector = new CGVector (new NFloat (1), new NFloat (2));
+#else
 			var vector = new CGVector ((nfloat)1, (nfloat)2);
+#endif
 			Assert.AreEqual ("{1, 2}", vector.ToString (), "ToString");
 		}
 	}

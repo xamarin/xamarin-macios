@@ -100,7 +100,11 @@ namespace MonoTouchFixtures.Photos {
 
 			context.SaveState ();
 			context.TranslateCTM (257.0f, 257.0f);
+#if NO_NFLOAT_OPERATORS
+			context.RotateCTM (90.0f * Math.PI / 180.0f);
+#else
 			context.RotateCTM (90.0f * (nfloat)Math.PI / 180.0f);
+#endif
 
 			var polygonPath = new UIBezierPath();
 			polygonPath.MoveTo (new CGPoint (0.0f, -250.0f));
@@ -119,7 +123,11 @@ namespace MonoTouchFixtures.Photos {
 			var textContent = "X";
 			UIColor.White.SetFill ();
 			var textFont = UIFont.FromName ("Helvetica", 350.0f);
+#if NO_NFLOAT_OPERATORS
+			textRect.Offset (new NFloat (0.0f), new NFloat ((textRect.Height.Value- new NSString (textContent).StringSize (textFont, textRect.Size).Height.Value) / 2.0f));
+#else
 			textRect.Offset (0.0f, (textRect.Height - new NSString (textContent).StringSize (textFont, textRect.Size).Height) / 2.0f);
+#endif
 			new NSString (textContent).DrawString (textRect, textFont, UILineBreakMode.WordWrap, UITextAlignment.Center);
 		}
 
@@ -130,7 +138,11 @@ namespace MonoTouchFixtures.Photos {
 				if (imageOfXamagram != null)
 					return imageOfXamagram;
 
+#if NO_NFLOAT_OPERATORS
+				UIGraphics.BeginImageContextWithOptions (new CGSize (512.0f, 512.0f), false, new NFloat (0));
+#else
 				UIGraphics.BeginImageContextWithOptions (new CGSize (512.0f, 512.0f), false, 0);
+#endif
 				DrawXamagram ();
 				imageOfXamagram = UIGraphics.GetImageFromCurrentImageContext ();
 				UIGraphics.EndImageContext ();

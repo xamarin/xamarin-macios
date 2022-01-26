@@ -228,7 +228,7 @@ namespace MonoTouchFixtures.SceneKit {
 		public void Constructor_CATransform3d ()
 		{
 			var transform = new CATransform3D () {
-#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
+#if NO_NFLOAT_OPERATORS
 				M11 = new NFloat (11),
 				M12 = new NFloat (12),
 				M13 = new NFloat (13),

@@ -771,7 +771,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ToStringTest ()
 		{
+#if NO_NFLOAT_OPERATORS
+			var transform = new CGAffineTransform (new NFloat (1), new NFloat (2), new NFloat (3), new NFloat (4), new NFloat (5), new NFloat (6));
+#else
 			var transform = new CGAffineTransform ((nfloat)1, (nfloat)2, (nfloat)3, (nfloat)4, (nfloat)5, (nfloat)6);
+#endif
 #if NET
 			Assert.AreEqual ("[1, 2, 3, 4, 5, 6]", transform.ToString (), "ToString");
 #else

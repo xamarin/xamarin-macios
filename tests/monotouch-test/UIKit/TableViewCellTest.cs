@@ -21,8 +21,13 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			var frame = new CGRect (10, 10, 100, 100);
 			using (UITableViewCell tvc = new UITableViewCell (frame)) {
+#if NO_NFLOAT_OPERATORS
+				Assert.That (tvc.Frame.X, Is.EqualTo (new NFloat (0.0f)), "X");
+				Assert.That (tvc.Frame.Y, Is.EqualTo (new NFloat (0.0f)), "Y");
+#else
 				Assert.That (tvc.Frame.X, Is.EqualTo ((nfloat) 0.0f), "X");
 				Assert.That (tvc.Frame.Y, Is.EqualTo ((nfloat) 0.0f), "Y");
+#endif
 				// whatever supplied value X and Y are set to 0.0 by the cell
 				// Width and Height are set by the cell (e.g. 320 x 44 for the iPhone)
 			}

@@ -171,7 +171,11 @@ namespace MonoTouchFixtures.UIKit {
 
 			if (TestRuntime.CheckXcodeVersion (6, 2)) {
 				Assert.IsNotNull (UIFont.SystemFontOfSize (0, UIFontWeight.Regular), "SystemFontOfSize (nfloat, UIFontWeight)");
+#if NO_NFLOAT_OPERATORS
+				Assert.IsNotNull (UIFont.SystemFontOfSize (new NFloat (0), new NFloat (0)), "SystemFontOfSize (nfloat, nfloat)");
+#else
 				Assert.IsNotNull (UIFont.SystemFontOfSize (0, (nfloat) 0), "SystemFontOfSize (nfloat, nfloat)");
+#endif
 			}
 
 			Assert.IsNotNull (UIFont.BoldSystemFontOfSize (-4), "BoldSystemFontOfSize");

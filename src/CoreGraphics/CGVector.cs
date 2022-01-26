@@ -46,6 +46,17 @@ namespace CoreGraphics {
 			this.dy = dy;
 		}
 
+		public CGVector (float dx, float dy)
+		{
+#if NO_NFLOAT_OPERATORS
+			this.dx = new NFloat (dx);
+			this.dy = new NFloat (dy);
+#else
+			this.dx = dx;
+			this.dy = dy;
+#endif
+		}
+
 		public static bool operator == (CGVector left, CGVector right)
 		{
 #if NO_NFLOAT_OPERATORS

@@ -36,8 +36,13 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (tbi.ImageInsets, Is.EqualTo (UIEdgeInsets.Zero), "ImageInsets");
 				Assert.That (tbi.Tag, Is.EqualTo ((nint) 0), "Tag");
 				Assert.Null (tbi.Title, "Title");
+#if NO_NFLOAT_OPERATORS
+				Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo (new NFloat (0f)), "TitlePositionAdjustment.Horizontal");
+				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo (new NFloat (0f)), "TitlePositionAdjustment.Vertical");
+#else
 				Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Horizontal");
 				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Vertical");
+#endif
 			}
 		}
 
@@ -55,8 +60,13 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (tbi.ImageInsets, Is.EqualTo (UIEdgeInsets.Zero), "ImageInsets");
 				Assert.That (tbi.Tag, Is.EqualTo (nint.MaxValue), "Tag");
 				Assert.Null (tbi.Title, "Title");
+#if NO_NFLOAT_OPERATORS
+				Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo (new NFloat (0f)), "TitlePositionAdjustment.Horizontal");
+				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo (new NFloat (0f)), "TitlePositionAdjustment.Vertical");
+#else
 				Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Horizontal");
 				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Vertical");
+#endif
 			}
 		}
 		
@@ -75,8 +85,13 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (tbi.ImageInsets, Is.EqualTo (UIEdgeInsets.Zero), "ImageInsets");
 				Assert.That (tbi.Tag, Is.EqualTo (nint.MinValue), "Tag");
 				Assert.That (tbi.Title, Is.EqualTo ("title"), "Title");
+#if NO_NFLOAT_OPERATORS
+				Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo (new NFloat (0f)), "TitlePositionAdjustment.Horizontal");
+				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo (new NFloat (0f)), "TitlePositionAdjustment.Vertical");
+#else
 				Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Horizontal");
 				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Vertical");
+#endif
 			}
 		}
 

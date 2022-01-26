@@ -2,7 +2,13 @@ global using nfloat = System.Runtime.InteropServices.NFloat;
 global using System.Runtime.InteropServices;
 
 using System;
+
+using CoreGraphics;
+using Foundation;
 using ObjCRuntime;
+#if __IOS__ || __TVOS__ || __MACCATALYST__
+using UIKit;
+#endif
 
 namespace ObjCRuntime {
 	internal static class NFloatHelpers {
@@ -46,6 +52,7 @@ namespace ObjCRuntime {
 
 #if __MACOS__ || __MACCATALYST__
 namespace AppKit {
+#if !__MACCATALYST__
 	internal static class NSStackViewNFloatExtensions {
 		public static void SetCustomSpacing (this NSStackView self, float arg0, NSView arg1)
 		{
@@ -69,6 +76,7 @@ namespace AppKit {
 			return self.CreateStatusItem (new NFloat (arg0));
 		}
 	}
+#endif // !__MACCATALYST__
 }
 #endif // __MACOS__ || __MACCATALYST__
 
@@ -221,6 +229,11 @@ namespace CoreGraphics {
 			self.RotateCTM (new NFloat (value));
 		}
 
+		public static void RotateCTM (this CGContext self, double value)
+		{
+			self.RotateCTM (new NFloat (value));
+		}
+
 		public static void SelectFont (this CGContext self, string fontName, float weight, CGTextEncoding encoding)
 		{
 			self.SelectFont (fontName, new NFloat (weight), encoding);
@@ -270,6 +283,36 @@ namespace CoreGraphics {
 		{
 			self.AddQuadCurveToPoint (new NFloat (cpx), new NFloat (cpy), new NFloat (x), new NFloat (y));
 		}
+	}
+}
 
+namespace Foundation {
+	internal static class NSString_NFloatExtensions {
+#if !__TVOS__ && !__MACOS__
+		public static CGSize DrawString (this NSString self, CGPoint point, float width, UIFont font, float minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment)
+		{
+			return self.DrawString (point, new NFloat (width), font, new NFloat (minFontSize), ref actualFontSize, breakMode, adjustment);
+		}
+
+		public static CGSize StringSize (this NSString self, UIFont font, float minFontSize, ref nfloat actualFontSize, float forWidth, UILineBreakMode lineBreakMode)
+		{
+			return self.StringSize (font, new NFloat (minFontSize), ref actualFontSize, new NFloat (forWidth), lineBreakMode);
+		}
+
+		public static CGSize StringSize (this NSString self, UIFont font, float forWidth, UILineBreakMode breakMode)
+		{
+			return self.StringSize (font, new NFloat (forWidth), breakMode);
+		}
+
+		public static CGSize DrawString (this NSString self, CGPoint point, float width, UIFont font, UILineBreakMode breakMode)
+		{
+			return self.DrawString (point, new NFloat (width), font, breakMode);
+		}
+
+		public static CGSize DrawString (this string self, CGPoint point, float width, UIFont font, UILineBreakMode breakMode)
+		{
+			return self.DrawString (point, new NFloat (width), font, breakMode);
+		}
+#endif
 	}
 }

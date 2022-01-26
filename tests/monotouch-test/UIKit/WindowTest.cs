@@ -48,14 +48,30 @@ namespace MonoTouchFixtures.UIKit {
 		public void Level ()
 		{
 			using (UIWindow w = new UIWindow ()) {
+#if NO_NFLOAT_OPERATORS
+				Assert.That (w.WindowLevel, Is.EqualTo (new NFloat (0f)), "default");
+#else
 				Assert.That (w.WindowLevel, Is.EqualTo ((nfloat) 0f), "default");
+#endif
 				w.WindowLevel = UIWindowLevel.Normal;
+#if NO_NFLOAT_OPERATORS
+				Assert.That (w.WindowLevel, Is.EqualTo (new NFloat (0f)), "Normal");
+#else
 				Assert.That (w.WindowLevel, Is.EqualTo ((nfloat) 0f), "Normal");
+#endif
 				w.WindowLevel = UIWindowLevel.Alert;
+#if NO_NFLOAT_OPERATORS
+				Assert.That (w.WindowLevel, Is.EqualTo (new NFloat (2000f)), "Alert");
+#else
 				Assert.That (w.WindowLevel, Is.EqualTo ((nfloat) 2000f), "Alert");
+#endif
 #if !__TVOS__
 				w.WindowLevel = UIWindowLevel.StatusBar;
+#if NO_NFLOAT_OPERATORS
+				Assert.That (w.WindowLevel, Is.EqualTo (new NFloat (1000f)), "StatusBar");
+#else
 				Assert.That (w.WindowLevel, Is.EqualTo ((nfloat) 1000f), "StatusBar");
+#endif
 #endif // !__TVOS__
 			}
 		}

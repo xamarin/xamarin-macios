@@ -49,7 +49,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 			img.LockFocus ();
 			var context = NSGraphicsContext.CurrentContext.GraphicsPort;
 #else
+#if NO_NFLOAT_OPERATORS
+			UIGraphics.BeginImageContextWithOptions (bounds.Size, false, new NFloat (0));
+#else
 			UIGraphics.BeginImageContextWithOptions (bounds.Size, false, 0);
+#endif
 			var context = UIGraphics.GetCurrentContext ();
 #endif
 			try {

@@ -67,7 +67,11 @@ namespace MonoTouchFixtures.CoreImage {
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (var url = NSUrl.FromFilename (file))
 			using (var ci = CIImage.FromUrl (url))
+#if NO_NFLOAT_OPERATORS
+			using (var ui = new UIImage (ci, new NFloat (1.0f), UIImageOrientation.Up)) {
+#else
 			using (var ui = new UIImage (ci, 1.0f, UIImageOrientation.Up)) {
+#endif
 				Assert.IsNotNull (ui.CIImage, "CIImage");
 			}
 		}

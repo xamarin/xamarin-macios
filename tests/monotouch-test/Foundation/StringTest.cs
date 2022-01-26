@@ -152,7 +152,11 @@ namespace MonoTouchFixtures.Foundation {
 		[Culture ("en")] // fails for some cultures, e.g. ar-AE
 		public void StringSize_5 ()
 		{
+#if NO_NFLOAT_OPERATORS
+			nfloat actualFontSize = new NFloat (12);
+#else
 			nfloat actualFontSize = 12;
+#endif
 			var f = UIFont.BoldSystemFontOfSize (actualFontSize);
 			try {
 				using (NSString s = new NSString ("s")) {

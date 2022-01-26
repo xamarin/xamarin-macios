@@ -9,6 +9,10 @@
 
 #if !__WATCHOS__
 
+#if !MONOMAC
+#define PFLOAT_SINGLE
+#endif
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -32,7 +36,7 @@ namespace MonoTouchFixtures.SceneKit {
 		public void Matrix ()
 		{
 			var id = SCNMatrix4.Identity;
-#if NO_NFLOAT_OPERATORS
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
 			id.M11 = new NFloat (2);
 #else
 			id.M11 = 2;
@@ -44,7 +48,7 @@ namespace MonoTouchFixtures.SceneKit {
 		public void Quaternion ()
 		{
 			var id = SCNQuaternion.Identity;
-#if NO_NFLOAT_OPERATORS
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
 			id.W = new NFloat (2);
 #else
 			id.W = 2;
@@ -57,7 +61,7 @@ namespace MonoTouchFixtures.SceneKit {
 		{
 			var v = new SCNVector4 ();
 			var u = SCNVector4.UnitX;
-#if NO_NFLOAT_OPERATORS
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
 			u.X = new NFloat (2);
 #else
 			u.X = 2;
@@ -65,7 +69,7 @@ namespace MonoTouchFixtures.SceneKit {
 			Assert.That (SCNVector4.UnitX, Is.Not.EqualTo (u), "UnitX");
 
 			u = SCNVector4.UnitY;
-#if NO_NFLOAT_OPERATORS
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
 			u.Y = new NFloat (2);
 #else
 			u.Y = 2;
@@ -73,7 +77,7 @@ namespace MonoTouchFixtures.SceneKit {
 			Assert.That (SCNVector4.UnitY, Is.Not.EqualTo (u), "UnitY");
 
 			u = SCNVector4.UnitZ;
-#if NO_NFLOAT_OPERATORS
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
 			u.Z = new NFloat (2);
 #else
 			u.Z = 2;
@@ -81,7 +85,7 @@ namespace MonoTouchFixtures.SceneKit {
 			Assert.That (SCNVector4.UnitZ, Is.Not.EqualTo (u), "UnitZ");
 
 			u = SCNVector4.UnitW;
-#if NO_NFLOAT_OPERATORS
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
 			u.W = new NFloat (2);
 #else
 			u.W = 2;
@@ -89,7 +93,7 @@ namespace MonoTouchFixtures.SceneKit {
 			Assert.That (SCNVector4.UnitW, Is.Not.EqualTo (u), "UnitW");
 
 			u = SCNVector4.Zero;
-#if NO_NFLOAT_OPERATORS
+#if NO_NFLOAT_OPERATORS && !PFLOAT_SINGLE
 			u.W = new NFloat (2);
 #else
 			u.W = 2;

@@ -99,7 +99,11 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void ToStringTest ()
 		{
+#if NO_NFLOAT_OPERATORS
+			var rect = new CGRect (new NFloat (1), new NFloat (2), new NFloat (3), new NFloat (4));
+#else
 			var rect = new CGRect ((nfloat)1, (nfloat)2, (nfloat)3, (nfloat)4);
+#endif
 #if NET
 			Assert.AreEqual ("{{1, 2}, {3, 4}}", rect.ToString (), "ToString");
 #else

@@ -68,7 +68,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				var p = data[0];
 #if NO_NFLOAT_OPERATORS
 				outData[0] = new NFloat (0.0f);
-				outData[1] = new NFloat ((1.0f-Slope(p, 2.0f).Value) * 0.5f);
+				outData[1] = new NFloat ((1.0f-Slope(p, new NFloat (2.0f)).Value) * 0.5f);
 #else
 				outData[0] = 0.0f;
 				outData[1] = (1.0f-Slope(p, 2.0f)) * 0.5f;
@@ -80,7 +80,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			{
 #if NO_NFLOAT_OPERATORS
 				var p = Math.Pow(x.Value, A.Value);
-				return new NFloat (p.Value/(p.Value + Math.Pow(1.0f-x.Value, A.Value)));
+				return new NFloat (p/(p + Math.Pow(1.0f-x.Value, A.Value)));
 #else
 				var p = Math.Pow(x, A);
 				return (nfloat)(p/(p + Math.Pow(1.0f-x, A)));

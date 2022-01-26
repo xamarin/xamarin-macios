@@ -50,10 +50,17 @@ namespace MonoTouchFixtures.UIKit {
 			var i = new UIEdgeInsets (10, 20, 30, 40);
 			var r = new CGRect (1, 2, 3, 4);
 			r = i.InsetRect (r);
+#if NO_NFLOAT_OPERATORS
+			Assert.That (r.X, Is.EqualTo (new NFloat (21f)), "X");
+			Assert.That (r.Y, Is.EqualTo (new NFloat (12f)), "Y");
+			Assert.That (r.Width, Is.EqualTo (new NFloat (-57f)), "Width");
+			Assert.That (r.Height, Is.EqualTo (new NFloat (-36f)), "Height");
+#else
 			Assert.That (r.X, Is.EqualTo ((nfloat) 21f), "X");
 			Assert.That (r.Y, Is.EqualTo ((nfloat) 12f), "Y");
 			Assert.That (r.Width, Is.EqualTo ((nfloat) (-57f)), "Width");
 			Assert.That (r.Height, Is.EqualTo ((nfloat) (-36f)), "Height");
+#endif
 
 			Assert.False (i.Equals (UIEdgeInsets.Zero), "Equals(UIEdgeInsets)");
 			Assert.False (UIEdgeInsets.Zero.Equals ((object) i), "Equals(object)");

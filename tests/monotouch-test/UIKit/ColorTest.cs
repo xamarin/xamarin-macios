@@ -121,16 +121,30 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void HSBA_No_Saturation ()
 		{
+#if NO_NFLOAT_OPERATORS
+			nfloat h = new NFloat (0.0f);
+			nfloat s = new NFloat (0.0f);
+			nfloat b = new NFloat (0.0f);
+			nfloat a = new NFloat (0.0f);
+#else
 			nfloat h = 0.0f;
 			nfloat s = 0.0f;
 			nfloat b = 0.0f;
 			nfloat a = 0.0f;
+#endif
 			UIColor c = UIColor.FromHSBA (h, s, b, a);
 			c.GetHSBA (out h, out s, out b, out a);
+#if NO_NFLOAT_OPERATORS
+			Assert.That (h, Is.EqualTo (new NFloat (0f)), "h");
+			Assert.That (s, Is.EqualTo (new NFloat (0f)), "s");
+			Assert.That (b, Is.EqualTo (new NFloat (0f)), "b");
+			Assert.That (a, Is.EqualTo (new NFloat (0f)), "a");
+#else
 			Assert.That (h, Is.EqualTo ((nfloat) 0f), "h");
 			Assert.That (s, Is.EqualTo ((nfloat) 0f), "s");
 			Assert.That (b, Is.EqualTo ((nfloat) 0f), "b");
 			Assert.That (a, Is.EqualTo ((nfloat) 0f), "a");
+#endif
 		}
 
 		// note: MonoTouch addition - not fully compatible with "getHue:saturation:brightness:alpha:" wrt alpha
