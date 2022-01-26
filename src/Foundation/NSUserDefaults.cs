@@ -10,21 +10,14 @@ namespace Foundation {
 	}
 
 	public partial class NSUserDefaults {
-#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 9)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-#else
-		[UnsupportedOSPlatform ("ios7.0")]
-		[UnsupportedOSPlatform ("macos10.10")]
-#endif
 		public NSUserDefaults (string name) : this (name, NSUserDefaultsType.UserName)
 		{
 		}
 
-#if !NET
 		[iOS (7,0)]
-#endif
 		public NSUserDefaults (string name, NSUserDefaultsType type)
 		{
 			// two different `init*` would share the same C# signature

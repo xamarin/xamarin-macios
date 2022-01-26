@@ -93,9 +93,7 @@ namespace Foundation {
 			}
 		}
 		
-#if !NET
 		[Mac(10,11),iOS(9,0)]
-#endif
 		[Export ("trueExpression")]
 		public virtual NSExpression TrueExpression {
 			get {
@@ -108,9 +106,7 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
 		[Mac(10,11),iOS(9,0)]
-#endif
 		[Export ("falseExpression")]
 		public virtual NSExpression FalseExpression {
 			get {

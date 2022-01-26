@@ -72,9 +72,7 @@ namespace Foundation {
 			return ret;
 		}
 
-#if !NET
 		[iOS (9,0), Mac(10,11)]
-#endif
 		public unsafe nuint [] GetIndexes (NSRange range)
 		{
 			var ret = new nuint [range.Length];

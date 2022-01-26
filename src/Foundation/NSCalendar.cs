@@ -40,15 +40,11 @@ namespace Foundation {
 	public enum NSCalendarType {
 		Gregorian, Buddhist, Chinese, Hebrew, Islamic, IslamicCivil, Japanese, [Obsolete] RepublicOfChina, Persian, Indian, ISO8601,
 		Coptic, EthiopicAmeteAlem, EthiopicAmeteMihret,
-#if !NET
 		[Mac (10, 10)]
 		[iOS (8, 0)]
-#endif
 		IslamicTabular,
-#if !NET
 		[Mac (10, 10)]
 		[iOS (8, 0)]
-#endif
 		IslamicUmmAlQura,
 #pragma warning disable 612 // RepublicOfChina is obsolete
 		Taiwan = RepublicOfChina
