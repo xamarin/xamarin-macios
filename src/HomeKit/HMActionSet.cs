@@ -7,9 +7,7 @@ namespace HomeKit {
 
 	partial class HMActionSet {
 
-#if !NET
 		[iOS (9,0)]
-#endif
 		public HMActionSetType ActionSetType {
 			get {
 				var s = _ActionSetType;
