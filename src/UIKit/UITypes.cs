@@ -36,6 +36,21 @@ namespace UIKit {
 			Right = right;
 		}
 
+		public UIEdgeInsets (float top, float left, float bottom, float right)
+		{
+#if NO_NFLOAT_OPERATORS
+			Top = new NFloat (top);
+			Left = new NFloat (left);
+			Bottom = new NFloat (bottom);
+			Right = new NFloat (right);
+#else
+			Top = top;
+			Left = left;
+			Bottom = bottom;
+			Right = right;
+#endif
+		}
+
 		// note: UIEdgeInsetsInsetRect (UIGeometry.h) is a macro
 		public CGRect InsetRect (CGRect rect)
 		{
@@ -133,6 +148,17 @@ namespace UIKit {
 		{
 			Minimum = minimum;
 			Maximum = maximum;
+		}
+
+		public UIFloatRange (float minimum, float maximum)
+		{
+#if NO_NFLOAT_OPERATORS
+			Minimum = new NFloat (minimum);
+			Maximum = new NFloat (maximum);
+#else
+			Minimum = minimum;
+			Maximum = maximum;
+#endif
 		}
 
 		[DllImport (Constants.UIKitLibrary)]

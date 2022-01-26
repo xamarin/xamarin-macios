@@ -1,7 +1,7 @@
 global using nfloat = System.Runtime.InteropServices.NFloat;
+global using System.Runtime.InteropServices;
 
-using System.Runtime.InteropServices;
-
+using System;
 using ObjCRuntime;
 
 namespace ObjCRuntime {
@@ -32,10 +32,19 @@ namespace ObjCRuntime {
 		public static bool IsInfinity         (nfloat f) { return double.IsInfinity (f.Value); }
 		public static bool IsPositiveInfinity (nfloat f) { return double.IsPositiveInfinity (f.Value); }
 		public static bool IsNegativeInfinity (nfloat f) { return double.IsNegativeInfinity (f.Value); }
+		public static NFloat MaxValue {
+			get {
+				if (IntPtr.Size == 8) {
+					return new NFloat (double.MaxValue);
+				} else {
+					return new NFloat (float.MaxValue);
+				}
+			}
+		}
 	}
 }
 
-#if HAS_APPKIT
+#if __MACOS__ || __MACCATALYST__
 namespace AppKit {
 	internal static class NSStackViewNFloatExtensions {
 		public static void SetCustomSpacing (this NSStackView self, float arg0, NSView arg1)
@@ -61,13 +70,13 @@ namespace AppKit {
 		}
 	}
 }
-#endif
+#endif // __MACOS__ || __MACCATALYST__
 
 namespace CoreGraphics {
-	internal static class CGBitmapContextNFloatExtensions {
-		public static void RotateCTM (this CGBitmapContext self, float value)
+	internal static class CGRectNFloatExtensions {
+		public static CGRect Inset (this CGRect self, float x, float y)
 		{
-			self.RotateCTM (new NFloat (value));
+			return self.Inset (new NFloat (x), new NFloat (y));
 		}
 	}
 
@@ -197,11 +206,6 @@ namespace CoreGraphics {
 			self.SetFillPattern (pattern, NFloatHelpers.ConvertArray (components));
 		}
 
-		public static void AddLineToPoint (this CGContext self, float x, float y)
-		{
-			self.AddLineToPoint (new NFloat (x), new NFloat (y));
-		}
-
 		public static void MoveTo (this CGContext self, float x, float y)
 		{
 			self.MoveTo (new NFloat (x), new NFloat (y));
@@ -211,5 +215,61 @@ namespace CoreGraphics {
 		{
 			self.SetLineWidth (new NFloat (w));
 		}
+
+		public static void RotateCTM (this CGContext self, float value)
+		{
+			self.RotateCTM (new NFloat (value));
+		}
+
+		public static void SelectFont (this CGContext self, string fontName, float weight, CGTextEncoding encoding)
+		{
+			self.SelectFont (fontName, new NFloat (weight), encoding);
+		}
+
+		public static void SetFillColor (this CGContext self, float red, float green, float blue, float alpha)
+		{
+			self.SetFillColor (new NFloat (red), new NFloat (green), new NFloat (blue), new NFloat (alpha));
+		}
+
+		public static void TranslateCTM (this CGContext self, float tx, float ty)
+		{
+			self.TranslateCTM (new NFloat (tx), new NFloat (ty));
+		}
+
+		public static void ShowTextAtPoint (this CGContext self, float x, float y, string text)
+		{
+			self.ShowTextAtPoint (new NFloat (x), new NFloat (y), text);
+		}
+
+		public static void AddArc (this CGContext self, float x, float y, float radius, float startAngle, float endAngle, bool clockwise)
+		{
+			self.AddArc (new NFloat (x), new NFloat (y), new NFloat (radius), new NFloat (startAngle), new NFloat (endAngle), clockwise);
+		}
+
+		public static void AddLineToPoint (this CGContext self, float x, float y)
+		{
+			self.AddLineToPoint (new NFloat (x), new NFloat (y));
+		}
+
+		public static void ScaleCTM (this CGContext self, float sx, float sy)
+		{
+			self.ScaleCTM (new NFloat (sx), new NFloat (sy));
+		}
+
+		public static void SetStrokeColor (this CGContext self, float red, float green, float blue, float alpha)
+		{
+			self.SetStrokeColor (new NFloat (red), new NFloat (green), new NFloat (blue), new NFloat (alpha));
+		}
+
+		public static void SetStrokeColor (this CGContext self, float cyan, float magenta, float yellow, float black, float alpha)
+		{
+			self.SetStrokeColor (new NFloat (cyan), new NFloat (magenta), new NFloat (yellow), new NFloat (black), new NFloat (alpha));
+		}
+
+		public static void AddQuadCurveToPoint (this CGContext self, float cpx, float cpy, float x, float y)
+		{
+			self.AddQuadCurveToPoint (new NFloat (cpx), new NFloat (cpy), new NFloat (x), new NFloat (y));
+		}
+
 	}
 }

@@ -29,6 +29,17 @@ namespace UIKit {
 		public /* CGFloat */ nfloat Horizontal;
 		public /* CGFloat */ nfloat Vertical;
 
+		public UIOffset (float horizontal, float vertical)
+		{
+#if NO_NFLOAT_OPERATORS
+			Horizontal = new NFloat (horizontal);
+			Vertical = new NFloat (vertical);
+#else
+			Horizontal = horizontal;
+			Vertical = vertical;
+#endif
+		}
+
 		public override bool Equals (object obj)
 		{
 			if (!(obj is UIOffset))

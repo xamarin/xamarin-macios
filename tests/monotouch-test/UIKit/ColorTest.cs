@@ -288,8 +288,13 @@ namespace MonoTouchFixtures.UIKit {
 		[TestCase (0.5, 0.7)]
 		public void WAConstructor (double w, double a)
 		{
+#if NO_NFLOAT_OPERATORS
+			var nw = new NFloat (w);
+			var na = new NFloat (a);
+#else
 			var nw = (nfloat) w;
 			var na = (nfloat) a;
+#endif
 			var c = UIColor.FromWhiteAlpha (nw, na);
 			var r = new UIColor (nw, na);
 			Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());

@@ -58,6 +58,21 @@ namespace UIKit {
 			Trailing = trailing;
 		}
 
+		public NSDirectionalEdgeInsets (float top, float leading, float bottom, float trailing)
+		{
+#if NO_NFLOAT_OPERATORS
+			Top = new NFloat (top);
+			Leading = new NFloat (leading);
+			Bottom = new NFloat (bottom);
+			Trailing = new NFloat (trailing);
+#else
+			Top = top;
+			Leading = leading;
+			Bottom = bottom;
+			Trailing = trailing;
+#endif
+		}
+
 		// note: NSDirectionalEdgeInsetsEqualToDirectionalEdgeInsets (UIGeometry.h) is a macro
 		public bool Equals (NSDirectionalEdgeInsets other)
 		{

@@ -45,8 +45,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 				var start = new CGPoint (rect.Left, rect.Bottom);
 				var end = new CGPoint (rect.Left, rect.Top);
 
+#if NO_NFLOAT_OPERATORS
+				var domain = new nfloat[] {new NFloat (0f), new NFloat (1f)};
+				var range = new nfloat[] {new NFloat (0f), new NFloat (1f), new NFloat (0f), new NFloat (1f)};
+#else
 				var domain = new nfloat[] {0f, 1f};
 				var range = new nfloat[] {0f, 1f, 0f, 1f};
+#endif
 				using (var context = UIGraphics.GetCurrentContext ())
 				using (var rgb = CGColorSpace.CreateDeviceGray())
 				using (var shadingFunction = new CGFunction(domain, range, Shading))
@@ -61,15 +66,25 @@ namespace MonoTouchFixtures.CoreGraphics {
 			public unsafe void Shading (nfloat* data, nfloat* outData)
 			{
 				var p = data[0];
+#if NO_NFLOAT_OPERATORS
+				outData[0] = new NFloat (0.0f);
+				outData[1] = new NFloat ((1.0f-Slope(p, 2.0f).Value) * 0.5f);
+#else
 				outData[0] = 0.0f;
 				outData[1] = (1.0f-Slope(p, 2.0f)) * 0.5f;
+#endif
 				Shaded ();
 			}
 
 			public nfloat Slope (nfloat x, nfloat A)
 			{
+#if NO_NFLOAT_OPERATORS
+				var p = Math.Pow(x.Value, A.Value);
+				return new NFloat (p.Value/(p.Value + Math.Pow(1.0f-x.Value, A.Value)));
+#else
 				var p = Math.Pow(x, A);
 				return (nfloat)(p/(p + Math.Pow(1.0f-x, A)));
+#endif
 			}
 		}
 

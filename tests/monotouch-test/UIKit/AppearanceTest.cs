@@ -59,10 +59,17 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.Appearance.TextColor, "null 1");
 				UILabel.Appearance.TextColor = UIColor.Red;
 				UILabel.Appearance.TextColor.GetRGBA (out r, out g, out b, out a);
+#if NO_NFLOAT_OPERATORS
+				Assert.AreEqual (new NFloat (1), a, "a1");
+				Assert.AreEqual (new NFloat (1), r, "r1");
+				Assert.AreEqual (new NFloat (0), g, "g1");
+				Assert.AreEqual (new NFloat (0), b, "b1");
+#else
 				Assert.AreEqual ((nfloat) 1, a, "a1");
 				Assert.AreEqual ((nfloat) 1, r, "r1");
 				Assert.AreEqual ((nfloat) 0, g, "g1");
 				Assert.AreEqual ((nfloat) 0, b, "b1");
+#endif
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.GetAppearance (traits).TextColor, "other null 2");
@@ -87,10 +94,17 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.AppearanceWhenContainedIn (typeof (UITextField)).TextColor, "null 1");
 				UILabel.AppearanceWhenContainedIn (typeof (UITextField)).TextColor = UIColor.Blue;
 				UILabel.AppearanceWhenContainedIn (typeof (UITextField)).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual ((nfloat) 1, a, "a1");
-				Assert.AreEqual ((nfloat) 0, r, "r1");
-				Assert.AreEqual ((nfloat) 0, g, "g1");
-				Assert.AreEqual ((nfloat) 1, b, "b1");
+#if NO_NFLOAT_OPERATORS
+				Assert.AreEqual (new NFloat (1), a, "g a1");
+				Assert.AreEqual (new NFloat (0), r, "g r1");
+				Assert.AreEqual (new NFloat (0), g, "g g1");
+				Assert.AreEqual (new NFloat (1), b, "g b1");
+#else
+				Assert.AreEqual ((nfloat) 1, a, "g a1");
+				Assert.AreEqual ((nfloat) 0, r, "g r1");
+				Assert.AreEqual ((nfloat) 0, g, "g g1");
+				Assert.AreEqual ((nfloat) 1, b, "g b1");
+#endif
 
 				// check that other appearance instances didn't change (bug 26353)
 				Assert.IsNull (UILabel.Appearance.TextColor, "other null 1");
@@ -116,10 +130,17 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance (traits, typeof (UITextField)).TextColor, "null 1");
 				UILabel.GetAppearance (traits, typeof (UITextField)).TextColor = UIColor.Blue;
 				UILabel.GetAppearance (traits, typeof (UITextField)).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual ((nfloat) 1, a, "a1");
-				Assert.AreEqual ((nfloat) 0, r, "r1");
-				Assert.AreEqual ((nfloat) 0, g, "g1");
-				Assert.AreEqual ((nfloat) 1, b, "b1");
+#if NO_NFLOAT_OPERATORS
+				Assert.AreEqual (new NFloat (1), a, "g a1");
+				Assert.AreEqual (new NFloat (0), r, "g r1");
+				Assert.AreEqual (new NFloat (0), g, "g g1");
+				Assert.AreEqual (new NFloat (1), b, "g b1");
+#else
+				Assert.AreEqual ((nfloat) 1, a, "g a1");
+				Assert.AreEqual ((nfloat) 0, r, "g r1");
+				Assert.AreEqual ((nfloat) 0, g, "g g1");
+				Assert.AreEqual ((nfloat) 1, b, "g b1");
+#endif
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "other null 1");
@@ -138,10 +159,17 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance<CustomLabel> (traits, typeof (UITextField)).TextColor, "g null 1");
 				UILabel.GetAppearance<CustomLabel> (traits, typeof (UITextField)).TextColor = UIColor.Blue;
 				UILabel.GetAppearance<CustomLabel> (traits, typeof (UITextField)).TextColor.GetRGBA (out r, out g, out b, out a);
+#if NO_NFLOAT_OPERATORS
+				Assert.AreEqual (new NFloat (1), a, "g a1");
+				Assert.AreEqual (new NFloat (0), r, "g r1");
+				Assert.AreEqual (new NFloat (0), g, "g g1");
+				Assert.AreEqual (new NFloat (1), b, "g b1");
+#else
 				Assert.AreEqual ((nfloat) 1, a, "g a1");
 				Assert.AreEqual ((nfloat) 0, r, "g r1");
 				Assert.AreEqual ((nfloat) 0, g, "g g1");
 				Assert.AreEqual ((nfloat) 1, b, "g b1");
+#endif
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "g other null 1");
@@ -166,10 +194,17 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance (traits).TextColor, "null 1");
 				UILabel.GetAppearance (traits).TextColor = UIColor.Blue;
 				UILabel.GetAppearance (traits).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual ((nfloat) 1, a, "a1");
-				Assert.AreEqual ((nfloat) 0, r, "r1");
-				Assert.AreEqual ((nfloat) 0, g, "g1");
-				Assert.AreEqual ((nfloat) 1, b, "b1");
+#if NO_NFLOAT_OPERATORS
+				Assert.AreEqual (new NFloat (1), a, "g a1");
+				Assert.AreEqual (new NFloat (0), r, "g r1");
+				Assert.AreEqual (new NFloat (0), g, "g g1");
+				Assert.AreEqual (new NFloat (1), b, "g b1");
+#else
+				Assert.AreEqual ((nfloat) 1, a, "g a1");
+				Assert.AreEqual ((nfloat) 0, r, "g r1");
+				Assert.AreEqual ((nfloat) 0, g, "g g1");
+				Assert.AreEqual ((nfloat) 1, b, "g b1");
+#endif
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "other null 1");
@@ -189,10 +224,17 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance<CustomLabel> (traits).TextColor, "g null 1");
 				UILabel.GetAppearance<CustomLabel> (traits).TextColor = UIColor.Blue;
 				UILabel.GetAppearance<CustomLabel> (traits).TextColor.GetRGBA (out r, out g, out b, out a);
+#if NO_NFLOAT_OPERATORS
+				Assert.AreEqual (new NFloat (1), a, "g a1");
+				Assert.AreEqual (new NFloat (0), r, "g r1");
+				Assert.AreEqual (new NFloat (0), g, "g g1");
+				Assert.AreEqual (new NFloat (1), b, "g b1");
+#else
 				Assert.AreEqual ((nfloat) 1, a, "g a1");
 				Assert.AreEqual ((nfloat) 0, r, "g r1");
 				Assert.AreEqual ((nfloat) 0, g, "g g1");
 				Assert.AreEqual ((nfloat) 1, b, "g b1");
+#endif
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "g other null 1");

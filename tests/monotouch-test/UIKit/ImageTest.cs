@@ -31,8 +31,13 @@ namespace MonoTouchFixtures.UIKit {
 						using (CGBitmapContext oContext = new CGBitmapContext (null, iWidth, iHeight, 8, iWidth * 4, oColorSpace, CGImageAlphaInfo.PremultipliedFirst)) {
 							using (CGImage oImage = oContext.ToImage ()) {
 								using (var img = UIImage.FromImage (oImage)) {
+#if NO_NFLOAT_OPERATORS
+									Assert.That (img.Size.Width, Is.GreaterThan (new NFloat (0)), "w" + r.ToString ());
+									Assert.That (img.Size.Height, Is.GreaterThan (new NFloat (0)), "h" + r.ToString ());
+#else
 									Assert.That (img.Size.Width, Is.GreaterThan ((nfloat) 0), "w" + r.ToString ());
 									Assert.That (img.Size.Height, Is.GreaterThan ((nfloat) 0), "h" + r.ToString ());
+#endif
 								}
 							}
 						}

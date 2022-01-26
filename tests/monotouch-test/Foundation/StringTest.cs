@@ -110,20 +110,36 @@ namespace MonoTouchFixtures.Foundation {
 		[Culture ("en")] // fails for some cultures, e.g. ar-AE
 		public void DrawString_7 ()
 		{
+#if NO_NFLOAT_OPERATORS
+			nfloat actualFontSize = new NFloat (12);
+#else
 			nfloat actualFontSize = 12;
+#endif
 			var f = UIFont.BoldSystemFontOfSize (actualFontSize);
 			try {
 				using (NSString s = new NSString ("s")) {
 					var size = s.DrawString (CGPoint.Empty, 20, f, 6, ref actualFontSize, UILineBreakMode.MiddleTruncation, UIBaselineAdjustment.None);
+#if NO_NFLOAT_OPERATORS
+					Assert.That (actualFontSize, Is.EqualTo (new NFloat (12)), "actualFontSize");
+					Assert.That (size.Width, Is.InRange (new NFloat (6f), new NFloat (7f)), "Width");
+					Assert.That (size.Height, Is.InRange (new NFloat (14f), new NFloat (15f)), "Height");
+#else
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 12), "actualFontSize");
 					Assert.That (size.Width, Is.InRange ((nfloat) 6f, (nfloat) 7f), "Width");
 					Assert.That (size.Height, Is.InRange ((nfloat) 14f, (nfloat) 15f), "Height");
+#endif
 				}
 				using (NSString s = new NSString ("saterlipopette")) {
 					var size = s.DrawString (CGPoint.Empty, 20, f, 6, ref actualFontSize, UILineBreakMode.MiddleTruncation, UIBaselineAdjustment.None);
+#if NO_NFLOAT_OPERATORS
+					Assert.That (actualFontSize, Is.EqualTo (new NFloat (6)), "actualFontSize-2");
+					Assert.That (size.Width, Is.InRange (new NFloat (17f), new NFloat (19f)), "Width-2");
+					Assert.That (size.Height, Is.InRange (new NFloat (7f), new NFloat (8f)), "Height-2");
+#else
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 6), "actualFontSize-2");
 					Assert.That (size.Width, Is.InRange ((nfloat) 17f, (nfloat) 19f), "Width-2");
 					Assert.That (size.Height, Is.InRange ((nfloat) 7f, (nfloat) 8f), "Height-2");
+#endif
 				}
 			} catch {
 				Console.WriteLine ("DrawString_7: actualFontSize: {0} font: {1}", actualFontSize, f);
@@ -141,15 +157,27 @@ namespace MonoTouchFixtures.Foundation {
 			try {
 				using (NSString s = new NSString ("s")) {
 					var size = s.StringSize (f, 6, ref actualFontSize, 10, UILineBreakMode.MiddleTruncation);
+#if NO_NFLOAT_OPERATORS
+					Assert.That (actualFontSize, Is.EqualTo (new NFloat (12)), "actualFontSize");
+					Assert.That (size.Width, Is.InRange (new NFloat (6f), new NFloat (7f)), "Width");
+					Assert.That (size.Height, Is.InRange (new NFloat (14f), new NFloat (15f)), "Height");
+#else
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 12), "actualFontSize");
 					Assert.That (size.Width, Is.InRange ((nfloat) 6f, (nfloat) 7f), "Width");
 					Assert.That (size.Height, Is.InRange ((nfloat) 14f, (nfloat) 15f), "Height");
+#endif
 				}
 				using (NSString s = new NSString ("saterlipopette")) {
 					var size = s.StringSize (f, 6, ref actualFontSize, 10, UILineBreakMode.MiddleTruncation);
+#if NO_NFLOAT_OPERATORS
+					Assert.That (actualFontSize, Is.EqualTo (new NFloat (6)), "actualFontSize-2");
+					Assert.That (size.Width, Is.InRange (new NFloat (5f), new NFloat (10f)), "Width-2");
+					Assert.That (size.Height, Is.InRange (new NFloat (14f), new NFloat (15f)), "Height-2");
+#else
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 6), "actualFontSize-2");
 					Assert.That (size.Width, Is.InRange ((nfloat) 5f, (nfloat) 10f), "Width-2");
 					Assert.That (size.Height, Is.InRange ((nfloat) 14f, (nfloat) 15f), "Height-2");
+#endif
 				}
 			} catch {
 				Console.WriteLine ("StringSize_5: actualFontSize: {0} font: {1}", actualFontSize, f);

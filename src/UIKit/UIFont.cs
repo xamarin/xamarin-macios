@@ -12,6 +12,7 @@
 using System;
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace UIKit {
@@ -145,6 +146,15 @@ namespace UIKit {
 			return SystemFontOfSize (size, GetFontWeight (weight));
 		}
 
+		public static UIFont SystemFontOfSize (float size, UIFontWeight weight)
+		{
+#if NO_NFLOAT_OPERATORS
+			return SystemFontOfSize (new NFloat (size), GetFontWeight (weight));
+#else
+			return SystemFontOfSize ((nfloat) size, GetFontWeight (weight));
+#endif
+		}
+
 #if !NET
 		[iOS (9,0)]
 #endif
@@ -154,12 +164,29 @@ namespace UIKit {
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+		public static UIFont MonospacedDigitSystemFontOfSize (float size, float weight)
+		{
+#if NO_NFLOAT_OPERATORS
+			return MonospacedDigitSystemFontOfSize (new NFloat (size), new NFloat (weight));
+#else
+			return MonospacedDigitSystemFontOfSize ((nfloat) size, (nfloat) weight);
+#endif
+		}
 #if !NET
 		[iOS (9,0)]
 #endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat fontSize, UIFontWeight weight)
 		{
 			return MonospacedDigitSystemFontOfSize (fontSize, GetFontWeight (weight));
+		}
+
+		public static UIFont MonospacedDigitSystemFontOfSize (float fontSize, UIFontWeight weight)
+		{
+#if NO_NFLOAT_OPERATORS
+			return MonospacedDigitSystemFontOfSize (new NFloat (fontSize), GetFontWeight (weight));
+#else
+			return MonospacedDigitSystemFontOfSize ((nfloat) fontSize, GetFontWeight (weight));
+#endif
 		}
 
 #if !NET
@@ -175,12 +202,43 @@ namespace UIKit {
 		}
 
 #if !NET
+		[iOS (13,0), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
+		public static UIFont GetMonospacedSystemFont (float size, float weight)
+		{
+#if NO_NFLOAT_OPERATORS
+			return GetMonospacedSystemFont (new NFloat (size), new NFloat (weight));
+#else
+			return GetMonospacedSystemFont ((nfloat) size, (nfloat) weight);
+#endif
+		}
+
+#if !NET
 		[iOS(13,0), TV(13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 #endif
 		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, GetFontWeight (weight));
+
+#if !NET
+		[iOS(13,0), TV(13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#endif
+		public static UIFont GetMonospacedSystemFont (float size, UIFontWeight weight)
+		{
+#if NO_NFLOAT_OPERATORS
+			return GetMonospacedSystemFont (new NFloat (size), weight);
+#else
+			return GetMonospacedSystemFont ((nfloat) size, weight);
+#endif
+		}
+
 
 		// In this case we want to _always_ return a different managed instance
 		// so one can be disposed without affecting others
@@ -231,16 +289,43 @@ namespace UIKit {
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+		public static UIFont FromDescriptor (UIFontDescriptor descriptor, float pointSize)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromDescriptor (descriptor, new NFloat (pointSize));
+#else
+			return FromDescriptor (descriptor, (nfloat) pointSize);
+#endif
+		}
+
 		public static UIFont FromName (string name, nfloat size)
 		{
 			var ptr = _FromName (name, size);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+		public static UIFont FromName (string name, float size)
+		{
+#if NO_NFLOAT_OPERATORS
+			return FromName (name, new NFloat (size));
+#else
+			return FromName (name, (nfloat) size);
+#endif
+		}
+
 		public static UIFont SystemFontOfSize (nfloat size)
 		{
 			var ptr = _SystemFontOfSize (size);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+
+		public static UIFont SystemFontOfSize (float size)
+		{
+#if NO_NFLOAT_OPERATORS
+			return SystemFontOfSize (new NFloat (size));
+#else
+			return SystemFontOfSize ((nfloat) size);
+#endif
 		}
 
 #if !NET
@@ -252,10 +337,28 @@ namespace UIKit {
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+		public static UIFont SystemFontOfSize (float size, float weight)
+		{
+#if NO_NFLOAT_OPERATORS
+			return SystemFontOfSize (new NFloat (size), new NFloat (weight));
+#else
+			return SystemFontOfSize ((nfloat) size, (nfloat) weight);
+#endif
+		}
+
 		public static UIFont BoldSystemFontOfSize (nfloat size)
 		{
 			var ptr = _BoldSystemFontOfSize (size);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+
+		public static UIFont BoldSystemFontOfSize (float size)
+		{
+#if NO_NFLOAT_OPERATORS
+			return BoldSystemFontOfSize (new NFloat (size));
+#else
+			return BoldSystemFontOfSize ((nfloat) size);
+#endif
 		}
 
 		public static UIFont ItalicSystemFontOfSize (nfloat size)
@@ -264,10 +367,28 @@ namespace UIKit {
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+		public static UIFont ItalicSystemFontOfSize (float size)
+		{
+#if NO_NFLOAT_OPERATORS
+			return ItalicSystemFontOfSize (new NFloat (size));
+#else
+			return ItalicSystemFontOfSize ((nfloat) size);
+#endif
+		}
+
 		public virtual UIFont WithSize (nfloat size)
 		{
 			var ptr = _WithSize (size);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+
+		public UIFont WithSize (float size)
+		{
+#if NO_NFLOAT_OPERATORS
+			return WithSize (new NFloat (size));
+#else
+			return WithSize ((nfloat) size);
+#endif
 		}
 
 		public static bool operator == (UIFont f1, UIFont f2)

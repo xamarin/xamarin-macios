@@ -33,7 +33,11 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			AssertNotBrokenFontWithSize ();
 			var f1 = UIFont.SystemFontOfSize (10).WithSize (20);
+#if NO_NFLOAT_OPERATORS
+			Assert.AreEqual (f1.PointSize, new NFloat (20), "#size");
+#else
 			Assert.AreEqual (f1.PointSize, (nfloat) 20, "#size");
+#endif
 		}
 
 		[Test]

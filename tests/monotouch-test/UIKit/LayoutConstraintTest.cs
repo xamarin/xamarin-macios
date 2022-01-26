@@ -18,7 +18,11 @@ namespace MonoTouchFixtures.UIKit {
 		public void Create ()
 		{
 			using (var view = new UIView ()) {
+#if NO_NFLOAT_OPERATORS
+				NSLayoutConstraint.Create (view, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, new NFloat (1), new NFloat (5)).Dispose ();
+#else
 				NSLayoutConstraint.Create (view, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, 5).Dispose ();
+#endif
 			}
 		}
 

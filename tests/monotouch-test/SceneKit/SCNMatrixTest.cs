@@ -11,6 +11,10 @@
 
 #nullable enable
 
+#if !MONOMAC
+#define PFLOAT_SINGLE
+#endif
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -20,10 +24,6 @@ using SceneKit;
 using OpenTK;
 
 using NUnit.Framework;
-
-#if !MONOMAC
-#define PFLOAT_SINGLE
-#endif
 
 #if PFLOAT_SINGLE
 using pfloat = System.Single;

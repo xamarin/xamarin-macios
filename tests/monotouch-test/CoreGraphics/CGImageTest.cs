@@ -34,7 +34,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 #if MONOMAC
 			using (var ui = new NSImage (img, new CGSize (10, 10))) {
 #else
+#if NO_NFLOAT_OPERATORS
+			using (var ui = new UIImage (img, new NFloat (1.0f), UIImageOrientation.Up)) {
+#else
 			using (var ui = new UIImage (img, 1.0f, UIImageOrientation.Up)) {
+#endif
 #endif
 				Assert.IsNotNull (ui.CGImage, "CGImage");
 				if (TestRuntime.CheckXcodeVersion (7, 0))
