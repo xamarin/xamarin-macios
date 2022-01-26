@@ -102,7 +102,9 @@ namespace HomeKit {
 		[NoWatch]
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
 #endif
+#if (WATCH || TVOS)
 		[Obsolete ("This API is not available on this platform.")]
+#endif // WATCH || TVOS
 		public virtual void RemoveUser (HMUser user, Action<NSError> completion) {
 			throw new NotSupportedException ();
 		}
@@ -119,7 +121,9 @@ namespace HomeKit {
 		[NoWatch]
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
 #endif
+#if (WATCH || TVOS)
 		[Obsolete ("This API is not available on this platform.")]
+#endif // WATCH || TVOS
 		public virtual Task RemoveUserAsync (HMUser user) {
 			throw new NotSupportedException ();
 		}
