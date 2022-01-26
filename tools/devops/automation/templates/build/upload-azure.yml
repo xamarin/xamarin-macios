@@ -116,7 +116,6 @@ steps:
   continueOnError: true
 
 - powershell: |
-
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
 
@@ -214,6 +213,8 @@ steps:
     foreach ($n in $msi) {
       Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"
     }
+
+    Write-Host "##vso[task.setvariable variable=SBOM.PackagesPath]$pkgsPath"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
@@ -222,3 +223,107 @@ steps:
     ${{ if eq(parameters.enableDotnet, true) }}:
       ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'
+
+# Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator
+- powershell: |
+    $SBomStagingDirectory = "$(Build.ArtifactStagingDirectory)/SBomArtifacts"
+    Write-Host "Creating SBOM staging directory: ${SBomStagingDirectory}"
+
+    if (-not ([IO.Directory]::Exists($SBomStagingDirectory))) {
+      [IO.Directory]::CreateDirectory($SBomStagingDirectory)
+    }
+
+    $pkgsPath = "$(SBOM.PackagesPath)"
+    Write-Host "Packages path: ${pkgsPath}"
+
+    $files = [IO.Directory]::GetFiles($pkgsPath)
+    $files | foreach {
+      $filename = [IO.Path]::GetFileName($_)
+      $destPathAndFilename = [IO.Path]::Combine($SBomStagingDirectory, $filename)
+      Write-Host "Copying $_ to ${destPathAndFilename}"
+      [IO.File]::Copy($_, $destPathAndFilename)
+    }
+  displayName: 'SBOM: Staging'
+
+- powershell: |
+    function Get-Version([string] $Filename, [string] $RegexVersion) {
+      Write-Host "Get-Version: ${Filename}"
+      Write-Host "Get-Version: RegexVersion: ${RegexVersion}"
+
+      $version = [string]::Empty
+
+      # https://powershellexplained.com/2017-07-31-Powershell-regex-regular-expression/#net-regex
+      if ($Filename -match $RegexVersion) {
+        $version = $Matches.version
+      } else {
+        Write-Host "WARNING: Regex does not match filename: ${Filename}"
+      }
+
+      Write-Host "Get-Version: version: ${version}"
+
+      return $version
+    }
+
+    function Get-PackageFileNames([string] $PkgsPath) {
+      $files = [IO.Directory]::GetFiles($PkgsPath)
+      $pkgFiles = $files | Select-Object [IO.Path]::GetFileName($_)
+      return $pkgFiles
+    }
+
+    $pkgsPath = "$(SBOM.PackagesPath)"
+    Write-Host "Packages path: ${pkgsPath}"
+
+    $regexPackageVersion = '(?i)^xamarin-ios-(?<version>\d+\.\d+\.\d+\.\d+).pkg$'
+    Write-Host "Package version regular expression: ${regexPackageVersion}"
+
+    $packageFileNames = Get-PackageFileNames -PkgsPath $pkgsPath
+    Write-Host "Package files: $($packageFiles.Count)"
+
+    $packageFile = ($packageFileNames | Where-Object { $_ -match $regexPackageVersion } | Select-Object -First 1)
+    Write-Host "Package file matching regular expression: ${packageFile}"
+
+    $packageFile_version = [string]::Empty
+
+    if (-not ([string]::IsNullOrEmpty($regexPackageVersion)) -and -not ([string]::IsNullOrEmpty($packageFile))) {
+      Write-Host "packageFile as basis for product version: ${packageFile}"
+      $packageFile_version = Get-Version -Filename $packageFile -RegexVersion $regexPackageVersion
+    } else {
+      Write-Host "Skip getting version from package name. regexPackageVersion variable not set"
+    }
+
+    Write-Host "Setting SBOM.ProductName: Xamarin iOS"
+    Write-Host "##vso[task.setvariable variable=SBOM.ProductName]Xamarin iOS"         # SBOM generation only lets us use a single package name and so choose 'Xamarin iOS' instead of 'Xamarin Mac'
+
+    # Always set the SBOM.ProductVersion variable even if setting to empty so that the variable exists when used later
+    Write-Host "Setting SBOM.ProductVersion: ${packageFile_version}"
+    Write-Host "##vso[task.setvariable variable=SBOM.ProductVersion]$packageFile_version"
+  displayName: 'SBOM: Set ProductVersion'
+
+- task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+  displayName: 'SBOM: Generation'
+  inputs:
+    BuildDropPath: '$(Build.ArtifactStagingDirectory)/SBomArtifacts'
+    PackageName: '$(SBOM.ProductName)'
+    PackageVersion: '$(SBOM.ProductVersion)'
+    Verbosity: Verbose
+
+- powershell: |
+    # The pkg files are already included under the drop-x64 and drop-arm locations
+    # We only needed them temporarily here as a means to produce the Software Bill of Materials (SBOM) manifest
+    # No need to include the pkg files (and duplicate them) in the SBOM drop
+    $SBomStagingDirectory = "$(Build.ArtifactStagingDirectory)/SBomArtifacts"
+
+    # Delete all top-level package files. This should leave the SBOM '_manifest' directory intact
+    $pkgFiles = [IO.Directory]::GetFiles($SBomStagingDirectory)
+    $pkgFiles | foreach {
+      Write-Host "Deleting PKG: $_"
+      [IO.File]::Delete($_)
+    }
+  displayName: 'SBOM: Cleanup'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'SBOM: Publish'
+  inputs:
+    artifactName: sbom
+    pathToPublish: $(Build.ArtifactStagingDirectory)/SBomArtifacts
+  condition: succeeded()
