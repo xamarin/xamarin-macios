@@ -8,7 +8,13 @@ namespace CoreLocation {
 
 	public partial class CLBeaconRegion {
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
+#endif
 		static public CLBeaconRegion Create (NSUuid uuid, ushort? major, ushort? minor, string identifier)
 		{
 			var handle = IntPtr.Zero;
