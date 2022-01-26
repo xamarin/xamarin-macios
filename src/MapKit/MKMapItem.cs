@@ -21,11 +21,7 @@ namespace MapKit {
 	// to replace NSString fields
 	public enum MKDirectionsMode {
 		Driving, Walking, Transit,
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[iOS (10,0)][NoTV][Watch (3,0)][Mac (10,12)]
-#endif
 		Default
 	}
 	
@@ -43,9 +39,7 @@ namespace MapKit {
 
 #if !WATCH // The corresponding key (MKLaunchOptionsCameraKey) is allowed in WatchOS, but there's no MKMapCamera type.
 
-#if !NET
 		[iOS (7,0)]
-#endif
 		public MKMapCamera? Camera { get; set; }
 #endif
 
