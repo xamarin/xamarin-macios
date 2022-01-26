@@ -6,7 +6,15 @@ using ObjCRuntime;
 
 namespace FileProvider {
 
-	[NoiOS, NoMacCatalyst, Mac (12,0)]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoiOS]
+	[NoMacCatalyst]
+	[Mac (12,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSFileProviderTypeAndCreator
 	{
