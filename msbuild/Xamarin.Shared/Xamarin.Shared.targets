@@ -1734,6 +1734,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_ReadAppExtensionCodesignProperties;
 			_CodesignAppExtensions;
 			_PrepareCodesignAppExtension;
+			_CalculateCodesignAppBundleInputs;
 		</_CodesignAppBundleDependsOn>
 
 		<CoreCodesignDependsOn>
@@ -2021,6 +2022,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			IncludeMetadata="true"
 			Overwrite="true"
 		/>
+	</Target>
+
+	<Target Name="_CalculateCodesignAppBundleInputs" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
+		<ItemGroup>
+			<_CodesignAppBundleInputs Include="$(_AppBundlePath)**\*.*" Exclude="$(_AppCodeSignaturePath)_CodeSignature\CodeResources" />
+		</ItemGroup>
 	</Target>
 
 	<!-- LinkMode -->
@@ -2461,6 +2468,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppFrameworksRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\Frameworks\</_AppFrameworksRelativePath>
 			<_AppFrameworksRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">Frameworks\</_AppFrameworksRelativePath>
 			<_AppFrameworksPath>$(_AppBundlePath)$(_AppFrameworksRelativePath)</_AppFrameworksPath>
+
+			<_AppCodeSignatureRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\</_AppCodeSignatureRelativePath>
+			<_AppCodeSignatureRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'"></_AppCodeSignatureRelativePath>
+			<_AppCodeSignaturePath>$(_AppBundlePath)$(_AppCodeSignatureRelativePath)</_AppCodeSignaturePath>
 
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\PlugIns\</_AppPlugInsRelativePath>
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">PlugIns\</_AppPlugInsRelativePath>

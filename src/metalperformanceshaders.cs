@@ -2829,7 +2829,7 @@ namespace MetalPerformanceShaders {
 		[Export ("secondaryKernelHeight")]
 		nuint SecondaryKernelHeight { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		// Apple answered to radar://38054031 and said that these were exposed by mistake in an older release
 		// and got removed because they are useless and no developers could have used it before.
 		// Keeping stubs for binary compat.

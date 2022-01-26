@@ -29,6 +29,10 @@ parameters:
   type: boolean
   default: true
 
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
 steps:
 
 - checkout: self
@@ -38,12 +42,13 @@ steps:
 - template: download-artifacts.yml 
   parameters:
     runTests: ${{ parameters.runTests }}
+    enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 - ${{ if eq(parameters.runTests, true) }}:
   - pwsh: |
       Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
 
-      $apiDiffRoot = "$Env:STABLE_APIDDIFF_PATH"
+      $apiDiffRoot = "$Env:STABLE_APIDIFF_PATH"
       $filePatterns = @{
         "iOS" = "^ios-[0-9\-]*\.md$";
         "macOS" = "^macos-[0-9\-]*\.md$";

@@ -776,7 +776,7 @@ namespace PassKit {
 		[Export ("initWithRequestConfiguration:delegate:")]
 		NativeHandle Constructor (PKAddPaymentPassRequestConfiguration configuration, [NullAllowed] IPKAddPaymentPassViewControllerDelegate viewControllerDelegate);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload accepting a IPKAddPaymentPassViewControllerDelegate")]
 		[Wrap ("this (configuration, (IPKAddPaymentPassViewControllerDelegate) viewControllerDelegate)")]
 		NativeHandle Constructor (PKAddPaymentPassRequestConfiguration configuration, PKAddPaymentPassViewControllerDelegate viewControllerDelegate);
@@ -850,7 +850,7 @@ namespace PassKit {
 		[Export ("localizedValueForFieldKey:")]
 		NSObject GetLocalizedValue (NSString key); // TODO: Should be enum for PKPassLibraryUserInfoKey
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !NET && !MONOMAC
 		[Field ("PKPassKitErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -1275,7 +1275,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (3,1), iOS (10,1)]
-#if XAMCORE_4_0 || MONOMAC
+#if NET || MONOMAC
 	[DisableDefaultCtor] // hint: getter only props and a factory method.
 #endif
 	[BaseType (typeof (PKTransitPassProperties))]
