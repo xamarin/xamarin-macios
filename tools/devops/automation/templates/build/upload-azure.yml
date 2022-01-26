@@ -214,6 +214,7 @@ steps:
       Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"
     }
 
+    Write-Host "Setting SBOM.PackagesPath: ${pkgsPath}"
     Write-Host "##vso[task.setvariable variable=SBOM.PackagesPath]$pkgsPath"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
