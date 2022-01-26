@@ -7,7 +7,13 @@ namespace HomeKit {
 
 	partial class HMActionSet {
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
 		[iOS (9,0)]
+#endif
 		public HMActionSetType ActionSetType {
 			get {
 				var s = _ActionSetType;

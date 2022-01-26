@@ -4,8 +4,13 @@ using Foundation;
 
 namespace HomeKit {
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
+#endif
 	public class HMCharacteristicProperties {
 
 		public bool SupportsChangeNumber { get; set; }

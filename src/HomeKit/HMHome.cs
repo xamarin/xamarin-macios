@@ -7,8 +7,13 @@ using System.Runtime.Versioning;
 
 namespace HomeKit {
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
+#endif
 	public partial class HMHome
 	{
 		public HMService [] GetServices (HMServiceType serviceTypes) 
@@ -85,19 +90,36 @@ namespace HomeKit {
 
 #if !XAMCORE_4_0
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#if IOS
+		[Obsolete ("Starting with ios9.0 this API in now prohibited on iOS. Use 'ManageUsers' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[NoTV]
 		[NoWatch]
-		[Obsolete ("This API is not available on this platform.")]
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+#endif
+		[Obsolete ("This API is not available on this platform.")]
 		public virtual void RemoveUser (HMUser user, Action<NSError> completion) {
 			throw new NotSupportedException ();
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#if IOS
+		[Obsolete ("Starting with ios9.0 this API in now prohibited on iOS. Use 'ManageUsers' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[NoTV]
 		[NoWatch]
-
-		[Obsolete ("This API is not available on this platform.")]
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+#endif
+		[Obsolete ("This API is not available on this platform.")]
 		public virtual Task RemoveUserAsync (HMUser user) {
 			throw new NotSupportedException ();
 		}
