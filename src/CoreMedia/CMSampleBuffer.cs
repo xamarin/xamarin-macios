@@ -747,7 +747,7 @@ namespace CoreMedia {
 			if (sampleTiming is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleTiming));
 			if (sampleTiming.Length != 1)
-				ObjCRuntime.ThrowHelper.ThrowArgumentException ("Only a single sample is allowed.", nameof (sampleTiming));
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sampleTiming), "Only a single sample is allowed.");
 			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
 		}
 #endif // !WATCH

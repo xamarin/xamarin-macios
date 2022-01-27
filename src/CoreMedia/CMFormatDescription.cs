@@ -492,7 +492,7 @@ namespace CoreMedia {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterSets));
 
 			if (parameterSets.Count < 3)
-				ObjCRuntime.ThrowHelper.ThrowArgumentException ("must contain at least three elements", nameof (parameterSets));
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (parameterSets), "must contain at least three elements");
 
 			if (nalUnitHeaderLength != 1 && nalUnitHeaderLength != 2 && nalUnitHeaderLength != 4)
 				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
