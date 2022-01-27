@@ -72,6 +72,7 @@ namespace Chip {
 		Int32,
 	}
 
+
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPDevice")]
 	[DisableDefaultCtor]
@@ -2554,6 +2555,7 @@ namespace Chip {
 		ChipOptionalQRCodeInfo[] GetAllOptionalVendorData ([NullAllowed] out NSError error);
 	}
 
+	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(NSObject), Name="CHIPThreadOperationalDataset")]
 	[DisableDefaultCtor]
 	interface ChipThreadOperationalDataset
