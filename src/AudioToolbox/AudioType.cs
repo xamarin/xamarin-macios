@@ -1190,7 +1190,7 @@ namespace AudioToolbox {
 
 	public enum SmpteTimeType : uint // UInt32 in AudioFileRegionList
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Value is not to be used with any API.")]
 		None          = uint.MaxValue,
 #endif
