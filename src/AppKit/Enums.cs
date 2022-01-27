@@ -100,7 +100,7 @@ namespace AppKit {
 		Cancelled, Success, Failure, ReplyLater
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Native]
 	public enum NSApplicationLayoutDirection : long {
@@ -250,7 +250,7 @@ namespace AppKit {
 	
 #region NSCell Defines 
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use formatters instead.")]
@@ -1262,7 +1262,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	public enum NSStackViewVisibilityPriority : int {
 		MustHold = 1000,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'MustHold' instead.")]
 		Musthold = MustHold,
 #endif
@@ -1523,7 +1523,7 @@ namespace AppKit {
 	}
 #endif // !NET
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use NSTextStorageEditActions instead.")]
 	[Flags]
@@ -1724,7 +1724,7 @@ namespace AppKit {
 	}
 #endif // !NET
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSModalResponse instead.")]
 	[Native]
@@ -1825,7 +1825,7 @@ namespace AppKit {
 	[Native]
 	public enum NSSpeechBoundary : ulong {
 		Immediate =  0,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Word' instead.")]
 		hWord,
 #endif
@@ -2121,7 +2121,7 @@ namespace AppKit {
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
 		TripleBuffer = 3,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TripleBuffer' instead.")]
 		TrippleBuffer = TripleBuffer,
 #endif
@@ -2299,7 +2299,7 @@ namespace AppKit {
 		GenericPreferencesIcon        = 0x70726566,   //'pref'
 		GenericQueryDocumentIcon      = 0x71657279,   //'qery'
 		GenericRamDiskIcon            = 0x72616D64,   //'ramd'
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GenericSharedLibraryIcon' instead.")]
 		GenericSharedLibaryIcon       = 0x73686C62,   //'shlb'
 #endif
@@ -2751,7 +2751,7 @@ namespace AppKit {
 	public enum NSWindowTitleVisibility : long {
 		Visible = 0,
 		Hidden = 1,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This API is not available on this platform.")]
 		HiddenWhenActive = 2,
 #endif

@@ -165,11 +165,16 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSAnimationDelegate)})]
 	interface NSAnimation : NSCoding, NSCopying {
+#if NET
+		[DesignatedInitializer]
+#endif
 		[Export ("initWithDuration:animationCurve:")]
+#if !NET
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		NativeHandle Constructor (double duration, NSAnimationCurve animationCurve);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the constructor instead.")]
 		[Export ("initWithDuration:animationCurve:")]
 		IntPtr Constant (double duration, NSAnimationCurve animationCurve);
@@ -603,7 +608,7 @@ namespace AppKit {
 		[Export ("nextEventMatchingMask:untilDate:inMode:dequeue:"), Protected]
 		NSEvent NextEvent (NSEventMask mask, [NullAllowed] NSDate expiration, NSString runLoopMode, bool deqFlag);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NextEvent (NSEventMask, NSDate, [NSRunLoopMode|NSString], bool)' overloads instead.")]
 		[Wrap ("NextEvent ((NSEventMask) (ulong) mask, expiration, (NSString) mode, deqFlag)", IsVirtual = true), Protected]
 		NSEvent NextEvent (nuint mask, NSDate expiration, string mode, bool deqFlag);
@@ -638,7 +643,7 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use EnumerateWindows instead.")]
 		NSWindow MakeWindowsPerform (Selector aSelector, bool inOrder);
 	
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Remove usage or use 'DangerousWindows' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Wrap ("DangerousWindows", IsVirtual = true)] 
@@ -740,7 +745,7 @@ namespace AppKit {
 		NSObject ServicesProvider { get; set; }
 	
 		[Export ("userInterfaceLayoutDirection")]
-#if !XAMCORE_4_0
+#if !NET
 		NSApplicationLayoutDirection UserInterfaceLayoutDirection { get; }
 #else
 		NSUserInterfaceLayoutDirection UserInterfaceLayoutDirection { get; }
@@ -855,16 +860,7 @@ namespace AppKit {
 		[Export ("completeStateRestoration")]
 		void CompleteStateRestoration ();
 
-#if XAMCORE_4_0
-		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
-		void RegisterServicesMenu (string [] sendTypes, string [] returnTypes);
-
-		[Export ("orderFrontStandardAboutPanel:")]
-		void OrderFrontStandardAboutPanel (NSObject sender);
-
-		[Export ("orderFrontStandardAboutPanelWithOptions:")]
-		void OrderFrontStandardAboutPanelWithOptions (NSDictionary optionsDictionary);
-#else
+#if !NET
 		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
 		void RegisterServicesMenu2 (string [] sendTypes, string [] returnTypes);
 
@@ -882,6 +878,29 @@ namespace AppKit {
 		[Mac (12,0)]
 		[Export ("protectedDataAvailable")]
 		bool ProtectedDataAvailable { [Bind ("isProtectedDataAvailable")] get; }
+	}
+
+	[NoMacCatalyst]
+	[Category]
+	[BaseType (typeof(NSApplication))]
+	interface NSApplication_NSServicesMenu {
+		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
+		void RegisterServicesMenu (string [] sendTypes, string [] returnTypes);
+	}
+
+	[NoMacCatalyst]
+	[Category]
+	[BaseType (typeof(NSApplication))]
+	interface NSApplication_NSStandardAboutPanel {
+		[Export ("orderFrontStandardAboutPanel:")]
+		void OrderFrontStandardAboutPanel ([NullAllowed] NSObject sender);
+
+		[Export ("orderFrontStandardAboutPanelWithOptions:")]
+#if XAMCORE_5_0
+		void OrderFrontStandardAboutPanelWithOptions (NSDictionary<NSAboutPanelOption, NSObject> optionsDictionary);
+#else
+		void OrderFrontStandardAboutPanelWithOptions (NSDictionary optionsDictionary);
+#endif
 	}
 
 	[NoMacCatalyst]
@@ -1002,7 +1021,7 @@ namespace AppKit {
 		[Export ("applicationDidChangeScreenParameters:"), EventArgs ("NSNotification")]
 		void ScreenParametersChanged (NSNotification notification);
 
-#if !XAMCORE_4_0 // Needs to move from delegate in next API break
+#if !NET // Needs to move from delegate in next API break
 		[Obsolete ("Use the 'RegisterServicesMenu2' on NSApplication.")]
 		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
 		void RegisterServicesMenu (string [] sendTypes, string [] returnTypes);
@@ -2053,10 +2072,18 @@ namespace AppKit {
 		//NSImage DraggingImageForRowsWithIndexes (NSBrowser browser, NSIndexSet rowIndexes, int column, NSEvent theEvent, NSPointPointer dragImageOffset);
 
 		[Export ("browser:validateDrop:proposedRow:column:dropOperation:")]
+#if NET
+		NSDragOperation ValidateDrop (NSBrowser browser, INSDraggingInfo info, ref nint row, ref nint column, ref NSBrowserDropOperation dropOperation);
+#else
 		NSDragOperation ValidateDrop (NSBrowser browser, [Protocolize (4)] NSDraggingInfo info, ref nint row, ref nint column, ref NSBrowserDropOperation dropOperation);
+#endif
 
 		[Export ("browser:acceptDrop:atRow:column:dropOperation:")]
+#if NET
+		bool AcceptDrop (NSBrowser browser, INSDraggingInfo info, nint row, nint column, NSBrowserDropOperation dropOperation);
+#else
 		bool AcceptDrop (NSBrowser browser, [Protocolize (4)] NSDraggingInfo info, nint row, nint column, NSBrowserDropOperation dropOperation);
+#endif
 
 		[return: NullAllowed]
 		[Export ("browser:typeSelectStringForRow:inColumn:")]
@@ -3176,10 +3203,18 @@ namespace AppKit {
 		//NSImage DraggingImageForItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evg, NSPointPointer dragImageOffset);
 
 		[Export ("collectionView:validateDrop:proposedIndex:dropOperation:")]
+#if NET
+		NSDragOperation ValidateDrop (NSCollectionView collectionView, INSDraggingInfo draggingInfo, ref nint dropIndex, ref NSCollectionViewDropOperation dropOperation);
+#else
 		NSDragOperation ValidateDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, ref nint dropIndex, ref NSCollectionViewDropOperation dropOperation);
+#endif
 
 		[Export ("collectionView:acceptDrop:index:dropOperation:")]
+#if NET
+		bool AcceptDrop (NSCollectionView collectionView, INSDraggingInfo draggingInfo, nint index, NSCollectionViewDropOperation dropOperation);
+#else
 		bool AcceptDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, nint index, NSCollectionViewDropOperation dropOperation);
+#endif
 
 		[Mac (10,11)]
 		[Export ("collectionView:canDragItemsAtIndexPaths:withEvent:")]
@@ -3199,7 +3234,7 @@ namespace AppKit {
 		[Export ("collectionView:draggingImageForItemsAtIndexPaths:withEvent:offset:")]
 		NSImage GetDraggingImage (NSCollectionView collectionView, NSSet indexPaths, NSEvent theEvent, ref CGPoint dragImageOffset);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Mac (10,11)]
 		[Export ("collectionView:validateDrop:proposedIndexPath:dropOperation:")]
 		NSDragOperation ValidateDropOperation (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation);
@@ -3211,7 +3246,11 @@ namespace AppKit {
 
 		[Mac (10,11)]
 		[Export ("collectionView:acceptDrop:indexPath:dropOperation:")]
+#if NET
+		bool AcceptDrop (NSCollectionView collectionView, INSDraggingInfo draggingInfo, NSIndexPath indexPath, NSCollectionViewDropOperation dropOperation);
+#else
 		bool AcceptDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, NSIndexPath indexPath, NSCollectionViewDropOperation dropOperation);
+#endif
 
 		[Mac (10,11)]
 		[Export ("collectionView:pasteboardWriterForItemAtIndexPath:")]
@@ -3676,7 +3715,7 @@ namespace AppKit {
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewTransitionLayout
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the constructor that allows you to set currentLayout and newLayout.")]
 		[Export ("init")]
 		NativeHandle Constructor ();
@@ -4947,7 +4986,7 @@ namespace AppKit {
 		NSFont Font { get; set; }
 
 		[Export ("formatter", ArgumentSemantic.Retain), NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		NSFormatter Formatter { get; set; }
 #else
 		NSObject Formatter { get; set; }
@@ -5075,7 +5114,7 @@ namespace AppKit {
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSController : NSCoding, NSEditorRegistration 
-#if XAMCORE_4_0
+#if NET
 	, NSEditor // Conflict over if CommitEditing is a property or a method. NSViewController has it right so can't "fix" NSEditor to match existing API
 #endif
 	{
@@ -5083,9 +5122,13 @@ namespace AppKit {
 		void DiscardEditing ();
 
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
+#if NET
+		void CommitEditing ([NullAllowed] NSObject delegate1, [NullAllowed] Selector didCommitSelector, IntPtr contextInfo);
+#else
 		void CommitEditingWithDelegate ([NullAllowed] NSObject delegate1, [NullAllowed] Selector didCommitSelector, IntPtr contextInfo);
+#endif
 
-#if XAMCORE_4_0
+#if NET
 		[Export ("objectDidBeginEditing:")]
 		void ObjectDidBeginEditing (INSEditor editor);
 
@@ -5100,7 +5143,11 @@ namespace AppKit {
 #endif
 
 		[Export ("commitEditing")]
+#if NET
+		bool CommitEditing ();
+#else
 		bool CommitEditing { get; }
+#endif
 
 		[Export ("isEditing")]
 		bool IsEditing { get; }
@@ -5704,7 +5751,7 @@ namespace AppKit {
 
 		// Found in NSUserInterfaceValidations protocol with INSValidatedUserInterfaceItem param but bound originally with NSObject
 		// Adding protocol gave warning 0108 which is unfixable without API break 
-#if XAMCORE_4_0
+#if NET
 		[Export ("validateUserInterfaceItem:")]
 		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem anItem);
 #else
@@ -5990,7 +6037,7 @@ namespace AppKit {
 
 		// Found in NSUserInterfaceValidations protocol with INSValidatedUserInterfaceItem param but bound originally with NSObject
 		// Adding protocol gave warning 0108 which is unfixable without API break 
-#if XAMCORE_4_0
+#if NET
 		[Export ("validateUserInterfaceItem:")]
 		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem anItem);
 #else
@@ -6063,7 +6110,7 @@ namespace AppKit {
 	}
 	
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
+#if !NET
 	[BaseType (typeof (NSObject))]
 #endif
 	[Protocol] // Apple docs say: "you never need to create a class that implements the NSDraggingInfo protocol.", so don't add [Model]
@@ -6170,31 +6217,61 @@ namespace AppKit {
 		void ResetSpringLoading ();
 	}
 
+	interface INSDraggingInfo { }
+
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
 	interface NSDraggingDestination {
 		[Export ("draggingEntered:"), DefaultValue (NSDragOperation.None)]
+#if NET
+		NSDragOperation DraggingEntered (INSDraggingInfo sender);
+#else
 		NSDragOperation DraggingEntered ([Protocolize (4)] NSDraggingInfo sender);
+#endif
 
 		[Export ("draggingUpdated:"), DefaultValue (NSDragOperation.None)]
+#if NET
+		NSDragOperation DraggingUpdated (INSDraggingInfo sender);
+#else
 		NSDragOperation DraggingUpdated ([Protocolize (4)] NSDraggingInfo sender);
+#endif
 
 		[Export ("draggingExited:")]
+#if NET
+		void DraggingExited ([NullAllowed] INSDraggingInfo sender);
+#else
 		void DraggingExited ([Protocolize (4)] NSDraggingInfo sender);
+#endif
 
 		[Export ("prepareForDragOperation:"), DefaultValue (false)]
+#if NET
+		bool PrepareForDragOperation (INSDraggingInfo sender);
+#else
 		bool PrepareForDragOperation ([Protocolize (4)] NSDraggingInfo sender);
+#endif
 
 		[Export ("performDragOperation:"), DefaultValue (false)]
+#if NET
+		bool PerformDragOperation (INSDraggingInfo sender);
+#else
 		bool PerformDragOperation ([Protocolize (4)] NSDraggingInfo sender);
+#endif
 
 		[Export ("concludeDragOperation:")]
+#if NET
+		void ConcludeDragOperation ([NullAllowed] INSDraggingInfo sender);
+#else
 		void ConcludeDragOperation ([Protocolize (4)] NSDraggingInfo sender);
+#endif
 
 		[Export ("draggingEnded:")]
+#if NET
+		void DraggingEnded (INSDraggingInfo sender);
+#else
 		void DraggingEnded ([Protocolize (4)] NSDraggingInfo sender);
+#endif
 
 		[DebuggerBrowsableAttribute (DebuggerBrowsableState.Never)]
 		[Export ("wantsPeriodicDraggingUpdates"), DefaultValue (true)]
@@ -7419,7 +7496,7 @@ namespace AppKit {
 		[Export ("gridViewWithNumberOfColumns:rows:")]
 		NSGridView Create (nint columnCount, nint rowCount);
 		
-#if !XAMCORE_4_0
+#if !NET
 		[Static]
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[Obsolete ("You should use either 'NSGridView.Create(NSView [][] rowsAndColumns)' or 'NSGridView.Create(NSView [,] rowsAndColumns)'.")]
@@ -8198,7 +8275,7 @@ namespace AppKit {
 		[Export ("itemArray", ArgumentSemantic.Copy)]
 		NSMenuItem[] Items { get; [Mac (10, 14)] set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Items' instead.")]
 		[Wrap ("Items", IsVirtual = true)]
 		NSMenuItem [] ItemArray ();
@@ -9005,7 +9082,7 @@ namespace AppKit {
 		nint RunModal (string [] types);
 	}
 
-#if !XAMCORE_4_0 && !__MACCATALYST__
+#if !NET && !__MACCATALYST__
 	// This class doesn't show up in any documentation
 	[BaseType (typeof (NSOpenPanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
@@ -9308,10 +9385,18 @@ namespace AppKit {
 		bool OutlineViewwriteItemstoPasteboard (NSOutlineView outlineView, NSArray items, NSPasteboard pboard);
 	
 		[Export ("outlineView:validateDrop:proposedItem:proposedChildIndex:")]
+#if NET
+		NSDragOperation ValidateDrop (NSOutlineView outlineView, INSDraggingInfo info, [NullAllowed] NSObject item, nint index);
+#else
 		NSDragOperation ValidateDrop (NSOutlineView outlineView, [Protocolize (4)] NSDraggingInfo info, [NullAllowed] NSObject item, nint index);
+#endif
 	
 		[Export ("outlineView:acceptDrop:item:childIndex:")]
+#if NET
+		bool AcceptDrop (NSOutlineView outlineView, INSDraggingInfo info, [NullAllowed] NSObject item, nint index);
+#else
 		bool AcceptDrop (NSOutlineView outlineView, [Protocolize (4)] NSDraggingInfo info, [NullAllowed] NSObject item, nint index);
+#endif
 	
 		[Export ("outlineView:namesOfPromisedFilesDroppedAtDestination:forDraggedItems:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
@@ -11288,8 +11373,12 @@ namespace AppKit {
 	}
 	
 	[NoMacCatalyst]
+#if !NET
+	// A class that implements only NSPasteboardWriting does not make sense, it's
+	// used to add pasteboard support to existing classes.
 	[BaseType (typeof (NSObject))]
 	[Model]
+#endif
 	[Protocol]
 	interface NSPasteboardWriting {
 #if NET
@@ -11359,8 +11448,8 @@ namespace AppKit {
 	interface INSPasteboardWriting {}
 
 	[NoMacCatalyst]
+#if !NET
 	[BaseType (typeof (NSObject))]
-#if !XAMCORE_4_0
 	// A class that implements only NSPasteboardReading does not make sense, it's
 	// used to add pasteboard support to existing classes.
 	[Model]
@@ -11557,10 +11646,18 @@ namespace AppKit {
 		bool ShouldDragPathComponentCell (NSPathControl pathControl, NSPathComponentCell pathComponentCell, NSPasteboard pasteboard);
 
 		[Export ("pathControl:validateDrop:")]
+#if NET
+		NSDragOperation ValidateDrop (NSPathControl pathControl, INSDraggingInfo info);
+#else
 		NSDragOperation ValidateDrop (NSPathControl pathControl, [Protocolize (4)] NSDraggingInfo info);
+#endif
 
 		[Export ("pathControl:acceptDrop:")]
+#if NET
+		bool AcceptDrop (NSPathControl pathControl, INSDraggingInfo info);
+#else
 		bool AcceptDrop (NSPathControl pathControl, [Protocolize (4)] NSDraggingInfo info);
+#endif
 
 		[Export ("pathControl:willDisplayOpenPanel:")]
 		void WillDisplayOpenPanel (NSPathControl pathControl, NSOpenPanel openPanel);
@@ -12027,19 +12124,19 @@ namespace AppKit {
 		[Export ("printSettings")]
 		NSMutableDictionary PrintSettings { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Internal]
 #endif
 		[Export ("PMPrintSession")]
 		IntPtr GetPMPrintSession ();
 
-#if XAMCORE_4_0
+#if NET
 		[Internal]
 #endif
 		[Export ("PMPageFormat")]
 		IntPtr GetPMPageFormat ();
 
-#if XAMCORE_4_0
+#if NET
 		[Internal]
 #endif
 		[Export ("PMPrintSettings")]
@@ -13102,7 +13199,7 @@ namespace AppKit {
 		
 	}
 
-#if !XAMCORE_4_0 && !__MACCATALYST__
+#if !NET && !__MACCATALYST__
 	// This class doesn't show up in any documentation.
 	[BaseType (typeof (NSSavePanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
@@ -13874,12 +13971,11 @@ namespace AppKit {
 
 		[Export ("vertical")]
 		// Radar 27222357
-#if XAMCORE_4_0
-		bool
+#if NET
+		bool IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 #else
-		nint
+		nint IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 #endif
-		IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 
 		[Export ("acceptsFirstMouse:")]
 		bool AcceptsFirstMouse (NSEvent theEvent);
@@ -13976,12 +14072,11 @@ namespace AppKit {
 
 		[Export ("vertical")]
 		// Radar 27222357
-#if XAMCORE_4_0
-		bool
+#if NET
+		bool IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 #else
-		nint
+		nint IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 #endif
-		IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 
 		[Export ("knobRectFlipped:")]
 		CGRect KnobRectFlipped (bool flipped);
@@ -14431,7 +14526,7 @@ namespace AppKit {
 		bool IsAutomaticTextCompletionEnabled { get; }
 
 		[Mac (10,12,2)]
-#if XAMCORE_4_0
+#if NET
 		[Async (ResultTypeName="NSSpellCheckerCandidates")]
 #else
 		[Async (ResultTypeName="NSSpellCheckerCanidates")]
@@ -14798,23 +14893,47 @@ namespace AppKit {
 	{
 		[Abstract]
 		[Export ("springLoadingActivated:draggingInfo:")]
+#if NET
+		void Activated (bool activated, INSDraggingInfo draggingInfo);
+#else
 		void Activated (bool activated, [Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 
 		[Abstract]
 		[Export ("springLoadingHighlightChanged:")]
+#if NET
+		void HighlightChanged (INSDraggingInfo draggingInfo);
+#else
 		void HighlightChanged ([Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 
 		[Export ("springLoadingEntered:")]
+#if NET
+		NSSpringLoadingOptions Entered (INSDraggingInfo draggingInfo);
+#else
 		NSSpringLoadingOptions Entered ([Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 
 		[Export ("springLoadingUpdated:")]
+#if NET
+		NSSpringLoadingOptions Updated (INSDraggingInfo draggingInfo);
+#else
 		NSSpringLoadingOptions Updated ([Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 
 		[Export ("springLoadingExited:")]
+#if NET
+		void Exited (INSDraggingInfo draggingInfo);
+#else
 		void Exited ([Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 
 		[Export ("draggingEnded:")]
+#if NET
+		void DraggingEnded (INSDraggingInfo draggingInfo);
+#else
 		void DraggingEnded ([Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 	}
 
 	[Mac (10,9)]
@@ -15869,13 +15988,17 @@ namespace AppKit {
 		NSMenu DefaultMenu ();
 
 		[Export ("addToolTipRect:owner:userData:")]
-#if !XAMCORE_4_0
+#if !NET
 		nint AddToolTip (CGRect rect, NSObject owner, IntPtr userData);
 #else
 		nint AddToolTip (CGRect rect, INSToolTipOwner owner, IntPtr userData);
 #endif
 
+#if NET
+		[Wrap ("AddToolTip (rect, owner, IntPtr.Zero)")]
+#else
 		[Wrap ("AddToolTip (rect, (NSObject)owner, IntPtr.Zero)")]
+#endif
 		nint AddToolTip (CGRect rect, INSToolTipOwner owner);
 
 		[Export ("removeToolTip:")]
@@ -17430,10 +17553,18 @@ namespace AppKit {
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
+#if NET
+		NSDragOperation ValidateDrop (NSTableView tableView, INSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#else
 		NSDragOperation ValidateDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#endif
 	
 		[Export ("tableView:acceptDrop:row:dropOperation:")]
+#if NET
+		bool AcceptDrop (NSTableView tableView, INSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#else
 		bool AcceptDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#endif
 	
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' instead.")]
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
@@ -17449,7 +17580,11 @@ namespace AppKit {
 		void DraggingSessionEnded (NSTableView tableView, NSDraggingSession draggingSession, CGPoint endedAtScreenPoint, NSDragOperation operation);
 
 		[Export ("tableView:updateDraggingItemsForDrag:")]
+#if NET
+		void UpdateDraggingItems (NSTableView tableView, INSDraggingInfo draggingInfo);
+#else
 		void UpdateDraggingItems (NSTableView tableView, [Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 	}
 
 	//
@@ -17553,10 +17688,18 @@ namespace AppKit {
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
+#if NET
+		NSDragOperation ValidateDrop (NSTableView tableView, INSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#else
 		NSDragOperation ValidateDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#endif
 	
 		[Export ("tableView:acceptDrop:row:dropOperation:")]
+#if NET
+		bool AcceptDrop (NSTableView tableView, INSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#else
 		bool AcceptDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
+#endif
 	
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
@@ -17584,7 +17727,11 @@ namespace AppKit {
 		void DraggingSessionEnded (NSTableView tableView, NSDraggingSession draggingSession, CGPoint endedAtScreenPoint, NSDragOperation operation);
 
 		[Export ("tableView:updateDraggingItemsForDrag:")]
+#if NET
+		void UpdateDraggingItems (NSTableView tableView, INSDraggingInfo draggingInfo);
+#else
 		void UpdateDraggingItems (NSTableView tableView, [Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 	}
 	
 	[NoMacCatalyst]
@@ -17689,7 +17836,7 @@ namespace AppKit {
 		[Export ("tabViewType")]
 		NSTabViewType TabViewType { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Export ("tabViewItems")]
 		NSTabViewItem [] Items { get; [Mac (10, 14)] set; }
 #else
@@ -17773,7 +17920,7 @@ namespace AppKit {
 		[Export ("tabView", ArgumentSemantic.Strong)]
 		NSTabView TabView { get; set; }
 
-#if !XAMCORE_4_0 && MONOMAC
+#if !NET && MONOMAC
 		// This property does not exist in any stable header - it was probably added in a beta and then removed.
 		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Do not use; this API was removed.")]
 		[Export ("segmentedControl", ArgumentSemantic.Strong)]
@@ -18606,20 +18753,26 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
 		[Export ("initWithMarkerFormat:options:")]
-		NativeHandle Constructor (
-#if XAMCORE_4_0
-		[BindAs (typeof (NSTextListMarkerFormats))] 
+#if NET
+		NativeHandle Constructor ([BindAs (typeof (NSTextListMarkerFormats))] NSString format, NSTextListOptions mask);
+#else
+		NativeHandle Constructor (string format, NSTextListOptions mask);
 #endif
-		string format, NSTextListOptions mask);
 
+#if !NET
 		[Wrap ("this (format.GetConstant(), mask)")]
 		NativeHandle Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
+#endif
 
-#if XAMCORE_4_0
+#if NET
 		[BindAs (typeof (NSTextListMarkerFormats))] 
 #endif
 		[Export ("markerFormat")]
+#if NET
+		NSString MarkerFormat { get; }
+#else
 		string MarkerFormat { get; }
+#endif
 
 		[Export ("listOptions")]
 		NSTextListOptions ListOptions { get; }
@@ -19049,7 +19202,11 @@ namespace AppKit {
 		string [] AcceptableDragTypes ();
 
 		[Export ("dragOperationForDraggingInfo:type:")]
+#if NET
+		NSDragOperation DragOperationForDraggingInfo (INSDraggingInfo dragInfo, string type);
+#else
 		NSDragOperation DragOperationForDraggingInfo ([Protocolize (4)] NSDraggingInfo dragInfo, string type);
+#endif
 
 		[Export ("cleanUpAfterDragOperation")]
 		void CleanUpAfterDragOperation ();
@@ -19230,7 +19387,7 @@ namespace AppKit {
 		[Export ("toggleSmartInsertDelete:")]
 		void ToggleSmartInsertDelete (NSObject sender);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'SmartInsert(string, NSRange, out string, out string)' overload instead.")]
 		[Wrap ("throw new NotSupportedException ()", IsVirtual = true)]
 		void SmartInsert (string pasteString, NSRange charRangeToReplace, string beforeString, string afterString);
@@ -20175,7 +20332,7 @@ namespace AppKit {
 		void RearrangeObjects ();
 
 		[Export ("arrangedObjects")]
-#if XAMCORE_4_0
+#if NET
 		NSTreeNode ArrangedObjects { get; }
 #else
 		NSObject ArrangedObjects { get; }
@@ -21165,7 +21322,7 @@ namespace AppKit {
 		[Mac (10,9)]
 		[Export ("endSheet:returnCode:")]
 		void EndSheet (NSWindow sheetWindow, NSModalResponse returnCode);
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the EndSheet(NSWindow,NSModalResponse) overload.")]
 		[Mac (10,9)]
 		[Wrap ("EndSheet (sheetWindow, (NSModalResponse)(long)returnCode)", IsVirtual = true)]
@@ -22752,7 +22909,11 @@ namespace AppKit {
 		INSPasteboardWriting PasteboardWriterForItem (NSCollectionView collectionView, nuint index);
 
 		[Export ("collectionView:updateDraggingItemsForDrag:")]
+#if NET
+		void UpdateDraggingItemsForDrag (NSCollectionView collectionView, INSDraggingInfo draggingInfo);
+#else
 		void UpdateDraggingItemsForDrag (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 
 		[Export ("collectionView:draggingSession:willBeginAtPoint:forItemsAtIndexes:")]
 		void DraggingSessionWillBegin (NSCollectionView collectionView, NSDraggingSession draggingSession,
@@ -22889,7 +23050,11 @@ namespace AppKit {
 
 		// - (void)outlineView:(NSOutlineView *)outlineView updateDraggingItemsForDrag:(id <NSDraggingInfo>)draggingInfo NS_AVAILABLE_MAC(10_7);
 		[Export ("outlineView:updateDraggingItemsForDrag:")]
+#if NET
+		void UpdateDraggingItemsForDrag (NSOutlineView outlineView, INSDraggingInfo draggingInfo);
+#else
 		void UpdateDraggingItemsForDrag (NSOutlineView outlineView, [Protocolize (4)] NSDraggingInfo draggingInfo);
+#endif
 	}
 
 	interface NSWindowExposeEventArgs {
@@ -22976,7 +23141,9 @@ namespace AppKit {
 		NSPrintRenderingQuality PreferredRenderingQuality { get; }
 	}
 
-#if !XAMCORE_4_0
+#if !NET
+	// This category is implemented directly on the NSResponder class instead.
+	// Ref: https://github.com/xamarin/xamarin-macios/issues/4837
 	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSResponder))]
  	partial interface NSControlEditingSupport {
@@ -22999,7 +23166,8 @@ namespace AppKit {
 		[Export ("quickLookWithEvent:")]
 		void QuickLook (NSEvent withEvent);
 
-		// From  NSControlEditingSupport category. Needs to be here to make the API easier to be used. issue 4837
+		// Inlined the NSControlEditingSupport category. Needs to be here to make the API easier to be used.
+		// Ref: https://github.com/xamarin/xamarin-macios/issues/4837
 		[Export ("validateProposedFirstResponder:forEvent:")]
 		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
 
@@ -24744,7 +24912,7 @@ namespace AppKit {
 		[Field ("NSAccessibilityWindowAttribute")]
 		NSString WindowAttribute { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TopLevelUIElementAttribute' instead.")]
 		[Field ("NSAccessibilityTopLevelUIElementAttribute")]
 		NSString ToplevelUIElementAttribute { get; }
