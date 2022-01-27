@@ -583,7 +583,7 @@ namespace PdfKit {
 		[NullAllowed]
 		PdfPage Page { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Protected]
 		[Export ("type")]
 		[NullAllowed]
@@ -962,7 +962,7 @@ namespace PdfKit {
 		[Export ("paths")]
 		NSBezierPath [] Paths { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("addBezierPath:")]
 		void AddBezierPathpath (NSBezierPath path);
 
@@ -1226,7 +1226,7 @@ namespace PdfKit {
 		[Wrap ("DocumentAttributes = attributes?.GetDictionary ()")]
 		void SetDocumentAttributes ([NullAllowed] PdfDocumentAttributes attributes);
 
-#if XAMCORE_4_0 || IOS
+#if NET || IOS
 		[Export ("majorVersion")]
 		nint MajorVersion { get; }
 
@@ -1351,7 +1351,7 @@ namespace PdfKit {
 		Type PageType { get; }
 
 		[Export ("findString:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'Find (string, NSStringCompareOptions)' instead.")]
 		PdfSelection [] Find (string text, nint options);
 
@@ -1360,7 +1360,7 @@ namespace PdfKit {
 		PdfSelection [] Find (string text, NSStringCompareOptions compareOptions);
 
 		[Export ("beginFindString:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'FindAsync (string, NSStringCompareOptions)' instead.")]
 		[return: NullAllowed]
 		void FindAsync (string text, nint options);
@@ -1371,7 +1371,7 @@ namespace PdfKit {
 		void FindAsync (string text, NSStringCompareOptions compareOptions);
 
 		[Export ("beginFindStrings:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'FindAsync (string [], NSStringCompareOptions)' instead.")]
 		[return: NullAllowed]
 		void FindAsync (string [] text, nint options);
@@ -1382,7 +1382,7 @@ namespace PdfKit {
 		void FindAsync (string [] text, NSStringCompareOptions compareOptions);
 
 		[Export ("findString:fromSelection:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'Find (string, PdfSelection, NSStringCompareOptions)' instead.")]
 		[return: NullAllowed]
 		PdfSelection Find (string text, [NullAllowed] PdfSelection selection, nint options);
@@ -1446,7 +1446,7 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'GetClassForAnnotationType' instead.")]
 		[Export ("classForAnnotationClass:"), DelegateName ("ClassForAnnotationClassDelegate"), DefaultValue (null)]
-#if XAMCORE_4_0
+#if NET
 		Class GetClassForAnnotationClass (Class sender);
 #else
 		Class ClassForAnnotationClass (Class sender);

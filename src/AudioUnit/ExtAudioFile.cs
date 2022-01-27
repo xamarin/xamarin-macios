@@ -363,31 +363,31 @@ namespace AudioUnit
         }
 
         #region Interop
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileOpenURL")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileOpenURL")]
         static extern ExtAudioFileError ExtAudioFileOpenUrl (IntPtr inUrl, out IntPtr outExtAudioFile);
 
         [DllImport (Constants.AudioToolboxLibrary)]
         static extern ExtAudioFileError ExtAudioFileWrapAudioFileID (IntPtr inFileID, [MarshalAs (UnmanagedType.I1)] bool inForWriting, IntPtr outExtAudioFile);    
 
-        [DllImport(Constants.AudioToolboxLibrary)]
+        [DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileRead (IntPtr inExtAudioFile, ref uint /* UInt32* */ ioNumberFrames, IntPtr ioData);
 
-        [DllImport(Constants.AudioToolboxLibrary)]
+        [DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileWrite (IntPtr inExtAudioFile, uint /* UInt32 */ inNumberFrames, IntPtr ioData);                 
 
-        [DllImport(Constants.AudioToolboxLibrary)]
+        [DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileWriteAsync(IntPtr inExtAudioFile, uint /* UInt32 */ inNumberFrames, IntPtr ioData);
 
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileDispose")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileDispose")]
 		static extern int /* OSStatus */ ExtAudioFileDispose(IntPtr inExtAudioFile);
 
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileSeek")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileSeek")]
 		static extern int /* OSStatus */ ExtAudioFileSeek(IntPtr inExtAudioFile, long /* SInt64 */ inFrameOffset);
         
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileTell")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileTell")]
 		static extern int /* OSStatus */ ExtAudioFileTell(IntPtr inExtAudioFile, ref long /* SInt64* */ outFrameOffset);
         
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileCreateWithURL")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileCreateWithURL")]
 		static extern int /* OSStatus */ ExtAudioFileCreateWithUrl(IntPtr inURL,
             [MarshalAs(UnmanagedType.U4)] AudioFileType inFileType,
             ref AudioStreamBasicDescription inStreamDesc,
@@ -395,33 +395,33 @@ namespace AudioUnit
             UInt32 /* UInt32 */ flags,
             out IntPtr outExtAudioFile);
         
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileGetProperty")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileGetProperty")]
         static extern int ExtAudioFileGetProperty(
             IntPtr inExtAudioFile, 
             PropertyIDType inPropertyID,
 			ref uint /* UInt32* */ ioPropertyDataSize,
             IntPtr outPropertyData);
         
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileGetProperty")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileGetProperty")]
         static extern int ExtAudioFileGetProperty(
             IntPtr inExtAudioFile,
             PropertyIDType inPropertyID,
 			ref uint /* UInt32* */ ioPropertyDataSize,
             ref AudioStreamBasicDescription outPropertyData);
         
-        [DllImport(Constants.AudioToolboxLibrary)]
+        [DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, ref uint /* UInt32* */ ioPropertyDataSize, out IntPtr outPropertyData);
 
-        [DllImport(Constants.AudioToolboxLibrary)]
+        [DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, ref uint /* UInt32* */ ioPropertyDataSize, out long outPropertyData);
 
-        [DllImport(Constants.AudioToolboxLibrary)]
+        [DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileGetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, ref uint /* UInt32* */ ioPropertyDataSize, out uint outPropertyData);
 
-        [DllImport(Constants.AudioToolboxLibrary)]
+        [DllImport (Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileSetProperty (IntPtr inExtAudioFile, PropertyIDType inPropertyID, int /* UInt32 */ ioPropertyDataSize, IntPtr outPropertyData);
 
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileSetProperty")]
+        [DllImport (Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileSetProperty")]
         static extern int ExtAudioFileSetProperty(
             IntPtr inExtAudioFile,
             PropertyIDType inPropertyID,

@@ -501,8 +501,13 @@ namespace CoreMidi {
 		extern static int /* OSStatus = SInt32 */ MIDIClientDispose (MidiObjectRef handle);
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -544,8 +549,13 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -565,8 +575,13 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -889,8 +904,13 @@ namespace CoreMidi {
 #if !COREBUILD
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -993,8 +1013,13 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -1003,8 +1028,13 @@ namespace CoreMidi {
 		extern static MidiError /* OSStatus = SInt32 */ MIDISend (MidiPortRef port, MidiEndpointRef endpoint, IntPtr packets);
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -1429,8 +1459,13 @@ namespace CoreMidi {
 		extern static MidiEntityRef MIDIDeviceGetEntity (MidiDeviceRef handle, nint item);
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -1450,6 +1485,9 @@ namespace CoreMidi {
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
@@ -1532,10 +1570,11 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
 #else
-		[Mac (10,15), iOS (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public string NameConfigurationDictionary {
 			get {
@@ -1956,8 +1995,13 @@ namespace CoreMidi {
 		extern static int /* OSStatus = SInt32 */ MIDIEndpointDispose (MidiEndpointRef handle);
 		
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
@@ -1968,14 +2012,19 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIFlushOutput (MidiEndpointRef handle);
 
-		[DllImport (Constants.CoreMidiLibrary)]
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 #endif
+		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIReceived (MidiEndpointRef handle, IntPtr /* MIDIPacketList* */ packetList);
 		
 		[DllImport (Constants.CoreMidiLibrary)]
@@ -2065,8 +2114,13 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]

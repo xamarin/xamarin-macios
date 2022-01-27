@@ -65,7 +65,7 @@ namespace MonoTouchFixtures.NetworkExtension {
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
-			Assert.That (NEVpnManager.ErrorDomain.ToString (), Is.EqualTo ("NEVPNErrorDomain"), "ErrorDomain");
+			Assert.That (NEVpnError.ConnectionFailed.GetDomain ().ToString (), Is.EqualTo ("NEVPNErrorDomain"), "ErrorDomain");
 		}
 	}
 }

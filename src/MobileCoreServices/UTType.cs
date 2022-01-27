@@ -40,24 +40,28 @@ namespace MobileCoreServices {
 		[iOS (8,0)][Mac (10,10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
-		extern static int /* Boolean */ UTTypeIsDynamic (IntPtr /* CFStringRef */ handle);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool /* Boolean */ UTTypeIsDynamic (IntPtr /* CFStringRef */ handle);
 		
 #if !NET
 		[iOS (8,0)][Mac (10,10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
-		extern static int /* Boolean */ UTTypeIsDeclared (IntPtr /* CFStringRef */ handle);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool /* Boolean */ UTTypeIsDeclared (IntPtr /* CFStringRef */ handle);
 
 #if !NET
 		[iOS (8,0)][Mac (10,10)]
 #endif
 		public static bool IsDynamic (string utType)
 		{
-			if (utType == null)
-				throw new ArgumentNullException ("utType");
+			if (utType is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (utType));
 
-			using (var x = new NSString (utType)) 
-				return UTTypeIsDynamic (x.Handle) != 0;
+			var ptr = CFString.CreateNative (utType);
+			var result = UTTypeIsDynamic (ptr);
+			CFString.ReleaseNative (ptr);
+			return result;
 		}
 
 #if !NET
@@ -65,11 +69,13 @@ namespace MobileCoreServices {
 #endif
 		public static bool IsDeclared (string utType)
 		{
-			if (utType == null)
-				throw new ArgumentNullException ("utType");
+			if (utType is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (utType));
 
-			using (var x = new NSString (utType)) 
-				return UTTypeIsDeclared (x.Handle) != 0;
+			var ptr = CFString.CreateNative (utType);
+			var result = UTTypeIsDeclared (ptr);
+			CFString.ReleaseNative (ptr);
+			return result;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -77,13 +83,13 @@ namespace MobileCoreServices {
 
 		public static string CreatePreferredIdentifier (string tagClass, string tag, string conformingToUti)
 		{
-			var a = NSString.CreateNative (tagClass);
-			var b = NSString.CreateNative (tag);
-			var c = NSString.CreateNative (conformingToUti);
+			var a = CFString.CreateNative (tagClass);
+			var b = CFString.CreateNative (tag);
+			var c = CFString.CreateNative (conformingToUti);
 			var ret = CFString.FromHandle (UTTypeCreatePreferredIdentifierForTag (a, b, c));
-			NSString.ReleaseNative (a);
-			NSString.ReleaseNative (b);
-			NSString.ReleaseNative (c);
+			CFString.ReleaseNative (a);
+			CFString.ReleaseNative (b);
+			CFString.ReleaseNative (c);
 			return ret;
 		}
 
@@ -92,18 +98,18 @@ namespace MobileCoreServices {
 
 		public static string [] CreateAllIdentifiers (string tagClass, string tag, string conformingToUti)
 		{
-			if (tagClass == null)
-				throw new ArgumentNullException ("tagClass");
-			if (tag == null)
-				throw new ArgumentNullException ("tag");
+			if (tagClass is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tagClass));
+			if (tag is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tag));
 
-			var a = NSString.CreateNative (tagClass);
-			var b = NSString.CreateNative (tag);
-			var c = NSString.CreateNative (conformingToUti);
+			var a = CFString.CreateNative (tagClass);
+			var b = CFString.CreateNative (tag);
+			var c = CFString.CreateNative (conformingToUti);
 			var ret = CFArray.StringArrayFromHandle (UTTypeCreateAllIdentifiersForTag (a, b, c));
-			NSString.ReleaseNative (a);
-			NSString.ReleaseNative (b);
-			NSString.ReleaseNative (c);
+			CFString.ReleaseNative (a);
+			CFString.ReleaseNative (b);
+			CFString.ReleaseNative (c);
 			return ret;
 		}
 		
@@ -118,35 +124,36 @@ namespace MobileCoreServices {
 #endif
 		public static string [] CopyAllTags (string uti, string tagClass)
 		{
-			if (uti == null)
-				throw new ArgumentNullException ("uti");
-			if (tagClass == null)
-				throw new ArgumentNullException ("tagClass");
+			if (uti is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
+			if (tagClass is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tagClass));
 
-			var a = NSString.CreateNative (uti);
-			var b = NSString.CreateNative (tagClass);
+			var a = CFString.CreateNative (uti);
+			var b = CFString.CreateNative (tagClass);
 			var ret = CFArray.StringArrayFromHandle (UTTypeCopyAllTagsWithClass (a, b));
-			NSString.ReleaseNative (a);
-			NSString.ReleaseNative (b);
+			CFString.ReleaseNative (a);
+			CFString.ReleaseNative (b);
 			return ret;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		extern static int /* Boolean */ UTTypeConformsTo (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ conformsToUtiStr);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool /* Boolean */ UTTypeConformsTo (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ conformsToUtiStr);
 
 		public static bool ConformsTo (string uti, string conformsToUti)
 		{
-			if (uti == null)
-				throw new ArgumentNullException ("uti");
-			if (conformsToUti == null)
-				throw new ArgumentNullException ("conformsToUti");
+			if (uti is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
+			if (conformsToUti is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (conformsToUti));
 
-			var a = NSString.CreateNative (uti);
-			var b = NSString.CreateNative (conformsToUti);
+			var a = CFString.CreateNative (uti);
+			var b = CFString.CreateNative (conformsToUti);
 			var ret = UTTypeConformsTo (a, b);
-			NSString.ReleaseNative (a);
-			NSString.ReleaseNative (b);
-			return ret != 0;
+			CFString.ReleaseNative (a);
+			CFString.ReleaseNative (b);
+			return ret;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -154,12 +161,12 @@ namespace MobileCoreServices {
 
 		public static string GetDescription (string uti)
 		{
-			if (uti == null)
-				throw new ArgumentNullException ("uti");
+			if (uti is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
 
-			var a = NSString.CreateNative (uti);
+			var a = CFString.CreateNative (uti);
 			var ret = CFString.FromHandle (UTTypeCopyDescription (a));
-			NSString.ReleaseNative (a);
+			CFString.ReleaseNative (a);
 			return ret;
 		}
 
@@ -168,16 +175,16 @@ namespace MobileCoreServices {
 
 		public static string GetPreferredTag (string uti, string tagClass)
 		{
-			if (uti == null)
-				throw new ArgumentNullException ("uti");
-			if (tagClass == null)
-				throw new ArgumentNullException ("tagClass");
+			if (uti is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
+			if (tagClass is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tagClass));
 
-			var a = NSString.CreateNative (uti);
-			var b = NSString.CreateNative (tagClass);
+			var a = CFString.CreateNative (uti);
+			var b = CFString.CreateNative (tagClass);
 			var ret = CFString.FromHandle (UTTypeCopyPreferredTagWithClass (a, b));
-			NSString.ReleaseNative (a);
-			NSString.ReleaseNative (b);
+			CFString.ReleaseNative (a);
+			CFString.ReleaseNative (b);
 			return ret;
 		}
 
@@ -186,26 +193,30 @@ namespace MobileCoreServices {
 
 		public static NSDictionary GetDeclaration (string uti)
 		{
-			if (uti == null)
-				throw new ArgumentNullException ("uti");
+			if (uti is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
 
-			var a = NSString.CreateNative (uti);
+			var a = CFString.CreateNative (uti);
 			var ret = Runtime.GetNSObject <NSDictionary> (UTTypeCopyDeclaration (a));
-			NSString.ReleaseNative (a);
+			CFString.ReleaseNative (a);
 			return ret;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSUrl */ UTTypeCopyDeclaringBundleURL (IntPtr utiStr);
 
+#if NET
+		public static NSUrl GetDeclaringBundleUrl (string uti)
+#else
 		public static NSUrl GetDeclaringBundleURL (string uti)
+#endif
 		{
-			if (uti == null)
-				throw new ArgumentNullException ("uti");
+			if (uti is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
 
-			var a = NSString.CreateNative (uti);
+			var a = CFString.CreateNative (uti);
 			var ret = Runtime.GetNSObject <NSUrl> (UTTypeCopyDeclaringBundleURL (a));
-			NSString.ReleaseNative (a);
+			CFString.ReleaseNative (a);
 			return ret;
 		}
 
@@ -221,9 +232,9 @@ namespace MobileCoreServices {
 #endif
 		public static bool Equals (NSString uti1, NSString uti2)
 		{
-			if (uti1 == null)
-				return uti2 == null;
-			else if (uti2 == null)
+			if (uti1 is null)
+				return uti2 is null;
+			else if (uti2 is null)
 				return false;
 			return UTTypeEqual (uti1.Handle, uti2.Handle);
 		}
