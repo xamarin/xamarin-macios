@@ -17,7 +17,7 @@ using System.Runtime.Versioning;
 using NativeHandle = System.IntPtr;
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 namespace CarPlay {
 	[Register (SkipRegistration = true)]
 #if !NET

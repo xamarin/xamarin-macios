@@ -237,7 +237,7 @@ namespace AudioUnit
 
 	public enum AudioObjectPropertyElement : uint
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Main' element instead.")]
 		Master = 0, // 0
 #endif
