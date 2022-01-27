@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
+using CoreFoundation;
 using ObjCRuntime;
 
 #if !NET
@@ -335,13 +336,20 @@ namespace Foundation {
 
 		public void LowlevelSetObject (NSObject obj, IntPtr key)
 		{
-			if (obj == null)
-				throw new ArgumentNullException (nameof (obj));
-#if MONOMAC
-			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetObject_ForKey_Handle, obj.Handle, key);
-#else
-			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setObject:forKey:"), obj.Handle, key);
-#endif
+			if (obj is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (obj));
+
+			LowlevelSetObject (obj.Handle, key);
+		}
+
+		public void LowlevelSetObject (string str, IntPtr key)
+		{
+			if (str is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (str));
+
+			var ptr = CFString.CreateNative (str);
+			LowlevelSetObject (ptr, key);
+			CFString.ReleaseNative (ptr);
 		}
 	}
 }

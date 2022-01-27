@@ -72,10 +72,12 @@ namespace CoreLocation {
 
 #if IOS && !COREBUILD // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
 	public partial class CLPlacemark {
-#if !NET
-		[iOS (10, 0), Mac (11,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (10, 0)]
+		[Mac (11,0)]
 #endif
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)
 		{

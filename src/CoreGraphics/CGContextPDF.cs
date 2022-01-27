@@ -113,23 +113,23 @@ namespace CoreGraphics {
 			var ret = base.ToDictionary ();
 
 			if (Title is not null)
-				ret.LowlevelSetObject ((NSString) Title, kCGPDFContextTitle);
+				ret.LowlevelSetObject (Title, kCGPDFContextTitle);
 			if (Author is not null)
-				ret.LowlevelSetObject ((NSString) Author, kCGPDFContextAuthor);
+				ret.LowlevelSetObject (Author, kCGPDFContextAuthor);
 			if (Subject is not null)
-				ret.LowlevelSetObject ((NSString) Subject, kCGPDFContextSubject);
+				ret.LowlevelSetObject (Subject, kCGPDFContextSubject);
 			if (Keywords is not null && Keywords.Length > 0){
 				if (Keywords.Length == 1)
-					ret.LowlevelSetObject ((NSString) Keywords [0], kCGPDFContextKeywords);
+					ret.LowlevelSetObject (Keywords [0], kCGPDFContextKeywords);
 				else
 					ret.LowlevelSetObject (NSArray.FromStrings (Keywords), kCGPDFContextKeywords);
 			}
 			if (Creator is not null)
-				ret.LowlevelSetObject ((NSString) Creator, kCGPDFContextCreator);
+				ret.LowlevelSetObject (Creator, kCGPDFContextCreator);
 			if (OwnerPassword is not null)
-				ret.LowlevelSetObject ((NSString) OwnerPassword, kCGPDFContextOwnerPassword);
+				ret.LowlevelSetObject (OwnerPassword, kCGPDFContextOwnerPassword);
 			if (UserPassword is not null)
-				ret.LowlevelSetObject ((NSString) UserPassword, kCGPDFContextUserPassword);
+				ret.LowlevelSetObject (UserPassword, kCGPDFContextUserPassword);
 			if (EncryptionKeyLength.HasValue)
 				ret.LowlevelSetObject (NSNumber.FromInt32 (EncryptionKeyLength.Value), kCGPDFContextEncryptionKeyLength);
 			if (AllowsPrinting.HasValue && AllowsPrinting.Value == false)

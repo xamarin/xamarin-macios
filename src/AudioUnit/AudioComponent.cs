@@ -59,10 +59,15 @@ namespace AudioUnit
 #if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
-#if !NET
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#else
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (10,13)]
+	[iOS (11,0)]
 #endif
 #if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
@@ -121,10 +126,15 @@ namespace AudioUnit
 	}
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
-#if !NET
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#else
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (10,13)]
+	[iOS (11,0)]
 #endif
 #if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
@@ -300,10 +310,10 @@ namespace AudioUnit
 			return FindComponent (ref cd);
 		}
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentFindNext (IntPtr inComponent, ref AudioComponentDescription inDesc);
 		
-		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentCopyName")]
+		[DllImport (Constants.AudioUnitLibrary, EntryPoint = "AudioComponentCopyName")]
 		static extern int /* OSStatus */ AudioComponentCopyName (IntPtr component, out IntPtr cfstr);
 		
 		public string? Name {
@@ -326,7 +336,7 @@ namespace AudioUnit
 			}
 		}
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioComponentGetVersion (IntPtr component, out int /* UInt32* */ version);
 
 		public Version? Version {
@@ -338,26 +348,32 @@ namespace AudioUnit
 			}
 		}
 
-#if !NET
-		[NoWatch, TV (14,0), Mac (11,0), iOS (14,0)]
-		[MacCatalyst (14,0)]
-#else
-		[SupportedOSPlatform ("ios14.0")]
+#if NET
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[NoWatch]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern unsafe IntPtr AudioComponentCopyIcon (IntPtr comp);
 
-#if !NET
-		[NoWatch, TV (14,0), iOS (14,0), Mac (11,0)]
-		[MacCatalyst (14,0)]
-#else
-		[SupportedOSPlatform ("ios14.0")]
+#if NET
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[NoWatch]
+		[TV (14,0)]
+		[iOS (14,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 #endif
 		public UIImage? CopyIcon ()
 		{
@@ -367,29 +383,36 @@ namespace AudioUnit
 
 #if !MONOMAC
 #if !__MACCATALYST__
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.TvOS, 14,0)]
-#else
-		[UnsupportedOSPlatform ("ios14.0")]
-		[UnsupportedOSPlatform ("tvos14.0")]
 #endif
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp, float /* float */ desiredPointSize);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos14.0 use 'CopyIcon' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'CopyIcon' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CopyIcon' instead.")]
 		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'CopyIcon' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios14.0")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-#if IOS
-		[Obsolete ("Starting with ios14.0 use 'CopyIcon' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __TVOS__
-		[Obsolete ("Starting with tvos14.0 use 'CopyIcon' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 		public UIKit.UIImage? GetIcon (float desiredPointSize)
 		{
@@ -397,38 +420,48 @@ namespace AudioUnit
 		}
 #endif // !__MACCATALYST__
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
 		[Deprecated (PlatformName.MacCatalyst, 14,0)]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #endif
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern double AudioComponentGetLastActiveTime (IntPtr comp);
 
-#if !NET
-		[iOS (7,0)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
-		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
-#else
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#if __MACCATALYST__
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
 		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __TVOS__
-		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #endif
 		public double LastActiveTime {
 			get {
@@ -437,22 +470,28 @@ namespace AudioUnit
 		}
 #else
 		// extern NSImage * __nullable AudioComponentGetIcon (AudioComponent __nonnull comp) __attribute__((availability(macosx, introduced=10.11)));
-#if !NET
-		[Mac (10,11)]
-		[Deprecated (PlatformName.MacOSX, 11, 0)]
-#else
+#if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("macos11.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Mac (10,11)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp);
 
-#if !NET
-		[Mac (10,11)]
-		[Deprecated (PlatformName.MacOSX, 11, 0)]
-#else
+#if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("macos11.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Mac (10,11)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		public AppKit.NSImage? GetIcon ()
 		{
@@ -461,26 +500,41 @@ namespace AudioUnit
 #endif
 
 #if IOS || MONOMAC
-#if !NET
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (10,13)]
+		[iOS (11,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
 
-#if !NET
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (10,13)]
+		[iOS (11,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
 
-#if !NET
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (10,13)]
+		[iOS (11,0)]
 #endif
 		public AudioComponentInfo[]? ComponentList {
 			get {
@@ -539,12 +593,14 @@ namespace AudioUnit
 		public static NSString ForceValidation = new NSString ("ForceValidation");
 
 //		#define kAudioComponentValidationParameter_LoadOutOfProcess		 "LoadOutOfProcess"
-#if !NET
-		[iOS (14,5), TV (14,5), Mac (11,3)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.5")]
 		[SupportedOSPlatform ("tvos14.5")]
 		[SupportedOSPlatform ("macos11.3")]
+#else
+		[iOS (14,5)]
+		[TV (14,5)]
+		[Mac (11,3)]
 #endif
 		public static NSString LoadOutOfProcess = new NSString ("LoadOutOfProcess");
 
