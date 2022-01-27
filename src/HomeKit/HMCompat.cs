@@ -60,7 +60,7 @@ namespace HomeKit {
 	} /* class HMChipServiceTopology */
 
 	[Obsolete ("This class is removed, use 'HMMatterRoom' instead.")]
-	[Register ("HMCHIPServiceRoom", SkipRegistration = true)]
+	[Register("HMCHIPServiceRoom", SkipRegistration = true)]
 	public class HMChipServiceRoom : NSObject, INSCoding, INSCopying, INSSecureCoding {
 
 		public override IntPtr ClassHandle => throw new InvalidOperationException ();
@@ -78,7 +78,7 @@ namespace HomeKit {
 	} /* class HMChipServiceRoom */
 
 	[Obsolete ("This class is removed, use 'HMMatterHome' instead.")]
-	[Register ("HMCHIPServiceHome", SkipRegistration = true)]
+	[Register("HMCHIPServiceHome", SkipRegistration = true)]
 	public partial class HMChipServiceHome : NSObject, INSCoding, INSCopying, INSSecureCoding {
 
 		public override IntPtr ClassHandle => throw new InvalidOperationException ();
