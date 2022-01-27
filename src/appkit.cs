@@ -2879,11 +2879,20 @@ namespace AppKit {
 		[return: Release ()]
 		NSCollectionViewItem NewItemForRepresentedObject (NSObject obj);
 
+		[return: NullAllowed]
 		[Export ("itemAtIndex:")]
+#if NET
+		NSCollectionViewItem GetItem (nint index);
+#else
 		NSCollectionViewItem ItemAtIndex (nint index);
+#endif
 
 		[Export ("frameForItemAtIndex:")]
+#if NET
+		CGRect GetFrameForItem (nint index);
+#else
 		CGRect FrameForItemAtIndex (nint index);
+#endif
 
 		[Export ("setDraggingSourceOperationMask:forLocal:")]
 		void SetDraggingSource (NSDragOperation dragOperationMask, bool localDestination);
@@ -2935,7 +2944,11 @@ namespace AppKit {
 		NSColor [] BackgroundColors { get; set; }
 
 		[Export ("frameForItemAtIndex:withNumberOfItems:")]
+#if NET
+		CGRect GetFrameForItem (nint index, nint numberOfItems);
+#else
 		CGRect FrameForItemAtIndex (nint index, nint numberOfItems);
+#endif
 
 		[Mac (10,11)]
 		[Protocolize]
@@ -8479,7 +8492,11 @@ namespace AppKit {
 		void CalcSize ();
 
 		[Export ("stateImageWidth")]
+#if NET
+		nfloat StateImageWidth { get; }
+#else
 		nfloat StateImageWidth ();
+#endif
 
 		[Export ("imageWidth")]
 		nfloat ImageWidth { get; }
@@ -20580,7 +20597,11 @@ namespace AppKit {
 		void ResignMainWindow ();
 		
 		[Export ("worksWhenModal")]
+#if NET
+		bool WorksWhenModal { get; }
+#else
 		bool WorksWhenModal ();
+#endif
 		
 		[Export ("preventsApplicationTerminationWhenModal")]
 		bool PreventsApplicationTerminationWhenModal  { get; set; }
