@@ -336,7 +336,11 @@ namespace Introspection {
 				return new CGPattern (
 					new RectangleF (0, 0, 16, 16), 
 					CGAffineTransform.MakeIdentity (), 
+#if NO_NFLOAT_OPERATORS
+					new NFloat (16), new NFloat (16),
+#else
 					16, 16, 
+#endif
 					CGPatternTiling.NoDistortion,
 					true, 
 					(cgc) => {});

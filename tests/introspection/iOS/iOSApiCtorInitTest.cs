@@ -234,7 +234,11 @@ namespace Introspection {
 			case "MPSPredicate":
 				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)
 				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
+#if NO_NFLOAT_OPERATORS
+				return (TestRuntime.IsDevice && (UIScreen.MainScreen.NativeBounds.Width.Value <= 1920));
+#else
 				return (TestRuntime.IsDevice && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
+#endif
 #endif
 #if __TVOS__ || __WATCHOS__
 			case "NSMetadataQuery":
