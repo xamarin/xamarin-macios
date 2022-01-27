@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.False (f.Opaque, "Opaque");
 			//Assert.False (f.PrefersExtendedRange, "PrefersExtendedRange"); // new iPhone (7/7+) returns True
 #if NO_NFLOAT_OPERATORS
-			Assert.That (f.Scale, Is.GreaterThan (new NFloat (0)), "Scale"); // varies on platform
+			Assert.That (f.Scale.Value, Is.GreaterThan (0), "Scale"); // varies on platform
 #else
 			Assert.That (f.Scale, Is.GreaterThan ((nfloat) 0), "Scale"); // varies on platform
 #endif
