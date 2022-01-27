@@ -268,7 +268,7 @@ namespace CoreGraphics
 		public CGSize ToRoundedCGSize ()
 		{
 #if NO_NFLOAT_OPERATORS
-			return new CGSize ((nfloat)NFloatOperators.ToNFloat (Math.Round (width.Value)), (nfloat)NFloatOperators.ToNFloat (Math.Round (height.Value)));
+			return new CGSize ((nfloat)new NFloat (Math.Round (width.Value)), (nfloat)new NFloat (Math.Round (height.Value)));
 #else
 			return new CGSize ((nfloat)Math.Round (width), (nfloat)Math.Round (height));
 #endif
@@ -392,10 +392,10 @@ namespace CoreGraphics
 
 			return FromLTRB (
 #if NO_NFLOAT_OPERATORS
-				NFloatOperators.ToNFloat (Math.Max (a.Left.Value, b.Left.Value)),
-				NFloatOperators.ToNFloat (Math.Max (a.Top.Value, b.Top.Value)),
-				NFloatOperators.ToNFloat (Math.Min (a.Right.Value, b.Right.Value)),
-				NFloatOperators.ToNFloat (Math.Min (a.Bottom.Value, b.Bottom.Value))
+				new NFloat (Math.Max (a.Left.Value, b.Left.Value)),
+				new NFloat (Math.Max (a.Top.Value, b.Top.Value)),
+				new NFloat (Math.Min (a.Right.Value, b.Right.Value)),
+				new NFloat (Math.Min (a.Bottom.Value, b.Bottom.Value))
 #else
 				(nfloat)Math.Max (a.Left, b.Left),
 				(nfloat)Math.Max (a.Top, b.Top),
@@ -414,10 +414,10 @@ namespace CoreGraphics
 		{
 #if NO_NFLOAT_OPERATORS
 			return FromLTRB (
-				NFloatOperators.ToNFloat (Math.Min (a.Left.Value, b.Left.Value)),
-				NFloatOperators.ToNFloat (Math.Min (a.Top.Value, b.Top.Value)),
-				NFloatOperators.ToNFloat (Math.Max (a.Right.Value, b.Right.Value)),
-				NFloatOperators.ToNFloat (Math.Max (a.Bottom.Value, b.Bottom.Value))
+				new NFloat (Math.Min (a.Left.Value, b.Left.Value)),
+				new NFloat (Math.Min (a.Top.Value, b.Top.Value)),
+				new NFloat (Math.Max (a.Right.Value, b.Right.Value)),
+				new NFloat (Math.Max (a.Bottom.Value, b.Bottom.Value))
 #else
 			return FromLTRB (
 				(nfloat)Math.Min (a.Left, b.Left),
@@ -560,10 +560,10 @@ namespace CoreGraphics
 		public CGRect (float x, float y, float width, float height)
 		{
 #if NO_NFLOAT_OPERATORS
-			this.x = NFloatOperators.ToNFloat (x);
-			this.y = NFloatOperators.ToNFloat (y);
-			this.width = NFloatOperators.ToNFloat (width);
-			this.height = NFloatOperators.ToNFloat (height);
+			this.x = new NFloat (x);
+			this.y = new NFloat (y);
+			this.width = new NFloat (width);
+			this.height = new NFloat (height);
 #else
 			this.x = x;
 			this.y = y;
@@ -592,7 +592,7 @@ namespace CoreGraphics
 		public bool Contains (float x, float y)
 		{
 #if NO_NFLOAT_OPERATORS
-			return Contains (NFloatOperators.ToNFloat (x), NFloatOperators.ToNFloat (y));
+			return Contains (new NFloat (x), new NFloat (y));
 #else
 			return Contains ((nfloat) x, (nfloat) y);
 #endif
@@ -601,7 +601,7 @@ namespace CoreGraphics
 		public bool Contains (double x, double y)
 		{
 #if NO_NFLOAT_OPERATORS
-			return Contains (NFloatOperators.ToNFloat (x), NFloatOperators.ToNFloat (y));
+			return Contains (new NFloat (x), new NFloat (y));
 #else
 			return Contains ((nfloat) x, (nfloat) y);
 #endif
@@ -633,8 +633,8 @@ namespace CoreGraphics
 #if NO_NFLOAT_OPERATORS
 			this.x = NFloatOperators.Subtract (this.x, x);
 			this.y = NFloatOperators.Subtract (this.y, y);
-			width = NFloatOperators.ToNFloat (this.width.Value + x.Value * 2);
-			height = NFloatOperators.ToNFloat (this.height.Value + y.Value * 2);
+			width = new NFloat (this.width.Value + x.Value * 2);
+			height = new NFloat (this.height.Value + y.Value * 2);
 #else
 			this.x -= x;
 			this.y -= y;
@@ -646,7 +646,7 @@ namespace CoreGraphics
 		public void Inflate (float x, float y)
 		{
 #if NO_NFLOAT_OPERATORS
-			Inflate (NFloatOperators.ToNFloat (x), NFloatOperators.ToNFloat (y));
+			Inflate (new NFloat (x), new NFloat (y));
 #else
 			Inflate ((nfloat) x, (nfloat) y);
 #endif
@@ -655,7 +655,7 @@ namespace CoreGraphics
 		public void Inflate (double x, double y)
 		{
 #if NO_NFLOAT_OPERATORS
-			Inflate (NFloatOperators.ToNFloat (x), NFloatOperators.ToNFloat (y));
+			Inflate (new NFloat (x), new NFloat (y));
 #else
 			Inflate ((nfloat) x, (nfloat) y);
 #endif
@@ -680,7 +680,7 @@ namespace CoreGraphics
 		public void Offset (float x, float y)
 		{
 #if NO_NFLOAT_OPERATORS
-			Offset (NFloatOperators.ToNFloat (x), NFloatOperators.ToNFloat (y));
+			Offset (new NFloat (x), new NFloat (y));
 #else
 			Offset ((nfloat) x, (nfloat) y);
 #endif
@@ -689,7 +689,7 @@ namespace CoreGraphics
 		public void Offset (double x, double y)
 		{
 #if NO_NFLOAT_OPERATORS
-			Offset (NFloatOperators.ToNFloat (x), NFloatOperators.ToNFloat (y));
+			Offset (new NFloat (x), new NFloat (y));
 #else
 			Offset ((nfloat) x, (nfloat) y);
 #endif
