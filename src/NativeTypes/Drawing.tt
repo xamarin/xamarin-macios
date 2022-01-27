@@ -542,6 +542,21 @@ namespace CoreGraphics
 			this.height = height;
 		}
 
+		public CGRect (double x, double y, double width, double height)
+		{
+#if NO_NFLOAT_OPERATORS
+			this.x = new NFloat (x);
+			this.y = new NFloat (y);
+			this.width = new NFloat (width);
+			this.height = new NFloat (height);
+#else
+			this.x = (nfloat)x;
+			this.y = (nfloat)y;
+			this.width = (nfloat)width;
+			this.height = (nfloat)height;
+#endif
+		}
+
 		public CGRect (float x, float y, float width, float height)
 		{
 #if NO_NFLOAT_OPERATORS
