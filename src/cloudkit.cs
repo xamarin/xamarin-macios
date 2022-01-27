@@ -405,7 +405,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKDatabaseOperation {
@@ -827,7 +827,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSSortDescriptor))]
@@ -1079,7 +1079,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKNotification is not meant for direct instantiation
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per doc
 #endif
 	interface CKNotification : NSSecureCoding {
@@ -1178,7 +1178,7 @@ namespace CloudKit {
 		CKQueryNotificationReason QueryNotificationReason { get; }
 
 		[NullAllowed, Export ("recordFields", ArgumentSemantic.Copy)]
-#if XAMCORE_4_0
+#if XAMCORE_5_0 // delayed until next time due to #13704.
 		NSDictionary<NSString, NSObject> RecordFields { get; }
 #else
 		NSDictionary RecordFields { get; }
@@ -1242,7 +1242,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSOperation))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKOperation {
@@ -1557,7 +1557,7 @@ namespace CloudKit {
 
 	[iOS (8,0), Mac (10,10)]
 	[Watch (3,0)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSObject))]

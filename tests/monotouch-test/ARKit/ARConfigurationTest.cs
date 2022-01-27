@@ -22,12 +22,14 @@ namespace MonoTouchFixtures.ARKit {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
+#if !NET
 		[Test]
 		public void SupportedVideoFormats ()
 		{
 			var svf = ARConfiguration.SupportedVideoFormats;
 			Assert.That (svf, Is.Empty, "empty");
 		}
+#endif
 
 		[Test]
 		public void GetSupportedVideoFormats_9_3 ()

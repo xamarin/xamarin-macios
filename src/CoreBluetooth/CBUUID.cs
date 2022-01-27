@@ -121,7 +121,9 @@ namespace CoreBluetooth {
 #if MONOMAC
 		// workaround for 27160443 – Trello: https://trello.com/c/oqB27JA6
 		// try new constant (10.13+) and fallback to the old/misnamed one
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10, 13)]
 #endif
 		public static NSString CharacteristicValidRangeString {

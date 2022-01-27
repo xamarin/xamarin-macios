@@ -719,7 +719,7 @@ namespace CoreFoundation {
 		protected abstract bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
 		                                     IntPtr context);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Call 'GetCheckedHandle ()' instead.")]
 		protected void CheckHandle ()
 		{
