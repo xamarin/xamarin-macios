@@ -15,7 +15,7 @@ using Vector3 = global::OpenTK.NVector3;
 
 namespace ARKit {
 
-#if !XAMCORE_4_0 && IOS
+#if !NET && IOS
 	public partial class ARFaceGeometry {
 
 		[Obsolete ("Use the 'GetVertices' method instead.")]

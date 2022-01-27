@@ -132,7 +132,7 @@ namespace CoreFoundation {
 		}
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'GetCheckedHandle' instead.")]
 		protected void Check ()
