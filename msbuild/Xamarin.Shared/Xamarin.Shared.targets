@@ -2024,7 +2024,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CalculateCodesignAppBundleInputs" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
+	<Target Name="_CalculateCodesignAppBundleInputs">
 		<ItemGroup>
 			<_CodesignAppBundleInputs Include="$(_AppBundlePath)**\*.*" Exclude="$(_AppCodeSignaturePath)_CodeSignature\CodeResources" />
 		</ItemGroup>
