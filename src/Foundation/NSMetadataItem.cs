@@ -260,15 +260,15 @@ namespace Foundation {
 		}
 
 #if NET
-		public bool? UbiquitousItemDownloadRequested {
-#else
-#if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
 #endif
+#if NET
+		public bool? UbiquitousItemDownloadRequested {
+#else
 		public bool UbiquitousItemDownloadRequested {
 #endif
 			get {
@@ -281,15 +281,15 @@ namespace Foundation {
 		}
 
 #if NET
-		public bool? UbiquitousItemIsExternalDocument {
-#else
-#if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
 #endif
+#if NET
+		public bool? UbiquitousItemIsExternalDocument {
+#else
 		public bool UbiquitousItemIsExternalDocument {
 #endif
 			get {
