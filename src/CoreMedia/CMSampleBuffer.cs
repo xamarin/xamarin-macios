@@ -733,14 +733,10 @@ namespace CoreMedia {
 			/* const CMSampleTimingInfo * CM_NONNULL */ ref CMSampleTimingInfo sampleTiming,
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-#if !XAMCORE_4_0
-#if !WATCH
 #if !NET
+#if !WATCH
 		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		[iOS (8,0)][Mac (10,10)]
-#else
-		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
 			CMFormatDescription formatDescription, CMSampleTimingInfo[] sampleTiming, out CMSampleBufferError error)
 		{
@@ -751,7 +747,7 @@ namespace CoreMedia {
 			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
 		}
 #endif // !WATCH
-#endif // !XAMCORE_4_0
+#endif // !NET
 #if !NET
 		[iOS (8,0)][Mac (10,10)]
 #endif
