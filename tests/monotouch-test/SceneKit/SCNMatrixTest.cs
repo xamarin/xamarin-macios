@@ -28,7 +28,11 @@ using NUnit.Framework;
 #if PFLOAT_SINGLE
 using pfloat = System.Single;
 #else
+#if NET
 using pfloat = System.Runtime.InteropServices.NFloat;
+#else
+using pfloat = System.nfloat;
+#endif
 #endif
 
 namespace MonoTouchFixtures.SceneKit {
