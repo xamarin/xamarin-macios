@@ -52,7 +52,7 @@ namespace NotificationCenter {
 		[Export ("widgetAllowsEditing")]
 		bool WidgetAllowsEditing {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
@@ -224,7 +224,7 @@ namespace NotificationCenter {
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetSearchViewDelegate
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 		[Export ("widgetSearch:searchForTerm:maxResults:"), EventArgs ("NSWidgetSearchForTerm"), DefaultValue (false)]
 		void SearchForTearm (NCWidgetSearchViewController controller, string searchTerm, nuint max);

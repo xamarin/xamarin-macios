@@ -28,7 +28,11 @@ namespace MonoTouchFixtures.Photos {
 
 		static NSError error_faker;
 
+#if NET
+		static PHLivePhotoFrameProcessingBlock managed = (IPHLivePhotoFrame frame, ref NSError error) => {
+#else
 		static PHLivePhotoFrameProcessingBlock2 managed = (IPHLivePhotoFrame frame, ref NSError error) => {
+#endif
 			error = error_faker;
 			return null;
 		};
@@ -44,7 +48,11 @@ namespace MonoTouchFixtures.Photos {
 			using (var cei = new PHContentEditingInput ())
 			using (var lpec = new PHLivePhotoEditingContext (cei)) {
 				// not much but it means the linker cannot remove it
+#if NET
+				Assert.Null (lpec.FrameProcessor, "FrameProcessor");
+#else
 				Assert.Null (lpec.FrameProcessor2, "FrameProcessor2");
+#endif
 			}
 		}
 
@@ -54,7 +62,11 @@ namespace MonoTouchFixtures.Photos {
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for the dynamic registrar to setup the block");
 
+#if NET
+			var t = typeof (NSObject).Assembly.GetType ("ObjCRuntime.Trampolines+SDPHLivePhotoFrameProcessingBlock");
+#else
 			var t = typeof (NSObject).Assembly.GetType ("ObjCRuntime.Trampolines+SDPHLivePhotoFrameProcessingBlock2");
+#endif
 			Assert.NotNull (t, "SDPHLivePhotoFrameProcessingBlock2");
 
 			var m = t.GetMethod ("Invoke", BindingFlags.Static | BindingFlags.NonPublic);
