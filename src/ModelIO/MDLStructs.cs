@@ -63,7 +63,7 @@ namespace ModelIO {
 
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Use 'MDLVoxelIndexExtent2' instead.")]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MDLVoxelIndexExtent {
@@ -77,7 +77,7 @@ namespace ModelIO {
 #endif
 
 	[StructLayout(LayoutKind.Sequential)]
-#if XAMCORE_4_0
+#if NET
 	public struct MDLVoxelIndexExtent {
 #else
 	public struct MDLVoxelIndexExtent2 {
@@ -85,7 +85,7 @@ namespace ModelIO {
 		public VectorInt4 MinimumExtent { get; private set; }
 		public VectorInt4 MaximumExtent { get; private set; }
 
-#if XAMCORE_4_0
+#if NET
 		public MDLVoxelIndexExtent (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
 #else
 		public MDLVoxelIndexExtent2 (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
