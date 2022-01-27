@@ -12,14 +12,27 @@ using Xamarin.Utils;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class TemplateTest {
+		public struct TemplateInfo {
+			public readonly string Platform;
+			public readonly string Template;
+			public readonly bool ValidateSuccessfulBuild;
 
-		public static string [][] Templates = {
-			// { platform, template_name }
-			new [] { "iOS", "ios" },
-			new [] { "iOS", "ioslib" },
-			new [] { "tvOS", "tvos" },
-			new [] { "MacCatalyst", "maccatalyst" },
-			new [] { "macOS", "macos" },
+			public TemplateInfo (string platform, string template, bool validateSuccessfulBuild = true)
+			{
+				Platform = platform;
+				Template = template;
+				ValidateSuccessfulBuild = validateSuccessfulBuild;
+			}
+		}
+
+		public static TemplateInfo[] Templates = {
+			new TemplateInfo ("iOS", "ios"),
+			new TemplateInfo ("iOS", "ioslib"),
+			new TemplateInfo ("iOS", "iosbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo ("tvOS", "tvos"),
+			new TemplateInfo ("MacCatalyst", "maccatalyst"),
+			new TemplateInfo ("MacCatalyst", "maccatalystbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo ("macOS", "macos"),
 		};
 
 		public class TemplateConfig {
@@ -36,7 +49,7 @@ namespace Xamarin.Tests {
 		[Test]
 		public void AreAllTemplatesListed ()
 		{
-			var allListedTemplates = Templates.Select (v => v [1]).ToArray ();
+			var allListedTemplates = Templates.Select (v => v.Template).ToArray ();
 			var allTemplates = new List<string> ();
 			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
 				var dir = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates");
@@ -66,14 +79,18 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCaseSource (nameof (Templates))]
-		public void CreateAndBuildTemplate (string platform, string template)
+		public void CreateAndBuildTemplate (TemplateInfo info)
 		{
-			Configuration.IgnoreIfIgnoredPlatform (platform);
+			if (!info.ValidateSuccessfulBuild) {
+				return;
+			}
+
+			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			Configuration.CopyDotNetSupportingFiles (tmpDir);
-			var outputDir = Path.Combine (tmpDir, template);
-			DotNet.AssertNew (outputDir, template);
-			var csproj = Path.Combine (outputDir, template + ".csproj");
+			var outputDir = Path.Combine (tmpDir, info.Template);
+			DotNet.AssertNew (outputDir, info.Template);
+			var csproj = Path.Combine (outputDir, info.Template + ".csproj");
 			var rv = DotNet.AssertBuild (csproj);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");

@@ -177,7 +177,7 @@ steps:
         Description = "msbuild.zip" ;
         TargetUrl = "$pkgsVirtualUrl/msbuild.zip" ;
         Error = "msbuild.zip not found." ;
-      },
+      }
     )
 
     foreach ($info in $statusInfo) {
