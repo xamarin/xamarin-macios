@@ -227,7 +227,7 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{assemblyDirectory}nunitlite.dll");
 			expectedFiles.Add ($"{assemblyDirectory}Touch.Client.dll");
 			expectedFiles.Add ($"{assemblyDirectory}Touch.Client.pdb");
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform)), runtimeIdentifiers, forceSingleRid: platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX, hasPdb: false);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX, hasPdb: false);
 			expectedFiles.Add ($"{assemblyDirectory}runtimeconfig.bin");
 
 			if (platform == ApplePlatform.MacOSX)
