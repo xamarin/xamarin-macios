@@ -13,6 +13,7 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -21,18 +22,16 @@ namespace GameKit {
 #if !MONOMAC
 
 	// NSUInteger -> GKPeerPickerController.h
-#if XAMCORE_4_0
+#if NET
 	[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif // IOS
+#endif
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoTV] // preserve binary compatibility with existing/shipping code
-#endif // XAMCORE_4_0
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 7, 0)]
-#endif
+#endif // NET
 	[Native]
 	public enum GKPeerPickerConnectionType : ulong {
 		Online = 1 << 0,
@@ -236,11 +235,15 @@ namespace GameKit {
 	[Deprecated (PlatformName.MacOSX, 10,14)]
 	[Deprecated (PlatformName.TvOS, 12,0)]
 	[Deprecated (PlatformName.iOS, 12,0)]
-	[Unavailable (PlatformName.WatchOS)]
-#endif
 	[Native]
+#if WATCH
+	// removed in Xcode 10 but a breaking change (for us) to remove
+	[Obsolete ("Not used in watchOS.")]
+#else
+	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
 #endif
+#endif // NET
 	public enum GKGameSessionErrorCode : long {
 		Unknown = 1,
 		NotAuthenticated = 2,
