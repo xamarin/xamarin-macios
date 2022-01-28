@@ -12,7 +12,13 @@ namespace GameKit {
 #if !XAMCORE_3_0
 	public partial class GKMatchRequest {
 		
-		[iOS (8,0), Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
 		[Obsolete ("Use 'RecipientResponseHandler' property.")]
 		public virtual void SetRecipientResponseHandler (Action<GKPlayer, GKInviteRecipientResponse> handler)
 		{
