@@ -9,7 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace ObjCRuntime {
-	public static class NFloatHelpers {
+	static class NFloatHelpers {
 #if ARCH_32
 		public static readonly int Size = 4;
 
@@ -89,7 +89,7 @@ namespace ObjCRuntime {
 		}
 	}
 
-	public static class NFloatOperators {
+	static class NFloatOperators {
 
 		public static bool Equals (NFloat a, NFloat b)
 		{
