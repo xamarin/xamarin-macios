@@ -50,7 +50,15 @@ namespace GameplayKit {
 			}
 		}
 
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
+#endif
 		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
 		{
 			if (points == null)
@@ -68,7 +76,15 @@ namespace GameplayKit {
 			}
 		}
 
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
+#endif
 		public GKPath (Vector3 [] points, float radius, bool cyclical)
 		{
 			if (points == null)

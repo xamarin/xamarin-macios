@@ -18,8 +18,21 @@ namespace GameplayKit {
 			return new GKQuadTree (min, max, minCellSize);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("ios10.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos10.0 empty stub (always return 'false') as this API is now rejected).", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios10.0 empty stub (always return 'false') as this API is now rejected).", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 10,0, message: "Empty stub (always return 'false') as this API is now rejected).")]
 		[Deprecated (PlatformName.TvOS, 10,0, message: "Empty stub (always return 'false') as this API is now rejected).")]
+#endif
 		public virtual bool RemoveData (NSObject data)
 		{
 			return false;

@@ -16,21 +16,45 @@ using Vector3 = global::OpenTK.Vector3;
 
 namespace GameplayKit {
 
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKBox {
 		public Vector3 Min;
 		public Vector3 Max;
 	}
 
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKQuad {
 		public Vector2 Min;
 		public Vector2 Max;
 	}
 
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKTriangle {
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
