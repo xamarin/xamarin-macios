@@ -1900,18 +1900,6 @@ namespace Registrar {
 			return objcType;
 		}
 			
-		protected bool SupportsModernObjectiveC {
-			get {
-#if MTOUCH || MONOTOUCH || BUNDLER
-				return true;
-#elif MMP
-				return App.Is64Build;
-#elif MONOMAC
-				return IntPtr.Size == 8;
-#endif
-			}
-		}
-
 		// This method is not thread-safe wrt 'types', and must be called with
 		// a lock held on 'types'.
 		ObjCType RegisterTypeUnsafe (TType type, ref List<Exception> exceptions)
@@ -2104,7 +2092,7 @@ namespace Registrar {
 							DeclaringType = objcType,
 							FieldType = "XamarinObject",// "^v", // void*
 							Name = "__monoObjectGCHandle",
-							IsPrivate = SupportsModernObjectiveC,
+							IsPrivate = true,
 							IsStatic = false,
 						}, ref exceptions);
 					}

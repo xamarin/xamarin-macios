@@ -2204,14 +2204,16 @@ namespace ModelIO {
 		[Export ("setVoxelsForMesh:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetVoxels (MDLVoxelIndexExtent2)' instead.")]
+#else
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #endif
 		[Export ("voxelsWithinExtent:")]
 		[return: NullAllowed]
 		NSData GetVoxels (MDLVoxelIndexExtent withinExtent);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("voxelsWithinExtent:")]
 		[return: NullAllowed]
@@ -2247,13 +2249,18 @@ namespace ModelIO {
 		[Export ("count")]
 		nuint Count { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'VoxelIndexExtent2' instead.")]
 #endif
 		[Export ("voxelIndexExtent")]
-		MDLVoxelIndexExtent VoxelIndexExtent { get; }
+		MDLVoxelIndexExtent VoxelIndexExtent {
+#if NET
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#endif
+			get;
+		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("voxelIndexExtent")]
 		[Sealed]
 		MDLVoxelIndexExtent2 VoxelIndexExtent2 {

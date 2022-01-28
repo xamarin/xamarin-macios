@@ -226,7 +226,6 @@ AUDIOUNIT_SOURCES = \
 	AudioUnit/ExtAudioFile.cs \
 	AudioUnit/AUScheduledAudioFileRegion.cs \
 	AudioUnit/AUParameter.cs \
-	AudioUnit/AUParameterNode.cs \
 
 # AuthenticationServices
 
