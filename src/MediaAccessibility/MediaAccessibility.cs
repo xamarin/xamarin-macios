@@ -23,7 +23,7 @@ namespace MediaAccessibility {
 #endif
 	public static partial class MACaptionAppearance {
 
-#if !XAMCORE_4_0
+#if !NET
 		// FIXME: make this a real notification
 		public static readonly NSString SettingsChangedNotification;
 
