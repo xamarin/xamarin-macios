@@ -70,7 +70,6 @@ namespace Foundation {
 			get {
 				var sb = new StringBuilder ("Objective-C exception thrown.  Name: ").Append (Name);
 				sb.Append (" Reason: ").AppendLine (Reason);
-				sb.AppendLine ("Native stack trace:");
 				AppendNativeStackTrace (sb);
 				return sb.ToString ();
 			}
@@ -78,7 +77,8 @@ namespace Foundation {
 
 		void AppendNativeStackTrace (StringBuilder sb)
 		{
-			if (native_exc is not null) {
+			if (native_exc?.CallStackSymbols?.Length > 0) {
+				sb.AppendLine ("Native stack trace:");
 				foreach (var symbol in native_exc.CallStackSymbols)
 					sb.Append ('\t').AppendLine (symbol);
 			}
@@ -91,6 +91,7 @@ namespace Foundation {
 				return msg;
 
 			var sb = new StringBuilder (msg);
+			sb.AppendLine ();
 			AppendNativeStackTrace (sb);
 			return sb.ToString ();
 		}
