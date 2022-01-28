@@ -10,12 +10,10 @@ using PointF=CoreGraphics.CGPoint;
 
 #if NET
 using PlatformException=ObjCRuntime.ObjCException;
-#else
-#if MONOMAC
+#elif MONOMAC
 using PlatformException = Foundation.ObjCException;
 #else
 using PlatformException = Foundation.MonoTouchException;
-#endif
 #endif
 
 namespace MonoTouchFixtures.Foundation {
