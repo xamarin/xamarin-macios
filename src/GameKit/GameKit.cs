@@ -21,14 +21,15 @@ namespace GameKit {
 #if !MONOMAC
 
 	// NSUInteger -> GKPeerPickerController.h
-#if NET
+#if XAMCORE_4_0
 	[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+#endif // IOS
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoTV] // preserve binary compatibility with existing/shipping code
+#endif // XAMCORE_4_0
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
