@@ -266,35 +266,60 @@ namespace MediaPlayer {
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios9.2")]
+#else
 		[iOS (9,2)]
+#endif
 		public bool HasProtectedAsset {
 			get {
 				return Int32ForProperty (HasProtectedAssetProperty) != 0;
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10,0)]
+#endif
 		public bool IsExplicitItem {
 			get {
 				return Int32ForProperty (IsExplicitProperty) != 0;
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10,0)]
+#endif
 		public NSDate? DateAdded {
 			get {
 				return (ValueForProperty (DateAddedProperty) as NSDate);
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios10.3")]
+#else
 		[iOS (10,3)]
+#endif
 		public NSString? PlaybackStoreID {
 			get {
 				return (ValueForProperty (PlaybackStoreIDProperty) as NSString);
 			}
 		}
 
-		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+#if NET
+		[SupportedOSPlatform ("tvos14.5")]
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+#else
+		[Watch (7,4)]
+		[TV (14,5)]
+		[Mac (11,3)]
+		[iOS (14,5)]
+#endif
 		public bool IsPreorder {
 			get {
 				return BoolForProperty (IsPreorderProperty);
