@@ -1,3 +1,5 @@
+#nullable enable
+
 global using nfloat = System.Runtime.InteropServices.NFloat;
 global using System.Runtime.InteropServices;
 
@@ -167,24 +169,24 @@ namespace CoreGraphics {
 		}
 
 		// CopyByDashingPath
-		public static CGPath CopyByDashingPath (this CGPath self, CGAffineTransform transform, float [] lengths)
+		public static CGPath CopyByDashingPath (this CGPath self, CGAffineTransform transform, float []? lengths)
 		{
-			return self.CopyByDashingPath (transform, NFloatHelpers.ConvertArray (lengths));
+			return self.CopyByDashingPath (transform, NFloatHelpers.ConvertArray (lengths)!);
 		}
 
-		public static CGPath CopyByDashingPath (this CGPath self, CGAffineTransform transform, float [] lengths, float phase)
+		public static CGPath CopyByDashingPath (this CGPath self, CGAffineTransform transform, float []? lengths, float phase)
 		{
-			return self.CopyByDashingPath (transform, NFloatHelpers.ConvertArray (lengths), new NFloat (phase));
+			return self.CopyByDashingPath (transform, NFloatHelpers.ConvertArray (lengths)!, new NFloat (phase));
 		}
 
-		public static CGPath CopyByDashingPath (this CGPath self, float [] lengths)
+		public static CGPath CopyByDashingPath (this CGPath self, float []? lengths)
 		{
-			return self.CopyByDashingPath (NFloatHelpers.ConvertArray (lengths));
+			return self.CopyByDashingPath (NFloatHelpers.ConvertArray (lengths)!);
 		}
 
-		public static CGPath CopyByDashingPath (this CGPath self, float [] lengths, float phase)
+		public static CGPath CopyByDashingPath (this CGPath self, float []? lengths, float phase)
 		{
-			return self.CopyByDashingPath (NFloatHelpers.ConvertArray (lengths), new NFloat (phase));
+			return self.CopyByDashingPath (NFloatHelpers.ConvertArray (lengths)!, new NFloat (phase));
 		}
 	}
 

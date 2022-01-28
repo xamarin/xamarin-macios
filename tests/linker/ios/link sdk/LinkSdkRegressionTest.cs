@@ -591,7 +591,11 @@ namespace LinkSdk {
 						ret = HardwareVersion.Unknown;
 #else
 						if (UIDevice.CurrentDevice.Model.Contains("iPhone"))
+#if NO_NFLOAT_OPERATORS
+							ret = UIScreen.MainScreen.Bounds.Height.Value * UIScreen.MainScreen.Scale.Value == 960 || UIScreen.MainScreen.Bounds.Width.Value * UIScreen.MainScreen.Scale.Value == 960 ? HardwareVersion.iPhone4Simulator : HardwareVersion.iPhoneSimulator;
+#else
 							ret = UIScreen.MainScreen.Bounds.Height * UIScreen.MainScreen.Scale == 960 || UIScreen.MainScreen.Bounds.Width * UIScreen.MainScreen.Scale == 960 ? HardwareVersion.iPhone4Simulator : HardwareVersion.iPhoneSimulator;
+#endif
 						else
 							ret = HardwareVersion.iPadSimulator;
 #endif
