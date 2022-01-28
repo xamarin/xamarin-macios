@@ -335,7 +335,7 @@ namespace Chip {
 		[Deprecated (PlatformName.MacOSX, 12, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
-		[Wrap ("WriteAttributeLocalConfigDisabled (Convert.ToBoolean(value), responseHandler)")]
+		[Wrap ("WriteAttributeLocalConfigDisabled (Convert.ToBoolean(value), responseHandler)", IsVirtual = true)]
 		void WriteAttributeLocalConfigDisabled (byte value, ChipResponseHandler responseHandler);
 #endif
 
@@ -381,7 +381,7 @@ namespace Chip {
 		[Deprecated (PlatformName.MacOSX, 12, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
-		[Wrap ("Bind (nodeId, groupId, (ushort) endpointId, (uint) clusterId, responseHandler)")]
+		[Wrap ("Bind (nodeId, groupId, (ushort) endpointId, (uint) clusterId, responseHandler)", IsVirtual = true)]
 		void Bind (ulong nodeId, ushort groupId, byte endpointId, ushort clusterId, ChipResponseHandler responseHandler);
 #endif
 
@@ -397,7 +397,7 @@ namespace Chip {
 		[Deprecated (PlatformName.MacOSX, 12, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
-		[Wrap ("Unbind (nodeId, groupId, (ushort) endpointId, (uint) clusterId, responseHandler)")]
+		[Wrap ("Unbind (nodeId, groupId, (ushort) endpointId, (uint) clusterId, responseHandler)", IsVirtual = true)]
 		void Unbind (ulong nodeId, ushort groupId, byte endpointId, ushort clusterId, ChipResponseHandler responseHandler);
 #endif
 
@@ -1775,7 +1775,7 @@ namespace Chip {
 		[Deprecated (PlatformName.MacOSX, 12, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
-		[Wrap ("AddScene (groupId, sceneId, transitionTime, sceneName, (uint) clusterId, length, value, responseHandler)")]
+		[Wrap ("AddScene (groupId, sceneId, transitionTime, sceneName, (uint) clusterId, length, value, responseHandler)", IsVirtual = true)]
 		void AddScene (ushort groupId, byte sceneId, ushort transitionTime, string sceneName, ushort clusterId, byte length, byte value, ChipResponseHandler responseHandler);
 #endif
 
@@ -1971,7 +1971,7 @@ namespace Chip {
 		[Deprecated (PlatformName.MacOSX, 12, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
-		[Wrap ("WriteAttributeBoolean (Convert.ToBoolean(value), responseHandler)")]
+		[Wrap ("WriteAttributeBoolean (Convert.ToBoolean(value), responseHandler)", IsVirtual = true)]
 		void WriteAttributeBoolean (byte value, ChipResponseHandler responseHandler);
 #endif
 
@@ -2780,7 +2780,7 @@ namespace Chip {
 		[Deprecated (PlatformName.MacOSX, 12, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
-		[Wrap ("WriteAttributeOutOfService (Convert.ToBoolean(value), responseHandler)")]
+		[Wrap ("WriteAttributeOutOfService (Convert.ToBoolean(value), responseHandler)", IsVirtual = true)]
 		void WriteAttributeOutOfService (byte value, ChipResponseHandler responseHandler);
 #endif
 
@@ -2800,7 +2800,7 @@ namespace Chip {
 		[Deprecated (PlatformName.MacOSX, 12, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
-		[Wrap ("WriteAttributePresentValue (Convert.ToBoolean(value), responseHandler)")]
+		[Wrap ("WriteAttributePresentValue (Convert.ToBoolean(value), responseHandler)", IsVirtual = true)]
 		void WriteAttributePresentValue (byte value, ChipResponseHandler responseHandler);
 #endif
 

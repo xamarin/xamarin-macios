@@ -31,8 +31,8 @@ namespace Chip {
 		protected ChipError (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		protected ChipError (IntPtr handle) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		
-		public virtual int ConvertToChipErrorCode (NSError errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		public virtual NSError? Create (int errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public static int ConvertToChipErrorCode (NSError errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public static NSError? Create (int errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		
 	} /* class ChipError */
 
