@@ -12,7 +12,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AVFoundation {
-#if IOS
+#if IOS && !NET
 	public partial class AVCaptureDeviceDiscoverySession {
 
 		public static AVCaptureDeviceDiscoverySession Create (AVCaptureDeviceType [] deviceTypes, string mediaType, AVCaptureDevicePosition position)
