@@ -44,7 +44,7 @@ namespace CoreVideo {
 
 	[Flags]
 	[Watch (4,0)]
-#if XAMCORE_4_0
+#if NET
 	public enum CVPixelBufferLock : ulong {
 #else
 	// before iOS10 beta 2 this was an untyped enum -> CVPixelBuffer.h
