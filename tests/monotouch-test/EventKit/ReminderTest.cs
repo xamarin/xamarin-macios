@@ -32,7 +32,12 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void DefaultProperties ()
 		{
+#if NET
+			using var store = new EKEventStore ();
+			using (var rem = EKReminder.Create (store)) {
+#else
 			using (var rem = new EKReminder ()) {
+#endif
 				Assert.AreEqual (0, rem.Priority, "Priority");
 				Assert.IsFalse (rem.Completed, "Completed");
 				Assert.IsNull (rem.CompletionDate, "CompletionDate");
@@ -47,7 +52,12 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void NullableProperties ()
 		{
+#if NET
+			using var store = new EKEventStore ();
+			using (var rem = EKReminder.Create (store)) {
+#else
 			using (var rem = new EKReminder ()) {
+#endif
 				rem.StartDateComponents = null;
 				rem.DueDateComponents = null;
 				rem.CompletionDate = null;
@@ -59,7 +69,12 @@ namespace MonoTouchFixtures.EventKit {
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
+#if NET
+			using var store = new EKEventStore ();
+			using (var rem = EKReminder.Create (store)) {
+#else
 			using (var rem = new EKReminder ()) {
+#endif
 				// priority is documented to have a range of 0-9 but there's no validation in ObjC
 				// this test is here to ensure Apple does not start throwing native exceptions at some points
 				rem.Priority = -1;
