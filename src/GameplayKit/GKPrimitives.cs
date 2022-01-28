@@ -10,6 +10,7 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
