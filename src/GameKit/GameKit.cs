@@ -21,9 +21,7 @@ namespace GameKit {
 #if !MONOMAC
 
 	// NSUInteger -> GKPeerPickerController.h
-#if XAMCORE_4_0
 	[NoTV] // preserve binary compatibility with existing/shipping code
-#endif
 	[NoWatch]
 	[Native]
 	[Deprecated (PlatformName.iOS, 7, 0)]
