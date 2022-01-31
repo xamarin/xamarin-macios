@@ -1,13 +1,2 @@
 TOP=../../..
-
-include $(TOP)/Make.config
-
-%-ios:
-	$(MAKE) -C iOS $@
-
-%-tvos:
-	$(MAKE) -C tvOS $@
-
-%-maccatalyst %-maccat:
-	$(MAKE) -C MacCatalyst $@
-
+include $(TOP)/tests/common/shared-dotnet-test.mk
