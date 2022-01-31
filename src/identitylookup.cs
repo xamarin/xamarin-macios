@@ -25,7 +25,7 @@ namespace IdentityLookup {
 		None = 0,
 		Allow = 1,
 		Junk = 2,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Junk' instead.")]
 		Filter = Junk,
 #endif

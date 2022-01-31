@@ -224,7 +224,7 @@ namespace CoreMidi {
 		[Export ("sourceEndpoint")] [Internal]
 		int /* MIDIObjectRef = UInt32 */ _SourceEndpoint { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Wrap ("new MidiEndpoint (_SourceEndpoint)")]
 		MidiEndpoint GetSourceEndpoint ();
 #else
@@ -235,7 +235,7 @@ namespace CoreMidi {
 		[Export ("destinationEndpoint")] [Internal]
 		int /* MIDIObjectRef = UInt32 */ _DestinationEndpoint { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Wrap ("new MidiEndpoint (_DestinationEndpoint)")]
 		MidiEndpoint GetDestinationEndPoint ();
 #else
