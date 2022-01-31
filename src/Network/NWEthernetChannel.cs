@@ -30,9 +30,9 @@ using NativeHandle = System.IntPtr;
 namespace Network {
 
 #if NET
-	[SupportedOSPlatform ("macos10.15")]
-	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
+	// [SupportedOSPlatform ("macos10.15")]  -  Not valid on Delegates
+	// [UnsupportedOSPlatform ("tvos")]
+	// [UnsupportedOSPlatform ("ios")]
 #else
 	[NoWatch]
 	[NoTV]

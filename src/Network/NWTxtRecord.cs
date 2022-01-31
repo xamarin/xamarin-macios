@@ -167,6 +167,7 @@ namespace Network {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use the overload that takes an NWTxtRecordApplyDelegate2 instead.")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate handler)
 		{

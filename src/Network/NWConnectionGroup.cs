@@ -24,10 +24,10 @@ using NativeHandle = System.IntPtr;
 namespace Network {
 
 #if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	// [SupportedOSPlatform ("tvos14.0")]  -  Not valid on Delegates
+	// [SupportedOSPlatform ("macos11.0")]
+	// [SupportedOSPlatform ("ios14.0")]
+	// [SupportedOSPlatform ("maccatalyst14.0")]
 #else
 	[TV (14,0)]
 	[Mac (11,0)]
@@ -38,10 +38,10 @@ namespace Network {
 	public delegate void NWConnectionGroupReceiveDelegate (DispatchData content, NWContentContext context, bool isCompleted);
 
 #if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	// [SupportedOSPlatform ("tvos14.0")]  -  Not valid on Delegates
+	// [SupportedOSPlatform ("macos11.0")]
+	// [SupportedOSPlatform ("ios14.0")]
+	// [SupportedOSPlatform ("maccatalyst14.0")]
 #else
 	[TV (14,0)]
 	[Mac (11,0)]
