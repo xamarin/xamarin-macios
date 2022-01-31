@@ -21,17 +21,7 @@ using OS_nw_txt_record=System.IntPtr;
 
 namespace Network {
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
-	[Flags]
+	[Flags, TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWBrowseResultChange : ulong {
 		Invalid = 0x00,
 		Identical = 0x01,
@@ -42,16 +32,7 @@ namespace Network {
 		InterfaceRemoved = 0x10,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWBrowserState {
 		Invalid = 0,
 		Ready = 1,
@@ -59,16 +40,8 @@ namespace Network {
 		Cancelled = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#endif
 	public enum NWConnectionState {
 		Invalid   = 0,
 		Waiting   = 1,
@@ -78,18 +51,8 @@ namespace Network {
 		Cancelled = 5,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[TV (14,0)]
-	[Mac (11,0)]
-	[iOS (14,0)]
-	[Watch (7,0)]
+	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	[MacCatalyst (14,0)]
-#endif
 	public enum NWConnectionGroupState {
 		Invalid = 0,
 		Waiting = 1,
@@ -98,31 +61,14 @@ namespace Network {
 		Cancelled = 4,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWDataTransferReportState {
 		Collecting = 1,
 		Collected = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#endif
 	public enum NWEndpointType {
 		Invalid = 0,
 		Address = 1,
@@ -130,32 +76,14 @@ namespace Network {
 		BonjourService = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWReportResolutionSource {
 		Query = 1,
 		Cache = 2,
 		ExpiredCache = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.15")]
-	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-#else
-	[NoWatch]
-	[NoTV]
-	[NoiOS]
-	[Mac (10,15)]
-#endif
+	[NoWatch, NoTV, NoiOS, Mac (10,15)]
 	public enum NWEthernetChannelState {
 		Invalid = 0,
 		Waiting = 1,
@@ -166,80 +94,36 @@ namespace Network {
 	}
 
 	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
 	[Flags]
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWFramerCreateFlags : uint {
 		Default = 0x00,
 	}
 
 	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWFramerStartResult {
 		Unknown = 0,
 		Ready = 1,
 		WillMarkReady = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[Watch (6,0)]
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-#endif
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	public enum NWIPLocalAddressPreference {
 		Default = 0,
 		Temporary = 1,
 		Stable = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[Watch (6,0)]
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-#endif
+	[Watch (6,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	public enum NWIPVersion {
 		Any = 0,
 		Version4 = 1,
 		Version6 = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#endif
 	public enum NWInterfaceType {
 		Other = 0,
 		Wifi = 1,
@@ -248,16 +132,8 @@ namespace Network {
 		Loopback = 4,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#endif
 	public enum NWListenerState {
 		Invalid = 0,
 		Waiting = 1,
@@ -266,16 +142,8 @@ namespace Network {
 		Cancelled = 4,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#endif
 	public enum NWMultiPathService {
 		Disabled = 0,
 		Handover = 1,
@@ -283,16 +151,8 @@ namespace Network {
 		Aggregate = 3, 
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#endif
 	public enum NWParametersExpiredDnsBehavior {
 		Default = 0,
 		Allow = 1,
@@ -300,16 +160,8 @@ namespace Network {
 	}
 
 	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)
-#if NET
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("ios12.0")]
-#else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#endif
 	public enum NWPathStatus {
 		Invalid = 0,
 		Satisfied = 1,
@@ -333,16 +185,7 @@ namespace Network {
 		Ce = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWTxtRecordFindKey {
 		Invalid = 0,
 		NotPresent = 1,
@@ -351,16 +194,7 @@ namespace Network {
 		NonEmptyValue = 4,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWWebSocketOpCode : int {
 		Cont = 0x0,
 		Text = 0x1,
@@ -371,16 +205,7 @@ namespace Network {
 		Invalid = -1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWWebSocketCloseCode : int {
 		NormalClosure = 1000,
 		GoingAway = 1001,
@@ -397,49 +222,20 @@ namespace Network {
 	}
 
 	// this maps to `nw_ws_version_t` in Network.framework/Headers/ws_options.h (and not the enum from NetworkExtension)
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWWebSocketVersion {
 		Invalid = 0,
 		Version13 = 1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-#else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
-#endif
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWWebSocketResponseStatus {
 		Invalid = 0,
 		Accept = 1,
 		Reject = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos15.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-	[TV (15,0)]
-	[Mac (12,0)]
-	[iOS (15,0)]
-	[Watch (8,0)]
-	[MacCatalyst (15,0)]
-#endif
+	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
 	public enum NWReportResolutionProtocol {
 		Unknown = 0,
 		Udp = 1,
@@ -448,47 +244,20 @@ namespace Network {
 		Https = 4,
 	}
 	
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-#else
-	[Watch (7,0)]
-	[TV (14,0)]
-	[Mac (11,0)]
-	[iOS (14,0)]
-#endif
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	public enum NWResolverConfigEndpointType {
 		Https,
 		Tls,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos15.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("ios15.0")]
-#else
-	[Watch (8, 0)]
-	[TV (15, 0)]
-	[Mac (12, 0)]
-	[iOS (15, 0)]
-#endif
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
 	public enum NWMultipathVersion {
 		Unspecified = -1,
 		Version0 = 0,
 		Version1 = 1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos15.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("ios15.0")]
-#else
-	[Watch (8, 0)]
-	[TV (15, 0)]
-	[Mac (12, 0)]
-	[iOS (15, 0)]
-#endif
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
 	public enum NWInterfaceRadioType {
 		Unknown = 0,
 		WifiB = 1,
@@ -509,16 +278,7 @@ namespace Network {
 		CellEvdo = 0x88,
 	}
 	
-#if NET
-	[SupportedOSPlatform ("tvos15.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("ios15.0")]
-#else
-	[Watch (8,0)]
-	[TV (15,0)]
-	[Mac (12,0)]
-	[iOS (15,0)]
-#endif
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
 	public enum NWParametersAttribution {
 		Developer = 1,
 		User = 2,
