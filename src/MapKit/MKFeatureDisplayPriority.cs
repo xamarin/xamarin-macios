@@ -6,7 +6,7 @@ using ObjCRuntime;
 
 namespace MapKit {
 
-#if !WATCH || (WATCH && !XAMCORE_4_0)
+#if !WATCH || (WATCH && !NET)
 
 #if NET
 	[SupportedOSPlatform ("ios11.0")]
@@ -14,7 +14,7 @@ namespace MapKit {
 #else
 	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
 #endif
-#if WATCH && !XAMCORE_4_0
+#if WATCH && !NET
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	// .net does not allow float-based enumerations
