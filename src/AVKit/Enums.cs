@@ -18,13 +18,13 @@ namespace AVKit {
 	}
 #endif
 
-#if !MONOMAC || !XAMCORE_4_0
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos13.0")]
-#else
+	// The version of the AVError.h header file in the tvOS SDK is much newer than in the iOS SDKs,
+	// (copyright 2016 vs 2019), so this is reflecting the tvOS SDK.
 	[iOS (9,0)]
 	[TV (13,0)]
+#if NET
+	[NoMac]
+	[NoWatch]
 #endif
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]
@@ -36,7 +36,6 @@ namespace AVKit {
 		ContentDisallowedByPasscode = -1101,
 		ContentDisallowedByProfile = -1102,
 	}
-#endif
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]

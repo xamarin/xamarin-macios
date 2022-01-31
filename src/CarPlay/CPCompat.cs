@@ -17,16 +17,11 @@ using System.Runtime.Versioning;
 using NativeHandle = System.IntPtr;
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 namespace CarPlay {
 	[Register (SkipRegistration = true)]
-#if !NET
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
 	[Obsolete ("This API has been removed from the native SDK.")]
-#else
-	[UnsupportedOSPlatform ("ios")]
-	[Obsolete ("This API has been removed from the native SDK.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class CPEntity : NSObject, INSSecureCoding {
 

@@ -699,6 +699,14 @@
 				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' != ''">$(_StrippedAssemblyDirectory)\%(ResolvedFileToPublish.DestinationSubPath)</OutputPath>
 				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' == ''">$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
 			</_AssembliesToBeStripped>
+
+			<!-- Use forward slashes in OutputPath, otherwise ILStrip will create filenames that resemble the part of
+				 the relative path of the item that uses backslashes, instead of writing the file to the location of the
+				 relative path. -->
+			<_AssembliesToBeStripped>
+				<OutputPath>$([System.String]::Copy('%(OutputPath)').Replace('\', '/'))</OutputPath>
+			</_AssembliesToBeStripped>
+
 			<_AssemblyDirsToCreate Include="@(_AssembliesToBeStripped->'%(OutputPath)%(Directory)'->Distinct())"/>
 		</ItemGroup>
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="@(_AssemblyDirsToCreate)" />
