@@ -92,13 +92,13 @@ namespace CoreFoundation {
 		}
 	}
 
-#if XAMCORE_4_0
+#if NET
 	// nothing is exposed publicly
-	internal
+	internal static class CFObject {
 #else
-	public
+	public static class CFObject {
 #endif
-	static class CFObject {
+	
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFRelease (IntPtr obj);
 

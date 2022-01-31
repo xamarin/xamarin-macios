@@ -85,6 +85,30 @@ namespace Xamarin.MacDev.Tasks {
 						if (!string.IsNullOrEmpty (addToAppBundle))
 							t.SetMetadata ("AddToAppBundle", addToAppBundle);
 
+						var frameworks = nr.GetMetadata("Frameworks");
+						if (!string.IsNullOrEmpty(frameworks))
+							t.SetMetadata("Frameworks", frameworks);
+
+						var weakFrameworks = nr.GetMetadata("WeakFrameworks");
+						if (!string.IsNullOrEmpty(weakFrameworks))
+							t.SetMetadata("WeakFrameworks", weakFrameworks);
+
+						var smartLink = nr.GetMetadata("SmartLink");
+						if (!string.IsNullOrEmpty(smartLink))
+							t.SetMetadata("SmartLink", smartLink);
+
+						var forceLoad = nr.GetMetadata("ForceLoad");
+						if (!string.IsNullOrEmpty(forceLoad))
+							t.SetMetadata("ForceLoad", forceLoad);
+
+						var linkerFlags = nr.GetMetadata("LinkerFlags");
+						if (!string.IsNullOrEmpty(linkerFlags))
+							t.SetMetadata("LinkerFlags", linkerFlags);
+
+						var isCxx = nr.GetMetadata("IsCxx");
+						if (!string.IsNullOrEmpty(isCxx))
+							t.SetMetadata("IsCxx", isCxx);
+
 						native_frameworks.Add (t);
 						break;
 					case ".framework":

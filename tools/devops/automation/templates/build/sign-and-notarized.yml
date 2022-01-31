@@ -9,6 +9,10 @@ parameters:
   type: boolean
   default: false
 
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
 - name: keyringPass
   type: string
 
@@ -130,7 +134,7 @@ steps:
     displayName: 'Sign .msi'
     condition: ${{ parameters.condition }}
 
-- ${{ if eq(variables['IsPR'], 'True') }}:
+- ${{ if or(eq(parameters.skipESRP, true), eq(variables['IsPR'], 'True')) }}:
   - bash: |
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
       PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"

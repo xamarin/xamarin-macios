@@ -52,6 +52,11 @@ parameters:
   type: boolean
   default: false 
 
+- name: skipESRP
+  displayName: Skip ESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
 #
@@ -269,6 +274,7 @@ stages:
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
         enableAPIDiff: ${{ parameters.enableAPIDiff }}
+        skipESRP: ${{ parameters.skipESRP }}
 
 # .NET 6 Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(parameters.forceInsertion, true))) }}:
@@ -290,7 +296,7 @@ stages:
           statusContext: ${{ config['statusContext'] }} 
           iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-          keyringPass: $(pass--lab--mac--builder--keychain)
+          keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
 

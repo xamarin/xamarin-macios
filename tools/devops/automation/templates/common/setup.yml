@@ -64,13 +64,14 @@ steps:
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
   displayName: 'Clear results directory'
   timeoutInMinutes: 5
+  continueOnError: true
 
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
   env:
     OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
+  continueOnError: true
 
 # was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
 # that we can call make and generated the provisionator config files.
