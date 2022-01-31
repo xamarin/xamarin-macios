@@ -29,16 +29,10 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
-#endif
 	public delegate void NWEthernetChannelReceiveDelegate (DispatchData? content, ushort vlanTag, string? localAddress, string? remoteAddress);
 
-#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
-#else
-	[SupportedOSPlatform ("macos10.15")]
-#endif
 	public class NWEthernetChannel : NativeObject {
 
 		[Preserve (Conditional = true)]

@@ -23,27 +23,16 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	[MacCatalyst (14,0)]
-#endif
 	public delegate void NWConnectionGroupReceiveDelegate (DispatchData content, NWContentContext context, bool isCompleted);
 
-#if !NET
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	[MacCatalyst (14,0)]
-#endif
 	public delegate void NWConnectionGroupStateChangedDelegate (NWConnectionGroupState state, NWError? error);
 
-#if !NET
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	[MacCatalyst (14,0)]
-#else
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#endif
 	public class NWConnectionGroup : NativeObject {
 		[Preserve (Conditional = true)]
 		protected internal NWConnectionGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
@@ -281,19 +270,11 @@ namespace Network {
 			}
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_connection_group_copy_protocol_metadata (OS_nw_connection_group group, OS_nw_protocol_definition definition);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public NWProtocolMetadata? GetProtocolMetadata (NWContentContext context) {
 			if (context is null)
 				throw new ArgumentNullException (nameof (context));
@@ -301,19 +282,11 @@ namespace Network {
 			return ptr == IntPtr.Zero ? null : new NWProtocolMetadata (ptr, true);
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_connection_group_copy_protocol_metadata_for_message (OS_nw_connection_group group, OS_nw_content_context context, OS_nw_protocol_definition definition);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public NWProtocolMetadata? GetProtocolMetadata (NWContentContext context, NWProtocolDefinition definition) {
 			if (context is null)
 				throw new ArgumentNullException (nameof (context));
@@ -323,39 +296,23 @@ namespace Network {
 			return ptr == IntPtr.Zero ? null : new NWProtocolMetadata (ptr, true);
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_connection nw_connection_group_extract_connection (OS_nw_connection_group group, OS_nw_endpoint endpoint, OS_nw_protocol_options protocolOptions);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public NWConnection? ExtractConnection (NWEndpoint endpoint, NWProtocolOptions protocolOptions)
 		{
 			var ptr = nw_connection_group_extract_connection (GetCheckedHandle (), endpoint.GetCheckedHandle (), protocolOptions.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWConnection (ptr, true);
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_connection_group_reinsert_extracted_connection (OS_nw_connection_group group, OS_nw_connection connection);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public bool TryReinsertExtractedConnection (NWConnection connection)
 		{
 			if (connection is null)
@@ -363,11 +320,7 @@ namespace Network {
 			return nw_connection_group_reinsert_extracted_connection (GetCheckedHandle (), connection.Handle);
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_group_set_new_connection_handler (OS_nw_connection_group group, ref BlockLiteral connectionHandler);
 		
@@ -385,11 +338,7 @@ namespace Network {
 			}
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionHandler (Action<NWConnection> handler)
 		{

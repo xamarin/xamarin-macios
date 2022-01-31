@@ -15,15 +15,8 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	[MacCatalyst (14,0)]
-#else
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#endif
 	public class NWMulticastGroup : NativeObject {
 		[Preserve (Conditional = true)]
 		internal NWMulticastGroup (NativeHandle handle, bool owns) : base (handle, owns) {}

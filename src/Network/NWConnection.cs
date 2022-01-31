@@ -46,13 +46,8 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveReadOnlySpanCompletion (ReadOnlySpan<byte> data, NWContentContext? context, bool isComplete, NWError? error);
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-#endif
 	public class NWConnection : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
@@ -579,13 +574,7 @@ namespace Network {
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
 		}
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
 
@@ -603,13 +592,7 @@ namespace Network {
 			}
 		}
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
 		{

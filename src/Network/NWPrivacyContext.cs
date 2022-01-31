@@ -14,11 +14,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Network {
-#if !NET
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 	public class NWPrivacyContext : NativeObject {
 
 		public static NWPrivacyContext Default =>

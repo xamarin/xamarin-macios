@@ -25,13 +25,8 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-#endif
 	public class NWInterface : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET

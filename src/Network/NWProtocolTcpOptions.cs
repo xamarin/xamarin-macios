@@ -27,12 +27,7 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-#endif
 	public class NWProtocolTcpOptions : NWProtocolOptions {
 		
 		[Preserve (Conditional = true)]
@@ -77,19 +72,11 @@ namespace Network {
 
 		public void SetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
 		
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_tcp_options_set_multipath_force_version (OS_nw_protocol_options options, NWMultipathVersion multipath_force_version);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public void ForceMultipathVersion (NWMultipathVersion version)
 			=> nw_tcp_options_set_multipath_force_version (GetCheckedHandle (), version);
 	}

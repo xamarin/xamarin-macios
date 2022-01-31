@@ -24,13 +24,8 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-#endif
 	public class NWListener : NativeObject {
 		bool connectionHandlerWasSet = false;
 		object connectionHandlerLock = new object ();
@@ -251,43 +246,21 @@ namespace Network {
 			nw_listener_set_advertise_descriptor (GetCheckedHandle (), descriptor.GetHandle ());
 		}
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern uint nw_listener_get_new_connection_limit (IntPtr listener);
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_listener_set_new_connection_limit (IntPtr listener, uint new_connection_limit);
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		public uint ConnectionLimit {
 			get => nw_listener_get_new_connection_limit (GetCheckedHandle ());
 			set => nw_listener_set_new_connection_limit (GetCheckedHandle (), value);
 		}
 		
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_listener_set_new_connection_group_handler (IntPtr listener, /* [NullAllowed] */ ref BlockLiteral handler);
 		
@@ -304,11 +277,7 @@ namespace Network {
 			del (nwConnectionGroup);
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionGroupHandler (Action<NWConnectionGroup> handler)
 		{

@@ -28,13 +28,8 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-#endif
 	public class NWParameters : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
@@ -194,19 +189,11 @@ namespace Network {
 		}
 
 #if MONOMAC
-#if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
-#else
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
 
-#if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
-#else
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions>? configureCustomIP = null)
 		{
@@ -502,94 +489,48 @@ namespace Network {
 			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value);
 		}
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_parameters_get_prohibit_constrained (IntPtr parameters);
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, [MarshalAs (UnmanagedType.I1)] bool prohibit_constrained);
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		public bool ProhibitConstrained {
 			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ());
 			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value);
 		}
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_attribution (OS_nw_parameters parameters, NWParametersAttribution attribution);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWParametersAttribution nw_parameters_get_attribution (OS_nw_parameters parameters);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public NWParametersAttribution Attribution {
 			get => nw_parameters_get_attribution (GetCheckedHandle ());
 			set => nw_parameters_set_attribution (GetCheckedHandle (), value);
 		}
 		
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_privacy_context (OS_nw_parameters parameters, OS_nw_privacy_context privacy_context);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public void SetPrivacyContext (NWPrivacyContext privacyContext)
 			=> nw_parameters_set_privacy_context (GetCheckedHandle (), privacyContext.Handle);
 		
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static unsafe extern OS_nw_parameters nw_parameters_create_quic (void *configureQuic);
 		
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static NWParameters CreateQuic (Action<NWProtocolOptions>? configureQuic = null)
 		{

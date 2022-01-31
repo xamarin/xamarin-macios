@@ -25,13 +25,8 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-#endif
 	public class NWPathMonitor : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
@@ -174,19 +169,11 @@ namespace Network {
 		}
 		
 		
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_path_monitor_prohibit_interface_type (OS_nw_path_monitor monitor, NWInterfaceType interfaceType);
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public void ProhibitInterfaceType (NWInterfaceType interfaceType)
 			=> nw_path_monitor_prohibit_interface_type (GetCheckedHandle (), interfaceType);
 	}

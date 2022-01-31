@@ -26,13 +26,8 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-#endif
 	public class NWProtocolOptions : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
@@ -75,35 +70,15 @@ namespace Network {
 
 		// added to have a consistent API, but obsolete it
 
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst(15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern IntPtr nw_quic_create_options ();
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")] 
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
 		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use the 'NWProtocolQuciOptions' class methods and constructors instead.")]
-#else
-		[UnsupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos12.0 Use the 'NWProtocolQuciOptions' class methods and constructors instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public static NWProtocolOptions CreateQuic ()
 		{
 			return new NWProtocolUdpOptions (nw_quic_create_options (), owns: true);
@@ -158,26 +133,12 @@ namespace Network {
 		}
 
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_local_address_preference (IntPtr options, NWIPLocalAddressPreference preference);
 
-#if !NET
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("maccatalystq")]
-		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public NWIPLocalAddressPreference IPLocalAddressPreference {
 			set => nw_ip_options_set_local_address_preference (GetCheckedHandle (), value);
 		}
@@ -294,11 +255,7 @@ namespace Network {
 		[Obsolete ("Use the 'NWProtocolTlsOptions' class instead.")]
 		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
 		
-#if !NET
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_protocol_options_is_quic (IntPtr options);
