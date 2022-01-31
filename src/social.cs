@@ -14,9 +14,19 @@ using Accounts;
 
 #if !MONOMAC
 using UIKit;
+using SocialImage = UIKit.UIImage;
+using SocialTextView = UIKit.UITextView;
+using SocialTextViewDelegate = UIKit.UITextViewDelegate;
+using SocialView = UIKit.UIView;
+using SocialViewController = UIKit.UIViewController;
 #endif
 #if MONOMAC
 using AppKit;
+using SocialImage = AppKit.NSImage;
+using SocialTextView = AppKit.NSTextView;
+using SocialTextViewDelegate = AppKit.NSTextViewDelegate;
+using SocialView = AppKit.NSView;
+using SocialViewController = AppKit.NSViewController;
 #endif
 
 #if !NET
@@ -94,8 +104,8 @@ namespace Social {
 		void PerformRequest (Action<NSData,NSHttpUrlResponse,NSError> handler);
 	}
 
-#if !MONOMAC
-	[BaseType (typeof (UIViewController))]
+	[NoMac]
+	[BaseType (typeof (SocialViewController))]
 	[DisableDefaultCtor] // see note on 'composeViewControllerForServiceType:'
 	interface SLComposeViewController {
 		[Export ("initWithNibName:bundle:")]
@@ -121,7 +131,7 @@ namespace Social {
 		bool SetInitialText (string text);
 
 		[Export ("addImage:")]
-		bool AddImage (UIImage image);
+		bool AddImage (SocialImage image);
 
 		[Export ("removeAllImages")]
 		bool RemoveAllImages ();
@@ -132,20 +142,11 @@ namespace Social {
 		[Export ("removeAllURLs")]
 		bool RemoveAllUrls ();
 	}
-#endif
 
 	[Mac (10,10)]
 	[iOS (8,0)]
-#if MONOMAC
-	[BaseType (typeof (NSViewController))]
-#else
-	[BaseType (typeof (UIViewController))]
-#endif
-	#if MONOMAC
-	interface SLComposeServiceViewController : NSTextViewDelegate {
-	#else
-	interface SLComposeServiceViewController : UITextViewDelegate {
-	#endif
+	[BaseType (typeof (SocialViewController))]
+	interface SLComposeServiceViewController : SocialTextViewDelegate {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
@@ -153,13 +154,8 @@ namespace Social {
 		[Export ("presentationAnimationDidFinish")]
 		void PresentationAnimationDidFinish ();
 
-#if !MONOMAC
 		[Export ("textView")]
-		UITextView TextView { get; }
-#else
-		[Export ("textView")]
-		NSTextView TextView { get; }
-#endif
+		SocialTextView TextView { get; }
 
 		[Export ("contentText")]
 		string ContentText { get; }
@@ -187,30 +183,34 @@ namespace Social {
 		[Export ("charactersRemaining", ArgumentSemantic.Strong)]
 		NSNumber CharactersRemaining { get; set; }
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("configurationItems")]
 		SLComposeSheetConfigurationItem [] GetConfigurationItems ();
 
+		[NoMac]
 		[Export ("reloadConfigurationItems")]
 		void ReloadConfigurationItems ();
 
+		[NoMac]
 		[Export ("pushConfigurationViewController:")]
-		void PushConfigurationViewController (UIViewController viewController);
+		void PushConfigurationViewController (SocialViewController viewController);
 
+		[NoMac]
 		[Export ("popConfigurationViewController")]
 		void PopConfigurationViewController ();
 
+		[NoMac]
 		[Export ("loadPreviewView")]
-		UIView LoadPreviewView();
+		SocialView LoadPreviewView();
 
+		[NoMac]
 		[NullAllowed] // by default this property is null
 		[Export ("autoCompletionViewController", ArgumentSemantic.Strong)]
-		UIViewController AutoCompletionViewController { get; set; }
-#endif
+		SocialViewController AutoCompletionViewController { get; set; }
 	}
 
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
@@ -234,5 +234,4 @@ namespace Social {
 		[Export ("tapHandler", ArgumentSemantic.Copy)]
 		Action TapHandler { get; set; }
 	}
-#endif
 }
