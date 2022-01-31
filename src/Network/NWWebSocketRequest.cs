@@ -25,7 +25,16 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWWebSocketRequest : NativeObject {
 		[Preserve (Conditional = true)]
 		internal NWWebSocketRequest (NativeHandle handle, bool owns) : base (handle, owns) {}

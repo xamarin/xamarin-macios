@@ -24,8 +24,16 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
 	[Watch (6,0)]
+#endif
 	public class NWListener : NativeObject {
 		bool connectionHandlerWasSet = false;
 		object connectionHandlerLock = new object ();
@@ -246,21 +254,56 @@ namespace Network {
 			nw_listener_set_advertise_descriptor (GetCheckedHandle (), descriptor.GetHandle ());
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern uint nw_listener_get_new_connection_limit (IntPtr listener);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_listener_set_new_connection_limit (IntPtr listener, uint new_connection_limit);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		public uint ConnectionLimit {
 			get => nw_listener_get_new_connection_limit (GetCheckedHandle ());
 			set => nw_listener_set_new_connection_limit (GetCheckedHandle (), value);
 		}
 		
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_listener_set_new_connection_group_handler (IntPtr listener, /* [NullAllowed] */ ref BlockLiteral handler);
 		
@@ -277,7 +320,18 @@ namespace Network {
 			del (nwConnectionGroup);
 		}
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionGroupHandler (Action<NWConnectionGroup> handler)
 		{

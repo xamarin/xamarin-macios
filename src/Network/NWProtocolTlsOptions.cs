@@ -26,7 +26,16 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
+#endif
 	public class NWProtocolTlsOptions : NWProtocolOptions {
 		[Preserve (Conditional = true)]
 		internal NWProtocolTlsOptions (NativeHandle handle, bool owns) : base (handle, owns) {}

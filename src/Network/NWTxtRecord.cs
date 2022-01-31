@@ -29,7 +29,16 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWTxtRecord : NativeObject {
 		[Preserve (Conditional = true)]
 		internal NWTxtRecord (NativeHandle handle, bool owns) : base (handle, owns) { }
@@ -158,7 +167,6 @@ namespace Network {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use the overload that takes an NWTxtRecordApplyDelegate2 instead.")]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate handler)
 		{
