@@ -113,12 +113,13 @@ namespace Network {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
 		[iOS (13,0)]
-#endif
 		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
+#endif
 		public static NWProtocolDefinition WebSocketDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 #endif
 

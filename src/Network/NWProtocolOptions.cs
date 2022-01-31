@@ -187,12 +187,14 @@ namespace Network {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
 		[iOS (13,0)]
-#endif
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
+#endif
 		public NWIPLocalAddressPreference IPLocalAddressPreference {
 			set => nw_ip_options_set_local_address_preference (GetCheckedHandle (), value);
 		}
