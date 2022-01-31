@@ -2,7 +2,13 @@ using ObjCRuntime;
 
 namespace NetworkExtension {
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[ErrorDomain ("NEVPNErrorDomain")]
 	[Native]
 	public enum NEVpnError : long {
@@ -14,7 +20,13 @@ namespace NetworkExtension {
 		ConfigurationUnknown = 6
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEVpnStatus : long {
 		Invalid = 0,
@@ -25,7 +37,13 @@ namespace NetworkExtension {
 		Disconnecting = 5
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEVpnIkeAuthenticationMethod : long {
 		None = 0,
@@ -33,22 +51,52 @@ namespace NetworkExtension {
 		SharedSecret = 2
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEVpnIke2EncryptionAlgorithm : long {
 		DES = 1,
 		TripleDES = 2,
 		AES128 = 3,
 		AES256 = 4,
-		[iOS (8,3)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios8.3")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (8,3)]
+		[Mac (10,11)]
+#endif
 		AES128GCM = 5,
-		[iOS (8,3)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios8.3")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (8,3)]
+		[Mac (10,11)]
+#endif
 		AES256GCM = 6,
-		[Mac (10,15)][iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		ChaCha20Poly1305 = 7,
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEVpnIke2IntegrityAlgorithm : long {
 		SHA96 = 1,
@@ -58,7 +106,13 @@ namespace NetworkExtension {
 		SHA512 = 5
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEVpnIke2DeadPeerDetectionRate : long {
 		None = 0,
@@ -67,7 +121,13 @@ namespace NetworkExtension {
 		High = 3
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEVpnIke2DiffieHellman : long {
 		Invalid = 0,
@@ -83,11 +143,23 @@ namespace NetworkExtension {
 		Group19 = 19,
 		Group20 = 20,
 		Group21 = 21,
-		[Mac (10,15)][iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		Group31 = 31,
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEOnDemandRuleAction : long {
 		Connect = 1,
@@ -96,7 +168,13 @@ namespace NetworkExtension {
 		Ignore = 4
 	}
 
-	[iOS (8,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (8,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum NEOnDemandRuleInterfaceType : long {
 		Any = 0,
@@ -105,26 +183,48 @@ namespace NetworkExtension {
 		Cellular = 3
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
+	[iOS (8,0)]
+	[Mac (10,10)]
+#endif
 	[Native]
 	public enum NEEvaluateConnectionRuleAction : long {
 		ConnectIfNeeded = 1,
 		NeverConnect = 2
 	}
 
-	[iOS (8,3)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios8.3")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (8,3)]
+	[Mac (10,11)]
+#endif
 	[Native] // NSInteger
 	public enum NEVpnIke2CertificateType : long {
 		RSA = 1,
 		ECDSA256 = 2,
 		ECDSA384 = 3,
 		ECDSA521 = 4,
-		[Mac (10,15)][iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		Ed25519 = 5,
 	}
 
 	// in Xcode7 SDK but marked as 8.0
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[iOS (8,0)]
+#endif
 	[ErrorDomain ("NEFilterErrorDomain")]
 	[Native]
 	public enum NEFilterManagerError : long {
@@ -137,7 +237,11 @@ namespace NetworkExtension {
 		ConfigurationInternalError = 6,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[ErrorDomain ("NETunnelProviderErrorDomain")]
 	[Native]
 	public enum NETunnelProviderError : long {
@@ -147,7 +251,11 @@ namespace NetworkExtension {
 		Failed = 3
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[ErrorDomain ("NEAppProxyErrorDomain")]
 	[Native]
 	public enum NEAppProxyFlowError : long {
@@ -165,7 +273,11 @@ namespace NetworkExtension {
 		ReadAlreadyPending = 10,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum NEProviderStopReason : long
 	{
@@ -184,13 +296,29 @@ namespace NetworkExtension {
 		UserLogout = 12,
 		UserSwitch = 13,
 		ConnectionFailed = 14,
-		[Mac (10,15)][iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		Sleep = 15,
-		[Mac (10,15)][iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		AppUpdate,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum NWPathStatus : long
 	{
@@ -200,7 +328,11 @@ namespace NetworkExtension {
 		Satisfiable = 3
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum NWTcpConnectionState : long
 	{
@@ -212,7 +344,11 @@ namespace NetworkExtension {
 		Cancelled = 5
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum NWUdpSessionState : long
 	{
@@ -224,17 +360,33 @@ namespace NetworkExtension {
 		Cancelled = 5
 	}
 	
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum NETunnelProviderRoutingMethod : long {
 		DestinationIP = 1,
 		SourceApplication = 2,
-		[Mac (10,15)][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (10,15)]
+		[NoiOS]
+#endif
 		NetworkRule = 3,
 	}
 
 #if !MONOMAC
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum NEHotspotHelperCommandType : long {
 		None = 0,
@@ -246,7 +398,11 @@ namespace NetworkExtension {
 		Logoff = 6
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum NEHotspotHelperConfidence : long {
 		None = 0,
@@ -254,7 +410,11 @@ namespace NetworkExtension {
 		High = 2
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum NEHotspotHelperResult : long {
 		Success = 0,
@@ -267,7 +427,16 @@ namespace NetworkExtension {
 	}
 #endif
 
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoMac]
+	[iOS (14,0)]
+#endif
 	[Native]
 	[ErrorDomain ("NEAppPushErrorDomain")]
 	public enum NEAppPushManagerError : long {
@@ -277,7 +446,16 @@ namespace NetworkExtension {
 		InactiveSession = 4,
 	}
 
-	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (11,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum NEDnsProtocol : long {
 		Cleartext = 1,
@@ -285,7 +463,16 @@ namespace NetworkExtension {
 		Https = 3,
 	}
 
-	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (11,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	[ErrorDomain ("NEDNSSettingsErrorDomain")]
 	public enum NEDnsSettingsManagerError : long {

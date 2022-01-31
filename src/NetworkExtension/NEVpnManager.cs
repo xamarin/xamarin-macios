@@ -19,7 +19,12 @@ using System.Runtime.Versioning;
 namespace NetworkExtension {
 	public partial class NEVpnManager {
 
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,11)]
+#endif
 		public void SetAuthorization (Authorization authorization)
 		{
 			if (authorization is null)
