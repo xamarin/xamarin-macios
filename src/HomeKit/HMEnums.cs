@@ -161,7 +161,7 @@ namespace HomeKit {
 		[Field ("HMCharacteristicTypeHeatingThreshold")]
 		HeatingThreshold,
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This value does not exist anymore and will always return null.")]
 		HeatingCoolingStatus,
 #endif

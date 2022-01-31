@@ -1,6 +1,6 @@
 // Copyright 2016, Xamarin Inc. All rights reserved.
 
-#if !COREBUILD
+#if !COREBUILD && !NET
 
 using System;
 using System.Runtime.Versioning;
@@ -85,9 +85,7 @@ namespace CloudKit {
 	}
 #endif
 
-#if !NET
 	[iOS (8,0), Mac (10,10)]
-#endif
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
 #if !WATCH	

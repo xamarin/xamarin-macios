@@ -114,7 +114,7 @@ namespace GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerButtonInput {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'ValueChangedHandler' property.")]
 		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (GCControllerButtonValueChanged handler);
@@ -134,7 +134,7 @@ namespace GameController {
 		[Export ("pressed")]
 		bool IsPressed { [Bind ("isPressed")] get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Use the 'PressedChangedHandler' property.")]
 		[Wrap ("PressedChangedHandler = handler;", IsVirtual = true)]
@@ -380,7 +380,7 @@ namespace GameController {
 		bool AttachedToDevice { [Bind ("isAttachedToDevice")] get; }
 
 		[Export ("playerIndex")]
-#if XAMCORE_4_0
+#if NET
 		// enum only added in iOS9 / OSX 10.11 - but with compatible values
 		GCControllerPlayerIndex PlayerIndex { get; set; }
 #else
@@ -497,7 +497,7 @@ namespace GameController {
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'ValueChangedHandler' property.")]
 		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (Action<GCMotion> handler);
