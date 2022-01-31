@@ -1,14 +1,3 @@
-## header file removed from the framework umbrella in xcode9
-!unknown-type! CAEmitterBehavior bound
-!unknown-field! kCAEmitterBehaviorAlignToMotion bound
-!unknown-field! kCAEmitterBehaviorAttractor bound
-!unknown-field! kCAEmitterBehaviorColorOverLife bound
-!unknown-field! kCAEmitterBehaviorDrag bound
-!unknown-field! kCAEmitterBehaviorLight bound
-!unknown-field! kCAEmitterBehaviorSimpleAttractor bound
-!unknown-field! kCAEmitterBehaviorValueOverLife bound
-!unknown-field! kCAEmitterBehaviorWave bound
-
 ## helpers built from existing (native) values
 !extra-enum-value! Managed value 12 for CAEdgeAntialiasingMask.TopBottomEdges not found in native headers
 !extra-enum-value! Managed value 15 for CAEdgeAntialiasingMask.All not found in native headers

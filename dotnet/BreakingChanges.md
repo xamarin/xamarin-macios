@@ -97,3 +97,15 @@ The following types:
 were moved from the CoreServices namespace to the CFNetwork namespace.
 
 This requires adding a `using CFNetwork;` statement to any files that uses these types.
+
+## Removal of `Runtime.UseAutoreleasePoolInThreadPool`
+
+Enabling or disabling this feature is not supported at runtime and must
+be done using the MSBuild [`AutoreleasePoolSupport`](https://docs.microsoft.com/en-us/dotnet/core/run-time-config/threading#autoreleasepool-for-managed-threads)
+property.
+
+You can query if the build-time feature is enabled with the following code:
+
+```csharp
+AppContext.TryGetSwitch ("System.Threading.Thread.EnableAutoreleasePool", out var enabled);
+```

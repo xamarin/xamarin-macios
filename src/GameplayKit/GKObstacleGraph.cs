@@ -18,11 +18,11 @@ using NativeHandle = System.IntPtr;
 namespace GameplayKit {
 
 	public partial class GKObstacleGraph {
-		public
-#if !XAMCORE_4_0
-		virtual
+#if !NET
+		public virtual GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
+#else
+		public GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
 #endif
-		GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
 		{
 			return NSArray.ArrayFromHandle<GKGraphNode2D> (_GetNodes (obstacle));
 		}

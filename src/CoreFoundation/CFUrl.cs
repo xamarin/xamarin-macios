@@ -129,15 +129,23 @@ namespace CoreFoundation {
 			return CFString.FromHandle (CFURLCopyFileSystemPath (hcfurl, 0), true);
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFURLIsFileReferenceURL (/* CFURLRef */IntPtr url);
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public bool IsFileReference {
 			get {
