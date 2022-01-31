@@ -50,7 +50,7 @@ namespace Darwin {
 		public IntPtr /* uintptr_tr */ Ident;
 		public EventFilter /* int16_t */ Filter;
 		public EventFlags /* uint16_t */ Flags;
-#if XAMCORE_4_0
+#if NET
 		public FilterFlags /* uint32_t */ FilterFlags;
 #else
 		public uint /* uint32_t */ FilterFlags;
@@ -247,7 +247,7 @@ namespace Darwin {
 			return rv;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, int nChanges, KernelEvent [] eventList, int nEvents, ref TimeSpec timeOut)
 		{
@@ -291,7 +291,7 @@ namespace Darwin {
 		}
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		public int KEvent (KernelEvent [] changeList, KernelEvent [] eventList)
 #else
 		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
@@ -301,7 +301,7 @@ namespace Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
-#if XAMCORE_4_0
+#if NET
 						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, IntPtr.Zero);
 #else
 						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, IntPtr.Zero) != -1;
