@@ -199,7 +199,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		public unsafe CGContextPDF (NSUrl url, CGRect mediaBox, CGPDFInfo info) :
+		public unsafe CGContextPDF (NSUrl url, CGRect mediaBox, CGPDFInfo? info) :
 			this (url, &mediaBox, info)
 		{
 		}
@@ -233,7 +233,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFContextBeginPage (/* CGContextRef */ IntPtr context, /* CFDictionaryRef */ IntPtr pageInfo);
 		
-		public void BeginPage (CGPDFPageInfo info)
+		public void BeginPage (CGPDFPageInfo? info)
 		{
 			using (var dict = info?.ToDictionary ())
 				CGPDFContextBeginPage (Handle, dict.GetHandle ());

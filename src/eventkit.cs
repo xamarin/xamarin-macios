@@ -50,7 +50,7 @@ namespace EventKit {
 	}
 
 	[BaseType (typeof (EKObject))]
-#if XAMCORE_4_0	
+#if NET
 	[Abstract] // "The EKCalendarItem class is a an abstract superclass ..." from Apple docs.
 #endif
 	interface EKCalendarItem {
@@ -398,7 +398,7 @@ namespace EventKit {
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceDayOfWeek : NSCopying, NSSecureCoding {
 		[Export ("dayOfTheWeek")]
-#if XAMCORE_4_0
+#if NET
 		EKWeekday DayOfTheWeek { get;  }
 #else
 		nint DayOfTheWeek { get;  }
@@ -409,7 +409,7 @@ namespace EventKit {
 
 		[Static]
 		[Export ("dayOfWeek:")]
-#if XAMCORE_4_0
+#if NET
 		EKRecurrenceDayOfWeek FromDay (EKWeekday dayOfTheWeek);
 #else
 		[Internal]
@@ -418,7 +418,7 @@ namespace EventKit {
 
 		[Static]
 		[Export ("dayOfWeek:weekNumber:")]
-#if XAMCORE_4_0
+#if NET
 		EKRecurrenceDayOfWeek FromDay (EKWeekday dayOfTheWeek, nint weekNumber);
 #else
 		[Internal]
@@ -426,7 +426,7 @@ namespace EventKit {
 #endif
 
 		[Export ("initWithDayOfTheWeek:weekNumber:")]
-#if XAMCORE_4_0
+#if NET
 		NativeHandle Constructor (EKWeekday dayOfTheWeek, nint weekNumber);
 #else
 		NativeHandle Constructor (nint dayOfTheWeek, nint weekNumber);
@@ -449,7 +449,7 @@ namespace EventKit {
 		nint Interval { get;  }
 
 		[Export ("firstDayOfTheWeek")]
-#if XAMCORE_4_0
+#if NET
 		EKWeekday FirstDayOfTheWeek { get; }
 #else
 		[Internal]
@@ -478,7 +478,7 @@ namespace EventKit {
 
 		[NullAllowed]
 		[Export ("setPositions")]
-#if XAMCORE_4_0
+#if NET
 		NSNumber [] SetPositions { get; }
 #else
 		NSObject [] SetPositions { get;  }
