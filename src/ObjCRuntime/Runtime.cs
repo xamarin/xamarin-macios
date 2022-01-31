@@ -50,6 +50,7 @@ namespace ObjCRuntime {
 
 		internal const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
 
+#pragma warning disable 649 // Field 'X' is never assigned to, and will always have its default value
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr assembly;
 			public MTClassMap *map;
@@ -64,6 +65,7 @@ namespace ObjCRuntime {
 			public int protocol_wrapper_count;
 			public int protocol_count;
 		}
+#pragma warning restore 649
 
 		[Flags]
 		internal enum MTTypeFlags : uint
@@ -100,6 +102,7 @@ namespace ObjCRuntime {
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
+#pragma warning disable 649 // Field 'X' is never assigned to, and will always have its default value
 		internal struct Trampolines {
 			public IntPtr tramp;
 			public IntPtr stret_tramp;
@@ -125,6 +128,7 @@ namespace ObjCRuntime {
 			public IntPtr get_flags_tramp;
 			public IntPtr set_flags_tramp;
 		}
+#pragma warning restore 649
 
 		[Flags]
 		internal enum InitializationFlags : int {
