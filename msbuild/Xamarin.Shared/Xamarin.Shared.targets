@@ -2024,10 +2024,61 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CalculateCodesignAppBundleInputs" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
+	<Target Name="_CalculateCodesignAppBundleInputs">
 		<ItemGroup>
 			<_CodesignAppBundleInputs Include="$(_AppBundlePath)**\*.*" Exclude="$(_AppCodeSignaturePath)_CodeSignature\CodeResources" />
 		</ItemGroup>
+
+		<PropertyGroup>
+			<_CodesignAppBundleCondition Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)'">true</_CodesignAppBundleCondition>
+			<_CodesignAppBundleCondition Condition="'$(_PlatformName)' != 'macOS' And ('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">true</_CodesignAppBundleCondition>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CodesignAppBundle"
+			Condition="'$(_CodesignAppBundleCondition)' == 'true'"
+			DependsOnTargets="$(_CodesignAppBundleDependsOn)"
+			Inputs="@(_CodesignAppBundleInputs)"
+			Outputs="$(_AppCodeSignaturePath)_CodeSignature\CodeResources"
+		>
+
+		<PropertyGroup>
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
+
+			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' == 'macOS'">$(IntermediateOutputPath)Entitlements.xcent</_AppBundleCodesignEntitlements>
+			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' != 'macOS'">$(_CompiledCodesignEntitlements)</_AppBundleCodesignEntitlements>
+		</PropertyGroup>
+
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
+			Entitlements="$(_AppBundleCodesignEntitlements)"
+			ExtraArgs="$(CodesignExtraArgs)"
+			IsAppExtension="$(IsAppExtension)"
+			Keychain="$(CodesignKeychain)"
+			ResourceRules="$(_PreparedResourceRules)"
+			Resources="$(AppBundleDir)"
+			SigningKey="$(_CodeSigningKey)"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			UseHardenedRuntime="$(UseHardenedRuntime)"
+			UseSecureTimestamp="$(UseHardenedRuntime)"
+			>
+		</Codesign>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(AppBundleDir).dSYM\Contents\Info.plist')"
+			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
+		/>
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_AppBundlePath)_CodeSignature\CodeResources')"
+			Files="$(_AppBundlePath)_CodeSignature\CodeResources"
+		/>
 	</Target>
 
 	<!-- LinkMode -->

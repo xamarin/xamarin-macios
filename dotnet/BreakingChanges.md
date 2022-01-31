@@ -117,3 +117,14 @@ This affects methods and properties on the following classes:
 * MDLTransform
 * MDLTransformComponent
 
+## Removal of `Runtime.UseAutoreleasePoolInThreadPool`
+
+Enabling or disabling this feature is not supported at runtime and must
+be done using the MSBuild [`AutoreleasePoolSupport`](https://docs.microsoft.com/en-us/dotnet/core/run-time-config/threading#autoreleasepool-for-managed-threads)
+property.
+
+You can query if the build-time feature is enabled with the following code:
+
+```csharp
+AppContext.TryGetSwitch ("System.Threading.Thread.EnableAutoreleasePool", out var enabled);
+```
