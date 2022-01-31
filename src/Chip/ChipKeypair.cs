@@ -3,7 +3,7 @@
 //
 // Authors:
 //	Rachel Kang  <rachelkang@microsoft.com>
-//com
+//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 
