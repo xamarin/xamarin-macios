@@ -26,9 +26,18 @@ using ObjCRuntime;
 
 namespace NaturalLanguage {
 
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (12,0)]
+	[Mac (10,14)]
+	[TV (12,0)]
+	[Watch (5,0)]
+#endif
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	public enum NLTaggerOptions : ulong {
 		OmitWords = 1uL << 0,
 		OmitPunctuation = 1uL << 1,
@@ -38,15 +47,33 @@ namespace NaturalLanguage {
 		JoinContractions = 1uL << 5,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (12,0)]
+	[Mac (10,14)]
+	[TV (12,0)]
+	[Watch (5,0)]
+#endif
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	public enum NLModelType : long {
 		Classifier,
 		Sequence,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (12,0)]
+	[Mac (10,14)]
+	[TV (12,0)]
+	[Watch (5,0)]
+#endif
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	public enum NLTokenUnit : long {
 		Word,
 		Sentence,
@@ -55,16 +82,34 @@ namespace NaturalLanguage {
 	}
 
 
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (12,0)]
+	[Mac (10,14)]
+	[TV (12,0)]
+	[Watch (5,0)]
+#endif
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	public enum NLTokenizerAttributes : ulong {
 		Numeric = 1uL << 0,
 		Symbolic = 1uL << 1,
 		Emoji = 1uL << 2,
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (12,0)]
+	[Mac (10,14)]
+	[TV (12,0)]
+	[Watch (5,0)]
+#endif
 	public enum NLLanguage {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -185,7 +230,16 @@ namespace NaturalLanguage {
 		Vietnamese,
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (12,0)]
+	[Mac (10,14)]
+	[TV (12,0)]
+	[Watch (5,0)]
+#endif
 	public enum NLTagScheme {
 		[Field ("NLTagSchemeTokenType")]
 		TokenType,
@@ -201,7 +255,16 @@ namespace NaturalLanguage {
 		Language,
 		[Field ("NLTagSchemeScript")]
 		Script,
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
+		[Watch (6,0)]
+#endif
 		[Field ("NLTagSchemeSentimentScore")]
 		SentimentScore,
 	}
