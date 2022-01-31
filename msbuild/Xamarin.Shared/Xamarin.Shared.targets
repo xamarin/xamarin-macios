@@ -1730,6 +1730,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_EmbedProvisionProfile;
 			_CodesignNativeLibraries;
 			_CollectFrameworks;
+			_CodesignFrameworks;
 			_ReadAppExtensionCodesignProperties;
 			_CodesignAppExtensions;
 			_PrepareCodesignAppExtension;
@@ -1858,8 +1859,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CodesignFrameworks" Condition="'$(_MustCodesignFrameworks)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
-		Inputs="%(_Frameworks.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)">
+	<Target Name="_CodesignFrameworks" Condition="'$(_MustCodesignFrameworks)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks">
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
@@ -1869,7 +1869,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 
 		<ItemGroup>
-			<_CodesignItems Include="@(Frameworks)">
+			<_CodesignItems Include="@(_Frameworks)">
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
 				<!-- CodesignDeep -->
 				<CodesignDisableTimestamp>$(_CodesignDisableTimestamp)</CodesignDisableTimestamp>
