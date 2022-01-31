@@ -125,7 +125,7 @@ namespace LinkAll.Attributes {
 		{
 #if NET
 			const string klassName = "ObjCRuntime.ObjCException";
-#if __MACOS__
+#elif __MACOS__
 			const string klassName = "Foundation.ObjCException";
 #else
 			const string klassName = "Foundation.MonoTouchException";
