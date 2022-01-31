@@ -19,9 +19,7 @@ using System.Runtime.Versioning;
 namespace NetworkExtension {
 	public partial class NEVpnManager {
 
-#if !NET
 		[Mac (10,11)]
-#endif
 		public void SetAuthorization (Authorization authorization)
 		{
 			if (authorization is null)
