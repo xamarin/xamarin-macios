@@ -16575,6 +16575,10 @@ namespace AppKit {
 		[Export ("initWithViewAnimations:")]
 		NativeHandle Constructor (NSDictionary [] viewAnimations);
 	
+		[DesignatedInitializer]
+		[Export ("initWithDuration:animationCurve:")]
+		NativeHandle Constructor (double duration, NSAnimationCurve animationCurve);
+
 		[Export ("viewAnimations", ArgumentSemantic.Copy)]
 		NSDictionary [] ViewAnimations { get; set; }
 	
