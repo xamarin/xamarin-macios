@@ -27,8 +27,14 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreVideo {
 
-#if !NET
-	[iOS (8,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[iOS (8,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
 #endif
 	public class CVMetalTexture : NativeObject {
 		[Preserve (Conditional = true)]

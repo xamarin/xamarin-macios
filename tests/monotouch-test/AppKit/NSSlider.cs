@@ -20,12 +20,13 @@ namespace Xamarin.Mac.Tests
 
 			NSSlider slider = new NSSlider ();
 			var isVert = slider.IsVertical;
-#if XAMCORE_4_0
+#if NET
 			slider.IsVertical = true;
+			Assert.IsTrue (slider.IsVertical);
 #else
 			slider.IsVertical = 1;
-#endif
 			Assert.AreEqual ((nint) 1, slider.IsVertical);
+#endif
 		}
 	}
 }

@@ -17,15 +17,8 @@ namespace AppKit {
 namespace UIKit {
 #endif
 	partial class NSLayoutManager {
-#if !XAMCORE_4_0 && MONOMAC
-#if NET
-		[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
+#if !NET && MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
-#endif
 		public CGRect [] GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, NSTextContainer textContainer)
 		{
 			if (textContainer == null)
@@ -44,7 +37,7 @@ namespace UIKit {
 			}
 			return returnArray;
 		}
-#endif // MONOMAC
+#endif // !NET && MONOMAC
 
 #if !NET && MONOMAC
 		[Obsolete ("Use 'GetIntAttribute' instead.")]
@@ -52,7 +45,7 @@ namespace UIKit {
 		{
 			return GetIntAttribute (attributeTag, glyphIndex);
 		}
-#endif
+#endif // !NET && MONOMAC
 	}
 }
 

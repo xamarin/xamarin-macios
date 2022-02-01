@@ -113,4 +113,3 @@
 !missing-selector! WKWebView::stopLoading: not bound
 !missing-selector! WKWebViewConfiguration::setUserInterfaceDirectionPolicy: not bound
 !missing-selector! WKWebViewConfiguration::userInterfaceDirectionPolicy not bound
-!unknown-native-enum! WKSelectionGranularity bound
