@@ -21,7 +21,7 @@ namespace GameKit {
 #if !MONOMAC
 
 	// NSUInteger -> GKPeerPickerController.h
-#if XAMCORE_4_0
+#if NET
 	[NoTV] // preserve binary compatibility with existing/shipping code
 #endif
 	[NoWatch]
@@ -126,7 +126,7 @@ namespace GameKit {
 		TurnBasedInvalidParticipant,
 		TurnBasedInvalidTurn,
 		TurnBasedInvalidState,
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("This value was re-used on macOS only and removed later.")]
 		Offline = 25,
 #endif
@@ -165,7 +165,7 @@ namespace GameKit {
 	[Deprecated (PlatformName.TvOS, 12,0)]
 	[Deprecated (PlatformName.iOS, 12,0)]
 	[Native]
-#if WATCH && !XAMCORE_4_0
+#if WATCH && !NET
 	// removed in Xcode 10 but a breaking change (for us) to remove
 	[Obsolete ("Not used in watchOS.")]
 #else
@@ -308,6 +308,7 @@ namespace GameKit {
 		NoAnswer = 5,
 	}
 
+#if !NET
 	[iOS (11,3)][Deprecated (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
 	[Mac (10,13,4)][Deprecated (PlatformName.MacOSX, 11,0, message: "Do not use; this API was removed.")]
 	[TV (11,3)][Deprecated (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
@@ -318,6 +319,7 @@ namespace GameKit {
 		GreenBuddyUI = 1,
 		AuthKitInvocation = 2,
 	}
+#endif
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[NoWatch]

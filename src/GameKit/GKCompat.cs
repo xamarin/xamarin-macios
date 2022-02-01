@@ -34,7 +34,7 @@ namespace GameKit {
 	}
 #endif // !XAMCORE_3_0
 
-#if WATCH && !XAMCORE_4_0
+#if WATCH && !NET
 	[Unavailable (PlatformName.WatchOS)]
 	[Obsolete ("This API is not available on this platform.")]
 	public static class GKGameSessionErrorCodeExtensions {
@@ -43,7 +43,7 @@ namespace GameKit {
 	}
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	public partial class GKGameSession {
 
 		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]

@@ -44,24 +44,43 @@ namespace MonoTouchFixtures.GamePlayKit
 		public void RotationTest ()
 		{
 			using (var obj = new GKAgent3D ()) {
+#if NET
+				var initial = new MatrixFloat3x3 (0, 0, 1,
+												  0, 1, 0,
+												  1, 0, 0);
+#else
 				var initial = new Matrix3 (0, 0, 1,
 										   0, 1, 0,
 										   1, 0, 0);
+#endif
 				Asserts.AreEqual (initial, obj.Rotation, "Rotation");
+#if !NET
 				Asserts.AreEqual ((MatrixFloat3x3) initial, obj.Rotation3x3, "Rotation3x3");
+#endif
 
+#if !NET
 				var mat = new Matrix3 (1, 2, 3,
 									   4, 5, 6,
 									   7, 8, 9);
-				var mat3x3 = (MatrixFloat3x3) mat;
+#endif
+				var mat3x3 = new MatrixFloat3x3 (1, 2, 3,
+												 4, 5, 6,
+												 7, 8, 9);;
 
+#if !NET
 				obj.Rotation = mat;
 				Asserts.AreEqual (mat, obj.Rotation, "Rotation after setter");
 				var transposed3x3 = MatrixFloat3x3.Transpose ((MatrixFloat3x3) mat);
 				Asserts.AreEqual (transposed3x3, obj.Rotation3x3, "Rotation3x3 after setter");
 				Asserts.AreEqual (transposed3x3, CFunctions.GetMatrixFloat3x3 (obj, "rotation"), "Rotation3x3 after setter native");
+#endif
+#if NET
+				obj.Rotation = mat3x3;
+				Asserts.AreEqual (mat3x3, obj.Rotation, "Rotation3x3 after setter 3x3");
+#else
 				obj.Rotation3x3 = mat3x3;
 				Asserts.AreEqual (mat3x3, obj.Rotation3x3, "Rotation3x3 after setter 3x3");
+#endif
 				Asserts.AreEqual (mat3x3, CFunctions.GetMatrixFloat3x3 (obj, "rotation"), "Rotation3x3 after setter native 3x3");
 			}
 		}
