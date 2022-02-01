@@ -2174,12 +2174,14 @@ xamarin_log_marshalled_exceptions ()
 }
 
 void
-xamarin_log_managed_exception (GCHandle handle, MarshalManagedExceptionMode mode)
+xamarin_log_managed_exception (MonoObject *exception, MarshalManagedExceptionMode mode)
 {
 	if (!xamarin_log_marshalled_exceptions ())
 		return;
 
+	GCHandle handle = xamarin_gchandle_new (exception, false);
 	NSLog (@PRODUCT ": Processing managed exception for exception marshalling (mode: %i):\n%@", mode, xamarin_print_all_exceptions (handle));
+	xamarin_gchandle_free (handle);
 }
 
 void
@@ -2291,7 +2293,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 #endif
 	}
 
-	xamarin_log_managed_exception (handle, mode);
+	xamarin_log_managed_exception (exception, mode);
 
 	switch (mode) {
 #if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
