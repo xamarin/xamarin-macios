@@ -2459,11 +2459,16 @@ namespace Foundation
 		[Field ("NSKeyedArchiveRootObjectKey")]
 		NSString RootObjectKey { get; }
 
+#if NET
+		[Export ("requiresSecureCoding")]
+		bool RequiresSecureCoding { get; set; }
+#else
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
+#endif
 
 		[Watch (3,0)][TV (10,0)][Mac (10, 12)][iOS (10,0)]
 		[Export ("encodedData", ArgumentSemantic.Strong)]
@@ -2554,12 +2559,16 @@ namespace Foundation
 		[return: NullAllowed]
 		Class GetClass (string codedName);
 
+#if NET
+		[Export ("requiresSecureCoding")]
+		bool RequiresSecureCoding { get; set; }
+#else
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
-
+#endif
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
