@@ -74,7 +74,7 @@ namespace MonoTouchFixtures.Network {
 #if NET
 			using (var m = new NWIPMetadata ()) {
 				Assert.That (m.EcnFlag, Is.EqualTo (NWIPEcnFlag.NonEct), "IPMetadataEcnFlag");
-				Assert.That (m.ReceiveTime, Is.EqualTo (Is.EqualTo (TimeSpan.Zero)), "IPMetadataReceiveTime");
+				Assert.That (m.ReceiveTime, Is.EqualTo (TimeSpan.Zero), "IPMetadataReceiveTime");
 #else
 			using (var m = NWProtocolMetadata.CreateIPMetadata ()) {
 				Assert.That (m.IPMetadataEcnFlag, Is.EqualTo (NWIPEcnFlag.NonEct), "IPMetadataEcnFlag");
