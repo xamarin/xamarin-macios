@@ -51,6 +51,12 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
+		protected string GetAppPath (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			return Path.Combine (Path.GetDirectoryName (projectPath)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, Path.GetFileNameWithoutExtension (projectPath) + ".app");
+		}
+
 		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
 		{
 			switch (platform) {
