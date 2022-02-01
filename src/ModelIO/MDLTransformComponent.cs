@@ -1,4 +1,4 @@
-#if !XAMCORE_4_0
+#if !NET
 using OpenTK;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
