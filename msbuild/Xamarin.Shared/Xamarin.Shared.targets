@@ -2008,27 +2008,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 
 		<PropertyGroup>
-			<_CodesignAppBundleCondition Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)'">true</_CodesignAppBundleCondition>
-			<_CodesignAppBundleCondition Condition="'$(_PlatformName)' != 'macOS' And ('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">true</_CodesignAppBundleCondition>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="_CodesignAppBundle"
-			Condition="'$(_CodesignAppBundleCondition)' == 'true'"
-			DependsOnTargets="$(_CodesignAppBundleDependsOn)"
-			Inputs="@(_CodesignAppBundleInputs)"
-			Outputs="$(_AppCodeSignaturePath)_CodeSignature\CodeResources"
-		>
-
-		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 
 			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' == 'macOS'">$(IntermediateOutputPath)Entitlements.xcent</_AppBundleCodesignEntitlements>
 			<_AppBundleCodesignEntitlements Condition="'$(_PlatformName)' != 'macOS'">$(_CompiledCodesignEntitlements)</_AppBundleCodesignEntitlements>
+
+			<_CodesignAppBundleCondition Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)'">true</_CodesignAppBundleCondition>
+			<_CodesignAppBundleCondition Condition="'$(_PlatformName)' != 'macOS' And ('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">true</_CodesignAppBundleCondition>
 		</PropertyGroup>
 
-		<ItemGroup>
+		<ItemGroup Condition="'$(_CodesignAppBundleCondition)' == 'true'">
 			<_CodesignItems Include="$(AppBundleDir)">
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
 				<CodesignDeep>$(IsAppExtension)</CodesignDeep>
@@ -2041,8 +2031,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<!-- CodesignStampPath -->
 				<CodesignUseHardenedRuntime>$(UseHardenedRuntime)</CodesignUseHardenedRuntime>
 				<CodesignUseSecureTimestamp>$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
+				<OutputStampFile>$(_AppCodeSignaturePath)_CodeSignature\CodeResources</OutputStampFile>
 			</_CodesignItems>
 		</ItemGroup>
+	</Target>
+
+	<!-- sign the app bundle and anything inside that needs signing -->
+	<Target Name="_CodesignAppBundle"
+			DependsOnTargets="$(_CodesignAppBundleDependsOn)"
+			Inputs="@(_CodesignItems)"
+			Outputs="@(_CodesignItems -> '%(_CodesignItems.OutputStampFile)'"
+		>
 
 		<Codesign
 			SessionId="$(BuildSessionId)"
