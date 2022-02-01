@@ -46,7 +46,7 @@ namespace AVKit {
 	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0
+#if NET
 	[Sealed] // Apple docs: Do not subclass AVPictureInPictureController. Overriding this class’s methods is unsupported and results in undefined behavior.
 #endif
 	interface AVPictureInPictureController

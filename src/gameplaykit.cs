@@ -138,7 +138,7 @@ namespace GameplayKit {
 		[Export ("rightHanded")]
 		bool RightHanded { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Rotation3x3' instead.")]
 		[Export ("rotation", ArgumentSemantic.Assign)]
 		Matrix3 Rotation { 
@@ -150,7 +150,7 @@ namespace GameplayKit {
 #endif
 
 		[Export ("rotation", ArgumentSemantic.Assign)]
-#if XAMCORE_4_0
+#if NET
 		MatrixFloat3x3 Rotation {
 #else
 		[Sealed]
@@ -853,7 +853,7 @@ namespace GameplayKit {
 		Vector2i GridPosition { 
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set; 
 #endif
@@ -1478,7 +1478,7 @@ namespace GameplayKit {
 		[Export ("displaceXWithNoise:yWithNoise:zWithNoise:")]
 		void Displace (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GKNoise.Displace' instead.")]
 		[Wrap ("Displace (xDisplacementNoise, yDisplacementNoise, zDisplacementNoise)", isVirtual: true)]
 		void DisplaceX (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
@@ -1950,7 +1950,7 @@ namespace GameplayKit {
 		[Export ("removeElement:withNode:")]
 		bool RemoveElement (NSObject data, GKQuadTreeNode node);
 
-#if !XAMCORE_4_0 && !MONOMAC // This API is removed in Xcode 8
+#if !NET && !MONOMAC // This API is removed in Xcode 8
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]

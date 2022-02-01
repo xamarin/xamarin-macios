@@ -29,6 +29,12 @@ namespace ObjCRuntime {
 		}
 
 		[DoesNotReturn]
+		public static void ThrowArgumentOutOfRangeException (string argumentName, string message)
+		{
+			throw new ArgumentOutOfRangeException (argumentName, message);
+		}
+
+		[DoesNotReturn]
 		public static void ThrowObjectDisposedException (object o)
 		{
 			throw new ObjectDisposedException (o.GetType ().ToString ());
