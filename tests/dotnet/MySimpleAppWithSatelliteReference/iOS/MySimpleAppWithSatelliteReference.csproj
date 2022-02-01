@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-	<ItemGroup>
-	  <ProjectReference Include="..\..\MySatelliteAssembliesLibrary\iOS\MySatelliteAssembliesLibrary.csproj" />
-	</ItemGroup>
 	<PropertyGroup>
 		<TargetFramework>net6.0-ios</TargetFramework>
 	</PropertyGroup>

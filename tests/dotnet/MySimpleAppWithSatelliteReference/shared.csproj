@@ -9,7 +9,9 @@
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />
-
+	<ItemGroup>
+	  <ProjectReference Include="..\..\MySatelliteAssembliesLibrary\$(_PlatformName)\MySatelliteAssembliesLibrary.csproj" />
+	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="../*.cs" />
 	</ItemGroup>
