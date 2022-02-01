@@ -2364,16 +2364,13 @@ xamarin_process_managed_exception (MonoObject *exception)
 				xamarin_free (fullname);
 			}
 
-			char *message = xamarin_get_exception_message (handle, &exception_gchandle);
+			reason = xamarin_print_all_exceptions (handle);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception when trying to get the message for an exception (this exception will be ignored):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				xamarin_gchandle_free (exception_gchandle);
 				exception_gchandle = INVALID_GCHANDLE;
 				reason = @"Unknown message";
-			} else {
-				reason = [NSString stringWithUTF8String: message];
-				xamarin_free (message);
 			}
 
 			userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
