@@ -1,2 +1,6 @@
 !missing-field! CHIPVersionNumber not bound
 !missing-field! CHIPVersionString not bound
+!missing-field! CHIPSizeThreadExtendedPanId not bound
+!missing-field! CHIPSizeThreadMasterKey not bound
+!missing-field! CHIPSizeThreadNetworkName not bound
+!missing-field! CHIPSizeThreadPSKc not bound

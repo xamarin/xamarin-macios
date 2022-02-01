@@ -29,6 +29,10 @@ parameters:
   type: boolean
   default: true
 
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -109,6 +113,7 @@ jobs:
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
+      skipESRP: ${{ parameters.skipESRP }}
       enableAPIDiff: false # this step should never execute the api diff, that should be left for the parallel job
 
 - job: api_diff
@@ -236,4 +241,5 @@ jobs:
       statusContext: "Build"
       runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      enableAPIDiff: ${{ parameters.enableAPIDiff }}
       devicePrefix: sim

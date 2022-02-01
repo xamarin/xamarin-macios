@@ -30,7 +30,7 @@ namespace PhotosUI {
 	[Mac (10, 13)]
 	[MacCatalyst (14,0)]
 	[Protocol]
-#if !XAMCORE_4_0 && !TVOS && !MONOMAC
+#if !NET && !TVOS && !MONOMAC
 	// According to documentation you're supposed to implement this protocol in a UIViewController subclass,
 	// which means a model (which does not inherit from UIViewController) is not useful.
 	[Model]

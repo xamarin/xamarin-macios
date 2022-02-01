@@ -100,6 +100,9 @@ public class BindingTouch : IDisposable {
 		if (!string.IsNullOrEmpty (attributedll))
 			return attributedll!;
 
+		if (IsDotNet)
+			return Path.Combine (GetSDKRoot (), "lib", "Xamarin.Apple.BindingAttributes.dll");
+
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
 			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
@@ -371,6 +374,8 @@ public class BindingTouch : IDisposable {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+				else if (target_framework == TargetFramework.DotNet_5_0_macOS)
+					baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else
 					throw ErrorHelper.CreateError (1053, target_framework); 
 			}

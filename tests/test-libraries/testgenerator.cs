@@ -791,7 +791,9 @@ using Security;
 using UIKit;
 #endif
 using MonoTouchException=ObjCRuntime.RuntimeException;
-#if __MACOS__
+#if NET
+using NativeException=ObjCRuntime.ObjCException;
+#elif __MACOS__
 using NativeException=Foundation.ObjCException;
 #else
 using NativeException=Foundation.MonoTouchException;

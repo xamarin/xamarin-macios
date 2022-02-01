@@ -1,6 +1,6 @@
 // Compatibility stubs
 
-#if !XAMCORE_4_0 && IOS
+#if !NET && IOS
 
 using System;
 

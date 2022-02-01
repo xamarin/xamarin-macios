@@ -745,11 +745,21 @@ namespace CoreAnimation {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
-#if XAMCORE_4_0
+#if NET
 		[Protected]
-#endif
+		[Export ("scrollMode", ArgumentSemantic.Copy)]
+		NSString WeakScrollMode { get; set; }
+
+		CAScroll ScrollMode {
+			[Wrap ("CAScrollExtensions.GetValue (WeakScrollMode)")]
+			get;
+			[Wrap ("WeakScrollMode = value.GetConstant ()!")]
+			set;
+		}
+#else
 		[Export ("scrollMode", ArgumentSemantic.Copy)]
 		NSString ScrollMode { get; set;  }
+#endif
 
 		[Export ("scrollToPoint:")]
 		void ScrollToPoint (CGPoint p);
@@ -914,7 +924,7 @@ namespace CoreAnimation {
 		[Export ("alignmentMode", ArgumentSemantic.Copy)]
 		NSString WeakAlignmentMode { get; set; }
 
-#if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
+#if !NET // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
 		[Obsolete ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerTruncationMode.None.GetConstant ()")]
@@ -959,7 +969,7 @@ namespace CoreAnimation {
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Justified.GetConstant ()")]
 		NSString AlignmentJustified { get; }
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 		[iOS(9,0)]
 		[Export ("allowsFontSubpixelQuantization")]
@@ -1022,7 +1032,7 @@ namespace CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject)
-#if XAMCORE_4_0
+#if NET
 		, Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (CAAnimationDelegate) }
 #endif
 	)]
@@ -1039,7 +1049,7 @@ namespace CoreAnimation {
 		[Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
 	
-#if XAMCORE_4_0
+#if NET
 		// before that we need to be wrap this manually to avoid the BI1110 error
 		[Wrap ("WeakDelegate")]
 		ICAAnimationDelegate Delegate { get; set; }
@@ -1088,7 +1098,7 @@ namespace CoreAnimation {
 		[Field ("kCAAnimationLinear")]
 		NSString AnimationLinear { get; }
 				
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("kCAAnimationDiscrete")]
 		[Obsolete ("The name has been fixed, use 'AnimationDiscrete' instead.")]
 		NSString AnimationDescrete { get; }
@@ -1400,11 +1410,11 @@ namespace CoreAnimation {
 		[Export ("endPoint")]
 		CGPoint EndPoint { get; set;  }
 
-#if XAMCORE_4_0
+#if NET
 		CAGradientLayerType LayerType {
 			[Wrap ("CAGradientLayerTypeExtensions.GetValue (WeakLayerType)")]
 			get;
-			[Wrap ("WeakLayerType = value.GetConstant ()")]
+			[Wrap ("WeakLayerType = value.GetConstant ()!")]
 			set;
 		}
 
@@ -1785,7 +1795,7 @@ namespace CoreAnimation {
 // rdar #33590997 was filled - no news
 // 'initWithType:', 'behaviorWithType:' and 'behaviorTypes' API now cause rejection
 // https://trello.com/c/J8BDDUV9/86-33590997-coreanimation-quartzcore-api-removals
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterBehavior : NSSecureCoding {

@@ -215,7 +215,7 @@ namespace CoreAnimation {
 		[DllImport (Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DInvert (CATransform3D t);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use Invert() as the argument to this method is unused.")]
 		public CATransform3D Invert (CATransform3D t)
 		{

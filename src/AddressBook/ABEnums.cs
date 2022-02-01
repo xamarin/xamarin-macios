@@ -28,15 +28,27 @@
 #if !MONOMAC
 
 using System;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
 namespace AddressBook {
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	[Native]
 	[ErrorDomain ("ABAddressBookErrorDomain")]
 	public enum ABAddressBookError : long {
@@ -44,9 +56,20 @@ namespace AddressBook {
 		OperationNotPermittedByUserError
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	[Native]
 	public enum ABAuthorizationStatus : long {
 		NotDetermined = 0,
@@ -55,19 +78,40 @@ namespace AddressBook {
 		Authorized
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABPersonSortBy : uint /* uint32_t */ {
 		FirstName = 0,
 		LastName  = 1,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABPersonCompositeNameFormat : uint /* uint32_t */ {
 		FirstNameFirst  = 0,
 		LastNameFirst   = 1,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABPersonProperty {
 		Address,
 		Birthday,
@@ -96,28 +140,56 @@ namespace AddressBook {
 		SocialProfile,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	[Native]
 	public enum ABPersonImageFormat : long {
 		Thumbnail = 0,
 		OriginalSize = 2,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABPersonKind {
 		None,
 		Organization,
 		Person,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABRecordType : uint /* uint32_t */ {
 		Person = 0,
 		Group = 1,
 		Source = 2,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABPropertyType : uint /* uint32_t */ {
 		Invalid         = 0,
 		String          = 0x1,
@@ -135,7 +207,14 @@ namespace AddressBook {
 	}
 
 	// note: not a true flag
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABSourceType : int /* typedef int */ {
 		Local		= 0x0,
 		Exchange	= 0x1,
@@ -148,7 +227,14 @@ namespace AddressBook {
 		SearchableMask = 0x01000000,
 	};
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public enum ABSourceProperty {
 		Name,
 		Type,

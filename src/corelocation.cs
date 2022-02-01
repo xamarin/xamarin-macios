@@ -489,9 +489,7 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateHeading:"), EventArgs ("CLHeadingUpdated")]
 		void UpdatedHeading (CLLocationManager  manager, CLHeading newHeading);
 	
-#if XAMCORE_4_0 // Unavailable on macOS
-		[NoMac]
-#endif
+		[Mac (10,15)]
 		[NoTV]
 		[Watch (6,0)]
 		[Export ("locationManagerShouldDisplayHeadingCalibration:"), DelegateName ("CLLocationManagerEventArgs"), DefaultValue (true)]
@@ -556,16 +554,12 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation[] locations);
 
-#if XAMCORE_4_0 // Unavailable on macOS
-		[NoMac]
-#endif
+		[Mac (10,15)]
 		[NoWatch][NoTV]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
-#if XAMCORE_4_0 // Unavailable on macOS
-		[NoMac]
-#endif
+		[Mac (10,15)]
 		[NoWatch][NoTV]
 		[Export ("locationManagerDidResumeLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesResumed (CLLocationManager manager);

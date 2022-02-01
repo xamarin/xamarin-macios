@@ -203,7 +203,9 @@ namespace CoreVideo {
 		}
 #endif
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public bool? MetalCompatibility {
