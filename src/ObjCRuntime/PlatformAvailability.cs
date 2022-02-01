@@ -12,7 +12,7 @@
 //
 // Copyright 2013-2014 Xamarin Inc.
 
-#if (!XAMCORE_3_0 && !NET)
+#if COREBUILD || (!XAMCORE_3_0 && !NET)
 
 using System;
 using System.Globalization;
