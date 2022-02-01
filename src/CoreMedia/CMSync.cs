@@ -586,8 +586,8 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Mac (10,8)]
-		[iOS (6,0)]
+		[Introduced (PlatformName.MacOSX)]
+		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -612,8 +612,8 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Mac (10,8)]
-		[iOS (6,0)]
+		[Introduced (PlatformName.MacOSX)]
+		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -643,8 +643,8 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Mac (10,8)]
-		[iOS (6,0)]
+		[Introduced (PlatformName.MacOSX)]
+		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -669,8 +669,8 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Mac (10,8)]
-		[iOS (6,0)]
+		[Introduced (PlatformName.MacOSX)]
+		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
