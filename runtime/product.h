@@ -31,7 +31,11 @@
   #else
     #error Unknown MONOTOUCH product for dual assembly
   #endif
-	#define PRODUCT_EXCEPTION_TYPE   "MonoTouchException"
+  #if DOTNET
+    #define PRODUCT_EXCEPTION_TYPE   "ObjCException"
+  #else
+    #define PRODUCT_EXCEPTION_TYPE   "MonoTouchException"
+  #endif
 	#ifdef __LP64__
 		#define ARCH_SUBDIR ".monotouch-64"
 	#else

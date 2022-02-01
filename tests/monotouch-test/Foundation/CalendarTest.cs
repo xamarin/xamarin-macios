@@ -8,7 +8,9 @@ using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
 
-#if MONOMAC
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#elif MONOMAC
 using PlatformException = Foundation.ObjCException;
 #else
 using PlatformException = Foundation.MonoTouchException;
