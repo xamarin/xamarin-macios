@@ -9,10 +9,14 @@ namespace MapKit {
 #if !WATCH || (WATCH && !NET)
 
 #if NET
-	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
 #else
-	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
+	[TV (11,0)]
+	[NoWatch]
+	[iOS (11,0)]
+	[Mac (10,13)]
 #endif
 #if WATCH && !NET
 	[Obsolete ("This API is not available on this platform.")]

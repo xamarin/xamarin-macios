@@ -13,9 +13,7 @@ using Bindings.Test;
 
 using NUnit.Framework;
 
-#if __MACOS__
-using ObjCException = Foundation.ObjCException;
-#else
+#if !NET && !__MACOS__
 using ObjCException = Foundation.MonoTouchException;
 #endif
 

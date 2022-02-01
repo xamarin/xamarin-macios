@@ -436,7 +436,7 @@ namespace ObjCRuntime {
 
 		static void ThrowNSException (IntPtr ns_exception)
 		{
-#if MONOMAC
+#if MONOMAC || NET
 			throw new ObjCException (new NSException (ns_exception));
 #else
 			throw new MonoTouchException (new NSException (ns_exception));
@@ -452,7 +452,7 @@ namespace ObjCRuntime {
 		static IntPtr CreateNSException (IntPtr ns_exception)
 		{
 			Exception ex;
-#if MONOMAC
+#if MONOMAC || NET
 			ex = new ObjCException (Runtime.GetNSObject<NSException> (ns_exception)!);
 #else
 			ex = new MonoTouchException (Runtime.GetNSObject<NSException> (ns_exception)!);
@@ -469,7 +469,7 @@ namespace ObjCRuntime {
 		static IntPtr UnwrapNSException (IntPtr exc_handle)
 		{
 			var obj = GCHandle.FromIntPtr (exc_handle).Target;
-#if MONOMAC
+#if MONOMAC || NET
 			var exc = obj as ObjCException;
 #else
 			var exc = obj as MonoTouchException;
