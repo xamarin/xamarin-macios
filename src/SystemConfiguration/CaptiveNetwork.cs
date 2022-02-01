@@ -24,71 +24,39 @@ namespace SystemConfiguration {
 
 #if __TVOS__
 		// in Xcode 10 the CaptiveNetwork API are marked as prohibited on tvOS
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Always return 'null'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static Foundation.NSString NetworkInfoKeyBSSID => null;
 
 		[Obsolete ("Always return 'null'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static Foundation.NSString NetworkInfoKeySSID => null;
 
 		[Obsolete ("Always return 'null'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static Foundation.NSString NetworkInfoKeySSIDData => null;
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static bool MarkPortalOffline (string iface) => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static bool MarkPortalOnline (string iface)  => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static bool SetSupportedSSIDs (string[] ssids) => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out Foundation.NSDictionary currentNetworkInfo)  => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)  => throw new NotSupportedException ();
-#endif
+#endif // !NET
 #else
 		
 #if !MONOMAC

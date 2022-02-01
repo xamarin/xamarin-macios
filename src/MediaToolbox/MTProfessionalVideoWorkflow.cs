@@ -10,7 +10,9 @@ namespace MediaToolbox {
 
 	static public class MTProfessionalVideoWorkflow {
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[Mac (10,10)]
 #endif
 		[DllImport (Constants.MediaToolboxLibrary, EntryPoint = "MTRegisterProfessionalVideoWorkflowFormatReaders")]

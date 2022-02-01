@@ -51,8 +51,12 @@ namespace MonoTouchFixtures.ModelIO {
 			Vector2 V2;
 			Vector3 V3;
 			Vector4 V4;
+#if NET
+			NMatrix4 M4;
+#else
 			Matrix4 M4;
 			MatrixFloat4x4 M4x4;
+#endif
 			MDLTextureSampler tsv;
 			NSUrl url;
 
@@ -73,8 +77,12 @@ namespace MonoTouchFixtures.ModelIO {
 				V2 = new Vector2 (1, 2);
 				V3 = new Vector3 (3, 4, 5);
 				V4 = new Vector4 (6, 7, 8, 9);
+#if NET
+				M4 = new NMatrix4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+#else
 				M4 = new Matrix4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 				M4x4 = new MatrixFloat4x4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+#endif
 				tsv = new MDLTextureSampler ();
 				url = new NSUrl ("http://xamarin.com");
 
@@ -140,14 +148,21 @@ namespace MonoTouchFixtures.ModelIO {
 				
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4)) {
 				Asserts.AreEqual (M4, obj.Matrix4x4, "7 Matrix4x4");
+#if NET
+				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.Matrix4x4, "7b MatrixFloat4x4");
+				Asserts.AreEqual (M4, obj.Matrix4x4, "7c MatrixFloat4x4");
+#else
 				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7b MatrixFloat4x4");
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) M4), obj.MatrixFloat4x4, "7c MatrixFloat4x4");
+#endif
 			}
 
+#if !NET
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4x4)) {
 				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7' MatrixFloat4x4");
 				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4, "7'b MatrixFloat4x4");
 			}
+#endif
 
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, V4)) {
 				Asserts.AreEqual (V4, obj.Float4Value, "8 Float4Value");

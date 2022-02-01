@@ -113,17 +113,10 @@ namespace VideoToolbox {
 #endif
 		public bool SupportsFrameReordering { get; private set; }
 
-#if !XAMCORE_4_0
 #if !NET
 		[NoiOS, NoTV, NoMacCatalyst, NoMac, NoWatch]
-#else
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("macos")]
-#endif
 		public bool SupportsMultiPass { get; private set; }
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 #if !NET
 		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]

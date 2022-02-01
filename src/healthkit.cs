@@ -1015,7 +1015,7 @@ namespace HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-#if XAMCORE_4_0
+#if NET
 	[Abstract] // as per docs
 #endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1045,7 +1045,7 @@ namespace HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-#if XAMCORE_4_0
+#if NET
 	[Abstract]
 #endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1055,7 +1055,7 @@ namespace HealthKit {
 		[Export ("identifier")]
 		NSString Identifier { get; }
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKQuantityType.Create (HKQuantityTypeIdentifier)'.")]
@@ -1065,7 +1065,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKQuantityType GetQuantityType (NSString hkTypeIdentifier);
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCategoryType.Create (HKCategoryTypeIdentifier)'.")]
@@ -1075,7 +1075,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKCategoryType GetCategoryType (NSString hkCategoryTypeIdentifier);
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)'.")]
@@ -1085,7 +1085,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKCharacteristicType GetCharacteristicType (NSString hkCharacteristicTypeIdentifier);
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCorrelationType.Create (HKCorrelationTypeIdentifier)'.")]
@@ -1103,7 +1103,7 @@ namespace HealthKit {
 		HKDocumentType _GetDocumentType (NSString hkDocumentTypeIdentifier);
 
 		[Static, Export ("workoutType")]
-#if XAMCORE_4_0
+#if NET
 		HKWorkoutType WorkoutType { get; }
 #else
 		HKWorkoutType GetWorkoutType ();
@@ -1230,7 +1230,7 @@ namespace HealthKit {
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
-#if XAMCORE_4_0
+#if NET
 	[Abstract]
 #endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKObserverQuery
@@ -1469,7 +1469,7 @@ namespace HealthKit {
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKObject))]
-#if XAMCORE_4_0
+#if NET
 	[Abstract]
 #endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSample
