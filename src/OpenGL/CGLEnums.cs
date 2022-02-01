@@ -26,7 +26,14 @@ using System.Runtime.Versioning;
 
 namespace OpenGL {
 
+#if NET
+	[UnsupportedOSPlatform ("macos10.14")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
+#endif
 	public enum CGLErrorCode : uint
 	{
 		NoError            = 0,		/* no error */
@@ -51,7 +58,14 @@ namespace OpenGL {
 
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("macos10.14")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
+#endif
 	public enum CGLPixelFormatAttribute : uint
 	{
 		AllRenderers = 1,
