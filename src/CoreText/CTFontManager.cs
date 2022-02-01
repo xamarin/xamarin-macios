@@ -63,15 +63,8 @@ namespace CoreText {
 		[NoWatch]
 #endif
 		Session = 3,
-#if !XAMCORE_4_0
-#if NET
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
-#else
-		[NoiOS]
-		[NoTV]
-		[NoWatch] // historically not available under the old name
-#endif
+#if !NET
+		[NoiOS][NoTV][NoWatch] // historically not available under the old name
 		User = Persistent,
 #endif
 	}
@@ -498,16 +491,16 @@ namespace CoreText {
 			return ret;
 		}
 		
+#if !NET
 		static CTFontManager ()
 		{
 			var handle = Libraries.CoreText.Handle;
 #if !XAMCORE_3_0
 			ErrorDomain  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorDomain");
 #endif
-#if !XAMCORE_4_0
 			ErrorFontUrlsKey  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorFontURLsKey");
-#endif
 		}
+#endif // !NET
 
 		static NSString _RegisteredFontsChangedNotification;
 
@@ -527,7 +520,7 @@ namespace CoreText {
 #if !XAMCORE_3_0
 		public readonly static NSString ErrorDomain;
 #endif
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'CTFontManagerErrorKeys.FontUrlsKey' property instead.")]
 		public readonly static NSString ErrorFontUrlsKey;
 #endif

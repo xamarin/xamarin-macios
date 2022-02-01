@@ -36,9 +36,11 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			}
 
 #if __TVOS__
+#if !NET
 			Assert.IsNull (CaptiveNetwork.NetworkInfoKeyBSSID, "kCNNetworkInfoKeyBSSID");
 			Assert.IsNull (CaptiveNetwork.NetworkInfoKeySSID, "kCNNetworkInfoKeySSID");
 			Assert.IsNull (CaptiveNetwork.NetworkInfoKeySSIDData, "kCNNetworkInfoKeySSIDData");
+#endif
 #else
 			Assert.That (CaptiveNetwork.NetworkInfoKeyBSSID.ToString (), Is.EqualTo ("BSSID"), "kCNNetworkInfoKeyBSSID");
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSID.ToString (), Is.EqualTo ("SSID"), "kCNNetworkInfoKeySSID");
@@ -53,7 +55,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		{
 			NSDictionary dict;
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
+#endif
 #else
 			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
 #endif
@@ -66,7 +70,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			StatusCode status;
 
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => { status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict); });
+#endif
 #else
 			status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict);
 
@@ -90,7 +96,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		{
 			StatusCode status;
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces));
+#endif
 #else
 			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
 			Assert.AreEqual (StatusCode.OK, status, "Status");
@@ -102,7 +110,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		public void MarkPortalOnline_Null ()
 		{
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOnline (null));
+#endif
 #else
 			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.MarkPortalOnline (null));
 #endif
@@ -115,7 +125,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOnline ("xamxam"));
+#endif
 #else
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
 #endif
@@ -125,7 +137,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		public void MarkPortalOffline_Null ()
 		{
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOffline (null));
+#endif
 #else
 			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.MarkPortalOffline (null));
 #endif
@@ -137,7 +151,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOffline ("xamxam"));
+#endif
 #else
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
 #endif
@@ -147,7 +163,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		public void SetSupportedSSIDs_Null ()
 		{
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.SetSupportedSSIDs (null));
+#endif
 #else
 			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.SetSupportedSSIDs (null));
 #endif
@@ -165,7 +183,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			bool supported = !TestRuntime.CheckXcodeVersion (7, 0);
 #endif
 #if __TVOS__
+#if !NET
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), "set");
+#endif
 #else
 			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" }), Is.EqualTo (supported), "set");
 #endif

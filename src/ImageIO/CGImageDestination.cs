@@ -61,33 +61,46 @@ namespace ImageIO {
 
 	public partial class CGCopyImageSourceOptions
 	{
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public CGImageMetadata? Metadata { get; set; }
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public bool MergeMetadata { get; set; }
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public bool ShouldExcludeXMP { get; set; }
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 10)]
 		[iOS (8, 0)]
 #endif
 		public bool ShouldExcludeGPS { get; set; }
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public DateTime? DateTime { get; set; }
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public int? Orientation { get; set; }
@@ -291,7 +304,9 @@ namespace ImageIO {
 			return success;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
@@ -299,10 +314,12 @@ namespace ImageIO {
 			/* CGImageRef __nonnull */ IntPtr image, /* CGImageMetadataRef __nullable */ IntPtr metadata,
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary? options)
 		{
 			if (image is null)
@@ -310,7 +327,9 @@ namespace ImageIO {
 			CGImageDestinationAddImageAndMetadata (Handle, image.Handle, meta.GetHandle (), options.GetHandle ());
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, CGImageDestinationOptions? options)
@@ -319,7 +338,9 @@ namespace ImageIO {
 			AddImageAndMetadata (image, meta, o);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
@@ -328,10 +349,12 @@ namespace ImageIO {
 			/* CGImageSourceRef __nonnull */ IntPtr image, /* CFDictionaryRef __nullable */ IntPtr options,
 			/* CFErrorRef* */ out IntPtr err);
 
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public bool CopyImageSource (CGImageSource image, NSDictionary? options, out NSError? error)
 		{
 			if (image is null)
@@ -341,7 +364,9 @@ namespace ImageIO {
 			return result;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions? options, out NSError? error)
@@ -350,20 +375,28 @@ namespace ImageIO {
 			return CopyImageSource (image, o, out error);
 		}
 
-#if !NET
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
+#if NET
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4, 0)]
+		[TV (11, 0)]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		static extern void CGImageDestinationAddAuxiliaryDataInfo (IntPtr /* CGImageDestinationRef* */ idst, IntPtr /* CFStringRef* */ auxiliaryImageDataType, IntPtr /* CFDictionaryRef* */ auxiliaryDataInfoDictionary);
 
-#if !NET
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
+#if NET
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4, 0)]
+		[TV (11, 0)]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
 #endif
 		public void AddAuxiliaryDataInfo (CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo? auxiliaryDataInfo)
 		{

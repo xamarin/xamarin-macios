@@ -182,16 +182,18 @@ namespace CoreMedia {
 		
 		public override bool Equals (object obj)
 		{
-			if (!(obj is CMTime))
-				return false;
-			
-			CMTime other = (CMTime) obj;
-			return other == this;
+			if (obj is CMTime time)
+				return CMTimeCompare (this, time) == 0;
+			return false;
 		}
 		
 		public override int GetHashCode ()
 		{
+#if NET
+			return HashCode.Combine (Value, TimeScale, TimeFlags, TimeEpoch);
+#else
 			return Value.GetHashCode () ^ TimeScale.GetHashCode () ^ TimeFlags.GetHashCode () ^ TimeEpoch.GetHashCode ();
+#endif
 		}
 		
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -364,8 +366,8 @@ namespace CoreMedia {
 
 		public static CMTime FromDictionary (NSDictionary dict)
 		{
-			if (dict == null)
-				throw new ArgumentNullException ("dict");
+			if (dict is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dict));
 			return CMTimeMakeFromDictionary (dict.Handle);
 		}
 #endif // !COREBUILD

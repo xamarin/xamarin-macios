@@ -580,7 +580,7 @@ namespace AudioUnit
 			return MusicDeviceMIDIEvent (Handle, status, data1, data2, offsetSampleFrame);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This API has been removed.")]
 		public AudioUnitStatus SetLatency (double latency)
 		{
@@ -1339,7 +1339,7 @@ namespace AudioUnit
 	}
 #endif
 
-#if !XAMCORE_4_0 && !COREBUILD
+#if !NET && !COREBUILD
 #if !MONOMAC
 	[Obsolete ("Use 'AUImplementorStringFromValueCallback' instead.")]
 	public delegate NSString _AUImplementorStringFromValueCallback (AUParameter param, IntPtr value);
