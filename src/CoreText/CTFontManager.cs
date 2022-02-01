@@ -221,7 +221,7 @@ namespace CoreText {
 		}
 
 #if NET
-		// [SupportedOSPlatform ("tvos13.0")] - Not valid delegate declaration
+		// [SupportedOSPlatform ("tvos13.0")] - Not valid on delegate declaration
 		// [SupportedOSPlatform ("macos10.15")]
 		// [SupportedOSPlatform ("ios13.0")]
 #else
@@ -765,7 +765,7 @@ namespace CoreText {
 		}
 
 #if NET
-		// [SupportedOSPlatform ("ios13.0")] - Not valid delegate declaration
+		// [SupportedOSPlatform ("ios13.0")] - Not valid on delegate declaration
 		// [UnsupportedOSPlatform ("tvos")]
 		// [UnsupportedOSPlatform ("macos")]
 #else
