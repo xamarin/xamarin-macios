@@ -109,3 +109,11 @@ You can query if the build-time feature is enabled with the following code:
 ```csharp
 AppContext.TryGetSwitch ("System.Threading.Thread.EnableAutoreleasePool", out var enabled);
 ```
+
+## The 'Foundation.MonoTouchException' and 'Foundation.ObjCException' types have been renamed/moved to 'ObjCRuntime.ObjCException'.
+
+The type `Foundation.MonoTouchException` (for iOS, tvOS and Mac Catalyst) and
+the type `Foundation.ObjCException` (for macOS) have been renamed/moved to
+`ObjCRuntime.ObjCException`. Both types had the exact same functionality: they
+were wrapping a native NSException, and were renamed so that we have identical
+API and behavior on all platforms.
