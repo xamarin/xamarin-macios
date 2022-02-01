@@ -572,8 +572,8 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos10.8")]
-		[SupportedOSPlatform ("ios6.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -598,8 +598,8 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos10.8")]
-		[SupportedOSPlatform ("ios6.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -629,8 +629,8 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos10.8")]
-		[SupportedOSPlatform ("ios6.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -655,8 +655,8 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos10.8")]
-		[SupportedOSPlatform ("ios6.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
