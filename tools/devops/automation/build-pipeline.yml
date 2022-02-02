@@ -15,22 +15,22 @@ parameters:
 - name: runTests
   displayName: Run Simulator Tests
   type: boolean
-  default: true
+  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
 
 - name: runDeviceTests
   displayName: Run Device Tests 
   type: boolean
-  default: true
+  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
 
 - name: runOldMacOSTests
   displayName: Run Tests on older macOS versions 
   type: boolean
-  default: true
+  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
 
 - name: runGovernanceTests
   displayName: Run Governance Checks
   type: boolean
-  default: true 
+  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
 
 - name: runSamples
   displayName: Run Samples
