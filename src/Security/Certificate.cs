@@ -221,7 +221,6 @@ namespace Security {
 			}
 		}
 
-#if !__MACCATALYST__ // Neither the macOS nor the non-MacOS one works on Mac Catalyst
 #if MONOMAC
 		/* Only available on OS X v10.7 or later */
 		[DllImport (Constants.SecurityLibrary)]
@@ -254,7 +253,6 @@ namespace Security {
 				return Runtime.GetNSObject<NSData> (dataPtr);
 			}
 		}
-#else
 #if !NET
 		[iOS (10,3)]
 		[TV (10,3)]
@@ -304,7 +302,6 @@ namespace Security {
 			return (data == IntPtr.Zero) ? null : new SecKey (data, true);
 		}
 #endif
-#endif // !__MACCATALYST__
 
 #if !NET
 		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
@@ -446,7 +443,7 @@ namespace Security {
 #endif
 #endif
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
-#else // !MONOMAC
+
 #if !NET
 		[iOS (10,3)]
 #else
@@ -498,7 +495,6 @@ namespace Security {
 		{
 #if MONOMAC
 			IntPtr data = SecCertificateCopySerialNumber (Handle, IntPtr.Zero);
-#else
 			IntPtr data = SecCertificateCopySerialNumber (Handle);
 #endif
 			return Runtime.GetNSObject<NSData> (data, true);
@@ -683,11 +679,9 @@ namespace Security {
 		[Advice ("On iOS this method applies the attributes to both public and private key. To apply different attributes to each key, use 'GenerateKeyPair (SecKeyType, int, SecPublicPrivateKeyAttrs, SecPublicPrivateKeyAttrs, out SecKey, out SecKey)' instead.")]
 		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicAndPrivateKeyAttrs, out SecKey? publicKey, out SecKey? privateKey)
 		{
-#if !MONOMAC
 			// iOS (+friends) need to pass the strong dictionary for public and private key attributes to specific keys
 			// instead of merging them with other attributes.
 			return GenerateKeyPair (type, keySizeInBits, publicAndPrivateKeyAttrs, publicAndPrivateKeyAttrs, out publicKey, out privateKey);
-#else
 			if (type == SecKeyType.Invalid)
 				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
 
@@ -699,9 +693,7 @@ namespace Security {
 			dic.LowlevelSetObject ((NSObject) type.GetConstant ()!, SecAttributeKey.Type);
 			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			return GenerateKeyPair (dic, out publicKey, out privateKey);
-#endif
 		}
-#if !MONOMAC
 		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicKeyAttrs, SecPublicPrivateKeyAttrs privateKeyAttrs, out SecKey? publicKey, out SecKey? privateKey)
 		{
 			if (type == SecKeyType.Invalid)
@@ -719,7 +711,6 @@ namespace Security {
 				}
 			}
 		}
-#endif
 			
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* size_t */ nint SecKeyGetBlockSize (IntPtr handle);
