@@ -20,10 +20,8 @@ using JavaScriptCore;
 
 namespace SceneKit
 {
-#if !NET
 	[Mac (10, 10)]
 	[iOS (8, 0)]
-#endif
 	public static class SCNJavaScript
 	{
 		[DllImport (Constants.SceneKitLibrary)]
