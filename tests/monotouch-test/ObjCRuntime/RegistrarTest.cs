@@ -19,11 +19,19 @@ using Foundation;
 using AppKit;
 using UIColor = AppKit.NSColor;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.ObjCException;
+#endif
 #else
 using UIKit;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.MonoTouchException;
+#endif
 #endif
 using ObjCRuntime;
 #if !__TVOS__

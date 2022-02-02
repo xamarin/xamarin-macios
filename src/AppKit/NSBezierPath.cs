@@ -102,7 +102,7 @@ namespace AppKit {
 				_AppendPathWithPoints ((IntPtr)ptr, points.Length);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Append (CGPoint[])' instead.")]
 		public unsafe void AppendPathWithPoints (CGPoint[] points)
 		{

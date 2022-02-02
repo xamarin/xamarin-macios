@@ -1,7 +1,9 @@
+using ObjCRuntime;
+
 namespace macOSApp1;
 
 public partial class ViewController : NSViewController {
-	public ViewController (IntPtr handle) : base (handle)
+	protected ViewController (NativeHandle handle) : base (handle)
 	{
 	}
 

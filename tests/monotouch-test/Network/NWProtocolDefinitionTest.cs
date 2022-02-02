@@ -18,28 +18,28 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void IPDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.IPDefinition)
+			using (var definition = NWProtocolDefinition.CreateIPDefinition ())
 				Assert.NotNull (definition);
 		}
 
 		[Test]
 		public void TcpDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.TcpDefinition)
+			using (var definition = NWProtocolDefinition.CreateTcpDefinition ())
 				Assert.NotNull (definition);
 		}
 
 		[Test]
 		public void TlsDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.TlsDefinition)
+			using (var definition = NWProtocolDefinition.CreateTlsDefinition ())
 				Assert.NotNull (definition);
 		}
 
 		[Test]
 		public void UdpDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.UdpDefinition)
+			using (var definition = NWProtocolDefinition.CreateUdpDefinition ())
 				Assert.NotNull (definition);
 		}
 
@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.Network {
 		public void WebSocketDefinitionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
-			using (var definition = NWProtocolDefinition.WebSocketDefinition)
+			using (var definition = NWProtocolDefinition.CreateWebSocketDefinition ())
 				Assert.NotNull (definition);
 		}
 	}
