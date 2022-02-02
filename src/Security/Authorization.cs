@@ -70,6 +70,7 @@ namespace Security {
 #else
 	[MacCatalyst (15,0)]
 #endif
+	// typedef UInt32 AuthorizationFlags;
 	[Flags]
 	public enum AuthorizationFlags : int {
 		Defaults,
@@ -143,7 +144,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]
@@ -164,7 +165,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]

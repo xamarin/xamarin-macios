@@ -459,6 +459,7 @@ namespace Security {
 		[Mac (10,15)]
 		[iOS (13,0)]
 #endif
+		// no [Async] as it can be called multiple times
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool AccessPreSharedKeys (SecAccessPreSharedKeysHandler handler)
 		{
