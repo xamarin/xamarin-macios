@@ -36,11 +36,7 @@ using ObjCRuntime;
 
 namespace PdfKit {
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfActionNamedName : long {
 		None         = 0,
@@ -57,11 +53,7 @@ namespace PdfKit {
 		ZoomOut      = 11
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfWidgetControlType : long {
 		Unknown    = -1,
@@ -70,11 +62,7 @@ namespace PdfKit {
 		CheckBox    = 2
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfLineStyle : long {
 		None        = 0,
@@ -85,11 +73,7 @@ namespace PdfKit {
 		ClosedArrow = 5
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfMarkupType : long {
 		Highlight = 0,
@@ -98,11 +82,7 @@ namespace PdfKit {
 		Redact    = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfTextAnnotationIconType : long {
 		Comment      = 0,
@@ -114,11 +94,7 @@ namespace PdfKit {
 		Insert       = 6
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfBorderStyle : long {
 		Solid     = 0,
@@ -129,10 +105,11 @@ namespace PdfKit {
 	}
 
 #if NET
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[Unavailable (PlatformName.MacCatalyst)]
+	[NoiOS]
+#elif IOS
+	[Obsolete (Constants.UnavailableOniOS)]
 #endif
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Native]
 	public enum PdfPrintScalingMode : long {
 		None      = 0,
@@ -140,11 +117,7 @@ namespace PdfKit {
 		DownToFit = 2
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfDocumentPermissions : long {
 		None  = 0,
@@ -152,11 +125,7 @@ namespace PdfKit {
 		Owner = 2
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfDisplayBox : long {
 		Media = 0,
@@ -166,11 +135,7 @@ namespace PdfKit {
 		Art   = 4
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfDisplayMode : long {
 		SinglePage           = 0,
@@ -179,11 +144,7 @@ namespace PdfKit {
 		TwoUpContinuous      = 3
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Flags]
 	[Native]
 	public enum PdfAreaOfInterest : long {
@@ -197,36 +158,19 @@ namespace PdfKit {
 		IconArea       = 1 << 6,
 		PopupArea      = 1 << 7,
 		ImageArea      = 1 << 8,
-#if NET
-		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("macos12.0")]
-#else
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
-		[Mac (12,0)]
-#endif
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
 		AnyArea = Int64.MaxValue,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[Mac (10,13)]
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfDisplayDirection : long {
 		Vertical = 0,
 		Horizontal = 1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-#else
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfInterpolationQuality : long {
 		None = 0,
@@ -234,26 +178,15 @@ namespace PdfKit {
 		High = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-	[UnsupportedOSPlatform ("macos")]
-#else
 	[NoMac]
 	[iOS (11,0)]
-#endif
 	[Native]
 	public enum PdfThumbnailLayoutMode : long {
 		Vertical = 0,
 		Horizontal = 1,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.12")]
-#else
-	[iOS (11,0)]
-	[Mac (10,12)]
-#endif
+	[iOS (11,0), Mac (10,12)]
 	[Native]
 	public enum PdfWidgetCellState : long {
 		Mixed = -1,
