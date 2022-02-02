@@ -20,9 +20,7 @@ using ObjCRuntime;
 namespace PdfKit {
 	public partial class PdfAnnotation {
 
-#if !NET
 		[Mac (10,12)]
-#endif
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
 			if (value is null)
@@ -31,9 +29,7 @@ namespace PdfKit {
 			return _SetValue (value.Handle, key.GetConstant ()!);
 		}
 
-#if !NET
 		[Mac (10,12)]
-#endif
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
 			var nstr = CFString.CreateNative (str);
@@ -44,9 +40,7 @@ namespace PdfKit {
 			}
 		}
 
-#if !NET
 		[Mac (10,12)]
-#endif
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
 			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()!), true)!;
@@ -62,9 +56,7 @@ namespace PdfKit {
 #endif
 		}
 
-#if !NET
 		[Mac (10,13)]
-#endif
 		public CGPoint[] QuadrilateralPoints {
 			get {
 				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) =>

@@ -104,11 +104,6 @@ namespace PdfKit {
 		Underline = 4
 	}
 
-#if NET
-	[NoiOS]
-#elif IOS
-	[Obsolete (Constants.UnavailableOniOS)]
-#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Native]
 	public enum PdfPrintScalingMode : long {
