@@ -7,8 +7,16 @@ using ObjCRuntime;
 
 namespace SensorKit {
 
-	[NoWatch, NoTV, NoMac]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoMac]
 	[iOS (14,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct SRAmbientLightChromaticity {
 		public float X;
