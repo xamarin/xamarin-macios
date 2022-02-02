@@ -41,15 +41,27 @@ namespace Photos {
 #if MONOMAC
 	public partial class PHAssetCollection {
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Unavailable (PlatformName.MacOSX)]
+#endif
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		public static PHFetchResult FetchMoments (PHFetchOptions options)
 		{
 			return null;
 		}
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Unavailable (PlatformName.MacOSX)]
+#endif
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		public static PHFetchResult FetchMoments (PHCollectionList momentList, PHFetchOptions options)
 		{
 			return null;
@@ -58,15 +70,27 @@ namespace Photos {
 
 	public partial class PHCollectionList {
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Unavailable (PlatformName.MacOSX)]
+#endif
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHFetchOptions options)
 		{
 			return null;
 		}
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Unavailable (PlatformName.MacOSX)]
+#endif
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHAssetCollection moment, PHFetchOptions options)
 		{
 			return null;
@@ -74,8 +98,14 @@ namespace Photos {
 	}
 
 	public partial class PHContentEditingInput {
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Unavailable (PlatformName.MacOSX, message: "Use 'AudiovisualAsset' instead.")]
+#endif
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		public virtual AVFoundation.AVAsset AvAsset {
 			get { return AudiovisualAsset; }
 		}
@@ -84,8 +114,14 @@ namespace Photos {
 	public delegate void PHImageDataHandler (NSData data, NSString dataUti, CGImagePropertyOrientation orientation, NSDictionary info);
 
 	public partial class PHImageManager {
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Unavailable (PlatformName.MacOSX, message: "Use 'RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler)' instead.")]
+#endif
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		public virtual int RequestImageData (PHAsset asset, PHImageRequestOptions options, PHImageDataHandler handler)
 		{
 			return -1;

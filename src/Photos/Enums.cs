@@ -5,9 +5,15 @@ using Foundation;
 namespace Photos
 {
 	// NSInteger -> PHImageManager.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHImageContentMode : long {
 		AspectFit = 0,
@@ -16,9 +22,15 @@ namespace Photos
 	}
 
 	// NSInteger -> PHImageManager.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,13)]
+#endif
 	[Native]
 	public enum PHImageRequestOptionsVersion : long {
 		Current = 0,
@@ -27,9 +39,15 @@ namespace Photos
 	}
 
 	// NSInteger -> PHImageManager.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,13)]
+#endif
 	[Native]
 	public enum PHImageRequestOptionsDeliveryMode : long {
 		Opportunistic = 0,
@@ -38,9 +56,15 @@ namespace Photos
 	}
 
 	// NSInteger -> PHImageManager.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,13)]
+#endif
 	[Native]
 	public enum PHImageRequestOptionsResizeMode : long {
 		None = 0,
@@ -49,9 +73,15 @@ namespace Photos
 	}
 
 	// NSInteger -> PHImageManager.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,15)]
+#endif
 	[Native]
 	public enum PHVideoRequestOptionsVersion : long {
 		Current = 0,
@@ -59,9 +89,15 @@ namespace Photos
 	}
 
 	// NSInteger -> PHImageManager.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,15)]
+#endif
 	[Native]
 	public enum PHVideoRequestOptionsDeliveryMode : long {
 		Automatic = 0,
@@ -71,32 +107,83 @@ namespace Photos
 	}
 
 	// NSInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHCollectionListType : long {
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
+#endif
 		MomentList  = 1,
 		Folder      = 2,
 		SmartFolder = 3
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHCollectionListSubtype : long {
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
+#endif
 		MomentListCluster = 1,
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
+#endif
 		MomentListYear = 2,
 
 		RegularFolder = 100,
@@ -115,9 +202,15 @@ namespace Photos
 	}
 
 	// NSUInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHCollectionEditOperation : long {
 		None             = 0,
@@ -131,24 +224,49 @@ namespace Photos
 	}
 
 	// NSInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHAssetCollectionType : long {
 		Album      = 1,
 		SmartAlbum = 2,
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
+#endif
 		Moment     = 3
 	}
 
 	// NSInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHAssetCollectionSubtype : long {
 		AlbumRegular         = 2,
@@ -168,21 +286,83 @@ namespace Photos
 		SmartAlbumBursts        = 207,
 		SmartAlbumSlomoVideos   = 208,
 		SmartAlbumUserLibrary 	= 209,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[iOS (9,0)]
+#endif
 		SmartAlbumSelfPortraits = 210,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[iOS (9,0)]
+#endif
 		SmartAlbumScreenshots   = 211,
-		[iOS (10,2), TV (10,1)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios10.2")]
+		[SupportedOSPlatform ("tvos10.1")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (10,2)]
+		[TV (10,1)]
+		[Mac (10,13)]
+#endif
 		SmartAlbumDepthEffect   = 212,
-		[iOS (10,3), TV (10,2)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (10,3)]
+		[TV (10,2)]
+		[Mac (10,13)]
+#endif
 		SmartAlbumLivePhotos = 213,
-		[iOS (11,0)][TV(11,0)][Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,15)]
+#endif
 		SmartAlbumAnimated = 214,
-		[iOS (11,0)][TV(11,0)][Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,15)]
+#endif
 		SmartAlbumLongExposures = 215,
-		[iOS (13,0)][TV(13,0)][Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+#endif
 		SmartAlbumUnableToUpload = 216,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		SmartAlbumRAW = 217,
 
 
@@ -190,9 +370,15 @@ namespace Photos
 	}
 
 	// NSUInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHAssetEditOperation : long {
 		None       = 0,
@@ -202,9 +388,15 @@ namespace Photos
 	}
 
 	// NSInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHAssetMediaType : long {
 		Unknown = 0,
@@ -214,20 +406,46 @@ namespace Photos
 	}
 
 	// NSUInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	[Flags]
 	public enum PHAssetMediaSubtype : ulong {
 		None               = 0,
 		PhotoPanorama      = (1 << 0),
 		PhotoHDR           = (1 << 1),
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[iOS (9,0)]
+#endif
 		Screenshot         = (1 << 2),
+#if NET
+		[SupportedOSPlatform ("ios9.1")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[iOS (9,1)]
+#endif
 		PhotoLive          = (1 << 3),
-		[iOS (10,2), TV (10,1), Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("ios10.2")]
+		[SupportedOSPlatform ("tvos10.1")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
+		[iOS (10,2)]
+		[TV (10,1)]
+		[Mac (10,15)]
+#endif
 		PhotoDepthEffect   = (1 << 4),
 		VideoStreamed      = (1 << 16),
 		VideoHighFrameRate = (1 << 17),
@@ -235,9 +453,15 @@ namespace Photos
 	}
 
 	// NSUInteger -> PhotosTypes.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	[Flags]
 	public enum PHAssetBurstSelectionType : ulong {
@@ -246,22 +470,42 @@ namespace Photos
 		UserPick = (1 << 1)
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#else
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,13)]
+#endif
 	[Native]
 	public enum PHAuthorizationStatus : long {
 		NotDetermined,
 		Restricted,
 		Denied,
 		Authorized,
-		[iOS (14,0)][NoTV][NoMac]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (14,0)]
+		[NoTV]
+		[NoMac]
+#endif
 		Limited,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("tvos10.0")]
+#else
 	[iOS (9,0)]
 	[Mac (10,12)]
 	[TV (10,0)]
+#endif
 	[Native]
 	public enum PHAssetResourceType : long
 	{
@@ -273,19 +517,53 @@ namespace Photos
 		FullSizeVideo = 6,
 		AdjustmentData = 7,
 		AdjustmentBasePhoto = 8,
+#if NET
+		[SupportedOSPlatform ("ios9.1")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[iOS (9,1)]
+#endif
 		PairedVideo = 9,
-		[Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		FullSizePairedVideo = 10,
-		[Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		AdjustmentBasePairedVideo = 11,
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
 		AdjustmentBaseVideo = 12,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHAssetSourceType : ulong
 	{
@@ -295,17 +573,30 @@ namespace Photos
 		iTunesSynced = (1 << 2)
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (10,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
+#endif
 	[Native]
 	public enum PHLivePhotoFrameType : long {
 		Photo,
 		Video
 	}
 
-	[TV (11,0), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#else
+	[TV (11,0)]
+	[iOS (11,0)]
 	[Mac (10,13)]
+#endif
 	[Native]
 	public enum PHAssetPlaybackStyle : long {
 		Unsupported = 0,
@@ -316,8 +607,15 @@ namespace Photos
 		VideoLooping = 5,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Mac (10,13)]
-	[NoiOS][NoTV]
+	[NoiOS]
+	[NoTV]
+#endif
 	[Native]
 	public enum PHProjectTextElementType : long {
 		Body = 0,
@@ -325,8 +623,15 @@ namespace Photos
 		Subtitle,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Mac (10,13)]
-	[NoiOS][NoTV]
+	[NoiOS]
+	[NoTV]
+#endif
 	[Native]
 	public enum PHProjectCreationSource : long {
 		Undefined = 0,
@@ -343,8 +648,15 @@ namespace Photos
 		ProjectExtension = 26,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Mac (10,13)]
-	[NoiOS][NoTV]
+	[NoiOS]
+	[NoTV]
+#endif
 	[Native]
 	public enum PHProjectSectionType : long {
 		Undefined = 0,
@@ -353,20 +665,57 @@ namespace Photos
 		Auxiliary = 3,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.12")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoMacCatalyst]
 	[Mac (10,12)]
-	[NoiOS][NoTV]
+	[NoiOS]
+	[NoTV]
+#endif
 	[Native]
 	[ErrorDomain ("PHLivePhotoEditingErrorDomain")]
 	public enum PHLivePhotoEditingError : long {
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'PHPhotosError.InternalError' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PHPhotosError.InternalError' instead.")]
+#endif
 		Unknown,
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("macos10.15")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'PHPhotosError.UserCancelled' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PHPhotosError.UserCancelled' instead.")]
+#endif
 		Aborted,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.14")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Mac (10,14)]
-	[NoiOS][NoTV]
+	[NoiOS]
+	[NoTV]
+#endif
 	public enum FigExifCustomRenderedValue : short {
 		NotCustom = 0,
 		Custom = 1,
@@ -379,12 +728,30 @@ namespace Photos
 		SdofPlusOriginal_OriginalImage = 9,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[ErrorDomain ("PHPhotosErrorDomain")]
-	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[Native]
 	public enum PHPhotosError : long {
 #if !NET
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos12.0 use 'InternalError' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'InternalError' instead.")]
+#endif
 		Invalid = -1,
 #endif
 		InternalError = -1,
@@ -405,7 +772,15 @@ namespace Photos
 		AccessUserDenied = 3311,
 	}
 
-	[TV (14,0), Mac (11,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[TV (14,0)]
+	[Mac (11,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum PHAccessLevel : long
 	{
