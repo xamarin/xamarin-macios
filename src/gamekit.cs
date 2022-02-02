@@ -1120,7 +1120,7 @@ namespace GameKit {
 		void StateChanged (GKMatch match, string playerId, GKPlayerConnectionState state);
 
 #if MONOMAC
-#if !XAMCORE_4_0
+#if !NET
 		// This API was removed or never existed. Can't cleanly remove due to EventsArgs/Delegate
 		[Obsolete ("It will never be called.")]
 		[Export ("xamarin:selector:removed:"), EventArgs ("GKPlayerError")]
@@ -2221,7 +2221,7 @@ namespace GameKit {
 		GKAchievement Achievement { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[DisableDefaultCtor] // the native 'init' method returned nil.
 #endif
 	[NoWatch]
@@ -2500,7 +2500,7 @@ namespace GameKit {
 	[Model, Protocol, BaseType (typeof (NSObject))]
 	interface GKTurnBasedEventListener
 	{
-#if XAMCORE_4_0		
+#if NET
 		[NoMac]
 #endif
 		[NoWatch]

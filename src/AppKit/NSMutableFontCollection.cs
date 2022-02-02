@@ -12,7 +12,7 @@ using System;
 
 namespace AppKit
 {
-#if !XAMCORE_4_0
+#if !NET
 	public partial class NSMutableFontCollection
 	{
 		[Obsolete ("macOS 10.12 does not allow creation via this constructor")]

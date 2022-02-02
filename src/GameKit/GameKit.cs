@@ -169,7 +169,7 @@ namespace GameKit {
 		TurnBasedInvalidParticipant,
 		TurnBasedInvalidTurn,
 		TurnBasedInvalidState,
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("This value was re-used on macOS only and removed later.")]
 		Offline = 25,
 #endif
@@ -453,6 +453,7 @@ namespace GameKit {
 		GreenBuddyUI = 1,
 		AuthKitInvocation = 2,
 	}
+#endif
 
 #if NET
 	[SupportedOSPlatform ("tvos14.0")]

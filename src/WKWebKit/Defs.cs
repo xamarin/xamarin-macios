@@ -80,13 +80,14 @@ namespace WebKit
 		JavaScriptAppBoundDomain,
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+#if NET
+	[NoMac]
+#endif
 	[iOS (8, 0)]
 	[Native]
 	public enum WKSelectionGranularity : long {
 		Dynamic, Character
 	}
-#endif
 
 	[iOS (10,0)][NoMac]
 	[Native]

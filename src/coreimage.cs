@@ -643,11 +643,11 @@ namespace CoreImage {
 #endif
 
 		[Export ("setValue:forKey:"), Internal]
-		void SetValueForKey ([NullAllowed] NSObject value, NSString key);
+		void SetValueForKey ([NullAllowed] NSObject value, IntPtr key);
 
 		[Export ("valueForKey:"), Internal]
 		[return: NullAllowed]
-		NSObject ValueForKey (NSString key);
+		NSObject ValueForKey (IntPtr key);
 
 		// CIRAWFilter (CIFilter)
 

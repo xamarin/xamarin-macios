@@ -184,7 +184,7 @@ namespace ExternalAccessory {
 #else
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAWiFiUnconfiguredAccessoryBrowserDelegate)})]
 #endif
-#if XAMCORE_4_0
+#if NET
 	// There's a designated initializer, which leads to think that the default ctor
 	// should not be used (documentation says nothing).
 	[DisableDefaultCtor]
