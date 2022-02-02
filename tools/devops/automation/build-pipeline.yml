@@ -45,7 +45,7 @@ parameters:
 - name: enableAPIDiff
   displayName: Enable API diff generation
   type: boolean
-  default: true
+  default: false              # UNDONE: TEST: DO NOT MERGE TO MAIN
 
 - name: forceInsertion
   displayName: Force Insertion 
