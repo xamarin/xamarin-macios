@@ -247,24 +247,6 @@ steps:
   displayName: 'SBOM: Staging'
 
 - powershell: |
-    function Get-Version([string] $Filename, [string] $RegexVersion) {
-      Write-Host "Get-Version: ${Filename}"
-      Write-Host "Get-Version: RegexVersion: ${RegexVersion}"
-
-      $version = [string]::Empty
-
-      # https://powershellexplained.com/2017-07-31-Powershell-regex-regular-expression/#net-regex
-      if ($Filename -match $RegexVersion) {
-        $version = $Matches.version
-      } else {
-        Write-Host "WARNING: Regex does not match filename: ${Filename}"
-      }
-
-      Write-Host "Get-Version: version: ${version}"
-
-      return $version
-    }
-
     function Get-PackageFileNames([string] $PkgsPath) {
       $files = [IO.Directory]::GetFiles($PkgsPath)
       $pkgFiles = $files | foreach { [IO.Path]::GetFileName($_) }
