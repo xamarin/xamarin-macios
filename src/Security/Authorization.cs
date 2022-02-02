@@ -41,11 +41,7 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 	[MacCatalyst (15,0)]
-#endif
 	// Untyped enum in ObjC
 	public enum AuthorizationStatus {
 		Success                 = 0,
@@ -65,11 +61,7 @@ namespace Security {
 		BadAddress              = -60033,
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 	[MacCatalyst (15,0)]
-#endif
 	// typedef UInt32 AuthorizationFlags;
 	[Flags]
 	public enum AuthorizationFlags : int {
@@ -86,33 +78,21 @@ namespace Security {
 	// For ease of use, we let the user pass the AuthorizationParameters, and we
 	// create the structure for them with the proper data
 	//
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 	[MacCatalyst (15,0)]
-#endif
 	public class AuthorizationParameters {
 		public string? PathToSystemPrivilegeTool;
 		public string? Prompt;
 		public string? IconPath;
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 	[MacCatalyst (15,0)]
-#endif
 	public class AuthorizationEnvironment {
 		public string? Username;
 		public string? Password;
 		public bool   AddToSharedCredentialPool;
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 	[MacCatalyst (15,0)]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct AuthorizationItem {
 		public IntPtr /* AuthorizationString = const char * */ name;
@@ -121,33 +101,18 @@ namespace Security {
 		public int /* UInt32 */ flags;  // zero
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 	[MacCatalyst (15,0)]
-#endif
 	unsafe struct AuthorizationItemSet {
 		public int /* UInt32 */ count;
 		public AuthorizationItem * /* AuthorizationItem* */ ptrToAuthorization;
 	}
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 	[MacCatalyst (15,0)]
-#endif
 	public unsafe class Authorization : DisposableObject {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, out IntPtr auth);
 
-#if !NET
 		[Deprecated (PlatformName.MacOSX, 10,7)]
-#else
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string? []? args, IntPtr FILEPtr);
 
@@ -160,14 +125,7 @@ namespace Security {
 		{
 		}
 
-#if !NET
 		[Deprecated (PlatformName.MacOSX, 10,7)]
-#else
-		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string []? args)
 		{
 			string?[]? arguments = args!;

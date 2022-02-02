@@ -25,13 +25,7 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
-#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-#endif
 	public class SecTrust2 : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
