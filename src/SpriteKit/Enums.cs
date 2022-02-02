@@ -111,7 +111,13 @@ namespace SpriteKit {
 		DontCare,
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum SKAttributeType : long
 	{
@@ -126,7 +132,13 @@ namespace SpriteKit {
 		VectorHalfFloat4 = 8,
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum SKTileDefinitionRotation : ulong
 	{
@@ -136,7 +148,13 @@ namespace SpriteKit {
 		Angle270,
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum SKTileSetType : ulong
 	{
@@ -146,7 +164,13 @@ namespace SpriteKit {
 		HexagonalPointy,
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum SKTileAdjacencyMask : ulong
 	{
@@ -187,9 +211,16 @@ namespace SpriteKit {
 		UpperLeftCorner = Up | UpperRight | Right | Down | LowerLeft | Left | UpperLeft,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("macos")]
+#else
 	[NoWatch]
 	[NoMac]
-	[TV (11,0), iOS (11,0)]
+	[TV (11,0)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum SKNodeFocusBehavior : long {
 		None = 0,
