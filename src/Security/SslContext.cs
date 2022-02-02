@@ -581,8 +581,8 @@ namespace Security {
 #else
 		[Unavailable (PlatformName.iOS, message : "'SetSessionStrengthPolicy' is not available anymore.")]
 		[Unavailable (PlatformName.MacOSX, message : "'SetSessionStrengthPolicy' is not available anymore.")]
-#endif
 		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
+#endif
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
 			Runtime.NSLog ("SetSessionStrengthPolicy is not available anymore.");

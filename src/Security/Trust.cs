@@ -210,12 +210,27 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecCertificateRef */ SecTrustGetCertificateAtIndex (IntPtr /* SecTrustRef */ trust, nint /* CFIndex */ ix);
 
-
+#if NET
+		[UnsupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("ios15.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos12.0 use the 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 use the 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 use the 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 use the 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'GetCertificateChain' method instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use the 'GetCertificateChain' method instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
+#endif
 		public SecCertificate this [nint index] {
 			get {
 				if ((index < 0) || (index >= Count))
