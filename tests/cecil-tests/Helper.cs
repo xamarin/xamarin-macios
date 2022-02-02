@@ -80,7 +80,7 @@ namespace Cecil.Tests {
 		{
 			if (type.HasProperties) {
 				foreach (var property in type.Properties) {
-					if ((filter == null) || filter (property))
+					if ((filter is null) || filter (property))
 						yield return property;
 				}
 			}

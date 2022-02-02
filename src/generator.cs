@@ -3368,7 +3368,7 @@ public partial class Generator : IMemberGatherer {
 		if (attr.Version is null) {
 			switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute(platform, attr.Architecture, attr.Message);
+					return new IntroducedAttribute (platform, attr.Architecture, attr.Message);
 				case AvailabilityKind.Deprecated:
 					return new DeprecatedAttribute(platform, attr.Architecture, attr.Message);
 				case AvailabilityKind.Obsoleted:
