@@ -22,8 +22,8 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Inputs
 
-		// Can also be specified per resource using the 'CodesignStampPath' metadata
-		public string StampPath { get; set; }
+		// Can also be specified per resource using the 'CodesignStampFile' metadata
+		public string StampFile { get; set; }
 
 		// Can also be specified per resource using the 'CodesignAllocate' metadata
 		public string CodesignAllocate { get; set; }
@@ -86,16 +86,9 @@ namespace Xamarin.MacDev.Tasks
 			return File.Exists (path) ? path : ToolExe;
 		}
 
-		string GetOutputPath (ITaskItem item)
+		string GetCodesignStampFile (ITaskItem item)
 		{
-			var path = item.ItemSpec;
-			var app = path.LastIndexOf (".app/");
-			return Path.Combine (GetCodesignStampPath (item), path.Substring (app + ".app/".Length));
-		}
-
-		string GetCodesignStampPath (ITaskItem item)
-		{
-			return GetNonEmptyStringOrFallback (item, "CodesignStampPath", StampPath);
+			return GetNonEmptyStringOrFallback (item, "CodesignStampFile", StampFile, "StampFile", required: true);
 		}
 
 		string GetCodesignAllocate (ITaskItem item)
@@ -103,20 +96,51 @@ namespace Xamarin.MacDev.Tasks
 			return GetNonEmptyStringOrFallback (item, "CodesignAllocate", CodesignAllocate, "CodesignAllocate", required: true);
 		}
 
-		bool NeedsCodesign (ITaskItem item)
+		// 'sortedItems' is sorted by length of path, longest first.
+		bool NeedsCodesign (ITaskItem[] sortedItems, int index)
 		{
-			var stampPath = GetCodesignStampPath (item);
-			if (string.IsNullOrEmpty (stampPath))
+			var item = sortedItems [index];
+			var stampFile = GetCodesignStampFile (item);
+			if (!File.Exists (stampFile)) {
+				Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' does not exist, so the item '{1}' needs to be codesigned.", stampFile, item.ItemSpec);
 				return true;
+			}
 
-			var output = GetOutputPath (item);
-
-			if (!File.Exists (output))
+			if (File.GetLastWriteTimeUtc (item.ItemSpec) >= File.GetLastWriteTimeUtc (stampFile)) {
+				Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' for the item '{1}' is not up-to-date, so the item needs to be codesigned.", stampFile, item.ItemSpec);
 				return true;
+			}
 
-			if (File.GetLastWriteTimeUtc (item.ItemSpec) >= File.GetLastWriteTimeUtc (output))
-				return true;
+			if (Directory.Exists (item.ItemSpec)) {
+				// We're signing a directory. First check if any of the
+				// previous items in the sorted item array must be signed, and
+				// if that item is inside this directory, we'll have to sign
+				// this directory too.
+				var itemPath = EnsureEndsWithDirectorySeparator (item.ItemSpec);
+				var resolvedStampFile = Path.GetFullPath (PathUtils.ResolveSymbolicLinks (stampFile));
 
+				for (var i = 0; i < index; i++) {
+					if (sortedItems [i] is null)
+						continue; // this item does not need to be signed
+					if (sortedItems [i].ItemSpec.StartsWith (itemPath, StringComparison.OrdinalIgnoreCase)) {
+						Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which must be signed, which means that the item must be signed too.", item.ItemSpec, sortedItems [i].ItemSpec);
+						return true; // there's an item inside this directory that needs to be signed, so this directory must be signed too
+					}
+				}
+
+				// we also need to check every file inside this directory
+				foreach (var file in Directory.EnumerateFiles (itemPath, "*", SearchOption.AllDirectories)) {
+					if (string.Equals (resolvedStampFile, Path.GetFullPath (PathUtils.ResolveSymbolicLinks (file)), StringComparison.OrdinalIgnoreCase))
+						continue; // we check every file except the stamp file, which may be inside the directory we want to sign (example: _CodeSignature/CodeResources is inside the app bundle, and also the stamp file).
+
+					if (!IsUpToDate (file, stampFile)) {
+						Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which is not up-to-date with regards to the stamp file '{2}', so the item must be codesigned.", item.ItemSpec, file, stampFile);
+						return true;
+					}
+				}
+			}
+
+			Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' for the item '{1}' is up-to-date, so the item does not need to be codesigned.", stampFile, item.ItemSpec);
 			return false;
 		}
 
@@ -228,11 +252,62 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogError (MSBStrings.E0004, item.ItemSpec, errors);
 				else
 					Log.LogError (MSBStrings.E0005, item.ItemSpec);
-			} else if (!string.IsNullOrEmpty (GetCodesignStampPath (item))) {
-				var outputPath = GetOutputPath (item);
-				Directory.CreateDirectory (Path.GetDirectoryName (outputPath));
-				File.WriteAllText (outputPath, string.Empty);
+			} else {
+				var stampFile = GetCodesignStampFile (item);
+				if (string.IsNullOrEmpty (stampFile)) {
+					Log.LogMessage (MessageImportance.Low, "No stamp file '{0}' available for the item '{1}'", stampFile, item.ItemSpec);
+				} else if (IsUpToDate (item.ItemSpec, stampFile)) {
+					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is already up-to-date for the item '{1}'", stampFile, item.ItemSpec);
+				} else if (File.Exists (stampFile)) {
+					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is not up-to-date for the item '{1}', and it will be touched", stampFile, item.ItemSpec);
+					File.SetLastWriteTimeUtc (stampFile, DateTime.UtcNow);
+				} else {
+					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is not up-to-date for the item '{1}', and it will be created", stampFile, item.ItemSpec);
+					Directory.CreateDirectory (Path.GetDirectoryName (stampFile));
+					File.WriteAllText (stampFile, string.Empty);
+				}
+
+				var additionalFilesToTouch = item.GetMetadata ("CodesignAdditionalFilesToTouch").Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+				foreach (var file in additionalFilesToTouch) {
+					if (IsUpToDate (item.ItemSpec, file)) {
+						Log.LogMessage (MessageImportance.Low, "The additional file '{0}' is already up-to-date for the item '{1}'", file, item.ItemSpec);
+					} else if (File.Exists (file)) {
+						Log.LogMessage (MessageImportance.Low, "The additional file '{0}' for the item '{1}' exists, but is not up-to-date, and it will be touched", file, item.ItemSpec);
+						File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
+					} else {
+						Log.LogMessage (MessageImportance.Low, "The additional file '{0}' for the item '{1}' does not exist, and it won't be created", file, item.ItemSpec);
+					}
+				}
 			}
+		}
+
+		static bool IsUpToDate (string itemPath, string stampFile)
+		{
+			if (!File.Exists (stampFile))
+				return false;
+
+			var stampDate = File.GetLastWriteTimeUtc (stampFile);
+			DateTime itemDate;
+			if (File.Exists (itemPath)) {
+				itemDate = File.GetLastWriteTimeUtc (itemPath);
+			} else if (Directory.Exists (itemPath)) {
+				itemDate = Directory.GetLastWriteTimeUtc (itemPath);
+			} else {
+				return false;
+			}
+
+			return stampDate > itemDate;
+		}
+
+		static string EnsureEndsWithDirectorySeparator (string dir)
+		{
+			if (string.IsNullOrEmpty (dir))
+				return dir;
+
+			if (dir [dir.Length - 1] == Path.DirectorySeparatorChar)
+				return dir;
+
+			return dir + Path.DirectorySeparatorChar;
 		}
 
 		public override bool Execute ()
@@ -241,7 +316,7 @@ namespace Xamarin.MacDev.Tasks
 				return true;
 
 			var codesignedFiles = new List<ITaskItem> ();
-			var resourcesToSign = Resources.Where (v => NeedsCodesign (v)).ToArray ();
+			var resourcesToSign = Resources;
 
 			// 1. Rewrite requests to sign executables inside frameworks to sign the framework itself
 			//    signing a framework and a file inside a framework is not *always* identical
@@ -268,6 +343,15 @@ namespace Xamarin.MacDev.Tasks
 			// first sort all the items by path length, longest path first.
 			resourcesToSign = resourcesToSign.OrderBy (v => v.ItemSpec.Length).Reverse ().ToArray ();
 
+			// remove items that are up-to-date
+			for (var i = 0; i < resourcesToSign.Length; i++) {
+				var item = resourcesToSign [i];
+				if (!NeedsCodesign (resourcesToSign, i)) {
+					resourcesToSign [i] = null;
+				}
+			}
+			resourcesToSign = resourcesToSign.Where (v => v is not null).ToArray ();
+
 			// Then we need to split the input into buckets, where everything in a bucket can be signed in parallel
 			// (i.e. no item in a bucket depends on any other item in the bucket being signed first).
 			// any such items must go into a different bucket. The bucket themselves are also sorted, where
@@ -290,8 +374,7 @@ namespace Xamarin.MacDev.Tasks
 					var dir = res.ItemSpec;
 
 					// Add the directory separator, so we can do easy substring matches
-					if (dir.Length > 0 && dir [dir.Length - 1] != Path.DirectorySeparatorChar)
-						dir += Path.DirectorySeparatorChar;
+					dir = EnsureEndsWithDirectorySeparator (dir);
 
 					// This is a directory, which can contain other files or directories that must be signed first
 					// If this item is a containing directory for any of the items in a bucket, then we need to
