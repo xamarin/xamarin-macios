@@ -16,6 +16,7 @@ namespace AppKit {
 			return result;
 		}
 		
+#if !NET
 		public bool WriteObjects (NSPasteboardWriting [] objects)
 		{
 			var nsa_pasteboardReading = NSArray.FromNSObjects (objects);
@@ -23,6 +24,7 @@ namespace AppKit {
 			nsa_pasteboardReading.Dispose ();
 			return result;
 		}
+#endif
 	}
 }
 #endif // !__MACCATALYST__

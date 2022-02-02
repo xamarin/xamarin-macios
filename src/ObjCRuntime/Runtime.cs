@@ -517,13 +517,17 @@ namespace ObjCRuntime {
 		{
 			var str = new StringBuilder ();
 			try {
-				var exc = (Exception) GetGCHandleTarget (exception_gchandle)!;
+				var exc = (Exception?) GetGCHandleTarget (exception_gchandle);
 
-				int counter = 0;
-				do {
-					PrintException (exc, counter > 0, str);
-					exc = exc.InnerException;
-				} while (counter < 10 && exc is not null);
+				if (exc is null) {
+					str.Append ($"Unable to print exception handle 0x{exception_gchandle.ToString ("x")}: null exception");
+				} else {
+					int counter = 0;
+					do {
+						PrintException (exc, counter > 0, str);
+						exc = exc.InnerException;
+					} while (counter < 10 && exc is not null);
+				}
 			} catch (Exception exception) {
 				str.Append ("Failed to print exception: ").Append (exception);
 			}
