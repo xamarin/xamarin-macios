@@ -274,32 +274,17 @@ steps:
     $pkgsPath = "$(SBOM.PackagesPath)"
     Write-Host "Packages path: ${pkgsPath}"
 
-    $regexPackageVersion = '(?i)^xamarin-ios-(?<version>\d+\.\d+\.\d+\.\d+).pkg$'
-    Write-Host "Package version regular expression: ${regexPackageVersion}"
-
     $packageFileNames = Get-PackageFileNames -PkgsPath $pkgsPath
     $packageFileNames = @($packageFileNames)
     Write-Host "Package files: $($packageFileNames.Count)"
     $packageFileNames | foreach { Write-Host $_ }
 
-    $packageFile = ($packageFileNames | Where-Object { $_ -match $regexPackageVersion } | Select-Object -First 1)
-    Write-Host "Package file matching regular expression: ${packageFile}"
-
-    $packageFile_version = [string]::Empty
-
-    if (-not ([string]::IsNullOrEmpty($regexPackageVersion)) -and -not ([string]::IsNullOrEmpty($packageFile))) {
-      Write-Host "packageFile as basis for product version: ${packageFile}"
-      $packageFile_version = Get-Version -Filename $packageFile -RegexVersion $regexPackageVersion
-    } else {
-      Write-Host "Skip getting version from package name. regexPackageVersion variable not set"
-    }
-
     Write-Host "Setting SBOM.ProductName: Xamarin iOS"
     Write-Host "##vso[task.setvariable variable=SBOM.ProductName]Xamarin iOS"         # SBOM generation only lets us use a single package name and so choose 'Xamarin iOS' instead of 'Xamarin Mac'
 
-    # Always set the SBOM.ProductVersion variable even if setting to empty so that the variable exists when used later
-    Write-Host "Setting SBOM.ProductVersion: ${packageFile_version}"
-    Write-Host "##vso[task.setvariable variable=SBOM.ProductVersion]$packageFile_version"
+    $sbomManifestVersion = "$(Build.BuildId)"
+    Write-Host "Setting SBOM.ProductVersion to the build number: ${sbomManifestVersion}"
+    Write-Host "##vso[task.setvariable variable=SBOM.ProductVersion]$sbomManifestVersion"
   displayName: 'SBOM: Set ProductVersion'
 
 - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
