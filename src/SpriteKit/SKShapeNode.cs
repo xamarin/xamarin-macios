@@ -16,10 +16,8 @@ using ObjCRuntime;
 namespace SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
-#if !NET
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-#endif
 		public static SKShapeNode FromPoints (CGPoint [] points)
 		{
 			if (points == null)
@@ -28,10 +26,8 @@ namespace SpriteKit {
 			return FromPoints (ref points[0], (nuint) points.Length);
 		}
 
-#if !NET
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-#endif
 		public static SKShapeNode FromPoints (CGPoint [] points, int offset, int length)
 		{
 			if (points == null)
@@ -42,10 +38,8 @@ namespace SpriteKit {
 			return FromPoints (ref points [offset], (nuint) length);
 		}
 
-#if !NET
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-#endif
 		public static SKShapeNode FromSplinePoints (CGPoint [] points)
 		{
 			if (points == null)
@@ -54,10 +48,8 @@ namespace SpriteKit {
 			return FromSplinePoints (ref points[0], (nuint) points.Length);
 		}
 
-#if !NET
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-#endif
 		public static SKShapeNode FromSplinePoints (CGPoint [] points, int offset, int length)
 		{
 			if (points == null)
