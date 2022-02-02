@@ -572,8 +572,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -586,8 +584,6 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Introduced (PlatformName.MacOSX)]
-		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -598,8 +594,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -612,8 +606,6 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Introduced (PlatformName.MacOSX)]
-		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -629,8 +621,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -643,8 +633,6 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Introduced (PlatformName.MacOSX)]
-		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -655,8 +643,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -669,8 +655,6 @@ namespace CoreMedia {
 #endif
 #else
 		[TV (9,0)]
-		[Introduced (PlatformName.MacOSX)]
-		[Introduced (PlatformName.iOS)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
