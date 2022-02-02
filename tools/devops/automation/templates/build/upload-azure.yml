@@ -267,7 +267,7 @@ steps:
 
     function Get-PackageFileNames([string] $PkgsPath) {
       $files = [IO.Directory]::GetFiles($PkgsPath)
-      $pkgFiles = $files | Select-Object [IO.Path]::GetFileName($_)
+      $pkgFiles = $files | foreach { [IO.Path]::GetFileName($_) }
       return $pkgFiles
     }
 
@@ -278,7 +278,9 @@ steps:
     Write-Host "Package version regular expression: ${regexPackageVersion}"
 
     $packageFileNames = Get-PackageFileNames -PkgsPath $pkgsPath
-    Write-Host "Package files: $($packageFiles.Count)"
+    $packageFileNames = @($packageFileNames)
+    Write-Host "Package files: $($packageFileNames.Count)"
+    $packageFileNames | foreach { Write-Host $_ }
 
     $packageFile = ($packageFileNames | Where-Object { $_ -match $regexPackageVersion } | Select-Object -First 1)
     Write-Host "Package file matching regular expression: ${packageFile}"
