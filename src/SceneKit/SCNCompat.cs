@@ -209,7 +209,7 @@ namespace SceneKit {
 		}
 	}
 
-#if !WATCH && !__MACCATALYST__
+#if !MONOMAC && !WATCH && !__MACCATALYST__
 	public partial class SCNView {
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -222,6 +222,6 @@ namespace SceneKit {
 		[Obsolete ("Empty stub. (not a public API).")]
 		public virtual bool DrawableResizesAsynchronously { get; set; } 
 	}
-#endif // !WATCH && !__MACCATALYST__
+#endif // !MONOMAC && !WATCH && !__MACCATALYST__
 #endif // !NET
 }
