@@ -639,7 +639,7 @@ namespace MLCompute {
 		[Export ("optimizerData", ArgumentSemantic.Copy)]
 		MLCTensorData[] OptimizerData {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif

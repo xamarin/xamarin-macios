@@ -59,7 +59,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ip_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateIPDefinition' method instead.")]
 		public static NWProtocolDefinition IPDefinition => new NWProtocolDefinition (nw_protocol_copy_ip_definition (), owns: true);
 #endif
@@ -69,7 +69,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_tcp_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateTcpDefinition' method instead.")]
 		public static NWProtocolDefinition TcpDefinition => new NWProtocolDefinition (nw_protocol_copy_tcp_definition (), owns: true);
 #endif
@@ -79,7 +79,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_udp_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateUdpDefinition' method instead.")]
 		public static NWProtocolDefinition UdpDefinition => new NWProtocolDefinition (nw_protocol_copy_udp_definition (), owns: true);
 #endif
@@ -89,7 +89,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_tls_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateTlsDefinition' method instead.")]
 		public static NWProtocolDefinition TlsDefinition => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
 #endif
@@ -108,7 +108,6 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
-#if !XAMCORE_4_0
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
@@ -121,7 +120,6 @@ namespace Network {
 		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
 #endif
 		public static NWProtocolDefinition WebSocketDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
-#endif
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]

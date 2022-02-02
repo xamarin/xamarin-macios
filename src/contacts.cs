@@ -1274,7 +1274,7 @@ namespace Contacts {
 	}
 
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
-#if !XAMCORE_4_0
+#if !NET
 	delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
 #endif
 	delegate void CNContactStoreListContactsHandler (CNContact contact, ref bool stop);
@@ -1512,12 +1512,12 @@ namespace Contacts {
 		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);
 
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete ("Use the overload that takes 'CNContactStoreListContactsHandler' instead.")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
 
-		[Sealed] // We will introduce breaking changes anyways if XAMCORE_4_0 happens
+		[Sealed]
 #endif
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, [NullAllowed] out NSError error, CNContactStoreListContactsHandler handler);
@@ -1584,7 +1584,7 @@ namespace Contacts {
 		CNContact [] GetContactsFromData (NSData data, out NSError error);
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNContainer))]
@@ -1622,7 +1622,7 @@ namespace Contacts {
 
 #region comes from CNContainer (Predicates) Category
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainersWithIdentifiers:")]
 #else
 		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainers (null!, identifiers)")]
@@ -1630,7 +1630,7 @@ namespace Contacts {
 		NSPredicate CreatePredicateForContainers (string [] identifiers);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 #else
 		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfContact (null!, contactIdentifier)")]
@@ -1638,7 +1638,7 @@ namespace Contacts {
 		NSPredicate CreatePredicateForContainerOfContact (string contactIdentifier);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 #else
 		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfGroup (null!, groupIdentifier)")]
@@ -1680,7 +1680,7 @@ namespace Contacts {
 		NSString KeyPaths { get; }
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNGroup))]
@@ -1716,7 +1716,7 @@ namespace Contacts {
 
 #region comes from CNGroup (Predicates) Category
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForGroupsWithIdentifiers:")]
 #else
 		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroups (null!, identifiers)")]
@@ -1725,7 +1725,7 @@ namespace Contacts {
 
 		[NoiOS][NoWatch]
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 #else
 		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForSubgroupsInGroup (null!, parentGroupIdentifier)")]
@@ -1733,7 +1733,7 @@ namespace Contacts {
 		NSPredicate CreatePredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 #else
 		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroupsInContainer (null!, containerIdentifier)")]
@@ -2147,7 +2147,7 @@ namespace Contacts {
 		string LocalizeProperty (CNPostalAddressKeyOption option);
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]

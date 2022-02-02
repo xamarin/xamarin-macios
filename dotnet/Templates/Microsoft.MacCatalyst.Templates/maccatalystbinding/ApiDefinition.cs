@@ -62,7 +62,7 @@ namespace MacCatalystBinding1
 // Can be bound as:
 //
 //     [Export ("initWithElmo:")]
-//     IntPtr Constructor (ElmoMuppet elmo);
+//     NativeHandle Constructor (ElmoMuppet elmo);
 //
 // For more information, see https://aka.ms/ios-binding
 //

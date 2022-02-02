@@ -210,7 +210,7 @@ namespace Network {
 		}	
 
 		// let to not change the API, but would be nice to remove it in the following releases.
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Uset the 'IndividualChangesDelegate' instead.")]
 		public void SetChangesHandler (Action<NWBrowseResult?, NWBrowseResult?> handler) => IndividualChangesDelegate = handler;
 #endif

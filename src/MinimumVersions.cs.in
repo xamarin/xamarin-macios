@@ -2,7 +2,7 @@ using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #if NET
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 [assembly: TargetPlatform ("ios")]
 #elif __TVOS__
 [assembly: TargetPlatform ("tvos")]

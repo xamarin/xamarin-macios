@@ -8,7 +8,11 @@ using ObjCRuntime;
 
 namespace AppKit {
 	public partial class NSDraggingSession {
+#if NET
+		public void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, INSPasteboardReading [] classArray, NSDictionary searchOptions, NSDraggingEnumerator enumerator)
+#else
 		public void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, NSPasteboardReading [] classArray, NSDictionary searchOptions, NSDraggingEnumerator enumerator)
+#endif
 		{
 			var nsa_classArray = NSArray.FromNSObjects (classArray);
 			EnumerateDraggingItems (enumOpts, view, nsa_classArray.Handle, searchOptions, enumerator);

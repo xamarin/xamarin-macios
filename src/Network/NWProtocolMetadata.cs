@@ -42,7 +42,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern OS_nw_protocol_metadata nw_ip_create_metadata ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public static NWProtocolMetadata CreateIPMetadata ()
 		{
@@ -53,8 +53,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern OS_nw_protocol_metadata nw_udp_create_metadata ();
 
-#if !XAMCORE_4_0
-		[Obsolete ("Use the 'NSUdpMetadata' class and methods instead.")]
+#if !NET
+		[Obsolete ("Use the 'NWUdpMetadata' class and methods instead.")]
 		public static NWProtocolMetadata CreateUdpMetadata ()
 		{
 			return new NWProtocolMetadata (nw_udp_create_metadata (), owns: true);
@@ -148,7 +148,7 @@ namespace Network {
 				throw new InvalidOperationException ("This metadata is not TLS metadata.");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWTlsMetadata' class and methods instead.")]
 		public SecProtocolMetadata SecProtocolMetadata => TlsSecProtocolMetadata;
 
@@ -167,7 +167,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern NWIPEcnFlag nw_ip_metadata_get_ecn_flag (OS_nw_protocol_metadata metadata);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public NWIPEcnFlag IPMetadataEcnFlag {
 			get {
@@ -184,7 +184,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern /* uint64_t */ ulong nw_ip_metadata_get_receive_time (OS_nw_protocol_metadata metadata);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public ulong IPMetadataReceiveTime {
 			get {
@@ -200,7 +200,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern NWServiceClass nw_ip_metadata_get_service_class (OS_nw_protocol_metadata metadata);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public NWServiceClass ServiceClass {
 			get => IPServiceClass;
@@ -223,7 +223,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static /* uint32_t */ uint nw_tcp_get_available_receive_buffer (IntPtr handle);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWTcpMetadata' class and methods instead.")]
 		public uint TcpGetAvailableReceiveBuffer ()
 		{
@@ -235,7 +235,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static /* uint32_t */ uint nw_tcp_get_available_send_buffer (IntPtr handle);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWTcpMetadata' class and methods instead.")]
 		public uint TcpGetAvailableSendBuffer ()
 		{

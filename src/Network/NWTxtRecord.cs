@@ -132,7 +132,7 @@ namespace Network {
 		delegate bool nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_apply_t static_ApplyHandler = TrampolineApplyHandler;
 
-#if XAMCORE_4_0
+#if NET
 		public delegate bool NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey result, ReadOnlySpan<byte> value);
 #else
 		public delegate void NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey rersult, ReadOnlySpan<byte> value);
@@ -142,7 +142,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_txt_record_apply_t))]
 		unsafe static bool TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
-#if XAMCORE_4_0
+#if NET
 			var del = BlockLiteral.GetTarget<NWTxtRecordApplyDelegate> (block);
 #else
 			var del = BlockLiteral.GetTarget<MulticastDelegate> (block);
@@ -151,7 +151,7 @@ namespace Network {
 				return false;
 
 			var mValue = new ReadOnlySpan<byte> ((void*)value, (int)valueLen);
-#if XAMCORE_4_0
+#if NET
 			return del (key, found, mValue);
 #else
 			if (del is NWTxtRecordApplyDelegate apply) {
@@ -165,7 +165,7 @@ namespace Network {
 #endif
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload that takes an NWTxtRecordApplyDelegate2 instead.")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -183,7 +183,7 @@ namespace Network {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate2 handler)
 		{
