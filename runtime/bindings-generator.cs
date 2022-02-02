@@ -102,6 +102,7 @@ namespace Xamarin.BindingMethods.Generator
 			Types.Matrix3f = isDotNet ? Types.RMatrix3f : Types.OpenTK_Matrix3f;
 			Types.Matrix4f = isDotNet ? Types.Numerics_Matrix4f : Types.OpenTK_Matrix4f;
 			Types.QuatD = isDotNet ? Types.NQuaterniond : Types.OpenTK_QuatD;
+			Types.MDLVoxelIndexExtent = isDotNet ? Types.MDLVoxelIndexExtent_DotNet : Types.MDLVoxelIndexExtent2;
 
 			data.Add (
 				new FunctionData {
@@ -959,6 +960,21 @@ namespace Xamarin.BindingMethods.Generator
 					},
 				}
 			);
+
+			if (isDotNet) {
+				data.Add (
+					new FunctionData {
+						Comment = " // NMatrix4 func (IntPtr, Double)",
+						Prefix = "simd__",
+						Variants = Variants.All,
+						ReturnType = Types.NMatrix4,
+						Parameters = new ParameterData[] {
+							new ParameterData { TypeData = Types.NativeHandleType },
+							new ParameterData { TypeData = Types.Double },
+						},
+					}
+				);
+			}
 
 			data.Add (
 				new FunctionData {
@@ -2019,10 +2035,10 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MDLVoxelIndexExtent2 func ()",
+					Comment = " // MDLVoxelIndexExtent func ()",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MDLVoxelIndexExtent2,
+					ReturnType = Types.MDLVoxelIndexExtent,
 				}
 			);
 
@@ -2037,11 +2053,11 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // void func (MDLVoxelIndexExtent2)",
+					Comment = " // void func (MDLVoxelIndexExtent)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.MDLVoxelIndexExtent2 },
+						new ParameterData { TypeData = Types.MDLVoxelIndexExtent },
 					}
 				}
 			);
@@ -2150,12 +2166,12 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (MDLVoxelIndexExtent2)",
+					Comment = " // IntPtr func (MDLVoxelIndexExtent)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.NativeHandleType,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.MDLVoxelIndexExtent2 },
+						new ParameterData { TypeData = Types.MDLVoxelIndexExtent },
 					},
 				}
 			);
@@ -2783,6 +2799,7 @@ namespace Xamarin.BindingMethods.Generator
 				// this is not exposed (under normal circumstance) to managed code - but if something gets wrong it won't be random data
 				writer.WriteLine ("\tmemset ({0}{1}dummy, 0, sizeof ({0}{1}dummy));", managedVariable, accessor);
 				break;
+			case "MDLVoxelIndexExtent":
 			case "MDLVoxelIndexExtent2":
 				writer.WriteLine ("\t{0}{2}minimumExtent.a = {1}.minimumExtent [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}minimumExtent.b = {1}.minimumExtent [1];", managedVariable, nativeVariable, accessor);
@@ -2929,6 +2946,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t{0}.maxPixelValue [2] = {1}{2}maxPixelValue.c;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.maxPixelValue [3] = {1}{2}maxPixelValue.d;", nativeVariable, managedVariable, accessor);
 				break;
+			case "MDLVoxelIndexExtent":
 			case "MDLVoxelIndexExtent2":
 				writer.WriteLine ("\t{0}.minimumExtent [0] = {1}{2}minimumExtent.a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.minimumExtent [1] = {1}{2}minimumExtent.b;", nativeVariable, managedVariable, accessor);
@@ -3712,6 +3730,18 @@ namespace Xamarin.BindingMethods.Generator
 				ManagedType = "MPSImageHistogramInfo",
 				NativeType = "MPSImageHistogramInfo",
 				NativeWrapperType = "struct MPSImageHistogramInfoWrapper",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
+			};
+
+			public static TypeData MDLVoxelIndexExtent;
+
+			public static TypeData MDLVoxelIndexExtent_DotNet = new TypeData {
+				ManagedType = "MDLVoxelIndexExtent",
+				NativeType = "MDLVoxelIndexExtent",
+				NativeWrapperType = "struct MDLVoxelIndexExtentWrapper",
 				RequireMarshal = true,
 				IsARMStret = true,
 				IsX86Stret = true,

@@ -90,7 +90,7 @@ namespace CoreMedia {
 		public bool MightDrift (CMClock otherClock)
 		{
 			if (otherClock is null)
-				throw new ArgumentNullException (nameof (otherClock));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (otherClock));
 
 			return CMClockMightDrift (Handle, otherClock.Handle);
 		}
@@ -147,11 +147,11 @@ namespace CoreMedia {
 		static IntPtr Create (CMClock masterClock)
 		{
 			if (masterClock is null)
-				throw new ArgumentNullException (nameof (masterClock));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (masterClock));
 
 			var error = CMTimebaseCreateWithMasterClock (IntPtr.Zero, masterClock.Handle, out var handle);
 			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
 		}
 
@@ -177,11 +177,11 @@ namespace CoreMedia {
 		static IntPtr Create (CMTimebase masterTimebase)
 		{
 			if (masterTimebase is null)
-				throw new ArgumentNullException (nameof (masterTimebase));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (masterTimebase));
 
 			var error = CMTimebaseCreateWithMasterTimebase (IntPtr.Zero, masterTimebase.Handle, out var handle);
 			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
 		}
 
@@ -201,11 +201,11 @@ namespace CoreMedia {
 		static IntPtr Create (CFAllocator? allocator, CMClock sourceClock)
 		{
 			if (sourceClock is null)
-				throw new ArgumentNullException (nameof (sourceClock));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceClock));
 
 			var error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, out var handle);
 			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
 		}
 
@@ -230,11 +230,11 @@ namespace CoreMedia {
 		static IntPtr Create (CFAllocator? allocator, CMTimebase sourceTimebase)
 		{
 			if (sourceTimebase is null)
-				throw new ArgumentNullException (nameof (sourceTimebase));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceTimebase));
 
 			var error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, out var handle);
 			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
 		}
 
@@ -270,7 +270,7 @@ namespace CoreMedia {
 			set {
 				var error = CMTimebaseSetRate (Handle, value);
 				if (error != CMTimebaseError.None)
-					throw new ArgumentException (error.ToString ());				
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			}
 		} 
 
@@ -287,7 +287,7 @@ namespace CoreMedia {
 			set {
 				var error = CMTimebaseSetTime (Handle, value);
 				if (error != CMTimebaseError.None)
-					throw new ArgumentException (error.ToString ());
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			}
 		}
 
@@ -466,9 +466,9 @@ namespace CoreMedia {
 		public CMTimebaseError AddTimer (NSTimer timer, NSRunLoop runloop)
 		{
 			if (timer is null)
-				throw new ArgumentNullException (nameof (timer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
 			if (runloop is null)
-				throw new ArgumentNullException (nameof (runloop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runloop));
 
 			// NSRunloop and CFRunloop[Ref] are NOT toll free bridged types
 			using (var cf = runloop.GetCFRunLoop ())
@@ -481,7 +481,7 @@ namespace CoreMedia {
 		public CMTimebaseError RemoveTimer (NSTimer timer)
 		{
 			if (timer is null)
-				throw new ArgumentNullException (nameof (timer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
 
 			return CMTimebaseRemoveTimer (Handle, timer.Handle);
 		}
@@ -492,7 +492,7 @@ namespace CoreMedia {
 		public CMTimebaseError SetTimerNextFireTime (NSTimer timer, CMTime fireTime)
 		{
 			if (timer is null)
-				throw new ArgumentNullException (nameof (timer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
 
 			return CMTimebaseSetTimerNextFireTime (Handle, timer.Handle, fireTime, 0);
 		}
@@ -503,7 +503,7 @@ namespace CoreMedia {
 		public CMTimebaseError SetTimerToFireImmediately (NSTimer timer)
 		{
 			if (timer is null)
-				throw new ArgumentNullException (nameof (timer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
 
 			return CMTimebaseSetTimerToFireImmediately (Handle, timer.Handle);
 		}
@@ -538,7 +538,7 @@ namespace CoreMedia {
 		public CMTimebaseError SetMasterTimebase (CMTimebase newMasterTimebase)
 		{
 			if (newMasterTimebase is null)
-				throw new ArgumentNullException (nameof (newMasterTimebase));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newMasterTimebase));
 
 			return CMTimebaseSetMasterTimebase (Handle, newMasterTimebase.Handle);
 		}
@@ -573,7 +573,7 @@ namespace CoreMedia {
 		public CMTimebaseError SetMasterClock (CMClock newMasterClock)
 		{
 			if (newMasterClock is null)
-				throw new ArgumentNullException (nameof (newMasterClock));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newMasterClock));
 
 			return CMTimebaseSetMasterClock (Handle, newMasterClock.Handle);
 		}
@@ -765,10 +765,10 @@ namespace CoreMedia {
 		public static double GetRelativeRate (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
 		{
 			if (clockOrTimebaseA is null)
-				throw new ArgumentNullException (nameof (clockOrTimebaseA));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseA));
 
 			if (clockOrTimebaseB is null)
-				throw new ArgumentNullException (nameof (clockOrTimebaseB));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
 			return CMSyncGetRelativeRate (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}
@@ -784,10 +784,10 @@ namespace CoreMedia {
 		public static CMSyncError GetRelativeRateAndAnchorTime (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB,  out double relativeRate, out CMTime timeA, out CMTime timeB)
 		{
 			if (clockOrTimebaseA is null)
-				throw new ArgumentNullException (nameof (clockOrTimebaseA));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseA));
 
 			if (clockOrTimebaseB is null)
-				throw new ArgumentNullException (nameof (clockOrTimebaseB));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
 			return CMSyncGetRelativeRateAndAnchorTime (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle, out relativeRate, out timeA, out timeB);
 		}
@@ -798,9 +798,9 @@ namespace CoreMedia {
 		public static CMTime ConvertTime (CMTime time, CMClockOrTimebase from, CMClockOrTimebase to)
 		{
 			if (from is null)
-				throw new ArgumentNullException (nameof (from));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (from));
 			if (to is null)
-				throw new ArgumentNullException (nameof (to));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (to));
 
 			return CMSyncConvertTime (time, from.Handle, to.Handle);
 		}
@@ -812,10 +812,10 @@ namespace CoreMedia {
 		public static bool MightDrift (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
 		{
 			if (clockOrTimebaseA is null)
-				throw new ArgumentNullException (nameof (clockOrTimebaseA));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseA));
 
 			if (clockOrTimebaseB is null)
-				throw new ArgumentNullException (nameof (clockOrTimebaseB));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
 			return CMSyncMightDrift (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}

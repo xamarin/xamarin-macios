@@ -28,7 +28,6 @@ namespace GameplayKit {
 	}
 
 	public partial class GKQuadTreeNode {
-
 		[Obsolete ("A valid instance of this type cannot be directly created.")]
 		public GKQuadTreeNode ()
 		{

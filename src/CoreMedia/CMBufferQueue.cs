@@ -116,15 +116,15 @@ namespace CoreMedia {
 		{
 			var bq = new CMBufferQueue (count);
 			var cbacks = new CMBufferCallbacks () {
-				version = (uint) (getTotalSize == null ? 0 : 1),
+				version = (uint) (getTotalSize is null ? 0 : 1),
 				refcon = GCHandle.ToIntPtr (bq.gch),
-				XgetDecodeTimeStamp = getDecodeTimeStamp == null ? (BufferGetTimeCallback?) null : GetDecodeTimeStamp,
-				XgetPresentationTimeStamp = getPresentationTimeStamp == null ? (BufferGetTimeCallback?) null : GetPresentationTimeStamp,
-				XgetDuration = getDuration == null ? (BufferGetTimeCallback?) null : GetDuration,
-				XisDataReady = isDataReady == null ? (BufferGetBooleanCallback?) null : GetDataReady,
-				Xcompare = compare == null ? (BufferCompareCallback?) null : Compare,
-				cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification == null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
-				XgetSize = getTotalSize == null ? (BufferGetSizeCallback?) null : GetTotalSize
+				XgetDecodeTimeStamp = getDecodeTimeStamp is null ? (BufferGetTimeCallback?) null : GetDecodeTimeStamp,
+				XgetPresentationTimeStamp = getPresentationTimeStamp is null ? (BufferGetTimeCallback?) null : GetPresentationTimeStamp,
+				XgetDuration = getDuration is null ? (BufferGetTimeCallback?) null : GetDuration,
+				XisDataReady = isDataReady is null ? (BufferGetBooleanCallback?) null : GetDataReady,
+				Xcompare = compare is null ? (BufferCompareCallback?) null : Compare,
+				cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification is null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
+				XgetSize = getTotalSize is null ? (BufferGetSizeCallback?) null : GetTotalSize
 			};
 
 			bq.getDecodeTimeStamp = getDecodeTimeStamp;
@@ -170,7 +170,7 @@ namespace CoreMedia {
 		public void Enqueue (INativeObject cftypeBuffer)
 		{
 			if (cftypeBuffer is null)
-				throw new ArgumentNullException (nameof (cftypeBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (cftypeBuffer));
 			lock (queueObjects){
 				var cfh = cftypeBuffer.Handle;
 				CMBufferQueueEnqueue (Handle, cfh);

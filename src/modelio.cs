@@ -27,6 +27,8 @@ using Vector3i = global::CoreGraphics.NVector3i;
 using Vector4 = global::System.Numerics.Vector4;
 using Vector4d = global::CoreGraphics.NVector4d;
 using Vector4i = global::CoreGraphics.NVector4i;
+using Matrix2 = global::CoreGraphics.NMatrix2;
+using Matrix3 = global::CoreGraphics.NMatrix3;
 using Matrix4 = global::System.Numerics.Matrix4x4;
 using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
 using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
@@ -46,6 +48,8 @@ using Vector3i = global::OpenTK.Vector3i;
 using Vector4 = global::OpenTK.Vector4;
 using Vector4d = global::OpenTK.Vector4d;
 using Vector4i = global::OpenTK.Vector4i;
+using Matrix2 = global::OpenTK.Matrix2;
+using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using NMatrix4 = global::OpenTK.NMatrix4;
@@ -697,7 +701,7 @@ namespace ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'MatrixFloat4x4' instead.")]
 #endif
 		[Export ("matrix4x4", ArgumentSemantic.Assign)]
@@ -706,7 +710,7 @@ namespace ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("matrix4x4", ArgumentSemantic.Assign)]
 		MatrixFloat4x4 MatrixFloat4x4 {
@@ -1223,16 +1227,19 @@ namespace ModelIO {
 		[Wrap ("SetComponent (component, new Protocol (type!))")]
 		void SetComponent (IMDLComponent component, Type type);
 
-#if XAMCORE_4_0
-		[Internal]
-#endif
+#if !NET
 		[Obsolete ("Use 'GetComponent (Type type)'.")]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
 		IMDLComponent IsComponentConforming (Protocol protocol);
+#endif
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
+#if NET
+		[Export ("componentConformingToProtocol:")]
+#else
 		[Wrap ("IsComponentConforming (protocol!)")]
+#endif
 		[return: NullAllowed]
 		IMDLComponent GetComponent (Protocol protocol);
 
@@ -1683,7 +1690,7 @@ namespace ModelIO {
 		[Export ("init")]
 		NativeHandle Constructor ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Static]
 		[Obsolete ("Use 'CreateTexture' instead.")]
 		[Wrap ("CreateTexture (name)")]
@@ -1696,7 +1703,7 @@ namespace ModelIO {
 		[return: NullAllowed]
 		MDLTexture CreateTexture (string name);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Static]
 		[Obsolete ("Use 'CreateTexture' instead.")]
 		[Wrap ("CreateTexture (name, bundleOrNil)")]
@@ -2215,14 +2222,16 @@ namespace ModelIO {
 		[Export ("setVoxelsForMesh:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetVoxels (MDLVoxelIndexExtent2)' instead.")]
+#else
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #endif
 		[Export ("voxelsWithinExtent:")]
 		[return: NullAllowed]
 		NSData GetVoxels (MDLVoxelIndexExtent withinExtent);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("voxelsWithinExtent:")]
 		[return: NullAllowed]
@@ -2258,13 +2267,18 @@ namespace ModelIO {
 		[Export ("count")]
 		nuint Count { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'VoxelIndexExtent2' instead.")]
 #endif
 		[Export ("voxelIndexExtent")]
-		MDLVoxelIndexExtent VoxelIndexExtent { get; }
+		MDLVoxelIndexExtent VoxelIndexExtent {
+#if NET
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#endif
+			get;
+		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("voxelIndexExtent")]
 		[Sealed]
 		MDLVoxelIndexExtent2 VoxelIndexExtent2 {

@@ -226,7 +226,6 @@ AUDIOUNIT_SOURCES = \
 	AudioUnit/ExtAudioFile.cs \
 	AudioUnit/AUScheduledAudioFileRegion.cs \
 	AudioUnit/AUParameter.cs \
-	AudioUnit/AUParameterNode.cs \
 
 # AuthenticationServices
 
@@ -330,6 +329,11 @@ CARPLAY_SOURCES = \
 	CarPlay/CPCompat.cs \
 	CarPlay/CPNavigationAlert.cs \
 	CarPlay/CPMessageListItem.cs \
+
+# Chip
+
+CHIP_SOURCES = \
+	Chip/ChipCompat.cs \
 
 # ClassKit
 
@@ -1551,7 +1555,7 @@ SENSORKIT_SOURCES = \
 
 # Social
 
-SOCIAL_CORE_SOURCES = \
+SOCIAL_API_SOURCES = \
 	Social/Enums.cs \
 
 SOCIAL_SOURCES = \

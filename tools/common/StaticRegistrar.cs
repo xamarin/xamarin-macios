@@ -5020,11 +5020,7 @@ namespace Registrar {
 			}
 
 			header.WriteLine ("#include <stdarg.h>");
-			if (SupportsModernObjectiveC) {
-				methods.WriteLine ("#include <xamarin/xamarin.h>");
-			} else {
-				header.WriteLine ("#include <xamarin/xamarin.h>");
-			}
+			methods.WriteLine ("#include <xamarin/xamarin.h>");
 			header.WriteLine ("#include <objc/objc.h>");
 			header.WriteLine ("#include <objc/runtime.h>");
 			header.WriteLine ("#include <objc/message.h>");

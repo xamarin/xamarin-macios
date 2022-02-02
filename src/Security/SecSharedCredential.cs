@@ -94,7 +94,7 @@ namespace Security {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload accepting a 'SecSharedCredentialInfo' argument.")]
 		public static void RequestSharedWebCredential (string domainName, string account, Action<string[], NSError> handler)
 		{

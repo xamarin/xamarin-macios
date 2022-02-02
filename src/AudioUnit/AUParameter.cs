@@ -26,15 +26,5 @@ namespace AudioUnit
 				}
 			}
 		}
-
-		public void SetValue (float value, AUParameterObserverToken originator)
-		{
-			SetValue (value, originator.ObserverToken);
-		}
-
-		public void SetValue (float value, AUParameterObserverToken originator, ulong hostTime)
-		{
-			SetValue (value, originator.ObserverToken, hostTime);
-		}
 	}
 }
