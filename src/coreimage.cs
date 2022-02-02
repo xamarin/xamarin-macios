@@ -9501,6 +9501,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
 
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
 	}
@@ -9515,6 +9518,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
@@ -9531,6 +9537,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
 
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
 	}
@@ -9545,6 +9554,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
@@ -9561,6 +9573,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
 
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
 	}
@@ -9575,6 +9590,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputBackgroundImage")]
 		CIImage BackgroundImage { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -9609,6 +9627,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputBackgroundImage")]
 		CIImage BackgroundImage { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 	}
 #endregion
 }
