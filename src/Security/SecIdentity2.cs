@@ -25,7 +25,16 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (5,0)]
+#endif
 	public class SecIdentity2 : NativeObject {
 #if NET
 		[Preserve (Conditional = true)]
@@ -81,7 +90,16 @@ namespace Security {
 			}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
  		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
@@ -97,8 +115,16 @@ namespace Security {
 				del (new SecCertificate2 (cert, false));
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		// no [Async] as it can be called multiple times
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool AccessCertificates (Action</* sec_identity_t */SecCertificate2> handler)
 		{

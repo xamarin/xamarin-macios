@@ -64,9 +64,23 @@ namespace Security {
 			}
 		}
 
-		[DllImport (Constants.SecurityLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
 		extern static void SecRequestSharedWebCredential ( IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account,
 			IntPtr /* void (^completionHandler)( CFArrayRef credentials, CFErrorRef error) */ completionHandler);
 
@@ -97,8 +111,22 @@ namespace Security {
 		}
 #endif
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0 use 'ASAuthorizationPasswordRequest' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'ASAuthorizationPasswordRequest' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RequestSharedWebCredential (string domainName, string account, Action<SecSharedCredentialInfo[], NSError> handler)
 		{

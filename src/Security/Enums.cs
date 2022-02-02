@@ -404,27 +404,66 @@ namespace Security {
 		None      = 0,
 		PKCS1     = 1,
 
-		[NoMac][TV (10,0)][Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[TV (10,0)]
+		[Watch (3,0)]
+#endif
 		OAEP      = 2,
 
+#if NET
+		[SupportedOSPlatform ("ios8.3")]
+#else
 		[iOS (8,3)]
+#endif
 		Raw       = 0x4000,
 
-		[Obsolete ("Don't use hash algorithm.")][NoTV][NoWatch]
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[NoWatch]
+#endif
+		[Obsolete ("Don't use hash algorithm.")]
 		PKCS1MD2  = 0x8000,
 
-		[Obsolete ("Don't use hash algorithm.")][NoTV][NoWatch]
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[NoWatch]
+#endif
+		[Obsolete ("Don't use hash algorithm.")]
 		PKCS1MD5  = 0x8001,
 
 		PKCS1SHA1 = 0x8002,
 
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac]
+#endif
 		PKCS1SHA224 = 0x8003,
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac]
+#endif
 		PKCS1SHA256 = 0x8004,
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac]
+#endif
 		PKCS1SHA384 = 0x8005,
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac]
+#endif
 		PKCS1SHA512 = 0x8006,
 	}
 
@@ -434,8 +473,18 @@ namespace Security {
 		Invalid,
 		Proceed,
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("ios7.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+#endif
 		Confirm,
 		Deny,
 		Unspecified,
@@ -445,21 +494,57 @@ namespace Security {
 	}
 
 	// convenience enum mapping to kSecUseAuthenticationUI* fields
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	public enum SecAuthenticationUI {
 		NotSet = -1,
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0 use 'LAContext.InteractionNotAllowed' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos14.0 use 'LAContext.InteractionNotAllowed' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'LAContext.InteractionNotAllowed' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+#endif
 		[Field ("kSecUseAuthenticationUIAllow")]
 		Allow,
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0 use 'LAContext.InteractionNotAllowed' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos14.0 use 'LAContext.InteractionNotAllowed' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'LAContext.InteractionNotAllowed' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+#endif
 		[Field ("kSecUseAuthenticationUIFail")]
 		Fail,
 
@@ -467,8 +552,13 @@ namespace Security {
 		Skip
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
 	[iOS (9,0)]
 	[Mac (10,12)]
+#endif
 	public enum SecTokenID {
 		None = 0,
 
@@ -476,7 +566,16 @@ namespace Security {
 		SecureEnclave,
 	}
 
-	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios10.0")]
+#else
+	[Watch (3,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
+	[iOS (10,0)]
+#endif
 	[Native]
 	public enum SecKeyOperationType : long {
 		Sign = 0,
@@ -488,7 +587,11 @@ namespace Security {
 
 	// untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
 	// which is defined as in CFBase.h (do not trust Apple web documentation)
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[iOS (7,0)]
+#endif
 	[Flags]
 	[Native]
 	public enum SecRevocation : ulong {

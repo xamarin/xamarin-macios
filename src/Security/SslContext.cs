@@ -26,10 +26,23 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
 	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+#endif
 	public class SslContext : NativeObject {
 
 		SslConnection? connection;
@@ -493,13 +506,39 @@ namespace Security {
 			}
 		}
 
-		[DllImport (Constants.SecurityLibrary)]
+#if NET
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 the use of different RSA certificates for signing and encryption is no longer allowed.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0, message: "The use of different RSA certificates for signing and encryption is no longer allowed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetEncryptionCertificate (/* SSLContextRef */ IntPtr context, /* CFArrayRef */ IntPtr certRefs);
 
+#if NET
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Export ciphers are not available anymore.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Export ciphers are not available anymore.")]
+#endif
 		public SslStatus SetEncryptionCertificate (SecIdentity identify, IEnumerable<SecCertificate> certificates)
 		{
 			using (var array = Bundle (identify, certificates)) {
@@ -532,8 +571,17 @@ namespace Security {
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
 
+#if NET
+		[UnsupportedOSPlatform ("tvos13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[Unavailable (PlatformName.iOS, message : "'SetSessionStrengthPolicy' is not available anymore.")]
 		[Unavailable (PlatformName.MacOSX, message : "'SetSessionStrengthPolicy' is not available anymore.")]
+#endif
 		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
@@ -542,15 +590,49 @@ namespace Security {
 		}
 #endif
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLSetSessionConfig (IntPtr /* SSLContextRef* */ context, IntPtr /* CFStringRef* */ config);
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public int SetSessionConfig (NSString config)
 		{
@@ -560,36 +642,135 @@ namespace Security {
 			return SSLSetSessionConfig (Handle, config.Handle);
 		}
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 		[TV (10,0)]
+#endif
 		public int SetSessionConfig (SslSessionConfig config)
 		{
 			return SetSessionConfig (config.GetConstant ()!);
 		}
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLReHandshake (IntPtr /* SSLContextRef* */ context);
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
+#endif
 		public int ReHandshake ()
 		{
 			return SSLReHandshake (Handle);
 		}
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte[] /* char* */ peerName, ref nuint /* size_t */ peerNameLen);
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerNameLength (IntPtr /* SSLContextRef* */ context, ref nuint /* size_t */ peerNameLen);
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		public string GetRequestedPeerName ()
 		{
 			var result = String.Empty;
@@ -602,31 +783,145 @@ namespace Security {
 			return result;
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetSessionTicketsEnabled (IntPtr /* SSLContextRef */ context, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ enabled);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		public int SetSessionTickets (bool enabled)
 		{
 			return SSLSetSessionTicketsEnabled (Handle, enabled);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetError (IntPtr /* SSLContextRef */ context, SecStatusCode /* OSStatus */ status);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		public int SetError (SecStatusCode status)
 		{
 			return SSLSetError (Handle, status);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetOCSPResponse (IntPtr /* SSLContextRef */ context, IntPtr /* CFDataRef __nonnull */ response);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		public int SetOcspResponse (NSData response)
 		{
 			if (response is null)
@@ -634,26 +929,98 @@ namespace Security {
 			return SSLSetOCSPResponse (Handle, response.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
 		[Mac (10,13,4)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr /* CFArrayRef */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
 		[Mac (10,13,4)]
+#endif
 		public int SetAlpnProtocols (string[] protocols)
 		{
 			using (var array = NSArray.FromStrings (protocols))
 				return SSLSetALPNProtocols (Handle, array.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
 		[Mac (10,13,4)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
 		[Mac (10,13,4)]
+#endif
 
 		public string?[] GetAlpnProtocols (out int error)
 		{
@@ -664,8 +1031,26 @@ namespace Security {
 			return CFArray.StringArrayFromHandle (protocols, true)!;
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
 		[Mac (10,13,4)]
+#endif
 		public string?[] GetAlpnProtocols ()
 		{
 			int error;

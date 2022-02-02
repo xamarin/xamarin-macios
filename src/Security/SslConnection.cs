@@ -23,10 +23,23 @@ namespace Security {
 	unsafe delegate SslStatus SslWriteFunc (IntPtr connection, IntPtr data, /* size_t* */ nint* dataLength);
 #endif
 
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public abstract class SslConnection : IDisposable {
 
 		GCHandle handle;

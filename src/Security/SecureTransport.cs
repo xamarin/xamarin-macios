@@ -7,10 +7,23 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.15 use 'TlsProtocolVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos13.0 use 'TlsProtocolVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios13.0 use 'TlsProtocolVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsProtocolVersion' instead.")]
+#endif
 	public enum SslProtocol {
 		Unknown = 0,
 		Ssl_3_0 = 2,
@@ -18,7 +31,26 @@ namespace Security {
 		Tls_1_1 = 7, 
 		Tls_1_2 = 8, 
 		Dtls_1_0 = 9,
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'TlsProtocolVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'TlsProtocolVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'TlsProtocolVersion' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		Tls_1_3 = 10,
 		Dtls_1_2 = 11,
 		
@@ -29,7 +61,16 @@ namespace Security {
 		All = 6,                
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	// CF_ENUM(uint16_t, tls_protocol_version_t)
 	public enum TlsProtocolVersion : ushort {
 		Tls10 = 769,
@@ -40,7 +81,16 @@ namespace Security {
 		Dtls12 = 65277,
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	// CF_ENUM(uint16_t, tls_ciphersuite_t)
 	public enum TlsCipherSuite: ushort {
 		RsaWith3desEdeCbcSha = 10,
@@ -71,7 +121,16 @@ namespace Security {
 		Chacha20Poly1305Sha256 = 4867
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	// CF_ENUM(uint16_t, tls_ciphersuite_group_t)
 	public enum TlsCipherSuiteGroup : ushort {
 		Default,
@@ -165,42 +224,167 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public enum SslSessionOption {
 		BreakOnServerAuth,
 		BreakOnCertRequested,
 		BreakOnClientAuth,
 
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
 		FalseStart,
 
 		SendOneByteRecord,
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		AllowServerIdentityChange = 5,
 		
-		[iOS (8,1)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.1")]
+		[SupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (8,1)]
+		[Mac (10,10)]
+#endif
 		Fallback = 6,
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		BreakOnClientHello = 7,
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		AllowRenegotiation = 8,
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+#endif
 		EnableSessionTickets = 9,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public enum SslAuthenticate {
 		Never,
 		Always,
@@ -209,10 +393,23 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public enum SslProtocolSide {
 		Server,
 		Client,
@@ -220,10 +417,23 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public enum SslConnectionType {
 		Stream,
 		Datagram
@@ -231,10 +441,23 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public enum SslSessionState {
 		Invalid = -1,
 		Idle,
@@ -246,10 +469,23 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public enum SslSessionStrengthPolicy {
 		Default,
 		ATSv1,
@@ -258,10 +494,23 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with macos10.15 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with tvos13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ([Verify ("Constants in descriptions are not")]"Starting with ios13.0 Constants.UseNetworkInstead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+#endif
 	public enum SslClientCertificateState {
 		None,
 		Requested,
@@ -272,10 +521,23 @@ namespace Security {
 #if !NET
 	// Security.framework/Headers/CipherSuite.h
 	// 32 bits (uint32_t) on OSX, 16 bits (uint16_t) on iOS
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.15 use 'TlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos13.0 use 'TlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios13.0 use 'TlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsCipherSuite' instead.")]
+#endif
 #if MONOMAC || __MACCATALYST__
 	public enum SslCipherSuite : uint {
 #else
@@ -440,10 +702,23 @@ namespace Security {
 	}
 #endif // !NET
 
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.15 use 'TlsCipherSuiteGroup' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos13.0 use 'TlsCipherSuiteGroup' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios13.0 use 'TlsCipherSuiteGroup' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsCipherSuiteGroup' instead.")]
+#endif
 	// typedef CF_ENUM(int, SSLCiphersuiteGroup)
 	public enum SslCipherSuiteGroup {
 		Default, Compatibility, Legacy, Ats, AtsCompatibility,
