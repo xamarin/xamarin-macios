@@ -53,12 +53,22 @@ namespace SceneKit {
 			return nsa;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 10)]
+#endif
 		public SCNMatrix4 []? BoneInverseBindTransforms {
 			get { return FromNSArray (_BoneInverseBindTransforms); }
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 10)]
+#endif
 		public static SCNSkinner Create (SCNGeometry baseGeometry,
 			SCNNode [] bones, SCNMatrix4 [] boneInverseBindTransforms,
 			SCNGeometrySource boneWeights, SCNGeometrySource boneIndices)

@@ -20,49 +20,104 @@ using Vector4 = global::OpenTK.Vector4;
 
 namespace SceneKit {
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[iOS (8, 0)]
+#endif
 	[Native] // untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
 	[ErrorDomain ("SCNErrorDomain")]
 	public enum SCNErrorCode : long {
 		ProgramCompilationError = 1,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNGeometryPrimitiveType : long {
 		Triangles,
 		TriangleStrip,
 		Line,
 		Point,
-		[TV (10,0), Mac (10,12), iOS (10,0)]
+#if NET
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+#else
+		[TV (10,0)]
+		[Mac (10,12)]
+		[iOS (10,0)]
+#endif
 		Polygon
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNTransparencyMode : long {
 		AOne,
 		RgbZero,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		SingleLayer = 2,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		DualLayer = 3,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		Default = AOne,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNCullMode : long {
 		Back, Front
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNFilterMode : long {
 		None,
@@ -70,8 +125,12 @@ namespace SceneKit {
 		Linear
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNWrapMode : long {
 		Clamp = 1,
@@ -81,8 +140,12 @@ namespace SceneKit {
 		Mirror
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNSceneSourceStatus : long {
 		Error = -1,
@@ -92,9 +155,14 @@ namespace SceneKit {
 		Complete = 16
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 9)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNChamferMode : long {
 		Both,
@@ -102,18 +170,28 @@ namespace SceneKit {
 		Back
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 9)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNMorpherCalculationMode : long {
 		Normalized,
 		Additive
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNActionTimingMode : long {
 		Linear,
@@ -122,9 +200,14 @@ namespace SceneKit {
 		EaseInEaseOut
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNShadowMode : long {
 		Forward,
@@ -132,9 +215,14 @@ namespace SceneKit {
 		Modulated
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNPhysicsBodyType : long {
 		Static,
@@ -142,18 +230,28 @@ namespace SceneKit {
 		Kinematic
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNPhysicsFieldScope : long {
 		InsideExtent,
 		OutsideExtent
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleSortingMode : long {
 		None,
@@ -163,9 +261,14 @@ namespace SceneKit {
 		YoungestFirst
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleBlendMode : long {
 		Additive,
@@ -176,9 +279,14 @@ namespace SceneKit {
 		Replace
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleOrientationMode : long {
 		BillboardScreenAligned,
@@ -187,9 +295,14 @@ namespace SceneKit {
 		BillboardYAligned
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleBirthLocation : long {
 		Surface,
@@ -197,9 +310,14 @@ namespace SceneKit {
 		Vertex
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleBirthDirection : long {
 		Constant,
@@ -207,9 +325,14 @@ namespace SceneKit {
 		Random
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleImageSequenceAnimationMode : long {
 		Repeat,
@@ -217,9 +340,14 @@ namespace SceneKit {
 		AutoReverse
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleInputMode : long {
 		OverLife,
@@ -227,9 +355,14 @@ namespace SceneKit {
 		OverOtherProperty
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleModifierStage : long {
 		PreDynamics,
@@ -238,9 +371,14 @@ namespace SceneKit {
 		PostCollision
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Watch (3,0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum SCNParticleEvent : long {
 		Birth,
@@ -277,7 +415,9 @@ namespace SceneKit {
 		Any, Closest, All, 
 	}
 
+#if !NET
 	[Watch (3,0)]
+#endif
 	[Native]
 	public enum SCNAntialiasingMode : ulong {
 		None,
@@ -289,7 +429,9 @@ namespace SceneKit {
 #endif
 	}
 
+#if !NET
 	[Watch (3,0)]
+#endif
 	[Native]
 	public enum SCNPhysicsCollisionCategory : ulong {
 		None	= 0,
@@ -298,8 +440,14 @@ namespace SceneKit {
 		All		= UInt64.MaxValue
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[Watch (3,0)]
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum SCNBillboardAxis : ulong {
 		X = 1 << 0,
@@ -308,16 +456,28 @@ namespace SceneKit {
 		All = (X | Y | Z)
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[Watch (3,0)]
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum SCNReferenceLoadingPolicy : long {
 		Immediate = 0,
 		OnDemand = 1
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[Watch (3,0)]
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum SCNBlendMode : long
 	{
@@ -327,12 +487,27 @@ namespace SceneKit {
 		Multiply = 3,
 		Screen = 4,
 		Replace = 5,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		Max = 6,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[Watch (3,0)]
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	[Flags]
 	public enum SCNDebugOptions : ulong
@@ -344,26 +519,83 @@ namespace SceneKit {
 		ShowLightExtents = 1 << 3,
 		ShowPhysicsFields = 1 << 4,
 		ShowWireframe = 1 << 5,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		RenderAsWireframe = 1 << 6,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		ShowSkeletons = 1 << 7,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		ShowCreases = 1 << 8,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		ShowConstraints = 1 << 9,
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		ShowCameras = 1 << 10,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[Watch (3,0)]
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum SCNRenderingApi : ulong
 	{
 		Metal,
 #if !MONOMAC
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Unavailable (PlatformName.MacCatalyst)]
+#endif
 		OpenGLES2,
 #else
 		OpenGLLegacy,
@@ -372,8 +604,14 @@ namespace SceneKit {
 #endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[Watch (3,0)]
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum SCNBufferFrequency : long
 	{
@@ -382,15 +620,32 @@ namespace SceneKit {
 		Shadable = 2,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[Watch (3,0)]
-	[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+	[TV (10, 0)]
+	[Mac (10, 12)]
+	[iOS (10, 0)]
+#endif
 	[Native]
 	public enum SCNMovabilityHint : long {
 		Fixed,
 		Movable
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	[Flags]
 	public enum SCNColorMask : long
@@ -403,7 +658,16 @@ namespace SceneKit {
 		All = 15,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum SCNInteractionMode : long
 	{
@@ -416,7 +680,16 @@ namespace SceneKit {
 		Truck,
 	}
 		
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum SCNFillMode : ulong
 	{
@@ -424,8 +697,16 @@ namespace SceneKit {
 		Lines = 1,
 	}
 
-	[NoWatch, Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[NoWatch]
+	[Mac (10,13)]
+	[iOS (11,0)]
 	[TV (12,0)]
+#endif
 	[Native]
 	public enum SCNTessellationSmoothingMode : long
 	{
@@ -433,7 +714,16 @@ namespace SceneKit {
 		PNTriangles,
 		Phong,
 	}
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum SCNHitTestSearchMode : long
 	{
@@ -442,7 +732,16 @@ namespace SceneKit {
 		Any = 2,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum SCNCameraProjectionDirection : long
 	{
@@ -450,7 +749,16 @@ namespace SceneKit {
 		Horizontal = 1,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum SCNNodeFocusBehavior : long
 	{
@@ -459,7 +767,16 @@ namespace SceneKit {
 		Focusable,
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum SCNLightProbeType : long
 	{
@@ -467,7 +784,16 @@ namespace SceneKit {
 		Radiance = 1,
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum SCNLightProbeUpdateType : long
 	{
@@ -475,7 +801,16 @@ namespace SceneKit {
 		Realtime = 1,
 	}
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum SCNLightAreaType : long
 	{
@@ -483,8 +818,13 @@ namespace SceneKit {
 		Polygon = 4,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	public enum SCNPhysicsShapeType
 	{
 		ConvexHull,
