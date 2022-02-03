@@ -33,11 +33,7 @@ namespace SystemConfiguration {
 		ConnectionOnDemand = 1<<5,
 		IsLocalAddress = 1<<16,
 		IsDirect = 1<<17,
-#if NET
-		[UnsupportedOSPlatform ("macos")]
-#else
 		[Unavailable (PlatformName.MacOSX)]
-#endif
 		IsWWAN = 1<<18,
 		ConnectionAutomatic = ConnectionOnTraffic
 	}

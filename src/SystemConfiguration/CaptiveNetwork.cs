@@ -60,20 +60,12 @@ namespace SystemConfiguration {
 		
 #if !MONOMAC
 
-#if NET
-		[UnsupportedOSPlatform ("ios14.0")]
-#else
 		[Deprecated (PlatformName.iOS, 14,0)]
-#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* CFDictionaryRef __nullable */  CNCopyCurrentNetworkInfo (
 			/* CFStringRef __nonnull */ IntPtr interfaceName);
 
-#if NET
-		[UnsupportedOSPlatform ("ios14.0")]
-#else
 		[Deprecated (PlatformName.iOS, 14,0)]
-#endif
 		static public StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out NSDictionary currentNetworkInfo)
 		{
 			using (var nss = new NSString (interfaceName)) {
@@ -95,11 +87,7 @@ namespace SystemConfiguration {
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* CFArrayRef __nullable */ CNCopySupportedInterfaces ();
 
-#if NET
-		[UnsupportedOSPlatform ("ios14.0")]
-#else
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
-#endif
 		static public StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)
 		{
 			IntPtr array = CNCopySupportedInterfaces ();
@@ -113,29 +101,17 @@ namespace SystemConfiguration {
 			return StatusCode.OK;
 		}
 
-#if NET
-		[UnsupportedOSPlatform ("ios9.0")]
-#else
 		[Deprecated (PlatformName.iOS, 9,0)]
-#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool CNMarkPortalOffline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
-#if NET
-		[UnsupportedOSPlatform ("ios9.0")]
-#else
 		[Deprecated (PlatformName.iOS, 9,0)]
-#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool CNMarkPortalOnline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
-#if NET
-		[UnsupportedOSPlatform ("ios9.0")]
-#else
 		[Deprecated (PlatformName.iOS, 9,0)]
-#endif
 		static public bool MarkPortalOnline (string iface)
 		{
 			using (var nss = new NSString (iface)) {
@@ -143,11 +119,7 @@ namespace SystemConfiguration {
 			}
 		}
 
-#if NET
-		[UnsupportedOSPlatform ("ios9.0")]
-#else
 		[Deprecated (PlatformName.iOS, 9,0)]
-#endif
 		static public bool MarkPortalOffline (string iface)
 		{
 			using (var nss = new NSString (iface)) {
@@ -155,20 +127,12 @@ namespace SystemConfiguration {
 			}
 		}
 
-#if NET
-		[UnsupportedOSPlatform ("ios9.0")]
-#else
 		[Deprecated (PlatformName.iOS, 9,0)]
-#endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool CNSetSupportedSSIDs (IntPtr /* CFArrayRef __nonnull */ ssidArray);
 
-#if NET
-		[UnsupportedOSPlatform ("ios9.0")]
-#else
 		[Deprecated (PlatformName.iOS, 9,0)]
-#endif
 		static public bool SetSupportedSSIDs (string [] ssids)
 		{
 			using (var arr = NSArray.FromStrings (ssids)) {
