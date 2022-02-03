@@ -25,15 +25,7 @@ namespace UIKit {
 
 #if !TVOS && !__MACCATALYST__
 #if !NET
-#if NET
-		[UnsupportedOSPlatform ("ios3.2")]
-#if IOS
-		[Obsolete ("Starting with ios3.2.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Deprecated (PlatformName.iOS, 3, 2)]
-#endif
 		public static CGRect BoundsFromNotification (NSNotification n)
 		{
 			return RectangleFFrom (BoundsUserInfoKey, n);
@@ -73,15 +65,7 @@ namespace UIKit {
 
 #if !TVOS && !__MACCATALYST__
 #if !NET
-#if NET
-		[UnsupportedOSPlatform ("ios3.2")]
-#if IOS
-		[Obsolete ("Starting with ios3.2.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Deprecated (PlatformName.iOS, 3, 2)]
-#endif
 		static public CGPoint CenterBeginFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterBeginUserInfoKey, n);
@@ -89,15 +73,7 @@ namespace UIKit {
 #endif
 
 #if !NET
-#if NET
-		[UnsupportedOSPlatform ("ios3.2")]
-#if IOS
-		[Obsolete ("Starting with ios3.2.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Deprecated (PlatformName.iOS, 3, 2)]
-#endif
 		static public CGPoint CenterEndFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterEndUserInfoKey, n);

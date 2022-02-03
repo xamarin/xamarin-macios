@@ -301,11 +301,7 @@ namespace UIKit {
 		}
 
 #if !NET
-#if NET
-		[SupportedOSPlatform ("ios8.0")]
-#else
 		[iOS (8,0)]
-#endif
 		[Obsolete ("Use 'DarkerSystemColorsEnabled' instead.")]
 		public static bool DarkerSystemColosEnabled {
 			get {
