@@ -227,7 +227,10 @@ steps:
 
 # Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator
 - powershell: |
-    $SBomStagingDirectory = "$(Build.ArtifactStagingDirectory)/SBomArtifacts"
+    $filter = ${{ variables['SBOM.Filter'] }}
+    Write-Host "SBOM.Filter: ${filter}"
+
+    $SBomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
     Write-Host "Creating SBOM staging directory: ${SBomStagingDirectory}"
 
     if (-not ([IO.Directory]::Exists($SBomStagingDirectory))) {
@@ -237,12 +240,16 @@ steps:
     $pkgsPath = "$(SBOM.PackagesPath)"
     Write-Host "Packages path: ${pkgsPath}"
 
-    $files = [IO.Directory]::GetFiles($pkgsPath)
-    $files | foreach {
-      $filename = [IO.Path]::GetFileName($_)
-      $destPathAndFilename = [IO.Path]::Combine($SBomStagingDirectory, $filename)
-      Write-Host "Copying $_ to ${destPathAndFilename}"
-      [IO.File]::Copy($_, $destPathAndFilename)
+    $filters = $filter.Split(';', [StringSplitOptions]::RemoveEmptyEntries)
+    $filters | foreach {
+      Write-Host "Copying files based on filter $_"
+      $files = [IO.Directory]::GetFiles($pkgsPath, $_)
+      $files | foreach {
+        $filename = [IO.Path]::GetFileName($_)
+        $destPathAndFilename = [IO.Path]::Combine($SBomStagingDirectory, $filename)
+        Write-Host "Copying $_ to ${destPathAndFilename}"
+        [IO.File]::Copy($_, $destPathAndFilename)
+      }
     }
   displayName: 'SBOM: Staging'
 

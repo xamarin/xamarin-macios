@@ -164,6 +164,7 @@ jobs:
     Parameters.outputStorageUri: ''
     NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+    SBOM.Filter: '*.nupkg;*.pkg;*.msi'
 
   pool:
     vmImage: 'windows-latest'
