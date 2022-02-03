@@ -164,7 +164,6 @@ jobs:
     Parameters.outputStorageUri: ''
     NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
-    Packaging.EnableSBOMSigning: true                       # Software Bill of Materials (SBOM): Produces a catalog signing file manifest.cat as a companion to the manifest.json file
 
   pool:
     vmImage: 'windows-latest'
