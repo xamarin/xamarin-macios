@@ -22075,13 +22075,21 @@ namespace AppKit {
 		[Export ("openURL:options:configuration:error:")]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[return: NullAllowed]
+#if NET
+		NSRunningApplication OpenUrl (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
+#else
 		NSRunningApplication OpenURL (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
+#endif
 
 		[Mac (10,10)]
 		[Export ("openURLs:withApplicationAtURL:options:configuration:error:")]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[return: NullAllowed]
+#if NET
+		NSRunningApplication OpenUrls (NSUrl [] urls, NSUrl applicationURL, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
+#else
 		NSRunningApplication OpenURLs (NSUrl [] urls, NSUrl applicationURL, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
+#endif
 
 		[Mac (10, 10)]
 		[Field ("NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification")]
