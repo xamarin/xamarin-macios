@@ -330,6 +330,11 @@ CARPLAY_SOURCES = \
 	CarPlay/CPNavigationAlert.cs \
 	CarPlay/CPMessageListItem.cs \
 
+# Chip
+
+CHIP_SOURCES = \
+	Chip/ChipCompat.cs \
+
 # ClassKit
 
 CLASSKIT_SOURCES = \
@@ -1550,7 +1555,7 @@ SENSORKIT_SOURCES = \
 
 # Social
 
-SOCIAL_CORE_SOURCES = \
+SOCIAL_API_SOURCES = \
 	Social/Enums.cs \
 
 SOCIAL_SOURCES = \

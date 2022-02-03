@@ -142,7 +142,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
-#if XAMCORE_4_0 
+#if NET
 		public NWProtocolIPOptions? InternetProtocol {
 #else
 		public NWProtocolOptions? InternetProtocol {

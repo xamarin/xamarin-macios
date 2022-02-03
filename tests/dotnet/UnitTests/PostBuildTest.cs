@@ -66,11 +66,12 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
-		public void AssemblyStripping (ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
+		[TestCase ("MySimpleApp", ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase ("MySimpleApp", ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.iOS, "ios-arm64", false)]
+		public void AssemblyStripping (string project, ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
 		{
-			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
@@ -83,18 +84,21 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			AssertBundleAssembliesStripStatus (appPath, shouldStrip);
-			Assert.That (Path.Combine (appPath, "MySimpleApp.dll"), Does.Exist, "Application Assembly");
+			Assert.That (Path.Combine (appPath, $"{project}.dll"), Does.Exist, "Application Assembly");
 			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Exist, "Platform Assembly");
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
-		public void BuildPackageTest (ApplePlatform platform, string runtimeIdentifiers)
+		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		[TestCase ("MySimpleApp", ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase ("MySimpleApp", ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		public void BuildPackageTest (string project, ApplePlatform platform, string runtimeIdentifiers)
 		{
-			var project = "MySimpleApp";
 			var projectVersion = "3.14";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 

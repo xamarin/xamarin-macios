@@ -119,7 +119,9 @@ namespace UIKit
 		}
 
 #if !MONOMAC || NET
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10, 0)]
 #endif
 		public NSLayoutAnchor<AnchorType> FirstAnchor<AnchorType> () where AnchorType : NSObject
@@ -127,7 +129,9 @@ namespace UIKit
 			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_FirstAnchor ());
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10, 0)]
 #endif
 		public NSLayoutAnchor<AnchorType> SecondAnchor<AnchorType> () where AnchorType : NSObject
