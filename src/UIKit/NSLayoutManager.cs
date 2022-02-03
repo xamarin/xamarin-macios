@@ -27,6 +27,7 @@ using UIFont=AppKit.NSFont;
 
 #if MONOMAC
 namespace AppKit {
+#else
 namespace UIKit {
 #endif
 	partial class NSLayoutManager {
@@ -99,7 +100,12 @@ namespace UIKit {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 #endif
 		public unsafe void ShowGlyphs (
-
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
+		public unsafe void ShowCGGlyphs (
 #endif // MONOMAC
 			short[] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
 			CGPoint[] /* const CGPoint* */ positions,
@@ -143,7 +149,7 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if !NET && !MONOMAC
 		// TextContainerForGlyphAtIndex
 		[Obsolete ("Use 'GetTextContainer' instead.")]
 		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex)
