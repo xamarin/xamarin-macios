@@ -14,11 +14,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace UIKit {
-#if !NET
 	[Introduced (PlatformName.iOS, 13,4, PlatformArchitecture.All)]
-#else
-	[SupportedOSPlatform ("ios13.4")]
-#endif
 	[BindingImpl (BindingImplOptions.Optimizable)]
 	public static partial class UIEventButtonMaskExtensions {
 

@@ -104,9 +104,7 @@ namespace UIKit {
 	}
 
 #if !WATCH
-#if !NET
 	[iOS (9,0)]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIFloatRange : IEquatable<UIFloatRange> {
 
@@ -155,13 +153,8 @@ namespace UIKit {
 #endif
 
 #if IOS || __MACCATALYST__
-#if !NET
 	[Introduced (PlatformName.iOS, 15,0)]
 	[Introduced (PlatformName.MacCatalyst, 15,0)]
-#else
-	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
-#endif //!NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIPointerAccessoryPosition {
 		public nfloat Offset, Angle;

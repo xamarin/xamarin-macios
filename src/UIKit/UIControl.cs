@@ -196,9 +196,7 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
 		[iOS (9,0)]
-#endif
 		public event EventHandler PrimaryActionTriggered {
 			add {
 				AddTarget (value, UIControlEvent.PrimaryActionTriggered);
