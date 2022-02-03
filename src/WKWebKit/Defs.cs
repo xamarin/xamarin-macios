@@ -80,9 +80,6 @@ namespace WebKit
 		JavaScriptAppBoundDomain,
 	}
 
-#if NET
-	[NoMac]
-#endif
 	[iOS (8, 0)]
 	[Native]
 	public enum WKSelectionGranularity : long {
