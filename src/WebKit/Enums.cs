@@ -147,7 +147,15 @@ namespace WebKit {
 		DHTML = 1,
 		Image = 2, 
 		Link = 4,
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#else
 		[Obsolete ("This API is not available on this platform.")]
+#endif
 		Selection = 8,
 		Any = UInt64.MaxValue
 	}
