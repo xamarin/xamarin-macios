@@ -130,18 +130,7 @@ namespace VideoToolbox {
 		public bool SupportsFrameReordering { get; private set; }
 
 #if !NET
-#if NET
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("macos")]
-#else
-		[NoiOS]
-		[NoTV]
-		[NoMacCatalyst]
-		[NoMac]
-		[NoWatch]
-#endif
+		[NoiOS, NoTV, NoMacCatalyst, NoMac, NoWatch]
 		public bool SupportsMultiPass { get; private set; }
 #endif // !NET
 
