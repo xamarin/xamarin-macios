@@ -719,7 +719,7 @@ namespace CoreImage {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// not every CIFilter supports inputImage, i.e.
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger

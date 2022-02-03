@@ -1728,7 +1728,7 @@ namespace CoreImage {
 		[Export ("imageWithCVImageBuffer:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCVImageBuffer:options:")]
@@ -1877,7 +1877,7 @@ namespace CoreImage {
 		[Export ("initWithCVImageBuffer:")]
 		NativeHandle Constructor (CVImageBuffer imageBuffer);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Export ("initWithCVImageBuffer:options:")]
 		NativeHandle Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
@@ -2569,7 +2569,7 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // does not work in iOS 11 beta 4
 	interface CIImageAccumulator {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("The default initializer does not work in recent iOS version (11b4).")]
 		[Export ("init")]
 		NativeHandle Constructor ();
@@ -2580,7 +2580,7 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CIImageAccumulator FromRectangle (CGRect rect, CIFormat format);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
 		[Static]
 		[Wrap ("FromRectangle (rect, (CIFormat) ciImageFormat)")]
@@ -2596,7 +2596,7 @@ namespace CoreImage {
 		[Export ("initWithExtent:format:")]
 		NativeHandle Constructor (CGRect rectangle, CIFormat format);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
 		[Wrap ("this (rectangle, (CIFormat) ciImageFormat)")]
 		NativeHandle Constructor (CGRect rectangle, int ciImageFormat);
@@ -3076,7 +3076,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'FoldCount' instead.")]
 		[CoreImageFilterProperty ("inputNumberOfFolds")]
 		int NumberOfFolds { get; set; }
@@ -3105,7 +3105,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIAffineFilter : CIFilterProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoMac]
 		[Obsolete ("Not every subclass expose this property.")]
 		[CoreImageFilterProperty ("inputTransform")]
@@ -3192,7 +3192,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIAreaHistogram : CIAreaHistogramProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCount' instead.")]
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
@@ -3296,7 +3296,7 @@ namespace CoreImage {
 	[BaseType (typeof (CICodeGenerator))]
 	interface CIAztecCodeGenerator : CIAztecCodeGeneratorProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCompactStyle' instead.")]
 		[CoreImageFilterProperty ("inputCompactStyle")]
 		bool CompactStyle { get; set; }
@@ -3341,7 +3341,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIBlendWithMask : CIBlendWithMaskProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// renamed for API compatibility
 		[Obsolete ("Use 'MaskImage' instead.")]
 		[CoreImageFilterProperty ("inputMaskImage")]
@@ -3371,7 +3371,7 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3444,7 +3444,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CICheckerboardGenerator : CICheckerboardGeneratorProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3484,7 +3484,7 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputSharpness")]
 		float Sharpness { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3531,7 +3531,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CICircularWrap : CICircularWrapProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3543,7 +3543,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter), Name="CICMYKHalftone")]
 	interface CICmykHalftone : CICmykHalftoneProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// renamed for API compatibility
 		[Obsolete ("Use 'Sharpness' instead.")]
 		[CoreImageFilterProperty ("inputSharpness")]
@@ -3593,7 +3593,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIColorClamp : CIColorClampProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// here the prefix was not removed, edited to keep API compatibility
 		[Obsolete ("Use 'MinComponents' instead.")]
 		[CoreImageFilterProperty ("inputMinComponents")]
@@ -3782,7 +3782,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CICrystallize : CICrystallizeProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3809,7 +3809,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIDisintegrateWithMaskTransition : CIDisintegrateWithMaskTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'MaskImage' instead.")]
 		[CoreImageFilterProperty ("inputMaskImage")]
 		CIImage Mask { get; set; }
@@ -3904,7 +3904,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIDroste : CIDrosteProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("use 'InputInsetPoint0' instead.")]
 		[CoreImageFilterProperty ("inputInsetPoint0")]
 		CIVector InsetPoint0 { get; set; }
@@ -3935,7 +3935,7 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3972,7 +3972,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIFlashTransition : CIFlashTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// for some reason we prefixed all Striation* with Max - API compatibility
 		[Obsolete ("Use 'StriationContrast' instead.")]
 		[CoreImageFilterProperty ("inputStriationContrast")]
@@ -4022,7 +4022,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIGaussianGradient : CIGaussianGradientProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4058,7 +4058,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIGlassDistortion : CIGlassDistortionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4098,7 +4098,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIGlassLozenge : CIGlassLozengeProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
@@ -4140,7 +4140,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIHexagonalPixellate : CIHexagonalPixellateProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4235,7 +4235,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIKaleidoscope : CIKaleidoscopeProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCount' instead.")]
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
@@ -4256,7 +4256,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CILenticularHaloGenerator : CILenticularHaloGeneratorProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4297,7 +4297,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CILightTunnel : CILightTunnelProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4322,7 +4322,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CILinearGradient : CILinearGradientProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
@@ -4391,7 +4391,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIModTransition : CIModTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
 #endif
@@ -4435,7 +4435,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIPageCurlTransition : CIPageCurlTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
 #endif
@@ -4446,7 +4446,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIPageCurlWithShadowTransition : CIPageCurlWithShadowTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// prefixed for API compatibility
 		[Obsolete ("Use 'Time' instead.")]
 		[CoreImageFilterProperty ("inputTime")]
@@ -4473,7 +4473,7 @@ namespace CoreImage {
 	[Mac (10,11)]
 	[BaseType (typeof (CICodeGenerator), Name="CIPDF417BarcodeGenerator")]
 	interface CIPdf417BarcodeGenerator : CIPdf417BarcodeGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCorrectionLevel' instead.")]
 		[CoreImageFilterProperty ("inputCorrectionLevel")]
 		int CorrectionLevel { get; set; }
@@ -4513,7 +4513,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTile : CIPerspectiveTileProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
 		CIVector BottomLeft { get; set; }
@@ -4535,7 +4535,7 @@ namespace CoreImage {
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTransform : CIPerspectiveTransformProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
 		CIVector BottomLeft { get; set; }
@@ -4561,7 +4561,7 @@ namespace CoreImage {
 	[Mac (10,11)]
 	[BaseType (typeof (CIPerspectiveTransform))]
 	interface CIPerspectiveTransformWithExtent : CIPerspectiveTransformWithExtentProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -4674,7 +4674,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIPixellate : CIPixellateProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4685,7 +4685,7 @@ namespace CoreImage {
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPointillize : CIPointillizeProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4706,7 +4706,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIRadialGradient : CIRadialGradientProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4722,7 +4722,7 @@ namespace CoreImage {
 	[iOS (9,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIRippleTransition : CIRippleTransitionProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -4746,7 +4746,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIRowAverage : CIRowAverageProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -4793,7 +4793,7 @@ namespace CoreImage {
 	[Mac (10,11)]
 	[BaseType (typeof (CILinearGradient))]
 	interface CISmoothLinearGradient : CISmoothLinearGradientProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
@@ -4851,7 +4851,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIStarShineGenerator : CIStarShineGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4892,7 +4892,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIStretchCrop : CIStretchCropProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputSize' instead.")]
 		[CoreImageFilterProperty ("inputSize")]
 		CIVector Size { get; set; }
@@ -4902,7 +4902,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIStripesGenerator : CIStripesGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4944,7 +4944,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIToneCurve : CIToneCurveProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
 		CIVector Point0 { get; set; }
@@ -5000,7 +5000,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CITorusLensDistortion : CITorusLensDistortionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -5011,7 +5011,7 @@ namespace CoreImage {
 	[Mac (10,11)]
 	[BaseType (typeof (CIFilter))]
 	interface CITriangleKaleidoscope : CITriangleKaleidoscopeProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint' instead.")]
 		[CoreImageFilterProperty ("inputPoint")]
 		CIVector Point { get; set; }
@@ -5083,7 +5083,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIVignetteEffect : CIVignetteEffectProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -5131,7 +5131,7 @@ namespace CoreImage {
 	[iOS (8,3)]
 	[BaseType (typeof (CIFilter))]
 	interface CIZoomBlur : CIZoomBlurProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -5143,7 +5143,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIDepthOfField : CIDepthOfFieldProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// renamed 1 vs 0 for API compatibility
 		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
@@ -5160,7 +5160,7 @@ namespace CoreImage {
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CISunbeamsGenerator : CISunbeamsGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -5239,7 +5239,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CINinePartStretched : CINinePartStretchedProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputGrowAmount' instead.")]
 		[CoreImageFilterProperty ("inputGrowAmount")]
 		CIVector GrowAmount { get; set; }
@@ -5292,7 +5292,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CINinePartTiled : CINinePartTiledProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputGrowAmount' instead.")]
 		[CoreImageFilterProperty ("inputGrowAmount")]
 		CIVector GrowAmount { get; set; }
@@ -5392,7 +5392,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIBicubicScaleTransform : CIBicubicScaleTransformProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'ParameterB' instead.")]
 		[CoreImageFilterProperty ("inputB")]
 		float B { get; set; }
@@ -6260,7 +6260,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIReductionFilter))]
 	interface CIKMeans : CIKMeansProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCount' instead.")]
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
@@ -6279,7 +6279,7 @@ namespace CoreImage {
 	[Abstract]
 	interface CIMorphologyRectangle {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputHeight' instead.")]
 		[CoreImageFilterProperty ("inputHeight")]
 		int Height { get; set; }
@@ -6339,7 +6339,7 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputFocalLength")]
 		float FocalLength { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputTopRight' instead.")]
 		[CoreImageFilterProperty ("inputTopRight")]
 		CIVector TopRight { get; set; }
@@ -6439,7 +6439,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIRoundedRectangleGenerator : CIRoundedRectangleGeneratorProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -9501,6 +9501,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
 
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
 	}
@@ -9515,6 +9518,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
@@ -9531,6 +9537,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
 
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
 	}
@@ -9545,6 +9554,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
@@ -9561,6 +9573,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputWeights")]
 		CIVector Weights { get; set; }
 
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
 		[CoreImageFilterProperty ("inputBias")]
 		float Bias { get; set; }
 	}
@@ -9575,6 +9590,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputBackgroundImage")]
 		CIImage BackgroundImage { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -9609,6 +9627,9 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputBackgroundImage")]
 		CIImage BackgroundImage { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 	}
 #endregion
 }
