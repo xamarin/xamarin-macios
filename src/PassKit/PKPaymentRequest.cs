@@ -44,8 +44,10 @@ namespace PassKit {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos11.0")]
 #else
-		[Watch (4,0)][iOS (11,0)]
+		[Watch (4,0)]
+		[iOS (11,0)]
 #endif
 		public PKContactFields RequiredBillingContactFields {
 			get { return PKContactFieldsExtensions.GetValue (WeakRequiredBillingContactFields); }
@@ -54,8 +56,10 @@ namespace PassKit {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos11.0")]
 #else
-		[Watch (4,0)][iOS (11,0)]
+		[Watch (4,0)]
+		[iOS (11,0)]
 #endif
 		public PKContactFields RequiredShippingContactFields {
 			get { return PKContactFieldsExtensions.GetValue (WeakRequiredShippingContactFields); }
