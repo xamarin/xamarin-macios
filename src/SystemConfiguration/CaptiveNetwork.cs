@@ -89,6 +89,7 @@ namespace SystemConfiguration {
 		[Obsolete ("Throw a 'NotSupportedException'.")]
 		public static StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)  => throw new NotSupportedException ();
 #endif // !NET
+#else
 		
 #if !MONOMAC
 
