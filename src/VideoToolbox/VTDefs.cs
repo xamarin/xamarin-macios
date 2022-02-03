@@ -9,7 +9,6 @@
 //
 
 using System;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
@@ -50,17 +49,9 @@ namespace VideoToolbox {
 		ColorCorrectionImageRotationFailed        = -12219,
 		VideoDecoderRemoved                       = -17690,
 		SessionMalfunction                        = -17691,
-#if NET
-		[SupportedOSPlatform ("macos11.0")]
-#else
 		[Mac (11, 0)]
-#endif
 		DecoderNeedsRosetta                       = -17692,
-#if NET
-		[SupportedOSPlatform ("macos11.0")]
-#else
 		[Mac (11, 0)]
-#endif
 		EncoderNeedsRosetta	                      = -17693,
 	}
 
@@ -145,25 +136,9 @@ namespace VideoToolbox {
 		H263Profile0Level10,
 		H263Profile0Level45,
 		H263Profile3Level45,
-#if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#else
-		[Mac (10,13)]
-		[iOS (11,0)]
-		[TV (11,0)]
-#endif
+		[Mac (10,13), iOS (11,0), TV (11,0)]
 		HevcMainAutoLevel,
-#if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
-#else
-		[Mac (10,13)]
-		[iOS (11,0)]
-		[TV (11,0)]
-#endif
+		[Mac (10,13), iOS (11,0), TV (11,0)]
 		HevcMain10AutoLevel,
 	}
 
@@ -267,11 +242,7 @@ namespace VideoToolbox {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-#else
 	[iOS (9,0)]
-#endif
 	public enum VTScalingMode {
 		Unset,
 		Normal,
@@ -280,29 +251,15 @@ namespace VideoToolbox {
 		Trim
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-#else
 	[iOS (9,0)]
-#endif
 	public enum VTDownsamplingMode {
 		Unset,
 		Decimate,
 		Average
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-	[Watch (7, 0)]
-	[TV (14, 0)]
-	[Mac (11, 0)]
-	[iOS (14, 0)]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14,0)]
-#endif
 	public enum HdrMetadataInsertionMode {
 		[Field ("kVTHDRMetadataInsertionMode_None")]
 		None,
