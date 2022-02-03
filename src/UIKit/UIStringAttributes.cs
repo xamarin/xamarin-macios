@@ -157,7 +157,11 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public NSString WeakTextEffect {
 			get {
 				return Dictionary [UIStringAttributeKey.TextEffect] as NSString;
@@ -167,7 +171,11 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public NSTextEffect TextEffect {
 			get {
 				var s = WeakTextEffect;
@@ -187,7 +195,11 @@ namespace UIKit {
 		}
 
 #if !WATCH
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public NSTextAttachment TextAttachment {
 			get {
 				return Dictionary [UIStringAttributeKey.Attachment] as NSTextAttachment;
@@ -198,7 +210,11 @@ namespace UIKit {
 		}
 #endif // !WATCH
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public NSUrl Link {
 			get {
 				return Dictionary [UIStringAttributeKey.Link] as NSUrl;
@@ -208,7 +224,11 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public float? BaselineOffset {
 			get {
 				return GetFloatValue (UIStringAttributeKey.BaselineOffset);
@@ -218,7 +238,11 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public UIColor StrikethroughColor {
 			get {
 				return Dictionary [UIStringAttributeKey.StrikethroughColor] as UIColor;
@@ -228,7 +252,11 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public UIColor UnderlineColor {
 			get {
 				return Dictionary [UIStringAttributeKey.UnderlineColor] as UIColor;
@@ -239,7 +267,11 @@ namespace UIKit {
 		}
 		
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public float? Obliqueness {
 			get {
 				return GetFloatValue (UIStringAttributeKey.Obliqueness);
@@ -249,7 +281,11 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public float? Expansion {
 			get {
 				return GetFloatValue (UIStringAttributeKey.Expansion);
@@ -259,7 +295,11 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
+#endif
 		public NSNumber [] WritingDirectionInt {
 			get {
 				return GetArray<NSNumber> (UIStringAttributeKey.WritingDirection);

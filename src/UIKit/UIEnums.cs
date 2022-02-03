@@ -14,8 +14,13 @@ using ObjCRuntime;
 
 namespace UIKit {
 	// NSInteger -> UIImagePickerController.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIImagePickerControllerQualityType : long {
 		High,
 		Medium,
@@ -26,28 +31,77 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIActivityIndicatorView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIActivityIndicatorViewStyle : long {
+#if NET
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Large' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Large' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Large' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Large' instead.")]
+#endif
 		WhiteLarge,
+#if NET
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Medium' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Medium' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Medium' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Medium' instead.")]
+#endif
 		White,
+#if NET
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Medium' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Medium' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Medium' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Medium' instead.")]
+#endif
 		Gray,
 
-		[iOS (13,0), TV (13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
 		Medium = 100,
-		[iOS (13,0), TV (13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
 		Large = 101,
 	}
 
 	// NSInteger -> UIAlertView.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIAlertViewStyle : long {
 		Default,
 		SecureTextInput,
@@ -56,20 +110,31 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIBarButtonItem.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIBarButtonItemStyle : long {
 		Plain,
 
+#if NET
+		[UnsupportedOSPlatform ("ios8.0")]
+#if IOS
+		[Obsolete ("Starting with ios8.0 use 'UIBarButtonItemStyle.Plain' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarButtonItemStyle.Plain' instead.")]
+#endif
 		Bordered,
 			
 		Done,
 	}
 
 	// NSInteger -> UIBarButtonItem.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIBarButtonSystemItem : long {
 		Done,
 		Cancel,
@@ -94,16 +159,31 @@ namespace UIKit {
 		FastForward,
 		Undo,
 		Redo,
+#if NET
+		[UnsupportedOSPlatform ("ios11.0")]
+#if IOS
+		[Obsolete ("Starting with ios11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 11, 0)]
+#endif
 		PageCurl,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		Close,
 	} 
 
 	// NSUInteger -> UIControl.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UIControlEvent : ulong {
 		TouchDown           = 1 <<  0,
 		TouchDownRepeat     = 1 <<  1,
@@ -117,7 +197,13 @@ namespace UIKit {
 		
 		ValueChanged        = 1 << 12,
 		PrimaryActionTriggered = 1 << 13,
-		[iOS (14,0), TV (14,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+#endif
 		MenuActionTriggered = 1 << 14,
 		
 		EditingDidBegin     = 1 << 16,
@@ -133,25 +219,51 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIEvent.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIEventType : long {
 		Touches,
 		Motion,
 		RemoteControl,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
+#endif
 		Presses,
-		[iOS (13,4), TV (13,4)]
+#if NET
+		[SupportedOSPlatform ("ios13.4")]
+		[SupportedOSPlatform ("tvos13.4")]
+#else
+		[iOS (13,4)]
+		[TV (13,4)]
+#endif
 		Scroll = 10,
-		[iOS (13,4), TV (13,4)]
+#if NET
+		[SupportedOSPlatform ("ios13.4")]
+		[SupportedOSPlatform ("tvos13.4")]
+#else
+		[iOS (13,4)]
+		[TV (13,4)]
+#endif
 		Hover = 11,
-		[iOS (13,4), TV (13,4)]
+#if NET
+		[SupportedOSPlatform ("ios13.4")]
+		[SupportedOSPlatform ("tvos13.4")]
+#else
+		[iOS (13,4)]
+		[TV (13,4)]
+#endif
 		Transform = 14,
 	}
 
 	// NSInteger -> UIEvent.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIEventSubtype : long {
 		None,
 		MotionShake,
@@ -169,8 +281,10 @@ namespace UIKit {
 	}			
 	
 	// NSInteger -> UIControl.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIControlContentVerticalAlignment : long {
 		Center  = 0,
 		Top     = 1,
@@ -179,8 +293,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIControl.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIControlContentHorizontalAlignment : long {
 		Center = 0,
 		Left   = 1,
@@ -191,15 +307,21 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIControl.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UIControlState : ulong {
 		Normal       = 0,
 		Highlighted  = 1 << 0,
 		Disabled     = 1 << 1,
 		Selected     = 1 << 2,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
+#endif
 		Focused      = 1 << 3,
 		Application  = 0x00FF0000,
 		Reserved     = 0xFF000000
@@ -219,9 +341,11 @@ namespace UIKit {
 	}
 	
 	// NSUInteger -> UIView.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UIViewAutoresizing : ulong {
 		None                 = 0,
 		FlexibleLeftMargin   = 1 << 0,
@@ -236,8 +360,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIViewAnimationCurve : long {
 		EaseInOut,
 		EaseIn,
@@ -246,8 +372,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIViewContentMode : long {
 		ScaleToFill,
 		ScaleAspectFit,
@@ -265,8 +393,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIViewAnimationTransition : long {
 		None,
 		FlipFromLeft,
@@ -276,25 +406,44 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIBarCommon.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIBarMetrics : long {
 		Default,
 		Compact,
 		DefaultPrompt = 101,
 		CompactPrompt,
 
+#if NET
+		[UnsupportedOSPlatform ("ios8.0")]
+#if IOS
+		[Obsolete ("Starting with ios8.0 use 'UIBarMetrics.Compat' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarMetrics.Compat' instead.")]
+#endif
 		LandscapePhone = Compact,
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if IOS
+		[Obsolete ("Starting with ios8.0 use 'UIBarMetrics.CompactPrompt' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarMetrics.CompactPrompt' instead.")]
+#endif
 		LandscapePhonePrompt = CompactPrompt
 	}
 
 	// NSInteger -> UIButton.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIButtonType : long {
 		Custom,
 		RoundedRect,
@@ -302,9 +451,21 @@ namespace UIKit {
 		InfoLight,
 		InfoDark,
 		ContactAdd,
-		[TV (11,0)][NoiOS]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[TV (11,0)]
+		[NoiOS]
+#endif
 		Plain,
-		[NoTV, iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[iOS (13,0)]
+#endif
 		Close,
 		System = RoundedRect,
 	}
@@ -322,8 +483,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIStringDrawing.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIBaselineAdjustment : long {
 		AlignBaselines = 0,
 		AlignCenters,
@@ -331,8 +494,13 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDatePicker.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIDatePickerMode : long {
 		Time,         
 		Date,         
@@ -341,8 +509,13 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDevice.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIDeviceOrientation : long {
 		Unknown,
 		Portrait,
@@ -354,8 +527,13 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDevice.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIDeviceBatteryState : long {
 		Unknown,
 		Unplugged,
@@ -364,23 +542,38 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIDocument.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIDocumentChangeKind : long {
 		Done, Undone, Redone, Cleared
 	}
 
 	// NSInteger -> UIDocument.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIDocumentSaveOperation : long {
 		ForCreating, ForOverwriting
 	}
 
 	// NSUInteger -> UIDocument.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoTV][NoWatch]
 	public enum UIDocumentState : ulong {
 		Normal = 0,
 		Closed = 1 << 0,
@@ -391,66 +584,131 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImagePickerController.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
-	[NoWatch][NoTV]
 	public enum UIImagePickerControllerSourceType : long {
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0 use 'PHPicker' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'PHPicker' instead.")]
+#endif
 		PhotoLibrary,
 		Camera,
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0 use 'PHPicker' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'PHPicker' instead.")]
+#endif
 		SavedPhotosAlbum,
 	}
 
 	// NSInteger -> UIImagePickerController.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
-	[NoWatch][NoTV]
 	public enum UIImagePickerControllerCameraCaptureMode : long {
 		Photo, Video
 	}
 
 	// NSInteger -> UIImagePickerController.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
-	[NoWatch][NoTV]
 	public enum UIImagePickerControllerCameraDevice : long {
 		Rear,
 		Front
 	}
 
 	// NSInteger -> UIImagePickerController.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
-	[NoWatch][NoTV]
 	public enum UIImagePickerControllerCameraFlashMode : long {
 		Off = -1, Auto = 0, On = 1
 	}
 
 	// NSInteger -> UIInterface.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
-	[NoWatch][NoTV]
 	public enum UIBarStyle : long {
 		Default,
 		Black,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
+#if NET
+		[UnsupportedOSPlatform ("ios5.1")]
+#if IOS
+		[Obsolete ("Starting with ios5.1 use 'UIBarStyle.Black'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 5, 1, message : "Use 'UIBarStyle.Black'.")]
+#endif
 		BlackOpaque      = 1,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
+#if NET
+		[UnsupportedOSPlatform ("ios5.1")]
+#if IOS
+		[Obsolete ("Starting with ios5.1 use 'UIBarStyle.Black' and set the translucency property to true.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 5, 1, message : "Use 'UIBarStyle.Black' and set the translucency property to true.")]
+#endif
 		BlackTranslucent = 2,
 	}
 
 	// NSInteger -> UIProgressView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIProgressViewStyle : long {
 		Default,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		Bar,
 	}
 	
 	// NSInteger -> UIScrollView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIScrollViewIndicatorStyle : long {
 		Default,
 		Black,
@@ -458,8 +716,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITextInputTraits.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextAutocapitalizationType : long {
 		None,
 		Words,
@@ -468,8 +728,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITextInputTraits.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextAutocorrectionType : long {
 		Default,
 		No,
@@ -477,8 +739,10 @@ namespace UIKit {
 	}
 	
 	// NSInteger -> UITextInputTraits.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIKeyboardType : long {
 		Default,
 		ASCIICapable,
@@ -492,14 +756,27 @@ namespace UIKit {
 		DecimalPad,
 		Twitter,
 		WebSearch,
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10, 0)]
+#endif
 		AsciiCapableNumberPad
 	} 
 
 	// NSInteger -> UISegmentedControl.h
-	[Native]
-	[NoTV][NoWatch]
+#if NET
+	[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
+	[Obsolete ("Starting with ios7.0 this no longer has any effect.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "This no longer has any effect.")]
+#endif
+	[Native]
 	public enum UISegmentedControlStyle : long {
 		Plain,
 		Bordered,
@@ -508,8 +785,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITabBarItem.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITabBarSystemItem : long {
 		More,
 		Favorites,
@@ -526,18 +805,28 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITableView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITableViewStyle : long {
 		Plain,
 		Grouped,
-		[NoTV, iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[iOS (13,0)]
+#endif
 		InsetGrouped,
 	}
 
 	// NSInteger -> UITableView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITableViewScrollPosition : long {
 		None,        
 		Top,    
@@ -546,8 +835,10 @@ namespace UIKit {
 	}
 	
 	// NSInteger -> UITableView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITableViewRowAnimation : long {
 		Fade,
 		Right,
@@ -560,43 +851,82 @@ namespace UIKit {
 	}
 
 	// #defines over UIBarPosition -> NSInteger -> UIBarCommon.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIToolbarPosition : long {
 		Any, Bottom, Top
 	}
 	
 	// NSInteger -> UITouch.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITouchPhase : long {
 		Began,
 		Moved,
 		Stationary,
 		Ended,
 		Cancelled,
-		[iOS (13,4), TV (13,4)]
+#if NET
+		[SupportedOSPlatform ("ios13.4")]
+		[SupportedOSPlatform ("tvos13.4")]
+#else
+		[iOS (13,4)]
+		[TV (13,4)]
+#endif
 		RegionEntered,
-		[iOS (13,4), TV (13,4)]
+#if NET
+		[SupportedOSPlatform ("ios13.4")]
+		[SupportedOSPlatform ("tvos13.4")]
+#else
+		[iOS (13,4)]
+		[TV (13,4)]
+#endif
 		RegionMoved,
-		[iOS (13,4), TV (13,4)]
+#if NET
+		[SupportedOSPlatform ("ios13.4")]
+		[SupportedOSPlatform ("tvos13.4")]
+#else
+		[iOS (13,4)]
+		[TV (13,4)]
+#endif
 		RegionExited,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UITouchType : long
 	{
 		Direct,
 		Indirect,
 		Stylus,
-		[iOS (13,4), TV (13,4)]
+#if NET
+		[SupportedOSPlatform ("ios13.4")]
+		[SupportedOSPlatform ("tvos13.4")]
+#else
+		[iOS (13,4)]
+		[TV (13,4)]
+#endif
 		IndirectPointer,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.1")]
+#else
 	[NoWatch]
 	[iOS (9,1)]
+#endif
 	[Native]
 	[Flags]
 	public enum UITouchProperties : long
@@ -630,8 +960,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITableViewCell.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITableViewCellStyle : long {
 		Default,
 		Value1,	
@@ -640,19 +972,34 @@ namespace UIKit {
 	}                 
 
 	// NSInteger -> UITableViewCell.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UITableViewCellSeparatorStyle : long {
 		None,
 		SingleLine,
+#if NET
+		[UnsupportedOSPlatform ("ios11.0")]
+#if IOS
+		[Obsolete ("Starting with ios11.0 se 'SingleLine' for a single line separator.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'SingleLine' for a single line separator.")]
+#endif
 		SingleLineEtched,
 		DoubleLineEtched = SingleLineEtched
 	}
 
 	// NSInteger -> UITableViewCell.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITableViewCellSelectionStyle : long {
 		None,
 		Blue,
@@ -661,8 +1008,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITableViewCell.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITableViewCellEditingStyle : long {
 		None,
 		Delete,
@@ -670,22 +1019,36 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITableViewCell.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITableViewCellAccessory : long {
 		None,                
 		DisclosureIndicator,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		DetailDisclosureButton,
 		Checkmark,
-		[NoTV][iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[iOS (7,0)]
+#endif
 		DetailButton
 	}
 
 	// NSUInteger -> UITableViewCell.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UITableViewCellState : ulong {
 		DefaultMask                     = 0,
 		ShowingEditControlMask          = 1 << 0,
@@ -693,8 +1056,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITextField.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextBorderStyle : long {
 		None,
 		Line,
@@ -703,8 +1068,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITextField.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextFieldViewMode : long {
 		Never,
 		WhileEditing,
@@ -713,21 +1080,37 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIViewController.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIModalTransitionStyle : long {
 		CoverVertical = 0,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		FlipHorizontal,
 		CrossDissolve,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		PartialCurl
 	}
 
 	// NSInteger -> UIApplication.h
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+	[iOS (8,0)]
+#endif
 	[Native]
-	[NoTV][NoWatch]
-		[iOS (8,0)]
 	public enum UIInterfaceOrientation : long {
 		Unknown            = UIDeviceOrientation.Unknown,
 		Portrait           = UIDeviceOrientation.Portrait,
@@ -737,9 +1120,14 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoTV][NoWatch]
 	public enum UIInterfaceOrientationMask : ulong {
 		Portrait = 1 << (int) UIInterfaceOrientation.Portrait,
 		LandscapeLeft = 1 << (int) UIInterfaceOrientation.LandscapeLeft,
@@ -752,8 +1140,13 @@ namespace UIKit {
 	}
 	
 	// NSInteger -> UIApplication.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
-	[NoWatch][NoTV]
 	public enum UIWebViewNavigationType : long {
 		LinkClicked,
 		FormSubmitted,
@@ -764,20 +1157,40 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoTV][NoWatch]
 	public enum UIDataDetectorType : ulong {
 		PhoneNumber            = 1 << 0,
 		Link                   = 1 << 1,
 		Address                = 1 << 2,
 		CalendarEvent          = 1 << 3,
 
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (10,0)]
+#endif
 		ShipmentTrackingNumber = 1 << 4,
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (10,0)]
+#endif
 		FlightNumber           = 1 << 5,
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (10,0)]
+#endif
 		LookupSuggestion       = 1 << 6,
 
 		None          = 0,
@@ -785,9 +1198,18 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIActionSheet.h
-	[Native]
-	[NoTV][NoWatch]
+#if NET
+	[UnsupportedOSPlatform ("ios13.0")]
+#if IOS
+	[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 13,0)]
+#endif
+	[Native]
 	public enum UIActionSheetStyle : long {
 		Automatic        = -1,
 		Default          = UIBarStyle.Default,
@@ -796,26 +1218,57 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIApplication.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIStatusBarStyle : long {
 		Default,
 
+#if NET
+		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use 'LightContent' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
+#endif
 		BlackTranslucent = 1,
 
 		LightContent = 1,
 
+#if NET
+		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
+		[Obsolete ("Starting with ios7.0 use 'LightContent' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
+#endif
 		BlackOpaque = 2,
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (13,0)]
+#endif
 		DarkContent = 3,
 	}
 
 	// NSInteger -> UIApplication.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIStatusBarAnimation : long {
 		None, 
 		Fade,
@@ -823,8 +1276,10 @@ namespace UIKit {
 	}
 	
 	// NSInteger -> UIGestureRecognizer.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIGestureRecognizerState : long {
 		Possible,
 		Began,
@@ -837,9 +1292,14 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoTV][NoWatch]
 	public enum UIRemoteNotificationType : ulong {
 		None    = 0,
 		Badge   = 1 << 0,
@@ -849,8 +1309,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITextInputTraits.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIKeyboardAppearance : long {
 		Default,
 		Alert,
@@ -859,8 +1321,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITextInputTraits.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIReturnKeyType : long {
 		Default,
 		Go,
@@ -877,30 +1341,50 @@ namespace UIKit {
 	} 	
 
 	// NSInteger -> UIViewController.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIModalPresentationStyle : long {
 		None = -1,
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
 		[iOS (13,0)]
+#endif
 		Automatic = -2,
 		FullScreen = 0,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		PageSheet,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		FormSheet,
 		CurrentContext,
 		Custom,
 		OverFullScreen,
 		OverCurrentContext,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		Popover,
 		BlurOverFullScreen,
 	}
 	
 	// NSUInteger -> UISwipeGestureRecognizer.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UISwipeGestureRecognizerDirection : ulong {
 		Right = 1 << 0,
 		Left = 1 << 1,
@@ -909,9 +1393,11 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIPopoverController.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UIPopoverArrowDirection : ulong {
 		Up = 1 << 0,
 		Down = 1 << 1,
@@ -922,8 +1408,13 @@ namespace UIKit {
 	};
 
 	// NSInteger -> UIMenuController.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIMenuControllerArrowDirection : long {
 		Default,
 		Up,
@@ -944,28 +1435,41 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIApplication.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIUserInterfaceLayoutDirection : long {
 		LeftToRight, RightToLeft
 	}
 	
 	// NSInteger -> UIDevice.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIUserInterfaceIdiom : long {
 		Unspecified = -1,
 		Phone,
 		Pad,
 		TV,
 		CarPlay,
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[Watch (7,0)]
+		[TV (14,0)]
+		[iOS (14,0)]
+#endif
 		Mac = 5,
 	}
 
 	// NSInteger -> UIApplication.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIApplicationState : long {
 		Active,
 		Inactive,
@@ -973,9 +1477,11 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIView.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UIViewAnimationOptions : ulong {
 		LayoutSubviews            = 1 <<  0,
 		AllowUserInteraction      = 1 <<  1,
@@ -1002,11 +1508,23 @@ namespace UIKit {
 		TransitionFlipFromTop     = 6 << 20,
 		TransitionFlipFromBottom  = 7 << 20,
 
+#if NET
+		[SupportedOSPlatform ("ios10.3")]
+#else
 		[iOS (10,3)]
+#endif
 		PreferredFramesPerSecondDefault = 0 << 24,
+#if NET
+		[SupportedOSPlatform ("ios10.3")]
+#else
 		[iOS (10,3)]
+#endif
 		PreferredFramesPerSecond60 = 3 << 24,
+#if NET
+		[SupportedOSPlatform ("ios10.3")]
+#else
 		[iOS (10,3)]
+#endif
 		PreferredFramesPerSecond30 = 7 << 24,
 	}
 
@@ -1016,7 +1534,12 @@ namespace UIKit {
 
 	// untyped (and unamed) enum -> UIPrintError.h
 	// note: it looks unused by any API
-	[NoTV][NoWatch]
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[ErrorDomain ("UIPrintErrorDomain")]
 	public enum UIPrintError {
 		NotAvailable = 1,
@@ -1026,8 +1549,13 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIPrintInfo.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIPrintInfoDuplex : long {
 		None,
 		LongEdge,
@@ -1035,16 +1563,26 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIPrintInfo.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIPrintInfoOrientation : long {
 		Portrait,
 		Landscape,
 	}
 
 	// NSInteger -> UIPrintInfo.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIPrintInfoOutputType : long {
 		General,
 		Photo,
@@ -1053,8 +1591,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIAccessibility.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIAccessibilityScrollDirection : long {
 		Right = 1,
 		Left,
@@ -1065,8 +1605,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIScreen.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIScreenOverscanCompensation : long {
 		Scale, InsetBounds,
 		None,
@@ -1075,70 +1617,100 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UISegmentedControl.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UISegmentedControlSegment : long {
 		Any, Left, Center, Right, Alone
 	}
 
 	// NSInteger -> UISearchBar.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UISearchBarIcon : long {
 		Search,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		Clear,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		Bookmark,
+#if NET
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		ResultsList
 	}
 
 	// NSInteger -> UIPageViewController.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIPageViewControllerNavigationOrientation : long {
 		Horizontal, Vertical
 	}
 
 	// NSInteger -> UIPageViewController.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIPageViewControllerSpineLocation : long {
 		None, Min, Mid, Max
 	}
 
 	// NSInteger -> UIPageViewController.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIPageViewControllerNavigationDirection : long {
 		Forward, Reverse
 	}
 
 	// NSInteger -> UIPageViewController.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIPageViewControllerTransitionStyle : long {
 		PageCurl, Scroll
 	}
 
 	// NSInteger -> UITextInputTraits.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextSpellCheckingType : long {
 		Default, No, Yes, 
 	}
 
 	// NSInteger -> UITextInput.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextStorageDirection : long {
 		Forward, Backward
 	}
 
 	// NSInteger -> UITextInput.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextLayoutDirection : long {
 		Right = 2,
 		Left,
@@ -1148,8 +1720,10 @@ namespace UIKit {
 
 	// Sum of UITextStorageDirection and UITextLayoutDirection 
 	// NSInteger -> UITextInput.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextDirection : long {
 		Forward, Backward, Right, Left, Up, Down
 	}
@@ -1158,8 +1732,10 @@ namespace UIKit {
 	// NSInteger -> UITextInput.h
 	// Use Foundation.NSWritingDirection in .NET.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextWritingDirection : long {
 		Natural = -1,
 		LeftToRight,
@@ -1168,8 +1744,10 @@ namespace UIKit {
 #endif
 
 	// NSInteger -> UITextInput.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITextGranularity : long {
 		Character,
 		Word,
@@ -1182,31 +1760,49 @@ namespace UIKit {
 	// float (and not even a CGFloat) -> NSLayoutConstraint.h
 	// the API were fixed (a long time ago to use `float`) and the enum
 	// values can still be used (and useful) since they will be casted
+#if !NET
 	[NoWatch]
+#endif
 	public enum UILayoutPriority {
 		Required = 1000,
 		DefaultHigh = 750,
 		DefaultLow = 250,
 		FittingSizeLevel = 50,
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
 		[iOS (13,0)]
+#endif
 		DragThatCanResizeScene = 510,
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
 		[iOS (13,0)]
+#endif
 		SceneSizeStayPut = 500,
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+#else
 		[iOS (13,0)]
+#endif
 		DragThatCannotResizeScene = 490,
 	}
 
 	// NSInteger -> NSLayoutConstraint.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UICollectionUpdateAction : long {
 		Insert, Delete, Reload, Move, None
 	}
 
 	// NSUInteger -> UICollectionView.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UICollectionViewScrollPosition : ulong {
 		None,
 		Top = 1 << 0,
@@ -1218,15 +1814,19 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UICollectionViewFlowLayout.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UICollectionViewScrollDirection : long {
 		Vertical, Horizontal
 	}
 
 	// NSInteger -> UICollectionViewFlowLayout.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UILayoutConstraintAxis : long {
 		Horizontal, Vertical
 	}
@@ -1242,14 +1842,18 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UICollectionViewLayout.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UICollectionElementCategory : ulong {
 		Cell, SupplementaryView, DecorationView
 	}
 
 	// that's a convenience enum that maps to UICollectionElementKindSection[Footer|Header] which are NSString
+#if !NET
 	[NoWatch]
+#endif
 	public enum UICollectionElementKindSection {
 		Header,
 		Footer
@@ -1289,45 +1893,60 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIMotionEffect.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIInterpolatingMotionEffectType : long {
 		TiltAlongHorizontalAxis,
 		TiltAlongVerticalAxis
 	}
 
 	// NSInteger -> UINavigationController.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UINavigationControllerOperation : long {
 		None, Push, Pop
 	}
 
 	// NSInteger -> UIActivity.h
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
-	[NoTV][NoWatch]
 	public enum UIActivityCategory : long {
 		Action, Share
 	}
 
 	// NSInteger -> UIAttachmentBehavior.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIAttachmentBehaviorType : long {
 		Items, Anchor
 	}
 
 	// NSInteger -> UIBarCommon.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIBarPosition : long {
 		Any, Bottom, Top, TopAttached, 
 	}
 
 	// NSUInteger -> UICollisionBehavior.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UICollisionBehaviorMode : ulong  {
 		Items = 1,
 		Boundaries = 2,
@@ -1363,9 +1982,11 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIResponder.h
+#if !NET
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
-	[NoWatch]
 	public enum UIKeyModifierFlags : long {
 		AlphaShift     = 1 << 16,  // This bit indicates CapsLock
 		Shift          = 1 << 17,
@@ -1376,21 +1997,33 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIScrollView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIScrollViewKeyboardDismissMode : long {
 		None, OnDrag, Interactive
 	}
 
 	// NSInteger -> UIWebView.h
-	[NoWatch][NoTV]
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
 	public enum UIWebPaginationBreakingMode : long {
 		Page, Column
 	}
 
 	// NSInteger -> UIWebView.h
-	[NoWatch][NoTV]
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+#endif
 	[Native]
 	public enum UIWebPaginationMode : long {
 		Unpaginated,
@@ -1401,16 +2034,20 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIPushBehavior.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIPushBehaviorMode : long {
 		Continuous,
 		Instantaneous
 	}
 
 	// NSInteger -> UITabBar.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UITabBarItemPositioning : long {
 		Automatic,
 		Fill,
@@ -1418,9 +2055,13 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIView.h
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[iOS (7,0)]
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIViewKeyframeAnimationOptions : ulong {
 		LayoutSubviews = UIViewAnimationOptions.LayoutSubviews,
 		AllowUserInteraction = UIViewAnimationOptions.AllowUserInteraction,
@@ -1438,8 +2079,10 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UIViewTintAdjustmentMode : long {
 		Automatic,
 		Normal,
@@ -1447,8 +2090,10 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIView.h
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UISystemAnimation : ulong {
 		Delete
 	}
@@ -1474,9 +2119,13 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UISearchBar.h
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[NoWatch]
 	[iOS (7,0)]
+#endif
+	[Native]
 	public enum UISearchBarStyle : ulong {
 		Default,
 		Prominent,
@@ -1484,84 +2133,215 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIInputView.h
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[NoWatch]
 	[iOS (7,0)]
+#endif
+	[Native]
 	public enum UIInputViewStyle : long {
 		Default,
 		Keyboard
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[NoWatch]
 	[iOS (8,0)]
+#endif
+	[Native]
 	public enum UIUserInterfaceSizeClass : long {
 		Unspecified = 0,
 		Compact = 1,
 		Regular = 2
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[NoWatch]
 	[iOS (8,0)]
+#endif
+	[Native]
 	public enum UIAlertActionStyle : long {
 		Default, Cancel, Destructive
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[NoWatch]
 	[iOS (8,0)]
+#endif
+	[Native]
 	public enum UIAlertControllerStyle : long {
 		ActionSheet,
 		Alert
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[NoWatch]
 	[iOS (8,0)]
+#endif
+	[Native]
 	public enum UIBlurEffectStyle : long {
 		ExtraLight, Light, Dark,
-		[TV (10,0), NoiOS, NoWatch]
+#if NET
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[TV (10,0)]
+		[NoiOS]
+		[NoWatch]
+#endif
 		ExtraDark,
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10,0)]
+#endif
 		Regular = 4,
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10,0)]
+#endif
 		Prominent = 5,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemUltraThinMaterial,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemThinMaterial,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemMaterial,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemThickMaterial,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemChromeMaterial,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemUltraThinMaterialLight,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemThinMaterialLight,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemMaterialLight,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemThickMaterialLight,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemChromeMaterialLight,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemUltraThinMaterialDark,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemThinMaterialDark,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemMaterialDark,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemThickMaterialDark,
-		[iOS (13,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[NoTV]
+#endif
 		SystemChromeMaterialDark,
 	}
 
-	[Native]
-	[NoTV][NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[iOS (8,0)]
+#endif
+	[Native]
 	public enum UIPrinterJobTypes : long {
 		Unknown = 0,
 		Document = 1 << 0,
@@ -1574,9 +2354,19 @@ namespace UIKit {
 		Postcard = 1 << 7
 	}
 
-	[NoTV][NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("ios10.0")]
+#if IOS
+	[Obsolete ("Starting with ios10.0 se 'UNAuthorizationOptions' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[iOS (8,0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message:"Use 'UNAuthorizationOptions' instead.")]
+#endif
 	[Native]
 	[Flags]
 	public enum UIUserNotificationType : ulong {
@@ -1586,36 +2376,76 @@ namespace UIKit {
 		Alert      = 1 << 2
 	}
 	
-	[NoTV][NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("ios10.0")]
+#if IOS
+	[Obsolete ("Starting with ios10.0 use 'UNNotificationActionOptions' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[iOS (8, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationActionOptions' instead.")]
+#endif
 	[Native]
 	public enum UIUserNotificationActivationMode : ulong {
 		Foreground,
 		Background
 	}
 
-	[NoTV][NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("ios10.0")]
+#if IOS
+	[Obsolete ("Starting with ios10.0 use 'UNNotificationCategory.Actions' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[iOS (8, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationCategory.Actions' instead.")]
+#endif
 	[Native]
 	public enum UIUserNotificationActionContext : ulong {
 		Default,
 		Minimal
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("ios11.0")]
+#if IOS
+	[Obsolete ("Starting with ios11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Deprecated (PlatformName.iOS, 11, 0)]
-	[NoTV][NoWatch]
+	[NoTV]
+	[NoWatch]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum UIDocumentMenuOrder : ulong {
 		First,
 		Last
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+	[Obsolete ("Starting with ios14.0 use the designated constructors instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use the designated constructors instead.")]
-	[NoTV][NoWatch]
+	[NoTV]
+	[NoWatch]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum UIDocumentPickerMode : ulong {
 		Import,
@@ -1624,7 +2454,11 @@ namespace UIKit {
 		MoveToService
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum UIAccessibilityNavigationStyle : long {
 
@@ -1633,51 +2467,134 @@ namespace UIKit {
 		Combined = 2
 	}
 
-	[Native]
+#if !NET
 	[NoWatch]
+#endif
+	[Native]
 	public enum UISplitViewControllerDisplayMode : long {
 		Automatic,
-		[TV (14,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+#endif
 		SecondaryOnly,
-		[TV (14,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+#endif
 		OneBesideSecondary,
-		[TV (14,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+#endif
 		OneOverSecondary,
-		[TV (14,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+#endif
 		TwoBesideSecondary,
-		[TV (14,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+#endif
 		TwoOverSecondary,
-		[TV (14,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+#endif
 		TwoDisplaceSecondary,
 
+#if NET
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos14.0 use 'SecondaryOnly' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'SecondaryOnly' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'SecondaryOnly' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'SecondaryOnly' instead.")]
+#endif
 		PrimaryHidden = SecondaryOnly,
 
+#if NET
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos14.0 use 'OneBesideSecondary' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'OneBesideSecondary' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'OneBesideSecondary' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'OneBesideSecondary' instead.")]
+#endif
 		AllVisible = OneBesideSecondary,
 
+#if NET
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos14.0 use 'OneOverSecondary' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'OneOverSecondary' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'OneOverSecondary' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'OneOverSecondary' instead.")]
+#endif
 		PrimaryOverlay = OneOverSecondary,
 	}
 
-	[Native]
-	[NoTV][NoWatch]
+#if NET
+	[UnsupportedOSPlatform ("ios13.0")]
+#if IOS
+	[Obsolete ("Starting with ios13.0 use 'UIContextualActionStyle' and corresponding APIs instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIContextualActionStyle' and corresponding APIs instead.")]
+#endif
+	[Native]
 	public enum UITableViewRowActionStyle : long {
 		Default, Destructive = Default, Normal
 	}
 
 	// Utility enum for UITransitionContext[To|From]ViewKey
+#if !NET
 	[NoWatch]
+#endif
 	public enum UITransitionViewControllerKind {
 		ToView, FromView
 	}
 
 	// note [Native] since it maps to UIFontWeightConstants fields (CGFloat)
+#if NET
+	[SupportedOSPlatform ("ios8.2")]
+#else
 	[iOS (8,2)]
+#endif
 	public enum UIFontWeight {
 		UltraLight,
 		Thin,
@@ -1690,8 +2607,12 @@ namespace UIKit {
 		Black,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UIStackViewDistribution : long {
 		Fill,
@@ -1701,8 +2622,12 @@ namespace UIKit {
 		EqualCentering
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UIStackViewAlignment : long {
 		Fill,
@@ -1715,7 +2640,11 @@ namespace UIKit {
 		LastBaseline
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
+#endif
 	[Native]
 	[Flags]
 	public enum NSWritingDirectionFormatType : long {
@@ -1723,8 +2652,14 @@ namespace UIKit {
 		Override = 1 << 1
 	}
 
-	[NoTV][NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UIPrinterCutterBehavior : long
 	{
@@ -1735,9 +2670,19 @@ namespace UIKit {
 		CutAfterEachJob
 	}
 
-	[NoTV][NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("ios10.0")]
+#if IOS
+	[Obsolete ("Starting with ios10.0 use 'UNNotificationAction' or 'UNTextInputNotificationAction' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
 	[iOS (9,0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationAction' or 'UNTextInputNotificationAction' instead.")]
+#endif
 	[Native]
 	public enum UIUserNotificationActionBehavior : ulong
 	{
@@ -1745,8 +2690,12 @@ namespace UIKit {
 		TextInput
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UISemanticContentAttribute : long
 	{
@@ -1757,8 +2706,12 @@ namespace UIKit {
 		ForceRightToLeft
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UIDynamicItemCollisionBoundsType : ulong
 	{
@@ -1767,24 +2720,36 @@ namespace UIKit {
 		Path
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
-	[iOS(9,0)]
+	[iOS (9,0)]
+#endif
+	[Native]
 	public enum UIForceTouchCapability : long {
 		Unknown = 0,
 		Unavailable = 1,
 		Available = 2
 	}
 
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
-	[iOS(9,0)]
+	[iOS (9,0)]
+#endif
+	[Native]
 	public enum UIPreviewActionStyle : long {
 		Default, Selected, Destructive
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UIPressPhase : long {
 		Began,
@@ -1794,8 +2759,12 @@ namespace UIKit {
 		Cancelled
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)]
+#endif
 	[Native]
 	public enum UIPressType : long {
 		UpArrow,
@@ -1805,24 +2774,42 @@ namespace UIKit {
 		Select,
 		Menu,
 		PlayPause,
+#if NET
+		[SupportedOSPlatform ("tvos14.3")]
+		[UnsupportedOSPlatform ("ios")]
+#else
 		[TV (14,3)]
 		[NoiOS]
+#endif
 		PageUp = 30,
+#if NET
+		[SupportedOSPlatform ("tvos14.3")]
+		[UnsupportedOSPlatform ("ios")]
+#else
 		[TV (14,3)]
 		[NoiOS]
+#endif
 		PageDown = 31,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[NoWatch]
 	[iOS (9,0)] // introduced in Xcode 7.1 SDK (iOS 9.1 but hidden in 9.0)
+#endif
 	[Native]
 	public enum UITableViewCellFocusStyle : long {
 		Default,
 		Custom
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[NoWatch]
 	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UIDisplayGamut : long
 	{
@@ -1831,8 +2818,12 @@ namespace UIKit {
 		P3
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[NoWatch]
 	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UITraitEnvironmentLayoutDirection : long
 	{
@@ -1841,7 +2832,14 @@ namespace UIKit {
 		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft
 	}
 
-	[TV (10,0), NoWatch, iOS (12,0)]
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (10,0)]
+	[NoWatch]
+	[iOS (12,0)]
+#endif
 	[Native]
 	public enum UIUserInterfaceStyle : long
 	{
@@ -1850,8 +2848,12 @@ namespace UIKit {
 		Dark
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[NoWatch]
 	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UITextItemInteraction : long
 	{
@@ -1860,8 +2862,12 @@ namespace UIKit {
 		Preview
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[NoWatch]
 	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UIViewAnimatingState : long
 	{
@@ -1870,8 +2876,12 @@ namespace UIKit {
 		Stopped
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[NoWatch]
 	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UIViewAnimatingPosition : long
 	{
@@ -1880,8 +2890,12 @@ namespace UIKit {
 		Current
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[NoWatch]
 	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UITimingCurveType : long
 	{
@@ -1891,9 +2905,14 @@ namespace UIKit {
 		Composed
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoWatch]
 	[NoTV]
-	[iOS(10,0)]
+	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UIAccessibilityHearingDeviceEar : ulong {
 		None = 0,
@@ -1902,8 +2921,12 @@ namespace UIKit {
 		Both = Left | Right
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[NoWatch]
-	[iOS(10,0)]
+	[iOS (10,0)]
+#endif
 	[Native]
 	public enum UIAccessibilityCustomRotorDirection : long
 	{
@@ -1912,8 +2935,14 @@ namespace UIKit {
 	}
 
 	// Xcode 8.2 beta 1 added __TVOS_PROHIBITED but we need to keep it for binary compatibility
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("ios10.0")]
+#else
 	[TV (10,0)]
-	[iOS (10,0)][NoWatch]
+	[iOS (10,0)]
+	[NoWatch]
+#endif
 	[Native]
 	[Flags]
 	public enum UICloudSharingPermissionOptions : ulong {
@@ -1924,24 +2953,49 @@ namespace UIKit {
 		AllowReadWrite = 1 << 3
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum UITextFieldDidEndEditingReason : long {
 		Unknown = -1, // helper value (not in headers)
 		Committed,
+#if NET
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("ios")]
+#else
 		[NoiOS]
+#endif
 		Cancelled
 	}
 
-	[iOS (10,3), TV (10,2), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios10.3")]
+	[SupportedOSPlatform ("tvos10.2")]
+#else
+	[iOS (10,3)]
+	[TV (10,2)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum UIScrollViewIndexDisplayMode : long {
 		Automatic,
 		AlwaysHidden
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
 	[NoWatch]
-	[TV (11,0), iOS (11,0)]
+	[TV (11,0)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIScrollViewContentInsetAdjustmentBehavior : long
 	{
@@ -1951,7 +3005,14 @@ namespace UIKit {
 		Always
 	}
 	
-	[iOS (11,0), TV (11,0), Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
+	[iOS (11,0)]
+	[TV (11,0)]
+	[Watch (4,0)]
+#endif
 	[Native]
 	public enum UIAccessibilityContainerType : long
 	{
@@ -1959,12 +3020,25 @@ namespace UIKit {
 		DataTable,
 		List,
 		Landmark,
-		[iOS (13,0), TV (13,0), Watch (6,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+#endif
 		SemanticGroup,
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[NoWatch]
-	[iOS (11,0), TV (11,0)]
+	[iOS (11,0)]
+	[TV (11,0)]
+#endif
 	[Native]
 	public enum UITextSmartQuotesType : long
 	{
@@ -1973,8 +3047,14 @@ namespace UIKit {
 		Yes
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[NoWatch]
-	[iOS (11,0), TV (11,0)]
+	[iOS (11,0)]
+	[TV (11,0)]
+#endif
 	[Native]
 	public enum UITextSmartDashesType : long
 	{
@@ -1983,8 +3063,14 @@ namespace UIKit {
 		Yes
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[NoWatch]
-	[iOS (11,0), TV (11,0)]
+	[iOS (11,0)]
+	[TV (11,0)]
+#endif
 	[Native]
 	public enum UITextSmartInsertDeleteType : long
 	{
@@ -1993,8 +3079,14 @@ namespace UIKit {
 		Yes
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[NoWatch]
-	[iOS (11,0), TV (11,0)]
+	[iOS (11,0)]
+	[TV (11,0)]
+#endif
 	[Native]
 	public enum UIAccessibilityCustomSystemRotorType : long
 	{
@@ -2019,7 +3111,14 @@ namespace UIKit {
 		Landmark
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIDropOperation : ulong
 	{
@@ -2029,7 +3128,14 @@ namespace UIKit {
 		Move = 3
 	}
 
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	[Flags]
 	public enum UITextDragOptions : long
@@ -2038,7 +3144,14 @@ namespace UIKit {
 		StripTextColorFromPreviews = (1 << 0)
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UITextDropAction : ulong
 	{
@@ -2047,7 +3160,14 @@ namespace UIKit {
 		ReplaceAll
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UITextDropProgressMode : ulong
 	{
@@ -2055,7 +3175,14 @@ namespace UIKit {
 		Custom
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UITextDropEditability : ulong
 	{
@@ -2064,7 +3191,14 @@ namespace UIKit {
 		Yes
 	}
 
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UICollectionViewReorderingCadence : long
 	{
@@ -2073,7 +3207,14 @@ namespace UIKit {
 		Slow
 	}
 
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UICollectionViewDropIntent : long
 	{
@@ -2082,7 +3223,14 @@ namespace UIKit {
 		InsertIntoDestinationIndexPath
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UICollectionViewCellDragState : long
 	{
@@ -2091,9 +3239,19 @@ namespace UIKit {
 		Dragging
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+	[Obsolete ("Starting with ios14.0 use 'PHPicker' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'PHPicker' instead.")]
 	[NoWatch]
-	[NoTV, iOS (11,0)]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIImagePickerControllerImageUrlExportPreset : long
 	{
@@ -2101,8 +3259,14 @@ namespace UIKit {
 		Current
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoWatch]
-	[NoTV, iOS (11,0)]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIContextualActionStyle : long
 	{
@@ -2110,7 +3274,14 @@ namespace UIKit {
 		Destructive
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UITableViewCellDragState : long
 	{
@@ -2119,8 +3290,14 @@ namespace UIKit {
 		Dragging
 	}
 	
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
 	[NoWatch]
-	[TV (11,0), iOS (11,0)]
+	[TV (11,0)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UITableViewSeparatorInsetReference : long
 	{
@@ -2128,7 +3305,14 @@ namespace UIKit {
 		AutomaticInsets
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UITableViewDropIntent : long
 	{
@@ -2138,8 +3322,14 @@ namespace UIKit {
 		Automatic
 	}
 	
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
 	[NoWatch]
-	[TV (11,0), iOS (11,0)]
+	[TV (11,0)]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UISplitViewControllerPrimaryEdge : long
 	{
@@ -2147,7 +3337,14 @@ namespace UIKit {
 		Trailing
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIDropSessionProgressIndicatorStyle : ulong
 	{
@@ -2155,7 +3352,14 @@ namespace UIKit {
 		Default
 	}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UISpringLoadedInteractionEffectState : long
 	{
@@ -2165,8 +3369,14 @@ namespace UIKit {
 		Activated
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoWatch]
-	[NoTV, iOS (11,0)]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIDocumentBrowserImportMode : ulong
 	{
@@ -2175,8 +3385,14 @@ namespace UIKit {
 		Move
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoWatch]
-	[NoTV, iOS (11,0)]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIDocumentBrowserUserInterfaceStyle : ulong
 	{
@@ -2185,8 +3401,14 @@ namespace UIKit {
 		Dark
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[NoWatch]
-	[NoTV, iOS (11,0)]
+	[NoTV]
+	[iOS (11,0)]
+#endif
 	[Native]
 	[Flags]
 	public enum UIDocumentBrowserActionAvailability : long
@@ -2195,8 +3417,14 @@ namespace UIKit {
 		NavigationBar = 1 << 1
 	}
 
-	[NoWatch, NoTV]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
 	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UITextDropPerformer : ulong
 	{
@@ -2204,8 +3432,14 @@ namespace UIKit {
 		Delegate,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[NoWatch]
-	[iOS (11,0), TV (11,0)]
+	[iOS (11,0)]
+	[TV (11,0)]
+#endif
 	[Native]
 	public enum UINavigationItemLargeTitleDisplayMode : long
 	{
@@ -2214,8 +3448,14 @@ namespace UIKit {
 		Never,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[NoWatch]
-	[iOS (11,0), TV (11,0)]
+	[iOS (11,0)]
+	[TV (11,0)]
+#endif
 	[Native]
 	public enum UICollectionViewFlowLayoutSectionInsetReference : long
 	{
@@ -2224,8 +3464,14 @@ namespace UIKit {
 		LayoutMargins,
 	}
 
-	[NoWatch][NoTV]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
 	[iOS (11,0)]
+#endif
 	[Native]
 	public enum UIPreferredPresentationStyle : long
 	{
@@ -2234,7 +3480,16 @@ namespace UIKit {
 		Attachment,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[NoMac]
+	[iOS (11,0)]
+#endif
 	[Native]
 	[ErrorDomain ("UIDocumentBrowserErrorDomain")]
 	public enum UIDocumentBrowserErrorCode : long
@@ -2243,7 +3498,14 @@ namespace UIKit {
 		NoLocationAvailable = 2,
 	}
 	
-	[iOS (12,0), TV (12,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[iOS (12,0)]
+	[TV (12,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum UIGraphicsImageRendererFormatRange : long
 	{
@@ -2253,7 +3515,14 @@ namespace UIKit {
 		Standard,
 	}
 
-	[iOS (12,0), NoTV, NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[iOS (12,0)]
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	public enum UIPrintErrorCode : long
 	{
@@ -2263,7 +3532,14 @@ namespace UIKit {
 		JobFailedError
 	}
 
-	[iOS (13,0), TV (13,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[NoWatch]
+#endif
 	[ErrorDomain ("UISceneErrorDomain")]
 	[Native]
 	public enum UISceneErrorCode : long
@@ -2272,7 +3548,14 @@ namespace UIKit {
 		RequestDenied,
 	}
 
-	[Watch (6,0), TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UIImageSymbolScale : long
 	{
@@ -2283,7 +3566,14 @@ namespace UIKit {
 		Large,
 	}
 
-	[Watch (6,0), TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Watch (6,0)]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UIImageSymbolWeight : long
 	{
@@ -2299,7 +3589,14 @@ namespace UIKit {
 		Black,
 	}
 
-	[iOS (13,0), TV (13,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum UISceneActivationState : long {
 		Unattached = -1,
@@ -2308,7 +3605,14 @@ namespace UIKit {
 		Background,
 	}
 
-	[iOS (13,0), TV (13,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum UIMenuElementState : long {
 		Off,
@@ -2316,7 +3620,14 @@ namespace UIKit {
 		Mixed,
 	}
 
-	[iOS (13,0), TV (13,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum UIMenuElementAttributes : ulong {
 		Disabled = 1uL << 0,
@@ -2324,24 +3635,54 @@ namespace UIKit {
 		Hidden = 1uL << 2,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[NoWatch]
+#endif
 	[Flags]
-	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
 	public enum UIMenuOptions : ulong {
 		DisplayInline = 1uL << 0,
 		Destructive = 1uL << 1,
-		[iOS (15,0), TV (15,0), NoWatch, MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[NoWatch]
+		[MacCatalyst (15,0)]
+#endif
 		SingleSelection = 1uL << 5,
 	}
 
-	[NoWatch, NoTV, iOS (13, 0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13, 0)]
+#endif
 	[Native]
 	public enum UIContextMenuInteractionCommitStyle : long {
 		Dismiss = 0,
 		Pop,
 	}
 
-	[iOS (13,0), TV (13,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[NoWatch]
+#endif
 	public enum UIWindowSceneSessionRole {
 		[Field ("UIWindowSceneSessionRoleApplication")]
 		Application,
@@ -2349,14 +3690,27 @@ namespace UIKit {
 		[Field ("UIWindowSceneSessionRoleExternalDisplay")]
 		ExternalDisplay,
 
-		[NoTV][NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[NoWatch]
+#endif
 #if HAS_CARPLAY
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication", "CarPlay")]
 #endif
 		CarTemplateApplication,
 	}
 
-	[iOS (13,0), TV (13,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[NoWatch]
+#endif
 	public enum UIMenuIdentifier {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -2439,7 +3793,15 @@ namespace UIKit {
 		Alignment,
 		[Field ("UIMenuToolbar")]
 		Toolbar,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIMenuSidebar")]
 		Sidebar,
 		[Field ("UIMenuFullscreen")]
@@ -2451,13 +3813,27 @@ namespace UIKit {
 		[Field ("UIMenuRoot")]
 		Root,
 
-		[iOS (14,0), TV (14,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
 		[MacCatalyst (14,0)]
+#endif
 		[Field ("UIMenuOpenRecent")]
 		OpenRecent,
 	}
 
-	[iOS (13,0), TV (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Watch (6,0)]
+#endif
 	public enum UIAccessibilityTextualContext {
 		[Field ("UIAccessibilityTextualContextWordProcessing")]
 		WordProcessing,
@@ -2475,7 +3851,14 @@ namespace UIKit {
 		Console,
 	}
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[NoWatch]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UICollectionLayoutSectionOrthogonalScrollingBehavior : long {
 		None,
@@ -2486,7 +3869,14 @@ namespace UIKit {
 		GroupPagingCentered,
 	}
 
-	[TV (13,0), NoWatch, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[NoWatch]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UIAccessibilityContrast : long {
 		Unspecified = -1,
@@ -2494,7 +3884,14 @@ namespace UIKit {
 		High,
 	}
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[NoWatch]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UILegibilityWeight : long {
 		Unspecified = -1,
@@ -2502,7 +3899,14 @@ namespace UIKit {
 		Bold,
 	}
 
-	[NoWatch, NoTV, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UIUserInterfaceLevel : long {
 		Unspecified = -1,
@@ -2510,21 +3914,42 @@ namespace UIKit {
 		Elevated,
 	}
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[NoWatch]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UIEditingInteractionConfiguration : long {
 		None = 0,
 		Default = 1,
 	}
 
-	[NoTV, NoWatch, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UISplitViewControllerBackgroundStyle : long {
 		None,
 		Sidebar,
 	}
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[NoWatch]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UITabBarItemAppearanceStyle : long {
 		Stacked,
@@ -2532,21 +3957,42 @@ namespace UIKit {
 		CompactInline,
 	}
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[NoWatch]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UITextAlternativeStyle : long {
 		None,
 		LowConfidence,
 	}
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[NoWatch]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UITextInteractionMode : long {
 		Editable,
 		NonEditable,
 	}
 
-	[NoWatch, NoTV, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UIVibrancyEffectStyle : long {
 		Label,
@@ -2559,7 +4005,14 @@ namespace UIKit {
 		Separator,
 	}
 
-	[NoWatch, TV (13,0), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[NoWatch]
+	[TV (13,0)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum UIWindowSceneDismissalAnimation : long {
 		Standard = 1,
@@ -2567,13 +4020,27 @@ namespace UIKit {
 		Decline = 3,
 	}
 
-	[NoWatch, NoTV, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,0)]
+#endif
 	public enum UIActivityItemsConfigurationInteraction {
 		[Field ("UIActivityItemsConfigurationInteractionShare")]
 		Share,
 	}
 
-	[NoWatch, NoTV, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,0)]
+#endif
 	public enum UIActivityItemsConfigurationPreviewIntent {
 		[Field ("UIActivityItemsConfigurationPreviewIntentFullSize")]
 		FullSize,
@@ -2581,18 +4048,38 @@ namespace UIKit {
 		Thumbnail,
 	}
 
-	[NoWatch, NoTV, iOS (13,4)]
+#if NET
+	[SupportedOSPlatform ("ios13.4")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,4)]
+#endif
 	[Native]
 	public enum UIDatePickerStyle : long {
 		Automatic,
 		Wheels,
 		Compact,
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (14,0)]
+#endif
 		Inline,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst13.4")]
+	[SupportedOSPlatform ("ios13.4")]
+	[SupportedOSPlatform ("tvos13.4")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[iOS (13,4), NoWatch, TV (13,4)]
+	[iOS (13,4)]
+	[NoWatch]
+	[TV (13,4)]
+#endif
 	[Native]
 	public enum UIKeyboardHidUsage : long {
 		KeyboardErrorRollOver = 1,
@@ -2777,14 +4264,30 @@ namespace UIKit {
 		KeyboardZenkakuHankakuKanji = KeyboardLang5,
 	}
 
-	[Flags, NoWatch, NoTV, iOS (13,4)]
+#if NET
+	[SupportedOSPlatform ("ios13.4")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,4)]
+#endif
+	[Flags]
 	[Native]
 	public enum UIEventButtonMask : ulong {
 		Primary = 1L << 0,
 		Secondary = 1L << 1,
 	}
 
-	[Flags, TV (13,4), NoWatch, iOS (13,4)]
+#if NET
+	[SupportedOSPlatform ("tvos13.4")]
+	[SupportedOSPlatform ("ios13.4")]
+#else
+	[TV (13,4)]
+	[NoWatch]
+	[iOS (13,4)]
+#endif
+	[Flags]
 	[Native]
 	public enum UIAxis : ulong {
 		Neither = 0uL,
@@ -2793,14 +4296,29 @@ namespace UIKit {
 		Both = (Horizontal | Vertical),
 	}
 
-	[NoWatch, NoTV, iOS (13,4)]
+#if NET
+	[SupportedOSPlatform ("ios13.4")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,4)]
+#endif
 	[Native]
 	public enum UIScrollType : long {
 		Discrete,
 		Continuous,
 	}
 
-	[Flags, NoWatch, NoTV, iOS (13,4)]
+#if NET
+	[SupportedOSPlatform ("ios13.4")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,4)]
+#endif
+	[Flags]
 	[Native]
 	public enum UIScrollTypeMask : ulong {
 		Discrete = 1L << 0,
@@ -2808,7 +4326,14 @@ namespace UIKit {
 		All = Discrete | Continuous,
 	}
 
-	[NoWatch, NoTV, iOS (13,4)]
+#if NET
+	[SupportedOSPlatform ("ios13.4")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (13,4)]
+#endif
 	[Native]
 	public enum UIPointerEffectTintMode : long {
 		None = 0,
@@ -2816,7 +4341,14 @@ namespace UIKit {
 		Underlay,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UIButtonRole : long {
 		Normal,
@@ -2825,7 +4357,14 @@ namespace UIKit {
 		Destructive,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICellAccessoryDisplayedState : long {
 		Always,
@@ -2833,7 +4372,14 @@ namespace UIKit {
 		WhenNotEditing,
 	}
 
-	[NoWatch, NoTV, iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICellAccessoryOutlineDisclosureStyle : long {
 		Automatic,
@@ -2841,14 +4387,28 @@ namespace UIKit {
 		Cell,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICellAccessoryPlacement : long {
 		Leading,
 		Trailing,
 	}
 
-	[NoWatch, NoTV, iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICellConfigurationDragState : long {
 		None,
@@ -2856,7 +4416,14 @@ namespace UIKit {
 		Dragging,
 	}
 
-	[NoWatch, NoTV, iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICellConfigurationDropState : long {
 		None,
@@ -2864,22 +4431,51 @@ namespace UIKit {
 		Targeted,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICollectionLayoutListAppearance : long {
 		Plain,
 		Grouped,
 #if !TVOS
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		InsetGrouped,
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		Sidebar,
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		SidebarPlain,
 #endif
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICollectionLayoutListHeaderMode : long {
 		None,
@@ -2887,7 +4483,14 @@ namespace UIKit {
 		FirstItemInSection,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UIContentInsetsReference : long {
 		Automatic,
@@ -2897,7 +4500,14 @@ namespace UIKit {
 		ReadableContent,
 	}
 
-	[NoWatch, NoTV, iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UIContextMenuInteractionAppearance : long {
 		Unknown = 0,
@@ -2905,7 +4515,14 @@ namespace UIKit {
 		Compact,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UIUserInterfaceActiveAppearance : long {
 		Unspecified = -1,
@@ -2913,7 +4530,14 @@ namespace UIKit {
 		Active,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UIListContentTextAlignment : long {
 		Natural,
@@ -2921,7 +4545,14 @@ namespace UIKit {
 		Justified,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UIPageControlInteractionState : long {
 		None = 0,
@@ -2929,7 +4560,14 @@ namespace UIKit {
 		Continuous = 2,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UIPageControlBackgroundStyle : long {
 		Automatic = 0,
@@ -2937,8 +4575,16 @@ namespace UIKit {
 		Minimal = 2,
 	}
 
-	[iOS (14,0), TV (14,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+	[iOS (14,0)]
+	[TV (14,0)]
+	[NoWatch]
 	[MacCatalyst (14,0)]
+#endif
 	public enum UIPasteboardDetectionPattern {
 		[Field ("UIPasteboardDetectionPatternProbableWebURL")]
 		ProbableWebUrl,
@@ -2946,34 +4592,106 @@ namespace UIKit {
 		ProbableWebSearch,
 		[Field ("UIPasteboardDetectionPatternNumber")]
 		Number,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternLink")]
 		Link,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternPhoneNumber")]
 		PhoneNumber,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternEmailAddress")]
 		EmailAddress,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternPostalAddress")]
 		PostalAddress,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternCalendarEvent")]
 		CalendarEvent,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternShipmentTrackingNumber")]
 		ShipmentTrackingNumber,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternFlightNumber")]
 		FlightNumber,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+#endif
 		[Field ("UIPasteboardDetectionPatternMoneyAmount")]
 		MoneyAmount,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, NoiOS]
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+#endif
 	[Native]
 	public enum UISceneCollectionJoinBehavior : long {
 		Automatic,
@@ -2982,7 +4700,14 @@ namespace UIKit {
 		PreferredWithoutActivating,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UISplitViewControllerStyle : long {
 		Unspecified,
@@ -2990,7 +4715,14 @@ namespace UIKit {
 		TripleColumn,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UISplitViewControllerColumn : long {
 		Primary,
@@ -2999,7 +4731,14 @@ namespace UIKit {
 		Compact,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UISplitViewControllerSplitBehavior : long {
 		Automatic,
@@ -3008,7 +4747,14 @@ namespace UIKit {
 		Displace,
 	}
 
-	[NoWatch, NoTV, iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UISwitchStyle : long {
 		Automatic = 0,
@@ -3016,15 +4762,30 @@ namespace UIKit {
 		Sliding,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[NoWatch]
+	[TV (14,0)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UICollectionLayoutListFooterMode : long {
 		None,
 		Supplementary,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("ios")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, NoiOS]
+	[NoWatch]
+	[NoTV]
+	[NoiOS]
+#endif
 	[Native]
 	public enum UITitlebarSeparatorStyle : long {
 		Automatic,
@@ -3033,7 +4794,14 @@ namespace UIKit {
 		Shadow,
 	}
 
-	[NoWatch, NoTV, iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum UINavigationItemBackButtonDisplayMode : long {
 		Default = 0,
@@ -3042,15 +4810,28 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIGuidedAccessRestrictions.h
-	[Native]
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[NoWatch]
 	[iOS (7,0)]
+#endif
+	[Native]
 	public enum UIGuidedAccessRestrictionState : long {
 		Allow,
 		Deny,
 	}
 
-	[TV (15,0), iOS (15,0), NoWatch, MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15,0)]
+	[iOS (15,0)]
+	[NoWatch]
+	[MacCatalyst (15,0)]
+#endif
 	public enum UIActionIdentifier {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -3069,7 +4850,16 @@ namespace UIKit {
 		PasteAndSearch,
 	}
 
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIBandSelectionInteractionState : long {
 		Possible = 0,
@@ -3078,7 +4868,16 @@ namespace UIKit {
 		Ended,
 	}
 
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIBehavioralStyle : ulong {
 		Automatic = 0,
@@ -3086,7 +4885,16 @@ namespace UIKit {
 		Mac,
 	}
 
-	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15,0)]
+	[NoWatch]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIButtonConfigurationSize : long {
 		Medium,
@@ -3095,7 +4903,16 @@ namespace UIKit {
 		Large,
 	}
 
-	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15,0)]
+	[NoWatch]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIButtonConfigurationTitleAlignment : long {
 		Automatic,
@@ -3104,7 +4921,16 @@ namespace UIKit {
 		Trailing,
 	}
 
-	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15,0)]
+	[NoWatch]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIButtonConfigurationCornerStyle : long {
 		Fixed = -1,
@@ -3115,7 +4941,16 @@ namespace UIKit {
 		Capsule,
 	}
 
-	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[TV (15,0)]
+	[NoWatch]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIButtonConfigurationMacIdiomStyle : long {
 		Automatic,
@@ -3124,7 +4959,16 @@ namespace UIKit {
 		BorderlessTinted,
 	}
 
-	[NoTV, NoWatch, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoTV]
+	[NoWatch]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIFocusGroupPriority : long {
 		Ignored = 0,
@@ -3133,7 +4977,16 @@ namespace UIKit {
 		CurrentlyFocused = Int64.MaxValue,
 	}
 
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIFocusHaloEffectPosition : long {
 		Automatic = 0,
@@ -3141,7 +4994,16 @@ namespace UIKit {
 		Inside,
 	}
 
-	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	public enum UISheetPresentationControllerDetentIdentifier {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -3154,7 +5016,16 @@ namespace UIKit {
 		Large,
 	}
 
-	[NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[NoWatch]
+	[TV (15,0)]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum UIWindowScenePresentationStyle : ulong {
 		Automatic,
