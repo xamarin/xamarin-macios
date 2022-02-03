@@ -25,7 +25,13 @@ using NativeHandle = System.IntPtr;
 
 namespace VideoToolbox {
 
-	[iOS (8,0), TV (10,2)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("tvos10.2")]
+#else
+	[iOS (8,0)]
+	[TV (10,2)]
+#endif
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
 
@@ -219,11 +225,23 @@ namespace VideoToolbox {
 			return null;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,9)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionPrepareToEncodeFrames (IntPtr handle);
 
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,9)]
+#endif
 		public VTStatus PrepareToEncodeFrames ()
 		{
 			return VTCompressionSessionPrepareToEncodeFrames (GetCheckedHandle ());
@@ -329,25 +347,55 @@ namespace VideoToolbox {
 			return VTCompressionSessionCompleteFrames (GetCheckedHandle (), completeUntilPresentationTimeStamp);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionBeginPass (IntPtr session, VTCompressionSessionOptionFlags flags, IntPtr reserved);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,10)]
+#endif
 		public VTStatus BeginPass (VTCompressionSessionOptionFlags flags)
 		{
 			return VTCompressionSessionBeginPass (GetCheckedHandle (), flags, IntPtr.Zero);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, out byte furtherPassesRequestedOut, IntPtr reserved);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, IntPtr ptrByte, IntPtr reserved);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,10)]
+#endif
 		public VTStatus EndPass (out bool furtherPassesRequested)
 		{
 			var result = VTCompressionSessionEndPass (GetCheckedHandle (), out var b, IntPtr.Zero);
@@ -361,14 +409,26 @@ namespace VideoToolbox {
 			return VTCompressionSessionEndPass (GetCheckedHandle (), IntPtr.Zero, IntPtr.Zero);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionGetTimeRangesForNextPass (
 			/* VTCompressionSessionRef */ IntPtr session, 
 			/* CMItemCount* */ out int itemCount, 
 			/* const CMTimeRange** */ out IntPtr target);
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[Mac (10,10)]
+#endif
 		public VTStatus GetTimeRangesForNextPass (out CMTimeRange []? timeRanges)
 		{
 			var v = VTCompressionSessionGetTimeRangesForNextPass (GetCheckedHandle (), out var count, out var target);

@@ -20,7 +20,15 @@ using CoreVideo;
 
 namespace VideoToolbox {
 
-	[Mac (10,11), iOS (9,0), TV (10,2)]
+#if NET
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("tvos10.2")]
+#else
+	[Mac (10,11)]
+	[iOS (9,0)]
+	[TV (10,2)]
+#endif
 	public static class VTUtilities {
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCreateCGImageFromCVPixelBuffer (
@@ -47,11 +55,29 @@ namespace VideoToolbox {
 
 #if MONOMAC
 
-		[NoWatch, NoTV, NoiOS, Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (11,0)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		static extern void VTRegisterSupplementalVideoDecoderIfAvailable (uint codecType);
 
-		[NoWatch, NoTV, NoiOS, Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (11,0)]
+#endif
 		public static void RegisterSupplementalVideoDecoder (CMVideoCodecType codecType)
 			=> VTRegisterSupplementalVideoDecoderIfAvailable ((uint) codecType);
 #endif
