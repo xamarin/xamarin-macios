@@ -23,11 +23,13 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFCopyDescription (IntPtr ptr);
 
-#if !XAMCORE_4_0
+#if NET
+		internal CFType ()
+#else
 		public CFType ()
+#endif
 		{
 		}
-#endif
 
 		[Preserve (Conditional = true)]
 		internal CFType (NativeHandle handle, bool owns)

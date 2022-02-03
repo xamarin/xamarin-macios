@@ -133,7 +133,7 @@ namespace CoreAnimation {
 				}
 			}
 		}
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TextTruncationMode' instead.")]
 		public virtual string TruncationMode {
 			get { return (string) WeakTruncationMode; }
@@ -145,7 +145,7 @@ namespace CoreAnimation {
 			get { return (string) WeakAlignmentMode; }
 			set { WeakAlignmentMode = (NSString) value; }
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 		public CATextLayerTruncationMode TextTruncationMode {
 			get { return CATextLayerTruncationModeExtensions.GetValue (WeakTruncationMode); }
 			set { WeakTruncationMode = value.GetConstant ()!; }

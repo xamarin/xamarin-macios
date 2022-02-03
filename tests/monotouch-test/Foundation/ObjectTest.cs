@@ -18,11 +18,19 @@ using ObjCRuntime;
 using Security;
 #if MONOMAC
 using AppKit;
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#else
 using PlatformException = Foundation.ObjCException;
+#endif
 using UIView = AppKit.NSView;
 #else
 using UIKit;
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#else
 using PlatformException=Foundation.MonoTouchException;
+#endif
 #endif
 using NUnit.Framework;
 using Xamarin.Utils;

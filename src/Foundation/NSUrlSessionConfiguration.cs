@@ -41,17 +41,17 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
+#if NET
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.10 use 'CreateBackgroundSessionConfiguration' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0 use 'CreateBackgroundSessionConfiguration' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios8.0")]
-		[UnsupportedOSPlatform ("macos10.10")]
-#if IOS
-		[Obsolete ("Starting with ios8.0 use 'CreateBackgroundSessionConfiguration' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.10 use 'CreateBackgroundSessionConfiguration' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 		public static NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier)
 		{

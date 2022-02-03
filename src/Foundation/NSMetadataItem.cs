@@ -91,8 +91,12 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
 		public NSString? ContentType {
 			get {
@@ -100,8 +104,12 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
 		public NSString?[]? ContentTypeTree {
 			get {
@@ -138,8 +146,12 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 #if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
@@ -221,8 +233,12 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public NSError? UbiquitousItemDownloadingError {
 			get {
@@ -230,8 +246,12 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public NSError? UbiquitousItemUploadingError {
 			get {
@@ -240,9 +260,15 @@ namespace Foundation {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
+#if NET
 		public bool? UbiquitousItemDownloadRequested {
 #else
-		[iOS (8,0)][Mac (10,10)]
 		public bool UbiquitousItemDownloadRequested {
 #endif
 			get {
@@ -255,9 +281,15 @@ namespace Foundation {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
+#endif
+#if NET
 		public bool? UbiquitousItemIsExternalDocument {
 #else
-		[iOS (8,0)][Mac (10,10)]
 		public bool UbiquitousItemIsExternalDocument {
 #endif
 			get {
@@ -269,8 +301,12 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
 		public NSString? UbiquitousItemContainerDisplayName {
 			get {
@@ -278,8 +314,12 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
 		public NSUrl? UbiquitousItemUrlInLocalContainer {
 			get {
@@ -288,8 +328,15 @@ namespace Foundation {
 		}
 
 #if MONOMAC
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Keywords {
 			get {
@@ -297,8 +344,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Title {
 			get {
@@ -306,8 +360,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Authors {
 			get {
@@ -315,8 +376,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Editors {
 			get {
@@ -324,8 +392,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Participants {
 			get {
@@ -333,8 +408,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Projects {
 			get {
@@ -342,8 +424,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? DownloadedDate {
 			get {
@@ -351,8 +440,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? WhereFroms {
 			get {
@@ -360,8 +456,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Comment {
 			get {
@@ -369,8 +472,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Copyright {
 			get {
@@ -378,8 +488,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? LastUsedDate {
 			get {
@@ -387,8 +504,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? ContentCreationDate {
 			get {
@@ -396,8 +520,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? ContentModificationDate {
 			get {
@@ -405,8 +536,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? DateAdded {
 			get {
@@ -414,8 +552,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? DurationSeconds {
 			get {
@@ -423,8 +568,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? ContactKeywords {
 			get {
@@ -432,8 +584,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Version {
 			get {
@@ -441,8 +600,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? PixelHeight {
 			get {
@@ -450,8 +616,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? PixelWidth {
 			get {
@@ -459,8 +632,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? PixelCount {
 			get {
@@ -468,8 +648,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? ColorSpace {
 			get {
@@ -477,8 +664,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? BitsPerSample {
 			get {
@@ -486,8 +680,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? FlashOnOff {
 			get {
@@ -495,8 +696,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? FocalLength {
 			get {
@@ -504,8 +712,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? AcquisitionMake {
 			get {
@@ -513,8 +728,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? AcquisitionModel {
 			get {
@@ -522,8 +744,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? IsoSpeed {
 			get {
@@ -531,8 +760,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? Orientation {
 			get {
@@ -540,8 +776,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? LayerNames {
 			get {
@@ -549,8 +792,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? WhiteBalance {
 			get {
@@ -558,8 +808,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Aperture {
 			get {
@@ -567,8 +824,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? ProfileName {
 			get {
@@ -576,8 +840,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? ResolutionWidthDpi {
 			get {
@@ -585,8 +856,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? ResolutionHeightDpi {
 			get {
@@ -594,8 +872,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? ExposureMode {
 			get {
@@ -603,8 +888,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? ExposureTimeSeconds {
 			get {
@@ -612,8 +904,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? ExifVersion {
 			get {
@@ -621,8 +920,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? CameraOwner {
 			get {
@@ -630,8 +936,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? FocalLength35mm {
 			get {
@@ -639,8 +952,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? LensModel {
 			get {
@@ -648,8 +968,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? ExifGpsVersion {
 			get {
@@ -657,8 +984,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Altitude {
 			get {
@@ -666,8 +1000,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Latitude {
 			get {
@@ -675,8 +1016,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Longitude {
 			get {
@@ -684,8 +1032,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Speed {
 			get {
@@ -693,8 +1048,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? Timestamp {
 			get {
@@ -702,8 +1064,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsTrack {
 			get {
@@ -711,8 +1080,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? ImageDirection {
 			get {
@@ -720,8 +1096,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? NamedLocation {
 			get {
@@ -729,8 +1112,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? GpsStatus {
 			get {
@@ -738,8 +1128,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? GpsMeasureMode {
 			get {
@@ -747,8 +1144,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDop {
 			get {
@@ -756,8 +1160,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? GpsMapDatum {
 			get {
@@ -765,8 +1176,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestLatitude {
 			get {
@@ -774,8 +1192,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestLongitude {
 			get {
@@ -783,8 +1208,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestBearing {
 			get {
@@ -792,8 +1224,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestDistance {
 			get {
@@ -801,8 +1240,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? GpsProcessingMethod {
 			get {
@@ -810,8 +1256,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? GpsAreaInformation {
 			get {
@@ -819,8 +1272,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? GpsDateStamp {
 			get {
@@ -828,8 +1288,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDifferental {
 			get {
@@ -837,8 +1304,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Codecs {
 			get {
@@ -846,8 +1320,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? MediaTypes {
 			get {
@@ -855,8 +1336,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? Streamable {
 			get {
@@ -864,8 +1352,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? TotalBitRate {
 			get {
@@ -873,8 +1368,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? VideoBitRate {
 			get {
@@ -882,8 +1384,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioBitRate {
 			get {
@@ -891,8 +1400,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? DeliveryType {
 			get {
@@ -900,8 +1416,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Album {
 			get {
@@ -909,8 +1432,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? HasAlphaChannel {
 			get {
@@ -918,8 +1448,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? RedEyeOnOff {
 			get {
@@ -927,8 +1464,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? MeteringMode {
 			get {
@@ -936,8 +1480,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? MaxAperture {
 			get {
@@ -945,8 +1496,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? FNumber {
 			get {
@@ -954,8 +1512,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? ExposureProgram {
 			get {
@@ -963,8 +1528,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? ExposureTimeString {
 			get {
@@ -972,8 +1544,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Headline {
 			get {
@@ -981,8 +1560,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Instructions {
 			get {
@@ -990,8 +1576,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? City {
 			get {
@@ -999,8 +1592,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? StateOrProvince {
 			get {
@@ -1008,8 +1608,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Country {
 			get {
@@ -1017,8 +1624,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? TextContent {
 			get {
@@ -1026,8 +1640,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioSampleRate {
 			get {
@@ -1035,8 +1656,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioChannelCount {
 			get {
@@ -1044,8 +1672,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Tempo {
 			get {
@@ -1053,8 +1688,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? KeySignature {
 			get {
@@ -1062,8 +1704,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? TimeSignature {
 			get {
@@ -1071,8 +1720,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? AudioEncodingApplication {
 			get {
@@ -1080,8 +1736,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Composer {
 			get {
@@ -1089,8 +1752,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Lyricist {
 			get {
@@ -1098,8 +1768,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioTrackNumber {
 			get {
@@ -1107,8 +1784,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? RecordingDate {
 			get {
@@ -1116,8 +1800,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? MusicalGenre {
 			get {
@@ -1125,8 +1816,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? IsGeneralMidiSequence {
 			get {
@@ -1134,8 +1832,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? RecordingYear {
 			get {
@@ -1143,8 +1848,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Organizations {
 			get {
@@ -1152,8 +1864,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Languages {
 			get {
@@ -1161,8 +1880,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Rights {
 			get {
@@ -1170,8 +1896,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Publishers {
 			get {
@@ -1179,8 +1912,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Contributors {
 			get {
@@ -1188,8 +1928,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Coverage {
 			get {
@@ -1197,8 +1944,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Subject {
 			get {
@@ -1206,8 +1960,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Theme {
 			get {
@@ -1215,8 +1976,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Description {
 			get {
@@ -1224,8 +1992,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Identifier {
 			get {
@@ -1233,8 +2008,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Audiences {
 			get {
@@ -1242,8 +2024,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? NumberOfPages {
 			get {
@@ -1251,8 +2040,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? PageWidth {
 			get {
@@ -1260,8 +2056,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? PageHeight {
 			get {
@@ -1269,8 +2072,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? SecurityMethod {
 			get {
@@ -1278,8 +2088,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Creator {
 			get {
@@ -1287,8 +2104,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? EncodingApplications {
 			get {
@@ -1296,8 +2120,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public NSDate? DueDate {
 			get {
@@ -1305,8 +2136,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? StarRating {
 			get {
@@ -1314,8 +2152,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? PhoneNumbers {
 			get {
@@ -1323,8 +2168,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? EmailAddresses {
 			get {
@@ -1332,8 +2184,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? InstantMessageAddresses {
 			get {
@@ -1341,8 +2200,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Kind {
 			get {
@@ -1350,8 +2216,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Recipients {
 			get {
@@ -1359,8 +2232,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? FinderComment {
 			get {
@@ -1368,8 +2248,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Fonts {
 			get {
@@ -1377,8 +2264,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? AppleLoopsRoot {
 			get {
@@ -1386,8 +2280,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? AppleLoopsKeyFilterType {
 			get {
@@ -1395,8 +2296,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? AppleLoopsLoopMode {
 			get {
@@ -1404,8 +2312,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? AppleLoopDescriptors {
 			get {
@@ -1413,8 +2328,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? MusicalInstrumentCategory {
 			get {
@@ -1422,8 +2344,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? MusicalInstrumentName {
 			get {
@@ -1431,8 +2360,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? CFBundleIdentifier {
 			get {
@@ -1440,8 +2376,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Information {
 			get {
@@ -1449,8 +2392,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Director {
 			get {
@@ -1458,8 +2408,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Producer {
 			get {
@@ -1467,8 +2424,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? Genre {
 			get {
@@ -1476,8 +2440,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? Performers {
 			get {
@@ -1485,8 +2456,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? OriginalFormat {
 			get {
@@ -1494,8 +2472,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? OriginalSource {
 			get {
@@ -1503,8 +2488,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? AuthorEmailAddresses {
 			get {
@@ -1512,8 +2504,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? RecipientEmailAddresses {
 			get {
@@ -1521,8 +2520,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? AuthorAddresses {
 			get {
@@ -1530,8 +2536,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? RecipientAddresses {
 			get {
@@ -1539,8 +2552,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? IsLikelyJunk {
 			get {
@@ -1548,8 +2568,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? ExecutableArchitectures {
 			get {
@@ -1557,8 +2584,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? ExecutablePlatform {
 			get {
@@ -1566,8 +2600,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public string? []? ApplicationCategories {
 			get {
@@ -1575,8 +2616,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? IsApplicationManaged {
 			get {

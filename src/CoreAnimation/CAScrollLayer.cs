@@ -1,3 +1,4 @@
+#if !NET
 using System;
 
 using Foundation;
@@ -16,3 +17,4 @@ namespace CoreAnimation {
 		}
 	}
 }
+#endif

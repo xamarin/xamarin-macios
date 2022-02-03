@@ -22,9 +22,14 @@ namespace MapKit {
 	public enum MKDirectionsMode {
 		Driving, Walking, Transit,
 #if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)][NoTV][Watch (3,0)][Mac (10,12)]
+		[iOS (10,0)]
+		[NoTV]
+		[Watch (3,0)]
+		[Mac (10,12)]
 #endif
 		Default
 	}
@@ -43,7 +48,9 @@ namespace MapKit {
 
 #if !WATCH // The corresponding key (MKLaunchOptionsCameraKey) is allowed in WatchOS, but there's no MKMapCamera type.
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public MKMapCamera? Camera { get; set; }
