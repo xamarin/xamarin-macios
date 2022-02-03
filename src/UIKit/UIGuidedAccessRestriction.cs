@@ -52,7 +52,7 @@ namespace UIKit {
 		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr completion);
 
 #if NET
-		[SupportedOSPlatform ("ios12.2")]
+		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
 #else
 		[iOS (12,2)]
 #endif
