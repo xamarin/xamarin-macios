@@ -16,6 +16,7 @@ using Xamarin.Utils;
 using System.Numerics;
 #else
 using CoreGraphics;
+using OpenTK;
 #endif
 
 namespace MonoTouchFixtures.SpriteKit {

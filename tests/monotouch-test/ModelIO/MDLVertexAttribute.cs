@@ -25,6 +25,7 @@ using NUnit.Framework;
 using System.Numerics;
 #else
 using CoreGraphics;
+using OpenTK;
 #endif
 
 namespace MonoTouchFixtures.ModelIO {

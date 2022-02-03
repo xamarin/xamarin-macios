@@ -20,7 +20,7 @@ using NUnit.Framework;
 #if NET
 using Vector2i = global::CoreGraphics.NVector2i;
 #else
-use OpenTK;
+using OpenTK;
 #endif
 
 namespace MonoTouchFixtures.GamePlayKit {

@@ -8,6 +8,7 @@ using ObjCRuntime;
 #if NET
 using NVector3d = global::CoreGraphics.NVector3d;
 #else
+using OpenTK;
 using NVector3d = global::OpenTK.NVector3d;
 #endif
 

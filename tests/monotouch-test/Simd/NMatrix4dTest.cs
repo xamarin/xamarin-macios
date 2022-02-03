@@ -8,6 +8,7 @@ using ObjCRuntime;
 #if NET
 using NMatrix4d = global::CoreGraphics.NMatrix4d;
 #else
+using OpenTK;
 using NMatrix4d = global::OpenTK.NMatrix4d;
 #endif
 

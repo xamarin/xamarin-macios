@@ -8,6 +8,7 @@ using ObjCRuntime;
 #if NET
 using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
 #else
+using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 #endif
 

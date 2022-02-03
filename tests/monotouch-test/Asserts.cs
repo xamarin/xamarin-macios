@@ -28,7 +28,6 @@ using MatrixFloat4x3 = global::OpenTK.NMatrix4x3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
 using MatrixDouble4x4 = global::OpenTK.NMatrix4d;
-using VectorDouble2 = global::OpenTK.NVector2d;
 using VectorDouble3 = global::OpenTK.NVector3d;
 #endif
 
@@ -486,6 +485,7 @@ public static class Asserts
 	}
 #endif
 
+#if NET
 	public static void AreEqual (VectorDouble2 expected, VectorDouble2 actual, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, 0.001, message + " (X)");
@@ -497,6 +497,7 @@ public static class Asserts
 		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");
 	}
+#endif
 
 #if !NET
 	public static void AreEqual (Vector3d expected, Vector3d actual, string message)
