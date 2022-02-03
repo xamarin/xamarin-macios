@@ -24,11 +24,7 @@ using NativeHandle = System.IntPtr;
 
 namespace VideoToolbox {
 
-#if NET
-	[SupportedOSPlatform ("tvos10.2")]
-#else
 	[Mac (10,10), iOS (8,0), TV (10,2)]
-#endif
 	public class VTFrameSilo : NativeObject {
 #if !NET
 		protected internal VTFrameSilo (NativeHandle handle)

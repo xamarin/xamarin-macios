@@ -285,9 +285,7 @@ namespace VideoToolbox {
 			}
 		}
 
-#if !NET
 		[Mac (10,9)]
-#endif
 		public VTH264EntropyMode H264EntropyMode { 
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.H264EntropyMode);
@@ -493,15 +491,9 @@ namespace VideoToolbox {
 			}
 		}
 
-#if NET
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#else
 		[Introduced (PlatformName.MacOSX, 10,15)]
 		[Introduced (PlatformName.iOS, 13,0)]
 		[Introduced (PlatformName.TvOS, 13,0)]
-#endif
 		public VTAlphaChannelMode AlphaChannelMode {
 			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode));
 			set => SetStringValue (VTCompressionPropertyKey.AlphaChannelMode, value.GetConstant ());

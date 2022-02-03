@@ -84,9 +84,7 @@ namespace VideoToolbox {
 			}
 		}
 
-#if !NET
 		[iOS (10,0)]
-#endif
 		public VTColorPrimaries DestinationColorPrimaries { 
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationColorPrimaries);
@@ -124,9 +122,7 @@ namespace VideoToolbox {
 			}
 		}
 
-#if !NET
 		[iOS (10,0)]
-#endif
 		public VTTransferFunction DestinationTransferFunction { 
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationTransferFunction);
