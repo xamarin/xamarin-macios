@@ -10,6 +10,7 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
+using CoreGraphics;
 using Foundation;
 #if !MONOMAC
 using UIKit;
@@ -22,7 +23,7 @@ using ObjCRuntime;
 
 #if NET
 using System.Numerics;
-using Matrix4 = global::System.Numerics.Matrix4x4;
+using Matrix4 = global::CoreGraphics.NMatrix4;
 using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
 #else
 using OpenTK;
@@ -84,7 +85,6 @@ namespace MonoTouchFixtures.ModelIO
 					2, 2, 2, 1
 				), obj.Matrix, "Translated");
 
-#if !NET
 				// The 4x4 version is correct:
 #endif
 				Asserts.AreEqual (new Matrix4 (
@@ -107,7 +107,6 @@ namespace MonoTouchFixtures.ModelIO
 				// Translate again
 				obj.SetTranslation (new Vector3 (3, 3, 3), 0);
 
-#if !NET
 				// Set the matrix using a 4x4 matrix
 #if NET
 				obj.Matrix = m4;
@@ -163,7 +162,6 @@ namespace MonoTouchFixtures.ModelIO
 					2, 2, 2, 1
 				), component.GetLocalTransform (0), "Translated");
 
-#if !NET
 				// The 4x4 version is correct:
 #endif
 				Asserts.AreEqual (new Matrix4 (
@@ -226,7 +224,6 @@ namespace MonoTouchFixtures.ModelIO
 				// Translate again
 				obj.SetTranslation (new Vector3 (3, 3, 3), 0);
 
-#if !NET
 				// Set the local transform using a 4x4 matrix
 #if NET
 				component.SetLocalTransform (m4, 1);
@@ -268,7 +265,6 @@ namespace MonoTouchFixtures.ModelIO
 
 #if !NET
 				m4x4 = MDLTransform.CreateGlobalTransform4x4 (obj, 0);
-#endif
 				Asserts.AreEqual (CFunctions.MDLTransform_CreateGlobalTransform (obj, 0), m4, "CreateGlobalTransform4x4");
 #endif
 			}

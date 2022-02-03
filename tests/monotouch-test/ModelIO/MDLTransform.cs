@@ -10,6 +10,8 @@
 #if !__WATCHOS__
 
 using System;
+
+using CoreGraphics;
 using Foundation;
 #if !MONOMAC
 using UIKit;
@@ -215,7 +217,6 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (expected, obj.GetRotationMatrix (0), 0.00001f, "GetRotationMatrix");
 #else
 				Asserts.AreEqual ((Matrix4) MatrixFloat4x4.Transpose (expected), obj.GetRotationMatrix (0), 0.00001f, "GetRotationMatrix");
-#if !NET
 				Asserts.AreEqual (expected, obj.GetRotationMatrix4x4 (0), 0.00001f, "GetRotationMatrix4x4");
 #endif
 				Asserts.AreEqual (expected, CFunctions.MDLTransform_GetRotationMatrix (obj, 0), 0.00001f, "GetRotationMatrix4x4 native");

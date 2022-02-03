@@ -78,7 +78,6 @@ namespace MonoTouchFixtures.ModelIO
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat1), obj.LeftViewMatrix4x4, "LeftViewMatrix4x4");
 #endif
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat1), CFunctions.GetMatrixFloat4x4 (obj, "leftViewMatrix"), "LeftViewMatrix4x4 native");
-#endif
 
 #if NET
 				var mat2 = new NMatrix4 (
@@ -100,7 +99,6 @@ namespace MonoTouchFixtures.ModelIO
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat2), obj.RightViewMatrix4x4, "RightViewMatrix4x4");
 #endif
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat2), CFunctions.GetMatrixFloat4x4 (obj, "rightViewMatrix"), "RightViewMatrix4x4 native");
-#endif
 
 #if NET
 				var mat3 = new Matrix4 (
@@ -122,7 +120,6 @@ namespace MonoTouchFixtures.ModelIO
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat3), obj.LeftProjectionMatrix4x4, 0.0001f, "LeftProjectionMatrix4x4");
 #endif
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat3), CFunctions.GetMatrixFloat4x4 (obj, "leftProjectionMatrix"), 0.0001f, "LeftProjectionMatrix4x4 native");
-#endif
 
 				Asserts.AreEqual (mat3, obj.RightProjectionMatrix, 0.0001f, "RightProjectionMatrix");
 #if NET
@@ -131,7 +128,6 @@ namespace MonoTouchFixtures.ModelIO
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat3), obj.RightProjectionMatrix4x4, 0.0001f, "RightProjectionMatrix4x4");
 #endif
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) mat3), CFunctions.GetMatrixFloat4x4 (obj, "rightProjectionMatrix"), 0.0001f, "RightProjectionMatrix4x4 native");
-#endif
 			}
 		}
 	}

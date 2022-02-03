@@ -10,6 +10,7 @@
 #if !__WATCHOS__
 
 using System;
+using CoreGraphics;
 using Foundation;
 #if MONOMAC
 using AppKit;
