@@ -258,7 +258,11 @@ namespace Foundation
 		IntPtr LowLevelValue { get; }
 
 		[Export ("attributesAtIndex:effectiveRange:")]
+#if NET
+		IntPtr LowLevelGetAttributes (nint location, IntPtr effectiveRange);
+#else
 		IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange);
+#endif
 
 		[Export ("length")]
 		nint Length { get; }
