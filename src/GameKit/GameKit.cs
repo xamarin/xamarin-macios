@@ -423,36 +423,17 @@ namespace GameKit {
 		NoAnswer = 5,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("macos10.13.4")]
-	[SupportedOSPlatform ("tvos11.3")]
-	[UnsupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("tvos14.0")]
-	[UnsupportedOSPlatform ("ios14.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos11.0 do not use; this API was removed.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-	[Obsolete ("Starting with tvos14.0 do not use; this API was removed.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios14.0 do not use; this API was removed.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (11,3)]
-	[Deprecated (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
-	[Mac (10,13,4)]
-	[Deprecated (PlatformName.MacOSX, 11,0, message: "Do not use; this API was removed.")]
-	[TV (11,3)]
-	[Deprecated (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
-	[NoMacCatalyst]
-#endif
+#if !NET
+	[iOS (11,3)][Deprecated (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
+	[Mac (10,13,4)][Deprecated (PlatformName.MacOSX, 11,0, message: "Do not use; this API was removed.")]
+	[TV (11,3)][Deprecated (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
 	[Native]
 	public enum GKAuthenticationType : ulong {
 		WithoutUI = 0,
 		GreenBuddyUI = 1,
 		AuthKitInvocation = 2,
 	}
+#endif
 
 #if NET
 	[SupportedOSPlatform ("tvos14.0")]
