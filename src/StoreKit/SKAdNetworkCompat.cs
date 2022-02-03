@@ -16,12 +16,8 @@ using ObjCRuntime;
 
 #if TVOS && !NET
 namespace StoreKit {
-#if NET
-	[UnsupportedOSPlatform ("tvos")]
-#else
-	[Unavailable (PlatformName.TvOS)]
-#endif
 	[Obsolete ("Not usable from tvOS and will be removed in the future.")]
+	[Unavailable (PlatformName.TvOS)]
 	public class SKAdNetwork : NSObject {
 
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
