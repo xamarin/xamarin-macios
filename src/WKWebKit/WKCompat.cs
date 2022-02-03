@@ -20,7 +20,15 @@ namespace WebKit {
 
 	public partial class WKWebView {
 
-		[Mac (11,3), iOS (14,5), MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
 		[Obsolete ("Use 'CloseAllMediaPresentations (Action completionHandler)' instead.")]
 		public virtual void CloseAllMediaPresentations () {
 #if IOS || __MACCATALYST__
@@ -33,7 +41,15 @@ namespace WebKit {
 					_OldCloseAllMediaPresentations ();
 		}
 
-		[Mac (11,3), iOS (14,5), MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
  		public virtual void PauseAllMediaPlayback (Action? completionHandler)
 		{
 #if IOS || __MACCATALYST__
@@ -46,7 +62,15 @@ namespace WebKit {
 					_OldPauseAllMediaPlayback (completionHandler);
 		}
 
-		[Mac (11,3), iOS (14,5), MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
  		public virtual Task PauseAllMediaPlaybackAsync ()
 		{
 #if IOS || __MACCATALYST__
@@ -59,7 +83,15 @@ namespace WebKit {
 					return _OldPauseAllMediaPlaybackAsync ();
 		}
 
-		[Mac (11,3), iOS (14,5), MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
 		[Obsolete ("Use 'SetAllMediaPlaybackSuspended' instead.")]
  		public virtual void SuspendAllMediaPlayback (Action? completionHandler)
 		{
@@ -73,7 +105,15 @@ namespace WebKit {
 					_OldSuspendAllMediaPlayback (completionHandler);
 		}
 
-		[Mac (11,3), iOS (14,5), MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
  		public virtual Task SuspendAllMediaPlaybackAsync ()
 		{
 #if IOS || __MACCATALYST__
@@ -86,7 +126,15 @@ namespace WebKit {
 					return _OldSuspendAllMediaPlaybackAsync ();
 		}
 
-		[Mac (11,3), iOS (14,5), MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
 		[Obsolete ("Use 'SetAllMediaPlaybackSuspended' instead.")]
  		public virtual void ResumeAllMediaPlayback (Action? completionHandler)
 		{
@@ -100,7 +148,15 @@ namespace WebKit {
 					_OldResumeAllMediaPlayback (completionHandler);
 		}
 
-		[Mac (11,3), iOS (14,5), MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
  		public virtual Task ResumeAllMediaPlaybackAsync ()
 		{
 #if IOS || __MACCATALYST__

@@ -13,7 +13,15 @@ namespace WebKit {
 
 #if !COREBUILD
 		// we use the attrs of the old property 
-		[Mac (11,3)][iOS (14,5)][MacCatalyst (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+#endif
 		public bool TextInteractionEnabled { 
 			get {
 #if IOS || __MACCATALYST__ 

@@ -15,8 +15,13 @@ using ObjCRuntime;
 
 namespace WebKit
 {
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum WKNavigationType : long {
 		LinkActivated,
@@ -27,36 +32,68 @@ namespace WebKit
 		Other = -1
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum WKNavigationActionPolicy : long {
 		Cancel,
 		Allow,
-		[Mac (11,3)][iOS (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+#endif
 		Download,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum WKNavigationResponsePolicy : long {
 		Cancel,
 		Allow,
-		[Mac (11,3)][iOS (14,5)]
+#if NET
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+#else
+		[Mac (11,3)]
+		[iOS (14,5)]
+#endif
 		Download,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum WKUserScriptInjectionTime : long {
 		AtDocumentStart,
 		AtDocumentEnd
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	[Native]
 	[ErrorDomain ("WKErrorDomain")]
 	public enum WKErrorCode : long {
@@ -80,13 +117,23 @@ namespace WebKit
 		JavaScriptAppBoundDomain,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[iOS (8, 0)]
+#endif
 	[Native]
 	public enum WKSelectionGranularity : long {
 		Dynamic, Character
 	}
 
-	[iOS (10,0)][NoMac]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[UnsupportedOSPlatform ("macos")]
+#else
+	[iOS (10,0)]
+	[NoMac]
+#endif
 	[Native]
 	[Flags]
 	public enum WKDataDetectorTypes : ulong {
@@ -102,7 +149,13 @@ namespace WebKit
 		All = UInt64.MaxValue
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[Mac (10,12)]
+#endif
 	[Native]
 	[Flags]
 	public enum WKAudiovisualMediaTypes : ulong	{
@@ -112,7 +165,17 @@ namespace WebKit
 		All = UInt64.MaxValue
 	}
 
-	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (12,0)]
+	[iOS (15,0)]
+	[NoTV]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum WKMediaCaptureState : long {
 		None,
@@ -120,7 +183,17 @@ namespace WebKit
 		Muted,
 	}
 
-	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (12,0)]
+	[iOS (15,0)]
+	[NoTV]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum WKMediaCaptureType : long {
 		Camera,
@@ -128,7 +201,17 @@ namespace WebKit
 		CameraAndMicrophone,
 	}
 
-	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (12,0)]
+	[iOS (15,0)]
+	[NoTV]
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum WKPermissionDecision : long {
 		Prompt,
