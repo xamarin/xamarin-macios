@@ -589,7 +589,11 @@ public class MemberInformation
 		this.category_extension_type = category_extension_type;
 		if (category_extension_type != null) {
 			is_category_extension = true;
+#if NET
+			ignore_category_static_warnings = is_internal || type.IsInternal (generator);
+#else
 			ignore_category_static_warnings = is_internal || type.IsInternal (generator) || Generator.AttributeManager.GetCustomAttribute<CategoryAttribute> (type).AllowStaticMembers;
+#endif
 		}
 
 		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)

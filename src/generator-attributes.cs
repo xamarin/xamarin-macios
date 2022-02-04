@@ -648,15 +648,17 @@ public class AppearanceAttribute : Attribute {
 // }
 [AttributeUsage (AttributeTargets.Interface, AllowMultiple=false)]
 public class CategoryAttribute : Attribute {
+#if !NET
 	public bool AllowStaticMembers;
-	public CategoryAttribute () { }
-#if XAMCORE_4_0
-	[Obsolete ("Inline the static members in this category in the category's class (and remove this obsolete once fixed)"]
 #endif
+	public CategoryAttribute () { }
+#if !NET
+	[Obsolete ("Inline the static members in this category in the category's class (and remove this obsolete once fixed)")]
 	public CategoryAttribute (bool allowStaticMembers)
 	{
 		AllowStaticMembers = allowStaticMembers;
 	}
+#endif
 }
 
 //
