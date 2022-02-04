@@ -34,7 +34,14 @@ namespace AppKit {
 namespace UIKit {
 #endif
 
-	[Watch (4,0), TV (11,0), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[Watch (4,0)]
+	[TV (11,0)]
+	[iOS (11,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSDirectionalEdgeInsets {
 
