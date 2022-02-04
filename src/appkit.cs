@@ -4377,7 +4377,6 @@ namespace AppKit {
 	{
 		[Abstract]
 		[Export ("changeColor:")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSColorChanging' instead.")]
 		void ChangeColor ([NullAllowed] NSColorPanel sender);
 	}
 
@@ -18975,8 +18974,8 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
 	partial interface NSTextView : NSTextInputClient, NSTextLayoutOrientationProvider, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate, NSMenuItemValidation, NSUserInterfaceValidations, NSTextInput, NSTextContent
-#if XAMCORE_4_0
-		, NSColorChanging, // ChangeColor has the wrong param type
+#if NET
+		, NSColorChanging // ChangeColor has the wrong param type
 #endif
 	{
 		[DesignatedInitializer]
@@ -19060,8 +19059,10 @@ namespace AppKit {
 		[Export ("alignJustified:")]
 		void AlignJustified (NSObject sender);
 
+#if !NET
 		[Export ("changeColor:")]
 		void ChangeColor (NSObject sender);
+#endif
 
 		[Export ("changeAttributes:")]
 		void ChangeAttributes (NSObject sender);
