@@ -18,3 +18,6 @@
 
 # This selector does not exist in macOS, confirmed by intro.
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
+
+# API removed by Apple, marked as deprecated
+!unknown-native-enum! GKAuthenticationType bound
