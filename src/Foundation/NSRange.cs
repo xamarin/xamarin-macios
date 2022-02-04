@@ -24,7 +24,7 @@
 using System;
 
 namespace Foundation {
-	public struct NSRange {
+	public struct NSRange : IEquatable<NSRange> {
 		public nint Location;
 		public nint Length;
 
@@ -34,6 +34,21 @@ namespace Foundation {
 		{
 			Location = start;
 			Length = len;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(Location, Length);
+		}
+		
+		public override bool Equals(object obj)
+		{
+			return obj is NSRange other && Equals(other);
+		}
+		
+		public override bool Equals(NSRange other)
+		{
+			return Location == other.Location && Length == other.Length;
 		}
 
 		public override string ToString ()
