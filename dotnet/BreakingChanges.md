@@ -136,3 +136,9 @@ the type `Foundation.ObjCException` (for macOS) have been renamed/moved to
 `ObjCRuntime.ObjCException`. Both types had the exact same functionality: they
 were wrapping a native NSException, and were renamed so that we have identical
 API and behavior on all platforms.
+
+## The type 'CFNetwork.MessageHandler' has been removed.
+
+The type 'CFNetwork.MessageHandler' has been removed. Please use
+'System.Net.Http.CFNetworkHandler' or the more recent
+'Foundation.NSUrlSessionHandler' instead.
