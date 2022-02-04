@@ -46,7 +46,7 @@ namespace Foundation {
 		public static NSString[] GetConstants (this NSRunLoopMode[] self)
 		{
 			if (self is null)
-				throw new ArgumentNullException (nameof (self));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (self));
 			
 			var array = new NSString [self.Length];
 			for (int n = 0; n < self.Length; n++)

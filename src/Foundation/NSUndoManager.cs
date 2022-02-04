@@ -21,11 +21,11 @@ namespace Foundation {
 		}
 
 #if NET
-		public NSRunLoopMode []? RunLoopModes {
+		public NSRunLoopMode [] RunLoopModes {
 			get {
 				var modes = WeakRunLoopModes;
 				if (modes is null)
-					return null;
+					return Array.Empty<NSRunLoopMode> ();
 
 				var array = new NSRunLoopMode [modes.Length];
 				for (int n = 0; n < modes.Length; n++)
