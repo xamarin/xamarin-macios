@@ -7666,7 +7666,7 @@ namespace Foundation
 		nint LevelsOfUndo { get; set; }
 		
 #if NET
-		[Export ("runLoopModes")]
+		[Export ("runLoopModes", ArgumentSemantic.Copy)]
 		NSString [] WeakRunLoopModes { get; set; }
 #else
 		[Export ("runLoopModes")]
