@@ -78,6 +78,7 @@ namespace CoreText {
 		Subscript   = -1,
 	}
 
+#if !NET
 	public static partial class CTStringAttributeKey {
 		public static readonly NSString Font;
 		public static readonly NSString ForegroundColorFromContext;
@@ -124,15 +125,13 @@ namespace CoreText {
 			CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
 			RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
 			BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
-
-#if !MONOMAC
 			BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
 			BaselineInfo                = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName");
 			BaselineReferenceInfo       = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName");
 			WritingDirection            = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName");
-#endif
 		}
 	}
+#endif // !NET
 #endregion
 
 	public class CTStringAttributes {
