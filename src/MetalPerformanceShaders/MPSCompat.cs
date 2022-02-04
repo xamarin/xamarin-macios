@@ -38,13 +38,28 @@ namespace MetalPerformanceShaders {
 	}
 
 	public partial class MPSCnnConvolution {
-		[TV (11, 0), iOS (11, 0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[TV (11, 0)]
+		[iOS (11, 0)]
+#endif
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSImage destinationImage, out MPSCnnConvolutionState state)
 			=> throw new NotSupportedException ();
 	}
 
-	[TV (11,0), Mac (10, 13), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[TV (11,0)]
+	[Mac (10, 13)]
+	[iOS (11,0)]
+#endif
 	[Obsolete ("Empty stub (not a public API).")]
 	public partial class MPSCnnConvolutionState : MPSState, IMPSImageSizeEncodingState {
 
