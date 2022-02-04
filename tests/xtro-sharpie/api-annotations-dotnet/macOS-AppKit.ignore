@@ -228,10 +228,6 @@
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
 
-## 42781537 Classes fail to conformsToProtocol despite header declaration
-!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
-!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
-
 ## Added in Xcode 10.2 Final but deprecated
 
 !missing-release-attribute-on-return-value! AppKit.NSDictionaryControllerKeyValuePair AppKit.NSDictionaryController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
