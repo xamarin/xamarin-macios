@@ -21,11 +21,7 @@ namespace UIKit {
 #if !COREBUILD
 
 #if !NET
-#if NET
-	[SupportedOSPlatform ("ios7.0")]
-#else
 	[iOS (7,0)]
-#endif
 #endif
 	public partial class NSLayoutManager {
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
