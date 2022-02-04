@@ -43,7 +43,7 @@ namespace Metal {
 		}
 	}
 
-#if !COREBUILD
+#if COREBUILD
 	public static class MTLVertexFormatExtensions {
 
 #if !NET
@@ -376,7 +376,6 @@ namespace Metal {
 #if COREBUILD
 		// keep size identical
 		byte Red, Green, Blue, Alpha;
-#else
 		public MTLTextureSwizzle Red;
 
 		public MTLTextureSwizzle Green;
