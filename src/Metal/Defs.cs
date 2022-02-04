@@ -482,6 +482,9 @@ namespace Metal {
 	[Mac (11,0)]
 	[iOS (14,0)]
 	[NoTV]
+#if TVOS
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLAccelerationStructureSizes
