@@ -115,17 +115,7 @@ namespace ModelIO {
 	{
 		Vertex = 1,
 		Index = 2,
-#if NET
-		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-		[iOS (15,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[MacCatalyst (15,0)]
-#endif
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
 		Custom = 3,
 	}
 
@@ -190,17 +180,7 @@ namespace ModelIO {
 		Float3,
 		Float4,
 		Matrix44,
-#if NET
-		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-		[iOS (15,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[MacCatalyst (15,0)]
-#endif
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
 		Buffer,
 	}
 
@@ -271,13 +251,7 @@ namespace ModelIO {
 		IrradianceDistribution,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-#else
-	[iOS (9,0)]
-	[Mac (10,11)]
-#endif
+	[iOS (9,0), Mac (10,11)]
 	public enum MDLNoiseTextureType {
 		Vector,
 		Cellular,
