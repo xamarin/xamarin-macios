@@ -10,14 +10,21 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 
 namespace GameplayKit {
 
-#if !NET
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKBox {
@@ -25,8 +32,14 @@ namespace GameplayKit {
 		public Vector3 Max;
 	}
 
-#if !NET
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKQuad {
@@ -34,8 +47,14 @@ namespace GameplayKit {
 		public Vector2 Max;
 	}
 
-#if !NET
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GKTriangle {
