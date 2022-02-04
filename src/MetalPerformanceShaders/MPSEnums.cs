@@ -168,10 +168,8 @@ namespace MetalPerformanceShaders {
 		Logarithm,
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		GeLU,
-#if !NET
 		[Obsolete ("The value changes when newer versions are released. It will be removed in the future.")]
 		Count, // must always be last
-#endif
 	}
 
 	[TV (11, 0), Mac (10, 13), iOS (11, 0)]

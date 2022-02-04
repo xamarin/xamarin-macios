@@ -22,22 +22,10 @@ namespace MetalPerformanceShaders {
 		}
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		static extern /* id<MTLDevice> _Nullable */ IntPtr MPSGetPreferredDevice (nuint options);
 
-#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
 		{
 			var h = MPSGetPreferredDevice ((nuint)(ulong) options);
@@ -66,37 +54,17 @@ namespace MetalPerformanceShaders {
 		}
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-#if !NET
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		static extern void MPSHintTemporaryMemoryHighWaterMark (IntPtr commandBuffer, nuint bytes);
 
-#if !NET
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, sizeInBytes);
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-#if !NET
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		static extern void MPSSetHeapCacheDuration (IntPtr commandBuffer, double seconds);
 
-#if !NET
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-#endif
 		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, seconds);
 #endif
 	}
@@ -104,23 +72,11 @@ namespace MetalPerformanceShaders {
 #if !COREBUILD
 	public partial class MPSImage {
 
-#if !NET
 		[iOS (13,0), TV (12,0), Mac (10,15)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern MPSImageType MPSGetImageType (IntPtr image);
 
-#if !NET
 		[iOS (13,0), TV (12,0), Mac (10,15)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.15")]
-#endif
 		public MPSImageType ImageType => MPSGetImageType (Handle);
 	}
 
@@ -273,18 +229,8 @@ namespace MetalPerformanceShaders {
 
 	public partial class MPSCnnFullyConnected {
 
-#if !NET
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use any of the other 'DesignatedInitializer' ctors.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use any of the other 'DesignatedInitializer' ctors.")]
-#else
-		[UnsupportedOSPlatform ("ios11.0")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-#if IOS
-		[Obsolete ("Starting with ios11.0 use any of the other 'DesignatedInitializer' ctors.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use any of the other 'DesignatedInitializer' ctors.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
@@ -391,12 +337,7 @@ namespace MetalPerformanceShaders {
 	}
 
 	public partial class MPSCnnBinaryConvolutionNode {
-#if !NET
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
-#else
-		[SupportedOSPlatform ("ios11.3")]
-		[SupportedOSPlatform ("tvos11.3")]
-#endif
 		public static MPSCnnBinaryConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 		{
 			unsafe {
@@ -408,12 +349,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-#if !NET
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
-#else
-		[SupportedOSPlatform ("ios11.3")]
-		[SupportedOSPlatform ("tvos11.3")]
-#endif
 		public MPSCnnBinaryConvolutionNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
 		{
 			unsafe {
@@ -427,12 +363,7 @@ namespace MetalPerformanceShaders {
 	}
 
 	public partial class MPSCnnBinaryFullyConnectedNode {
-#if !NET
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
-#else
-		[SupportedOSPlatform ("ios11.3")]
-		[SupportedOSPlatform ("tvos11.3")]
-#endif
 		public static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 		{
 			unsafe {
@@ -444,12 +375,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-#if !NET
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
-#else
-		[SupportedOSPlatform ("ios11.3")]
-		[SupportedOSPlatform ("tvos11.3")]
-#endif
 		public MPSCnnBinaryFullyConnectedNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
 		{
 			unsafe {
