@@ -740,7 +740,6 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, appPath);
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (appExecutable);
