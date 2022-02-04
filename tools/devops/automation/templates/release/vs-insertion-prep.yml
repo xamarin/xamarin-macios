@@ -79,7 +79,7 @@ stages:
       parameters:
         githubToken: $(GitHub.Token)
         githubContext: $(NupkgCommitStatusName)
-        blobName: nuget-artifacts
+        blobName: $(NupkgCommitStatusName)
         packagePrefix: xamarin-macios
         artifactsPath: $(Build.SourcesDirectory)/nugets-blob
 
@@ -87,7 +87,7 @@ stages:
       parameters:
         githubToken: $(GitHub.Token)
         githubContext: $(VSDropCommitStatusName)
-        blobName: vs-insertion
+        blobName: $(VSDropCommitStatusName)
         packagePrefix: xamarin-macios
         artifactsPath: $(Build.SourcesDirectory)/vs-insertion
         downloadSteps:
