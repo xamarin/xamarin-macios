@@ -46,11 +46,23 @@ namespace Metal {
 #if COREBUILD
 	public static class MTLVertexFormatExtensions {
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MDLVertexFormat */ nuint MTKModelIOVertexFormatFromMetal (/* MTLVertexFormat */ nuint modelIODescriptor);
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		public static MDLVertexFormat ToModelVertexFormat (this MTLVertexFormat vertexFormat)
 		{
 			nuint mdlVertexFormat = MTKModelIOVertexFormatFromMetal ((nuint)(ulong)vertexFormat);
@@ -228,7 +240,15 @@ namespace Metal {
 		public uint ThreadGroupsPerGrid3;
 	}
 
-	[Mac (10,14), iOS (12,0), TV (12,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[TV (12,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLStageInRegionIndirectArguments {
 		public uint StageInOrigin1;
@@ -255,7 +275,16 @@ namespace Metal {
 		public uint BaseInstance;
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLSizeAndAlign
 	{
@@ -270,7 +299,16 @@ namespace Metal {
 	
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLDrawPatchIndirectArguments
 	{
@@ -289,7 +327,16 @@ namespace Metal {
 
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLQuadTessellationFactorsHalf
 	{
@@ -306,7 +353,16 @@ namespace Metal {
 	
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTriangleTessellationFactorsHalf
 	{
@@ -331,7 +387,16 @@ namespace Metal {
 	}
 #endif // COREBUILD
 #if MONOMAC
-	[NoiOS, NoTV, NoWatch, Mac (10,14)]
+#if NET
+	[SupportedOSPlatform ("macos10.14")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoiOS]
+	[NoTV]
+	[NoWatch]
+	[Mac (10,14)]
+#endif
 	public struct MTLIndirectCommandBufferExecutionRange
 	{
 		public uint Location;
@@ -345,7 +410,15 @@ namespace Metal {
 	}
 #endif // MONOMAC
 
-	[Mac (10,15), iOS (13,0), TV (13,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[TV (13,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTextureSwizzleChannels {
 #if COREBUILD
@@ -363,9 +436,15 @@ namespace Metal {
 
 #if IOS || MONOMAC || COREBUILD
 
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst13.4")]
+	[SupportedOSPlatform ("macos10.15.4")]
+#else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLVertexAmplificationViewMapping {
 		public uint ViewportArrayIndexOffset;
@@ -373,9 +452,15 @@ namespace Metal {
 		public uint RenderTargetArrayIndexOffset;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst13.4")]
+	[SupportedOSPlatform ("macos10.15.4")]
+#else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLCoordinate2D {
 		public float X;
@@ -386,10 +471,16 @@ namespace Metal {
 
 #if !TVOS || !NET
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Mac (11,0), iOS (14,0), NoTV]
-#if TVOS && !NET
-	[Obsolete ("This API is not available on this platform.")]
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[NoTV]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLAccelerationStructureSizes

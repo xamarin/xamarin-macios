@@ -12,7 +12,14 @@ using ObjCRuntime;
 namespace Metal {
 	public partial class MTLRasterizationRateLayerDescriptor
 	{
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos10.15.4")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[MacCatalyst (15,0)]
+#endif
 		public double[] HorizontalSampleStorage { 
 			get {
 				var width = (int)SampleCount.Width;
@@ -22,7 +29,14 @@ namespace Metal {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos10.15.4")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[MacCatalyst (15,0)]
+#endif
 		public double[] VerticalSampleStorage {
 			get {
 				var height = (int)SampleCount.Height;
@@ -32,7 +46,14 @@ namespace Metal {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos10.15.4")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[MacCatalyst (15,0)]
+#endif
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
 			if (horizontal == null)

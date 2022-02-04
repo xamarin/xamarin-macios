@@ -12,7 +12,15 @@ namespace Metal {
 	// add some extension methods to make the API of the protocol nicer
 	public static class MTLIntersectionFunctionTableExtensions {
 
-		[Mac (11,0), iOS (14,0), NoTV]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[NoTV]
+#endif
 		public static void SetBuffers (this IMTLIntersectionFunctionTable table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{
 			if (buffers == null)

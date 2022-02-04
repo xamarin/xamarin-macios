@@ -26,7 +26,11 @@ namespace Metal {
 			return NSArray.ArrayFromHandle<IMTLCounterSet>(global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (This.Handle, Selector.GetHandle ("counterSets")));
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLCounterSampleBuffer? CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError? error)
 		{
@@ -43,7 +47,11 @@ namespace Metal {
 	}
 
 	public static partial class MTLComputeCommandEncoder_Extensions {
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void SampleCounters (this IMTLComputeCommandEncoder This, IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier)
 		{

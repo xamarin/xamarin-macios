@@ -35,13 +35,45 @@ namespace Metal {
 		OneMinusBlendColor = 12,
 		BlendAlpha = 13,
 		OneMinusBlendAlpha = 14,
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
+#endif
 		Source1Color = 15,
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
+#endif
 		OneMinusSource1Color = 16,
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
+#endif
 		Source1Alpha = 17,
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
+#endif
 		OneMinusSource1Alpha = 18,
 	}
 
@@ -99,11 +131,38 @@ namespace Metal {
 	[Native]
 	public enum MTLStoreAction : ulong {
 		DontCare, Store, MultisampleResolve,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[Mac (10,12)]
+#endif
 		StoreAndMultisampleResolve,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[Mac (10,12)]
+#endif
 		Unknown,
-		[iOS (11,0), TV (11,0), NoWatch, Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+		[Mac (10,13)]
+#endif
 		CustomSampleDepthStore,
 	}
 
@@ -115,12 +174,36 @@ namespace Metal {
 		k2DArray = 3,
 		k2DMultisample = 4,
 		kCube = 5,
-		[iOS (11,0), TV (11,0), Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,11)]
+#endif
 		kCubeArray = 6,
 		k3D = 7,
-		[iOS (12,0), TV (12,0), Mac (10,14)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+#else
+		[iOS (12,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+#endif
 		k2DMultisampleArray = 8,
-		[iOS (12,0), TV (12,0), Mac (10,14)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+#else
+		[iOS (12,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+#endif
 		kTextureBuffer = 9,
 	}
 
@@ -139,13 +222,23 @@ namespace Metal {
 	[Native]
 	public enum MTLSamplerAddressMode : ulong {
 		ClampToEdge = 0,
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+#else
 		[iOS (14,0)]
+#endif
 		MirrorClampToEdge = 1,
 		Repeat = 2,
 		MirrorRepeat = 3,
 		ClampToZero = 4,
 		
-		[Mac (10,12), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios14.0")]
+#else
+		[Mac (10,12)]
+		[iOS (14,0)]
+#endif
 		ClampToBorderColor = 5,
 	}
 
@@ -206,37 +299,138 @@ namespace Metal {
 		Int1010102Normalized = 40,
 		UInt1010102Normalized = 41,
 
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UChar4NormalizedBgra = 42,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UChar = 45,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		Char = 46,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UCharNormalized = 47,
 
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		CharNormalized = 48,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UShort = 49,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		Short = 50,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UShortNormalized = 51,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		ShortNormalized = 52,
 		
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		Half = 53,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[Mac (10,11)]
+#endif
 	[Native]
 	public enum MTLPixelFormat : ulong {
 		Invalid = 0,
 		A8Unorm = 1,
 		R8Unorm = 10,
-		[NoiOS][NoTV]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoiOS]
+		[NoTV]
+#endif
 		R8Unorm_sRGB = 11,
 		R8Snorm = 12,
 		R8Uint = 13,
@@ -247,18 +441,38 @@ namespace Metal {
 		R16Sint = 24,
 		R16Float = 25,
 		RG8Unorm = 30,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Mac (11,0)]
+#endif
 		RG8Unorm_sRGB = 31,
 		RG8Snorm = 32,
 		RG8Uint = 33,
 		RG8Sint = 34,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Mac (11,0)]
+#endif
 		B5G6R5Unorm = 40,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Mac (11,0)]
+#endif
 		A1BGR5Unorm = 41,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Mac (11,0)]
+#endif
 		ABGR4Unorm = 42,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Mac (11,0)]
+#endif
 		BGR5A1Unorm = 43,
 		R32Uint = 53,
 		R32Sint = 54,
@@ -279,7 +493,16 @@ namespace Metal {
 		RGB10A2Uint = 91,
 		RG11B10Float = 92,
 		RGB9E5Float = 93,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		BGR10A2Unorm = 94,
 		RG32Uint = 103,
 		RG32Sint = 104,
@@ -292,33 +515,145 @@ namespace Metal {
 		RGBA32Uint = 123,
 		RGBA32Sint = 124,
 		RGBA32Float = 125,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC1RGBA = 130,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC1_RGBA_sRGB = 131,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC2RGBA = 132,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC2_RGBA_sRGB = 133,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC3RGBA = 134,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC3_RGBA_sRGB = 135,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC4_RUnorm = 140,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC4_RSnorm = 141,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC5_RGUnorm = 142,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC5_RGSnorm = 143,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC6H_RGBFloat = 150,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC6H_RGBUFloat = 151,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC7_RGBAUnorm = 152,
-		[Mac (11,0)][NoTV][NoiOS]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+		[NoiOS]
+#endif
 		BC7_RGBAUnorm_sRGB = 153,
 		PVRTC_RGB_2BPP = 160,
 		PVRTC_RGB_2BPP_sRGB = 161,
@@ -370,33 +705,145 @@ namespace Metal {
 		ASTC_12x10_LDR          = 217,
 		ASTC_12x12_LDR          = 218,
 
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_4x4_HDR = 222,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_5x4_HDR = 223,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_5x5_HDR = 224,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_6x5_HDR = 225,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_6x6_HDR = 226,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_8x5_HDR = 228,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_8x6_HDR = 229,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_8x8_HDR = 230,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_10x5_HDR = 231,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_10x6_HDR = 232,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_10x8_HDR = 233,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_10x10_HDR = 234,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_12x10_HDR = 235,
-		[iOS (13,0)][Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		ASTC_12x12_HDR = 236,
 
 		GBGR422 = 240,
@@ -407,25 +854,86 @@ namespace Metal {
 		Depth32Float = 252,
 		Stencil8 = 253,
 
-		[Mac (11,0)][NoiOS][NoTV]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[NoiOS]
+		[NoTV]
+#endif
 		Depth24Unorm_Stencil8 = 255,
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[iOS (9,0)]
+#endif
 		Depth32Float_Stencil8 = 260,
 	
-		[NoWatch, iOS (9,0), TV (9,0)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[NoWatch]
+		[iOS (9,0)]
+		[TV (9,0)]
+#endif
 		X32_Stencil8 = 261,
 
-		[Mac (10,12)][NoiOS][NoTV]
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,12)]
+		[NoiOS]
+		[NoTV]
+#endif
 		X24_Stencil8 = 262,
 
-		[iOS (10,0)][TV (10,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (11,0)]
+#endif
 		BGRA10_XR = 552,
-		[iOS (10,0)][TV (10,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (11,0)]
+#endif
 		BGRA10_XR_sRGB = 553,
-		[iOS (10,0)][TV (10,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (11,0)]
+#endif
 		BGR10_XR = 554,
-		[iOS (10,0)][TV (10,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (11,0)]
+#endif
 		BGR10_XR_sRGB = 555,
 	}
 
@@ -434,9 +942,25 @@ namespace Metal {
 		Vertex = 1,
 		Fragment = 2,
 		Kernel = 3,
-		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+#endif
 		Visible = 5,
-		[iOS (14,0)][NoTV][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (14,0)]
+		[NoTV]
+		[Mac (11,0)]
+#endif
 		Intersection = 6,
 	}
 
@@ -535,7 +1059,13 @@ namespace Metal {
 		DefaultCache, WriteCombined
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	[Flags]
 	public enum MTLTextureUsage : ulong {
@@ -550,27 +1080,77 @@ namespace Metal {
 		PixelFormatView = 0x0010,
 	}
 
-	[iOS (8,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (8,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	[Flags]
 	public enum MTLResourceOptions : ulong {
 		CpuCacheModeDefault = MTLCpuCacheMode.DefaultCache << 0,
 		CpuCacheModeWriteCombined = MTLCpuCacheMode.WriteCombined << 0,
 		
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[iOS (9,0)]
+#endif
 		StorageModeShared = MTLStorageMode.Shared << 4,
-		[Mac (11,0)][NoiOS][NoTV]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[NoiOS]
+		[NoTV]
+#endif
 		StorageModeManaged = MTLStorageMode.Managed << 4,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
 		[iOS (9,0)]
+#endif
 		StorageModePrivate = MTLStorageMode.Private << 4,
 		
-		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[NoMac]
+#endif
 		StorageModeMemoryless = MTLStorageMode.Memoryless << 4,
 
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[Mac (10,13)]
+#endif
 		HazardTrackingModeUntracked = 1 << 8,
 
-		[iOS (13,0), TV (13,0), Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+#endif
 		HazardTrackingModeTracked = 1 << 9,
 	}
 
@@ -578,9 +1158,27 @@ namespace Metal {
 	[Native]
 	public enum MTLVertexStepFunction : ulong {
 		Constant, PerVertex, PerInstance,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]	
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[Mac (10,12)]
+#endif
 		PerPatch = 3,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]	
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[Mac (10,12)]
+#endif
 		PerPatchControlPoint = 4,
 	}
 
@@ -661,44 +1259,393 @@ namespace Metal {
 		Bool3 = 55,
 		Bool4 = 56,
 
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Texture = 58,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Sampler = 59,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Pointer = 60,
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
+Texture = 58,
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
+Sampler = 59,
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
+Pointer = 60,
 
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] R8Unorm = 62,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] R8Snorm = 63,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] R16Unorm = 64,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] R16Snorm = 65,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg8Unorm = 66,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg8Snorm = 67,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg16Unorm = 68,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg16Snorm = 69,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba8Unorm = 70,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba8Unorm_sRgb = 71,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba8Snorm = 72,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba16Unorm = 73,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba16Snorm = 74,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgb10A2Unorm = 75,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg11B10Float = 76,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgb9E5Float = 77,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+R8Unorm = 62,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+R8Snorm = 63,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+R16Unorm = 64,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+R16Snorm = 65,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rg8Unorm = 66,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rg8Snorm = 67,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rg16Unorm = 68,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rg16Snorm = 69,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rgba8Unorm = 70,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rgba8Unorm_sRgb = 71,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rgba8Snorm = 72,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rgba16Unorm = 73,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rgba16Snorm = 74,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rgb10A2Unorm = 75,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rg11B10Float = 76,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Rgb9E5Float = 77,
 
-		[Mac (10,14), iOS (12,0), TV (12,0)] RenderPipeline = 78,
-		[Mac (11,0), iOS (13,0), TV (13,0)] ComputePipeline = 79,
-		[Mac (10,14), iOS (12,0), TV (12,0)] IndirectCommandBuffer = 80,
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[Mac (10,14)]
+		[iOS (12,0)]
+		[TV (12,0)]
+#endif
+RenderPipeline = 78,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Mac (11,0)]
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
+ComputePipeline = 79,
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[Mac (10,14)]
+		[iOS (12,0)]
+		[TV (12,0)]
+#endif
+IndirectCommandBuffer = 80,
 		
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long = 81,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long2 = 82,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long3 = 83,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long4 = 84,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong = 85,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong2 = 86,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong3 = 87,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong4 = 88,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+Long = 81,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+Long2 = 82,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+Long3 = 83,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+Long4 = 84,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+ULong = 85,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+ULong2 = 86,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+ULong3 = 87,
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
+ULong4 = 88,
 		
-		[Mac (11,0), iOS (14,0), NoTV] VisibleFunctionTable = 115,
-		[Mac (11,0), iOS (14,0), NoTV] IntersectionFunctionTable = 116,
-		[Mac (11,0), iOS (14,0), NoTV] PrimitiveAccelerationStructure = 117,
-		[Mac (11,0), iOS (14,0), NoTV] InstanceAccelerationStructure = 118,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[NoTV]
+#endif
+VisibleFunctionTable = 115,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[NoTV]
+#endif
+IntersectionFunctionTable = 116,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[NoTV]
+#endif
+PrimitiveAccelerationStructure = 117,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[NoTV]
+#endif
+InstanceAccelerationStructure = 118,
 	}
 
 	[Native]
@@ -708,16 +1655,72 @@ namespace Metal {
 		Texture = 2,
 		Sampler = 3,
 
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] ImageblockData = 16,
-		[NoMac, iOS (11,0), TV (14,5), NoWatch] Imageblock = 17,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+ImageblockData = 16,
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoMac]
+		[iOS (11,0)]
+		[TV (14,5)]
+		[NoWatch]
+#endif
+Imageblock = 17,
 
-		[iOS (14,0)][Mac (11,0)][NoTV][NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (14,0)]
+		[Mac (11,0)]
+		[NoTV]
+		[NoWatch]
+#endif
 		VisibleFunctionTable = 24,
-		[iOS (14,0)][Mac (11,0)][NoTV][NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (14,0)]
+		[Mac (11,0)]
+		[NoTV]
+		[NoWatch]
+#endif
 		PrimitiveAccelerationStructure = 25,
-		[iOS (14,0)][Mac (11,0)][NoTV][NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (14,0)]
+		[Mac (11,0)]
+		[NoTV]
+		[NoWatch]
+#endif
 		InstanceAccelerationStructure = 26,
-		[iOS (14,0)][Mac (11,0)][NoTV][NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (14,0)]
+		[Mac (11,0)]
+		[NoTV]
+		[NoWatch]
+#endif
 		IntersectionFunctionTable = 27,
 	}
 
@@ -732,7 +1735,15 @@ namespace Metal {
 		None,
 		ArgumentInfo,
 		BufferTypeInfo,
-		[iOS (14,0)][TV(14,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+#endif
 		FailOnBinaryArchiveMiss = 4,
 	}
 
@@ -743,124 +1754,466 @@ namespace Metal {
 		iOS_GPUFamily2_v1 = 1,
 		iOS_GPUFamily2_v2 = 3,
 		iOS_GPUFamily3_v1 = 4,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (10,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily1_v3 = 5,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (10,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily2_v3 = 6,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (10,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily3_v2 = 7,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (11,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily1_v4 = 8,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (11,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily2_v4 = 9,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (11,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily3_v3 = 10,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (11,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily4_v1 = 11,
 
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (12,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily1_v5 = 12,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (12,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily2_v5 = 13,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (12,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily3_v4 = 14,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (12,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily4_v2 = 15,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (12,0)]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
+#endif
 		iOS_GPUFamily5_v1 = 16,
 
-		[Mac (10,11), NoiOS, NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,11)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+#endif
 		macOS_GPUFamily1_v1 = 10000,
 		
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13 se 'macOS, GPUFamily1, v1' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Mac (10, 11)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v1' instead.")]
+#endif
 		OSX_GPUFamily1_v1 = macOS_GPUFamily1_v1,
 		
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,13)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+#endif
 		macOS_GPUFamily1_v2 = 10001,
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13 se 'macOS, GPUFamily1, v2' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Mac (10, 12)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v2' instead.")]
+#endif
 		OSX_GPUFamily1_v2 = macOS_GPUFamily1_v2,
 		
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,13)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+#endif
 		macOS_ReadWriteTextureTier2 = 10002,
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13 se 'macOS, ReadWriteTextureTier2' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Mac (10, 12)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, ReadWriteTextureTier2' instead.")]
+#endif
 		OSX_ReadWriteTextureTier2 = macOS_ReadWriteTextureTier2,
 		
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,13)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+#endif
 		macOS_GPUFamily1_v3 = 10003,
 
-		[Mac (10,14), NoiOS, NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,14)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+#endif
 		macOS_GPUFamily1_v4 = 10004,
 
-		[Mac (10,14), NoiOS, NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,14)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+#endif
 		macOS_GPUFamily2_v1 = 10005,
 
+#if NET
+		[SupportedOSPlatform ("tvos9.0")]
+#else
 		[TV (9,0)]
+#endif
 		TVOS_GPUFamily1_v1 = 30000,
 
-		[NoiOS, TV (10,0), NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoiOS]
+		[TV (10,0)]
+		[NoWatch]
+		[NoMac]
+#endif
 		tvOS_GPUFamily1_v2 = 30001,
 
-		[NoiOS, TV (11,0), NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoiOS]
+		[TV (11,0)]
+		[NoWatch]
+		[NoMac]
+#endif
 		tvOS_GPUFamily1_v3 = 30002,
 
-		[NoiOS, TV (11,0), NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoiOS]
+		[TV (11,0)]
+		[NoWatch]
+		[NoMac]
+#endif
 		tvOS_GPUFamily2_v1 = 30003,
 
-		[NoiOS, TV (12,0), NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("tvos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoiOS]
+		[TV (12,0)]
+		[NoWatch]
+		[NoMac]
+#endif
 		tvOS_GPUFamily1_v4 = 30004,
-		[NoiOS, TV (12,0), NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("tvos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[NoiOS]
+		[TV (12,0)]
+		[NoWatch]
+		[NoMac]
+#endif
 		tvOS_GPUFamily2_v2 = 30005,
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum MTLLanguageVersion : ulong {
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac]
+#endif
 		v1_0 = (1 << 16),
 		v1_1 = (1 << 16) + 1,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[Mac (10,12)]
+#endif
 		v1_2 = (1 << 16) + 2,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		v2_0 = (2 << 16),
-		[Mac (10,14), iOS (12,0), TV (12,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[Mac (10,14)]
+		[iOS (12,0)]
+		[TV (12,0)]
+		[NoWatch]
+#endif
 		v2_1 = (2 << 16) + 1,
-		[Mac (10,15), iOS (13,0), TV (13,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[NoWatch]
+#endif
 		v2_2 = (2 << 16) + 2,
-		[Mac (11,0), iOS (14,0), TV (14,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[NoWatch]
+#endif
 		v2_3 = (2 << 16) + 3,
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[Mac (12,0)]
+		[NoWatch]
+#endif
 		v2_4 = (2uL << 16) + 4,
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum MTLDepthClipMode : ulong {
 		Clip = 0,
 		Clamp = 1
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	[Flags]
 	public enum MTLBlitOption : ulong {
 		None = 0,
 		DepthFromDepthStencil = 1 << 0,
 		StencilFromDepthStencil = 1 << 1,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac]
+#endif
 		RowLinearPvrtc = 1 << 2
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	[Native]
 	public enum MTLStorageMode : ulong {
 		Shared = 0,
-		[Mac (11,0)][NoiOS][NoTV]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[NoiOS]
+		[NoTV]
+#endif
 		Managed = 1,
 		Private = 2,
-		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoWatch]
+		[NoMac]
+#endif
 		Memoryless = 3,
 	}
 
@@ -869,7 +2222,13 @@ namespace Metal {
 		Sample0, Min, Max
 	}
 
-	[Mac (10,12), iOS (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios14.0")]
+#else
+	[Mac (10,12)]
+	[iOS (14,0)]
+#endif
 	[Native]
 	public enum MTLSamplerBorderColor : ulong {
 		TransparentBlack = 0,
@@ -877,9 +2236,15 @@ namespace Metal {
 		OpaqueWhite = 2
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
 	[TV (13,0)]
 	[iOS (12,0)]
 	[Mac (10,11)]
+#endif
 	[Native]
 	public enum MTLPrimitiveTopologyClass : ulong {
 		Unspecified = 0,
@@ -888,7 +2253,16 @@ namespace Metal {
 		Triangle = 3
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLTessellationPartitionMode : ulong {
 		Pow2 = 0,
@@ -897,13 +2271,31 @@ namespace Metal {
 		FractionalEven = 3
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLTessellationFactorFormat : ulong {
 		Half = 0
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLTessellationControlPointIndexType : ulong {
 		None = 0,
@@ -911,7 +2303,16 @@ namespace Metal {
 		UInt32 = 2
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLTessellationFactorStepFunction : ulong {
 		Constant = 0,
@@ -920,7 +2321,16 @@ namespace Metal {
 		PerPatchAndPerInstance = 3
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLPatchType : ulong {
 		None = 0,
@@ -928,7 +2338,16 @@ namespace Metal {
 		Quad = 2
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLAttributeFormat : ulong {
 		Invalid = 0,
@@ -973,29 +2392,128 @@ namespace Metal {
 		UInt4 = 39,
 		Int1010102Normalized = 40,
 		UInt1010102Normalized = 41,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UChar4Normalized_Bgra = 42,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UChar = 45,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		Char = 46,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UCharNormalized = 47,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		CharNormalized = 48,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UShort = 49,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		Short = 50,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		UShortNormalized = 51,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		ShortNormalized = 52,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[NoWatch]
+#endif
 		Half = 53,
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLStepFunction : ulong {
 		Constant = 0,
@@ -1009,17 +2527,47 @@ namespace Metal {
 		ThreadPositionInGridYIndexed = 8
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[NoWatch]
+	[Mac (10,12)]
+#endif
 	[Native]
 	public enum MTLRenderStages : ulong {
 		Vertex = (1 << 0),
 		Fragment = (1 << 1),
-		[iOS (15,0), TV (15,0), NoWatch, Mac (12,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[NoWatch]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+#endif
 		Tile = (1uL << 2),
 	}
 
-	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-	[Native, Flags]
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
+	[Mac (10,13)]
+	[iOS (11,0)]
+	[TV (11,0)]
+	[NoWatch]
+#endif
+	[Native]
+	[Flags]
 	public enum MTLResourceUsage : ulong
 	{
 		Read = 1 << 0,
@@ -1027,7 +2575,16 @@ namespace Metal {
 		Sample = 1 << 2,
 	}
 
-	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
+	[Mac (10,13)]
+	[iOS (11,0)]
+	[TV (11,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum MTLMutability : ulong
 	{
@@ -1036,7 +2593,16 @@ namespace Metal {
 		Immutable = 2,
 	}
 
-	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
+	[Mac (10,13)]
+	[iOS (11,0)]
+	[TV (11,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum MTLReadWriteTextureTier : ulong
 	{
@@ -1045,7 +2611,16 @@ namespace Metal {
 		Two = 2,
 	}
 
-	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
+	[Mac (10,13)]
+	[iOS (11,0)]
+	[TV (11,0)]
+	[NoWatch]
+#endif
 	[Native]
 	public enum MTLArgumentBuffersTier : ulong
 	{
@@ -1053,15 +2628,33 @@ namespace Metal {
 		Two = 1,
 	}
 
-	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-	[Native, Flags]
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
+	[Mac (10,13)]
+	[iOS (11,0)]
+	[TV (11,0)]
+	[NoWatch]
+#endif
+	[Native]
+	[Flags]
 	public enum MTLStoreActionOptions : ulong
 	{
 		None = 0,
 		CustomSamplePositions = 1 << 0,
 	}
 
-	[Mac (10,14), iOS (12,0), TV (12,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[TV (12,0)]
+#endif
 	[Native]
 	public enum MTLDispatchType : ulong
 	{
@@ -1069,35 +2662,94 @@ namespace Metal {
 		Concurrent,
 	}
 
-	[Flags, Mac (10,14), iOS (12,0), TV (12,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[TV (12,0)]
+#endif
+	[Flags]
 	[Native]
 	public enum MTLBarrierScope : ulong
 	{
 		Buffers = 1 << 0,
 		Textures = 1 << 1,
-		[NoiOS, NoTV]
+#if NET
+		[SupportedOSPlatform ("macos10.14")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoiOS]
+		[NoTV]
+#endif
 		RenderTargets = 1 << 2,
 	}
 
-	[Flags, Mac (10,14), iOS (12,0), TV (12,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[TV (12,0)]
+#endif
+	[Flags]
 	[Native]
 	public enum MTLIndirectCommandType : ulong
 	{
 		Draw = 1 << 0,
 		DrawIndexed = 1 << 1,
+#if NET
+		[SupportedOSPlatform ("tvos14.5")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+#else
 		[TV (14,5)]
+#endif
 		DrawPatches = 1 << 2,
+#if NET
+		[SupportedOSPlatform ("tvos14.5")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+#else
 		[TV (14,5)]
+#endif
 		DrawIndexedPatches = 1 << 3,
-		[Mac (11,0), iOS (13,0), TV (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Mac (11,0)]
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
 		ConcurrentDispatch = 1 << 5,
-		[Mac (11,0), iOS (13,0), TV (13,0)]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Mac (11,0)]
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
 		ConcurrentDispatchThreads = 1 << 6,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos14.5")]
+	[SupportedOSPlatform ("macos10.14")]
+#else
 	[iOS (12,0)]
 	[TV (14,5)]
 	[Mac (10,14)]
+#endif
 	[Native]
 	public enum MTLMultisampleStencilResolveFilter : ulong
 	{
@@ -1106,22 +2758,47 @@ namespace Metal {
 	}
 
 
-	[Flags, Mac (11,0), NoTV, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (11,0)]
+	[NoTV]
+	[iOS (13,0)]
+#endif
+	[Flags]
 	[Native]
 	public enum MTLSparseTextureRegionAlignmentMode : ulong {
 		Outward = 0x0,
 		Inward = 0x1,
 	}
 
-	[Flags, Mac (11,0), NoTV, iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (11,0)]
+	[NoTV]
+	[iOS (13,0)]
 	[MacCatalyst (14, 0)]
+#endif
+	[Flags]
 	[Native]
 	public enum MTLSparseTextureMappingMode : ulong {
 		Map = 0x0,
 		Unmap = 0x1,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum MTLHazardTrackingMode : ulong {
 		Default = 0,
@@ -1129,7 +2806,15 @@ namespace Metal {
 		Tracked = 2,
 	}
 
-	[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	[ErrorDomain ("MTLCaptureErrorDomain")]
 	public enum MTLCaptureError : long {
@@ -1138,7 +2823,15 @@ namespace Metal {
 		InvalidDescriptor,
 	}
 
-	[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum MTLGpuFamily : long {
 		Apple1 = 1001,
@@ -1146,9 +2839,25 @@ namespace Metal {
 		Apple3 = 1003,
 		Apple4 = 1004,
 		Apple5 = 1005,
-		[NoTV, Mac (11,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[Mac (11,0)]
+		[iOS (14,0)]
+#endif
 		Apple6 = 1006,
-		[NoTV, Mac (11,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoTV]
+		[Mac (11,0)]
+		[iOS (14,0)]
+#endif
 		Apple7 = 1007,
 		Mac1 = 2001,
 		Mac2 = 2002,
@@ -1159,23 +2868,54 @@ namespace Metal {
 		iOSMac2 = 4002,
 	}
 
-	[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+#endif
 	[Native]
 	public enum MTLHeapType : long {
 		Automatic = 0,
 		Placement = 1,
-		[Mac (11,0)][NoTV]
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (11,0)]
+		[NoTV]
+#endif
 		Sparse = 2,
 	}
 
-	[Mac (10,15), iOS (13,0), TV (13,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[TV (13,0)]
+#endif
 	[Native]
 	public enum MTLCaptureDestination : long {
 		DeveloperTools = 1,
 		GpuTraceDocument,
 	}
 
-	[NoiOS, NoTV, Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoiOS]
+	[NoTV]
+	[Mac (10,15)]
+#endif
 	[Native]
 	public enum MTLDeviceLocation : ulong {
 		BuiltIn = 0,
@@ -1184,7 +2924,15 @@ namespace Metal {
 		Unspecified = ulong.MaxValue,
 	}
 
-	[iOS (14,0), TV (14,0), Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (10,15)]
+#endif
 	[Native]
 	[ErrorDomain ("MTLCounterErrorDomain")]
 	public enum MTLCounterSampleBufferError : long {
@@ -1193,7 +2941,15 @@ namespace Metal {
 		Internal = 2,
 	}
 
-	[iOS (14,0), TV (14,0), Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (10,15)]
+#endif
 	public enum MTLCommonCounter {
 		[Field ("MTLCommonCounterTimestamp")]
 		Timestamp,
@@ -1250,7 +3006,16 @@ namespace Metal {
 		SetStatistic,
 	}
 
-	[Flags, Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
+	[Flags]
 	public enum MTLAccelerationStructureInstanceOptions : uint {
 		None = 0x0,
 		DisableTriangleCulling = (1u << 0),
@@ -1259,18 +3024,46 @@ namespace Metal {
 		NonOpaque = (1u << 3),
 	}
 
-	[Mac (11,0), iOS (14,0), NoTV]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[NoTV]
+#endif
 	[Flags]
 	[Native]
 	public enum MTLAccelerationStructureUsage : ulong {
 		None = 0x0,
 		Refit = (1uL << 0),
 		PreferFastBuild = (1uL << 1),
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[Mac (12,0)]
+		[NoWatch]
+#endif
 		ExtendedLimits = (1uL << 2),
 	}
 
-	[Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
 	[ErrorDomain ("MTLBinaryArchiveDomain")]
 	[Native]
 	public enum MTLBinaryArchiveError : ulong {
@@ -1280,7 +3073,15 @@ namespace Metal {
 		CompilationFailure = 3,
 	}
 
-	[Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
 	[Flags]
 	[Native]
 	public enum MTLCommandBufferErrorOption : ulong {
@@ -1288,7 +3089,15 @@ namespace Metal {
 		EncoderExecutionStatus = 1uL << 0,
 	}
 
-	[Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
 	[Native]
 	public enum MTLCommandEncoderErrorState : long {
 		Unknown = 0,
@@ -1298,7 +3107,15 @@ namespace Metal {
 		Faulted = 4,
 	}
 
-	[Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
 	[Native]
 	public enum MTLCounterSamplingPoint : ulong {
 		StageBoundary,
@@ -1308,7 +3125,15 @@ namespace Metal {
 		BlitBoundary,
 	}
 
-	[Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
 	[ErrorDomain ("MTLDynamicLibraryDomain")]
 	[Native]
 	public enum MTLDynamicLibraryError : ulong {
@@ -1320,44 +3145,128 @@ namespace Metal {
 		Unsupported = 5,
 	}
 
-	[Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
 	[Native]
 	public enum MTLFunctionLogType : ulong
 	{
 		Validation = 0,
 	}
 
-	[Flags, Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
+	[Flags]
 	[Native]
 	public enum MTLFunctionOptions : ulong {
 		None = 0x0,
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoTV]
+#endif
 		CompileToBinary = 1uL << 0,
 	}
 
-	[Flags, Mac (11,0), iOS (14,0), NoTV]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[NoTV]
+#endif
+	[Flags]
 	[Native]
 	public enum MTLIntersectionFunctionSignature : ulong {
 		None = 0x0,
 		Instancing = (1uL << 0),
 		TriangleData = (1uL << 1),
 		WorldSpaceData = (1uL << 2),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
 		InstanceMotion = (1uL << 3),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
 		PrimitiveMotion = (1uL << 4),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[TV (15,0)]
+		[MacCatalyst (15,0)]
+		[NoWatch]
+#endif
 		ExtendedLimits = (1uL << 5),
 	}
 
-	[Mac (11,0), iOS (14,0), TV (14,0)]
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+#else
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[TV (14,0)]
+#endif
 	[Native]
 	public enum MTLLibraryType : long {
 		Executable = 0,
 		Dynamic = 1,
 	}
 
-	[Mac (10,15), iOS (13,0), TV (13,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[TV (13,0)]
+#endif
 	public enum MTLTextureSwizzle : byte {
 		Zero = 0,
 		One = 1,
@@ -1367,13 +3276,35 @@ namespace Metal {
 		Alpha = 5,
 	}
 	
-	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV, NoWatch]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (12,0)]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+	[NoTV]
+	[NoWatch]
+#endif
 	public enum MTLMotionBorderMode : uint  {
 		Clamp = 0,
 		Vanish = 1,
 	}
 
-	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV, NoWatch]
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[Mac (12,0)]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	public enum MTLAccelerationStructureInstanceDescriptorType : ulong {
 		Default = 0,
@@ -1381,7 +3312,18 @@ namespace Metal {
 		Motion = 2,
 	}
 
-	[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[UnsupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoMac]
+	[iOS (15,0)]
+	[NoMacCatalyst]
+	[NoTV]
+	[NoWatch]
+#endif
 	[Native]
 	public enum MTLTextureCompressionType : long
 	{
