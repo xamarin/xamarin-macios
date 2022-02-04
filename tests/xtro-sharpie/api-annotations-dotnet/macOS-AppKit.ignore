@@ -61,8 +61,6 @@
 
 ## unsorted
 
-!extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
-!extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
 !missing-enum! NSWritingDirectionFormatType not bound
 !missing-field! NSAuthorDocumentAttribute not bound
 !missing-field! NSBackgroundColorDocumentAttribute not bound
