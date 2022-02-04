@@ -247,7 +247,7 @@ steps:
     }
 
     $filter = "${{ parameters.sbomFilter }}"
-    Write-Host "SBOM.Filter: ${filter}"
+    Write-Host "sbomFilter: ${filter}"
 
     $SBomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
     Write-Host "Creating SBOM staging directory: ${SBomStagingDirectory}"
@@ -266,7 +266,7 @@ steps:
     $filters = $filter.Split(';', [StringSplitOptions]::RemoveEmptyEntries)
     Write-Host "Copying files based on ${filter}"
 
-    $files = [IO.Directory]::GetFiles($pkgsPath, $_)
+    $files = [IO.Directory]::GetFiles($pkgsPath)
     $files | foreach {
       $filename = [IO.Path]::GetFileName($_)
       $isMatch = $false
