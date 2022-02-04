@@ -33,15 +33,11 @@ namespace ModelIO {
 #if !COREBUILD
 	public static class MDLVertexFormatExtensions {
 		
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MTLVertexFormat */ nuint MTKMetalVertexFormatFromModelIO (/* MTLVertexFormat */ nuint vertexFormat);
 
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
-#endif
 		public static MTLVertexFormat ToMetalVertexFormat (this MDLVertexFormat vertexFormat)
 		{
 			nuint mtlVertexFormat = MTKMetalVertexFormatFromModelIO ((nuint)(ulong)vertexFormat);
