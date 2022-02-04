@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Runtime.Versioning;
 using Foundation;
 using Metal;
 using ObjCRuntime;
