@@ -27,9 +27,7 @@ namespace Metal {
 	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, NSString notifyName);
 #endif
 
-#if !NET
 	[iOS (8,0)][Mac (10,11)]
-#endif
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
 		extern static IntPtr MTLCreateSystemDefaultDevice ();
@@ -57,19 +55,11 @@ namespace Metal {
 		
 #if MONOMAC || __MACCATALYST__
 
-#if !NET
 		[MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
-#if !NET
 		[MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#endif
 		public static IMTLDevice [] GetAllDevices ()
 		{
 			var rv = MTLCopyAllDevices ();
@@ -82,15 +72,11 @@ namespace Metal {
 		
 #if MONOMAC
 
-#if !NET
 		[Mac (10, 13)]
-#endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, ref BlockLiteral handler);
 
-#if !NET
 		[Mac (10, 13)]
-#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject? observer)
 		{
@@ -109,9 +95,7 @@ namespace Metal {
 			return obj;
 		}
 
-#if !NET
 		[Mac (10, 13)]
-#endif
 		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject? observer, MTLDeviceNotificationHandler handler)
@@ -132,15 +116,11 @@ namespace Metal {
 				del ((IMTLDevice) Runtime.GetNSObject (device)!, (Foundation.NSString) Runtime.GetNSObject (notifyName)!);
 		}
 
-#if !NET
 		[Mac (10, 13)]
-#endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
-#if !NET
 		[Mac (10, 13), NoiOS, NoWatch, NoTV]
-#endif
 		public static void RemoveObserver (NSObject observer)
 		{
 			if (observer == null)
@@ -198,13 +178,7 @@ namespace Metal {
 		}
 #if IOS
 
-#if NET
-		[SupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-#else
 		[NoMac, NoTV, iOS (13,0)]
-#endif
 		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
 		{
 			if (tileRegions == null)
@@ -224,13 +198,7 @@ namespace Metal {
 			}
 		}
 
-#if NET
-		[SupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-#else
 		[NoMac, NoTV, iOS (13,0)]
-#endif
 		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
 		{
 			if (tileRegions == null)

@@ -869,9 +869,6 @@ namespace Metal {
 		Sample0, Min, Max
 	}
 
-#if NET
-	[NoTV]
-#endif
 	[Mac (10,12), iOS (14,0)]
 	[Native]
 	public enum MTLSamplerBorderColor : ulong {
