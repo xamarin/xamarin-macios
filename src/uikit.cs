@@ -11644,7 +11644,12 @@ namespace UIKit {
 
 		[Export ("dividerImageForLeftSegmentState:rightSegmentState:barMetrics:")]
 		[Appearance]
+		[return: NullAllowed]
+#if NET
+		UIImage GetDividerImage (UIControlState leftState, UIControlState rightState, UIBarMetrics barMetrics);
+#else
 		UIImage DividerImageForLeftSegmentStaterightSegmentStatebarMetrics (UIControlState leftState, UIControlState rightState, UIBarMetrics barMetrics);
+#endif
 
 		[Export ("setTitleTextAttributes:forState:"), Internal]
 		[Appearance]
