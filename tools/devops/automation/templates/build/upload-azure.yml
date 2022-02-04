@@ -3,6 +3,10 @@ parameters:
   type: boolean
   default: false
 
+- name: sbomFilter
+  type: string
+  default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
+
 steps:
 
 - checkout: self
@@ -242,7 +246,7 @@ steps:
         return $isMatch
     }
 
-    $filter = ${{ variables['SBOM.Filter'] }}
+    $filter = "${{ parameters.sbomFilter }}"
     Write-Host "SBOM.Filter: ${filter}"
 
     $SBomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
@@ -254,6 +258,10 @@ steps:
 
     $pkgsPath = "$(SBOM.PackagesPath)"
     Write-Host "Packages path: ${pkgsPath}"
+
+    if ([string]::IsNullOrEmpty($filter)) {
+        $filter = '*'       # Even if the caller attempts to force the parameter to an empty string treat empty as all '*'
+    }
 
     $filters = $filter.Split(';', [StringSplitOptions]::RemoveEmptyEntries)
     Write-Host "Copying files based on ${filter}"
