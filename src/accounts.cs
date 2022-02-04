@@ -89,7 +89,7 @@ namespace Accounts {
 		[Async]
 		void SaveAccount (ACAccount account, ACAccountStoreSaveCompletionHandler completionHandler);
 
-#if XAMCORE_4_0
+#if NET
 		[NoMac] // marked as unavailable in xcode10 beta 2
 #endif
 		[Export ("requestAccessToAccountsWithType:withCompletionHandler:")]

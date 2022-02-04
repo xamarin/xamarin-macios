@@ -25,14 +25,17 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-
-#else
-	[SupportedOSPlatform ("ios12.0")]
+#if NET
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
 #endif
+
 	public class NWEndpoint : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
@@ -123,22 +126,26 @@ namespace Network {
 
 		public string? BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetCheckedHandle ()));
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern OS_nw_endpoint nw_endpoint_create_url (string url);
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public static NWEndpoint? Create (string url)
 		{
@@ -150,22 +157,26 @@ namespace Network {
 			return new NWEndpoint (handle, owns: true);
 		}
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern IntPtr nw_endpoint_get_url (OS_nw_endpoint endpoint);
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public string? Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
 	}

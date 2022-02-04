@@ -61,7 +61,7 @@ public class ForcedTypeAttribute : Attribute {
 //
 // Valid on return values and parameters
 //
-// To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for XAMCORE_4_0, etc
+// To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for NET, etc
 //
 public class ProtocolizeAttribute : Attribute {
 	public ProtocolizeAttribute ()

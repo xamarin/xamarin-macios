@@ -436,7 +436,7 @@ namespace ObjCRuntime {
 
 		static void ThrowNSException (IntPtr ns_exception)
 		{
-#if MONOMAC
+#if MONOMAC || NET
 			throw new ObjCException (new NSException (ns_exception));
 #else
 			throw new MonoTouchException (new NSException (ns_exception));
@@ -452,7 +452,7 @@ namespace ObjCRuntime {
 		static IntPtr CreateNSException (IntPtr ns_exception)
 		{
 			Exception ex;
-#if MONOMAC
+#if MONOMAC || NET
 			ex = new ObjCException (Runtime.GetNSObject<NSException> (ns_exception)!);
 #else
 			ex = new MonoTouchException (Runtime.GetNSObject<NSException> (ns_exception)!);
@@ -469,7 +469,7 @@ namespace ObjCRuntime {
 		static IntPtr UnwrapNSException (IntPtr exc_handle)
 		{
 			var obj = GCHandle.FromIntPtr (exc_handle).Target;
-#if MONOMAC
+#if MONOMAC || NET
 			var exc = obj as ObjCException;
 #else
 			var exc = obj as MonoTouchException;
@@ -517,13 +517,17 @@ namespace ObjCRuntime {
 		{
 			var str = new StringBuilder ();
 			try {
-				var exc = (Exception) GetGCHandleTarget (exception_gchandle)!;
+				var exc = (Exception?) GetGCHandleTarget (exception_gchandle);
 
-				int counter = 0;
-				do {
-					PrintException (exc, counter > 0, str);
-					exc = exc.InnerException;
-				} while (counter < 10 && exc is not null);
+				if (exc is null) {
+					str.Append ($"Unable to print exception handle 0x{exception_gchandle.ToString ("x")}: null exception");
+				} else {
+					int counter = 0;
+					do {
+						PrintException (exc, counter > 0, str);
+						exc = exc.InnerException;
+					} while (counter < 10 && exc is not null);
+				}
 			} catch (Exception exception) {
 				str.Append ("Failed to print exception: ").Append (exception);
 			}

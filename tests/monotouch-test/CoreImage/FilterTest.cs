@@ -34,7 +34,11 @@ namespace MonoTouchFixtures.CoreImage {
 			using (var url = NSUrl.FromFilename (file))
 			using (var input = CIImage.FromUrl (url))
 			using (var filter = new CIHighlightShadowAdjust ()) {
+#if NET
+				filter.InputImage = input;
+#else
 				filter.Image = input;
+#endif
 				filter.HighlightAmount = 0.75f;
 				filter.ShadowAmount = 1.5f;
 				// https://bugzilla.xamarin.com/show_bug.cgi?id=15465
@@ -59,6 +63,7 @@ namespace MonoTouchFixtures.CoreImage {
 			Assert.AreEqual(10, filter.Input);
 		}
 
+#if !NET
 		[Test]
 		public void UnsupportedInputImage ()
 		{
@@ -70,6 +75,7 @@ namespace MonoTouchFixtures.CoreImage {
 				Assert.Null (filter.Image, "Image");
 			}
 		}
+#endif // !NET
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFGetRetainCount (IntPtr handle);

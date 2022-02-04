@@ -157,3 +157,17 @@ The types `NSFileProviderExtension` and
 namespace to the `NSFileProvider` namespace (this is reflecting that Apple
 originally added these types to `UIKit`, but then moved them to their own
 namespace, `NSFileExtension`).
+
+## The 'Foundation.MonoTouchException' and 'Foundation.ObjCException' types have been renamed/moved to 'ObjCRuntime.ObjCException'.
+
+The type `Foundation.MonoTouchException` (for iOS, tvOS and Mac Catalyst) and
+the type `Foundation.ObjCException` (for macOS) have been renamed/moved to
+`ObjCRuntime.ObjCException`. Both types had the exact same functionality: they
+were wrapping a native NSException, and were renamed so that we have identical
+API and behavior on all platforms.
+
+## The type 'CFNetwork.MessageHandler' has been removed.
+
+The type 'CFNetwork.MessageHandler' has been removed. Please use
+'System.Net.Http.CFNetworkHandler' or the more recent
+'Foundation.NSUrlSessionHandler' instead.

@@ -1,4 +1,4 @@
-#if !MONOMAC
+#if !MONOMAC && !NET
 
 using System;
 using System.Text;
@@ -66,4 +66,4 @@ namespace Foundation {
 	}
 }
 
-#endif // !MONOMAC
+#endif // !MONOMAC && !NET
