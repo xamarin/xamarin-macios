@@ -10,11 +10,14 @@ using System.Runtime.Versioning;
 
 namespace UIKit {
 	public unsafe static partial class UIStringDrawing  {
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGPoint, UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGPoint, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGPoint, UIStringAttributes) instead.")]
 #endif
 		public static CGSize DrawString (this string This, CGPoint point, UIFont font)
 		{
@@ -22,11 +25,14 @@ namespace UIKit {
 				return self.DrawString (point, font);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 #endif
 		public static CGSize DrawString (this string This, CGPoint point, nfloat width, UIFont font, UILineBreakMode breakMode)
 		{
@@ -34,11 +40,14 @@ namespace UIKit {
 				return self.DrawString (point, width, font, breakMode);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 #endif
 		public static CGSize DrawString (this string This, CGPoint point, nfloat width, UIFont font, nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment)
 		{
@@ -46,11 +55,14 @@ namespace UIKit {
 				return self.DrawString (point, width, font, fontSize, breakMode, adjustment);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 #endif
 		public static CGSize DrawString (this string This, CGPoint point, nfloat width, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment)
 		{
@@ -58,11 +70,14 @@ namespace UIKit {
 				return self.DrawString (point, width, font, minFontSize, ref actualFontSize, breakMode, adjustment);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 #endif
 		public static CGSize DrawString (this string This, CGRect rect, UIFont font)
 		{
@@ -70,11 +85,14 @@ namespace UIKit {
 				return self.DrawString (rect, font);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 #endif
 		public static CGSize DrawString (this string This, CGRect rect, UIFont font, UILineBreakMode mode)
 		{
@@ -82,11 +100,14 @@ namespace UIKit {
 				return self.DrawString (rect, font, mode);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 #endif
 		public static CGSize DrawString (this string This, CGRect rect, UIFont font, UILineBreakMode mode, UITextAlignment alignment)
 		{
@@ -94,11 +115,14 @@ namespace UIKit {
 				return self.DrawString (rect, font, mode, alignment);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.")]
 #endif
 		public static CGSize StringSize (this string This, UIFont font)
 		{
@@ -106,11 +130,14 @@ namespace UIKit {
 				return self.StringSize (font);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
 #endif
 		public static CGSize StringSize (this string This, UIFont font, nfloat forWidth, UILineBreakMode breakMode)
 		{
@@ -118,11 +145,14 @@ namespace UIKit {
 				return self.StringSize (font, forWidth, breakMode);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
 #endif
 		public static CGSize StringSize (this string This, UIFont font, CGSize constrainedToSize)
 		{
@@ -130,11 +160,14 @@ namespace UIKit {
 				return self.StringSize (font, constrainedToSize);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
 #endif
 		public static CGSize StringSize (this string This, UIFont font, CGSize constrainedToSize, UILineBreakMode lineBreakMode)
 		{
@@ -142,10 +175,14 @@ namespace UIKit {
 				return self.StringSize (font, constrainedToSize, lineBreakMode);
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
 		public static CGSize StringSize (this string This, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, nfloat forWidth, UILineBreakMode lineBreakMode)
 		{
