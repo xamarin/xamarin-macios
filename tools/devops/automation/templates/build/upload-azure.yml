@@ -252,7 +252,7 @@ steps:
     $sbomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
     Write-Host "Creating SBOM staging directory: ${sbomStagingDirectory}"
 
-    if (-not ([IO.Directory]::Exists(sbomStagingDirectory))) {
+    if (-not ([IO.Directory]::Exists($sbomStagingDirectory))) {
       [IO.Directory]::CreateDirectory($sbomStagingDirectory)
     }
 
