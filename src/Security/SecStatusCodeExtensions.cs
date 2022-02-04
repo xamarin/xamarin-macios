@@ -34,8 +34,8 @@ namespace Security {
 		[SupportedOSPlatform ("tvos11.3")]
 #else
 		[iOS (11,3)] // Since Mac 10,3
-		[TV (11,3)] // Since Mac 10,3
-		[Watch (4,3)] // Since Mac 10,3
+		[TV (11,3)]
+		[Watch (4,3)]
 #endif
 		public static string GetStatusDescription (this SecStatusCode status)
 		{
