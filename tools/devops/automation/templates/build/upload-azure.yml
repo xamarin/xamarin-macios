@@ -227,6 +227,21 @@ steps:
 
 # Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator
 - powershell: |
+    # https://stackoverflow.com/questions/188892/glob-pattern-matching-in-net
+    function Is-Match([string] $Text, [string] $Filter)
+    {
+        $isMatch = $false
+
+        $regexGlobEquivalent = [Regex]::Escape($Filter).Replace("\*", ".*").Replace("\?", ".")
+        $pattern = "^${regexGlobEquivalent}$"
+
+        # https://stackoverflow.com/questions/42700341/how-can-i-use-powershell-to-do-a-net-regex-matches-method-and-add-a-timeout
+        $regEx = New-Object -TypeName regex -ArgumentList $pattern, ([Text.RegularExpressions.RegexOptions]::Singleline, [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+        $isMatch = $regEx.IsMatch($Text)
+
+        return $isMatch
+    }
+
     $filter = ${{ variables['SBOM.Filter'] }}
     Write-Host "SBOM.Filter: ${filter}"
 
@@ -241,14 +256,24 @@ steps:
     Write-Host "Packages path: ${pkgsPath}"
 
     $filters = $filter.Split(';', [StringSplitOptions]::RemoveEmptyEntries)
-    $filters | foreach {
-      Write-Host "Copying files based on filter $_"
-      $files = [IO.Directory]::GetFiles($pkgsPath, $_)
-      $files | foreach {
-        $filename = [IO.Path]::GetFileName($_)
+    Write-Host "Copying files based on ${filter}"
+
+    $files = [IO.Directory]::GetFiles($pkgsPath, $_)
+    $files | foreach {
+      $filename = [IO.Path]::GetFileName($_)
+      $isMatch = $false
+      $filters | foreach {
+        if (-not $isMatch) {
+          $isMatch = Is-Match -Text $filename -Filter $_
+        }
+      }
+
+      if ($isMatch) {
         $destPathAndFilename = [IO.Path]::Combine($SBomStagingDirectory, $filename)
-        Write-Host "Copying $_ to ${destPathAndFilename}"
+        Write-Host "Copying $_ to ${destPathAndFilename}. Filter: ${filter}"
         [IO.File]::Copy($_, $destPathAndFilename)
+      } else {
+        Write-Host "Skipped file copy based on filter ${filter}: ${filename}"
       }
     }
   displayName: 'SBOM: Staging'
