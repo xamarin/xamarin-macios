@@ -157,7 +157,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public NSString WeakTextEffect {
@@ -169,7 +171,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public NSTextEffect TextEffect {
@@ -191,7 +195,9 @@ namespace UIKit {
 		}
 
 #if !WATCH
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public NSTextAttachment TextAttachment {
@@ -204,7 +210,9 @@ namespace UIKit {
 		}
 #endif // !WATCH
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public NSUrl Link {
@@ -216,7 +224,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public float? BaselineOffset {
@@ -228,7 +238,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public UIColor StrikethroughColor {
@@ -240,7 +252,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public UIColor UnderlineColor {
@@ -253,7 +267,9 @@ namespace UIKit {
 		}
 		
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public float? Obliqueness {
@@ -265,7 +281,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public float? Expansion {
@@ -277,7 +295,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public NSNumber [] WritingDirectionInt {
