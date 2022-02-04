@@ -73,7 +73,12 @@ namespace NotificationCenter {
 #if !MONOMAC
 	[iOS (8,0)]
 	[BaseType (typeof (UIVibrancyEffect))]
+#if NET
+	[Internal]
+	[Category]
+#else
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+#endif
 	interface UIVibrancyEffect_NotificationCenter {
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]

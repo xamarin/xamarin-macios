@@ -61,8 +61,6 @@
 
 ## unsorted
 
-!extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
-!extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
 !missing-enum! NSWritingDirectionFormatType not bound
 !missing-field! NSAuthorDocumentAttribute not bound
 !missing-field! NSBackgroundColorDocumentAttribute not bound
@@ -101,7 +99,6 @@
 !missing-protocol! NSGlyphStorage not bound
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
-!missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSPageController should conform to NSAnimatablePropertyContainer
@@ -218,8 +215,6 @@
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
 
 ## Fixed in XAMCORE_4_0
-!missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSTextView should conform to NSColorChanging
 
 ## NSStandardKeyBindingResponding is strange case - technically on NSResponder but responder subclasses can implement any that make sense.
@@ -228,10 +223,6 @@
 
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
-
-## 42781537 Classes fail to conformsToProtocol despite header declaration
-!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
-!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
 
 ## Added in Xcode 10.2 Final but deprecated
 
