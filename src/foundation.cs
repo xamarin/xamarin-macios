@@ -7710,9 +7710,14 @@ namespace Foundation
 		[Export ("redoActionName")]
 		string RedoActionName { get; }
 
+#if NET
+		[Export ("setActionName:")]
+		void SetActionName (string actionName);
+#else
 		[Advice ("Use the correctly named method: 'SetActionName'.")]
 		[Export ("setActionName:")]
 		void SetActionname (string actionName); 
+#endif
 
 		[Export ("undoMenuItemTitle")]
 		string UndoMenuItemTitle { get; }

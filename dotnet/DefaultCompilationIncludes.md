@@ -48,13 +48,6 @@ included by default (as `CoreMLModel` items).
 All \*.metal files anywhere in the project directory or any subdirectory are
 included by default (as `Metal` items).
 
-## Binding projects
-
-Default compilation includes is turned off for binding projects, because
-typically there are C# source files (ApiDefinition.cs, StructsAndEnums.cs,
-etc.) in the binding project directory which should be compiled as binding
-source code, and not as normal C# source code.
-
 [1]: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#default-compilation-includes-in-net-core-projects
 
 ## Font files
