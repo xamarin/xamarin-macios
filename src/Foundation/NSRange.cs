@@ -36,17 +36,17 @@ namespace Foundation {
 			Length = len;
 		}
 
-		public override int GetHashCode()
+		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Location, Length);
+			return HashCode.Combine (Location, Length);
 		}
 		
-		public override bool Equals(object obj)
+		public override bool Equals (object obj)
 		{
-			return obj is NSRange other && Equals(other);
+			return obj is NSRange other && Equals (other);
 		}
 		
-		public bool Equals(NSRange other)
+		public bool Equals (NSRange other)
 		{
 			return Location == other.Location && Length == other.Length;
 		}
