@@ -53,7 +53,7 @@ namespace Foundation {
 
 		public override string ToString ()
 		{
-			return String.Format ("[Location={0},Length={1}]", Location, Length);
+			return string.Format ("[Location={0},Length={1}]", Location, Length);
 		}
 	}
 }
