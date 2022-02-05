@@ -46,7 +46,7 @@ namespace Foundation {
 			return obj is NSRange other && Equals(other);
 		}
 		
-		public override bool Equals(NSRange other)
+		public bool Equals(NSRange other)
 		{
 			return Location == other.Location && Length == other.Length;
 		}
