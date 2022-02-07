@@ -109,7 +109,11 @@ namespace MyTVMetalGame {
 
 			timer = CADisplayLink.Create (Gameloop);
 			timer.FrameInterval = 1;
+#if NET
+			timer.AddToRunLoop (NSRunLoop.Main, NSRunLoopMode.Default);
+#else
 			timer.AddToRunLoop (NSRunLoop.Main, NSRunLoop.NSDefaultRunLoopMode);
+#endif
 		}
 
 		public override void DidReceiveMemoryWarning ()
