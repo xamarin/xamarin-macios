@@ -60,12 +60,12 @@ namespace Introspection {
 			case "WatchKit": // Apple removed WatchKit from iOS
 #endif
 				return true;
-#elif __TVOS__ && !XAMCORE_4_0
+#elif __TVOS__ && !NET
 			// mistakes (can't be fixed without breaking binary compatibility)
 			case "CoreSpotlight":
 			case "WebKit":
 				return true;
-#elif __WATCHOS__ && !XAMCORE_4_0
+#elif __WATCHOS__ && !NET
 			// helpers (largely enums) for AVFoundation API - no p/invokes or obj-C API that requires native linking
 			case "AudioToolbox":
 				return true;
