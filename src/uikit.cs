@@ -10452,7 +10452,7 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring
+	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring, UIResponderStandardEditActions
 #if !TVOS
 	, UIAccessibilityDragging
 #endif // !TVOS
@@ -10526,65 +10526,6 @@ namespace UIKit {
 
 		[Export ("remoteControlReceivedWithEvent:")]
 		void RemoteControlReceived  ([NullAllowed] UIEvent theEvent);
-
-		// From the informal protocol ( = category on NSObject) UIResponderStandardEditActions
-
-		[Export ("cut:")]
-		void Cut ([NullAllowed] NSObject sender);
-		
-		[Export ("copy:")]
-		void Copy ([NullAllowed] NSObject sender);
-		
-		[Export ("paste:")]
-		void Paste ([NullAllowed] NSObject sender);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("pasteAndMatchStyle:")]
-		void PasteAndMatchStyle ([NullAllowed] NSObject sender);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("pasteAndGo:")]
-		void PasteAndGo ([NullAllowed] NSObject sender);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("pasteAndSearch:")]
-		void PasteAndSearch ([NullAllowed] NSObject sender);
-
-		[Export ("select:")]
-		void Select ([NullAllowed] NSObject sender);
-		
-		[Export ("selectAll:")]
-		void SelectAll ([NullAllowed] NSObject sender);
-		
-		[Export ("delete:")]
-		void Delete ([NullAllowed] NSObject sender);
-		
-		[Export ("makeTextWritingDirectionLeftToRight:")]
-		void MakeTextWritingDirectionLeftToRight ([NullAllowed] NSObject sender);
-	
-		[Export ("makeTextWritingDirectionRightToLeft:")]
-		void MakeTextWritingDirectionRightToLeft ([NullAllowed] NSObject sender);
-
-		[iOS (13,0), TV (13,0)]
-		[Export ("updateTextAttributesWithConversionHandler:")]
-		void UpdateTextAttributes (UITextAttributesConversionHandler conversionHandler);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("print:")]
-		void Print ([NullAllowed] NSObject sender);
-
-		//
-		// 6.0
-		//
-
-		[Export ("toggleBoldface:")]
-		void ToggleBoldface ([NullAllowed] NSObject sender);
-
-		[Export ("toggleItalics:")]
-		void ToggleItalics ([NullAllowed] NSObject sender);
-
-		[Export ("toggleUnderline:")]
-		void ToggleUnderline ([NullAllowed] NSObject sender);
 
 		//
 		// 7.0
@@ -10685,6 +10626,69 @@ namespace UIKit {
 		NSTouchBar TouchBar { get; set; }
 	}
 	
+	[Protocol]
+	interface UIResponderStandardEditActions {
+		[Export ("cut:")]
+		void Cut ([NullAllowed] NSObject sender);
+
+		[Export ("copy:")]
+		void Copy ([NullAllowed] NSObject sender);
+
+		[Export ("paste:")]
+		void Paste ([NullAllowed] NSObject sender);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("pasteAndMatchStyle:")]
+		void PasteAndMatchStyle ([NullAllowed] NSObject sender);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("pasteAndGo:")]
+		void PasteAndGo ([NullAllowed] NSObject sender);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("pasteAndSearch:")]
+		void PasteAndSearch ([NullAllowed] NSObject sender);
+
+		[Export ("select:")]
+		void Select ([NullAllowed] NSObject sender);
+
+		[Export ("selectAll:")]
+		void SelectAll ([NullAllowed] NSObject sender);
+
+		[Export ("delete:")]
+		void Delete ([NullAllowed] NSObject sender);
+
+		[Export ("makeTextWritingDirectionLeftToRight:")]
+		void MakeTextWritingDirectionLeftToRight ([NullAllowed] NSObject sender);
+
+		[Export ("makeTextWritingDirectionRightToLeft:")]
+		void MakeTextWritingDirectionRightToLeft ([NullAllowed] NSObject sender);
+
+		[Export ("toggleBoldface:")]
+		void ToggleBoldface ([NullAllowed] NSObject sender);
+
+		[Export ("toggleItalics:")]
+		void ToggleItalics ([NullAllowed] NSObject sender);
+
+		[Export ("toggleUnderline:")]
+		void ToggleUnderline ([NullAllowed] NSObject sender);
+
+		[Export ("decreaseSize:")]
+		void DecreaseSize ([NullAllowed] NSObject sender);
+
+		[Export ("increaseSize:")]
+		void IncreaseSize ([NullAllowed] NSObject sender);
+
+		[iOS (13,0), TV (13,0)]
+		[Export ("updateTextAttributesWithConversionHandler:")]
+		void UpdateTextAttributes (UITextAttributesConversionHandler conversionHandler);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("print:")]
+		void Print ([NullAllowed] NSObject sender);
+	}
+
+#if !NET // These two methods are in the UIResponderStandardEditActions protocol
 	[Category, BaseType (typeof (UIResponder))]
 	interface UIResponder_NSObjectExtension {
 		[Export ("decreaseSize:")]
@@ -10693,6 +10697,7 @@ namespace UIKit {
 		[Export ("increaseSize:")]
 		void IncreaseSize ([NullAllowed] NSObject sender);
 	}
+#endif
 	
 	[BaseType (typeof (NSObject))]
 	interface UIScreen : UITraitEnvironment {
