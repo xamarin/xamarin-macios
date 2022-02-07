@@ -460,6 +460,7 @@
 				IntermediateLinkDir=$(IntermediateLinkDir)
 				InvariantGlobalization=$(InvariantGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
+				IsAppExtension=$(IsAppExtension)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LibMonoLinkMode=$(_LibMonoLinkMode)
 				LibXamarinLinkMode=$(_LibXamarinLinkMode)

@@ -155,6 +155,9 @@ namespace Xamarin.Linker {
 					if (!string.IsNullOrEmpty (value))
 						Application.ParseInterpreter (value);
 					break;
+				case "IsAppExtension":
+					Application.IsExtension = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
 					break;
