@@ -1547,6 +1547,12 @@ namespace Xamarin.Bundler {
 			} else
 				aotArguments.Add ("full");
 
+			if (IsDeviceBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/0");
+			} else if (IsSimulatorBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/1");
+			}
+
 			var aname = Path.GetFileNameWithoutExtension (fname);
 			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
 

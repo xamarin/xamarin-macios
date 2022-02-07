@@ -82,9 +82,6 @@
 !missing-pinvoke! NSRectFromString is not bound
 !missing-pinvoke! NSReturnAddress is not bound
 !missing-pinvoke! NSSizeFromString is not bound
-!missing-pinvoke! NSStringFromPoint is not bound
-!missing-pinvoke! NSStringFromRect is not bound
-!missing-pinvoke! NSStringFromSize is not bound
 !missing-pinvoke! NSUnionRect is not bound
 !missing-protocol! NSSpellServerDelegate not bound
 !missing-protocol-member! NSFileManagerDelegate::fileManager:shouldCopyItemAtURL:toURL: not found

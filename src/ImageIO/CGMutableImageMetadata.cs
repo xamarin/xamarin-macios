@@ -19,7 +19,9 @@ using ObjCRuntime;
 
 namespace ImageIO {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+#else
 	[iOS (7,0)]
 #endif
 	public class CGMutableImageMetadata : CGImageMetadata {

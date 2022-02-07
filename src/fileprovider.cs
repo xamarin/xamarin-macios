@@ -19,7 +19,7 @@ using UniformTypeIdentifiers;
 using NativeHandle = System.IntPtr;
 #endif
 
-#if IOS && !XAMCORE_4_0 && !__MACCATALYST__
+#if IOS && !NET && !__MACCATALYST__
 using FileProvider;
 
 // This is the original (iOS 8) location of `NSFileProviderExtension`
@@ -262,7 +262,7 @@ namespace FileProvider {
 		ExcludingFromSync = 1 << 7,
 		AddingSubItems = Writing,
 		ContentEnumerating = Reading,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This enum value is not constant across OS and versions.")]
 	#if MONOMAC
 		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting | Evicting,
@@ -446,7 +446,7 @@ namespace FileProvider {
 		[Export ("filename")]
 		string Filename { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		// became optional when deprecated
 		[Abstract]
 #endif
@@ -492,7 +492,7 @@ namespace FileProvider {
 		[Export ("favoriteRank", ArgumentSemantic.Copy)]
 		NSNumber GetFavoriteRank ();
 
-#if XAMCORE_4_0 // Not available in mac
+#if NET // Not available in mac
 		[NoMac]
 #elif MONOMAC
 		[Obsolete ("'IsTrashed' is not available in macOS and will be removed in the future.")]

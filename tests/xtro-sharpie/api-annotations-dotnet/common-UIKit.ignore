@@ -14,9 +14,6 @@
 !missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
 !missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound
 
-## this was (pre iOS10) a required member that was deprecated and made optional
-!incorrect-protocol-member! UIFocusEnvironment::preferredFocusedView is OPTIONAL and should NOT be abstract
-
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=43788
 !missing-selector! +UIView::layerClass not bound
 
@@ -50,16 +47,6 @@
 !missing-selector! UILabel::isUserInteractionEnabled not bound
 !missing-selector! UILabel::setUserInteractionEnabled: not bound
 
-## it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
-!incorrect-protocol-member! UIInputViewAudioFeedback::enableInputClicksWhenVisible is OPTIONAL and should NOT be abstract
-
-## fixed in XAMCORE_4_0 - API break
-!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
-!incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
-!incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract
-
 ## the [Sealed] attributes removes the [Export] one so it seems missing (but it's not)
 !missing-selector! UIGestureRecognizer::ignorePress:forEvent: not bound
 
@@ -75,10 +62,6 @@
 !missing-pinvoke! CGPointFromString is not bound
 !missing-pinvoke! CGRectFromString is not bound
 !missing-pinvoke! CGSizeFromString is not bound
-!missing-pinvoke! NSStringFromCGAffineTransform is not bound
-!missing-pinvoke! NSStringFromCGPoint is not bound
-!missing-pinvoke! NSStringFromCGRect is not bound
-!missing-pinvoke! NSStringFromCGSize is not bound
 !missing-pinvoke! NSStringFromUIOffset is not bound
 !missing-pinvoke! UIOffsetFromString is not bound
 
@@ -131,15 +114,6 @@
 !missing-selector! NSObject::setIsAccessibilityElement: not bound
 !missing-selector! NSObject::setShouldGroupAccessibilityChildren: not bound
 !missing-selector! NSObject::shouldGroupAccessibilityChildren not bound
-
-## @required members added to exixting interfaces (breaking change), fixed on XAMCORE_4_0
-!incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
-!incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
-!incorrect-protocol-member! UITextDocumentProxy::documentIdentifier is REQUIRED and should be abstract
-!incorrect-protocol-member! UITextDocumentProxy::selectedText is REQUIRED and should be abstract
-!incorrect-protocol-member! UIViewControllerContextTransitioning::pauseInteractiveTransition is REQUIRED and should be abstract
-!incorrect-protocol-member! UIViewControllerTransitionCoordinator::notifyWhenInteractionChangesUsingBlock: is REQUIRED and should be abstract
-!incorrect-protocol-member! UIViewControllerTransitionCoordinatorContext::isInterruptible is REQUIRED and should be abstract
 
 # Apple renamed it from UILineBreakMode and we kept the old name for API compatibility
 !missing-enum! NSLineBreakMode not bound

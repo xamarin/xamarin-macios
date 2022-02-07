@@ -1121,7 +1121,9 @@ namespace WebKit {
 		void InitEvent (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
 #endif
 
+#if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		[Export ("initEvent:canBubbleArg:cancelableArg:")]
 		NativeHandle Constructor (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
 	}
@@ -1138,7 +1140,9 @@ namespace WebKit {
 		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
 		void InitEvent (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
 #endif
+#if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
 		NativeHandle Constructor (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
 
@@ -1175,7 +1179,9 @@ namespace WebKit {
 		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
 		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
 #endif
+#if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
 
@@ -1218,11 +1224,15 @@ namespace WebKit {
 		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 #endif
 
+#if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
 
+#if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
@@ -1266,7 +1276,9 @@ namespace WebKit {
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
 		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, [Protocolize] DomEventTarget relatedTarget);
 #endif
+#if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, [Protocolize] DomEventTarget relatedTarget);
 
@@ -1329,7 +1341,9 @@ namespace WebKit {
 		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
 		void InitEvent (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 #endif
+#if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
+#endif
 		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
 		NativeHandle Constructor (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
@@ -2102,12 +2116,21 @@ namespace WebKit {
 	[Protocol]
 #endif
 	partial interface WebOpenPanelResultListener {
+#if NET
+		[Abstract]
+#endif
 		[Export ("chooseFilename:")]
 		void ChooseFilename (string filename);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("chooseFilenames:")]
 		void ChooseFilenames (string [] filenames);
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("cancel")]
 		void Cancel ();
 	}
@@ -2141,12 +2164,21 @@ namespace WebKit {
 	[Protocol]
 #endif
 	partial interface WebPolicyDecisionListener {
+#if NET
+		[Abstract]
+#endif
 		[Export ("use")]
 		void Use ();
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("download")]
 		void Download ();
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("ignore")]
 		void Ignore ();
 	}
@@ -2384,7 +2416,7 @@ namespace WebKit {
 		[Export ("webView:validateUserInterfaceItem:defaultValidation:"), DelegateName ("WebViewValidateUserInterface"), DefaultValueFromArgument ("defaultValidation")]
 		bool UIValidateUserInterfaceItem (WebView webView, NSObject validatedUserInterfaceItem, bool defaultValidation);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("webView:shouldPerformAction:fromSender:"), DelegateName("WebViewPerformAction"), DefaultValue (null)]
 		bool UIShouldPerformActionfromSender (WebView webView, Selector action, NSObject sender);
 #else
@@ -2394,13 +2426,17 @@ namespace WebKit {
 
 		[Export ("webView:dragDestinationActionMaskForDraggingInfo:"), DelegateName ("DragDestinationGetActionMask"), DefaultValue (0)]
 #if NET
-		WebDragDestinationAction UIGetDragDestinationActionMask (WebView webView, NSDraggingInfo draggingInfo);
+		WebDragDestinationAction UIGetDragDestinationActionMask (WebView webView, INSDraggingInfo draggingInfo);
 #else
 		NSEventModifierMask UIGetDragDestinationActionMask (WebView webView, NSDraggingInfo draggingInfo);
 #endif
 
 		[Export ("webView:willPerformDragDestinationAction:forDraggingInfo:"), EventArgs ("WebViewDrag")]
+#if NET
+		void UIWillPerformDragDestination (WebView webView, WebDragDestinationAction action, INSDraggingInfo draggingInfo);
+#else
 		void UIWillPerformDragDestination (WebView webView, WebDragDestinationAction action, NSDraggingInfo draggingInfo);
+#endif
 
 		[Export ("webView:dragSourceActionMaskForPoint:"), DelegateName ("DragSourceGetActionMask"), DefaultValue (0)]
 #if NET

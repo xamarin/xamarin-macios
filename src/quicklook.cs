@@ -160,7 +160,7 @@ namespace QuickLook {
 		[Abstract]
 		[NullAllowed]
 		[Export ("previewItemURL")]
-#if XAMCORE_4_0
+#if NET
 		NSUrl PreviewItemUrl { get; }
 #else
 		NSUrl ItemUrl { get; }
@@ -168,7 +168,7 @@ namespace QuickLook {
 
 		[Export ("previewItemTitle")]
 		[NullAllowed]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 		string ItemTitle { get; }
 #else

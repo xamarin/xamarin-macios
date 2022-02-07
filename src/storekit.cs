@@ -106,7 +106,7 @@ namespace StoreKit {
 
 	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_4_0
+#if NET
 	[DisableDefaultCtor]
 #endif
 	partial interface SKPayment : NSMutableCopying {
@@ -149,7 +149,7 @@ namespace StoreKit {
 
 	[Watch (6, 2)]
 	[BaseType (typeof (SKPayment))]
-#if XAMCORE_4_0
+#if NET
 	[DisableDefaultCtor]
 #endif
 	interface SKMutablePayment {
@@ -289,7 +289,7 @@ namespace StoreKit {
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'IsDownloadable' instead.")]
 		[Export ("downloadable")]
 		bool Downloadable { get; }
-#elif !XAMCORE_4_0
+#elif !NET
 		[Obsolete ("Use 'IsDownloadable' instead.")]
 		bool Downloadable {
 			[Wrap ("IsDownloadable")]
@@ -303,7 +303,7 @@ namespace StoreKit {
 
 		[NoiOS]
 		[NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[NoTV]
 #else
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'DownloadContentLengths' instead.")]
@@ -316,12 +316,8 @@ namespace StoreKit {
 		[Export ("downloadContentLengths")]
 		NSNumber [] DownloadContentLengths { get;  }
 
-		[NoiOS]
-#if XAMCORE_4_0
-		[NoTV]
-#else
-		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'DownloadContentVersion' instead.")]
-#endif
+		[iOS (13,0)]
+		[TV (13,0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'DownloadContentVersion' instead.")]
 		[Export ("contentVersion")]
 		string ContentVersion { get; }
@@ -531,7 +527,7 @@ namespace StoreKit {
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
 	interface SKStoreProductViewController {
-#if !XAMCORE_4_0
+#if !NET
 		// SKStoreProductViewController is an OS View Controller which can't be customized
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]

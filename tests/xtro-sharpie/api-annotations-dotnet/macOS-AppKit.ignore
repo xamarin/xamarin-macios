@@ -32,10 +32,6 @@
 ## Defined in NSLayoutManager (NSLayoutManagerDeprecated)
 !missing-selector! NSLayoutManager::rectArrayForCharacterRange:withinSelectedCharacterRange:inTextContainer:rectCount: not bound
 
-## Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
-!unknown-type! NSRemoteOpenPanel bound
-!unknown-type! NSRemoteSavePanel bound
-
 ## Defined in NSControlTextEditingDelegate - NSTextFieldDelegate <NSControlTextEditingDelegate>
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToFormatString:errorDescription: found
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToValidatePartialString:errorDescription: found
@@ -59,87 +55,13 @@
 
 !missing-protocol-member! NSTextViewDelegate::textView:draggedCell:inRect:event: not found
 
-## unsorted
-
-!extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanel: found
-!extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanelWithOptions: found
-!extra-protocol-member! unexpected selector NSApplicationDelegate::readSelectionFromPasteboard: found
-!extra-protocol-member! unexpected selector NSApplicationDelegate::registerServicesMenuSendTypes:returnTypes: found
-!extra-protocol-member! unexpected selector NSApplicationDelegate::writeSelectionToPasteboard:types: found
-!extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
-!extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
+# These members are required and static, and the generator doesn't create the correct code for that case
 !incorrect-protocol-member! +NSPasteboardReading::readableTypesForPasteboard: is REQUIRED and should be abstract
 !incorrect-protocol-member! +NSWindowRestoration::restoreWindowWithIdentifier:state:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::accessibilityCustomActions is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::accessibilityCustomRotors is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::isAccessibilityRequired is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::setAccessibilityChildrenInNavigationOrder: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomActions: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomRotors: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAccessibility::setAccessibilityRequired: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAppearanceCustomization::appearance is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAppearanceCustomization::effectiveAppearance is REQUIRED and should be abstract
-!incorrect-protocol-member! NSAppearanceCustomization::setAppearance: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDockTilePlugIn::dockMenu is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSDraggingInfo::animatesToDestination is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggedImage is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggedImageLocation is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggingDestinationWindow is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggingFormation is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggingLocation is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggingPasteboard is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggingSequenceNumber is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggingSource is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::draggingSourceOperationMask is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::enumerateDraggingItemsWithOptions:forView:classes:searchOptions:usingBlock: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::namesOfPromisedFilesDroppedAtDestination: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::numberOfValidItemsForDrop is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::resetSpringLoading is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::setAnimatesToDestination: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::setDraggingFormation: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::setNumberOfValidItemsForDrop: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::slideDraggedImageTo: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSDraggingInfo::springLoadingHighlight is REQUIRED and should be abstract
-!incorrect-protocol-member! NSFilePromiseProviderDelegate::filePromiseProvider:writePromiseToURL:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSMenuDelegate::menu:willHighlightItem: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSPasteboardItemDataProvider::pasteboardFinishedWithDataProvider: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSPasteboardWriting::pasteboardPropertyListForType: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSPasteboardWriting::writableTypesForPasteboard: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSPrintPanelAccessorizing::keyPathsForValuesAffectingPreview is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSRuleEditorDelegate::ruleEditor:predicatePartsForCriterion:withDisplayValue:inRow: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSRuleEditorDelegate::ruleEditorRowsDidChange: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::allowsMultipleSelection is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::contentViewAtIndex:effectiveCharacterRange: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::didReplaceCharacters is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::drawCharactersInRange:forContentView: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::firstSelectedRange is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::isEditable is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::isSelectable is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::rectsForCharacterRange: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::replaceCharactersInRange:withString: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::scrollRangeToVisible: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::selectedRanges is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::setSelectedRanges: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::shouldReplaceCharactersInRanges:withStrings: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::string is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::stringAtIndex:effectiveRange:endsWithSearchBoundary: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::stringLength is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextFinderClient::visibleCharacterRanges is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! NSTextInputClient::attributedSubstringForProposedRange:actualRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::characterIndexForPoint: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::firstRectForCharacterRange:actualRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::hasMarkedText is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::insertText:replacementRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::markedRange is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::selectedRange is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::setMarkedText:selectedRange:replacementRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::unmarkText is REQUIRED and should be abstract
-!incorrect-protocol-member! NSTextInputClient::validAttributesForMarkedText is REQUIRED and should be abstract
-!incorrect-protocol-member! NSUserInterfaceItemIdentification::identifier is REQUIRED and should be abstract
-!incorrect-protocol-member! NSUserInterfaceItemIdentification::setIdentifier: is REQUIRED and should be abstract
+
+## unsorted
+
 !missing-enum! NSWritingDirectionFormatType not bound
-!missing-enum-native! NSSpellingState
 !missing-field! NSAuthorDocumentAttribute not bound
 !missing-field! NSBackgroundColorDocumentAttribute not bound
 !missing-field! NSBottomMarginDocumentAttribute not bound
@@ -177,7 +99,6 @@
 !missing-protocol! NSGlyphStorage not bound
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
-!missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSPageController should conform to NSAnimatablePropertyContainer
@@ -275,7 +196,6 @@
 !unknown-field! NSTableColumn bound
 !unknown-field! NSTextMovement bound
 !unknown-native-enum! NSAlertButtonReturn bound
-!unknown-native-enum! NSApplicationLayoutDirection bound
 !unknown-native-enum! NSBackingStore bound
 !unknown-native-enum! NSCellHit bound
 !unknown-native-enum! NSCellStateValue bound
@@ -285,23 +205,14 @@
 !unknown-native-enum! NSFontPanelMode bound
 !unknown-native-enum! NSImageScale bound
 !unknown-native-enum! NSMenuProperty bound
-!unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSRunResponse bound
 !unknown-native-enum! NSTableColumnResizing bound
 !unknown-native-enum! NSTableViewAnimation bound
 !unknown-native-enum! NSTableViewGridStyle bound
-!unknown-native-enum! NSTextStorageEditedFlags bound
-!unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
-!wrong-enum-size! NSSpellingState managed 4 vs native 8
 
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
-
-## Fixed in XAMCORE_4_0
-!missing-protocol-conformance! NSController should conform to NSEditor
-!missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
 
 ## NSStandardKeyBindingResponding is strange case - technically on NSResponder but responder subclasses can implement any that make sense.
 !missing-protocol-conformance! NSTextView should conform to NSStandardKeyBindingResponding
@@ -310,23 +221,19 @@
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
 
-## 42781537 Classes fail to conformsToProtocol despite header declaration
-!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
-!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
-
 ## Added in Xcode 10.2 Final but deprecated
 
 !missing-release-attribute-on-return-value! AppKit.NSDictionaryControllerKeyValuePair AppKit.NSDictionaryController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! Foundation.NSObject AppKit.NSObjectController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
 # Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.NSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.NSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.NSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #4
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.NSDraggingInfo,System.IntPtr&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.NSDraggingInfo,System.IntPtr&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDropOperation(AppKit.NSCollectionView,AppKit.NSDraggingInfo,Foundation.NSIndexPath&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDropOperation(AppKit.NSCollectionView,AppKit.NSDraggingInfo,Foundation.NSIndexPath&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #3
+!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.INSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #2
+!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.INSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #3
+!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.INSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #4
+!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,System.IntPtr&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #2
+!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,System.IntPtr&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #3
+!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,Foundation.NSIndexPath&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #2
+!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,Foundation.NSIndexPath&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'AppKit.NSImage AppKit.NSCollectionView::GetDraggingImage(Foundation.NSSet`1<Foundation.NSIndexPath>,AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'AppKit.NSImage AppKit.NSCollectionViewDelegate::GetDraggingImage(AppKit.NSCollectionView,Foundation.NSSet,AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'AppKit.NSImage AppKit.NSTableView::DragImageForRows(Foundation.NSIndexSet,AppKit.NSTableColumn[],AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #3
@@ -386,7 +293,6 @@
 !missing-null-allowed! 'AppKit.NSCell AppKit.NSTableViewDelegate::GetDataCell(AppKit.NSTableView,AppKit.NSTableColumn,System.IntPtr)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'AppKit.NSCell AppKit.NSTableViewDelegate::GetDataCell(AppKit.NSTableView,AppKit.NSTableColumn,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSCell[] AppKit.NSBrowser::SelectedCells()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSCollectionViewItem AppKit.NSCollectionView::ItemAtIndex(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSColor AppKit.NSBitmapImageRep::ColorAt(System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSColor AppKit.NSBrowserCell::HighlightColorInView(AppKit.NSView)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSColor AppKit.NSColor::BlendedColor(ObjCRuntime.nfloat,AppKit.NSColor)' is missing an [NullAllowed] on return type
@@ -447,7 +353,6 @@
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSBrowserCell::get_BranchImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSBrowserCell::get_HighlightedBranchImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSImageDelegate::ImageDidNotDraw(Foundation.NSObject,CoreGraphics.CGRect)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSImage AppKit.NSRunningApplication::get_Icon()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSSegmentedCell::GetImageForSegment(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSSegmentedControl::GetImage(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSSharingService::get_AlternateImage()' is missing an [NullAllowed] on return type
@@ -531,8 +436,6 @@
 !missing-null-allowed! 'AppKit.NSText AppKit.NSControl::get_CurrentEditor()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSText AppKit.NSWindow::FieldEditor(System.Boolean,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::get_ExtraLineFragmentTextContainer()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::GetTextContainer(System.UIntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSLayoutManager::GetTextContainer(System.UIntPtr,System.IntPtr,System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSTypesetter::get_CurrentTextContainer()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer[] AppKit.NSTypesetter::get_TextContainers()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextInputContext AppKit.NSTextInputContext::get_CurrentInputContext()' is missing an [NullAllowed] on return type
@@ -574,7 +477,6 @@
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSApplication::get_ModalWindow()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSApplication::WindowWithWindowNumber(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSDocument::get_WindowForSheet()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSWindow AppKit.NSDraggingInfo::get_DraggingDestinationWindow()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSEvent::get_Window()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSPopoverDelegate::GetDetachableWindowForPopover(AppKit.NSPopover)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSSharingServiceDelegate::SourceWindowForShareItems(AppKit.NSSharingService,Foundation.NSObject[],AppKit.NSSharingContentScope)' is missing an [NullAllowed] on return type
@@ -595,7 +497,6 @@
 !missing-null-allowed! 'CoreGraphics.CGSize AppKit.NSStringDrawing_NSString::StringSize(Foundation.NSString,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'CoreImage.CIContext AppKit.NSGraphicsContext::get_CIContext()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAffineTransform AppKit.NSFontDescriptor::get_Matrix()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSArray AppKit.NSTextFinderClient::RectsForCharacterRange(Foundation.NSRange)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray AppKit.NSTextView::RangesForUserCharacterAttributeChange()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray AppKit.NSTextView::RangesForUserParagraphAttributeChange()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray AppKit.NSTextView::RangesForUserTextChange()' is missing an [NullAllowed] on return type
@@ -621,17 +522,15 @@
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDocFormat(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtf(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtfd(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate AppKit.NSRunningApplication::get_LaunchDate()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSCollectionViewLayoutInvalidationContext::get_InvalidatedDecorationIndexPaths()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSCollectionViewLayoutInvalidationContext::get_InvalidatedSupplementaryIndexPaths()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSDocument::FileAttributesToWrite(Foundation.NSUrl,System.String,AppKit.NSSaveOperationType,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSGraphicsContext::get_Attributes()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary AppKit.NSLayoutManagerDelegate::ShouldUseTemporaryAttributes(AppKit.NSLayoutManager,Foundation.NSDictionary,System.Boolean,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSRuleEditorDelegate::PredicateParts(AppKit.NSRuleEditor,Foundation.NSObject,Foundation.NSObject,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTableView::get_RegisteredNibsByIdentifier()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTrackingArea::get_UserInfo()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSWorkspace::DesktopImageOptions(AppKit.NSScreen)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSObject::BindingInfo(System.String)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSObject::GetBindingInfo(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSExpression[] AppKit.NSPredicateEditorRowTemplate::get_LeftExpressions()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSExpression[] AppKit.NSPredicateEditorRowTemplate::get_RightExpressions()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSFileWrapper AppKit.NSDocument::GetAsFileWrapper(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
@@ -660,7 +559,6 @@
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDocumentController::MakeDocument(Foundation.NSUrl,System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDocumentController::MakeUntitledDocument(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDocumentController::OpenUntitledDocument(System.Boolean,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSDraggingInfo::get_DraggingSource()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSEPSImageRep::FromData(Foundation.NSData)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSEvent::AddGlobalMonitorForEventsMatchingMask(AppKit.NSEventMask,AppKit.GlobalEventHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSEvent::AddLocalMonitorForEventsMatchingMask(AppKit.NSEventMask,AppKit.LocalEventHandler)' is missing an [NullAllowed] on return type
@@ -677,7 +575,6 @@
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSOutlineViewDelegate::GetNextTypeSelectMatch(AppKit.NSOutlineView,Foundation.NSObject,Foundation.NSObject,System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSPasteboard::GetPropertyListForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSPasteboardItem::GetPropertyListForType(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSPasteboardWriting::GetPasteboardPropertyListForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSResponder::SupplementalTargetForAction(ObjCRuntime.Selector,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSResponder::ValidRequestorForSendType(System.String,System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSSpeechSynthesizer::ObjectForProperty(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
@@ -713,8 +610,6 @@
 !missing-null-allowed! 'Foundation.NSUndoManager AppKit.NSWindowDelegate::WillReturnUndoManager(AppKit.NSWindow)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSDocument::get_BackupFileUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSPathControlItem::get_Url()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl AppKit.NSRunningApplication::get_BundleUrl()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl AppKit.NSRunningApplication::get_ExecutableUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSSavePanel::get_Url()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSSharingService::get_PermanentLink()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSWorkspace::DesktopImageUrl(AppKit.NSScreen)' is missing an [NullAllowed] on return type
@@ -727,7 +622,7 @@
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSDocumentController::DocumentClassForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSImageRep::ImageRepClassForData(Foundation.NSData)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSImageRep::ImageRepClassForType(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ObjCRuntime.Class Foundation.NSObject::BindingValueClass(System.String)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'ObjCRuntime.Class Foundation.NSObject::GetBindingValueClass(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Boolean AppKit.NSBrowser::IsLeafItem(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSBrowserDelegate::IsLeafItem(AppKit.NSBrowser,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSBrowserDelegate::ShouldEditItem(AppKit.NSBrowser,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
@@ -802,8 +697,6 @@
 !missing-null-allowed! 'System.String AppKit.NSPopUpButton::get_TitleOfSelectedItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSPopUpButtonCell::get_TitleOfSelectedItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSPrintInfo::get_LocalizedPaperName()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AppKit.NSRunningApplication::get_BundleIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AppKit.NSRunningApplication::get_LocalizedName()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSegmentedCell::GetLabel(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSegmentedControl::GetLabel(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSharingService::get_AccountName()' is missing an [NullAllowed] on return type
@@ -850,7 +743,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSApplication::MiniaturizeAll(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSApplication::OrderFrontCharacterPalette(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSApplication::OrderFrontColorPanel(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSApplication::OrderFrontStandardAboutPanel2(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSApplication::set_ApplicationIconImage(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSApplication::set_MainMenu(AppKit.NSMenu)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSApplication::set_ServicesMenu(AppKit.NSMenu)' is missing an [NullAllowed] on parameter #0
@@ -951,8 +843,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSDocumentController::CloseAllDocuments(Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSDocumentController::CloseAllDocuments(Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSDocumentController::ReviewUnsavedDocuments(System.String,System.Boolean,Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSDraggingDestination::ConcludeDragOperation(AppKit.NSDraggingInfo)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSDraggingDestination::DraggingExited(AppKit.NSDraggingInfo)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSDraggingImageComponent::set_Contents(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSFontManager::AddFontTrait(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSFontManager::ModifyFont(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
@@ -967,7 +857,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::FindString(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::OpenHelpAnchor(System.String,System.String)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AppKit.NSLayoutManagerDelegate::LayoutCompleted(AppKit.NSLayoutManager,AppKit.NSTextContainer,System.Boolean)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_CriticalFillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_FillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_WarningFillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
@@ -1145,7 +1034,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSTextFinderBarContainer::set_FindBarView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::AlignJustified(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeAttributes(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeColor(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeDocumentBackgroundColor(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeLayoutOrientation(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::CheckTextInDocument(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
@@ -1235,7 +1123,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSFileWrapper::set_Icon(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 
 !extra-null-allowed! 'AppKit.NSMenu AppKit.NSTextCheckingController::GetMenu(System.UIntPtr,System.Boolean,Foundation.NSRange&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSView AppKit.NSTextFinderClient::ContentViewAtIndexeffectiveCharacterRange(System.UIntPtr,Foundation.NSRange&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSArray AppKit.NSTokenFieldCellDelegate::GetCompletionStrings(AppKit.NSTokenFieldCell,System.String,System.IntPtr,System.IntPtr&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'Foundation.NSData AppKit.NSBitmapImageRep::RepresentationUsingTypeProperties(AppKit.NSBitmapImageFileType,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetData(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
@@ -1244,7 +1131,6 @@
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtfd(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetFileWrapper(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetRtfdFileWrapper(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.String AppKit.NSTextFinderClient::StringAtIndexeffectiveRangeendsWithSearchBoundary(System.UIntPtr,Foundation.NSRange&,System.Boolean)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.String[] AppKit.NSControlTextEditingDelegate::GetCompletions(AppKit.NSControl,AppKit.NSTextView,System.String[],Foundation.NSRange,System.IntPtr&)' has a extraneous [NullAllowed] on parameter #4
 !extra-null-allowed! 'System.Void AppKit.NSCell::EditWithFrame(CoreGraphics.CGRect,AppKit.NSView,AppKit.NSText,Foundation.NSObject,AppKit.NSEvent)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void AppKit.NSCell::EditWithFrame(CoreGraphics.CGRect,AppKit.NSView,AppKit.NSText,Foundation.NSObject,AppKit.NSEvent)' has a extraneous [NullAllowed] on parameter #2
@@ -1285,7 +1171,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSCell::EditWithFrame(CoreGraphics.CGRect,AppKit.NSView,AppKit.NSText,Foundation.NSObject,AppKit.NSEvent)' is missing an [NullAllowed] on parameter #4
 !missing-null-allowed! 'System.Void AppKit.NSDocumentController::ReviewUnsavedDocuments(System.String,System.Boolean,Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSDocumentController::ReviewUnsavedDocuments(System.String,System.Boolean,Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #3
-!missing-null-allowed! 'System.Void AppKit.NSDraggingInfo::EnumerateDraggingItems(AppKit.NSDraggingItemEnumerationOptions,AppKit.NSView,System.IntPtr,Foundation.NSDictionary,AppKit.NSDraggingEnumerator)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSDraggingItem::SetDraggingFrame(CoreGraphics.CGRect,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSDraggingSession::EnumerateDraggingItems(AppKit.NSDraggingItemEnumerationOptions,AppKit.NSView,System.IntPtr,Foundation.NSDictionary,AppKit.NSDraggingEnumerator)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSMatrix::.ctor(CoreGraphics.CGRect,AppKit.NSMatrixMode,ObjCRuntime.Class,System.IntPtr,System.IntPtr)' is missing an [NullAllowed] on parameter #2

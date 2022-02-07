@@ -19,11 +19,19 @@ using Foundation;
 using AppKit;
 using UIColor = AppKit.NSColor;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.ObjCException;
+#endif
 #else
 using UIKit;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.MonoTouchException;
+#endif
 #endif
 using ObjCRuntime;
 #if !__TVOS__
@@ -2288,7 +2296,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var targetContentOffset = new CGPoint (3, 4);
 				Messaging.void_objc_msgSend_IntPtr_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), IntPtr.Zero, velocity, ref targetContentOffset);
 				Console.WriteLine (targetContentOffset);
+#if NET
+				Assert.AreEqual ("{123, 345}", targetContentOffset.ToString (), "ref output");
+#else
 				Assert.AreEqual ("{X=123, Y=345}", targetContentOffset.ToString (), "ref output");
+#endif
 			}
 		}
 #endif // !__WATCHOS
@@ -2299,8 +2311,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("scrollViewWillEndDragging:withVelocity:targetContentOffset:")]
 			public void WillEndDragging (UIScrollView scrollView, PointF velocity, ref PointF targetContentOffset)
 			{
+#if NET
+				Assert.AreEqual ("{1, 2}", velocity.ToString (), "velocity");
+				Assert.AreEqual ("{3, 4}", targetContentOffset.ToString (), "targetContentOffset");
+#else
 				Assert.AreEqual ("{X=1, Y=2}", velocity.ToString (), "velocity");
 				Assert.AreEqual ("{X=3, Y=4}", targetContentOffset.ToString (), "targetContentOffset");
+#endif
 				targetContentOffset = new CGPoint (123, 345);
 			}
 		}

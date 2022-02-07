@@ -67,7 +67,7 @@ namespace WebKit {
 			}
 		}
 
-#if XAMCORE_4_0
+#if NET
 		public IDomEventListener AddEventListener (string type, DomEventListenerHandler handler, bool useCapture)
 #else
 		public DomEventListener AddEventListener (string type, DomEventListenerHandler handler, bool useCapture)
@@ -80,7 +80,7 @@ namespace WebKit {
 			return obj;
 		}
 
-#if XAMCORE_4_0
+#if NET
 		public IDomEventListener AddEventListener (string type, Action<DomEvent> callback, bool useCapture)
 #else
 		public DomEventListener AddEventListener (string type, Action<DomEvent> callback, bool useCapture)

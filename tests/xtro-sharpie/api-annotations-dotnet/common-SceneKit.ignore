@@ -1,35 +1,3 @@
-## Breaking changes fixed in XAMCORE_4_0
-## we cannot add abstract members to existing SCNSceneRenderer or SCNAnimatable protocols (breaking changes)
-!incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNAnimatable::animationPlayerForKey: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNAnimatable::removeAnimationForKey:blendOutDuration: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNAnimatable::setSpeed:forAnimationKey: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::audioEngine is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::audioListener is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::debugOptions is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::nodesInsideFrustumWithPointOfView: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::presentScene:withTransition:incomingPointOfView:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::renderingAPI is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::setAudioListener: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::setDebugOptions: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::audioEnvironmentNode is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::colorPixelFormat is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::commandQueue is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::currentRenderCommandEncoder is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::depthPixelFormat is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::device is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::currentViewport is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::isTemporalAntialiasingEnabled is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::setTemporalAntialiasingEnabled: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::setUsesReverseZ: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::usesReverseZ is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::currentRenderPassDescriptor is REQUIRED and should be abstract
-
-## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
-!incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
-
 ## We have managed counterparts that comes from OpenTK code
 !missing-field! SCNMatrix4Identity not bound
 !missing-field! SCNVector3Zero not bound

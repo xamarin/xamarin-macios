@@ -145,7 +145,7 @@ namespace Introspection {
 				// The header declares this on an NSObject category but 
 				// it doesn't even respondsToSelector on NSView/NSCell...
 				return true;
-#if !XAMCORE_4_0
+#if !NET
 			case "xamarinselector:removed:":
 				return true;
 #endif
@@ -1216,10 +1216,6 @@ namespace Introspection {
 			case "usesSceneTimeBase":
 			case "setUsesSceneTimeBase:":
 				if (!Mac.CheckSystemVersion (10, 8))
-					return true;
-				break;
-			case "initWithString:":
-				if (declaredType.Name == "NSTextStorage")
 					return true;
 				break;
 			}

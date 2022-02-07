@@ -123,12 +123,14 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void MonoTouchException_Unconditional ()
 		{
-#if __MACOS__
-			const string klassName = "ObjCException";
+#if NET
+			const string klassName = "ObjCRuntime.ObjCException";
+#elif __MACOS__
+			const string klassName = "Foundation.ObjCException";
 #else
-			const string klassName = "MonoTouchException";
+			const string klassName = "Foundation.MonoTouchException";
 #endif
-			var klass = Type.GetType ("Foundation." + klassName +", " + AssemblyName);
+			var klass = Type.GetType (klassName +", " + AssemblyName);
 			Assert.NotNull (klass, klassName);
 		}
 

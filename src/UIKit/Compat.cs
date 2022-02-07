@@ -44,7 +44,7 @@ namespace UIKit {
 	}
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	public partial class UIPresentationController {
 
 		[Obsolete ("Removed in iOS10. Use '.ctor (UIViewController,UIViewController)'.")]
@@ -73,7 +73,7 @@ namespace UIKit {
 
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	public partial class UICollectionViewFocusUpdateContext {
 		[Obsolete ("This cannot be directly created.")]
 		public UICollectionViewFocusUpdateContext () { }

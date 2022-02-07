@@ -1,6 +1,6 @@
 // Copyright 2016, Xamarin Inc. All rights reserved.
 
-#if !COREBUILD
+#if !COREBUILD && !NET
 
 using System;
 using System.Runtime.Versioning;
@@ -19,7 +19,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CloudKit {
 
-#if !XAMCORE_4_0
+#if !NET
 	public partial class CKQueryNotification {
 
 		[Obsolete ("Empty stub (not public API). Use 'DatabaseScope' instead.")]
@@ -27,33 +27,17 @@ namespace CloudKit {
 	}
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	public partial class CKOperation {
 
-#if !NET
 		[Obsoleted (PlatformName.iOS, 9,3, message: "Do not use; this API was removed and will always return 0.")]
-#else
-#if IOS
-		[Obsolete ("Do not use; this API was removed and will always return 0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public virtual ulong ActivityStart ()
 		{
 			return 0;
 		}
 
-#if !NET
 		[Deprecated (PlatformName.iOS, 9,0, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
-#else
-		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("macos10.11")]
-#if IOS
-		[Obsolete ("Empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public virtual bool UsesBackgroundSession { get; set; }
 	}
 
@@ -101,19 +85,11 @@ namespace CloudKit {
 	}
 #endif
 
-#if !NET
 	[iOS (8,0), Mac (10,10)]
-#endif
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
 #if !WATCH	
-#if !NET
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
-#else
-#if IOS
-	[Obsolete ("Use 'CKDiscoverUserIdentitiesOperation' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	public partial class CKDiscoverUserInfosOperation : CKOperation { 
 
 		public CKDiscoverUserInfosOperation () : base () { }
@@ -126,9 +102,7 @@ namespace CloudKit {
 		protected CKDiscoverUserInfosOperation (NativeHandle handle)
 			=> throw new NotSupportedException ();
 
-#if !NET
 		[iOS (8,0), Mac (10,10)]
-#endif
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKDiscoverUserInfosCompletionHandler Completed { get; set; }
 
@@ -165,36 +139,22 @@ namespace CloudKit {
 
 #if MONOMAC || IOS
 	public partial class CKDiscoveredUserInfo {
-#if !NET
 		[iOS (9,0)][Mac (10,11)]
 		[Obsolete ("Empty stub (not public API).")]
-#else
-		[Obsolete ("Empty stub (not public API).", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public virtual CNContact DisplayContact { get; }
 
-#if NET
-		[UnsupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.GivenName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.GivenName'.")]
 		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.GivenName'.")]
 		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.GivenName'.")]
-#endif
 		public virtual string FirstName {
 			get { return null; }
 		}
 
-#if NET
-		[UnsupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.FamilyName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.FamilyName'.")]
 		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.FamilyName'.")]
 		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.FamilyName'.")]
-#endif
 		public virtual string LastName {
 			get { return null; }
 		}

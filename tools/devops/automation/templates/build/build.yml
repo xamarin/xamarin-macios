@@ -23,6 +23,26 @@ parameters:
   type: boolean
   default: false
 
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
+- name: uploadBinlogs
+  type: boolean
+  default: true
+
+- name: signAndNotarize
+  type: boolean
+  default: true
+
+- name: skipPackages
+  type: boolean
+  default: false 
+
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -52,50 +72,9 @@ steps:
     git remote # don't add -v else we see the pat
   displayName: 'Clean git mess from VSTS'
 
-- powershell: |
-    Write-Host "IsMacOS: ${IsMacOS}"
-    Write-Host "IsWindows: ${IsWindows}"
-    Write-Host "IsLinux: ${IsLinux}"
-
-    if ($IsMacOS -or $IsLinux) {
-        Write-Host "HOSTNAME: $(hostname)"
-    } else {
-        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
-    }
-
-    gci env: | format-table -autosize -wrap
-  displayName: 'Show Environment'
-
-- powershell: |
-    Write-Host "Python version"
-    python --version
-
-    Write-Host "Python location"
-    which python
-
-    Write-Host "Python2 location"
-    which python2
-
-    Write-Host "Python3 location"
-    which python3
-
-    Write-Host "Pip3 version"
-    pip3 -V
-  displayName: 'Show Python information'
-
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
-  displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
-  continueOnError: true
-  timeoutInMinutes: 60
-
-- bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
-  env:
-    OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
-  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
+- template: ../common/setup.yml
+  parameters:
+    keyringPass: ${{ parameters.keyringPass }}
 
 - template: install-certificates.yml@templates
   parameters:
@@ -105,8 +84,6 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
-- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
-
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
@@ -114,18 +91,6 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
   enabled: true
-
-# was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
-# that we can call make and generated the provisionator config files.
-- bash: |
-    XCODE_SELECT=$(xcode-select -p)
-    if [[ -d $XCODE_SELECT ]]; then
-      echo "Using Xcode in path $XCODE_SELECT"
-    else
-      echo "Setting Xcode to point to the default location."
-      xcode-select -s "/Applications/Xcode.app/Contents/Developer"
-    fi
-  displayName: 'Ensure Xcode is selected.'
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -143,22 +108,6 @@ steps:
     set -e
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
   displayName: 'Provision simulators'
-
-- bash: |
-    set -x
-    sudo rm -Rf /Developer/MonoTouch
-    sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
-    sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
-  displayName: 'Delete library folders'
-  timeoutInMinutes: 5
-
-- bash:
-    set -x
-    set -e
-    rm -Rvf $(Build.SourcesDirectory)/package
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
-  displayName: 'Clear results directory'
-  timeoutInMinutes: 5
 
 # Use the env variables that were set by the label parsing in the configure step
 # print some useful logging to allow to know what is going on AND allow make some
@@ -358,224 +307,223 @@ steps:
   displayName: 'Build'
   timeoutInMinutes: 180
 
- # run ASAP so that we do not have any files that got generated confusing git 
-- template: api-diff.yml
-  parameters:
-    prID: variables['PrID']
+# run ASAP so that we do not have any files that got generated confusing git 
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - template: api-diff.yml
+    parameters:
+      prID: variables['PrID']
 
-# build not signed .pkgs for the SDK
-- bash: |
-    set -x
-    set -e
-    rm -Rf $(Build.SourcesDirectory)/package/*.pkg
-    rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
-  name: packages
-  displayName: 'Build Packages'
-  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
-  timeoutInMinutes: 180
 
-# build nugets
-- ${{ if eq(parameters.enableDotnet, true) }}:
-  - template: build-nugets.yml
+- ${{ if ne(parameters.skipPackages, true) }}:
+  # build not signed .pkgs for the SDK
+  - bash: |
+      set -x
+      set -e
+      rm -Rf $(Build.SourcesDirectory)/package/*.pkg
+      rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
+      time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
+    name: packages
+    displayName: 'Build Packages'
+    condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
+    timeoutInMinutes: 180
 
-# only sign an notarize in no PR executions
-- template: sign-and-notarized.yml
-  parameters:
-    enableDotnet: ${{ parameters.enableDotnet }}
-    keyringPass: ${{ parameters.keyringPass }}
+  # build nugets
+  - ${{ if eq(parameters.enableDotnet, true) }}:
+    - template: build-nugets.yml
+
+
+- ${{ if eq(parameters.signAndNotarize, true) }}:
+  # only sign an notarize in no PR executions
+  - template: sign-and-notarized.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
+      skipESRP: ${{ parameters.skipESRP }}
+      keyringPass: ${{ parameters.keyringPass }}
 
 # publish nugets (must be done after signing)
-- ${{ if eq(parameters.enableDotnet, true) }}:
+- ${{ if and(ne(parameters.skipPackages, true), eq(parameters.enableDotnet, true)) }}:
   - template: publish-nugets.yml
 
-- template: generate-workspace-info.yml@templates
-  parameters:
-    GitHubToken: $(GitHub.Token)
-    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+- ${{ if ne(parameters.skipPackages, true) }}:
+  - template: generate-workspace-info.yml@templates
+    parameters:
+      GitHubToken: $(GitHub.Token)
+      ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-# upload each of the pkgs into the pipeline artifacts
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Build Artifacts'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package
-    artifactName: package
-  continueOnError: true
+  # upload each of the pkgs into the pipeline artifacts
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Build Artifacts'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/package
+      artifactName: package
+    continueOnError: true
 
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Build Internal Artifacts'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package-internal
-    artifactName: package-internal
-  continueOnError: true
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Build Internal Artifacts'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/package-internal
+      artifactName: package-internal
+    continueOnError: true
 
-# funny enough we need these profiles to build the mac tests
-- bash: |
-    set -x
-    set -e
+  # funny enough we need these profiles to build the mac tests
+  - bash: |
+      set -x
+      set -e
 
-    cd "$SOURCES_DIR/maccore/tools/"
-    ./install-qa-provisioning-profiles.sh -v
-  displayName: 'Add tests provisioning profiles'
-  timeoutInMinutes: 30
-  continueOnError: true # should not stop the build will result in test failures but we do want the pkg
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-    SOURCES_DIR: $(Build.SourcesDirectory)
+      cd "$SOURCES_DIR/maccore/tools/"
+      ./install-qa-provisioning-profiles.sh -v
+    displayName: 'Add tests provisioning profiles'
+    timeoutInMinutes: 30
+    continueOnError: true # should not stop the build will result in test failures but we do want the pkg
+    env:
+      AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+      AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+      SOURCES_DIR: $(Build.SourcesDirectory)
 
-- bash: |
-    set -x
-    set -e
+  - bash: |
+      set -x
+      set -e
 
-    echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
-    RC=0
-    make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests || RC=$?
-    if [ $RC -eq 0 ]; then
-      echo "Setting outpur var macTestsPresent to Succeeded"
       echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
-    else
-      echo "Setting outpur var macTestsPresent to Failed"
-      echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
-    fi
-    exit $RC
-    
-  name: macTestPkg
-  displayName: 'Package Xamarin.mac tests'
-  condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
-  continueOnError: true # not a terrible blocking issue
-  timeoutInMinutes: 60
+      RC=0
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests || RC=$?
+      if [ $RC -eq 0 ]; then
+        echo "Setting outpur var macTestsPresent to Succeeded"
+        echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
+      else
+        echo "Setting outpur var macTestsPresent to Failed"
+        echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
+      fi
+      exit $RC
+      
+    name: macTestPkg
+    displayName: 'Package Xamarin.mac tests'
+    condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+    continueOnError: true # not a terrible blocking issue
+    timeoutInMinutes: 60
 
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Xamarin.Mac tests'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
-    artifactName: mac-test-package
-  condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
-  continueOnError: true
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Xamarin.Mac tests'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
+      artifactName: mac-test-package
+    condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+    continueOnError: true
 
-- bash: |
-    set -x
-    set -e
-    echo "Running tests on $AGENT_NAME"
-    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
+- ${{ if eq(parameters.runTests, true) }}:
+  - bash: |
+      set -x
+      set -e
+      echo "Running tests on $AGENT_NAME"
+      echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
-    echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
-    rm -rf ~/.config/.mono/keypairs/
+      echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
+      rm -rf ~/.config/.mono/keypairs/
 
-    if [[ "$IsPR" == "True" ]]; then
-      TARGET='jenkins'
-    else
-      TARGET='wrench-jenkins'
-    fi
+      if [[ "$IsPR" == "True" ]]; then
+        TARGET='jenkins'
+      else
+        TARGET='wrench-jenkins'
+      fi
 
-    echo "Using target '$TARGET'"
+      echo "Using target '$TARGET'"
 
-    RC=0
-    make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
+      RC=0
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
 
-    if [ $RC -eq 0 ]; then
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
-    else
+      if [ $RC -eq 0 ]; then
+        echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
+      else
+        echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+      fi
+
+      if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
+        echo "Something went wrong:"
+        cat "$(Build.SourcesDirectory)/xamarin-macios//jenkins/pr-comments.md"
+        exit 1
+      fi
+    displayName: 'Run tests'
+    name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
+    timeoutInMinutes: 720
+    enabled: ${{ parameters.runTests }}
+    env:
+      IsPR: $(configuration.IsPR)
+      PR_ID: $(configuration.PR_ID)
+      GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
+      BUILD_REVISION: jenkins
+      VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
+
+
+  # Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this
+  # later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
+  - bash: |
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-    fi
+    displayName: 'On tests timeout'
+    condition: failed()
 
-    if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
-      echo "Something went wrong:"
-      cat "$(Build.SourcesDirectory)/xamarin-macios//jenkins/pr-comments.md"
-      exit 1
-    fi
-  displayName: 'Run tests'
-  name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
-  timeoutInMinutes: 720
-  enabled: ${{ parameters.runTests }}
-  env:
-    IsPR: $(configuration.IsPR)
-    PR_ID: $(configuration.PR_ID)
-    GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
-    BUILD_REVISION: jenkins
-    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
+  # Upload TestSummary as an artifact.
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: TestSummary'
+    inputs:
+      targetPath: 'xamarin-macios/tests/TestSummary.md'
+      artifactName: TestSummary-sim
+    continueOnError: true
+    condition: always () # any task can write to TestSummary.md, so always try to upload it
 
+  - pwsh: |
+      $summaryName = "TestSummary.md"
+      $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+      if (Test-Path "$summaryPath" -PathType Leaf) {
+        Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+      }
+    displayName: Set TestSummary
+    condition: always () # any task can write to TestSummary.md, so always try to upload it
 
-# Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this
-# later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
-- bash: |
-    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-  displayName: 'On tests timeout'
-  condition: failed()
+  # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
+  - task: ArchiveFiles@1
+    displayName: 'Archive HtmlReport'
+    inputs:
+      rootFolder: 'xamarin-macios/jenkins-results'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    continueOnError: true
+    condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
-# Upload TestSummary as an artifact.
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: TestSummary'
-  inputs:
-    targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary-sim
-  continueOnError: true
-  condition: always () # any task can write to TestSummary.md, so always try to upload it
+  # Create HtmlReport artifact. This serves two purposes:
+  # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+  # 2. Users can download this if they want.
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: HtmlReport'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+      artifactName: HtmlReport-sim
+    continueOnError: true
+    condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
-- pwsh: |
-    $summaryName = "TestSummary.md"
-    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-    if (Test-Path "$summaryPath" -PathType Leaf) {
-      Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
-    }
-  displayName: Set TestSummary
-  condition: always () # any task can write to TestSummary.md, so always try to upload it
+- ${{ if eq(parameters.uploadBinlogs, true) }}:
+  # Copy all the binlogs to a separate directory, keeping directory structure.
+  - script: |
+      set -x
+      mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+      rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+    displayName: Copy all binlogs
+    continueOnError: true
+    condition: succeededOrFailed()
 
-# Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
-- task: ArchiveFiles@1
-  displayName: 'Archive HtmlReport'
-  inputs:
-    rootFolder: 'xamarin-macios/jenkins-results'
-    includeRootFolder: false
-    archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-  continueOnError: true
-  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+  # Publish all the binlogs we collected in the previous step
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: All binlogs'
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
+      artifactName: all-binlogs
+    continueOnError: true
+    condition: succeededOrFailed()
 
-# Create HtmlReport artifact. This serves two purposes:
-# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
-# 2. Users can download this if they want.
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: HtmlReport'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: HtmlReport-sim
-  continueOnError: true
-  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
-
-# this will always be executed, is the default condition in the template
-- template: uninstall-certificates/v1.yml@templates
+# clean the bot after we use it
+- template: ../common/teardown.yml
   parameters:
-    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
-
-- pwsh: |
-    # should we need sudo, no, but someone did something wrong in the images..
-    sudo rm -Rf "$HOME/.git-credentials"
-  displayName: 'Remove git creds store'
-  condition: always()
-
-# Copy all the binlogs to a separate directory, keeping directory structure.
-- script: |
-    set -x
-    mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
-    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
-  displayName: Copy all binlogs
-  continueOnError: true
-  condition: succeededOrFailed()
-
-# Publish all the binlogs we collected in the previous step
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: All binlogs'
-  inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-    artifactName: all-binlogs
-  continueOnError: true
-  condition: succeededOrFailed()
-
-- template: ../common/mac-agent-logs.yml
-  parameters:
-    outputPath: agent-logs.log
+    keyringPass: ${{ parameters.keyringPass }}

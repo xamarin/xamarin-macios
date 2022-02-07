@@ -290,7 +290,7 @@ namespace PassKit {
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment2' instead.")]
 		[Export ("paymentAuthorizationViewController:didAuthorizePayment:completion:")]
 		[EventArgs ("PKPaymentAuthorization")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		void DidAuthorizePayment (PKPaymentAuthorizationViewController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
@@ -324,7 +324,7 @@ namespace PassKit {
 
 		[iOS (8,3)]
 		[Export ("paymentAuthorizationViewControllerWillAuthorizePayment:")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		void WillAuthorizePayment (PKPaymentAuthorizationViewController controller);
@@ -776,7 +776,7 @@ namespace PassKit {
 		[Export ("initWithRequestConfiguration:delegate:")]
 		NativeHandle Constructor (PKAddPaymentPassRequestConfiguration configuration, [NullAllowed] IPKAddPaymentPassViewControllerDelegate viewControllerDelegate);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload accepting a IPKAddPaymentPassViewControllerDelegate")]
 		[Wrap ("this (configuration, (IPKAddPaymentPassViewControllerDelegate) viewControllerDelegate)")]
 		NativeHandle Constructor (PKAddPaymentPassRequestConfiguration configuration, PKAddPaymentPassViewControllerDelegate viewControllerDelegate);
@@ -850,7 +850,7 @@ namespace PassKit {
 		[Export ("localizedValueForFieldKey:")]
 		NSObject GetLocalizedValue (NSString key); // TODO: Should be enum for PKPassLibraryUserInfoKey
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !NET && !MONOMAC
 		[Field ("PKPassKitErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -1144,7 +1144,7 @@ namespace PassKit {
 		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[Export ("paymentAuthorizationController:didAuthorizePayment:completion:")]
@@ -1204,7 +1204,7 @@ namespace PassKit {
 		[MacCatalyst (14,0)]
 		[Export ("presentationWindowForPaymentAuthorizationController:")]
 		[return: NullAllowed]
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[Abstract]
 #endif
 		UIWindow GetPresentationWindow (PKPaymentAuthorizationController controller);
@@ -1275,7 +1275,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (3,1), iOS (10,1)]
-#if XAMCORE_4_0 || MONOMAC
+#if NET || MONOMAC
 	[DisableDefaultCtor] // hint: getter only props and a factory method.
 #endif
 	[BaseType (typeof (PKTransitPassProperties))]

@@ -3520,6 +3520,9 @@ namespace AVFoundation {
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
 
+#if NET
+		[Abstract]
+#endif
 		[TV (14,5), Watch (7,4), Mac (11,3), iOS (14,5)]
 		[MacCatalyst (14,5)]
 		[Export ("hasSufficientMediaDataForReliablePlaybackStart")]
@@ -10520,10 +10523,16 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // init NS_UNAVAILABLE
 	interface AVCaptureDeviceDiscoverySession {
 
+#if !NET
 		[Internal]
 		[Static]
 		[Export ("discoverySessionWithDeviceTypes:mediaType:position:")]
 		AVCaptureDeviceDiscoverySession _Create (NSArray deviceTypes, [NullAllowed] string mediaType, AVCaptureDevicePosition position);
+#else
+		[Static]
+		[Export ("discoverySessionWithDeviceTypes:mediaType:position:")]
+		AVCaptureDeviceDiscoverySession Create ([BindAs (typeof (AVCaptureDeviceType[]))] NSString[] deviceTypes, [NullAllowed] [BindAs (typeof (AVMediaTypes))] NSString mediaType, AVCaptureDevicePosition position);
+#endif
 
 		[Export ("devices")]
 		AVCaptureDevice [] Devices { get; }

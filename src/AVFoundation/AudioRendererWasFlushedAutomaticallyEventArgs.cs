@@ -6,11 +6,15 @@ using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
-#if !NET
-	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
-#else
-	[SupportedOSPlatform ("ios11.0")]
+#if NET
 	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+#else
+	[TV (11, 0)]
+	[NoWatch]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 #endif
 	public partial class AudioRendererWasFlushedAutomaticallyEventArgs {
 		public CMTime AudioRendererFlushTime { 

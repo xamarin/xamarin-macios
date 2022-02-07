@@ -37,10 +37,15 @@ using System.Runtime.Versioning;
 namespace AVFoundation {
 	public partial class AVCaptureConnection {
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
+#if NET
+		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
 		public bool SupportsVideoMinFrameDuration {
 			get {
@@ -50,10 +55,15 @@ namespace AVFoundation {
 			}
 		}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 7, 0)]
-#else
+#if NET
+		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
 		public bool SupportsVideoMaxFrameDuration {
 			get {
