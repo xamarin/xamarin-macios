@@ -111,6 +111,7 @@ namespace OpenTK
 				value.R1C0, value.R1C1);
 		}
 #endif // !NET
+
 		public override string ToString ()
 		{
 			return $"({R0C0}, {R0C1})\n({R1C0}, {R1C1})";

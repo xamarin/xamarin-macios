@@ -926,6 +926,7 @@ namespace OpenTK
 
             result = new Vector2(v.X, v.Y);
         }
+
         #endregion
 
         #endregion

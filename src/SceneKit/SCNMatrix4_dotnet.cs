@@ -1162,27 +1162,22 @@ namespace SceneKit {
 
 		#endregion
 
-		static void ToAxisAngle(Quaternion q, out Vector3 axis, out float angle)
+		static void ToAxisAngle (Quaternion q, out Vector3 axis, out float angle)
 		{
 			if (q.W > 1.0f)
-			    q = Quaternion.Normalize(q);
+			    q = Quaternion.Normalize (q);
 
-			Vector4 result = new Vector4();
-
-			angle = 2.0f * (float)System.Math.Acos(q.W); // angle
-			float den = (float)System.Math.Sqrt(1.0 - q.W * q.W);
-			if (den > 0.0001f)
-			{
+			angle = 2.0f * (float) System.Math.Acos (q.W); // angle
+			var den = (float) System.Math.Sqrt (1.0 - q.W * q.W);
+			if (den > 0.0001f) {
 			        axis = new Vector3(q.X, q.Y, q.Z) / den;
-			}
-			else
-			{
-				// This occurs when the angle is zero. 
+			} else {
+				// This occurs when the angle is zero.
 				// Not a problem: just set an arbitrary normalized axis.
 				axis = Vector3.UnitX;
 			}
 		}
-	
+
 #if false
 
 	// The following code compiles, btu I want to think about
@@ -1215,8 +1210,7 @@ namespace SceneKit {
 		};
 	}
 #endif
-
-    }
+	}
 }
 
 #endif // NET
