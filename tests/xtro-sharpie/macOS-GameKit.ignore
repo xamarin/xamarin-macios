@@ -5,10 +5,10 @@
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
 
-# Used to remove hard to kill delegate API until XAMCORE_4_0
+# Used to remove hard to kill delegate API until .NET
 !extra-protocol-member! unexpected selector GKMatchDelegate::xamarin:selector:removed: found
 
-# Fixed in XAMCORE_4_0
+# Fixed in .NET
 !extra-protocol-member! unexpected selector GKTurnBasedEventListener::player:didRequestMatchWithPlayers: found
 
 # The parent enum GKVoiceChatService is not available in macOS 
