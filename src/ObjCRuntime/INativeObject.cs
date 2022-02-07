@@ -31,18 +31,21 @@ namespace ObjCRuntime {
 		{
 			if (self is null)
 				ThrowHelper.ThrowArgumentNullException (argumentName);
-			if (self.Handle == IntPtr.Zero)
+			if (self.Handle == NativeHandle.Zero)
 				ThrowHelper.ThrowObjectDisposedException (self);
 			return self.Handle;
 		}
 
-		public static IntPtr GetCheckedHandle (this INativeObject self)
+#if !NET
+		public static NativeHandle GetCheckedHandle (this INativeObject self)
 		{
-			if (self.Handle == IntPtr.Zero)
+			var h = self.Handle;
+			if (h == NativeHandle.Zero)
 				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (self);
 
-			return self.Handle;
+			return h;
 		}
+#endif
 	}
 #endif
 }

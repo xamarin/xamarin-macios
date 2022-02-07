@@ -928,12 +928,12 @@ namespace AppKit {
 	}
 
 	delegate void NSApplicationEnumerateWindowsHandler (NSWindow window, ref bool stop);
-// radar://42781537
-//#if XAMCORE_4_0
-//	delegate void ContinueUserActivityRestorationHandler (NSUserActivityRestoring [] restorableObjects);
-//#else
+#if NET
+	[NoMacCatalyst]
+	delegate void ContinueUserActivityRestorationHandler (INSUserActivityRestoring [] restorableObjects);
+#else
 	delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
-//#endif
+#endif
 	
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -4377,7 +4377,6 @@ namespace AppKit {
 	{
 		[Abstract]
 		[Export ("changeColor:")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSColorChanging' instead.")]
 		void ChangeColor ([NullAllowed] NSColorPanel sender);
 	}
 
@@ -5546,7 +5545,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSDocument /* : NSUserActivityRestoring radar://42781537 */ {
+	partial interface NSDocument : NSUserActivityRestoring {
 		[Export ("initWithType:error:")]
 		NativeHandle Constructor (string typeName, [NullAllowed] out NSError outError);
 
@@ -5888,10 +5887,12 @@ namespace AppKit {
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
+#if !NET
 		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
+#endif
 
 		[Mac (10,12)]
 		[Export ("isBrowsingVersions")] 
@@ -8211,7 +8212,7 @@ namespace AppKit {
 		[Export ("gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:"), DelegateName ("NSGesturesProbe"), DefaultValue (false)]
 		bool ShouldBeRequiredToFail (NSGestureRecognizer gestureRecognizer, NSGestureRecognizer otherGestureRecognizer);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("xamarinselector:removed:"), DelegateName ("NSGestureEvent"), DefaultValue (true)]
 		[Obsolete ("It will never be called.")]
 		bool ShouldReceiveEvent (NSGestureRecognizer gestureRecognizer, NSEvent gestureEvent);
@@ -9669,10 +9670,13 @@ namespace AppKit {
 		[Export ("template")]
 		bool Template { [Bind ("isTemplate")]get; set; }
 
+#if !NET
+		[Obsolete ("Use 'Draw' instead.")]
 		[NoMacCatalyst]
 		[Export ("drawInRect:fromRect:operation:fraction:")]
 		[Sealed]
 		void DrawInRect (CGRect dstRect, CGRect srcRect, NSCompositingOperation operation, nfloat delta);
+#endif
 
 		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use DrawInRect with respectContextIsFlipped instead.")]
 		[Export ("flipped")]
@@ -11466,15 +11470,12 @@ namespace AppKit {
 		[Export ("readingOptionsForType:pasteboard:")]
 		NSPasteboardReadingOptions GetReadingOptionsForType (string type, NSPasteboard pasteboard);
 
-#if !XAMCORE_4_0
+#if !NET
 		// This binding is just broken, it's an ObjC ctor (init*) bound as a normal method.
 		[Abstract]
 		[Export ("xamarinselector:removed:")]
 		[Obsolete ("It will never be called.")]
 		NSObject InitWithPasteboardPropertyList (NSObject propertyList, string type);
-#else
-#error		FIXME: (compiler error to not forget)
-#error		FIXME: figure out how to bind constructors in protocols.
 #endif
 	}
 	
@@ -12699,7 +12700,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSResponder : NSCoding, NSTouchBarProvider /* radar://42781537 , NSUserActivityRestoring */ {
+	partial interface NSResponder : NSCoding, NSTouchBarProvider , NSUserActivityRestoring {
 		[Export ("tryToPerform:with:")]
 		bool TryToPerformwith (Selector anAction, [NullAllowed] NSObject anObject);
 
@@ -12859,10 +12860,12 @@ namespace AppKit {
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
+#if !NET
 		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
+#endif
 
 		[Mac (10,10,3)]
 		[Export ("pressureChangeWithEvent:")]
@@ -12887,14 +12890,17 @@ namespace AppKit {
 		void EncodeRestorableState (NSCoder coder, NSOperationQueue queue);
 	}
 
-// 	[Protocol] // radar://42781537 - Classes fail to conformsToProtocol despite header declaration
-// 	interface NSUserActivityRestoring
-// 	{
-// 		[Mac (10,10)]
-// 		[Abstract]
-// 		[Export ("restoreUserActivityState:")]
-// 		void RestoreUserActivityState (NSUserActivity userActivity);
-// 	}
+	[NoMacCatalyst]
+	[Protocol]
+	interface NSUserActivityRestoring
+	{
+		[Mac (10,10)]
+		[Abstract]
+		[Export ("restoreUserActivityState:")]
+		void RestoreUserActivityState (NSUserActivity userActivity);
+	}
+
+	interface INSUserActivityRestoring { }
 
 	[NoMacCatalyst]
 	[Category]
@@ -18968,8 +18974,8 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
 	partial interface NSTextView : NSTextInputClient, NSTextLayoutOrientationProvider, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate, NSMenuItemValidation, NSUserInterfaceValidations, NSTextInput, NSTextContent
-#if XAMCORE_4_0
-		, NSColorChanging, // ChangeColor has the wrong param type
+#if NET
+		, NSColorChanging // ChangeColor has the wrong param type
 #endif
 	{
 		[DesignatedInitializer]
@@ -19053,8 +19059,10 @@ namespace AppKit {
 		[Export ("alignJustified:")]
 		void AlignJustified (NSObject sender);
 
+#if !NET
 		[Export ("changeColor:")]
 		void ChangeColor (NSObject sender);
+#endif
 
 		[Export ("changeAttributes:")]
 		void ChangeAttributes (NSObject sender);
@@ -22959,18 +22967,6 @@ namespace AppKit {
 			bool displayDocument, OpenDocumentCompletionHandler completionHandler);
 	}
 
-	[NoMacCatalyst]
-	partial interface NSLayoutManager {
-		// FIXME: This may need some generator work, or use IntPtr for glyphs?
-		//
-		//   ./AppKit/NSLayoutManager.g.cs(1015,44): error CS1503: Argument `#1'
-		//   cannot convert `ushort[]' expression to type `MonoMac.Foundation.NSObject[]'
-		//
-		// [Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
-		// void ShowCGGlyphs (CGGlyph [] glyphs, CGPoint [] positions, uint glyphCount, NSFont font,
-		// 	NSAffineTransform textMatrix, NSDictionary attributes, NSGraphicsContext graphicsContext);
-	}
-
 	partial interface NSViewColumnMoveEventArgs {
 		[Export ("NSOldColumn")]
 		nint OldColumn { get; }
@@ -23371,11 +23367,12 @@ namespace AppKit {
 		CGRect RectForSmartMagnificationAtPoint (CGPoint atPoint, CGRect inRect);
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSApplication))]
 	partial interface NSRemoteNotifications_NSApplication {
 
+		[Obsolete ("Use 'NSApplication.LaunchUserNotificationKey' instead.")]
 		[Field ("NSApplicationLaunchUserNotificationKey", "AppKit")]
 		NSString NSApplicationLaunchUserNotificationKey { get; }
 	}
@@ -23467,7 +23464,7 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	partial interface NSDocument : NSEditorRegistration, NSFilePresenter, NSMenuItemValidation
-#if XAMCORE_4_0
+#if NET
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
 #endif
 	{
@@ -23535,7 +23532,7 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	partial interface NSDocumentController : NSMenuItemValidation 
-#if XAMCORE_4_0
+#if NET
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
 #endif
 	{
@@ -25661,107 +25658,140 @@ namespace AppKit {
 		NSString SectionListSubrole { get; }
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Static]
 	[NoMacCatalyst]
 	interface NSAccessibilityNotifications {
+		[Obsolete ("Use the 'Notifications.MainWindowChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityMainWindowChangedNotification")]
 		NSString MainWindowChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.FocusedWindowChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityFocusedWindowChangedNotification")]
 		NSString FocusedWindowChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.UIElementFocusedChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityFocusedUIElementChangedNotification")]
 		NSString UIElementFocusedChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.ApplicationActivatedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityApplicationActivatedNotification")]
 		NSString ApplicationActivatedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.ApplicationDeactivatedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityApplicationDeactivatedNotification")]
 		NSString ApplicationDeactivatedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.ApplicationHiddenNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityApplicationHiddenNotification")]
 		NSString ApplicationHiddenNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.ApplicationShownNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityApplicationShownNotification")]
 		NSString ApplicationShownNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.WindowCreatedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityWindowCreatedNotification")]
 		NSString WindowCreatedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.WindowMovedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityWindowMovedNotification")]
 		NSString WindowMovedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.WindowResizedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityWindowResizedNotification")]
 		NSString WindowResizedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.WindowMiniaturizedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityWindowMiniaturizedNotification")]
 		NSString WindowMiniaturizedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.WindowDeminiaturizedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityWindowDeminiaturizedNotification")]
 		NSString WindowDeminiaturizedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.DrawerCreatedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityDrawerCreatedNotification")]
 		NSString DrawerCreatedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.SheetCreatedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilitySheetCreatedNotification")]
 		NSString SheetCreatedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.UIElementDestroyedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityUIElementDestroyedNotification")]
 		NSString UIElementDestroyedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.ValueChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityValueChangedNotification")]
 		NSString ValueChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.TitleChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityTitleChangedNotification")]
 		NSString TitleChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.ResizedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityResizedNotification")]
 		NSString ResizedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.MovedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityMovedNotification")]
 		NSString MovedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.CreatedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityCreatedNotification")]
 		NSString CreatedNotification { get; }
 
 		[Mac (10, 9)]
+		[Obsolete ("Use the 'Notifications.LayoutChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityLayoutChangedNotification")]
 		NSString LayoutChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.HelpTagCreatedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityHelpTagCreatedNotification")]
 		NSString HelpTagCreatedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.SelectedTextChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilitySelectedTextChangedNotification")]
 		NSString SelectedTextChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.RowCountChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityRowCountChangedNotification")]
 		NSString RowCountChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.SelectedChildrenChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilitySelectedChildrenChangedNotification")]
 		NSString SelectedChildrenChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.SelectedRowsChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilitySelectedRowsChangedNotification")]
 		NSString SelectedRowsChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.SelectedColumnsChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilitySelectedColumnsChangedNotification")]
 		NSString SelectedColumnsChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.RowExpandedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityRowExpandedNotification")]
 		NSString RowExpandedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.RowCollapsedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityRowCollapsedNotification")]
 		NSString RowCollapsedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.SelectedCellsChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilitySelectedCellsChangedNotification")]
 		NSString SelectedCellsChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.UnitsChangedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityUnitsChangedNotification")]
 		NSString UnitsChangedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.SelectedChildrenMovedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilitySelectedChildrenMovedNotification")]
 		NSString SelectedChildrenMovedNotification { get; }
 
+		[Obsolete ("Use the 'Notifications.AnnouncementRequestedNotification' helper method instead on the accessibility item in question.")]
 		[Field ("NSAccessibilityAnnouncementRequestedNotification")]
 		NSString AnnouncementRequestedNotification { get; }
 	}
@@ -27184,7 +27214,11 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
+#if NET
+	interface NSFontAssetRequest : NSProgressReporting
+#else
 	interface NSFontAssetRequest : INSProgressReporting
+#endif
 	{
 		[Export ("initWithFontDescriptors:options:")]
 		[DesignatedInitializer]

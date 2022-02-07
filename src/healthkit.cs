@@ -128,10 +128,14 @@ namespace HealthKit {
 		Indeterminate,
 	}
 
+#if NET
+	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
+#else
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
 	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSampleType[] results, nuint newAnchor, NSError error);
+#endif
 
 	delegate void HKAnchoredObjectUpdateHandler (HKAnchoredObjectQuery query, HKSample[] addedObjects, HKDeletedObject[] deletedObjects, HKQueryAnchor newAnchor, NSError error);
 
@@ -144,16 +148,20 @@ namespace HealthKit {
 	interface HKAnchoredObjectQuery {
 
 		[NoWatch]
+#if !NET
 		[Obsolete ("Use the overload that takes HKAnchoredObjectResultHandler2 instead")]
+#endif
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		NativeHandle Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler completion);
 
+#if !NET
 		[NoWatch]
 		[Sealed]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		NativeHandle Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler2 completion);
+#endif
 
 		[iOS (9,0)]
 		[Export ("initWithType:predicate:anchor:limit:resultsHandler:")]
