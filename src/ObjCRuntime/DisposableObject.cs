@@ -91,9 +91,10 @@ namespace ObjCRuntime {
 
 		public NativeHandle GetCheckedHandle ()
 		{
-			if (handle == NativeHandle.Zero)
+			var h = handle;
+			if (h == NativeHandle.Zero)
 				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
-			return handle;
+			return h;
 		}
 
 #if NET

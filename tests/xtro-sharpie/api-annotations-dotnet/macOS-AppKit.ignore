@@ -61,8 +61,6 @@
 
 ## unsorted
 
-!extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
-!extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
 !missing-enum! NSWritingDirectionFormatType not bound
 !missing-field! NSAuthorDocumentAttribute not bound
 !missing-field! NSBackgroundColorDocumentAttribute not bound
@@ -101,7 +99,6 @@
 !missing-protocol! NSGlyphStorage not bound
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
-!missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSPageController should conform to NSAnimatablePropertyContainer
@@ -217,21 +214,12 @@
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
 
-## Fixed in XAMCORE_4_0
-!missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSTextView should conform to NSColorChanging
-
 ## NSStandardKeyBindingResponding is strange case - technically on NSResponder but responder subclasses can implement any that make sense.
 !missing-protocol-conformance! NSTextView should conform to NSStandardKeyBindingResponding
 !missing-protocol-conformance! NSResponder should conform to NSStandardKeyBindingResponding (defined in 'NSStandardKeyBindingMethods' category)
 
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
-
-## 42781537 Classes fail to conformsToProtocol despite header declaration
-!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
-!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
 
 ## Added in Xcode 10.2 Final but deprecated
 
@@ -542,7 +530,7 @@
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTableView::get_RegisteredNibsByIdentifier()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSTrackingArea::get_UserInfo()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary AppKit.NSWorkspace::DesktopImageOptions(AppKit.NSScreen)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSObject::BindingInfo(System.String)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSObject::GetBindingInfo(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSExpression[] AppKit.NSPredicateEditorRowTemplate::get_LeftExpressions()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSExpression[] AppKit.NSPredicateEditorRowTemplate::get_RightExpressions()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSFileWrapper AppKit.NSDocument::GetAsFileWrapper(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
@@ -634,7 +622,7 @@
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSDocumentController::DocumentClassForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSImageRep::ImageRepClassForData(Foundation.NSData)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSImageRep::ImageRepClassForType(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ObjCRuntime.Class Foundation.NSObject::BindingValueClass(System.String)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'ObjCRuntime.Class Foundation.NSObject::GetBindingValueClass(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Boolean AppKit.NSBrowser::IsLeafItem(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSBrowserDelegate::IsLeafItem(AppKit.NSBrowser,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSBrowserDelegate::ShouldEditItem(AppKit.NSBrowser,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
@@ -1046,7 +1034,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSTextFinderBarContainer::set_FindBarView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::AlignJustified(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeAttributes(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeColor(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeDocumentBackgroundColor(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::ChangeLayoutOrientation(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView::CheckTextInDocument(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0

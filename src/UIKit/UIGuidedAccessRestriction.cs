@@ -21,13 +21,17 @@ namespace UIKit {
 
 	public static partial class UIGuidedAccessRestriction {
 #if !COREBUILD
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* UIGuidedAccessRestrictionState */ nint UIGuidedAccessRestrictionStateForIdentifier (/* NSString */ IntPtr restrictionIdentifier);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public static UIGuidedAccessRestrictionState GetState (string restrictionIdentifier)
@@ -39,15 +43,17 @@ namespace UIKit {
 		}
 
 #if IOS
-#if !NET
-		[iOS (12,2)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios12.2")]
+#else
+		[iOS (12,2)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr completion);
 
-#if !NET
+#if NET
+		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
+#else
 		[iOS (12,2)]
 #endif
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
@@ -68,10 +74,10 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
-		[iOS (12,2)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios12.2")]
+#else
+		[iOS (12,2)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConfigureAccessibilityFeatures (UIGuidedAccessAccessibilityFeature features, bool enabled, UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler completionHandler)
@@ -91,10 +97,10 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
-		[iOS (12,2)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios12.2")]
+#else
+		[iOS (12,2)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static Task<(bool Success, NSError Error)> ConfigureAccessibilityFeaturesAsync (UIGuidedAccessAccessibilityFeature features, bool enabled)

@@ -313,7 +313,6 @@
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISearchBar::GetScopeBarButtonBackgroundImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISearchBar::GetScopeBarButtonDividerImage(UIKit.UIControlState,UIKit.UIControlState)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISearchBar::GetSearchFieldBackgroundImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UISegmentedControl::DividerImageForLeftSegmentStaterightSegmentStatebarMetrics(UIKit.UIControlState,UIKit.UIControlState,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISegmentedControl::GetBackgroundImage(UIKit.UIControlState,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISegmentedControl::ImageAt(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISlider::get_CurrentMaxTrackImage()' is missing an [NullAllowed] on return type

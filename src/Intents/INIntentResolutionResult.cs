@@ -19,6 +19,8 @@ using NativeHandle = System.IntPtr;
 namespace Intents {
 
 #if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("tvos14.0")]
 #else
 	[iOS (10, 0)]
@@ -58,16 +60,22 @@ namespace Intents {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("tvos14.0")]
 #else
-		[Watch (6,0), iOS (13,0), Mac (11,0)]
+		[Watch (6,0)]
+		[iOS (13,0)]
+		[Mac (11,0)]
 #endif
 		public static INIntentResolutionResult GetUnsupported (nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("tvos14.0")]
 #else
-		[Watch (6,0), iOS (13,0), Mac (11,0)]
+		[Watch (6,0)]
+		[iOS (13,0)]
+		[Mac (11,0)]
 #endif
 		public static INIntentResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
