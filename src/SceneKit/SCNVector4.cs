@@ -32,6 +32,7 @@ using System.Xml.Serialization;
 using Vector2 = global::System.Numerics.Vector2;
 using Vector3 = global::System.Numerics.Vector3;
 using Vector4 = global::System.Numerics.Vector4;
+using MathHelper = global::CoreGraphics.MathHelper;
 #else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -242,11 +243,7 @@ namespace SceneKit
         {
             get
             {
-#if NET
-                return (pfloat)(1.0f / SCNVector3.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-#else
                 return (pfloat)(1.0f / MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-#endif
      	    }
         }
 
@@ -296,11 +293,7 @@ namespace SceneKit
         /// </summary>
         public void NormalizeFast()
         {
-#if NET
-            pfloat scale = (pfloat)(SCNVector3.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-#else
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-#endif
      	    X *= scale;
             Y *= scale;
             Z *= scale;
@@ -715,11 +708,7 @@ namespace SceneKit
         /// <returns>The normalized vector</returns>
         public static SCNVector4 NormalizeFast(SCNVector4 vec)
         {
-#if NET
-            pfloat scale = (pfloat)(SCNVector3.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
-#else
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
-#endif
             vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
@@ -734,11 +723,7 @@ namespace SceneKit
         /// <param name="result">The normalized vector</param>
         public static void NormalizeFast(ref SCNVector4 vec, out SCNVector4 result)
         {
-#if NET
-            pfloat scale = (pfloat)(SCNVector3.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
-#else
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
-#endif
      	    result.X = vec.X * scale;
             result.Y = vec.Y * scale;
             result.Z = vec.Z * scale;

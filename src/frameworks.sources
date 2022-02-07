@@ -1868,6 +1868,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Selector.cs \
 	ObjCRuntime/SystemVersion.cs \
 	ObjCRuntime/ThrowHelper.cs \
+	Simd/MathHelper.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
 	Simd/MatrixFloat3x3.cs \
