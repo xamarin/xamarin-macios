@@ -25,67 +25,35 @@ namespace SystemConfiguration {
 #if __TVOS__
 		// in Xcode 10 the CaptiveNetwork API are marked as prohibited on tvOS
 #if !NET
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Always return 'null'.")]
 		public static Foundation.NSString NetworkInfoKeyBSSID => null;
 
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Always return 'null'.")]
 		public static Foundation.NSString NetworkInfoKeySSID => null;
 
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Always return 'null'.")]
 		public static Foundation.NSString NetworkInfoKeySSIDData => null;
 
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Throw a 'NotSupportedException'.")]
 		public static bool MarkPortalOffline (string iface) => throw new NotSupportedException ();
 
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Throw a 'NotSupportedException'.")]
 		public static bool MarkPortalOnline (string iface)  => throw new NotSupportedException ();
 
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Throw a 'NotSupportedException'.")]
 		public static bool SetSupportedSSIDs (string[] ssids) => throw new NotSupportedException ();
 
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Throw a 'NotSupportedException'.")]
 		public static StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out Foundation.NSDictionary currentNetworkInfo)  => throw new NotSupportedException ();
 
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		[Obsolete ("Throw a 'NotSupportedException'.")]
 		public static StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)  => throw new NotSupportedException ();
 #endif // !NET
