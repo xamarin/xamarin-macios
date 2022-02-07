@@ -147,7 +147,6 @@ APPKIT_SOURCES = \
 	AppKit/NSTextContainer.cs \
 	AppKit/NSTextField.cs \
 	AppKit/NSTextStorage.cs \
-	AppKit/NSTextView.cs \
 	AppKit/NSToolbarItem.cs \
 	AppKit/NSTouch.cs \
 	AppKit/NSTreeController.cs \
