@@ -169,11 +169,10 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(IOS_BUILD_DI
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in
-	$(Q) mkdir -p $(IOS_DOTNET_BUILD_DIR)
+$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(IOS_DOTNET_BUILD_DIR)/
 	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g;'
 
-$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.ios.xml
+$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.ios.xml | $(IOS_DOTNET_BUILD_DIR)/
 	$(Q) $(CP) $< $@
 
 # core.dll
@@ -525,8 +524,7 @@ $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MAC_BUILD_DI
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in
-	$(Q) mkdir -p $(MACOS_DOTNET_BUILD_DIR)
+$(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(MACOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g;'
 
 $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.macOS.xml | $(MACOS_DOTNET_BUILD_DIR)
@@ -1120,11 +1118,10 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: ILLink.LinkAttributes.tvos.xml
-	$(Q) mkdir -p $(TVOS_DOTNET_BUILD_DIR)
+$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: ILLink.LinkAttributes.tvos.xml | $(TVOS_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $< $@
 
-$(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.tvos.xml
+$(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.tvos.xml | $(TVOS_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $< $@
 
 $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/tvos-defines.rsp | $(TVOS_BUILD_DIR)/tvos
@@ -1330,8 +1327,7 @@ $(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/M
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in
-	$(Q) mkdir -p $(MACCATALYST_DOTNET_BUILD_DIR)
+$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,maccatalyst) sed < $< > $@ 's|@PRODUCT_NAME@|Xamarin.MacCatalyst|g;'
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.MacCatalyst.xml | $(MACCATALYST_DOTNET_BUILD_DIR)
