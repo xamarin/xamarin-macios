@@ -3170,6 +3170,18 @@ xamarin_is_managed_exception_marshaling_disabled ()
 #endif
 }
 
+#if DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
+int
+xamarin_get_runtime_arch ()
+{
+	#if TARGET_OS_SIMULATOR
+		return 1;
+	#else
+		return 0;
+	#endif
+}
+#endif // DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
+
 /*
  * XamarinGCHandle
  */
