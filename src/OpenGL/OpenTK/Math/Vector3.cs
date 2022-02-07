@@ -84,7 +84,6 @@ namespace OpenTK
             Z = z;
         }
 
-#if !NET
         /// <summary>
         /// Constructs a new Vector3 from the given Vector2.
         /// </summary>
@@ -95,7 +94,6 @@ namespace OpenTK
             Y = v.Y;
             Z = 0.0f;
         }
-#endif
 
         /// <summary>
         /// Constructs a new Vector3 from the given Vector3.
@@ -948,7 +946,6 @@ namespace OpenTK
 
         #region Transform
 
-#if !NET
         /// <summary>Transform a direction vector by the given Matrix
         /// Assumes the matrix has a bottom row of (0,0,0,1), that is the translation part is ignored.
         /// </summary>
@@ -1165,7 +1162,7 @@ namespace OpenTK
             result.Y = v.Y / v.W;
             result.Z = v.Z / v.W;
         }
-#endif // !NET
+
         #endregion
 
         #region CalculateAngle
@@ -1200,13 +1197,11 @@ namespace OpenTK
 
         #region Swizzle
 
-#if !NET
         /// <summary>
         /// Gets or sets an OpenTK.Vector2 with the X and Y components of this instance.
         /// </summary>
         [XmlIgnore]
         public Vector2 Xy { get { return new Vector2(X, Y); } set { X = value.X; Y = value.Y; } }
-#endif
 
         #endregion
 
