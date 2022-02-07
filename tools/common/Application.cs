@@ -1359,7 +1359,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalManagedExceptions) {
 			case MarshalManagedExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
 				} else if (EnableCoopGC.Value) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
@@ -1394,7 +1394,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalObjectiveCExceptions) {
 			case MarshalObjectiveCExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 				} else if (EnableCoopGC.Value) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
