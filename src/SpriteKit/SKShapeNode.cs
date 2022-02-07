@@ -10,13 +10,17 @@
 using System;
 using CoreGraphics;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
 #endif
@@ -28,7 +32,10 @@ namespace SpriteKit {
 			return FromPoints (ref points[0], (nuint) points.Length);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
 #endif
@@ -42,7 +49,10 @@ namespace SpriteKit {
 			return FromPoints (ref points [offset], (nuint) length);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
 #endif
@@ -54,7 +64,10 @@ namespace SpriteKit {
 			return FromSplinePoints (ref points[0], (nuint) points.Length);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
 #endif

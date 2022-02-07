@@ -16,9 +16,11 @@ using ObjCRuntime;
 
 namespace Foundation {
 	public partial class NSUndoManager {
+#if !NET
 		public virtual void SetActionName (string actionName) {
 			SetActionname (actionName);
 		}
+#endif
 
 #if NET
 		public NSRunLoopMode [] RunLoopModes {

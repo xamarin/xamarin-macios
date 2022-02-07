@@ -589,7 +589,11 @@ public class MemberInformation
 		this.category_extension_type = category_extension_type;
 		if (category_extension_type != null) {
 			is_category_extension = true;
+#if NET
+			ignore_category_static_warnings = is_internal || type.IsInternal (generator);
+#else
 			ignore_category_static_warnings = is_internal || type.IsInternal (generator) || Generator.AttributeManager.GetCustomAttribute<CategoryAttribute> (type).AllowStaticMembers;
+#endif
 		}
 
 		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
@@ -6603,10 +6607,34 @@ public partial class Generator : IMemberGatherer {
 
 			foreach (var protocolType in type.GetInterfaces ()) {
 				if (!AttributeManager.HasAttribute<ProtocolAttribute> (protocolType)) {
+					if (protocolType.Name [0] != 'I')
+						continue;
+
 					string nonInterfaceName = protocolType.Name.Substring (1);
-					if (protocolType.Name[0] == 'I' && types.Any (x => x.Name.Contains(nonInterfaceName)))
-						if (protocolType.Name.Contains ("MKUserLocation"))	// We can not fix MKUserLocation without breaking API, and we don't want warning forever in build until then...
-							ErrorHelper.Warning (1111, protocolType, type, nonInterfaceName);
+					if (!types.Any (x => x.Name.Contains (nonInterfaceName)))
+						continue;
+
+					if (is_category_class)
+						continue;
+					// 1. MKUserLocation implements the MKAnnotation protocol
+					// 2. The MKAnnotation protocol has a required 'coordinate' getter, and an optional 'coordinate' setter.
+					//    We've bound the former using an [Abstract] readonly Coordinate property, and the latter using a SetCoordinate method.
+					// 3. MKUserLocation has a readwrite 'coordinate' property, which we've bound as a readwrite Coordinate property.
+					// 4. If we make MKUserLocation implement the MKAnnotation protocol in the api bindings, then we'll
+					//    inline all the MKAnnotation protocol members in MKUserLocation. This includes the SetCoordinate method,
+					//    which causes problems, because it implements the 'setCoordinate:' selector, which the Coordinate property
+					//    does as well, resulting in:
+					//        error MM4119: Could not register the selector 'setCoordinate:' of the member 'MapKit.MKUserLocation.set_Coordinate' because the selector is already registered on the member 'SetCoordinate'.
+					//
+					// So we can't make the MKUserLocation implement the MKAnnotation protocol in the api definition (for now at least).
+					if (type.Name =="MKUserLocation" && protocolType.Name == "IMKAnnotation")
+						continue;
+#if !NET
+					if (type.Name == "NSFontAssetRequest" || protocolType.Name == "INSProgressReporting")
+						continue;
+#endif
+
+					ErrorHelper.Warning (1111, protocolType, type, nonInterfaceName);
 					continue;
 				}
 
