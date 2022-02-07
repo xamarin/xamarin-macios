@@ -15,22 +15,22 @@ parameters:
 - name: runTests
   displayName: Run Simulator Tests
   type: boolean
-  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
+  default: true
 
 - name: runDeviceTests
   displayName: Run Device Tests 
   type: boolean
-  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
+  default: true
 
 - name: runOldMacOSTests
   displayName: Run Tests on older macOS versions 
   type: boolean
-  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
+  default: true
 
 - name: runGovernanceTests
   displayName: Run Governance Checks
   type: boolean
-  default: false                # UNDONE: TEST: DO NOT MERGE TO MAIN
+  default: true
 
 - name: runSamples
   displayName: Run Samples
@@ -45,7 +45,7 @@ parameters:
 - name: enableAPIDiff
   displayName: Enable API diff generation
   type: boolean
-  default: false              # UNDONE: TEST: DO NOT MERGE TO MAIN
+  default: true
 
 - name: forceInsertion
   displayName: Force Insertion 
