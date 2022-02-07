@@ -728,23 +728,6 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 		}
 
-		[Test]
-		[TestCase ("osx-x64")]
-		[TestCase ("osx-arm64")]
-		public void BuildGCResurrectApp (string runtimeIdentifier)
-		{
-			var platform = ApplePlatform.MacOSX;
-			var project_path = GetProjectPath ("GCResurrectApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifier);
-			var result = DotNet.AssertBuild (project_path, properties);
-			AssertThatLinkerExecuted (result);
-
-			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (appExecutable);
-		}
-
 		void AssertThatLinkerExecuted (ExecutionResult result)
 		{
 			var output = BinLog.PrintToString (result.BinLogPath);
