@@ -46,7 +46,11 @@ wrong, then developers can override the target location by:
 * `@(Content)` or `@(EmbeddedResource)` items: `PublishFolderType=Resource`
 * `@(BundleResource)` items: `PublishFolderType=Resource`
 * Assemblies and their related files (\*.dll, \*.exe, \*.pdb, \*.mdb,
-  \*.config): `PublishFolderType=Assembly`.
+  \*.config):
+    * If the `PackageDebugSymbols` property is set to `true': `PublishFolderType=Assembly`.
+    * If the `PackageDebugSymbols` is set to something else: `PublishFolderType=None`.
+    * If the `PackageDebugSymbols` is not set: `PublishFolderType=None` for
+      release builds, `PublishFolderType=Assembly` otherwise.
 * A \*.resources directory or a \*.resources.zip file next to an assembly with
   the same name is treated as a third-party binding
   (`PublishFolderType=AppleBindingResourcePackage`), and we handle it as such
