@@ -911,7 +911,7 @@ public partial class Generator : IMemberGatherer {
 		get {
 #if NET
 			return 4;
-#endif
+#else
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
 			case PlatformName.iOS:
@@ -922,6 +922,7 @@ public partial class Generator : IMemberGatherer {
 			default:
 				return 4;
 			}
+#endif
 		}
 	}
 	Type [] types, strong_dictionaries;
