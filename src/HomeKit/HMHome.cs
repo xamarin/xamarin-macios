@@ -85,59 +85,23 @@ namespace HomeKit {
 			return GetServices (arr.ToArray ());
 		}
 
-#if !XAMCORE_4_0
-
 #if !NET
 		[NoTV]
 		[NoWatch]
-#else
-		[UnsupportedOSPlatform ("tvos")]
-#endif
 #if (WATCH || TVOS)
-#if !NET
 		[Obsolete ("This API is not available on this platform.")]
-#else
-#if TVOS
-		[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 #endif // WATCH || TVOS
-#if !NET
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-		[Obsolete ("Starting with ios9.0 this API in now prohibited on iOS. Use 'ManageUsers' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 		public virtual void RemoveUser (HMUser user, Action<NSError> completion) {
 			throw new NotSupportedException ();
 		}
 
-#if !NET
 		[NoTV]
 		[NoWatch]
-#else
-		[UnsupportedOSPlatform ("tvos")]
-#endif
-
 #if (WATCH || TVOS)
-#if !NET
 		[Obsolete ("This API is not available on this platform.")]
-#else
-#if TVOS
-		[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 #endif // WATCH || TVOS
-#if !NET
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-		[Obsolete ("Starting with ios9.0 this API in now prohibited on iOS. Use 'ManageUsers' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif // !NET
 		public virtual Task RemoveUserAsync (HMUser user) {
 			throw new NotSupportedException ();
 		}

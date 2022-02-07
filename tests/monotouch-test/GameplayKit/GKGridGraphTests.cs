@@ -61,13 +61,25 @@ namespace MonoTouchFixtures.GamePlayKit {
 					var tile = maze[i * 10 + j];
 					switch ((TileType)tile) {
 					case TileType.Wall:
+#if NET
+						walls.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
+#else
 						walls.Add (graph.GetNodeAt (new Vector2i (i, j)));
+#endif
 						break;
 					case TileType.Portal:
+#if NET
+						spawnPoints.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
+#else
 						spawnPoints.Add (graph.GetNodeAt (new Vector2i (i, j)));
+#endif
 						break;
 					case TileType.Start:
+#if NET
+						startPosition = graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j));
+#else
 						startPosition = graph.GetNodeAt (new Vector2i (i, j));
+#endif
 						break;
 					default:
 						break;
@@ -104,13 +116,25 @@ namespace MonoTouchFixtures.GamePlayKit {
 					var tile = maze[i * 10 + j];
 					switch ((TileType)tile) {
 					case TileType.Wall:
+#if NET
+						walls.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
+#else
 						walls.Add (graph.GetNodeAt (new Vector2i (i, j)));
+#endif
 						break;
 					case TileType.Portal:
+#if NET
+						spawnPoints.Add (graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j)));
+#else
 						spawnPoints.Add (graph.GetNodeAt (new Vector2i (i, j)));
+#endif
 						break;
 					case TileType.Start:
+#if NET
+						startPosition = graph.GetNodeAt<GKGridGraphNode> (new Vector2i (i, j));
+#else
 						startPosition = graph.GetNodeAt (new Vector2i (i, j));
+#endif
 						break;
 					default:
 						break;

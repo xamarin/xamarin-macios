@@ -5,7 +5,7 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 namespace ModelIO {
 	public partial class MDLTransform {
-#if !XAMCORE_4_0
+#if !NET
 		// Inlined from the MDLTransformComponent protocol.
 		public static MatrixFloat4x4 CreateGlobalTransform4x4 (MDLObject obj, double atTime)
 		{

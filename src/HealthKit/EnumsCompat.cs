@@ -1,4 +1,4 @@
-#if !XAMCORE_4_0
+#if !NET
 
 using System;
 using Foundation;
@@ -6,17 +6,8 @@ using ObjCRuntime;
 using System.Runtime.Versioning;
 
 namespace HealthKit {
-#if !NET
 	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.")]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
-#else
-	// not 'UnsupportedOSPlatform for iOS since many members are introduced in
-	// different versions of iOS
-	[UnsupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("tvos")]
-	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public unsafe static partial class HKQuantityTypeIdentifierKey  {
 		public static NSString ActiveEnergyBurned {
 			get {
@@ -24,19 +15,15 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,3, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 2,2, PlatformArchitecture.All)]
-#endif
 		public static NSString AppleExerciseTime {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.AppleExerciseTime);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString BasalBodyTemperature {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.BasalBodyTemperature);
@@ -319,9 +306,7 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString DietaryWater {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DietaryWater);
@@ -340,22 +325,16 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.WatchOS, 4,2, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 11,2, PlatformArchitecture.All)]
-#else
-		[SupportedOSPlatform ("ios11.2")]
-#endif
 		public static NSString DistanceDownhillSnowSports {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DistanceDownhillSnowSports);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
-#endif
 		public static NSString DistanceSwimming {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DistanceSwimming);
@@ -368,10 +347,8 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
-#endif
 		public static NSString DistanceWheelchair {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DistanceWheelchair);
@@ -408,12 +385,8 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public static NSString HeartRateVariabilitySdnn {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.HeartRateVariabilitySdnn);
@@ -432,12 +405,8 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public static NSString InsulinDelivery {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.InsulinDelivery);
@@ -480,10 +449,8 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
-#endif
 		public static NSString PushCount {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.PushCount);
@@ -496,12 +463,8 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public static NSString RestingHeartRate {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.RestingHeartRate);
@@ -514,55 +477,39 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
-#endif
 		public static NSString SwimmingStrokeCount {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.SwimmingStrokeCount);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString UVExposure {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.UVExposure);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public static NSString VO2Max {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.VO2Max);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public static NSString WaistCircumference {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.WaistCircumference);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 11,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 4,0, PlatformArchitecture.All)]
-#else
-		[SupportedOSPlatform ("ios11.0")]
-#endif
 		public static NSString WalkingHeartRateAverage {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.WalkingHeartRateAverage);
@@ -570,75 +517,53 @@ namespace HealthKit {
 		}
 	} /* class HKQuantityTypeIdentifierKey */
 
-#if !NET
 	[Obsolete ("Use the 'HKCategoryTypeIdentifier' enum instead.")]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
-#else
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-	[Obsolete ("Starting with ios8.0 use the 'HKCategoryTypeIdentifier' enum instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public unsafe static partial class HKCategoryTypeIdentifierKey  {
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString AppleStandHour {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.AppleStandHour);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString CervicalMucusQuality {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.CervicalMucusQuality);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString IntermenstrualBleeding {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.IntermenstrualBleeding);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString MenstrualFlow {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.MenstrualFlow);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
-#endif
 		public static NSString MindfulSession {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.MindfulSession);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString OvulationTestResult {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.OvulationTestResult);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString SexualActivity {
 			get {
 				return HKCategoryTypeIdentifierExtensions.GetConstant (HKCategoryTypeIdentifier.SexualActivity);
@@ -652,16 +577,8 @@ namespace HealthKit {
 		}
 	} /* class HKCategoryTypeIdentifierKey */
 
-#if !NET
 	[Obsolete ("Use the 'HKCharacteristicTypeIdentifier' enum instead.")]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
-#else
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-	[Obsolete ("Use the 'HKCharacteristicTypeIdentifier' enum instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public unsafe static partial class HKCharacteristicTypeIdentifierKey  {
 		public static NSString BiologicalSex {
 			get {
@@ -681,19 +598,15 @@ namespace HealthKit {
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
-#endif
 		public static NSString FitzpatrickSkinType {
 			get {
 				return HKCharacteristicTypeIdentifierExtensions.GetConstant (HKCharacteristicTypeIdentifier.FitzpatrickSkinType);
 			}
 		}
 
-#if !NET
 		[Introduced (PlatformName.iOS, 10,0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 3,0, PlatformArchitecture.All)]
-#endif
 		public static NSString WheelchairUse {
 			get {
 				return HKCharacteristicTypeIdentifierExtensions.GetConstant (HKCharacteristicTypeIdentifier.WheelchairUse);
@@ -701,16 +614,8 @@ namespace HealthKit {
 		}
 	} /* class HKCharacteristicTypeIdentifierKey */
 
-#if !NET
 	[Obsolete ("Use the 'HKCorrelationType' enum instead.")]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
-#else
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-	[Obsolete ("Use the 'HKCorrelationType' enum instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	public unsafe static partial class HKCorrelationTypeKey  {
 		public static NSString IdentifierBloodPressure {
 			get {
@@ -726,4 +631,4 @@ namespace HealthKit {
 	} /* class HKCorrelationTypeKey */
 }
 
-#endif // !XAMCORE_4_0
+#endif // !NET

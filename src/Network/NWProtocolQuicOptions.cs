@@ -18,10 +18,17 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst(15,0)]
+#if NET
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+	[Watch (8,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[iOS (15,0)]
+	[MacCatalyst (15,0)]
 #endif
 	public class NWProtocolQuicOptions : NWProtocolOptions {
 

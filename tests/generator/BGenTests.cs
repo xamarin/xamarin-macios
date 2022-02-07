@@ -808,6 +808,41 @@ namespace GeneratorTests
 			Assert.AreEqual ("setAbstractProperty:", (string) ldstr.Operand, "setAbstractProperty");
 		}
 
+		[Test]
+		public void AbstractTypeTest ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/abstract-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyObject");
+			Assert.NotNull (type, "MyObject");
+#if NET
+			Assert.IsFalse (type.IsAbstract, "IsAbstract");
+#else
+			Assert.IsTrue (type.IsAbstract, "IsAbstract");
+#endif
+
+			var method = type.Methods.First (v => v.Name == ".ctor" && !v.HasParameters && !v.IsStatic);
+#if NET
+			Assert.IsTrue (method.IsFamily, "IsProtected ctor");
+#else
+			Assert.IsFalse (method.IsPublic, "IsPublic ctor");
+#endif
+
+			method = type.Methods.First (v => v.Name == "AbstractMember" && !v.HasParameters && !v.IsStatic);
+			var throwInstruction = method.Body?.Instructions?.FirstOrDefault (v => v.OpCode == OpCodes.Throw);
+			Assert.IsTrue (method.IsPublic, "IsPublic ctor");
+			Assert.IsTrue (method.IsVirtual, "IsVirtual");
+#if NET
+			Assert.IsFalse (method.IsAbstract, "IsAbstract");
+			Assert.IsNotNull (throwInstruction, "Throw");
+#else
+			Assert.IsTrue (method.IsAbstract, "IsAbstract");
+			Assert.IsNull (throwInstruction, "Throw");
+#endif
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

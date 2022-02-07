@@ -65,12 +65,8 @@ namespace AppKit {
 			return NSFileTypeForHFSTypeCode (fourCcTypeCode);
 		}
 
-#if !XAMCORE_4_0
 #if !NET
-		[Obsolete ("Use the overload that takes 'ref NSError' instead.")]
-#else
-		[Obsolete ("Use the overload that takes 'ref NSError' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif // !NET
+		[Obsolete ("Use the overload that takes 'out NSError' instead.")]
 		public virtual NSRunningApplication LaunchApplication (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, NSError error)
 		{
 			return LaunchApplication (url, options, configuration, out error);

@@ -258,7 +258,11 @@ namespace Foundation
 		IntPtr LowLevelValue { get; }
 
 		[Export ("attributesAtIndex:effectiveRange:")]
+#if NET
+		IntPtr LowLevelGetAttributes (nint location, IntPtr effectiveRange);
+#else
 		IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange);
+#endif
 
 		[Export ("length")]
 		nint Length { get; }
@@ -2459,11 +2463,16 @@ namespace Foundation
 		[Field ("NSKeyedArchiveRootObjectKey")]
 		NSString RootObjectKey { get; }
 
+#if NET
+		[Export ("requiresSecureCoding")]
+		bool RequiresSecureCoding { get; set; }
+#else
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
+#endif
 
 		[Watch (3,0)][TV (10,0)][Mac (10, 12)][iOS (10,0)]
 		[Export ("encodedData", ArgumentSemantic.Strong)]
@@ -2554,12 +2563,16 @@ namespace Foundation
 		[return: NullAllowed]
 		Class GetClass (string codedName);
 
+#if NET
+		[Export ("requiresSecureCoding")]
+		bool RequiresSecureCoding { get; set; }
+#else
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
-
+#endif
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
@@ -7701,9 +7714,14 @@ namespace Foundation
 		[Export ("redoActionName")]
 		string RedoActionName { get; }
 
+#if NET
+		[Export ("setActionName:")]
+		void SetActionName (string actionName);
+#else
 		[Advice ("Use the correctly named method: 'SetActionName'.")]
 		[Export ("setActionName:")]
 		void SetActionname (string actionName); 
+#endif
 
 		[Export ("undoMenuItemTitle")]
 		string UndoMenuItemTitle { get; }
@@ -8793,13 +8811,13 @@ namespace Foundation
 		NSString ChangeNotificationIsPriorKey { get; }
 #if MONOMAC
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("valueClassForBinding:")]
 		Class GetBindingValueClass (NSString binding);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options)' instead.")]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
@@ -8836,25 +8854,25 @@ namespace Foundation
 		NSString[] ExposedBindings { get; }
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("unbind:")]
 		void Unbind (NSString binding);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("infoForBinding:")]
 		NSDictionary GetBindingInfo (NSString binding);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("optionDescriptionsForBinding:")]
@@ -8881,7 +8899,6 @@ namespace Foundation
 
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
-		//void CommitEditingWithDelegateDidCommitSelectorContextInfo (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
 		void CommitEditing (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
 #endif
 		[Export ("methodForSelector:")]

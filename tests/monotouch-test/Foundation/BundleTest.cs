@@ -18,6 +18,10 @@ using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
 
+#if !NET && !MONOMAC
+using ObjCException = Foundation.MonoTouchException;
+#endif
+
 namespace MonoTouchFixtures.Foundation {
 	
 	[TestFixture]
@@ -107,19 +111,19 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void PathForImageResource ()
 		{
-			Assert.Throws<MonoTouchException> (() => main.PathForImageResource ("basn3p08.png"));
+			Assert.Throws<ObjCException> (() => main.PathForImageResource ("basn3p08.png"));
 		}
 
 		[Test]
 		public void PathForSoundResource ()
 		{
-			Assert.Throws<MonoTouchException> (() => main.PathForSoundResource ("basn3p08.png"));
+			Assert.Throws<ObjCException> (() => main.PathForSoundResource ("basn3p08.png"));
 		}
 
 		[Test]
 		public void LoadNib ()
 		{
-			Assert.Throws<MonoTouchException> (() => NSBundle.LoadNib (String.Empty, main));
+			Assert.Throws<ObjCException> (() => NSBundle.LoadNib (String.Empty, main));
 		}
 #endif
 		[Test]

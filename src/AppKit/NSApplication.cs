@@ -38,11 +38,7 @@ namespace AppKit {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
 
-#if !(XAMCORE_4_0 && NET)
-#if NET
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("This field is ignored (treated as if always true).")]
-#endif
+#if !NET
 		public static bool IgnoreMissingAssembliesDuringRegistration = false;
 #endif
 

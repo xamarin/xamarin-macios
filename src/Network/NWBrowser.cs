@@ -32,12 +32,15 @@ namespace Network {
 
 	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult? result, NWBrowseResultChange change)>? changes);
 
-#if !NET
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios13.0")]
+#if NET
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
 #endif
 	public class NWBrowser : NativeObject {
 
@@ -207,7 +210,7 @@ namespace Network {
 		}	
 
 		// let to not change the API, but would be nice to remove it in the following releases.
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Uset the 'IndividualChangesDelegate' instead.")]
 		public void SetChangesHandler (Action<NWBrowseResult?, NWBrowseResult?> handler) => IndividualChangesDelegate = handler;
 #endif

@@ -589,7 +589,11 @@ public class MemberInformation
 		this.category_extension_type = category_extension_type;
 		if (category_extension_type != null) {
 			is_category_extension = true;
+#if NET
+			ignore_category_static_warnings = is_internal || type.IsInternal (generator);
+#else
 			ignore_category_static_warnings = is_internal || type.IsInternal (generator) || Generator.AttributeManager.GetCustomAttribute<CategoryAttribute> (type).AllowStaticMembers;
+#endif
 		}
 
 		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
@@ -651,7 +655,11 @@ public class MemberInformation
 		} else if (is_static || is_category_extension || is_extension_method) {
 			mods += "static ";
 		} else if (is_abstract) {
+#if NET
+			mods += "virtual ";
+#else
 			mods += "abstract ";
+#endif
 		} else if (is_virtual_method && !is_type_sealed) {
 			mods += is_override ? "override " : "virtual ";
 		}
@@ -901,6 +909,9 @@ public partial class Generator : IMemberGatherer {
 
 	public int XamcoreVersion {
 		get {
+#if NET
+			return 4;
+#endif
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
 			case PlatformName.iOS:
@@ -2477,7 +2488,11 @@ public partial class Generator : IMemberGatherer {
 				if (AttributeManager.HasAttribute<StaticAttribute> (pi))
 					need_static [t] = true;
 
+#if NET
+				var is_abstract = false;
+#else
 				bool is_abstract = AttributeManager.HasAttribute<AbstractAttribute> (pi) && pi.DeclaringType == t;
+#endif
 				
 				if (pi.CanRead){
 					MethodInfo getter = pi.GetGetMethod ();
@@ -5085,8 +5100,12 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			PrintAttributes (pi.GetGetMethod(), platform:true, preserve:true, advice:true, notImplemented:true);
+#if NET
+			if (false) {
+#else
 			if (minfo.is_abstract){
 				print ("get; ");
+#endif
 			} else {
 				print ("get {");
 				var is32BitNotSupported = Is64BitiOSOnly (pi);
@@ -5099,6 +5118,8 @@ public partial class Generator : IMemberGatherer {
 					print ("Console.WriteLine (\"In {0}\");", pi.GetGetMethod ());
 				if (is_model)
 					print ("\tthrow new ModelNotImplementedException ();");
+				else if (minfo.is_abstract)
+					print ("throw new You_Should_Not_Call_base_In_This_Method ();");
 				else {
 					if (minfo.is_autorelease) {
 						indent++;
@@ -5150,8 +5171,12 @@ public partial class Generator : IMemberGatherer {
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 
 			PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true, notImplemented:true);
+#if NET
+			if (false) {
+#else
 			if (minfo.is_abstract){
 				print ("set; ");
+#endif
 			} else {
 				print ("set {");
 				var is32BitNotSupported = Is64BitiOSOnly (pi);
@@ -5167,15 +5192,17 @@ public partial class Generator : IMemberGatherer {
 				// we need to put in a check to verify you aren't stomping the "internal underscore"
 				// generated delegate. We check CheckForEventAndDelegateMismatches global to disable the checks
 				if (!BindThirdPartyLibrary && pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
-					string delName = pi.Name.Substring(4);
+					string delName = pi.Name.Substring (4);
 					if (SafeIsProtocolizedEventBacked (delName, type))
 						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", ApplicationClassName, string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
 				}
 
-				if (not_implemented_attr != null){
+				if (not_implemented_attr != null) {
 					print ("\tthrow new NotImplementedException ({0});", not_implemented_attr.Message == null ? "" : "\"" + not_implemented_attr.Message + "\"");
 				} else if (is_model)
 					print ("\tthrow new ModelNotImplementedException ();");
+				else if (minfo.is_abstract)
+					print ("throw new You_Should_Not_Call_base_In_This_Method ();");
 				else {
 					GenerateMethodBody (minfo, setter, sel, null_allowed, null, BodyOption.None, pi);
 					if (!minfo.is_static && !is_interface_impl && DoesPropertyNeedBackingField (pi)) {
@@ -5563,7 +5590,13 @@ public partial class Generator : IMemberGatherer {
 
 		var mod = minfo.GetVisibility ();
 
+#if NET
+		var is_abstract = false;
+		var do_not_call_base = minfo.is_abstract || minfo.is_model;
+#else
 		var is_abstract = minfo.is_abstract;
+		var do_not_call_base = minfo.is_model;
+#endif
 		print_generated_code (optimizable: IsOptimizable (minfo.mi));
 		print ("{0} {1}{2}{3}",
 		       mod,
@@ -5590,7 +5623,7 @@ public partial class Generator : IMemberGatherer {
 			if (debug)
 				print ("\tConsole.WriteLine (\"In {0}\");", mi);
 					
-			if (minfo.is_model)
+			if (do_not_call_base)
 				print ("\tthrow new You_Should_Not_Call_base_In_This_Method ();");
 			else if (minfo.wrap_method != null) {
 				if (!minfo.is_ctor) {
@@ -6529,9 +6562,18 @@ public partial class Generator : IMemberGatherer {
 					}
 					print ("[Register(\"{0}\", {1})]", register_name, is_direct_binding == false ? "false" : "true");
 				}
-				if (is_abstract || need_abstract.ContainsKey (type))
+				if (is_abstract || need_abstract.ContainsKey (type)) {
+					// Don't mark [Abstract] classes as abstract in .NET, we might need to create instances of them at some point.
+					// This can happen if the OS gives an instance of a subclass, but that subclass is private (so we haven't bound it).
+					// In this case, the best managed type is this type, but it can't be abstract if we want to create an instance of it.
+					// Except that we declare models as abstract, because they're meant to be subclassed (and they're not wrapping a native type anyway).
+#if NET
+					if (is_model)
+						class_mod = "abstract ";
+#else
 					class_mod = "abstract ";
-				else if (is_sealed)
+#endif
+				} else if (is_sealed)
 					class_mod = "sealed ";
 			} 
 			
@@ -6565,10 +6607,34 @@ public partial class Generator : IMemberGatherer {
 
 			foreach (var protocolType in type.GetInterfaces ()) {
 				if (!AttributeManager.HasAttribute<ProtocolAttribute> (protocolType)) {
+					if (protocolType.Name [0] != 'I')
+						continue;
+
 					string nonInterfaceName = protocolType.Name.Substring (1);
-					if (protocolType.Name[0] == 'I' && types.Any (x => x.Name.Contains(nonInterfaceName)))
-						if (protocolType.Name.Contains ("MKUserLocation"))	// We can not fix MKUserLocation without breaking API, and we don't want warning forever in build until then...
-							ErrorHelper.Warning (1111, protocolType, type, nonInterfaceName);
+					if (!types.Any (x => x.Name.Contains (nonInterfaceName)))
+						continue;
+
+					if (is_category_class)
+						continue;
+					// 1. MKUserLocation implements the MKAnnotation protocol
+					// 2. The MKAnnotation protocol has a required 'coordinate' getter, and an optional 'coordinate' setter.
+					//    We've bound the former using an [Abstract] readonly Coordinate property, and the latter using a SetCoordinate method.
+					// 3. MKUserLocation has a readwrite 'coordinate' property, which we've bound as a readwrite Coordinate property.
+					// 4. If we make MKUserLocation implement the MKAnnotation protocol in the api bindings, then we'll
+					//    inline all the MKAnnotation protocol members in MKUserLocation. This includes the SetCoordinate method,
+					//    which causes problems, because it implements the 'setCoordinate:' selector, which the Coordinate property
+					//    does as well, resulting in:
+					//        error MM4119: Could not register the selector 'setCoordinate:' of the member 'MapKit.MKUserLocation.set_Coordinate' because the selector is already registered on the member 'SetCoordinate'.
+					//
+					// So we can't make the MKUserLocation implement the MKAnnotation protocol in the api definition (for now at least).
+					if (type.Name =="MKUserLocation" && protocolType.Name == "IMKAnnotation")
+						continue;
+#if !NET
+					if (type.Name == "NSFontAssetRequest" || protocolType.Name == "INSProgressReporting")
+						continue;
+#endif
+
+					ErrorHelper.Warning (1111, protocolType, type, nonInterfaceName);
 					continue;
 				}
 
@@ -6685,7 +6751,7 @@ public partial class Generator : IMemberGatherer {
 					print ("public {1} {2} ClassHandle {{ get {{ return class_ptr; }} }}\n", objc_type_name, TypeName == "NSObject" ? "virtual" : "override", NativeHandleType);
 				}
 
-				var ctor_visibility = "public";
+				var ctor_visibility = is_abstract ? "protected" : "public";
 				var disable_default_ctor = false;
 				if (default_ctor_visibility != null) {
 					switch (default_ctor_visibility.Visibility) {

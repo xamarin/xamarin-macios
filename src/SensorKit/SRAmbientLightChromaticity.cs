@@ -12,7 +12,9 @@ namespace SensorKit {
 	[UnsupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos")]
 #else
-	[NoWatch, NoTV, NoMac]
+	[NoWatch]
+	[NoTV]
+	[NoMac]
 	[iOS (14,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
