@@ -152,7 +152,7 @@ jobs:
       enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 - job: upload_azure_blob
-  displayName: 'Upload packages to Azure'
+  displayName: 'Upload packages to Azure & SBOM'
   timeoutInMinutes: 1000
   dependsOn:
   - configure
