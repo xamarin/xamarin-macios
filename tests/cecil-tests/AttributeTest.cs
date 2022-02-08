@@ -85,7 +85,7 @@ namespace Cecil.Tests {
 // 			}
 
 			var myAvailability = GetAvailabilityAttributes(item, includeUnsupported: true);
-			if (!FirstContainsAllOfSecond (myAvailability, parentAvailability) {
+			if (!FirstContainsAllOfSecond (myAvailability, parentAvailability)) {
 				DebugPrint (fullName, parentAvailability, myAvailability);
 				found.Add(fullName);
 			}
