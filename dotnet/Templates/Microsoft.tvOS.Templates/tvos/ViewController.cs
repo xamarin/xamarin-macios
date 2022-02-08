@@ -1,7 +1,9 @@
+using ObjCRuntime;
+
 namespace tvOSApp1;
 
 public partial class ViewController : UIViewController {
-	public ViewController (IntPtr handle) : base (handle)
+	protected ViewController (NativeHandle handle) : base (handle)
 	{
 	}
 }

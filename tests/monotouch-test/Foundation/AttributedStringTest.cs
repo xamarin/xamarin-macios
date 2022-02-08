@@ -146,5 +146,61 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 #endif // !__WATCHOS__
+
+#if NET // this test crashes in legacy Xamarin
+		[Test]
+		public void LowLevelGetAttributesOverrideTest ()
+		{
+			using var storage = new MyTextStorage ("Hello World");
+			using var container = new NSTextContainer {
+				Size = new CGSize (100, float.MaxValue),
+				WidthTracksTextView = true
+			};
+			using var layoutManager = new NSLayoutManager ();
+			layoutManager.AddTextContainer (container);
+			storage.AddLayoutManager (layoutManager);
+			layoutManager.EnsureLayoutForCharacterRange (new NSRange (0, 1));
+			Assert.That (storage.LowLevelGetAttributes_Called, Is.GreaterThan (0), "LowLevelGetAttributes #called");
+			Assert.That (storage.LowLevelValue_Called, Is.GreaterThan (0), "LowLevelValue #called");
+		}
+
+		public class MyTextStorage : NSTextStorage {
+			string text;
+			NSString nsString;
+			IntPtr stringPtr;
+			NSDictionary attributes;
+			IntPtr attributesPtr;
+			public int LowLevelGetAttributes_Called;
+			public int LowLevelValue_Called;
+
+			public MyTextStorage (string text)
+			{
+				this.text = text ?? "";
+				nsString = (NSString) (this.text);
+				stringPtr = nsString.Handle;
+				attributes = new ();
+				attributesPtr = attributes.Handle;
+			}
+
+			public override IntPtr LowLevelValue {
+				get {
+					LowLevelValue_Called++;
+					return stringPtr;
+				}
+			}
+
+			public override IntPtr LowLevelGetAttributes (nint location, IntPtr effectiveRangePtr)
+			{
+				LowLevelGetAttributes_Called++;
+				if (effectiveRangePtr != IntPtr.Zero) {
+					unsafe {
+						NSRange *effectiveRange = (NSRange *) effectiveRangePtr;
+						*effectiveRange = new NSRange (location, 1);
+					}
+				}
+				return attributesPtr;
+			}
+		}
+#endif // NET
 	}
 }

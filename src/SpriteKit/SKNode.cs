@@ -22,8 +22,12 @@ namespace SpriteKit
 {
 	public partial class SKNode : IEnumerable, IEnumerable<SKNode>
 	{
-#if !NET
-		[iOS (8,0), Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
 		public static T? FromFile<T> (string file) where T : SKNode
 		{
@@ -61,10 +65,14 @@ namespace SpriteKit
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
 #else
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
 #endif
 		public static SKNode? Create (string filename, Type [] types, out NSError error)
 		{
@@ -84,10 +92,14 @@ namespace SpriteKit
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
 #else
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
 #endif
 		public static SKNode? Create (string filename, NSSet<Class> classes, out NSError error)
 		{

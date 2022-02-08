@@ -10,6 +10,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -18,18 +19,24 @@ using NativeHandle = System.IntPtr;
 namespace GameplayKit {
 
 	public partial class GKObstacleGraph {
-		public
-#if !XAMCORE_4_0
-		virtual
+#if !NET
+		public virtual GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
+#else
+		public GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
 #endif
-		GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
 		{
 			return NSArray.ArrayFromHandle<GKGraphNode2D> (_GetNodes (obstacle));
 		}
 	}
 
-#if !NET
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+#else
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12)]
 #endif
 	[Register ("GKObstacleGraph", SkipRegistration = true)]
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {

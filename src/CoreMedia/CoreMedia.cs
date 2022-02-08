@@ -10,6 +10,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
@@ -163,7 +164,7 @@ namespace CoreMedia {
 		{
 			get
 			{
-				return (string) new NSString (CMTimeMappingCopyDescription(IntPtr.Zero, this), true);
+				return CFString.FromHandle (CMTimeMappingCopyDescription(IntPtr.Zero, this), true);
 			}
 		}
 
@@ -234,7 +235,7 @@ namespace CoreMedia {
 		public CMTimeScale (int value)
 		{
 			if (value < 0 || value > 0x7fffffff)
-				throw new ArgumentOutOfRangeException ("value");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), "Between 0 and 0x7fffffff");
 
 			this.Value = value;
 		}

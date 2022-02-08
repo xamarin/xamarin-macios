@@ -41,6 +41,7 @@ namespace Xamarin.Mac.Tests
 //			Assert.IsFalse (controller.TabView == tabView, "NSTabViewControllerShouldChangeTabView - Failed to set the TabView property");
 //		}
 
+#if !NET
 		[Test]
 		public void NSTabViewControllerShouldChangeSegmentedControl ()
 		{
@@ -53,6 +54,7 @@ namespace Xamarin.Mac.Tests
 
 			Assert.IsFalse (controller.SegmentedControl == segmentedControl, "NSTabViewControllerShouldChangeSegmentedControl - Failed to set the SegmentedControl property");
 		}
+#endif
 
 		[Test]
 		public void NSTabViewControllerShouldChangeTransitionOptions ()

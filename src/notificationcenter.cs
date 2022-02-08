@@ -52,7 +52,7 @@ namespace NotificationCenter {
 		[Export ("widgetAllowsEditing")]
 		bool WidgetAllowsEditing {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
@@ -73,7 +73,12 @@ namespace NotificationCenter {
 #if !MONOMAC
 	[iOS (8,0)]
 	[BaseType (typeof (UIVibrancyEffect))]
+#if NET
+	[Internal]
+	[Category]
+#else
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+#endif
 	interface UIVibrancyEffect_NotificationCenter {
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]
@@ -224,7 +229,7 @@ namespace NotificationCenter {
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetSearchViewDelegate
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 		[Export ("widgetSearch:searchForTerm:maxResults:"), EventArgs ("NSWidgetSearchForTerm"), DefaultValue (false)]
 		void SearchForTearm (NCWidgetSearchViewController controller, string searchTerm, nuint max);

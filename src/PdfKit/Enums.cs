@@ -104,7 +104,7 @@ namespace PdfKit {
 		Underline = 4
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoiOS]
 #elif IOS
 	[Obsolete (Constants.UnavailableOniOS)]

@@ -46,19 +46,19 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace AddressBook {
-#if !NET
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary? info)
@@ -116,19 +116,19 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 	public class ABAddressBook : NativeObject, IEnumerable<ABRecord> {
 
@@ -139,13 +139,17 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		internal extern static IntPtr ABAddressBookCreate ();
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 6, 0, message : "Use the static Create method instead")]
-#else
+#if NET
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios6.0")]
-#if IOS
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
 		[Obsolete ("Starting with ios6.0 use the static Create method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use the static Create method instead")]
 #endif
 		public ABAddressBook ()
 			: this (ABAddressBookCreate (), true)

@@ -66,6 +66,16 @@ namespace ObjCRuntime {
 			return new NativeHandle (value);
 		}
 
+		public unsafe static explicit operator void* (NativeHandle value)
+		{
+			return (void *) (IntPtr) value;
+		}
+
+		public unsafe static explicit operator NativeHandle (void * value)
+		{
+			return new NativeHandle ((IntPtr) value);
+		}
+
 		public override bool Equals (object? o)
 		{
 			if (o is NativeHandle nh)

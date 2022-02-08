@@ -144,7 +144,11 @@ namespace MonoTouchFixtures.MobileCoreServices {
 			// so just skip this test for the simulator.
 			TestRuntime.AssertIfSimulatorThenARM64 ();
 
+#if NET
+			Assert.NotNull (UTType.GetDeclaringBundleUrl (UTType.PDF));
+#else
 			Assert.NotNull (UTType.GetDeclaringBundleURL (UTType.PDF));
+#endif
 		}
 
 		[Test]

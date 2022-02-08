@@ -28,7 +28,14 @@ namespace ObjCRuntime {
 		const int sys2 = 1937339186;
 
 		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
+#if NET
+		[UnsupportedOSPlatform ("macos10.8")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
+#endif
 		[DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
 		static extern int Gestalt (int selector, out int result);
 

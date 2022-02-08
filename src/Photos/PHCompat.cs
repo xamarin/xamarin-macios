@@ -27,7 +27,7 @@ namespace Photos {
 	}
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 	// incorrect signature, should have been `ref NSError`
 	[Obsolete ("Use 'PHLivePhotoFrameProcessingBlock2' instead.")]
 	public delegate CIImage PHLivePhotoFrameProcessingBlock (IPHLivePhotoFrame frame, NSError error);
@@ -41,25 +41,15 @@ namespace Photos {
 #if MONOMAC
 	public partial class PHAssetCollection {
 
-#if !NET
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-#else
-		[UnsupportedOSPlatform ("macos")]
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public static PHFetchResult FetchMoments (PHFetchOptions options)
 		{
 			return null;
 		}
 
-#if !NET
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-#else
-		[UnsupportedOSPlatform ("macos")]
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public static PHFetchResult FetchMoments (PHCollectionList momentList, PHFetchOptions options)
 		{
 			return null;
@@ -68,25 +58,15 @@ namespace Photos {
 
 	public partial class PHCollectionList {
 
-#if !NET
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-#else
-		[UnsupportedOSPlatform ("macos")]
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHFetchOptions options)
 		{
 			return null;
 		}
 
-#if !NET
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-#else
-		[UnsupportedOSPlatform ("macos")]
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHAssetCollection moment, PHFetchOptions options)
 		{
 			return null;
@@ -94,14 +74,8 @@ namespace Photos {
 	}
 
 	public partial class PHContentEditingInput {
-
-#if !NET
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX, message: "Use 'AudiovisualAsset' instead.")]
-#else
-		[UnsupportedOSPlatform ("macos")]
-		[Obsolete ("Use 'AudiovisualAsset' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public virtual AVFoundation.AVAsset AvAsset {
 			get { return AudiovisualAsset; }
 		}
@@ -110,20 +84,14 @@ namespace Photos {
 	public delegate void PHImageDataHandler (NSData data, NSString dataUti, CGImagePropertyOrientation orientation, NSDictionary info);
 
 	public partial class PHImageManager {
-
-#if !NET
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX, message: "Use 'RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler)' instead.")]
-#else
-		[UnsupportedOSPlatform ("macos")]
-		[Obsolete ("Use 'RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public virtual int RequestImageData (PHAsset asset, PHImageRequestOptions options, PHImageDataHandler handler)
 		{
 			return -1;
 		}
 	}
-#endif
+#endif // MONOMAC
 
-#endif
+#endif // !NET
 }

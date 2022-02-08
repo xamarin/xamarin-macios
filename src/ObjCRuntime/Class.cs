@@ -71,7 +71,7 @@ namespace ObjCRuntime {
 
 		public Class (Type type)
 		{
-			this.handle = GetClassHandle (type);
+			this.handle = GetHandle (type);
 		}
 
 		public Class (IntPtr handle)
@@ -145,7 +145,7 @@ namespace ObjCRuntime {
 		}
 
 		public static NativeHandle GetHandle (Type type) {
-			return GetClassHandle (type);
+			return GetClassHandle (type, true, out _);
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
@@ -188,11 +188,6 @@ namespace ObjCRuntime {
 			}
 
 			return @class;
-		}
-
-		static IntPtr GetClassHandle (Type type)
-		{
-			return GetClassHandle (type, true, out var is_custom_type);
 		}
 
 		internal static IntPtr GetClassForObject (IntPtr obj)

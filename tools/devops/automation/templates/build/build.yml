@@ -39,6 +39,10 @@ parameters:
   type: boolean
   default: false 
 
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -333,6 +337,7 @@ steps:
   - template: sign-and-notarized.yml
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
+      skipESRP: ${{ parameters.skipESRP }}
       keyringPass: ${{ parameters.keyringPass }}
 
 # publish nugets (must be done after signing)
@@ -499,17 +504,6 @@ steps:
     continueOnError: true
     condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
-# this will always be executed, is the default condition in the template
-- template: uninstall-certificates/v1.yml@templates
-  parameters:
-    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
-
-- pwsh: |
-    # should we need sudo, no, but someone did something wrong in the images..
-    sudo rm -Rf "$HOME/.git-credentials"
-  displayName: 'Remove git creds store'
-  condition: always()
-
 - ${{ if eq(parameters.uploadBinlogs, true) }}:
   # Copy all the binlogs to a separate directory, keeping directory structure.
   - script: |
@@ -529,6 +523,7 @@ steps:
     continueOnError: true
     condition: succeededOrFailed()
 
-- template: ../common/mac-agent-logs.yml
+# clean the bot after we use it
+- template: ../common/teardown.yml
   parameters:
-    outputPath: agent-logs.log
+    keyringPass: ${{ parameters.keyringPass }}

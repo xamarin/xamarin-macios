@@ -74,7 +74,7 @@ namespace ARKit {
 		InvalidReferenceObject = 301,
 		InvalidWorldMap = 302,
 		InvalidConfiguration = 303,
-		#if !XAMCORE_4_0
+		#if !NET
 		[Obsolete ("Please use the 'InvalidCollaborationData' value instead.")]
 		CollaborationDataUnavailable = InvalidCollaborationData,
 		#endif
@@ -400,7 +400,7 @@ namespace ARKit {
 			get;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Project' instead.")]
 		[Wrap ("Project (point, orientation, viewportSize)", IsVirtual = true)]
 		CGPoint GetProjectPoint (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
@@ -973,7 +973,7 @@ namespace ARKit {
 		[Export ("isSupported")]
 		bool IsSupported { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		// even if static - it's abstract
 		[iOS (11,3)]
 		[Static]
@@ -1450,7 +1450,7 @@ namespace ARKit {
 		[Export ("initWithAnchor:")]
 		NativeHandle Constructor (ARAnchor anchor);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Constructor marked as unavailable.")]
 		[Export ("init")]
 		NativeHandle Constructor ();
@@ -1527,7 +1527,7 @@ namespace ARKit {
 	[BaseType (typeof(SCNGeometry))]
 	[DisableDefaultCtor]
 	interface ARSCNFaceGeometry {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Create' static constructor instead.")]
 		[Static]
 		[Wrap ("Create (device)")]
@@ -1540,7 +1540,7 @@ namespace ARKit {
 		[return: NullAllowed]
 		ARSCNFaceGeometry Create (IMTLDevice device);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Create' static constructor instead.")]
 		[Static]
 		[Wrap ("Create (device, fillMesh)")]

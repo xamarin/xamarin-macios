@@ -51,11 +51,18 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+
+#if NET
+	public enum NSObjectFlag {
+		Empty,
+	}
+#else
 	public class NSObjectFlag {
 		public static readonly NSObjectFlag Empty;
 		
 		NSObjectFlag () {}
 	}
+#endif
 
 #if NET && !COREBUILD
 	[ObjectiveCTrackedType]
@@ -925,6 +932,20 @@ namespace Foundation {
 				if (disposing) {
 					ReleaseManagedRef ();
 				} else {
+#if NET
+					// By adding an external reference to the object from finalizer we will
+					// resurrect it. Since Runtime class tracks the NSObject instances with
+					// GCHandle(..., WeakTrackResurrection) we need to make sure it's aware
+					// that the object was finalized.
+					//
+					// On CoreCLR the non-tracked objects don't get a callback from the
+					// garbage collector when they enter the finalization queue but the
+					// information is necessary for Runtime.TryGetNSObject to work correctly. 
+					// Since we are on the finalizer thread now we can just set the flag
+					// directly here.
+					actual_flags |= Flags.InFinalizerQueue;
+#endif
+
 					NSObject_Disposer.Add (this);
 				}
 			} else {

@@ -806,7 +806,7 @@ namespace ImageKit {
 		[Export ("backgroundColor", ArgumentSemantic.Assign)]
 		NSColor BackgroundColor { get; set;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("setImage:imageProperties:")]
 		void SetImageimageProperties (CGImage image, NSDictionary metaData);
 #else
