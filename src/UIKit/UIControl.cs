@@ -196,7 +196,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public event EventHandler PrimaryActionTriggered {

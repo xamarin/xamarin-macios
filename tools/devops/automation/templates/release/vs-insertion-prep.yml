@@ -12,6 +12,7 @@ stages:
   displayName: Prepare Release
   dependsOn: ${{ parameters.dependsOn }}
   condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(variables.IsPRBuild, 'False'), eq(${{ parameters.enableDotnet }}, true))
+
   jobs:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@templates
@@ -36,7 +37,7 @@ stages:
     variables:
       skipNugetSecurityAnalysis: true
     pool:
-      vmImage: macOS-10.15
+      vmImage: windows-latest
     steps:
     - task: DownloadPipelineArtifact@2
       inputs:
@@ -67,6 +68,33 @@ stages:
         packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
         nuGetFeedType: external
         publishFeedCredentials: dnceng-dotnet6
+
+    - pwsh: |
+        mkdir $(Build.SourcesDirectory)/nugets-blob
+        cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
+        cp $(Build.SourcesDirectory)/vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
+      displayName: "Copy content for the nugets blob."
+
+    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+      parameters:
+        githubToken: $(GitHub.Token)
+        githubContext: $(NupkgCommitStatusName)
+        blobName: $(NupkgCommitStatusName)
+        packagePrefix: xamarin-macios
+        artifactsPath: $(Build.SourcesDirectory)/nugets-blob
+
+    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+      parameters:
+        githubToken: $(GitHub.Token)
+        githubContext: $(VSDropCommitStatusName)
+        blobName: $(VSDropCommitStatusName)
+        packagePrefix: xamarin-macios
+        artifactsPath: $(Build.SourcesDirectory)/vs-insertion
+        downloadSteps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: vsdrop-signed
+              downloadPath: $(Build.SourcesDirectory)/vs-insertion
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"

@@ -35,14 +35,12 @@ namespace Xamarin.Mac.Tests
 		class MyPasteboard2 : NSPasteboardReading
 #endif
 		{
-#if NET
-			NSObject INSPasteboardReading.InitWithPasteboardPropertyList (NSObject propertyList, string type)
-#else
+#if !NET
 			public override NSObject InitWithPasteboardPropertyList (NSObject propertyList, string type)
-#endif
 			{
 				return new NSObject ();
 			}
+#endif
 		}
 		
 #if NET

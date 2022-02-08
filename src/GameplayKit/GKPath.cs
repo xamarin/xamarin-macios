@@ -13,6 +13,7 @@ using ObjCRuntime;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace GameplayKit {
 	public partial class GKPath {
@@ -50,8 +51,14 @@ namespace GameplayKit {
 			}
 		}
 
-#if !NET
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
 		{
@@ -70,8 +77,14 @@ namespace GameplayKit {
 			}
 		}
 
-#if !NET
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public GKPath (Vector3 [] points, float radius, bool cyclical)
 		{

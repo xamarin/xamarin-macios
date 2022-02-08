@@ -145,7 +145,7 @@ namespace Introspection {
 				// The header declares this on an NSObject category but 
 				// it doesn't even respondsToSelector on NSView/NSCell...
 				return true;
-#if !XAMCORE_4_0
+#if !NET
 			case "xamarinselector:removed:":
 				return true;
 #endif
