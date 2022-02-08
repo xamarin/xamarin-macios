@@ -124,10 +124,6 @@
 ## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
 !unknown-native-enum! UIToolbarPosition bound
 
-## Protocol Inlined Maybe we want to change this in XAMCORE_4_0 since this predates our Category support
-!missing-protocol! UIResponderStandardEditActions not bound
-!missing-protocol-conformance! UIResponder should conform to UIResponderStandardEditActions
-
 ## there's no UI_APPEARANCE_SELECTOR in headers - but they can (unofficially) work, YYMV
 !extra-ui-appearance-support! UIKit.UIColor UIKit.UIBarButtonItem::get_TintColor() should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! System.Void UIKit.UIBarButtonItem::set_TintColor(UIKit.UIColor) should NOT be decorated with [Appearance]
