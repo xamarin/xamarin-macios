@@ -21,6 +21,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
+
+		<!-- Enable nuget package conflict resolution -->
+		<!-- This must be set before importing Microsoft.CSharp.targets -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(UsingAppleNETSdk)' != 'true'" />
 	<Import Project="Xamarin.iOS.Common.targets" />
