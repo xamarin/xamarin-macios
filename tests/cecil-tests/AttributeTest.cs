@@ -37,7 +37,7 @@ namespace Cecil.Tests {
 		public void ChildElementsListAvailabilityForAllPlatformsOnParent (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null) {
+			if (assembly is null) {
 				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
 				return;
 			}
@@ -65,7 +65,7 @@ namespace Cecil.Tests {
 		void Process (object item, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
 			// XXX - For now skip generated code until associated generator.cs changes are in
-			if (HasCodegenAttribute(item)) {
+			if (Ignore (fullName) || HasCodegenAttribute(item)) {
 				return;
 			}
 // #if DEBUG
@@ -85,11 +85,9 @@ namespace Cecil.Tests {
 // 			}
 
 			var myAvailability = GetAvailabilityAttributes(item, includeUnsupported: true);
-			if (!FirstContainsAllOfSecond (myAvailability, parentAvailability)) {
-				if (!Ignore (fullName)) {
-					DebugPrint (fullName, parentAvailability, myAvailability);
-					found.Add(fullName);
-				}
+			if (!FirstContainsAllOfSecond (myAvailability, parentAvailability) {
+				DebugPrint (fullName, parentAvailability, myAvailability);
+				found.Add(fullName);
 			}
 		}
 		
@@ -139,7 +137,7 @@ namespace Cecil.Tests {
 			var availability = new List<string>();
 			foreach (var attribute in attributes.Where(a => IsAvailabilityAttribute(a, includeUnsupported))) {
 				var kind = FindAvailabilityKind (attribute);
-				if (kind != null) {
+				if (kind is not null) {
 					availability.Add(kind);
 				}
 			}
