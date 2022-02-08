@@ -50,7 +50,9 @@ using UIKit;
 #if !__WATCHOS__ && !__MACCATALYST__ && !__MACOS__
 using OpenGLES;
 #endif
+#if !(__TVOS__ && NET)
 using WebKit;
+#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 using Xamarin.Utils;

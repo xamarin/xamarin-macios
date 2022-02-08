@@ -191,6 +191,10 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceC.txt");
 
+			expectedFiles.Add ($"{resourcesDirectory}AutoIncluded.txt");
+			expectedFiles.Add ($"{resourcesDirectory}SubDirectory");
+			expectedFiles.Add ($"{resourcesDirectory}SubDirectory/AutoIncluded2.txt");
+
 			expectedFiles.Add ($"{assemblyDirectory}FrameworksInRuntimesNativeDirectory.dll");
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworksInRuntimesNativeDirectory1", isSigned);
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworksInRuntimesNativeDirectory2", isSigned);
