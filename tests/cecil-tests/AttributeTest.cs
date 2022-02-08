@@ -58,7 +58,7 @@ namespace Cecil.Tests {
 #if DEBUG				
 			Assert.That (found.Count, Is.Zero);
 #else
-            Assert.That (found.Count, Is.Zero, string.Join (", ", found));
+			Assert.That (found.Count, Is.Zero, string.Join (", ", found));
 #endif
 		}
 
