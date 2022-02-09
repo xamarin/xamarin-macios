@@ -55,11 +55,8 @@ namespace Cecil.Tests {
 			foreach (var meth in Helper.FilterMethods(assembly, a => HasAnyAvailabilityAttribute(a, includeUnsupported: true))) {
 				Process (meth, meth.FullName, meth.DeclaringType, found);
 			}
-#if DEBUG				
+
 			Assert.That (found, Is.Empty); 
-#else
-			Assert.That (found.Count, Is.Zero, string.Join (", ", found));
-#endif
 		}
 
 		void Process (ICustomAttributeProvider item, string fullName, TypeDefinition parent, HashSet<string> found)
