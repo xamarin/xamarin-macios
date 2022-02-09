@@ -114,9 +114,9 @@ namespace Cecil.Tests {
 			return second.All(s => firstSet.Contains(s));
 		}
 
-		IEnumerable<string> GetAvailabilityAttributes (ICustomAttributeProvider provider, bool includeUnsupported) => GetAvailabilityAttributes (provider.CustomAttributes, includeUnsupported);
+		IEnumerable<string> GetAvailabilityAttributes (ICustomAttributeProvider provider, bool includeUnsupported) => GetAvailabilityAttributes(provider.CustomAttributes, includeUnsupported);
 
-		IEnumerable<string> GetAvailabilityAttributes(IEnumerable<CustomAttribute> attributes, bool includeUnsupported)
+		IEnumerable<string> GetAvailabilityAttributes (IEnumerable<CustomAttribute> attributes, bool includeUnsupported)
 		{
 			var availability = new List<string>();
 			foreach (var attribute in attributes.Where(a => IsAvailabilityAttribute(a, includeUnsupported))) {
@@ -128,8 +128,10 @@ namespace Cecil.Tests {
 			return availability;
 		}
 
-		bool HasCodegenAttribute (ICustomAttributeProvider provider) => HasCodegenAttribute (provider.CustomAttributes);
-		bool HasCodegenAttribute(IEnumerable<CustomAttribute> attributes) => attributes.Any(a => a.AttributeType.Name == "BindingImplAttribute");
+		bool HasCodegenAttribute (ICustomAttributeProvider provider)
+		{
+			return provider.CustomAttributes.Any(a => a.AttributeType.Name == "BindingImplAttribute");
+		}
 
 		string? FindAvailabilityKind (CustomAttribute attribute)
 		{
@@ -153,10 +155,10 @@ namespace Cecil.Tests {
 			return null;
 		}
 
-		bool HasAnyAvailabilityAttribute (PropertyDefinition prop, bool includeUnsupported) => HasAnyAvailabilityAttribute(prop.CustomAttributes, includeUnsupported);
-		bool HasAnyAvailabilityAttribute (MethodDefinition meth, bool includeUnsupported) => HasAnyAvailabilityAttribute(meth.CustomAttributes, includeUnsupported);
-
-		bool HasAnyAvailabilityAttribute (IEnumerable<CustomAttribute> attributes, bool includeUnsupported) => attributes.Any (a => IsAvailabilityAttribute(a, includeUnsupported));
+		bool HasAnyAvailabilityAttribute (ICustomAttributeProvider provider, bool includeUnsupported)
+		{
+			return provider.CustomAttributes.Any (a => IsAvailabilityAttribute(a, includeUnsupported));
+		}
 
 		bool IsAvailabilityAttribute (CustomAttribute attribute, bool includeUnsupported)
 		{
