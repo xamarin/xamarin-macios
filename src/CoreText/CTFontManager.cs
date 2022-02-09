@@ -56,6 +56,7 @@ namespace CoreText {
 		Persistent = 2,
 #if NET
 		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[NoiOS]
