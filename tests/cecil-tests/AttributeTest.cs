@@ -51,17 +51,17 @@ namespace Cecil.Tests {
 			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
 				CheckAllPlatformsOnParent (prop, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods(assembly, a => HasAnyAvailabilityAttribute(a, includeUnsupported: true))) {
+			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
 				CheckAllPlatformsOnParent (meth, meth.FullName, meth.DeclaringType, found);
 			}
 
-			Assert.That (found, Is.Empty); 
+			Assert.That (found, Is.Empty);
 		}
 
 		void CheckAllPlatformsOnParent (ICustomAttributeProvider item, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
 			// XXX - For now skip generated code until associated generator.cs changes are in
-			if (Ignore (fullName) || HasCodegenAttribute(item)) {
+			if (Ignore (fullName) || HasCodegenAttribute (item)) {
 				return;
 			}
 // #if DEBUG
@@ -83,7 +83,7 @@ namespace Cecil.Tests {
 			var myAvailability = GetAvailabilityAttributes(item, includeUnsupported: true);
 			if (!FirstContainsAllOfSecond (myAvailability, parentAvailability)) {
 				DebugPrint (fullName, parentAvailability, myAvailability);
-				found.Add(fullName);
+				found.Add (fullName);
 			}
 		}
 
@@ -123,100 +123,118 @@ namespace Cecil.Tests {
 			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
 				CheckCurrentPlatformIncludedIfAny (prop, platformName, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods(assembly, a => HasAnyAvailabilityAttribute(a, includeUnsupported: true))) {
+			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
 				CheckCurrentPlatformIncludedIfAny (meth, platformName, meth.FullName, meth.DeclaringType, found);
 			}
 
-			Assert.That (found, Is.Empty); 
+			Assert.That (found, Is.Empty);
 		}
 
 		void CheckCurrentPlatformIncludedIfAny (ICustomAttributeProvider item, string platformName, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
 			if (HasAnyAvailabilityAttribute (item, true)) {
-				var supportedAttributes = item.CustomAttributes.Where (a => IsSupportedAttribute(a));
-				if (!supportedAttributes.Any(a => FindAvailabilityKind (a) != platformName ))
-				{
-					found.Add(fullName);
+				var supportedAttributes = item.CustomAttributes.Where (a => IsSupportedAttribute (a));
+				if (!supportedAttributes.Any (a => FindAvailabilityKind (a) != platformName)) {
+					found.Add (fullName);
 				}
 			}
 		}
-		
+
 		string AssemblyToAttributeName (string assemblyPath)
 		{
-			switch (Path.GetFileName (assemblyPath))
-			{
-				case "Xamarin.iOS.dll":
-					return "ios";
-				case "Xamarin.TVOS.dll":
-					return "tvos";
-				case "Xamarin.Mac.dll":
-					return "macos";
-				case "Xamarin.MacCatalyst.dll":
-					return "maccatalyst";
-				default:
-					throw new NotImplementedException ();
+			switch (Path.GetFileName (assemblyPath)) {
+			case "Xamarin.iOS.dll":
+				return "ios";
+			case "Xamarin.TVOS.dll":
+				return "tvos";
+			case "Xamarin.Mac.dll":
+				return "macos";
+			case "Xamarin.MacCatalyst.dll":
+				return "maccatalyst";
+			default:
+				throw new NotImplementedException ();
 			}
 		}
 
-		[Conditional("DEBUG")]
+		[Conditional ("DEBUG")]
 		void DebugPrint (string fullName, IEnumerable<string> parentAvailability, IEnumerable<string> myAvailability)
 		{
 			Console.WriteLine (fullName);
-			Console.WriteLine ("Parent: " + string.Join(" ", parentAvailability));
-			Console.WriteLine ("Mine: " + string.Join(" ", myAvailability));
+			Console.WriteLine ("Parent: " + string.Join (" ", parentAvailability));
+			Console.WriteLine ("Mine: " + string.Join (" ", myAvailability));
 			Console.WriteLine ();
 		}
 
 		bool Ignore (string fullName)
 		{
 			switch (fullName) {
-				default:
-					return false;
+			default:
+				return false;
 			}
 		}
 
 		bool FirstContainsAllOfSecond<T> (IEnumerable<T> first, IEnumerable<T> second)
 		{
-			var firstSet = new HashSet<T>(first);
-			return second.All(s => firstSet.Contains(s));
+			var firstSet = new HashSet<T> (first);
+			return second.All (s => firstSet.Contains (s));
 		}
 
-		IEnumerable<string> GetAvailabilityAttributes (ICustomAttributeProvider provider, bool includeUnsupported) => GetAvailabilityAttributes(provider.CustomAttributes, includeUnsupported);
+		IEnumerable<string> GetAvailabilityAttributes (ICustomAttributeProvider provider, bool includeUnsupported) => GetAvailabilityAttributes (provider.CustomAttributes, includeUnsupported);
 
 		IEnumerable<string> GetAvailabilityAttributes (IEnumerable<CustomAttribute> attributes, bool includeUnsupported)
 		{
-			var availability = new List<string>();
-			foreach (var attribute in attributes.Where(a => IsAvailabilityAttribute(a, includeUnsupported))) {
+			var availability = new List<string> ();
+			foreach (var attribute in attributes.Where (a => IsAvailabilityAttribute (a, includeUnsupported))) {
 				var kind = FindAvailabilityKind (attribute);
 				if (kind is not null) {
-					availability.Add(kind);
+					availability.Add (kind);
 				}
 			}
 			return availability;
 		}
 
+		// Unfortunate state we need to keep since I can't see to walk "up" from a
+		// MethodDefinition get_Foo or SetFoo to see it's container's properties
+		HashSet<MethodDefinition> HasCodegenPropertyImpl = new HashSet<MethodDefinition> ();
 		bool HasCodegenAttribute (ICustomAttributeProvider provider)
 		{
-			return provider.CustomAttributes.Any(a => a.AttributeType.Name == "BindingImplAttribute");
+			// get/set don't have BindingImpl directly, it is on the parent context
+			if (provider is MethodDefinition method) {
+				if (HasCodegenPropertyImpl.Contains(method)) {
+					return true;
+				}
+			}
+			if (provider is PropertyDefinition prop) {
+				if (prop.CustomAttributes.Any (IsBindingImplAttribute)) {
+					if (prop.GetMethod != null) {
+						HasCodegenPropertyImpl.Add (prop.GetMethod);
+					}
+					if (prop.SetMethod != null) {
+						HasCodegenPropertyImpl.Add (prop.SetMethod);
+					}
+					return true;
+				}
+			}
+			return provider.CustomAttributes.Any (IsBindingImplAttribute);
 		}
 
 		string? FindAvailabilityKind (CustomAttribute attribute)
 		{
-			if (attribute.ConstructorArguments.Count == 1 && attribute.ConstructorArguments[0].Type.Name == "String") {
-				string full = (string)attribute.ConstructorArguments[0].Value;
+			if (attribute.ConstructorArguments.Count == 1 && attribute.ConstructorArguments [0].Type.Name == "String") {
+				string full = (string) attribute.ConstructorArguments [0].Value;
 				switch (full) {
-					case string s when full.StartsWith("ios", StringComparison.Ordinal):
-						return "ios";
-					case string s when full.StartsWith("tvos"):
-						return "tvos";
-					case string s when full.StartsWith("macos"):
-						return "macos";
-					case string s when full.StartsWith("maccatalyst"):
-						return "maccatalyst";
-					case string s when full.StartsWith("watchos"):
-						return null; // WatchOS is ignored for comparision
-					default:
-						throw new System.NotImplementedException($"Unknown platform kind: {full}");
+				case string s when full.StartsWith ("ios", StringComparison.Ordinal):
+					return "ios";
+				case string s when full.StartsWith ("tvos"):
+					return "tvos";
+				case string s when full.StartsWith ("macos"):
+					return "macos";
+				case string s when full.StartsWith ("maccatalyst"):
+					return "maccatalyst";
+				case string s when full.StartsWith ("watchos"):
+					return null; // WatchOS is ignored for comparision
+				default:
+					throw new System.NotImplementedException ($"Unknown platform kind: {full}");
 				}
 			}
 			return null;
@@ -224,7 +242,7 @@ namespace Cecil.Tests {
 
 		bool HasAnyAvailabilityAttribute (ICustomAttributeProvider provider, bool includeUnsupported)
 		{
-			return provider.CustomAttributes.Any (a => IsAvailabilityAttribute(a, includeUnsupported));
+			return provider.CustomAttributes.Any (a => IsAvailabilityAttribute (a, includeUnsupported));
 		}
 
 		bool IsAvailabilityAttribute (CustomAttribute attribute, bool includeUnsupported)
@@ -233,9 +251,7 @@ namespace Cecil.Tests {
 				(includeUnsupported && attribute.AttributeType.Name == "UnsupportedOSPlatformAttribute");
 		}
 
-		bool IsSupportedAttribute (CustomAttribute attribute)
-		{
-			return attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
-		}
+		bool IsSupportedAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
+		bool IsBindingImplAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "BindingImplAttribute";
 	}
 }
