@@ -62,7 +62,7 @@ namespace Cecil.Tests {
 #endif
 		}
 
-		void Process (object item, string fullName, TypeDefinition parent, HashSet<string> found)
+		void Process (ICustomAttributeProvider item, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
 			// XXX - For now skip generated code until associated generator.cs changes are in
 			if (Ignore (fullName) || HasCodegenAttribute(item)) {
@@ -128,7 +128,7 @@ namespace Cecil.Tests {
 			return availability;
 		}
 
-		bool HasCodegenAttribute (ICustomAttributeProvider prop) => HasCodegenAttribute (provider.CustomAttributes);
+		bool HasCodegenAttribute (ICustomAttributeProvider provider) => HasCodegenAttribute (provider.CustomAttributes);
 		bool HasCodegenAttribute(IEnumerable<CustomAttribute> attributes) => attributes.Any(a => a.AttributeType.Name == "BindingImplAttribute");
 
 		string? FindAvailabilityKind (CustomAttribute attribute)
