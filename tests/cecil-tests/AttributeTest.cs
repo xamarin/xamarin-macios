@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using System.IO;
 
 using NUnit.Framework;
 
@@ -46,20 +47,18 @@ namespace Cecil.Tests {
 			Console.WriteLine(assemblyPath);
 #endif
 
-			// Make a list of Availability on parent.
-			// Each child must have an attribute for each availability (Either NotSupported or Supported)
 			HashSet<string> found = new HashSet<string> ();
 			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
-				Process (prop, prop.FullName, prop.DeclaringType, found);
+				CheckAllPlatformsOnParent (prop, prop.FullName, prop.DeclaringType, found);
 			}
 			foreach (var meth in Helper.FilterMethods(assembly, a => HasAnyAvailabilityAttribute(a, includeUnsupported: true))) {
-				Process (meth, meth.FullName, meth.DeclaringType, found);
+				CheckAllPlatformsOnParent (meth, meth.FullName, meth.DeclaringType, found);
 			}
 
 			Assert.That (found, Is.Empty); 
 		}
 
-		void Process (ICustomAttributeProvider item, string fullName, TypeDefinition parent, HashSet<string> found)
+		void CheckAllPlatformsOnParent (ICustomAttributeProvider item, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
 			// XXX - For now skip generated code until associated generator.cs changes are in
 			if (Ignore (fullName) || HasCodegenAttribute(item)) {
@@ -87,7 +86,78 @@ namespace Cecil.Tests {
 				found.Add(fullName);
 			}
 		}
+
+		// https://github.com/xamarin/xamarin-macios/issues/10170
+		// Every binding class that has net6 any availability attributes on a method/property
+		// must have an introduced for the current platform.
+		//
+		// Example:
+		// class TestType
+		// {
+		//     public static void Original () { }
+		//
+		//     [SupportedOSPlatform(""ios2.0"")]
+		//     public static void Extension () { }
+		// }
+		//
+		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
+		// [TestCaseSource (typeof (Helper), "NetPlatformAssemblies")]
+		public void AllAttributedItemsMostIncludeCurrentPlatform (string assemblyPath)
+		{
+			var assembly = Helper.GetAssembly (assemblyPath);
+			if (assembly is null) {
+				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				return;
+			}
+
+#if DEBUG
+			Console.WriteLine(assemblyPath);
+#endif
+
+			string platformName = AssemblyToAttributeName (assemblyPath);
+
+			HashSet<string> found = new HashSet<string> ();
+			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
+				CheckCurrentPlatformIncludedIfAny (type, platformName, type.FullName, type.DeclaringType, found);
+			}
+			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
+				CheckCurrentPlatformIncludedIfAny (prop, platformName, prop.FullName, prop.DeclaringType, found);
+			}
+			foreach (var meth in Helper.FilterMethods(assembly, a => HasAnyAvailabilityAttribute(a, includeUnsupported: true))) {
+				CheckCurrentPlatformIncludedIfAny (meth, platformName, meth.FullName, meth.DeclaringType, found);
+			}
+
+			Assert.That (found, Is.Empty); 
+		}
+
+		void CheckCurrentPlatformIncludedIfAny (ICustomAttributeProvider item, string platformName, string fullName, TypeDefinition parent, HashSet<string> found)
+		{
+			if (HasAnyAvailabilityAttribute (item, true)) {
+				var supportedAttributes = item.CustomAttributes.Where (a => IsSupportedAttribute(a));
+				if (!supportedAttributes.Any(a => FindAvailabilityKind (a) != platformName ))
+				{
+					found.Add(fullName);
+				}
+			}
+		}
 		
+		string AssemblyToAttributeName (string assemblyPath)
+		{
+			switch (Path.GetFileName (assemblyPath))
+			{
+				case "Xamarin.iOS.dll":
+					return "ios";
+				case "Xamarin.TVOS.dll":
+					return "tvos";
+				case "Xamarin.Mac.dll":
+					return "macos";
+				case "Xamarin.MacCatalyst.dll":
+					return "maccatalyst";
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
 		[Conditional("DEBUG")]
 		void DebugPrint (string fullName, IEnumerable<string> parentAvailability, IEnumerable<string> myAvailability)
 		{
@@ -159,8 +229,13 @@ namespace Cecil.Tests {
 
 		bool IsAvailabilityAttribute (CustomAttribute attribute, bool includeUnsupported)
 		{
-			return attribute.AttributeType.Name == "SupportedOSPlatformAttribute" ||
+			return IsSupportedAttribute (attribute) ||
 				(includeUnsupported && attribute.AttributeType.Name == "UnsupportedOSPlatformAttribute");
+		}
+
+		bool IsSupportedAttribute (CustomAttribute attribute)
+		{
+			return attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
 		}
 	}
 }
