@@ -283,7 +283,6 @@ namespace Xamarin.Tests {
 
 		public static StringBuilder AssertExecute (string executable, string[] arguments, out StringBuilder output)
 		{
-
 			var rv = ExecutionHelper.Execute (executable, arguments, out output);
 			if (rv != 0) {
 				Console.WriteLine ($"'{executable} {StringUtils.FormatArguments (arguments)}' exited with exit code {rv}:");
