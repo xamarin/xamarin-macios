@@ -571,7 +571,6 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -593,7 +592,6 @@ namespace CoreMedia {
 		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -620,7 +618,6 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -642,7 +639,6 @@ namespace CoreMedia {
 		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
@@ -753,7 +749,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
@@ -779,7 +774,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
@@ -803,7 +797,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
@@ -829,7 +822,6 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
