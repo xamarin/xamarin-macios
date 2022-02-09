@@ -308,7 +308,7 @@
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
 
-## Fixed in XAMCORE_4_0
+## Fixed in .NET
 !missing-protocol-conformance! NSController should conform to NSEditor
 !missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
