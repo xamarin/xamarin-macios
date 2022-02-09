@@ -49,14 +49,14 @@ namespace Cecil.Tests {
 			// Make a list of Availability on parent.
 			// Each child must have an attribute for each availability (Either NotSupported or Supported)
 			HashSet<string> found = new HashSet<string> ();
-			foreach (var prop in Helper.FilterProperties(assembly, a => HasAnyAvailabilityAttribute(a, includeUnsupported: true))) {
+			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
 				Process (prop, prop.FullName, prop.DeclaringType, found);
 			}
 			foreach (var meth in Helper.FilterMethods(assembly, a => HasAnyAvailabilityAttribute(a, includeUnsupported: true))) {
 				Process (meth, meth.FullName, meth.DeclaringType, found);
 			}
 #if DEBUG				
-			Assert.That (found.Count, Is.Zero);
+			Assert.That (found, Is.Empty); 
 #else
 			Assert.That (found.Count, Is.Zero, string.Join (", ", found));
 #endif
@@ -114,23 +114,7 @@ namespace Cecil.Tests {
 			return second.All(s => firstSet.Contains(s));
 		}
 
-		IEnumerable<string> GetAvailabilityAttributes(object o, bool includeUnsupported)
-		{
-			switch (o) {
-				case TypeDefinition definition:
-					return GetAvailabilityAttributes (definition, includeUnsupported);
-				case PropertyDefinition prop:
-					return GetAvailabilityAttributes (prop, includeUnsupported);
-				case MethodDefinition meth:
-					return GetAvailabilityAttributes (meth, includeUnsupported);
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-		IEnumerable<string> GetAvailabilityAttributes(TypeDefinition definition, bool includeUnsupported) => GetAvailabilityAttributes(definition.CustomAttributes, includeUnsupported);
-		IEnumerable<string> GetAvailabilityAttributes(PropertyDefinition prop, bool includeUnsupported) => GetAvailabilityAttributes(prop.CustomAttributes, includeUnsupported);
-		IEnumerable<string> GetAvailabilityAttributes(MethodDefinition meth, bool includeUnsupported) => GetAvailabilityAttributes(meth.CustomAttributes, includeUnsupported);
+		IEnumerable<string> GetAvailabilityAttributes (ICustomAttributeProvider provider, bool includeUnsupported) => GetAvailabilityAttributes (provider.CustomAttributes, includeUnsupported);
 
 		IEnumerable<string> GetAvailabilityAttributes(IEnumerable<CustomAttribute> attributes, bool includeUnsupported)
 		{
@@ -144,20 +128,7 @@ namespace Cecil.Tests {
 			return availability;
 		}
 
-		bool HasCodegenAttribute(object o)
-		{
-			switch (o) {
-				case PropertyDefinition prop:
-					return HasCodegenAttribute (prop);
-				case MethodDefinition meth:
-					return HasCodegenAttribute (meth);
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-		bool HasCodegenAttribute(PropertyDefinition prop) => HasCodegenAttribute(prop.CustomAttributes);
-		bool HasCodegenAttribute(MethodDefinition meth) => HasCodegenAttribute(meth.CustomAttributes);
+		bool HasCodegenAttribute (ICustomAttributeProvider prop) => HasCodegenAttribute (provider.CustomAttributes);
 		bool HasCodegenAttribute(IEnumerable<CustomAttribute> attributes) => attributes.Any(a => a.AttributeType.Name == "BindingImplAttribute");
 
 		string? FindAvailabilityKind (CustomAttribute attribute)
@@ -165,7 +136,7 @@ namespace Cecil.Tests {
 			if (attribute.ConstructorArguments.Count == 1 && attribute.ConstructorArguments[0].Type.Name == "String") {
 				string full = (string)attribute.ConstructorArguments[0].Value;
 				switch (full) {
-					case string s when full.StartsWith("ios"):
+					case string s when full.StartsWith("ios", StringComparison.Ordinal):
 						return "ios";
 					case string s when full.StartsWith("tvos"):
 						return "tvos";
