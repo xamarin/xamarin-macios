@@ -356,8 +356,6 @@ namespace Xamarin.Bundler {
 				Console.WriteLine (format);
 		}
 
-		public const bool IsXAMCORE_4_0 = false;
-
 		public static bool IsDotNet {
 			get { return TargetFramework.IsDotNet; }
 		}

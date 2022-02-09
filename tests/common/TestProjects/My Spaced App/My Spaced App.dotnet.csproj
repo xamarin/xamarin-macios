@@ -22,7 +22,6 @@
       <Link>Folder\LinkedBundleResource.txt</Link>
     </BundleResource>
     <BundleResource Include="Folder\BundleResource.txt" />
-    <BundleResource Include="Resources\image.png" />
   </ItemGroup>
 
   <ItemGroup>

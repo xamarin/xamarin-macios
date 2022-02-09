@@ -4144,25 +4144,60 @@ namespace AppKit {
 		[Export ("colorWithCIColor:")]
 		NSColor FromCIColor (CIColor color);
 
+#if !NET
+		[Obsolete ("Use 'Label' instead.")]
 		[Mac (10,10)]
 		[Static, Export ("labelColor")]
 		NSColor LabelColor { get; }
+#endif
 
+		[Mac (10,10)]
+		[Static, Export ("labelColor")]
+		NSColor Label { get; }
+
+#if !NET
+		[Obsolete ("Use 'SecondaryLabel' instead.")]
 		[Mac (10,10)]
 		[Static, Export ("secondaryLabelColor")]
 		NSColor SecondaryLabelColor { get; }
+#endif
 
+		[Mac (10,10)]
+		[Static, Export ("secondaryLabelColor")]
+		NSColor SecondaryLabel { get; }
+
+#if !NET
+		[Obsolete ("Use 'TertiaryLabel' instead.")]
 		[Mac (10,10)]
 		[Static, Export ("tertiaryLabelColor")]
 		NSColor TertiaryLabelColor { get; } 
+#endif
 
+		[Mac (10,10)]
+		[Static, Export ("tertiaryLabelColor")]
+		NSColor TertiaryLabel { get; }
+
+#if !NET
+		[Obsolete ("Use 'QuaternaryLabel' instead.")]
 		[Mac (10,10)]
 		[Static, Export ("quaternaryLabelColor")]
 		NSColor QuaternaryLabelColor { get; }
+#endif
 
+		[Mac (10,10)]
+		[Static, Export ("quaternaryLabelColor")]
+		NSColor QuaternaryLabel { get; }
+
+#if !NET
+		[Obsolete ("Use 'Link' instead.")]
 		[Mac (10, 10)]
 		[Static, Export ("linkColor", ArgumentSemantic.Strong)]
 		NSColor LinkColor { get; }
+#endif
+
+		[Mac (10, 10)]
+		[Static, Export ("linkColor", ArgumentSemantic.Strong)]
+		NSColor Link { get; }
 		
 		[Mac (10,12)]
 		[Static]
@@ -4174,10 +4209,18 @@ namespace AppKit {
 		[Export ("colorWithColorSpace:hue:saturation:brightness:alpha:")]
 		NSColor FromColor (NSColorSpace space, nfloat hue, nfloat saturation, nfloat brightness, nfloat alpha);
 
+#if !NET
+		[Obsolete ("Use 'ScrubberTexturedBackground' instead.")]
 		[Mac (10, 12, 2)]
 		[Static]
 		[Export ("scrubberTexturedBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor ScrubberTexturedBackgroundColor { get; }
+#endif
+
+		[Mac (10, 12, 2)]
+		[Static]
+		[Export ("scrubberTexturedBackgroundColor", ArgumentSemantic.Strong)]
+		NSColor ScrubberTexturedBackground { get; }
 
 		[Mac (10,13)]
 		[Static]
@@ -4200,119 +4243,287 @@ namespace AppKit {
 		[return: NullAllowed]
 		NSColor GetColor (NSColorType type);
 
+#if !NET
+		[Obsolete ("Use 'SystemRed' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemRedColor", ArgumentSemantic.Strong)]
 		NSColor SystemRedColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemRedColor", ArgumentSemantic.Strong)]
+		NSColor SystemRed { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGreen' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemGreenColor", ArgumentSemantic.Strong)]
 		NSColor SystemGreenColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemGreenColor", ArgumentSemantic.Strong)]
+		NSColor SystemGreen { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemBlue' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemBlueColor", ArgumentSemantic.Strong)]
 		NSColor SystemBlueColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemBlueColor", ArgumentSemantic.Strong)]
+		NSColor SystemBlue { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemOrange' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemOrangeColor", ArgumentSemantic.Strong)]
 		NSColor SystemOrangeColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemOrangeColor", ArgumentSemantic.Strong)]
+		NSColor SystemOrange { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemYellow' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemYellowColor", ArgumentSemantic.Strong)]
 		NSColor SystemYellowColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemYellowColor", ArgumentSemantic.Strong)]
+		NSColor SystemYellow { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemBrown' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemBrownColor", ArgumentSemantic.Strong)]
 		NSColor SystemBrownColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemBrownColor", ArgumentSemantic.Strong)]
+		NSColor SystemBrown { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemPink' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemPinkColor", ArgumentSemantic.Strong)]
 		NSColor SystemPinkColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemPinkColor", ArgumentSemantic.Strong)]
+		NSColor SystemPink { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemPurple' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemPurpleColor", ArgumentSemantic.Strong)]
 		NSColor SystemPurpleColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemPurpleColor", ArgumentSemantic.Strong)]
+		NSColor SystemPurple { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGray' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("systemGrayColor", ArgumentSemantic.Strong)]
 		NSColor SystemGrayColor { get; }
+#endif
 
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemGrayColor", ArgumentSemantic.Strong)]
+		NSColor SystemGray { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemIndigo' instead.")]
 		[Mac (10, 15)]
 		[Static]
 		[Export ("systemIndigoColor", ArgumentSemantic.Strong)]
 		NSColor SystemIndigoColor { get; }
+#endif
 
+		[Mac (10, 15)]
+		[Static]
+		[Export ("systemIndigoColor", ArgumentSemantic.Strong)]
+		NSColor SystemIndigo { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemMint' instead.")]
 		[Mac (10, 12)]
 		[Static]
 		[Export ("systemMintColor", ArgumentSemantic.Strong)]
 		NSColor SystemMintColor { get; }
+#endif
 
+		[Mac (10, 12)]
+		[Static]
+		[Export ("systemMintColor", ArgumentSemantic.Strong)]
+		NSColor SystemMint { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemCyan' instead.")]
 		[Mac (12, 0)]
 		[Static]
 		[Export ("systemCyanColor", ArgumentSemantic.Strong)]
 		NSColor SystemCyanColor { get; }
+#endif
 
+		[Mac (12, 0)]
+		[Static]
+		[Export ("systemCyanColor", ArgumentSemantic.Strong)]
+		NSColor SystemCyan { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemTeal' instead.")]
 		[Mac (10, 12)]
 		[Static]
 		[Export ("systemTealColor", ArgumentSemantic.Strong)]
 		NSColor SystemTealColor { get; }
+#endif
 
+		[Mac (10, 12)]
+		[Static]
+		[Export ("systemTealColor", ArgumentSemantic.Strong)]
+		NSColor SystemTeal { get; }
+
+#if !NET
+		[Obsolete ("Use 'Separator' instead.")]
 		[Mac (10, 14)]
 		[Static]
 		[Export ("separatorColor", ArgumentSemantic.Strong)]
 		NSColor SeparatorColor { get; }
+#endif
 
+		[Mac (10, 14)]
+		[Static]
+		[Export ("separatorColor", ArgumentSemantic.Strong)]
+		NSColor Separator { get; }
+
+#if !NET
+		[Obsolete ("Use 'SelectedContentBackground' instead.")]
 		[Mac (10, 14)]
 		[Static]
 		[Export ("selectedContentBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor SelectedContentBackgroundColor { get; }
+#endif
 
+		[Mac (10, 14)]
+		[Static]
+		[Export ("selectedContentBackgroundColor", ArgumentSemantic.Strong)]
+		NSColor SelectedContentBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'UnemphasizedSelectedContentBackground' instead.")]
 		[Mac (10, 14)]
 		[Static]
 		[Export ("unemphasizedSelectedContentBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor UnemphasizedSelectedContentBackgroundColor { get; }
+#endif
+
+		[Mac (10, 14)]
+		[Static]
+		[Export ("unemphasizedSelectedContentBackgroundColor", ArgumentSemantic.Strong)]
+		NSColor UnemphasizedSelectedContentBackground { get; }
 
 		[Mac (10, 14)]
 		[Static]
 		[Export ("alternatingContentBackgroundColors", ArgumentSemantic.Strong)]
 		NSColor[] AlternatingContentBackgroundColors { get; }
 
+#if !NET
+		[Obsolete ("Use 'UnemphasizedSelectedTextBackground' instead.")]
 		[Mac (10, 14)]
 		[Static]
 		[Export ("unemphasizedSelectedTextBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor UnemphasizedSelectedTextBackgroundColor { get; }
+#endif
 
+		[Mac (10, 14)]
+		[Static]
+		[Export ("unemphasizedSelectedTextBackgroundColor", ArgumentSemantic.Strong)]
+		NSColor UnemphasizedSelectedTextBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'UnemphasizedSelectedText' instead.")]
 		[Mac (10, 14)]
 		[Static]
 		[Export ("unemphasizedSelectedTextColor", ArgumentSemantic.Strong)]
 		NSColor UnemphasizedSelectedTextColor { get; }
+#endif
 
+		[Mac (10, 14)]
+		[Static]
+		[Export ("unemphasizedSelectedTextColor", ArgumentSemantic.Strong)]
+		NSColor UnemphasizedSelectedText { get; }
+
+#if !NET
+		[Obsolete ("Use 'ControlAccent' instead.")]
 		[Mac (10, 14)]
 		[Static]
 		[Export ("controlAccentColor", ArgumentSemantic.Strong)]
 		NSColor ControlAccentColor { get; }
+#endif
+
+		[Mac (10, 14)]
+		[Static]
+		[Export ("controlAccentColor", ArgumentSemantic.Strong)]
+		NSColor ControlAccent { get; }
 
 		[Mac (10,14)]
 		[Export ("colorWithSystemEffect:")]
 		NSColor FromSystemEffect (NSColorSystemEffect systemEffect);
 
+#if !NET
+		[Obsolete ("Use 'FindHighlight' instead.")]
 		[Mac (10, 13)]
 		[Static]
 		[Export ("findHighlightColor", ArgumentSemantic.Strong)]
 		NSColor FindHighlightColor { get; }
+#endif
 
+		[Mac (10, 13)]
+		[Static]
+		[Export ("findHighlightColor", ArgumentSemantic.Strong)]
+		NSColor FindHighlight { get; }
+
+#if !NET
+		[Obsolete ("Use 'PlaceholderText' instead.")]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("placeholderTextColor", ArgumentSemantic.Strong)]
 		NSColor PlaceholderTextColor { get; }
+#endif
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("placeholderTextColor", ArgumentSemantic.Strong)]
+		NSColor PlaceholderText { get; }
 
 		[Mac (10,15)]
 		[Static]
@@ -4377,7 +4588,6 @@ namespace AppKit {
 	{
 		[Abstract]
 		[Export ("changeColor:")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSColorChanging' instead.")]
 		void ChangeColor ([NullAllowed] NSColorPanel sender);
 	}
 
@@ -18974,9 +19184,11 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
-	partial interface NSTextView : NSTextInputClient, NSTextLayoutOrientationProvider, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate, NSMenuItemValidation, NSUserInterfaceValidations, NSTextInput, NSTextContent
-#if XAMCORE_4_0
-		, NSColorChanging, // ChangeColor has the wrong param type
+	partial interface NSTextView : NSTextInputClient, NSTextLayoutOrientationProvider, NSDraggingSource, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate, NSMenuItemValidation, NSUserInterfaceValidations, NSTextInput, NSTextContent
+#if NET
+		, NSColorChanging // ChangeColor has the wrong param type
+#else
+		, NSTextFinderClient
 #endif
 	{
 		[DesignatedInitializer]
@@ -19060,8 +19272,10 @@ namespace AppKit {
 		[Export ("alignJustified:")]
 		void AlignJustified (NSObject sender);
 
+#if !NET
 		[Export ("changeColor:")]
 		void ChangeColor (NSObject sender);
+#endif
 
 		[Export ("changeAttributes:")]
 		void ChangeAttributes (NSObject sender);
@@ -19542,6 +19756,13 @@ namespace AppKit {
 			[Wrap ("SetContentType (value.GetConstant()!)")]
 			set;
 		}
+
+#if NET
+		// This came from the NSTextFinderClient protocol in legacy Xamarin, but NSTextView doesn't really implement that protocol,
+		// so when it was removed for .NET, we still need to expose the API from NSTextFinderClient that NSTextView actually has.
+		[Export ("selectedRanges", ArgumentSemantic.Copy)]
+		NSArray SelectedRanges { get; set;  }
+#endif
 	}
 
 	[NoMacCatalyst]
@@ -23435,8 +23656,14 @@ namespace AppKit {
 	[NoMacCatalyst]
 	partial interface NSColor {
 
+#if !NET
+		[Obsolete ("Use 'UnderPageBackground' instead.")]
 		[Static, Export ("underPageBackgroundColor")]
 		NSColor UnderPageBackgroundColor { get; }
+#endif
+
+		[Static, Export ("underPageBackgroundColor")]
+		NSColor UnderPageBackground { get; }
 
 		[Static, Export ("colorWithCGColor:")]
 		NSColor FromCGColor (CGColor cgColor);
