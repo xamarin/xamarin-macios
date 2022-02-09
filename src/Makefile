@@ -169,10 +169,10 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(IOS_BUILD_DI
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(IOS_DOTNET_BUILD_DIR)/
+$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(IOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g;'
 
-$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.ios.xml | $(IOS_DOTNET_BUILD_DIR)/
+$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.ios.xml | $(IOS_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $< $@
 
 # core.dll
