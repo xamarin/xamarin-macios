@@ -70,8 +70,8 @@ namespace Cecil.Tests {
 // 				return;
 // 			}
 // #endif
-		
-			var parentAvailability = GetAvailabilityAttributes(parent, includeUnsupported: false).ToList();
+
+			var parentAvailability = GetAvailabilityAttributes (parent, includeUnsupported: false).ToList ();
 // 			// This is true in theory, but our code should be explicit and list every platform individually
 // 			// This can be re-enabled if that decision is reverted.
 
@@ -80,7 +80,7 @@ namespace Cecil.Tests {
 // 				parentAvailability.Append("maccatalyst");
 // 			}
 
-			var myAvailability = GetAvailabilityAttributes(item, includeUnsupported: true);
+			var myAvailability = GetAvailabilityAttributes (item, includeUnsupported: true);
 			if (!FirstContainsAllOfSecond (myAvailability, parentAvailability)) {
 				DebugPrint (fullName, parentAvailability, myAvailability);
 				found.Add (fullName);
