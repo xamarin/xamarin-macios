@@ -1,6 +1,6 @@
 //
 // QuaternionDouble.cs:
-//     This represents the native quaternion double type, which is 32 bytes.
+//     This represents the native simd_quatd double type, which is 32 bytes.
 //
 //
 // Authors:
@@ -12,6 +12,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/quaternion.h
 #if NET
 namespace CoreGraphics
 {

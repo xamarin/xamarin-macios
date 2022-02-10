@@ -1,5 +1,6 @@
 //
 // VectorInt2.cs:
+//     This represents the native vector_int2 type, which is 8 bytes.
 //
 //
 // Authors:
@@ -11,6 +12,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/vector_types.h
 #if NET
 namespace CoreGraphics
 {

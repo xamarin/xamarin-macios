@@ -20,6 +20,7 @@ using Vector4d = global::CoreGraphics.NVector4d;
 using Vector4d = global::OpenTK.Vector4d;
 #endif
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
 #if NET
 namespace CoreGraphics
 #else

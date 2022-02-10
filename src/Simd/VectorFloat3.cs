@@ -6,12 +6,13 @@
 //
 
 //
-// This represents the native vector_float3 type, which is 16 bytes.
+// This represents the native vector_float3 type, which due to padding is 16 bytes (not 12).
 //
 
 using System;
 using System.Runtime.InteropServices;
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/vector_types.h
 #if NET
 namespace CoreGraphics
 #else

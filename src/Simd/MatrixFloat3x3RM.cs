@@ -6,13 +6,14 @@
 //
 
 //
-// This represents the native matrix_float3x3 type, which has a row-major layout
+// This represents the native GLKMatrix3 type, which has a row-major layout
 // (same as OpenTK.Matrix3).
 //
 
 using System;
 using System.Runtime.InteropServices;
 
+// This type does not come from the CoreGraphics framework
 #if NET
 namespace CoreGraphics
 {

@@ -18,6 +18,7 @@ using VectorFloat4=global::System.Numerics.Vector4;
 using VectorFloat4=global::OpenTK.Vector4;
 #endif
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
 #if NET
 namespace CoreGraphics
 #else
