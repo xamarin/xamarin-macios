@@ -24,77 +24,48 @@ namespace SystemConfiguration {
 
 #if __TVOS__
 		// in Xcode 10 the CaptiveNetwork API are marked as prohibited on tvOS
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Always return 'null'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static Foundation.NSString NetworkInfoKeyBSSID => null;
 
 		[Obsolete ("Always return 'null'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static Foundation.NSString NetworkInfoKeySSID => null;
 
 		[Obsolete ("Always return 'null'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static Foundation.NSString NetworkInfoKeySSIDData => null;
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static bool MarkPortalOffline (string iface) => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static bool MarkPortalOnline (string iface)  => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static bool SetSupportedSSIDs (string[] ssids) => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out Foundation.NSDictionary currentNetworkInfo)  => throw new NotSupportedException ();
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
-#if NET
-		[UnsupportedOSPlatform ("tvos")]
-#else
 		[Unavailable (PlatformName.TvOS)]
-#endif
 		public static StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)  => throw new NotSupportedException ();
-#endif
+#endif // !NET
 #else
 		
 #if !MONOMAC
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
@@ -104,6 +75,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
@@ -130,6 +104,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0 use 'NEHotspotNetwork.FetchCurrent' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #endif
@@ -148,6 +125,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -157,6 +137,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -166,6 +149,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -178,6 +164,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -190,6 +179,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -199,6 +191,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif

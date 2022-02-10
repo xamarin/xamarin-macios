@@ -2174,12 +2174,14 @@ xamarin_log_marshalled_exceptions ()
 }
 
 void
-xamarin_log_managed_exception (GCHandle handle, MarshalManagedExceptionMode mode)
+xamarin_log_managed_exception (MonoObject *exception, MarshalManagedExceptionMode mode)
 {
 	if (!xamarin_log_marshalled_exceptions ())
 		return;
 
+	GCHandle handle = xamarin_gchandle_new (exception, false);
 	NSLog (@PRODUCT ": Processing managed exception for exception marshalling (mode: %i):\n%@", mode, xamarin_print_all_exceptions (handle));
+	xamarin_gchandle_free (handle);
 }
 
 void
@@ -2214,7 +2216,11 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	}
 
 	if (mode == MarshalObjectiveCExceptionModeDefault)
+#if DOTNET
+		mode = MarshalObjectiveCExceptionModeThrowManagedException;
+#else
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
+#endif
 	
 	xamarin_log_objectivec_exception (ns_exception, mode);
 
@@ -2284,14 +2290,14 @@ xamarin_process_managed_exception (MonoObject *exception)
 	}
 
 	if (mode == MarshalManagedExceptionModeDefault) {
-#if defined (CORECLR_RUNTIME)
+#if DOTNET
 		mode = MarshalManagedExceptionModeThrowObjectiveCException;
 #else
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
 #endif
 	}
 
-	xamarin_log_managed_exception (handle, mode);
+	xamarin_log_managed_exception (exception, mode);
 
 	switch (mode) {
 #if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
@@ -2364,16 +2370,13 @@ xamarin_process_managed_exception (MonoObject *exception)
 				xamarin_free (fullname);
 			}
 
-			char *message = xamarin_get_exception_message (handle, &exception_gchandle);
+			reason = xamarin_print_all_exceptions (handle);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception when trying to get the message for an exception (this exception will be ignored):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				xamarin_gchandle_free (exception_gchandle);
 				exception_gchandle = INVALID_GCHANDLE;
 				reason = @"Unknown message";
-			} else {
-				reason = [NSString stringWithUTF8String: message];
-				xamarin_free (message);
 			}
 
 			userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
@@ -3170,6 +3173,18 @@ xamarin_is_managed_exception_marshaling_disabled ()
 	return false;
 #endif
 }
+
+#if DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
+int
+xamarin_get_runtime_arch ()
+{
+	#if TARGET_OS_SIMULATOR
+		return 1;
+	#else
+		return 0;
+	#endif
+}
+#endif // DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
 
 /*
  * XamarinGCHandle

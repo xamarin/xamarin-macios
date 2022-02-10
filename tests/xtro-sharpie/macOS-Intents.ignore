@@ -2,7 +2,7 @@
 
 !unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
 
-## Fixed in XAMCORE_4_0 but with a conditional TODO check in code
+## Fixed in .NET but with a conditional TODO check in code
 ## API_AVAILABLE(macosx(10.12), ios(10.0)); This is supposed to be there according to availability (Last Review: Feb 2018)
 !unknown-protocol! INCallsDomainHandling bound
 
@@ -39,7 +39,7 @@
 !missing-type! INTicketedEvent not bound
 !missing-type! INTicketedEventReservation not bound
 
-## Apple fixed API availability fixed in XAMCORE_4_0
+## Apple fixed API availability fixed in .NET
 !unknown-field! INPersonRelationshipAssistant bound
 !unknown-field! INPersonRelationshipBrother bound
 !unknown-field! INPersonRelationshipChild bound

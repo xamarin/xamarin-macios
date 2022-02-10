@@ -19,11 +19,19 @@ using Foundation;
 using AppKit;
 using UIColor = AppKit.NSColor;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.ObjCException;
+#endif
 #else
 using UIKit;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.MonoTouchException;
+#endif
 #endif
 using ObjCRuntime;
 #if !__TVOS__
@@ -37,7 +45,9 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if !(__TVOS__ && NET)
 using WebKit;
+#endif
 using OpenTK;
 using NUnit.Framework;
 using Bindings.Test;

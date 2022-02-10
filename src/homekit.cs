@@ -1896,7 +1896,7 @@ namespace HomeKit {
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
 		NSString WeakSignificantEvent { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Override]
 #endif
 		HMSignificantEvent SignificantEvent {

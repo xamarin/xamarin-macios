@@ -247,7 +247,7 @@ namespace CoreMedia {
 			get {
 				unsafe {
 					var ret = (AudioFormat *) CMAudioFormatDescriptionGetMostCompatibleFormat (Handle);
-					if (ret == null)
+					if (ret is null)
 						return new AudioFormat ();
 					return *ret;
 				}
@@ -261,7 +261,7 @@ namespace CoreMedia {
 			get {
 				unsafe {
 					var ret = (AudioFormat *) CMAudioFormatDescriptionGetRichestDecodableFormat (Handle);
-					if (ret == null)
+					if (ret is null)
 						return new AudioFormat ();
 					return *ret;
 				}
@@ -327,7 +327,7 @@ namespace CoreMedia {
 			IntPtr handle;
 			var error = CMVideoFormatDescriptionCreate (IntPtr.Zero, codecType, size.Width, size.Height, IntPtr.Zero, out handle);
 			if (error != CMFormatDescriptionError.None)
-				throw new ArgumentException (error.ToString ());
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
 		}
 
@@ -351,7 +351,7 @@ namespace CoreMedia {
 		public static CMVideoFormatDescription? CreateForImageBuffer (CVImageBuffer imageBuffer, out CMFormatDescriptionError error)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 
 			IntPtr desc;
 			error = CMVideoFormatDescriptionCreateForImageBuffer (IntPtr.Zero, imageBuffer.Handle, out desc);
@@ -379,13 +379,13 @@ namespace CoreMedia {
 		public static CMVideoFormatDescription? FromH264ParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
 			if (parameterSets is null)
-				throw new ArgumentNullException (nameof (parameterSets));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterSets));
 
 			if (parameterSets.Count < 2)
-				throw new ArgumentException ("parameterSets must contain at least two elements");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException ("parameterSets must contain at least two elements");
 
 			if (nalUnitHeaderLength != 1 && nalUnitHeaderLength != 2 && nalUnitHeaderLength != 4)
-				throw new ArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
 
 			var handles = new GCHandle [parameterSets.Count];
 			try {
@@ -454,13 +454,13 @@ namespace CoreMedia {
 		public static NSObject? []? GetExtensionKeysCommonWithImageBuffers ()
 		{
 			var arr = CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers ();
-			return NSArray.ArrayFromHandle<NSString> (arr);
+			return CFArray.ArrayFromHandle<NSString> (arr);
 		}
 
 		public bool VideoMatchesImageBuffer (CVImageBuffer imageBuffer)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			return CMVideoFormatDescriptionMatchesImageBuffer (Handle, imageBuffer.Handle);
 		}
 
@@ -489,13 +489,13 @@ namespace CoreMedia {
 		public static CMVideoFormatDescription? FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions, out CMFormatDescriptionError error)
 		{
 			if (parameterSets is null)
-				throw new ArgumentNullException (nameof (parameterSets));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterSets));
 
 			if (parameterSets.Count < 3)
-				throw new ArgumentException ($"{nameof (parameterSets)} must contain at least three elements");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (parameterSets), "must contain at least three elements");
 
 			if (nalUnitHeaderLength != 1 && nalUnitHeaderLength != 2 && nalUnitHeaderLength != 4)
-				throw new ArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
 
 			var handles = new GCHandle [parameterSets.Count];
 			try {

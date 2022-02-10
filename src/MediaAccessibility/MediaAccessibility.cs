@@ -18,12 +18,16 @@ using Foundation;
 
 namespace MediaAccessibility {
 
-#if !NET
-	[iOS (7,0)][Mac (10,9)]
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos10.9")]
+#else
+	[iOS (7,0)]
+	[Mac (10,9)]
 #endif
 	public static partial class MACaptionAppearance {
 
-#if !XAMCORE_4_0
+#if !NET
 		// FIXME: make this a real notification
 		public static readonly NSString SettingsChangedNotification;
 
@@ -222,21 +226,25 @@ namespace MediaAccessibility {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
 #else
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern void MACaptionAppearanceDidDisplayCaptions (IntPtr /* CFArratRef */ strings);
 
 #if NET
-		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
 #else
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public static void DidDisplayCaptions (string[] strings)
 		{
@@ -249,11 +257,13 @@ namespace MediaAccessibility {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
 #else
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public static void DidDisplayCaptions (NSAttributedString[] strings)
 		{
@@ -269,8 +279,12 @@ namespace MediaAccessibility {
 	}
 
 	static partial class MAAudibleMedia {
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern unsafe IntPtr /* CFArrayRef __nonnull */ MAAudibleMediaCopyPreferredCharacteristics ();

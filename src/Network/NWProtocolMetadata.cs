@@ -27,19 +27,22 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
+#if NET
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
 #endif
 	public class NWProtocolMetadata : NativeObject {
 
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern OS_nw_protocol_metadata nw_ip_create_metadata ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public static NWProtocolMetadata CreateIPMetadata ()
 		{
@@ -50,8 +53,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern OS_nw_protocol_metadata nw_udp_create_metadata ();
 
-#if !XAMCORE_4_0
-		[Obsolete ("Use the 'NSUdpMetadata' class and methods instead.")]
+#if !NET
+		[Obsolete ("Use the 'NWUdpMetadata' class and methods instead.")]
 		public static NWProtocolMetadata CreateUdpMetadata ()
 		{
 			return new NWProtocolMetadata (nw_udp_create_metadata (), owns: true);
@@ -94,19 +97,33 @@ namespace Network {
 
 		public bool IsTcp => nw_protocol_metadata_is_tcp (GetCheckedHandle ());
 		
-#if !NET
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_protocol_metadata_is_quic (OS_nw_protocol_metadata metadata);
 
-#if !NET
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
 #endif
 		public bool IsQuic => nw_protocol_metadata_is_quic (GetCheckedHandle ());
 
@@ -131,7 +148,7 @@ namespace Network {
 				throw new InvalidOperationException ("This metadata is not TLS metadata.");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWTlsMetadata' class and methods instead.")]
 		public SecProtocolMetadata SecProtocolMetadata => TlsSecProtocolMetadata;
 
@@ -150,7 +167,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern NWIPEcnFlag nw_ip_metadata_get_ecn_flag (OS_nw_protocol_metadata metadata);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public NWIPEcnFlag IPMetadataEcnFlag {
 			get {
@@ -167,7 +184,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern /* uint64_t */ ulong nw_ip_metadata_get_receive_time (OS_nw_protocol_metadata metadata);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public ulong IPMetadataReceiveTime {
 			get {
@@ -183,7 +200,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern NWServiceClass nw_ip_metadata_get_service_class (OS_nw_protocol_metadata metadata);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWIPMetadata' class and methods instead.")]
 		public NWServiceClass ServiceClass {
 			get => IPServiceClass;
@@ -206,7 +223,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static /* uint32_t */ uint nw_tcp_get_available_receive_buffer (IntPtr handle);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWTcpMetadata' class and methods instead.")]
 		public uint TcpGetAvailableReceiveBuffer ()
 		{
@@ -218,7 +235,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal extern static /* uint32_t */ uint nw_tcp_get_available_send_buffer (IntPtr handle);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'NWTcpMetadata' class and methods instead.")]
 		public uint TcpGetAvailableSendBuffer ()
 		{
@@ -227,43 +244,51 @@ namespace Network {
 		}
 #endif
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_framer_message (OS_nw_protocol_metadata metadata);
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public bool IsFramerMessage => nw_protocol_metadata_is_framer_message (GetCheckedHandle ());
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_ws (OS_nw_protocol_metadata metadata);
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public bool IsWebSocket => nw_protocol_metadata_is_ws (GetCheckedHandle ());
 	}

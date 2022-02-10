@@ -1359,7 +1359,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalManagedExceptions) {
 			case MarshalManagedExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
 				} else if (EnableCoopGC.Value) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
@@ -1394,7 +1394,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalObjectiveCExceptions) {
 			case MarshalObjectiveCExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 				} else if (EnableCoopGC.Value) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
@@ -1546,6 +1546,12 @@ namespace Xamarin.Bundler {
 				aotArguments.Add ("full");
 			} else
 				aotArguments.Add ("full");
+
+			if (IsDeviceBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/0");
+			} else if (IsSimulatorBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/1");
+			}
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
 			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
