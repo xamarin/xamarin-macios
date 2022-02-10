@@ -24,12 +24,14 @@ namespace CoreGraphics
 		public int X;
 		public int Y;
 		public int Z;
+		int dummy;
 
 		public NVector3i (int x, int y, int z)
 		{
 			X = x;
 			Y = y;
 			Z = z;
+			dummy = 0;
 		}
 
 		public static bool operator == (NVector3i left, NVector3i right)
