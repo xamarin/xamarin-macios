@@ -2040,7 +2040,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ItemGroup>
 			<!-- Compute the relative path of the item in the app bundle -->
 			<_CodesignItems>
-				<CodesignRelativeAppBundlePath>$([System.String]::new('%(Identity)')).Substring($([System.String]::new('%(Identity)')).LastIndexOf('.app/')+5)</CodesignRelativeAppBundlePath>
+				<CodesignRelativeAppBundlePath>$([System.String]::new('%(Identity)').Substring($([MSBuild]::Add($([System.String]::new('%(Identity)').LastIndexOf('.app/')),5))))</CodesignRelativeAppBundlePath>
 			</_CodesignItems>
 			<!-- Set CodesignStampPath if it's not set already -->
 			<_CodesignItems>
