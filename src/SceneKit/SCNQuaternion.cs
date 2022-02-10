@@ -28,6 +28,7 @@ using Vector2 = global::System.Numerics.Vector2;
 using Vector3 = global::System.Numerics.Vector3;
 using Vector4 = global::System.Numerics.Vector4;
 using Matrix3 = global::CoreGraphics.RMatrix3;
+using Quaternion = global::System.Numerics.Quaternion;
 #else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -110,7 +111,12 @@ namespace SceneKit
             if (matrix.R1C0 - matrix.R0C1 < 0) Z = -Z;
         }
 
-#if !NET
+#if NET
+	public SCNQuaternion (Quaternion quaternion)
+		: this (quaternion.X, quaternion.Y, quaternion.Z, quaternion.W)
+	{
+	}
+#else
 	public SCNQuaternion (Quaternion openTkQuaternion) : this (new SCNVector3 (openTkQuaternion.XYZ), openTkQuaternion.W)
 	{
 		
