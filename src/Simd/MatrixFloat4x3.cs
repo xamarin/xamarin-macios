@@ -9,6 +9,8 @@
 // This represents the native matrix_float4x3 type (3 rows and 4 columns)
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -177,12 +179,12 @@ namespace OpenTK
 				M31.GetHashCode () ^ M32.GetHashCode () ^ M33.GetHashCode () ^ M34.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix4x3))
+			if (!(obj is NMatrix4x3 matrix))
 				return false;
 
-			return Equals ((NMatrix4x3) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix4x3 other)

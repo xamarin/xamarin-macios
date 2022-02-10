@@ -10,6 +10,8 @@
 // (as opposed to OpenTK.Matrix4, which has a row-major layout).
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -345,12 +347,12 @@ namespace OpenTK
 				M41.GetHashCode () ^ M42.GetHashCode () ^ M43.GetHashCode () ^ M44.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix4))
+			if (!(obj is NMatrix4 matrix))
 				return false;
 
-			return Equals ((NMatrix4) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix4 other)

@@ -10,6 +10,7 @@
 // Copyright (c) 2017 Microsoft Inc
 //
 
+#nullable enable
 
 using System;
 using System.Runtime.InteropServices;
@@ -327,12 +328,12 @@ namespace OpenTK
 				M41.GetHashCode () ^ M42.GetHashCode () ^ M43.GetHashCode () ^ M44.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix4d))
+			if (!(obj is NMatrix4d matrix))
 				return false;
 
-			return Equals ((NMatrix4d) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix4d other)

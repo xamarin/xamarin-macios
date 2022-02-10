@@ -9,6 +9,8 @@
 // This represents the native vector_float3 type, which due to padding is 16 bytes (not 12).
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -77,12 +79,12 @@ namespace OpenTK
 			return X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NVector3))
+			if (!(obj is NVector3 vector))
 				return false;
 
-			return Equals ((NVector3) obj);
+			return Equals (vector);
 		}
 
 		public bool Equals (NVector3 other)

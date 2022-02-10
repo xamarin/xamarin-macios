@@ -9,6 +9,8 @@
 // Copyright (c) 2021 Microsoft Inc
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -62,12 +64,12 @@ namespace CoreGraphics
 		public override int GetHashCode () =>
 			X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode () ^ W.GetHashCode ();
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NQuaterniond))
+			if (!(obj is NQuaterniond quat))
 				return false;
 
-			return Equals ((NQuaterniond) obj);
+			return Equals (quat);
 		}
 
 		public bool Equals (NQuaterniond other) =>

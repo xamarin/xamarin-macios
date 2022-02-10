@@ -10,6 +10,8 @@
 // Copyright (c) 2017 Microsoft Inc
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -87,12 +89,12 @@ namespace OpenTK
 			return X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NVector3d))
+			if (!(obj is NVector3d vector))
 				return false;
 
-			return Equals ((NVector3d) obj);
+			return Equals (vector);
 		}
 
 		public bool Equals (NVector3d other)

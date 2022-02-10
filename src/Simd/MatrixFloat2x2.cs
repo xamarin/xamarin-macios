@@ -10,6 +10,8 @@
 // (as opposed to OpenTK.Matrix2, which has a row-major layout).
 // 
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -123,12 +125,12 @@ namespace OpenTK
 			return R0C0.GetHashCode () ^ R0C1.GetHashCode () ^ R1C0.GetHashCode () ^ R1C1.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix2))
+			if (!(obj is NMatrix2 matrix))
 				return false;
 
-			return Equals ((NMatrix2) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix2 other)

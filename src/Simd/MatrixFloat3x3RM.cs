@@ -10,6 +10,8 @@
 // (same as OpenTK.Matrix3).
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -149,12 +151,12 @@ namespace CoreGraphics
 				R2C0.GetHashCode () ^ R2C1.GetHashCode () ^ R2C2.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is RMatrix3))
+			if (!(obj is RMatrix3 matrix))
 				return false;
 
-			return Equals ((RMatrix3) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (RMatrix3 other)

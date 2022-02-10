@@ -9,6 +9,8 @@
 // Copyright (c) 2021 Microsoft Inc
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -62,12 +64,12 @@ namespace CoreGraphics
 			return X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode () ^ W.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NVector4d))
+			if (!(obj is NVector4d vector))
 				return false;
 
-			return Equals ((NVector4d) obj);
+			return Equals (vector);
 		}
 
 		public bool Equals (NVector4d other)
