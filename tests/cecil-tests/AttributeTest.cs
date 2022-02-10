@@ -8,6 +8,9 @@ using NUnit.Framework;
 
 using Mono.Cecil;
 
+using Xamarin.Utils;
+using Xamarin.Tests;
+
 #nullable enable
 
 namespace Cecil.Tests {
@@ -142,17 +145,16 @@ namespace Cecil.Tests {
 
 		string AssemblyToAttributeName (string assemblyPath)
 		{
-			var baseName = Path.GetFileName (assemblyPath));
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_iOS) == baseName)
+			var baseName = Path.GetFileName (assemblyPath);
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_iOS.Platform) == baseName)
 				return "ios";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_tvOS) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_tvOS.Platform) == baseName)
 				return "tvos";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_macOS) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_macOS.Platform) == baseName)
 				return "macos";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_MacCatalyst) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_MacCatalyst.Platform) == baseName)
 				return "maccatalyst";
 			throw new NotImplementedException ();
-			}
 		}
 
 		[Conditional ("DEBUG")]
