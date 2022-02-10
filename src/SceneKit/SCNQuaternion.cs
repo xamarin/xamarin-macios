@@ -27,7 +27,7 @@ SOFTWARE.
 using Vector2 = global::System.Numerics.Vector2;
 using Vector3 = global::System.Numerics.Vector3;
 using Vector4 = global::System.Numerics.Vector4;
-using Matrix3 = global::CoreGraphics.NMatrix3;
+using Matrix3 = global::CoreGraphics.RMatrix3;
 #else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
