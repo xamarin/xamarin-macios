@@ -392,7 +392,7 @@ namespace LinkSdk {
 			model.Entities = new NSEntityDescription[1] { entity };
 			model.SetEntities (model.Entities, String.Empty);
 
-			var sqlitePath = Path.Combine (NSFileManager.TemporaryDirectory, "test.sqlite");
+			var sqlitePath = Path.Combine (NSFileManager.TemporaryDirectory, $"test-{System.Diagnostics.Process.GetCurrentProcess ().Id}.sqlite");
 			NSUrl url =  NSUrl.FromFilename (sqlitePath);
 
 			try {
