@@ -57,6 +57,9 @@ namespace Cecil.Tests {
 			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
 				CheckAllPlatformsOnParent (meth, meth.FullName, meth.DeclaringType, found);
 			}
+			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
+				CheckAllPlatformsOnParent (field, field.FullName, field.DeclaringType, found);
+			}
 
 			Assert.That (found, Is.Empty);
 		}
@@ -128,6 +131,9 @@ namespace Cecil.Tests {
 			}
 			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
 				CheckCurrentPlatformIncludedIfAny (meth, platformName, meth.FullName, meth.DeclaringType, found);
+			}
+			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
+				CheckCurrentPlatformIncludedIfAny (field, platformName, field.FullName, field.DeclaringType, found);
 			}
 
 			Assert.That (found, Is.Empty);
