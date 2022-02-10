@@ -76,6 +76,10 @@ namespace CoreGraphics
 		{
 			return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
 		}
+
+		public static NVector4d Zero {
+			get => default;
+		}
 	}
 }
 #endif // NET

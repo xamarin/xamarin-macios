@@ -102,6 +102,10 @@ namespace OpenTK
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}
 
+		public static NVector3d Zero {
+			get => default;
+		}
+
 #if NET
 		internal double Length =>
 			System.Math.Sqrt (X * X + Y * Y + Z * Z);
@@ -122,8 +126,6 @@ namespace OpenTK
 		internal static readonly NVector3d UnitY = new NVector3d (0, 1, 0);
 
 		internal static readonly NVector3d UnitZ = new NVector3d (0, 0, 1);
-
-		internal static readonly NVector3d Zero = new NVector3d (0, 0, 0);
 
 		internal static readonly NVector3d One = new NVector3d (1, 1, 1);
 #endif // NET

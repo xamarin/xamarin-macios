@@ -2,6 +2,10 @@
 // QuaternionDouble.cs:
 //     This represents the native simd_quatd double type, which is 32 bytes.
 //
+// One day we might be able to remove this type in favor of a System.Numerics.Quaterniond type (which doesn't exist yet),
+// so the only API available here is the one that I _think_ System.Numerics.Quanterniond will have (based on the existing
+// System.Numerics.Quaternion type). In particular it must not have any API that *doesn't* exist in a potential
+// System.Numerics.Quaterniond type (🔮).
 //
 // Authors:
 //     Stephane Delcroix <stephane@delcroix.org>
@@ -34,15 +38,15 @@ namespace CoreGraphics
 			W = w;
 		}
 
-		public NQuaterniond (NVector3d xyz, double w)
+		public NQuaterniond (NVector3d vectorPart, double scalarPart)
 		{
-			X = xyz.X;
-			Y = xyz.Y;
-			Z = xyz.Z;
-			W = w;
+			X = vectorPart.X;
+			Y = vectorPart.Y;
+			Z = vectorPart.Z;
+			W = scalarPart;
 		}
 
-		public NVector3d Xyz
+		internal NVector3d Xyz
 		{
 			get => new NVector3d (X, Y, Z);
 			set {

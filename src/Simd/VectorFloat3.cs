@@ -91,5 +91,9 @@ namespace OpenTK
 		{
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}
+
+		public static NVector3 Zero {
+			get => default;
+		}
 	}
 }
