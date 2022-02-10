@@ -344,10 +344,8 @@ namespace GLKit {
 		[Export ("textureCubeMap")]
 		GLKEffectPropertyTexture TextureCubeMap { get;  }
 
-#if !NET
 		[Export ("matrix", ArgumentSemantic.Assign)]
 		Matrix3 Matrix { get; set;  }
-#endif
 	}
 	
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
