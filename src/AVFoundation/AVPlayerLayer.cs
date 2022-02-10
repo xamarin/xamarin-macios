@@ -13,6 +13,8 @@ using ObjCRuntime;
 using CoreVideo;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVPlayerLayer {
 #if NET
@@ -22,7 +24,7 @@ namespace AVFoundation {
 		[iOS (9,0)]
 		[Mac (10,11)]
 #endif
-		public CVPixelBufferAttributes PixelBufferAttributes { 
+		public CVPixelBufferAttributes? PixelBufferAttributes {
 			get {
 				if (WeakPixelBufferAttributes != null) {
 					var strongDict = new CVPixelBufferAttributes (WeakPixelBufferAttributes);

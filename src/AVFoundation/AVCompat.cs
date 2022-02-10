@@ -14,6 +14,8 @@ using System.Runtime.Versioning;
 using NativeHandle = System.IntPtr;
 #endif
 
+#nullable enable
+
 namespace AVFoundation {
 	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
 
@@ -119,7 +121,7 @@ namespace AVFoundation {
 	partial class AVAsset {
 
 		[Obsolete ("Use 'GetChapterMetadataGroups'.")]
-		public virtual AVMetadataItem[] ChapterMetadataGroups (NSLocale forLocale, AVMetadataItem[] commonKeys)
+		public virtual AVMetadataItem[]? ChapterMetadataGroups (NSLocale forLocale, AVMetadataItem[] commonKeys)
 		{
 			return null;
 		}
@@ -128,7 +130,7 @@ namespace AVFoundation {
 	partial class AVAssetTrack {
 
 		[Obsolete ("Use 'GetAssociatedTracks'.")]
-		public virtual NSString GetAssociatedTracksOfType (NSString avAssetTrackTrackAssociationType)
+		public virtual NSString? GetAssociatedTracksOfType (NSString avAssetTrackTrackAssociationType)
 		{
 			return null;
 		}
@@ -433,22 +435,22 @@ namespace AVFoundation {
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
@@ -468,7 +470,7 @@ namespace AVFoundation {
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
@@ -550,7 +552,7 @@ namespace AVFoundation {
 		}
 
 		[Obsolete ("Use 'Events' instead.")]
-		public virtual AVPlayerInterstitialEvent[] InterstitialEvents {
+		public virtual AVPlayerInterstitialEvent[]? InterstitialEvents {
 			get { return Events; }
 			set { Events = value; }
 		}

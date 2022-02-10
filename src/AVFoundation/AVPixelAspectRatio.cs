@@ -27,6 +27,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -60,7 +62,7 @@ namespace AVFoundation {
 			return (int) HorizontalSpacing ^ (int) VerticalSpacing;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is AVPixelAspectRatio){
 				var o = (AVPixelAspectRatio) other;

@@ -26,6 +26,8 @@ using AudioToolbox;
 using ObjCRuntime;
 using System;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	public partial class AVPlayerLooper {

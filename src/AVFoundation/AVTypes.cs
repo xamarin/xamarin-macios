@@ -15,6 +15,8 @@ using Vector3 = global::OpenTK.Vector3;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -42,7 +44,7 @@ namespace AVFoundation {
 			return !left.Equals (right);
 		}
 		
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVAudio3DVectorOrientation))
 				return false;
@@ -85,8 +87,8 @@ namespace AVFoundation {
 				left.Roll != right.Roll);
 			
 		}
-		
-		public override bool Equals(object obj)
+
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVAudio3DAngularOrientation))
 				return false;
@@ -135,7 +137,7 @@ namespace AVFoundation {
 				left.BlueGain != right.BlueGain);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceGains))
 				return false;
@@ -179,7 +181,7 @@ namespace AVFoundation {
 			return left.X != right.X || left.Y != right.Y;
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceChromaticityValues))
 				return false;
@@ -223,7 +225,7 @@ namespace AVFoundation {
 			
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceTemperatureAndTintValues))
 				return false;

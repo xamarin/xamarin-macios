@@ -27,6 +27,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -70,7 +72,7 @@ namespace AVFoundation {
 				(int)Top ^ (int)Right ^ (int)Bottom;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is AVEdgeWidths){
 				var o = (AVEdgeWidths) other;

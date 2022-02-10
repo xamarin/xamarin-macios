@@ -35,6 +35,8 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	public class AVErrorEventArgs : EventArgs {
@@ -57,9 +59,9 @@ namespace AVFoundation {
 
 	#pragma warning disable 672
 	sealed class InternalAVAudioPlayerDelegate : AVAudioPlayerDelegate {
-		internal EventHandler cbEndInterruption, cbBeginInterruption;
-		internal EventHandler<AVStatusEventArgs> cbFinishedPlaying;
-		internal EventHandler<AVErrorEventArgs> cbDecoderError;
+		internal EventHandler? cbEndInterruption, cbBeginInterruption;
+		internal EventHandler<AVStatusEventArgs>? cbFinishedPlaying;
+		internal EventHandler<AVErrorEventArgs>? cbDecoderError;
 
 		public InternalAVAudioPlayerDelegate ()
 		{
@@ -76,9 +78,9 @@ namespace AVFoundation {
 		}
 	
 		[Preserve (Conditional = true)]
-		public override void DecoderError (AVAudioPlayer player, NSError  error)
+		public override void DecoderError (AVAudioPlayer player, NSError?  error)
 		{
-			if (cbDecoderError != null)
+			if (cbDecoderError is not null && error is not null)
 				cbDecoderError (player, new AVErrorEventArgs (error));
 		}
 #if !MONOMAC	
@@ -116,7 +118,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbFinishedPlaying -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbFinishedPlaying -= value;
 			}
 		}
 
@@ -126,7 +129,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbDecoderError -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbDecoderError -= value;
 			}
 		}
 
@@ -136,7 +140,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -146,16 +151,17 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbEndInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbEndInterruption -= value;
 			}
 		}
 	}
 
 #if !TVOS
 	internal class InternalAVAudioRecorderDelegate : AVAudioRecorderDelegate {
-		internal EventHandler cbEndInterruption, cbBeginInterruption;
-		internal EventHandler<AVStatusEventArgs> cbFinishedRecording;
-		internal EventHandler<AVErrorEventArgs> cbEncoderError;
+		internal EventHandler? cbEndInterruption, cbBeginInterruption;
+		internal EventHandler<AVStatusEventArgs>? cbFinishedRecording;
+		internal EventHandler<AVErrorEventArgs>? cbEncoderError;
 
 		public InternalAVAudioRecorderDelegate ()	
 		{
@@ -170,9 +176,9 @@ namespace AVFoundation {
 		}
 	
 		[Preserve (Conditional = true)]
-		public override void EncoderError (AVAudioRecorder recorder, NSError error)
+		public override void EncoderError (AVAudioRecorder recorder, NSError? error)
 		{
-			if (cbEncoderError != null)
+			if (cbEncoderError is not null && error is not null)
 				cbEncoderError (recorder, new AVErrorEventArgs (error));
 		}
 #if !MONOMAC	
@@ -209,7 +215,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbFinishedRecording -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbFinishedRecording -= value;
 			}
 		}
 
@@ -219,7 +226,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbEncoderError -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbEncoderError -= value;
 			}
 		}
 
@@ -229,7 +237,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -239,7 +248,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbEndInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbEndInterruption -= value;
 			}
 		}
 	}
@@ -272,12 +282,12 @@ namespace AVFoundation {
 	
 #if !MONOMAC && !TVOS
 	internal class InternalAVAudioSessionDelegate : AVAudioSessionDelegate {
-		internal EventHandler cbEndInterruption, cbBeginInterruption;
-		internal EventHandler<AVCategoryEventArgs> cbCategoryChanged;
-		internal EventHandler<AVStatusEventArgs> cbInputAvailabilityChanged;
-		internal EventHandler<AVSampleRateEventArgs> cbSampleRateChanged;
-		internal EventHandler<AVChannelsEventArgs> cbInputChanged;
-		internal EventHandler<AVChannelsEventArgs> cbOutputChanged;
+		internal EventHandler? cbEndInterruption, cbBeginInterruption;
+		internal EventHandler<AVCategoryEventArgs>? cbCategoryChanged;
+		internal EventHandler<AVStatusEventArgs>? cbInputAvailabilityChanged;
+		internal EventHandler<AVSampleRateEventArgs>? cbSampleRateChanged;
+		internal EventHandler<AVChannelsEventArgs>? cbInputChanged;
+		internal EventHandler<AVChannelsEventArgs>? cbOutputChanged;
 
 		AVAudioSession session;
 		
@@ -335,7 +345,8 @@ namespace AVFoundation {
 				EnsureEventDelegate ().cbBeginInterruption += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -353,7 +364,8 @@ namespace AVFoundation {
 				EnsureEventDelegate ().cbEndInterruption += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -371,7 +383,8 @@ namespace AVFoundation {
 				EnsureEventDelegate ().cbCategoryChanged += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbCategoryChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbCategoryChanged -= value;
 			}
 		}
 
@@ -389,7 +402,8 @@ namespace AVFoundation {
 				EnsureEventDelegate ().cbInputAvailabilityChanged += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbInputAvailabilityChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbInputAvailabilityChanged -= value;
 			}
 		}
 
@@ -408,7 +422,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbSampleRateChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbSampleRateChanged -= value;
 			}
 		}
 
@@ -427,7 +442,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbInputChanged += value;
+				if (value is not null)
+					EnsureEventDelegate ().cbInputChanged += value;
 			}
 		}
 
@@ -446,7 +462,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbOutputChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbOutputChanged -= value;
 			}
 		}
 	}

@@ -28,6 +28,8 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET
@@ -64,7 +66,7 @@ namespace AVFoundation {
 			return !left.Equals (right);
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVBeatRange))
 				return false;
