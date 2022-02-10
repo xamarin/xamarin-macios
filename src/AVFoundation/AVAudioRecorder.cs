@@ -31,6 +31,8 @@ using ObjCRuntime;
 using System;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 #if !TVOS
 	public partial class AVAudioRecorder {
@@ -44,10 +46,10 @@ namespace AVFoundation {
 			Handle = InitWithUrl (url, format, out error);
 		}
 
-		public static AVAudioRecorder Create (NSUrl url, AudioSettings settings, out NSError error)
+		public static AVAudioRecorder? Create (NSUrl url, AudioSettings settings, out NSError? error)
 		{
 			if (settings == null)
-				throw new ArgumentNullException ("settings");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			error = null;
 			try {
 				AVAudioRecorder r = new AVAudioRecorder (url, settings, out error);
@@ -68,10 +70,10 @@ namespace AVFoundation {
 		[iOS (10,0)]
 		[Mac (10,12)]
 #endif
-		public static AVAudioRecorder Create (NSUrl url, AVAudioFormat format, out NSError error)
+		public static AVAudioRecorder? Create (NSUrl url, AVAudioFormat? format, out NSError? error)
 		{
-			if (format == null)
-				throw new ArgumentNullException (nameof (format));
+			if (format is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (format));
 			error = null;
 			try {
 				AVAudioRecorder r = new AVAudioRecorder (url, format, out error);
@@ -84,7 +86,7 @@ namespace AVFoundation {
 			}
 		}
 
-		internal static AVAudioRecorder ToUrl (NSUrl url, NSDictionary settings, out NSError error)
+		internal static AVAudioRecorder? ToUrl (NSUrl url, NSDictionary settings, out NSError? error)
 		{
 			return Create (url, new AudioSettings (settings), out error);
 		}

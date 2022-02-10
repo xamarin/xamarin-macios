@@ -5,6 +5,8 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace AVFoundation {
 #if MONOMAC && !XAMCORE_3_0
 	public partial class AVFragmentedAsset {

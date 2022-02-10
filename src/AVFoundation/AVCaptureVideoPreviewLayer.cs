@@ -8,6 +8,8 @@ using ObjCRuntime;
 using AudioToolbox;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
 

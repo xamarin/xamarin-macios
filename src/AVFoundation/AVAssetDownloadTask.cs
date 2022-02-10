@@ -10,6 +10,8 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace AVFoundation {
 #if !MONOMAC && !WATCH && !TVOS
 	public partial class AVAssetDownloadTask : NSUrlSessionTask {

@@ -32,9 +32,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVMetadataMachineReadableCodeObject {
-		public CGPoint[] Corners {
+		public CGPoint[]? Corners {
 			get {
 				var arr = WeakCorners;
 				if (arr == null)

@@ -33,6 +33,8 @@ using ObjCRuntime;
 using AudioToolbox;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	// Should be called AVAudioSetting but AVAudioSetting has been already used by keys class
@@ -170,7 +172,7 @@ namespace AVFoundation {
 #endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
 			set {
-				NSString v = null;
+				NSString? v = null;
 				switch (value){
 				case AVAudioBitRateStrategy.Constant:
 					v = AVAudioSettings._Constant;
@@ -220,7 +222,7 @@ namespace AVFoundation {
 				return null;
 			}
 			set {
-				NSString v = null;
+				NSString? v = null;
 				switch (value){
 				case AVSampleRateConverterAlgorithm.Mastering:
 					v = AVAudioSettings.AVSampleRateConverterAlgorithm_Mastering;

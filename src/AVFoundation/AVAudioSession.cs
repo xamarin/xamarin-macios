@@ -27,6 +27,8 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if !MONOMAC
@@ -42,7 +44,7 @@ namespace AVFoundation {
 	}
 
 	public partial class AVAudioSession : NSObject {
-		public NSError SetActive (bool beActive)
+		public NSError? SetActive (bool beActive)
 		{
 			NSError outError;
 			if (SetActive (beActive, out outError))
@@ -51,7 +53,7 @@ namespace AVFoundation {
 		}
 
 #if !TVOS && !WATCH
-		public NSError SetActive (bool active, AVAudioSessionSetActiveOptions options)
+		public NSError? SetActive (bool active, AVAudioSessionSetActiveOptions options)
 		{
 			NSError outError;
 			if (SetActive (active, options, out outError))
@@ -60,16 +62,16 @@ namespace AVFoundation {
 		}
 #endif
 
-		public NSError SetCategory (NSString theCategory)
+		public NSError? SetCategory (NSString? theCategory)
 		{
 			NSError outError;
 			
-			if (SetCategory (theCategory, out outError))
+			if (theCategory is null || SetCategory (theCategory, out outError))
 				return null;
 			return outError;
 		}
 
-		internal NSString CategoryToToken (AVAudioSessionCategory category)
+		internal NSString? CategoryToToken (AVAudioSessionCategory category)
 		{
 			switch (category){
 			case AVAudioSessionCategory.Ambient:
@@ -92,12 +94,12 @@ namespace AVFoundation {
 			return null;
 		}
 		
-		public NSError SetCategory (AVAudioSessionCategory category)
+		public NSError? SetCategory (AVAudioSessionCategory category)
 		{
 			return SetCategory (CategoryToToken (category));
 		}
 
-		public NSError SetCategory (AVAudioSessionCategory category, AVAudioSessionCategoryOptions options)
+		public NSError? SetCategory (AVAudioSessionCategory category, AVAudioSessionCategoryOptions options)
 		{
 			NSError error;
 			if (SetCategory (CategoryToToken (category), options, out error))

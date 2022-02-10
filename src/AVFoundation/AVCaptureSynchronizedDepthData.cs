@@ -5,6 +5,8 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace AVFoundation {
 #if !NET && __IOS__
 	public partial class AVCaptureSynchronizedDepthData {

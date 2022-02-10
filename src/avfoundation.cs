@@ -51,6 +51,7 @@ using CoreVideo;
 using UniformTypeIdentifiers;
 using ImageIO;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using OpenTK;
 #if MONOMAC
@@ -1224,9 +1225,11 @@ namespace AVFoundation {
 	interface AVAudioFormat : NSSecureCoding {
 		[Export ("initWithStreamDescription:")]
 		NativeHandle Constructor (ref AudioStreamBasicDescription description);
+		// NativeHandle Constructor ([NotNull] ref AudioStreamBasicDescription description);
 
 		[Export ("initWithStreamDescription:channelLayout:")]
 		NativeHandle Constructor (ref AudioStreamBasicDescription description, [NullAllowed] AVAudioChannelLayout layout);
+		// NativeHandle Constructor ([NotNull] ref AudioStreamBasicDescription description, [NullAllowed] AVAudioChannelLayout layout);
 
 		[Export ("initStandardFormatWithSampleRate:channels:")]
 		NativeHandle Constructor (double sampleRate, uint /* AVAudioChannelCount = uint32_t */ channels);
@@ -2875,6 +2878,7 @@ namespace AVFoundation {
 	interface AVAudioTime {
 		[Export ("initWithAudioTimeStamp:sampleRate:")]
 		NativeHandle Constructor (ref AudioTimeStamp timestamp, double sampleRate);
+		// NativeHandle Constructor ([NotNull] ref AudioTimeStamp timestamp, double sampleRate);
 
 		[Export ("initWithHostTime:")]
 		NativeHandle Constructor (ulong hostTime);
@@ -2905,6 +2909,7 @@ namespace AVFoundation {
 
 		[Static, Export ("timeWithAudioTimeStamp:sampleRate:")]
 		AVAudioTime FromAudioTimeStamp (ref AudioTimeStamp timestamp, double sampleRate);
+		// AVAudioTime FromAudioTimeStamp ([NotNull] ref AudioTimeStamp timestamp, double sampleRate);
 
 		[Static, Export ("timeWithHostTime:")]
 		AVAudioTime FromHostTime (ulong hostTime);
@@ -12124,6 +12129,7 @@ namespace AVFoundation {
 		[Export ("seekToDate:completionHandler:")]
 		[Async]
 		bool Seek (NSDate date, AVCompletion completion);
+		// bool Seek (NSDate date, [NotNull] AVCompletion completion);
 
 		[Mac (10, 9)]
 		[Export ("seekingWaitsForVideoCompositionRendering")]

@@ -33,6 +33,8 @@ using ObjCRuntime;
 using CoreVideo;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	// Convenience enum for native strings - AVVideoSettings.h
@@ -98,11 +100,12 @@ namespace AVFoundation {
 
 		public AVVideoScalingMode? ScalingMode {
 			get {
-				return ScalingModeFromNSString (GetNSStringValue (AVVideo.ScalingModeKey));
+				var val = GetNSStringValue (AVVideo.ScalingModeKey);
+				return val is not null ? ScalingModeFromNSString (val) : null;
 			}
 
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoScalingMode.Fit:
 					v = AVVideoScalingModeKey.Fit;
@@ -164,7 +167,7 @@ namespace AVFoundation {
 			}
 
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoCodec.H264:
 					v = AVVideo.CodecH264;
@@ -252,7 +255,7 @@ namespace AVFoundation {
 				return null;
 			}
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoH264EntropyMode.AdaptiveBinaryArithmetic:
 					v = AVVideo.H264EntropyModeCABAC;
@@ -307,11 +310,12 @@ namespace AVFoundation {
 
 		public AVVideoScalingMode? ScalingMode {
 			get {
-				return AVVideoSettingsUncompressed.ScalingModeFromNSString (GetNSStringValue (AVVideo.ScalingModeKey));
+				var val = GetNSStringValue (AVVideo.ScalingModeKey);
+				return val is not null ? AVVideoSettingsUncompressed.ScalingModeFromNSString (val) : null;
 			}
 
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoScalingMode.Fit:
 					v = AVVideoScalingModeKey.Fit;
@@ -339,7 +343,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public AVVideoCodecSettings CodecSettings {
+		public AVVideoCodecSettings? CodecSettings {
 			get {
 				var dict = GetNSDictionary (AVVideo.CompressionPropertiesKey);
 				if (dict == null)
@@ -437,7 +441,7 @@ namespace AVFoundation {
 			}
 			
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoProfileLevelH264.Baseline30:
 					v = AVVideo.ProfileLevelH264Baseline30;
@@ -491,7 +495,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public AVVideoPixelAspectRatioSettings PixelAspectRatio {
+		public AVVideoPixelAspectRatioSettings? PixelAspectRatio {
 			get {
 				var dict = GetNSDictionary (AVVideo.PixelAspectRatioKey);
 				if (dict == null)
@@ -504,7 +508,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public AVVideoCleanApertureSettings VideoCleanAperture {
+		public AVVideoCleanApertureSettings? VideoCleanAperture {
 			get {
 				var dict = GetNSDictionary (AVVideo.CleanApertureKey);
 				if (dict == null)

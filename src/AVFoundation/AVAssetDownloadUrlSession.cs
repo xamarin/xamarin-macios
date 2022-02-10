@@ -11,6 +11,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 #if !MONOMAC
 	public partial class AVAssetDownloadUrlSession : NSUrlSession {
@@ -84,12 +86,12 @@ namespace AVFoundation {
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
@@ -104,17 +106,17 @@ namespace AVFoundation {
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}

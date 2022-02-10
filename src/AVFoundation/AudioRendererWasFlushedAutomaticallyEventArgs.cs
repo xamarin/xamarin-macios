@@ -4,6 +4,8 @@ using CoreMedia;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET

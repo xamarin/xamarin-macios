@@ -34,6 +34,8 @@ using ObjCRuntime;
 using Foundation;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureConnection {
 
