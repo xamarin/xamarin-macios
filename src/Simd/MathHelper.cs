@@ -12,14 +12,14 @@ namespace CoreGraphics {
 		/// http://www.codemaestro.com/reviews/review00000105.html. For the history of this method, see
 		/// http://www.beyond3d.com/content/articles/8/
 		/// </remarks>
-		internal static float InverseSqrtFast(float x)
+		internal static float InverseSqrtFast (float x)
 		{
 			unsafe
 			{
 				float xhalf = 0.5f * x;
-				int i = *(int*)&x;              // Read bits as integer.
+				int i = *(int*) &x;              // Read bits as integer.
 				i = 0x5f375a86 - (i >> 1);      // Make an initial guess for Newton-Raphson approximation
-				x = *(float*)&i;                // Convert bits back to float
+				x = *(float*) &i;                // Convert bits back to float
 				x = x * (1.5f - xhalf * x * x); // Perform left single Newton-Raphson step.
 				return x;
 			}

@@ -42,15 +42,13 @@ namespace CoreGraphics
 
 		public NVector3d Xyz
 		{
-		    get => new NVector3d (X, Y, Z);
-		    set
-		    {
-			X = value.X;
-			Y = value.Y;
-			Z = value.Z;       
-		    }
+			get => new NVector3d (X, Y, Z);
+			set {
+				X = value.X;
+				Y = value.Y;
+				Z = value.Z;
+			}
 		}
-
 
 		public static bool operator == (NQuaterniond left, NQuaterniond right) =>
 			left.Equals (right);
@@ -76,8 +74,8 @@ namespace CoreGraphics
 			X == other.X && Y == other.Y && Z == other.Z && W == other.W;
 
 		internal double Length =>
-			(double)System.Math.Sqrt (W * W + Xyz.LengthSquared);
-        
+			(double) System.Math.Sqrt (W * W + Xyz.LengthSquared);
+
 		internal void Normalize ()
 		{
 			double scale = 1.0f / Length;
@@ -87,30 +85,30 @@ namespace CoreGraphics
 
 		internal void ToAxisAngle (out NVector3d axis, out double angle)
 		{
-		    NVector4d result = ToAxisAngle ();
-		    axis = result.Xyz;
-		    angle = result.W;
+			NVector4d result = ToAxisAngle ();
+			axis = result.Xyz;
+			angle = result.W;
 		}
 
 		internal NVector4d ToAxisAngle ()
 		{
-		    NQuaterniond q = this;
-		    if (q.W > 1.0f)
-			    q.Normalize();
+			NQuaterniond q = this;
+			if (q.W > 1.0f)
+				q.Normalize();
 
-		    NVector4d result = new NVector4d ();
+			NVector4d result = new NVector4d ();
 
-		    result.W = 2.0f * (float)System.Math.Acos (q.W); // angle
-		    float den = (float)System.Math.Sqrt (1.0 - q.W * q.W);
-		    if (den > 0.0001f)
-			    result.Xyz = q.Xyz / den;
-		    else {
-			    // This occurs when the angle is zero. 
-			    // Not a problem: just set an arbitrary normalized axis.
-			    result.Xyz = NVector3d.UnitX;
-		    }
+			result.W = 2.0f * (float) System.Math.Acos (q.W); // angle
+			float den = (float) System.Math.Sqrt (1.0 - q.W * q.W);
+			if (den > 0.0001f)
+				result.Xyz = q.Xyz / den;
+			else {
+				// This occurs when the angle is zero.
+				// Not a problem: just set an arbitrary normalized axis.
+				result.Xyz = NVector3d.UnitX;
+			}
 
-		    return result;
+			return result;
 		}
 	}
 }

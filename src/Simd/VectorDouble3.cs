@@ -47,7 +47,7 @@ namespace OpenTK
 		}
 
 #if NET
-		public static NVector3d operator *(NVector3d vec, double scale)
+		public static NVector3d operator * (NVector3d vec, double scale)
 		{
 			vec.X *= scale;
 			vec.Y *= scale;
@@ -55,7 +55,7 @@ namespace OpenTK
 			return vec;
 		}
 
-        	public static NVector3d operator /(NVector3d vec, double scale)
+		public static NVector3d operator / (NVector3d vec, double scale)
 		{
 			double mult = 1 / scale;
 			vec.X *= mult;
@@ -101,7 +101,7 @@ namespace OpenTK
 		}
 
 #if NET
-	        internal double Length =>
+		internal double Length =>
 			System.Math.Sqrt (X * X + Y * Y + Z * Z);
 
 		internal double LengthSquared =>

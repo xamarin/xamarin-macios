@@ -34,13 +34,12 @@ namespace CoreGraphics
 
 		internal NVector3d Xyz
 		{
-		    get => new NVector3d(X, Y, Z);
-		    set
-		    {
-			X = value.X;
-			Y = value.Y;
-			Z = value.Z;
-		    }
+			get => new NVector3d (X, Y, Z);
+			set {
+				X = value.X;
+				Y = value.Y;
+				Z = value.Z;
+			}
 		}
 
 		public static bool operator == (NVector4d left, NVector4d right)
