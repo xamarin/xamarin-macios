@@ -135,9 +135,14 @@ namespace Cecil.Tests {
 
 		void CheckCurrentPlatformIncludedIfAny (ICustomAttributeProvider item, string platformName, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
+			// XXX - For now skip generated code until associated generator.cs changes are in
+			if (Ignore (fullName) || HasCodegenAttribute (item)) {
+				return;
+			}
+
 			if (HasAnyAvailabilityAttribute (item, true)) {
 				var supportedAttributes = item.CustomAttributes.Where (a => IsSupportedAttribute (a));
-				if (!supportedAttributes.Any (a => FindAvailabilityKind (a) != platformName)) {
+				if (!supportedAttributes.Any (a => FindAvailabilityKind (a) == platformName)) {
 					found.Add (fullName);
 				}
 			}
@@ -201,18 +206,8 @@ namespace Cecil.Tests {
 		{
 			// get/set don't have BindingImpl directly, it is on the parent context
 			if (provider is MethodDefinition method) {
-				if (HasCodegenPropertyImpl.Contains(method)) {
-					return true;
-				}
-			}
-			if (provider is PropertyDefinition prop) {
-				if (prop.CustomAttributes.Any (IsBindingImplAttribute)) {
-					if (prop.GetMethod != null) {
-						HasCodegenPropertyImpl.Add (prop.GetMethod);
-					}
-					if (prop.SetMethod != null) {
-						HasCodegenPropertyImpl.Add (prop.SetMethod);
-					}
+				var property = method.DeclaringType.Properties.FirstOrDefault (v => v.Name == method.Name.Substring (4));
+				if (property != null && property.CustomAttributes.Any (IsBindingImplAttribute)) {
 					return true;
 				}
 			}
