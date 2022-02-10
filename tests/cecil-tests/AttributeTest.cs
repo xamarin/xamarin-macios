@@ -102,7 +102,7 @@ namespace Cecil.Tests {
 		//
 		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
 		// [TestCaseSource (typeof (Helper), "NetPlatformAssemblies")]
-		public void AllAttributedItemsMostIncludeCurrentPlatform (string assemblyPath)
+		public void AllAttributedItemsMustIncludeCurrentPlatform (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly is null) {
@@ -142,17 +142,16 @@ namespace Cecil.Tests {
 
 		string AssemblyToAttributeName (string assemblyPath)
 		{
-			switch (Path.GetFileName (assemblyPath)) {
-			case "Xamarin.iOS.dll":
+			var baseName = Path.GetFileName (assemblyPath));
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_iOS) == baseName)
 				return "ios";
-			case "Xamarin.TVOS.dll":
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_tvOS) == baseName)
 				return "tvos";
-			case "Xamarin.Mac.dll":
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_macOS) == baseName)
 				return "macos";
-			case "Xamarin.MacCatalyst.dll":
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_MacCatalyst) == baseName)
 				return "maccatalyst";
-			default:
-				throw new NotImplementedException ();
+			throw new NotImplementedException ();
 			}
 		}
 
