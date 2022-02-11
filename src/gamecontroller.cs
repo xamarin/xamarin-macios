@@ -14,7 +14,9 @@ using System;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+#if !NET
 using OpenTK;
+#endif
 #if MONOMAC
 using AppKit;
 using UIViewController = AppKit.NSViewController;
@@ -24,6 +26,10 @@ using BezierPath = AppKit.NSBezierPath;
 using CoreHaptics;
 using UIKit;
 using BezierPath = UIKit.UIBezierPath;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace GameController {
@@ -108,7 +114,7 @@ namespace GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerButtonInput {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'ValueChangedHandler' property.")]
 		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (GCControllerButtonValueChanged handler);
@@ -128,7 +134,7 @@ namespace GameController {
 		[Export ("pressed")]
 		bool IsPressed { [Bind ("isPressed")] get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Use the 'PressedChangedHandler' property.")]
 		[Wrap ("PressedChangedHandler = handler;", IsVirtual = true)]
@@ -243,10 +249,10 @@ namespace GameController {
 		NSData SnapshotData { get; set; }
 
 		[Export ("initWithSnapshotData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithController:snapshotData:")]
-		IntPtr Constructor (GCController controller, NSData data);
+		NativeHandle Constructor (GCController controller, NSData data);
 	}
 
 	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
@@ -342,10 +348,10 @@ namespace GameController {
 		NSData SnapshotData { get; set; }
 
 		[Export ("initWithSnapshotData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithController:snapshotData:")]
-		IntPtr Constructor (GCController controller, NSData data);
+		NativeHandle Constructor (GCController controller, NSData data);
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -374,7 +380,7 @@ namespace GameController {
 		bool AttachedToDevice { [Bind ("isAttachedToDevice")] get; }
 
 		[Export ("playerIndex")]
-#if XAMCORE_4_0
+#if NET
 		// enum only added in iOS9 / OSX 10.11 - but with compatible values
 		GCControllerPlayerIndex PlayerIndex { get; set; }
 #else
@@ -491,7 +497,7 @@ namespace GameController {
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'ValueChangedHandler' property.")]
 		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (Action<GCMotion> handler);
@@ -502,18 +508,34 @@ namespace GameController {
 		Action<GCMotion> ValueChangedHandler { get; set; }
 
 		[Export ("gravity", ArgumentSemantic.Assign)]
+#if NET
+		GCAcceleration Gravity { get; }
+#else
 		Vector3d Gravity { get; }
+#endif
 
 		[Export ("userAcceleration", ArgumentSemantic.Assign)]
+#if NET
+		GCAcceleration UserAcceleration { get; }
+#else
 		Vector3d UserAcceleration { get; }
+#endif
 
 		[TV (11,0)]
 		[Export ("attitude", ArgumentSemantic.Assign)]
+#if NET
+		GCQuaternion Attitude { get; }
+#else
 		Quaterniond Attitude { get; }
+#endif
 
 		[TV (11,0), iOS (11,0), Mac (10,13)]
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
+#if NET
+		GCRotationRate RotationRate { get; }
+#else
 		Vector3d RotationRate { get; }
+#endif
 
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
@@ -634,10 +656,10 @@ namespace GameController {
 		NSData SnapshotData { get; set; }
 
 		[Export ("initWithSnapshotData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithController:snapshotData:")]
-		IntPtr Constructor (GCController controller, NSData data);
+		NativeHandle Constructor (GCController controller, NSData data);
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -656,7 +678,7 @@ namespace GameController {
 		// inlined ctor
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("controllerUserInteractionEnabled")]
 		bool ControllerUserInteractionEnabled { get; set; }
@@ -669,7 +691,7 @@ namespace GameController {
 	interface GCColor : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithRed:green:blue:")]
-		IntPtr Constructor (float red, float green, float blue);
+		NativeHandle Constructor (float red, float green, float blue);
 
 		[Export ("red")]
 		float Red { get; }
@@ -2053,7 +2075,7 @@ namespace GameController {
 
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (GCVirtualControllerConfiguration configuration);
+		NativeHandle Constructor (GCVirtualControllerConfiguration configuration);
 
 		[Async]
 		[Export ("connectWithReplyHandler:")]
@@ -2089,5 +2111,44 @@ namespace GameController {
 
 		[Export ("actsAsTouchpad")]
 		bool ActsAsTouchpad { get; set; }
+	}
+
+	// Deliberate decision on not enum'ifying these
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Static]
+	interface GCProductCategory
+	{
+		[Field ("GCProductCategoryDualSense")]
+		NSString DualSense { get; }
+
+		[Field ("GCProductCategoryDualShock4")]
+		NSString DualShock4 { get; }
+
+		[Field ("GCProductCategoryMFi")]
+		NSString MFi { get; }
+
+		[Field ("GCProductCategoryXboxOne")]
+		NSString XboxOne { get; }
+
+		[Field ("GCProductCategorySiriRemote1stGen")]
+		NSString SiriRemote1stGen { get; }
+
+		[Field ("GCProductCategorySiriRemote2ndGen")]
+		NSString SiriRemote2ndGen { get; }
+
+		[Field ("GCProductCategoryControlCenterRemote")]
+		NSString ControlCenterRemote { get; }
+
+		[Field ("GCProductCategoryUniversalElectronicsRemote")]
+		NSString UniversalElectronicsRemote { get; }
+
+		[Field ("GCProductCategoryCoalescedRemote")]
+		NSString CoalescedRemote { get; }
+
+		[Field ("GCProductCategoryMouse")]
+		NSString Mouse { get; }
+
+		[Field ("GCProductCategoryKeyboard")]
+		NSString Keyboard { get; }
 	}
 }

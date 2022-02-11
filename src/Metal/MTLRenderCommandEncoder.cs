@@ -1,4 +1,3 @@
-#if MONOMAC
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -11,8 +10,16 @@ using ObjCRuntime;
 
 namespace Metal {
 	public static class IMTLRenderCommandEncoder_Extensions {
-#if !NET
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+#if MONOMAC
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,13)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
 #endif
 		public unsafe static void SetViewports (this IMTLRenderCommandEncoder This, MTLViewport [] viewports)
 		{
@@ -20,20 +27,33 @@ namespace Metal {
 				This.SetViewports ((IntPtr)handle, (nuint)(viewports?.Length ?? 0));
 		}
 
-#if !NET
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,13)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
 #endif
 		public unsafe static void SetScissorRects (this IMTLRenderCommandEncoder This, MTLScissorRect [] scissorRects)
 		{
 			fixed (void* handle = scissorRects)
 				This.SetScissorRects ((IntPtr)handle, (nuint)(scissorRects?.Length ?? 0));
 		}
+#endif
 
 #if IOS
-#if !NET
-		[iOS (11,0), NoTV, NoMac, NoWatch]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (11,0)]
+		[NoTV]
+		[NoMac]
+		[NoWatch]
 #endif
 		public unsafe static void SetTileBuffers (this IMTLRenderCommandEncoder This, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{
@@ -41,10 +61,15 @@ namespace Metal {
 				This.SetTileBuffers (buffers, (IntPtr)handle, range);
 		}
 
-#if !NET
-		[iOS (11,0), NoTV, NoMac, NoWatch]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (11,0)]
+		[NoTV]
+		[NoMac]
+		[NoWatch]
 #endif
 		public unsafe static void SetTileSamplerStates (this IMTLRenderCommandEncoder This, IMTLSamplerState[] samplers, float[] lodMinClamps, float[] lodMaxClamps, NSRange range)
 		{
@@ -57,4 +82,3 @@ namespace Metal {
 #endif
 	}
 }
-#endif

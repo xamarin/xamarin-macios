@@ -38,6 +38,10 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	// The native constants are defined in usr/include/dispatch/queue.h, but since they're
@@ -67,11 +71,9 @@ namespace CoreFoundation {
 		// Constructors and lifecycle
 		//
 		[Preserve (Conditional = true)]
-		internal DispatchObject (IntPtr handle, bool owns)
-			: base (handle, owns)
+		internal DispatchObject (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException ("handle");
 		}
 
 		internal DispatchObject ()
@@ -94,27 +96,28 @@ namespace CoreFoundation {
 			dispatch_release (Handle);
 		}
 
+#if !NET
 		public static bool operator == (DispatchObject a, DispatchObject b)
 		{
-			var oa = a as object;
-			var ob = b as object;
-			
-			if (oa == null){
-				if (ob == null)
-					return true;
+			if (a is null)
+				return b is null;
+			else if (b is null)
 				return false;
-			} else {
-				if (ob == null)
-					return false;
-				return a.Handle == b.Handle;
-			}
+
+			return a.Handle == b.Handle;
 		}
 
 		public static bool operator != (DispatchObject a, DispatchObject b)
 		{
-			return !(a == b);
+			if (a is null)
+				return b is not null;
+			else if (b is null)
+				return true;
+			return a.Handle != b.Handle;
 		}
 
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
 		{
 			var od = other as DispatchQueue;
@@ -125,10 +128,11 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
+#endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'GetCheckedHandle' instead.")]
 		protected void Check ()
@@ -153,7 +157,11 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		internal extern static void dispatch_suspend (IntPtr o);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -164,13 +172,17 @@ namespace CoreFoundation {
 			dispatch_activate (GetCheckedHandle ());
 		}
 
-		[DllImport (Constants.libcLibrary)]
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Watch (3,0)]
 #endif
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
 #endif // !COREBUILD
 	}
@@ -178,13 +190,15 @@ namespace CoreFoundation {
 	public sealed class DispatchQueue : DispatchObject  {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
-		internal DispatchQueue (IntPtr handle, bool owns) : base (handle, owns)
+		internal DispatchQueue (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
-		public DispatchQueue (IntPtr handle) : base (handle, false)
+#if !NET
+		public DispatchQueue (NativeHandle handle) : base (handle, false)
 		{
 		}
+#endif
 		
 		public DispatchQueue (string label)
 			: base (dispatch_queue_create (label, IntPtr.Zero), true)
@@ -209,7 +223,11 @@ namespace CoreFoundation {
 				throw new Exception ("Error creating dispatch queue");
 		}
 		
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -230,7 +248,9 @@ namespace CoreFoundation {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public static string CurrentQueueLabel {
@@ -267,7 +287,15 @@ namespace CoreFoundation {
 			}
 		}
 	
-#if !NET
+#if NET
+		[UnsupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 #endif
@@ -478,7 +506,10 @@ namespace CoreFoundation {
 			return gchandle.Target;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,10)]
 		[iOS (8,0)]
 #endif
@@ -490,7 +521,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,10)]
 		[iOS (8,0)]
 #endif
@@ -508,7 +542,11 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -535,10 +573,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_async (IntPtr queue, IntPtr block);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync (IntPtr queue, IntPtr block);
 
 		[DllImport (Constants.libcLibrary)]
@@ -547,7 +585,15 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
-#if !NET
+#if NET
+		[UnsupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
 #endif
@@ -562,19 +608,25 @@ namespace CoreFoundation {
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)
 		extern static IntPtr dispatch_queue_get_label (IntPtr queue);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_queue_set_specific (IntPtr queue, /* const void* */ IntPtr key, /* void *_Nullable */ IntPtr context, dispatch_callback_t /* _Nullable */ destructor);
 
-		[DllImport(Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,10)]
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
 
+#if !NET
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
 		{
 			DispatchQueue o = other as DispatchQueue;
@@ -582,7 +634,9 @@ namespace CoreFoundation {
 				return false;
 			return (o.Handle == Handle);
 		}
+#endif
 
+#if !NET
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
 		{
 			if ((object) left == null)
@@ -599,8 +653,9 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
+#endif
 		
 #if MONOMAC
 		//
@@ -620,7 +675,11 @@ namespace CoreFoundation {
 		{
 			public bool Concurrent { get; set; }
 
-#if !NET
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
@@ -628,7 +687,11 @@ namespace CoreFoundation {
 #endif
 			public bool IsInitiallyInactive { get; set; }
 
-#if !NET
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
@@ -636,13 +699,19 @@ namespace CoreFoundation {
 #endif
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
-#if !NET
+#if NET
+			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[Mac (10,10)]
 			[iOS (8,0)]
 #endif
 			public int RelativePriority { get; set; }
 
-#if !NET
+#if NET
+			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[Mac (10,10)]
 			[iOS (8,0)]
 #endif
@@ -667,7 +736,11 @@ namespace CoreFoundation {
 				return rv;
 			}
 
-#if !NET
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
@@ -676,7 +749,11 @@ namespace CoreFoundation {
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
 
-#if !NET
+#if NET
+			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("ios10.0")]
+			[SupportedOSPlatform ("tvos10.0")]
+#else
 			[Mac (10,12)]
 			[iOS (10,0)]
 			[TV (10,0)]
@@ -685,7 +762,10 @@ namespace CoreFoundation {
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
 
-#if !NET
+#if NET
+			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("ios8.0")]
+#else
 			[Mac (10,10)]
 			[iOS (8,0)]
 #endif
@@ -693,7 +773,11 @@ namespace CoreFoundation {
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
 		[Mac (10,12)]
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -756,7 +840,8 @@ namespace CoreFoundation {
 	public class DispatchGroup : DispatchObject
 	{
 #if !COREBUILD
-		private DispatchGroup (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		private DispatchGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

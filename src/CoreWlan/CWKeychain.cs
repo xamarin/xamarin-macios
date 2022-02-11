@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
 
@@ -6,10 +7,7 @@ using Foundation;
 using ObjCRuntime;
 using Security;
 
-#if NET
 using System.Runtime.Versioning;
-#endif
-
 
 #nullable enable
 
@@ -29,6 +27,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -37,6 +36,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -54,6 +54,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -62,6 +63,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -70,6 +72,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -81,6 +84,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -89,6 +93,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -97,6 +102,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -108,6 +114,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -116,6 +123,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -124,6 +132,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -145,6 +154,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -153,6 +163,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -166,6 +177,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -174,6 +186,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -182,6 +195,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -198,6 +212,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -206,6 +221,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -218,6 +234,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -226,6 +243,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -234,6 +252,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -245,6 +264,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -253,6 +273,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -261,6 +282,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -272,6 +294,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -280,6 +303,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10, 9)]
 #endif
@@ -295,6 +319,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10, 9)]
 #endif
@@ -303,6 +328,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -311,6 +337,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -322,6 +349,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -330,6 +358,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -343,6 +372,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Mac (10,9)]
 #endif
@@ -363,3 +393,4 @@ namespace CoreWlan {
 			=> TryGetEAPIdentityList (list, out var _);
 	}
 }
+#endif // !__MACCATALYST__

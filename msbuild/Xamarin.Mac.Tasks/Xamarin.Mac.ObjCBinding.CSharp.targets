@@ -18,9 +18,13 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 	
-	<!-- This is used to set that we're a binding project. It must be set before including Xamarin.Shared.props -->
 	<PropertyGroup>
+		<!-- This is used to set that we're a binding project. It must be set before including Xamarin.Shared.props -->
 		<IsBindingProject>true</IsBindingProject>
+
+		<!-- Enable nuget package conflict resolution -->
+		<!-- This must be set before importing Microsoft.CSharp.targets -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<!-- Due to IDE/template bugs, many bindings projects exist in the wild without correct TFI/TFV tags.

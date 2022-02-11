@@ -25,20 +25,28 @@ using OS_nw_protocol_options=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using OS_nw_parameters=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, [MarshalAs (UnmanagedType.I1)] bool isCompleted);
 	public delegate nuint NWFramerInputDelegate (NWFramer framer); 
 
-#if !NET
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios13.0")]
+#if NET
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
 #endif
 	public class NWFramer : NativeObject {
-		internal NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWFramer (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -305,7 +313,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_options nw_framer_create_options (OS_nw_protocol_definition framer_definition);
 
-		public static T CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
+		public static T? CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));

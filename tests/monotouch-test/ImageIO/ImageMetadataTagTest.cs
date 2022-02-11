@@ -128,10 +128,9 @@ namespace MonoTouchFixtures.ImageIO {
 
 			var rc = name.RetainCount;
 			using (var tag = new CGImageMetadataTag (nspace, prefix, name,  CGImageMetadataType.Default, false)) {
-				using (var n = tag.Name) {
-					Assert.That (n.Handle, Is.EqualTo (name.Handle), "same");
-					Assert.That (n.ToString (), Is.EqualTo ("tagName"), "Name");
-				}
+				var n = tag.Name;
+				Assert.That (n.Handle, Is.EqualTo (name.Handle), "same");
+				Assert.That (n.ToString (), Is.EqualTo ("tagName"), "Name");
 				Assert.That (tag.Namespace.ToString (), Is.EqualTo ("http://ns.adobe.com/exif/1.0/"), "Namespace");
 				Assert.That (tag.Prefix.ToString (), Is.EqualTo ("exif"), "Prefix");
 				Assert.That (tag.Type, Is.EqualTo (CGImageMetadataType.String), "Type");

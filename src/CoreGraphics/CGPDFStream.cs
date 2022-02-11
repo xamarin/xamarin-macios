@@ -25,11 +25,18 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreGraphics {
 
@@ -41,16 +48,14 @@ namespace CoreGraphics {
 	};
 
 	// CGPDFStream.h
-	public class CGPDFStream : INativeObject {
-		internal IntPtr handle;
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
-		internal CGPDFStream (IntPtr handle)
+	public class CGPDFStream : CGPDFObject {
+		// The lifetime management of CGPDFObject (and CGPDFArray, CGPDFDictionary and CGPDFStream) are tied to
+		// the containing CGPDFDocument, and not possible to handle independently, which is why this class
+		// does not subclass NativeObject (there's no way to retain/release CGPDFObject instances). It's
+		// also why this constructor doesn't have a 'bool owns' parameter: it's always owned by the containing CGPDFDocument.
+		internal CGPDFStream (NativeHandle handle)
+			: base (handle)
 		{
-			this.handle = handle;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -58,16 +63,16 @@ namespace CoreGraphics {
 		
 		public CGPDFDictionary Dictionary {
 			get {
-				return new CGPDFDictionary (CGPDFStreamGetDictionary (handle));
+				return new CGPDFDictionary (CGPDFStreamGetDictionary (Handle));
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFDataRef */ IntPtr CGPDFStreamCopyData (/* CGPDFStreamRef */ IntPtr stream, /* CGPDFDataFormat* */ out CGPDFDataFormat format);
 
-		public NSData GetData (out CGPDFDataFormat format)
+		public NSData? GetData (out CGPDFDataFormat format)
 		{
-			IntPtr obj = CGPDFStreamCopyData (handle, out format);
+			IntPtr obj = CGPDFStreamCopyData (Handle, out format);
 			return Runtime.GetNSObject<NSData> (obj, true);
 		}
 	}

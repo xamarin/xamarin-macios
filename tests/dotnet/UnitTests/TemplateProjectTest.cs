@@ -62,5 +62,37 @@ class MainClass {
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
 			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (v => v.Message.Contains (magic)), "Expected error");
 		}
+
+		// https://github.com/xamarin/xamarin-macios/issues/13503
+		[TestCase (ApplePlatform.MacOSX, null)]
+		public void NativeReferenceStaticLibraryForceLoad (ApplePlatform platform, bool? simulator)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var magic = Guid.NewGuid ().ToString ();
+			var pathToNativeLibrary = Path.Combine (Configuration.GetTestLibraryDirectory (platform, simulator), "libtest.a");
+			var relativePathToNativeLibrary = Path.GetRelativePath (tmpdir, pathToNativeLibrary);
+			var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
+	<PropertyGroup>
+		<TargetFramework>{platform.ToFramework ()}</TargetFramework>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+	<ItemGroup>
+		<NativeReference Include=""{relativePathToNativeLibrary}"">
+			<Kind>Static</Kind>
+			<ForceLoad>True</ForceLoad>
+		</NativeReference>
+	</ItemGroup>
+</Project>";
+
+			Configuration.CopyDotNetSupportingFiles (tmpdir);
+			var project_path = Path.Combine (tmpdir, "TestProject.csproj");
+			File.WriteAllText (project_path, csproj);
+			File.WriteAllText (Path.Combine (tmpdir, "Info.plist"), EmptyAppManifest);
+			File.WriteAllText (Path.Combine (tmpdir, "Main.cs"), EmptyMainFile);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties ());
+		}
 	}
 }

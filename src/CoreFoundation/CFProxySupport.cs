@@ -34,6 +34,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using ObjCRuntime;
 using Foundation;
+#if NET
+using CFNetwork;
+#endif
 
 namespace CoreFoundation {
 	// Utility enum for string constants in ObjC
@@ -647,7 +650,7 @@ namespace CoreFoundation {
 				pacCbData.ErrorPtr = error;
 			}
 			// stop the CFRunLoop
-			var runLoop = new CFRunLoop (pacCbData.CFRunLoopPtr);
+			var runLoop = new CFRunLoop (pacCbData.CFRunLoopPtr, false);
 			Marshal.StructureToPtr (pacCbData, client, false);
 			runLoop.Stop ();
 		}
@@ -673,7 +676,7 @@ namespace CoreFoundation {
 					var clientContext = new CFStreamClientContext ();
 					clientContext.Info = pacDataPtr;
 
-					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext)))
+					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), false))
 					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 
 						if (cancellationToken.IsCancellationRequested)
@@ -729,7 +732,7 @@ namespace CoreFoundation {
 				var clientContext = new CFStreamClientContext ();
 				clientContext.Info = pacDataPtr;
 
-				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext)))
+				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), false))
 				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 					runLoop.AddSource (loopSource, mode);
 					runLoop.RunInMode (mode, double.MaxValue, false);

@@ -17,6 +17,10 @@ using System;
 using System.ComponentModel;
 using CoreLocation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace HealthKit {
 
 	[Watch (3,0), iOS (10,0)]
@@ -124,10 +128,14 @@ namespace HealthKit {
 		Indeterminate,
 	}
 
+#if NET
+	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
+#else
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
 	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSampleType[] results, nuint newAnchor, NSError error);
+#endif
 
 	delegate void HKAnchoredObjectUpdateHandler (HKAnchoredObjectQuery query, HKSample[] addedObjects, HKDeletedObject[] deletedObjects, HKQueryAnchor newAnchor, NSError error);
 
@@ -140,24 +148,28 @@ namespace HealthKit {
 	interface HKAnchoredObjectQuery {
 
 		[NoWatch]
+#if !NET
 		[Obsolete ("Use the overload that takes HKAnchoredObjectResultHandler2 instead")]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+#endif
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
-		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler completion);
+		NativeHandle Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler completion);
 
+#if !NET
 		[NoWatch]
 		[Sealed]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
-		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler2 completion);
+		NativeHandle Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler2 completion);
+#endif
 
 		[iOS (9,0)]
 		[Export ("initWithType:predicate:anchor:limit:resultsHandler:")]
-		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, [NullAllowed] HKQueryAnchor anchor, nuint limit, HKAnchoredObjectUpdateHandler handler);
+		NativeHandle Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, [NullAllowed] HKQueryAnchor anchor, nuint limit, HKAnchoredObjectUpdateHandler handler);
 
 		[Watch (8,0), iOS (15,0)]
 		[Export ("initWithQueryDescriptors:anchor:limit:resultsHandler:")]
-		IntPtr Constructor (HKQueryDescriptor[] queryDescriptors, [NullAllowed] HKQueryAnchor anchor, nint limit, HKAnchoredObjectUpdateHandler resultsHandler);
+		NativeHandle Constructor (HKQueryDescriptor[] queryDescriptors, [NullAllowed] HKQueryAnchor anchor, nint limit, HKAnchoredObjectUpdateHandler resultsHandler);
 
 		[iOS (9,0)]
 		[NullAllowed, Export ("updateHandler", ArgumentSemantic.Copy)]
@@ -437,7 +449,7 @@ namespace HealthKit {
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCorrelationQuery
 	interface HKCorrelationQuery {
 		[Export ("initWithType:predicate:samplePredicates:completion:")]
-		IntPtr Constructor (HKCorrelationType correlationType, [NullAllowed] NSPredicate predicate, [NullAllowed] NSDictionary samplePredicates, HKCorrelationQueryResultHandler completion);
+		NativeHandle Constructor (HKCorrelationType correlationType, [NullAllowed] NSPredicate predicate, [NullAllowed] NSDictionary samplePredicates, HKCorrelationQueryResultHandler completion);
 
 		[Export ("correlationType", ArgumentSemantic.Copy)]
 		HKCorrelationType CorrelationType { get; }
@@ -1011,7 +1023,7 @@ namespace HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-#if XAMCORE_4_0
+#if NET
 	[Abstract] // as per docs
 #endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1020,7 +1032,7 @@ namespace HealthKit {
 		[Export ("UUID", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("source", ArgumentSemantic.Strong)]
 		HKSource Source { get; }
 
@@ -1041,7 +1053,7 @@ namespace HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-#if XAMCORE_4_0
+#if NET
 	[Abstract]
 #endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1051,7 +1063,7 @@ namespace HealthKit {
 		[Export ("identifier")]
 		NSString Identifier { get; }
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKQuantityType.Create (HKQuantityTypeIdentifier)'.")]
@@ -1061,7 +1073,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKQuantityType GetQuantityType (NSString hkTypeIdentifier);
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCategoryType.Create (HKCategoryTypeIdentifier)'.")]
@@ -1071,7 +1083,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKCategoryType GetCategoryType (NSString hkCategoryTypeIdentifier);
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)'.")]
@@ -1081,7 +1093,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKCharacteristicType GetCharacteristicType (NSString hkCharacteristicTypeIdentifier);
 
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCorrelationType.Create (HKCorrelationTypeIdentifier)'.")]
@@ -1099,7 +1111,7 @@ namespace HealthKit {
 		HKDocumentType _GetDocumentType (NSString hkDocumentTypeIdentifier);
 
 		[Static, Export ("workoutType")]
-#if XAMCORE_4_0
+#if NET
 		HKWorkoutType WorkoutType { get; }
 #else
 		HKWorkoutType GetWorkoutType ();
@@ -1226,17 +1238,17 @@ namespace HealthKit {
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
-#if XAMCORE_4_0
+#if NET
 	[Abstract]
 #endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKObserverQuery
 	interface HKObserverQuery {
 		[Export ("initWithSampleType:predicate:updateHandler:")]
-		IntPtr Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate, HKObserverQueryUpdateHandler updateHandler);
+		NativeHandle Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate, HKObserverQueryUpdateHandler updateHandler);
 
 		[Watch (8,0), iOS (15,0)]
 		[Export ("initWithQueryDescriptors:updateHandler:")]
-		IntPtr Constructor (HKQueryDescriptor[] queryDescriptors, HKObserverQueryDescriptorUpdateHandler updateHandler);
+		NativeHandle Constructor (HKQueryDescriptor[] queryDescriptors, HKObserverQueryDescriptorUpdateHandler updateHandler);
 	}
 
 	[Watch (2,0)]
@@ -1465,7 +1477,7 @@ namespace HealthKit {
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKObject))]
-#if XAMCORE_4_0
+#if NET
 	[Abstract]
 #endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSample
@@ -1508,15 +1520,15 @@ namespace HealthKit {
 		NSSortDescriptor[] SortDescriptors { get; }
 
 		[Export ("initWithSampleType:predicate:limit:sortDescriptors:resultsHandler:")]
-		IntPtr Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor[] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
+		NativeHandle Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor[] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
 
 		[Watch (8,0), iOS (15,0)]
 		[Export ("initWithQueryDescriptors:limit:resultsHandler:")]
-		IntPtr Constructor (HKQueryDescriptor[] queryDescriptors, nint limit, HKSampleQueryResultsHandler resultsHandler);
+		NativeHandle Constructor (HKQueryDescriptor[] queryDescriptors, nint limit, HKSampleQueryResultsHandler resultsHandler);
 
 		[Watch (8,0), iOS (15,0)]
 		[Export ("initWithQueryDescriptors:limit:sortDescriptors:resultsHandler:")]
-		IntPtr Constructor (HKQueryDescriptor[] queryDescriptors, nint limit, NSSortDescriptor[] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
+		NativeHandle Constructor (HKQueryDescriptor[] queryDescriptors, nint limit, NSSortDescriptor[] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
 	}
 
 	[Watch (2,0)]
@@ -1544,7 +1556,7 @@ namespace HealthKit {
 	interface HKSourceQuery {
 
 		[Export ("initWithSampleType:samplePredicate:completionHandler:")]
-		IntPtr Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate objectPredicate, HKSourceQueryCompletionHandler completionHandler);
+		NativeHandle Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate objectPredicate, HKSourceQueryCompletionHandler completionHandler);
 	}
 
 	[Watch (2,0)]
@@ -1663,7 +1675,7 @@ namespace HealthKit {
 		HKStatisticsCollectionQueryStatisticsUpdateHandler StatisticsUpdated { get; set; }
 
 		[Export ("initWithQuantityType:quantitySamplePredicate:options:anchorDate:intervalComponents:")]
-		IntPtr Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, NSDate anchorDate, NSDateComponents intervalComponents);
+		NativeHandle Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, NSDate anchorDate, NSDateComponents intervalComponents);
 	}
 
 	delegate void HKStatisticsQueryHandler (HKStatisticsQuery query, HKStatistics result, NSError error);
@@ -1675,7 +1687,7 @@ namespace HealthKit {
 	interface HKStatisticsQuery {
 
 		[Export ("initWithQuantityType:quantitySamplePredicate:options:completionHandler:")]
-		IntPtr Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, HKStatisticsQueryHandler handler);
+		NativeHandle Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, HKStatisticsQueryHandler handler);
 	}
 
 	[Watch (2,0)]
@@ -2809,7 +2821,7 @@ namespace HealthKit {
 		string UdiDeviceIdentifier { get; }
 
 		[Export ("initWithName:manufacturer:model:hardwareVersion:firmwareVersion:softwareVersion:localIdentifier:UDIDeviceIdentifier:")]
-		IntPtr Constructor ([NullAllowed] string name, [NullAllowed] string manufacturer, [NullAllowed] string model, [NullAllowed] string hardwareVersion, [NullAllowed] string firmwareVersion, [NullAllowed] string softwareVersion, [NullAllowed] string localIdentifier, [NullAllowed] string udiDeviceIdentifier);
+		NativeHandle Constructor ([NullAllowed] string name, [NullAllowed] string manufacturer, [NullAllowed] string model, [NullAllowed] string hardwareVersion, [NullAllowed] string firmwareVersion, [NullAllowed] string softwareVersion, [NullAllowed] string localIdentifier, [NullAllowed] string udiDeviceIdentifier);
 
 		[Static]
 		[Export ("localDevice")]
@@ -2831,7 +2843,7 @@ namespace HealthKit {
 		bool IncludeDocumentData { get; }
 
 		[Export ("initWithDocumentType:predicate:limit:sortDescriptors:includeDocumentData:resultsHandler:")]
-		IntPtr Constructor (HKDocumentType documentType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor[] sortDescriptors, bool includeDocumentData, Action<HKDocumentQuery, HKDocumentSample [], bool, NSError> resultsHandler);
+		NativeHandle Constructor (HKDocumentType documentType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor[] sortDescriptors, bool includeDocumentData, Action<HKDocumentQuery, HKDocumentSample [], bool, NSError> resultsHandler);
 	}
 
 	[Watch (2,0)]
@@ -2890,7 +2902,7 @@ namespace HealthKit {
 		string Version { get; }
 
 		[Export ("initWithSource:version:")]
-		IntPtr Constructor (HKSource source, [NullAllowed] string version);
+		NativeHandle Constructor (HKSource source, [NullAllowed] string version);
 
 		[Watch (4, 0), iOS (11, 0)]
 		[NullAllowed, Export ("productType")]
@@ -2902,7 +2914,7 @@ namespace HealthKit {
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Export ("initWithSource:version:productType:operatingSystemVersion:")]
-		IntPtr Constructor (HKSource source, [NullAllowed] string version, [NullAllowed] string productType, NSOperatingSystemVersion operatingSystemVersion);
+		NativeHandle Constructor (HKSource source, [NullAllowed] string version, [NullAllowed] string productType, NSOperatingSystemVersion operatingSystemVersion);
 	}
 
 	[Watch (4,0), iOS (11,0)]
@@ -2972,16 +2984,16 @@ namespace HealthKit {
 
 		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithActivityType:locationType:")]
-		IntPtr Constructor (HKWorkoutActivityType activityType, HKWorkoutSessionLocationType locationType);
+		NativeHandle Constructor (HKWorkoutActivityType activityType, HKWorkoutSessionLocationType locationType);
 
 		[Watch (3,0)]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithConfiguration:error:")]
-		IntPtr Constructor (HKWorkoutConfiguration workoutConfiguration, out NSError error);
+		NativeHandle Constructor (HKWorkoutConfiguration workoutConfiguration, out NSError error);
 
 		[Watch (5,0)]
 		[Export ("initWithHealthStore:configuration:error:")]
-		IntPtr Constructor (HKHealthStore healthStore, HKWorkoutConfiguration workoutConfiguration, [NullAllowed] out NSError error);
+		NativeHandle Constructor (HKHealthStore healthStore, HKWorkoutConfiguration workoutConfiguration, [NullAllowed] out NSError error);
 
 		[Watch (5,0)]
 		[Export ("prepare")]
@@ -3075,7 +3087,7 @@ namespace HealthKit {
 		Action<HKActivitySummaryQuery, HKActivitySummary[], NSError> UpdateHandler { get; set; }
 
 		[Export ("initWithPredicate:resultsHandler:")]
-		IntPtr Constructor ([NullAllowed] NSPredicate predicate, Action<HKActivitySummaryQuery, HKActivitySummary[], NSError> handler);
+		NativeHandle Constructor ([NullAllowed] NSPredicate predicate, Action<HKActivitySummaryQuery, HKActivitySummary[], NSError> handler);
 	}
 
 	[iOS (9,3), Watch (2,2)]
@@ -3148,7 +3160,7 @@ namespace HealthKit {
 	[DisableDefaultCtor]
 	interface HKWorkoutRouteBuilder {
 		[Export ("initWithHealthStore:device:")]
-		IntPtr Constructor (HKHealthStore healthStore, [NullAllowed] HKDevice device);
+		NativeHandle Constructor (HKHealthStore healthStore, [NullAllowed] HKDevice device);
 
 		[Async, Export ("insertRouteData:completion:")]
 		void InsertRouteData (CLLocation [] routeData, Action<bool, NSError> completion);
@@ -3174,7 +3186,7 @@ namespace HealthKit {
 	interface HKWorkoutRouteQuery {
 		[Export ("initWithRoute:dataHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (HKWorkoutRoute workoutRoute, HKWorkoutRouteBuilderDataHandler dataHandler);
+		NativeHandle Constructor (HKWorkoutRoute workoutRoute, HKWorkoutRouteBuilderDataHandler dataHandler);
 	}
 
 	delegate void HKWorkoutBuilderCompletionHandler (bool success, NSError error);
@@ -3206,7 +3218,7 @@ namespace HealthKit {
 		HKWorkoutEvent[] WorkoutEvents { get; }
 
 		[Export ("initWithHealthStore:configuration:device:")]
-		IntPtr Constructor (HKHealthStore healthStore, HKWorkoutConfiguration configuration, [NullAllowed] HKDevice device);
+		NativeHandle Constructor (HKHealthStore healthStore, HKWorkoutConfiguration configuration, [NullAllowed] HKDevice device);
 
 		[Async]
 		[Export ("beginCollectionWithStartDate:completion:")]
@@ -3267,12 +3279,12 @@ namespace HealthKit {
 
 		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithQuantityType:predicate:quantityHandler:")]
-		IntPtr Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate predicate, HKQuantitySeriesSampleQueryQuantityHandler quantityHandler);
+		NativeHandle Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate predicate, HKQuantitySeriesSampleQueryQuantityHandler quantityHandler);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use Constructor that takes 'NSDateInterval' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use Constructor that takes 'NSDateInterval' instead.")]
 		[Export ("initWithSample:quantityHandler:")]
-		IntPtr Constructor (HKQuantitySample quantitySample, HKQuantitySeriesSampleQueryQuantityDelegate quantityHandler);
+		NativeHandle Constructor (HKQuantitySample quantitySample, HKQuantitySeriesSampleQueryQuantityDelegate quantityHandler);
 	}
 
 	delegate void HKQuantitySeriesSampleBuilderFinishSeriesDelegate (HKQuantitySample [] samples, NSError error);
@@ -3283,7 +3295,7 @@ namespace HealthKit {
 	interface HKQuantitySeriesSampleBuilder
 	{
 		[Export ("initWithHealthStore:quantityType:startDate:device:")]
-		IntPtr Constructor (HKHealthStore healthStore, HKQuantityType quantityType, NSDate startDate, [NullAllowed] HKDevice device);
+		NativeHandle Constructor (HKHealthStore healthStore, HKQuantityType quantityType, NSDate startDate, [NullAllowed] HKDevice device);
 
 		[Export ("quantityType", ArgumentSemantic.Copy)]
 		HKQuantityType QuantityType { get; }
@@ -3334,7 +3346,7 @@ namespace HealthKit {
 
 		[Export ("initWithHealthStore:workoutConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (HKHealthStore healthStore, [NullAllowed] HKWorkoutConfiguration configuration);
+		NativeHandle Constructor (HKHealthStore healthStore, [NullAllowed] HKWorkoutConfiguration configuration);
 
 		[Export ("enableCollectionForType:predicate:")]
 		void EnableCollection (HKQuantityType quantityType, [NullAllowed] NSPredicate predicate);
@@ -3516,7 +3528,7 @@ namespace HealthKit {
 
 		[Export ("initWithHealthStore:device:startDate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (HKHealthStore healthStore, [NullAllowed] HKDevice device, NSDate startDate);
+		NativeHandle Constructor (HKHealthStore healthStore, [NullAllowed] HKDevice device, NSDate startDate);
 
 		[Export ("addHeartbeatWithTimeIntervalSinceSeriesStartDate:precededByGap:completion:")]
 		[Async]
@@ -3539,7 +3551,7 @@ namespace HealthKit {
 	{
 		[Export ("initWithHeartbeatSeries:dataHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (HKHeartbeatSeriesSample heartbeatSeries, HKHeartbeatSeriesQueryDataHandler dataHandler);
+		NativeHandle Constructor (HKHeartbeatSeriesSample heartbeatSeries, HKHeartbeatSeriesQueryDataHandler dataHandler);
 	}
 
 	[Watch (7,0), iOS (14,0)]
@@ -3573,7 +3585,7 @@ namespace HealthKit {
 
 		[Export ("initWithElectrocardiogram:dataHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (HKElectrocardiogram electrocardiogram, HKElectrocardiogramQueryDataHandler dataHandler);
+		NativeHandle Constructor (HKElectrocardiogram electrocardiogram, HKElectrocardiogramQueryDataHandler dataHandler);
 	}
 
 	[Watch (7,0), iOS (14,0)]
@@ -3663,7 +3675,7 @@ namespace HealthKit {
 
 		[Export ("initWithSampleType:predicate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate);
+		NativeHandle Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate);
 	}
 
 	[NoWatch, iOS (15,0)]
@@ -3707,7 +3719,7 @@ namespace HealthKit {
 		string[] RecordTypes { get; }
 
 		[Export ("initWithRecordTypes:predicate:resultsHandler:")]
-		IntPtr Constructor (string[] recordTypes, [NullAllowed] NSPredicate predicate, HKVerifiableClinicalRecordQueryResultHandler handler);
+		NativeHandle Constructor (string[] recordTypes, [NullAllowed] NSPredicate predicate, HKVerifiableClinicalRecordQueryResultHandler handler);
 	}
 
 	[NoWatch, iOS (15,0)]

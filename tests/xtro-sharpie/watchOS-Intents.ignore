@@ -1,6 +1,5 @@
 ## Deprecated so not exposing it into Xamarin.Watch.dll
 ##!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
-!missing-selector! INRideDriver::initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber: not bound
 
 ## False positive the class INBookRestaurantReservationIntentResponse is not available on watchOS
 !missing-enum! INBookRestaurantReservationIntentCode not bound
@@ -20,7 +19,6 @@
 !unknown-type! INRelativeSettingResolutionResult bound
 
 ## These do not make sense to have on watchOS, we can bind later if needed
-!missing-field! INStartVideoCallIntentIdentifier not bound
 !unknown-native-enum! INCarAirCirculationMode bound
 !unknown-native-enum! INCarAudioSource bound
 !unknown-native-enum! INCarDefroster bound
@@ -34,7 +32,3 @@
 !deprecated-attribute-wrong! INCallRecord::caller has 7.4 not 7.3 on [Deprecated] attribute
 !deprecated-attribute-wrong! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen: has 7.4 not 7.3 on [Deprecated] attribute
 !deprecated-attribute-wrong! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: has 7.4 not 7.3 on [Deprecated] attribute
-
-## Headers say NoWatch but interface had preexisting Mac availability in Xamarin.iOS
-## Adding NoWatch would be a breaking change
-!unknown-type! INTemperatureResolutionResult bound

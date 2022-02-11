@@ -14,15 +14,23 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 #if !COREBUILD
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+#else
 	[iOS (8, 0)]
 	[Mac (10, 10)]
 #endif
 	public sealed class DispatchBlock : NativeObject {
-		internal DispatchBlock (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal DispatchBlock (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -181,9 +189,9 @@ namespace CoreFoundation {
 				return null;
 
 			unsafe {
-				BlockLiteral *handle = (BlockLiteral *) block.GetCheckedHandle ();
+				var handle = (BlockLiteral *) (IntPtr) block.GetCheckedHandle ();
 				var del = handle->GetDelegateForBlock<DispatchBlockCallback> ();
-				return new Action (() => del (block.GetCheckedHandle ()));
+				return new Action (() => del ((IntPtr) block.GetCheckedHandle ()));
 			}
 		}
 

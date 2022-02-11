@@ -39,11 +39,11 @@ namespace Introspection {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort
 			case "JSExport":
 				return true;
-#if !XAMCORE_4_0
+#if !NET
 			case "MTLCounter":
 			case "MTLCounterSampleBuffer":
 			case "MTLCounterSet":
-				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
+				return true; // Incorrectly bound, will be fixed for .NET.
 #endif
 			case "MPSImageLaplacianPyramid":
 			case "MPSImageLaplacianPyramidSubtract":
@@ -556,7 +556,7 @@ namespace Introspection {
 					if (!supports) {
 #if __IOS__
 						// broken in xcode 12 beta 1 simulator (only)
-						if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12,0)) {
+						if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12,0)) {
 							switch (type.Name) {
 							case "ARFaceGeometry":
 							case "ARPlaneGeometry":
@@ -658,7 +658,7 @@ namespace Introspection {
 					case "SKRenderer":
 						// was not possible in iOS 11.4 (current minimum) simulator
 						if (!TestRuntime.CheckXcodeVersion (12,0)) {
-							if (Runtime.Arch == Arch.SIMULATOR)
+							if (TestRuntime.IsSimulatorOrDesktop)
 								continue;
 						}
 						break;

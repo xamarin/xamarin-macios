@@ -21,7 +21,7 @@
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			ApplicationId="$(ApplicationId)"
 			ApplicationTitle="$(ApplicationTitle)"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(AppBundleManifest)"
 			ProvisioningProfile="$(CodesignProvision)"
 			SigningKey="$(CodesignKey)">
 
@@ -171,12 +171,12 @@
 
 	<Target Name="_CompileHotRestartAppManifest"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'"
-		Inputs="$(_AppManifest);$(HotRestartAppBundlePath)\Extracted"
-		Outputs="$(HotRestartSignedAppDir)$(_AppManifest);$(HotRestartSignedAppDir)Extracted">
+		Inputs="$(AppBundleManifest);$(HotRestartAppBundlePath)\Extracted"
+		Outputs="$(HotRestartSignedAppDir)$([System.IO.Path]::GetFileName('$(AppBundleManifest)'));$(HotRestartSignedAppDir)Extracted">
 
 		<HotRestart.Tasks.CompileAppManifest
 			AppBundlePath="$(HotRestartAppBundlePath)"
-			AppManifestPath="$(_AppManifest)" 
+			AppManifestPath="$(AppBundleManifest)" 
 			ApplicationTitle="$(ApplicationTitle)"/>
 	</Target>
 
@@ -288,7 +288,7 @@
 
 	<Target Name="_CollectCodeSignHotRestartInputs">
 		<ItemGroup>
-			<_CodeSignHotRestartInputs Include="$(_AppManifest)" Outputs="$(HotRestartSignedAppDir)$(_AppManifest)" />
+			<_CodeSignHotRestartInputs Include="$(AppBundleManifest)" Outputs="$(HotRestartSignedAppDir)$([System.IO.Path]::GetFileName('$(AppBundleManifest)'))" />
 			<_CodeSignHotRestartInputs Include="$(CodesignEntitlements)" Outputs="$(HotRestartSignedAppDir)$(CodesignEntitlements)" />
 			<_CodeSignHotRestartInputs Include="$(_ProvisioningProfilePath)" Outputs="$(HotRestartSignedAppDir)embedded.mobileprovision" />
 			<_CodeSignHotRestartInputs Include="@(_HotRestartFrameworkFiles)" Outputs="$(HotRestartAppBundlePath)\Frameworks\%(_HotRestartFrameworkFiles.FrameworkDir)%(RecursiveDir)%(Filename)%(Extension)" />

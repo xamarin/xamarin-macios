@@ -1,4 +1,6 @@
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -38,13 +40,17 @@ namespace ObjCRuntime {
 		#error Unknown platform
 #endif
 
+#if !__MACCATALYST__
+#if NET
+		public readonly static Arch Arch = (Arch) GetRuntimeArch ();
+#else
 		public static Arch Arch; // default: = Arch.DEVICE;
+#endif
+#endif
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
-#if __MACCATALYST__
-			Arch = Arch.SIMULATOR;
-#else
+#if !__MACCATALYST__ && !NET
 			if (options->IsSimulator)
 				Arch = Arch.SIMULATOR;
 #endif
@@ -52,7 +58,22 @@ namespace ObjCRuntime {
 			UIApplication.Initialize ();
 		}
 
-#if !XAMCORE_4_0
+#if NET && !__MACCATALYST__
+		[SuppressGCTransition] // The native function is a single "return <constant>;" so this should be safe.
+		[DllImport ("__Internal")]
+		static extern int xamarin_get_runtime_arch ();
+
+		// The linker will replace the contents of this method with constant return value depending on the circumstances.
+		// The linker will not do that with P/Invokes (https://github.com/dotnet/linker/issues/2586), so
+		// we need an indirection here. The P/Invoke itself will be removed by the linker once the contents
+		// of this method have been replaced with a constant value.
+		static int GetRuntimeArch ()
+		{
+			return xamarin_get_runtime_arch ();
+		}
+#endif
+
+#if !NET
 		// This method is documented to be for diagnostic purposes only,
 		// and should not be considered stable API.
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -71,7 +92,7 @@ namespace ObjCRuntime {
 			
 #if TVOS || WATCH || __MACCATALYST__
 		[Advice ("This method is present only to help porting code.")]
-		public static void StartWWAN (Uri uri, Action<Exception> callback)
+		public static void StartWWAN (Uri uri, Action<Exception?> callback)
 		{
 			NSRunLoop.Main.BeginInvokeOnMainThread (() => callback (null));
 		}
@@ -81,11 +102,17 @@ namespace ObjCRuntime {
 		{
 		}
 #else
-		public static void StartWWAN (Uri uri, Action<Exception> callback)
+		public static void StartWWAN (Uri uri, Action<Exception?> callback)
 		{
+			if (uri is null)
+				throw new ArgumentNullException (nameof (uri));
+
+			if (callback is null)
+				throw new ArgumentNullException (nameof (callback));
+
 			DispatchQueue.DefaultGlobalQueue.DispatchAsync (() => 
 			{
-				Exception ex = null;
+				Exception? ex = null;
 				try {
 					StartWWAN (uri);
 				} catch (Exception x) {
@@ -101,8 +128,8 @@ namespace ObjCRuntime {
 
 		public static void StartWWAN (Uri uri)
 		{
-			if (uri == null)
-				throw new ArgumentNullException ("uri");
+			if (uri is null)
+				throw new ArgumentNullException (nameof (uri));
 
 			if (uri.Scheme != "http" && uri.Scheme != "https")
 				throw new ArgumentException ("uri is not a valid http or https uri", uri.ToString ());
@@ -116,10 +143,12 @@ namespace ObjCRuntime {
 #endif // !COREBUILD
 	}
 
+#if !__MACCATALYST__
 	public enum Arch {
 		DEVICE,
 		SIMULATOR
 	}
+#endif
 }
 
 #endif // MONOMAC

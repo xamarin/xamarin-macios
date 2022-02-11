@@ -17,6 +17,10 @@ using UIViewController = AppKit.NSViewController;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoSubscriberAccount {
 
 	[Native]
@@ -103,7 +107,7 @@ namespace VideoSubscriberAccount {
 	interface VSAccountManagerDelegate {
 
 		[Abstract]
-#if XAMCORE_4_0
+#if NET
 		[NoMac]
 #elif MONOMAC
 		[Obsoleted (PlatformName.MacOSX, 12,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -112,7 +116,7 @@ namespace VideoSubscriberAccount {
 		void PresentViewController (VSAccountManager accountManager, UIViewController viewController);
 
 		[Abstract]
-#if XAMCORE_4_0
+#if NET
 		[NoMac]
 #elif MONOMAC
 		[Obsoleted (PlatformName.MacOSX, 12,0, message: "Unavailable on macOS, will be removed in the future.")]
@@ -354,7 +358,7 @@ namespace VideoSubscriberAccount {
 	interface VSAccountApplicationProvider {
 
 		[Export ("initWithLocalizedDisplayName:identifier:")]
-		IntPtr Constructor (string localizedDisplayName, string identifier);
+		NativeHandle Constructor (string localizedDisplayName, string identifier);
 
 		[Export ("localizedDisplayName")]
 		string LocalizedDisplayName { get; }

@@ -184,7 +184,6 @@
 !missing-selector! +CIFilter::stripesGeneratorFilter not bound
 !missing-selector! +CIFilter::subtractBlendModeFilter not bound
 !missing-selector! +CIFilter::sunbeamsGeneratorFilter not bound
-!missing-selector! +CIFilter::supportedRawCameraModels not bound
 !missing-selector! +CIFilter::swipeTransitionFilter not bound
 !missing-selector! +CIFilter::temperatureAndTintFilter not bound
 !missing-selector! +CIFilter::textImageGeneratorFilter not bound
@@ -242,6 +241,3 @@
 !missing-selector! +CIFilter::linearLightBlendModeFilter not bound
 !missing-selector! +CIFilter::personSegmentationFilter not bound
 !missing-selector! +CIFilter::vividLightBlendModeFilter not bound
-
-## API introduced and deprecated at the same time in Xcode 13
-!missing-field! kCIPropertiesKey not bound

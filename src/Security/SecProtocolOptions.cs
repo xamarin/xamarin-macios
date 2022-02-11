@@ -18,6 +18,10 @@ using sec_protocol_options_t=System.IntPtr;
 using dispatch_queue_t=System.IntPtr;
 using sec_identity_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
 #if !NET
@@ -31,7 +35,8 @@ namespace Security {
 #if !COREBUILD
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public
-		internal SecProtocolOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal SecProtocolOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_local_identity (sec_protocol_options_t handle, sec_identity_t identity);
@@ -48,20 +53,9 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_add_tls_ciphersuite (sec_protocol_options_t handle, SslCipherSuite cipherSuite);
+#endif
 
 #if !NET
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
@@ -69,20 +63,8 @@ namespace Security {
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 		public void AddTlsCipherSuite (SslCipherSuite cipherSuite) => sec_protocol_options_add_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
+#endif
 
 #if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

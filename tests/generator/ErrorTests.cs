@@ -130,6 +130,18 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1042 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("bi1042.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.ProcessEnums = true;
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1042, "Missing '[Field (LibraryName=value)]' for BindingTests.Tools.DoorOpener (e.g.\"__Internal\")");
+		}
+
+		[Test]
 		public void BI1046 ()
 		{
 			var bgen = new BGenTool ();
@@ -293,6 +305,7 @@ namespace Bug52570Tests {
 			bgen.AssertNoWarnings ();
 		}
 
+#if !NET
 		[Test]
 		public void BI1117_allowstaticmembers ()
 		{
@@ -302,6 +315,7 @@ namespace Bug52570Tests {
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 		}
+#endif
 
 		[Test]
 		public void BindAsNoMultidimensionalArrays ()

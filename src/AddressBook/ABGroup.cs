@@ -40,6 +40,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 	static class ABGroupProperty {
 
@@ -56,19 +60,19 @@ namespace AddressBook {
 		}
 	}
 
-#if !NET
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
+#if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
 	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 #endif
 	public class ABGroup : ABRecord, IEnumerable<ABRecord> {
 
@@ -93,12 +97,13 @@ namespace AddressBook {
 			Handle = ABGroupCreateInSource (source.Handle);
 		}
 
-		internal ABGroup (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal ABGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		internal ABGroup (IntPtr handle, ABAddressBook addressbook)
+		internal ABGroup (NativeHandle handle, ABAddressBook addressbook)
         	: base (handle, false)
 		{
 			AddressBook = addressbook;

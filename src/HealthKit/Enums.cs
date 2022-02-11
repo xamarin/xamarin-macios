@@ -442,7 +442,7 @@ namespace HealthKit
 	public enum HKInsulinDeliveryReason : long {
 		Basal = 1,
 		Bolus,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Basal' instead.")]
 		Asal = Basal,
 		[Obsolete ("Use 'Bolus' instead.")]
@@ -455,7 +455,7 @@ namespace HealthKit
 	public enum HKBloodGlucoseMealTime : long {
 		Preprandial = 1,
 		Postprandial,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Preprandial' instead.")]
 		Reprandial = Preprandial,
 		[Obsolete ("Use 'Postprandial' instead.")]

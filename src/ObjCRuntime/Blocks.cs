@@ -163,7 +163,7 @@ namespace ObjCRuntime {
 			if (trampoline == null)
 				throw new ArgumentNullException (nameof (trampoline));
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			// Check that:
 			// * The trampoline is static
 			// * The trampoline's method has a [MonoPInvokeCallback] attribute
@@ -226,12 +226,20 @@ namespace ObjCRuntime {
 			}
 		}
 
+#if NET
+		public T GetDelegateForBlock<T> () where T: System.MulticastDelegate
+#else
 		public T GetDelegateForBlock<T> () where T: class
+#endif
 		{
 			return (T) (object) Runtime.GetDelegateForBlock (invoke, typeof (T));
 		}
 
+#if NET
+		public unsafe static T GetTarget<T> (IntPtr block) where T: System.MulticastDelegate
+#else
 		public unsafe static T GetTarget<T> (IntPtr block) where T: class /* /* requires C# 7.3+: System.MulticastDelegate */
+#endif
 		{
 			return (T) ((BlockLiteral *) block)->Target;
 		}

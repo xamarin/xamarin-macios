@@ -28,6 +28,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -41,17 +43,25 @@ using Foundation;
 using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioToolbox {
 
 	public enum AudioFileType {  // UInt32 AudioFileTypeID
 		AIFF = 0x41494646, // AIFF
 		AIFC = 0x41494643, // AIFC
 		WAVE = 0x57415645, // WAVE
-#if !NET
-		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[NoWatch]
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
 #endif
 		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
@@ -68,19 +78,26 @@ namespace AudioToolbox {
 		ThreeGP = 0x33677070, // 3gpp
 		ThreeGP2 = 0x33677032, // 3gp2
 		AMR = 0x616d7266, // amrf
-#if !NET
-		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[NoWatch]
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
 #endif
 		FLAC =  0x666c6163, // flac
-#if !NET
-		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[NoWatch]
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // loas
 	}
@@ -184,14 +201,14 @@ namespace AudioToolbox {
 		CAFiXML					= 0x69584d4c,	// 'iXML'
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioFramePacketTranslation {
 		public long Frame;
 		public long Packet;
 		public int FrameOffsetInPacket;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioBytePacketTranslation {
 		public long Byte;
 		public long Packet;
@@ -205,7 +222,7 @@ namespace AudioToolbox {
 		IsEstimate = 1
 	}
 	
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileSmpteTime { // AudioFile_SMPTE_Time
 		public sbyte Hours;
 		public byte  Minutes;
@@ -214,7 +231,7 @@ namespace AudioToolbox {
 		public uint  SubFrameSampleOffset;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileMarker {
 		public double FramePosition;
 		internal IntPtr Name_cfstringref;
@@ -224,19 +241,22 @@ namespace AudioToolbox {
 		public ushort Reserved;
 		public ushort Channel;
 
-		public string Name {
+		public string? Name {
 			get {
 				return CFString.FromHandle (Name_cfstringref);
 			}
 		}
 	}
 
-#if !NET
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
-#else
+#if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRangeByteCountTranslation {
@@ -245,12 +265,15 @@ namespace AudioToolbox {
 		public long ByteCountUpperBound;
 	}
 
-#if !NET
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
-#else
+#if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRollDistanceTranslation {
@@ -258,12 +281,15 @@ namespace AudioToolbox {
 		public long RollDistance;
 	}
 
-#if !NET
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
-#else
+#if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioIndependentPacketTranslation {
@@ -271,12 +297,15 @@ namespace AudioToolbox {
 		public long IndependentlyDecodablePacket;
 	}
 
-#if !NET
-	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
-#else
+#if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+#else
+	[NoWatch]
+	[iOS (13,0)]
+	[Mac (10,15)]
+	[TV (13,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {
@@ -348,7 +377,7 @@ namespace AudioToolbox {
 		public AudioFileMarker this [int index] {
 			get {
 				if (index >= Count || index < 0)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException (nameof (index));
 
 				//
 				// Decodes
@@ -387,7 +416,7 @@ namespace AudioToolbox {
 		}
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFilePacketTableInfo
 	{
 		public long ValidFrames;
@@ -395,7 +424,7 @@ namespace AudioToolbox {
 		public int RemainderFrames;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileRegion {
 		readonly IntPtr ptr;
 		//
@@ -421,7 +450,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public string Name {
+		public string? Name {
 			get {
 				return CFString.FromHandle (NameWeak);
 			}
@@ -448,7 +477,7 @@ namespace AudioToolbox {
 		public AudioFileMarker this [int index] {
 			get {
 				if (index >= Count || index < 0)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException (nameof (index));
 
 				unsafe {
 					var ptr = (AudioFileMarker *) this.ptr + 3 * sizeof (int) + sizeof (IntPtr) + index * sizeof (AudioFileMarker);
@@ -503,7 +532,7 @@ namespace AudioToolbox {
 		public AudioFileRegion this [int index] {
 			get {
 				if (index >= Count || index < 0)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException (nameof (index));
 
 				//
 				// Decodes
@@ -547,44 +576,32 @@ namespace AudioToolbox {
 		}
 	}
 
-	public class AudioFile : IDisposable, INativeObject {
-
-		internal IntPtr handle;
-		
-		protected internal AudioFile (bool x)
+	public class AudioFile : DisposableObject {
+		internal AudioFile ()
 		{
 			// This ctor is used by AudioSource that will set the handle later.
 		}
-		
-		internal AudioFile (IntPtr handle)
-		{
-			this.handle = handle;
-		}
 
-		~AudioFile ()
+#if !NET
+		protected internal AudioFile (bool x)
 		{
-			Dispose (false);
 		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
+#endif
 
-		public IntPtr Handle {
-			get { return handle; }
+		[Preserve (Conditional = true)]
+		internal AudioFile (NativeHandle handle, bool owns)
+			: base (handle, owns)
+		{
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioFileClose (AudioFileID handle);
 
-		protected virtual void Dispose (bool disposing)
+		protected override void Dispose (bool disposing)
 		{
-			if (handle != IntPtr.Zero){
-				AudioFileClose (handle);
-				handle = IntPtr.Zero;
-			}
+			if (Handle != IntPtr.Zero && Owns)
+				AudioFileClose (Handle);
+			base.Dispose (disposing);
 		}
 
 		public long Length {
@@ -596,36 +613,36 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioFileCreateWithURL (IntPtr cfurlref_infile, AudioFileType inFileType, ref AudioStreamBasicDescription inFormat, AudioFileFlags inFlags, out AudioFileID file_id);
 
-		public static AudioFile Create (string url, AudioFileType fileType, AudioStreamBasicDescription format, AudioFileFlags inFlags)
+		public static AudioFile? Create (string url, AudioFileType fileType, AudioStreamBasicDescription format, AudioFileFlags inFlags)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
+			if (url is null)
+				throw new ArgumentNullException (nameof (url));
 
-			using (CFUrl cfurl = CFUrl.FromUrlString (url, null))
+			using (var cfurl = CFUrl.FromUrlString (url, null)!)
 				return Create (cfurl, fileType, format, inFlags);
 		}
 
-		public static AudioFile Create (CFUrl url, AudioFileType fileType, AudioStreamBasicDescription format, AudioFileFlags inFlags)
+		public static AudioFile? Create (CFUrl url, AudioFileType fileType, AudioStreamBasicDescription format, AudioFileFlags inFlags)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
+			if (url is null)
+				throw new ArgumentNullException (nameof (url));
 
 			IntPtr h;
 
 			if (AudioFileCreateWithURL (url.Handle, fileType, ref format, inFlags, out h) == 0)
-				return new AudioFile (h);
+				return new AudioFile (h, true);
 			return null;
 		}
 
-		public static AudioFile Create (NSUrl url, AudioFileType fileType, AudioStreamBasicDescription format, AudioFileFlags inFlags)
+		public static AudioFile? Create (NSUrl url, AudioFileType fileType, AudioStreamBasicDescription format, AudioFileFlags inFlags)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
+			if (url is null)
+				throw new ArgumentNullException (nameof (url));
 
 			IntPtr h;
 
 			if (AudioFileCreateWithURL (url.Handle, fileType, ref format, inFlags, out h) == 0)
-				return new AudioFile (h);
+				return new AudioFile (h, true);
 			return null;
 		}
 
@@ -633,85 +650,85 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioFileError AudioFileOpenURL  (IntPtr cfurlref_infile, byte permissions, AudioFileType fileTypeHint, out IntPtr file_id);
 
-		public static AudioFile OpenRead (string url, AudioFileType fileTypeHint = 0)
+		public static AudioFile? OpenRead (string url, AudioFileType fileTypeHint = 0)
 		{
 			return Open (url, AudioFilePermission.Read, fileTypeHint);
 		}
 
-		public static AudioFile OpenRead (string url, out AudioFileError error, AudioFileType fileTypeHint = 0)
+		public static AudioFile? OpenRead (string url, out AudioFileError error, AudioFileType fileTypeHint = 0)
 		{
 			return Open (url, AudioFilePermission.Read, out error, fileTypeHint);
 		}
 		
-		public static AudioFile OpenRead (CFUrl url, AudioFileType fileTypeHint = 0)
+		public static AudioFile? OpenRead (CFUrl url, AudioFileType fileTypeHint = 0)
 		{
 			return Open (url, AudioFilePermission.Read, fileTypeHint);
 		}
 
-		public static AudioFile OpenRead (CFUrl url, out AudioFileError error, AudioFileType fileTypeHint = 0)
+		public static AudioFile? OpenRead (CFUrl url, out AudioFileError error, AudioFileType fileTypeHint = 0)
 		{
 			return Open (url, AudioFilePermission.Read, out error, fileTypeHint);
 		}
 
-		public static AudioFile OpenRead (NSUrl url, AudioFileType fileTypeHint = 0)
+		public static AudioFile? OpenRead (NSUrl url, AudioFileType fileTypeHint = 0)
 		{
 			return Open (url, AudioFilePermission.Read, fileTypeHint);
 		}
 
-		public static AudioFile OpenRead (NSUrl url, out AudioFileError error, AudioFileType fileTypeHint = 0)
+		public static AudioFile? OpenRead (NSUrl url, out AudioFileError error, AudioFileType fileTypeHint = 0)
 		{
 			return Open (url, AudioFilePermission.Read, out error, fileTypeHint);
 		}
 		
-		public static AudioFile Open (string url, AudioFilePermission permissions, AudioFileType fileTypeHint = 0)
+		public static AudioFile? Open (string url, AudioFilePermission permissions, AudioFileType fileTypeHint = 0)
 		{
 			AudioFileError error;
 			return Open (url, permissions, out error, fileTypeHint);
 		}
 
-		public static AudioFile Open (string url, AudioFilePermission permissions, out AudioFileError error, AudioFileType fileTypeHint = 0)
+		public static AudioFile? Open (string url, AudioFilePermission permissions, out AudioFileError error, AudioFileType fileTypeHint = 0)
 		{
-			if (url == null)
+			if (url is null)
 				throw new ArgumentNullException (nameof (url));
 
-			using (CFUrl cfurl = CFUrl.FromUrlString (url, null))
+			using (var cfurl = CFUrl.FromUrlString (url, null)!)
 				return Open (cfurl, permissions, out error, fileTypeHint);
 		}
 
-		public static AudioFile Open (CFUrl url, AudioFilePermission permissions, AudioFileType fileTypeHint = 0)
+		public static AudioFile? Open (CFUrl url, AudioFilePermission permissions, AudioFileType fileTypeHint = 0)
 		{
 			AudioFileError error;
 			return Open (url, permissions, out error, fileTypeHint);
 		}
 
-		public static AudioFile Open (CFUrl url, AudioFilePermission permissions, out AudioFileError error, AudioFileType fileTypeHint = 0)
+		public static AudioFile? Open (CFUrl url, AudioFilePermission permissions, out AudioFileError error, AudioFileType fileTypeHint = 0)
 		{
-			if (url == null)
+			if (url is null)
 				throw new ArgumentNullException (nameof (url));
 
 			return Open (url.Handle, permissions, fileTypeHint, out error);
 		}
 
-		public static AudioFile Open (NSUrl url, AudioFilePermission permissions, AudioFileType fileTypeHint = 0)
+		public static AudioFile? Open (NSUrl url, AudioFilePermission permissions, AudioFileType fileTypeHint = 0)
 		{
 			AudioFileError error;
 			return Open (url, permissions, out error, fileTypeHint);
 		}
 
-		public static AudioFile Open (NSUrl url, AudioFilePermission permissions, out AudioFileError error, AudioFileType fileTypeHint = 0)
+		public static AudioFile? Open (NSUrl url, AudioFilePermission permissions, out AudioFileError error, AudioFileType fileTypeHint = 0)
 		{
-			if (url == null)
+			if (url is null)
 				throw new ArgumentNullException (nameof (url));
 
 			return Open (url.Handle, permissions, fileTypeHint, out error);
 		}
 
-		static AudioFile Open (IntPtr urlHandle, AudioFilePermission permissions, AudioFileType fileTypeHint, out AudioFileError error)
+		static AudioFile? Open (IntPtr urlHandle, AudioFilePermission permissions, AudioFileType fileTypeHint, out AudioFileError error)
 		{
 			IntPtr file;
 			error = AudioFileOpenURL (urlHandle, (byte) permissions, fileTypeHint, out file);
 			if (error == AudioFileError.Success)
-				return new AudioFile (file);
+				return new AudioFile (file, true);
 			return null;
 		}
 		
@@ -720,7 +737,7 @@ namespace AudioToolbox {
 
 		public bool Optimize ()
 		{
-			return AudioFileOptimize (handle) == 0;
+			return AudioFileOptimize (Handle) == 0;
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -729,11 +746,11 @@ namespace AudioToolbox {
 		public int Read (long startingByte, byte [] buffer, int offset, int count, bool useCache)
 		{
 			if (offset < 0)
-				throw new ArgumentException ("offset", "<0");
+				throw new ArgumentException (nameof (offset), "<0");
 			if (count < 0)
-				throw new ArgumentException ("count", "<0");
+				throw new ArgumentException (nameof (count), "<0");
 			if (startingByte < 0)
-				throw new ArgumentException ("startingByte", "<0");
+				throw new ArgumentException (nameof (startingByte), "<0");
 			int len = buffer.Length;
 			if (offset > len)
 				throw new ArgumentException ("destination offset is beyond array size");
@@ -743,7 +760,7 @@ namespace AudioToolbox {
 
 			unsafe {
 				fixed (byte *p = &buffer [offset]){
-					var res = AudioFileReadBytes (handle, useCache, startingByte, ref count, (IntPtr) p);
+					var res = AudioFileReadBytes (Handle, useCache, startingByte, ref count, (IntPtr) p);
 					
 					if (res == (int) AudioFileError.EndOfFile)
 						return count <= 0 ? -1 : count;
@@ -762,15 +779,15 @@ namespace AudioToolbox {
 		public int Write (long startingByte, byte [] buffer, int offset, int count, bool useCache)
 		{
 			if (offset < 0)
-				throw new ArgumentOutOfRangeException ("offset", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (offset), "< 0");
 			if (count < 0)
-				throw new ArgumentOutOfRangeException ("count", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (count), "< 0");
 			if (offset > buffer.Length - count)
 				throw new ArgumentException ("Reading would overrun buffer");
 
 			unsafe {
 				fixed (byte *p = &buffer [offset]){
-					if (AudioFileWriteBytes (handle, useCache, startingByte, ref count, (IntPtr) p) == 0)
+					if (AudioFileWriteBytes (Handle, useCache, startingByte, ref count, (IntPtr) p) == 0)
 						return count;
 					else
 						return -1;
@@ -781,15 +798,15 @@ namespace AudioToolbox {
 		public int Write (long startingByte, byte [] buffer, int offset, int count, bool useCache, out int errorCode)
 		{
 			if (offset < 0)
-				throw new ArgumentOutOfRangeException ("offset", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (offset), "< 0");
 			if (count < 0)
-				throw new ArgumentOutOfRangeException ("count", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (count), "< 0");
 			if (offset > buffer.Length - count)
 				throw new ArgumentException ("Reading would overrun buffer");
 
 			unsafe {
 				fixed (byte *p = &buffer [offset]){
-					errorCode = AudioFileWriteBytes (handle, useCache, startingByte, ref count, (IntPtr) p);
+					errorCode = AudioFileWriteBytes (Handle, useCache, startingByte, ref count, (IntPtr) p);
 					if (errorCode == 0)
 						return count;
 					else
@@ -801,33 +818,33 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static OSStatus AudioFileReadPacketData (
 			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, ref int numBytes, 
-			AudioStreamPacketDescription [] packetDescriptions, long inStartingPacket, ref int numPackets, IntPtr outBuffer);
+			AudioStreamPacketDescription* packetDescriptions, long inStartingPacket, ref int numPackets, IntPtr outBuffer);
 
-		public AudioStreamPacketDescription [] ReadPacketData (long inStartingPacket, int nPackets, byte [] buffer)
+		public AudioStreamPacketDescription []? ReadPacketData (long inStartingPacket, int nPackets, byte [] buffer)
 		{
 			AudioFileError error;
 			return ReadPacketData (inStartingPacket, nPackets, buffer, out error);
 		}
 
-		public AudioStreamPacketDescription [] ReadPacketData (long inStartingPacket, int nPackets, byte [] buffer, out AudioFileError error)
+		public AudioStreamPacketDescription []? ReadPacketData (long inStartingPacket, int nPackets, byte [] buffer, out AudioFileError error)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
 			int count = buffer.Length;
 			return RealReadPacketData (false, inStartingPacket, ref nPackets, buffer, 0, ref count, out error);
 		}
 		
-		public AudioStreamPacketDescription [] ReadPacketData (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count)
+		public AudioStreamPacketDescription []? ReadPacketData (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count)
 		{
 			return ReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, offset, ref count);
 		}
 
-		public AudioStreamPacketDescription [] ReadPacketData (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count, out AudioFileError error)
+		public AudioStreamPacketDescription []? ReadPacketData (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count, out AudioFileError error)
 		{
 			return ReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, offset, ref count, out error);
 		}
 
-		static internal AudioStreamPacketDescription [] PacketDescriptionFrom (int nPackets, IntPtr b)
+		static internal AudioStreamPacketDescription []? PacketDescriptionFrom (int nPackets, IntPtr b)
 		{
 			if (b == IntPtr.Zero)
 				return new AudioStreamPacketDescription [0];
@@ -844,20 +861,20 @@ namespace AudioToolbox {
 			return ret;
 		}
 
-		public AudioStreamPacketDescription [] ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, byte [] buffer, int offset, ref int count)
+		public AudioStreamPacketDescription []? ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, byte [] buffer, int offset, ref int count)
 		{
 			AudioFileError error;
 			return ReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, offset, ref count, out error);
 		}
 
-		public AudioStreamPacketDescription [] ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, byte [] buffer, int offset, ref int count, out AudioFileError error)
+		public AudioStreamPacketDescription []? ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, byte [] buffer, int offset, ref int count, out AudioFileError error)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
 			if (offset < 0)
-				throw new ArgumentException ("offset", "<0");
+				throw new ArgumentException (nameof (offset), "<0");
 			if (count < 0)
-				throw new ArgumentException ("count", "<0");
+				throw new ArgumentException (nameof (count), "<0");
 			int len = buffer.Length;
 			if (offset > len)
 				throw new ArgumentException ("destination offset is beyond array size");
@@ -867,33 +884,33 @@ namespace AudioToolbox {
 			return RealReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, offset, ref count, out error);
 		}
 
-		public AudioStreamPacketDescription [] ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count)
+		public AudioStreamPacketDescription []? ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count)
 		{
 			AudioFileError error;
 			return ReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, ref count, out error);
 		}
 
-		public AudioStreamPacketDescription [] ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error)
+		public AudioStreamPacketDescription []? ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error)
 		{
 			var descriptions = new AudioStreamPacketDescription [nPackets];
 			return ReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, ref count, out error, descriptions);
 		}
 
-		public unsafe AudioStreamPacketDescription [] ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error, AudioStreamPacketDescription[] descriptions)
+		public unsafe AudioStreamPacketDescription []? ReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error, AudioStreamPacketDescription[] descriptions)
 		{
 			if (buffer == IntPtr.Zero)
-				throw new ArgumentNullException ("buffer");
+				throw new ArgumentNullException (nameof (buffer));
 			if (count < 0)
-				throw new ArgumentException ("count", "<0");
-			if (descriptions == null)
-				throw new ArgumentNullException ("descriptions");
+				throw new ArgumentException (nameof (count), "<0");
+			if (descriptions is null)
+				throw new ArgumentNullException (nameof (descriptions));
 
 			fixed (AudioStreamPacketDescription *p = descriptions) {
 				return RealReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, ref count, out error, descriptions);
 			}
 		}
 
-		unsafe AudioStreamPacketDescription [] RealReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, byte [] buffer, int offset, ref int count, out AudioFileError error)
+		unsafe AudioStreamPacketDescription []? RealReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, byte [] buffer, int offset, ref int count, out AudioFileError error)
 		{
 			var descriptions = new AudioStreamPacketDescription [nPackets];
 			fixed (byte *bop = &buffer [offset]) {
@@ -903,9 +920,12 @@ namespace AudioToolbox {
 			}
 		}
 		
-		unsafe AudioStreamPacketDescription [] RealReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error, AudioStreamPacketDescription[] descriptions)
+		unsafe AudioStreamPacketDescription []? RealReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error, AudioStreamPacketDescription[] descriptions)
 		{
-			var r = AudioFileReadPacketData (handle, useCache, ref count, descriptions, inStartingPacket, ref nPackets, buffer);
+			OSStatus r;
+			fixed (AudioStreamPacketDescription* pdesc = &descriptions [0]) {
+				r = AudioFileReadPacketData (Handle, useCache, ref count, pdesc, inStartingPacket, ref nPackets, buffer);
+			}
 
 			error = (AudioFileError)r;
 
@@ -924,33 +944,33 @@ namespace AudioToolbox {
 			return descriptions;
 		}
 
-		public AudioStreamPacketDescription [] ReadFixedPackets (long inStartingPacket, int nPackets, byte [] buffer)
+		public AudioStreamPacketDescription []? ReadFixedPackets (long inStartingPacket, int nPackets, byte [] buffer)
 		{
 			AudioFileError error;
 			return ReadFixedPackets (inStartingPacket, nPackets, buffer, out error);
 		}
 
-		public AudioStreamPacketDescription [] ReadFixedPackets (long inStartingPacket, int nPackets, byte [] buffer, out AudioFileError error)
+		public AudioStreamPacketDescription []? ReadFixedPackets (long inStartingPacket, int nPackets, byte [] buffer, out AudioFileError error)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
 			return RealReadFixedPackets (false, inStartingPacket, nPackets, buffer, 0, buffer.Length, out error);
 		}
 
-		public AudioStreamPacketDescription [] ReadFixedPackets (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count)
+		public AudioStreamPacketDescription []? ReadFixedPackets (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count)
 		{
 			AudioFileError error;
 			return ReadFixedPackets (useCache, inStartingPacket, nPackets, buffer, offset, count, out error);
 		}
 
-		public AudioStreamPacketDescription [] ReadFixedPackets (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count, out AudioFileError error)
+		public AudioStreamPacketDescription []? ReadFixedPackets (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count, out AudioFileError error)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
 			if (offset < 0)
-				throw new ArgumentException ("offset", "<0");
+				throw new ArgumentException (nameof (offset), "<0");
 			if (count < 0)
-				throw new ArgumentException ("count", "<0");
+				throw new ArgumentException (nameof (count), "<0");
 			int len = buffer.Length;
 			if (offset > len)
 				throw new ArgumentException ("destination offset is beyond array size");
@@ -960,11 +980,14 @@ namespace AudioToolbox {
 			return RealReadFixedPackets (useCache, inStartingPacket, nPackets, buffer, offset, count, out error);
 		}
 
-		unsafe AudioStreamPacketDescription [] RealReadFixedPackets (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count, out AudioFileError error)
+		unsafe AudioStreamPacketDescription []? RealReadFixedPackets (bool useCache, long inStartingPacket, int nPackets, byte [] buffer, int offset, int count, out AudioFileError error)
 		{
 			var descriptions = new AudioStreamPacketDescription [nPackets];
 			fixed (byte *bop = &buffer [offset]){
-				var r = AudioFileReadPacketData (handle, useCache, ref count, descriptions, inStartingPacket, ref nPackets, (IntPtr) bop);
+				OSStatus r;
+				fixed (AudioStreamPacketDescription* pdesc = &descriptions [0]) {
+					r = AudioFileReadPacketData (Handle, useCache, ref count, pdesc, inStartingPacket, ref nPackets, (IntPtr) bop);
+				}
 				error = (AudioFileError)r;
 				if (r == (int) AudioFileError.EndOfFile) {
 					if (count == 0)
@@ -978,15 +1001,15 @@ namespace AudioToolbox {
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioFileError AudioFileWritePackets (
-			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, int inNumBytes, AudioStreamPacketDescription [] inPacketDescriptions,
+			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, int inNumBytes, AudioStreamPacketDescription []? inPacketDescriptions,
                         long inStartingPacket, ref int numPackets, IntPtr buffer);
 
 		public int WritePackets (bool useCache, long startingPacket, int numPackets, IntPtr buffer, int byteCount)
 		{
 			if (buffer == IntPtr.Zero)
-				throw new ArgumentNullException ("buffer");
+				throw new ArgumentNullException (nameof (buffer));
 
-			if (AudioFileWritePackets (handle, useCache, byteCount, null, startingPacket, ref numPackets, buffer) == 0)
+			if (AudioFileWritePackets (Handle, useCache, byteCount, null, startingPacket, ref numPackets, buffer) == 0)
 				return numPackets;
 
 			return -1;
@@ -994,32 +1017,32 @@ namespace AudioToolbox {
 
 		public int WritePackets (bool useCache, long startingPacket, AudioStreamPacketDescription [] packetDescriptions, IntPtr buffer, int byteCount)
 		{
-			if (packetDescriptions == null)
-				throw new ArgumentNullException ("packetDescriptions");
+			if (packetDescriptions is null)
+				throw new ArgumentNullException (nameof (packetDescriptions));
 			if (buffer == IntPtr.Zero)
-				throw new ArgumentNullException ("buffer");
+				throw new ArgumentNullException (nameof (buffer));
 			int nPackets = packetDescriptions.Length;
-			if (AudioFileWritePackets (handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, buffer) == 0)
+			if (AudioFileWritePackets (Handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, buffer) == 0)
 				return nPackets;
 			return -1;
 		}
 		
 		unsafe public int WritePackets (bool useCache, long startingPacket, AudioStreamPacketDescription [] packetDescriptions, byte [] buffer, int offset, int byteCount)
 		{
-			if (packetDescriptions == null)
-				throw new ArgumentNullException ("inPacketDescriptions");
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (packetDescriptions is null)
+				throw new ArgumentNullException (nameof (packetDescriptions));
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
 			if (offset < 0)
-				throw new ArgumentOutOfRangeException ("offset", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (offset), "< 0");
 			if (byteCount < 0)
-				throw new ArgumentOutOfRangeException ("byteCount", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (byteCount), "< 0");
 			if (offset > buffer.Length - byteCount)
 				throw new ArgumentException ("Reading would overrun buffer");
 
 			int nPackets = packetDescriptions.Length;
 			fixed (byte *bop = &buffer [offset]){
-				if (AudioFileWritePackets (handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, (IntPtr) bop) == 0)
+				if (AudioFileWritePackets (Handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, (IntPtr) bop) == 0)
 					return nPackets;
 				return -1;
 			}
@@ -1027,13 +1050,13 @@ namespace AudioToolbox {
 
 		public int WritePackets (bool useCache, long startingPacket, AudioStreamPacketDescription [] packetDescriptions, IntPtr buffer, int byteCount, out int errorCode)
 		{
-			if (packetDescriptions == null)
-				throw new ArgumentNullException ("packetDescriptions");
+			if (packetDescriptions is null)
+				throw new ArgumentNullException (nameof (packetDescriptions));
 			if (buffer == IntPtr.Zero)
-				throw new ArgumentException ("buffer");
+				throw new ArgumentException (nameof (buffer));
 			int nPackets = packetDescriptions.Length;
 			
-			errorCode = (int) AudioFileWritePackets (handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, buffer);
+			errorCode = (int) AudioFileWritePackets (Handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, buffer);
 			if (errorCode == 0)
 				return nPackets;
 			return -1;
@@ -1041,20 +1064,20 @@ namespace AudioToolbox {
 		
 		unsafe public int WritePackets (bool useCache, long startingPacket, AudioStreamPacketDescription [] packetDescriptions, byte [] buffer, int offset, int byteCount, out int errorCode)
 		{
-			if (packetDescriptions == null)
-				throw new ArgumentNullException ("inPacketDescriptions");
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (packetDescriptions is null)
+				throw new ArgumentNullException (nameof (packetDescriptions));
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
 			if (offset < 0)
-				throw new ArgumentOutOfRangeException ("offset", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (offset), "< 0");
 			if (byteCount < 0)
-				throw new ArgumentOutOfRangeException ("byteCount", "< 0");
+				throw new ArgumentOutOfRangeException (nameof (byteCount), "< 0");
 			if (offset > buffer.Length - byteCount)
 				throw new ArgumentException ("Reading would overrun buffer");
 
 			int nPackets = packetDescriptions.Length;
 			fixed (byte *bop = &buffer [offset]){
-				errorCode = (int) AudioFileWritePackets (handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, (IntPtr) bop);
+				errorCode = (int) AudioFileWritePackets (Handle, useCache, byteCount, packetDescriptions, startingPacket, ref nPackets, (IntPtr) bop);
 				if (errorCode == 0)
 					return nPackets;
 				return -1;
@@ -1066,7 +1089,7 @@ namespace AudioToolbox {
 			if (buffer == IntPtr.Zero)
 				throw new ArgumentException ("buffer");
 			
-			return AudioFileWritePackets (handle, useCache, numBytes, packetDescriptions, startingPacket, ref numPackets, buffer);
+			return AudioFileWritePackets (Handle, useCache, numBytes, packetDescriptions, startingPacket, ref numPackets, buffer);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -1075,7 +1098,7 @@ namespace AudioToolbox {
 		public int CountUserData (uint userData)
 		{
 			int count;
-			if (AudioFileCountUserData (handle, userData, out count) == 0)
+			if (AudioFileCountUserData (Handle, userData, out count) == 0)
 				return count;
 			return -1;
 		}
@@ -1086,7 +1109,7 @@ namespace AudioToolbox {
 		{
 			int ds;
 			
-			if (AudioFileGetUserDataSize (handle, userDataId, index, out ds) == 0)
+			if (AudioFileGetUserDataSize (Handle, userDataId, index, out ds) == 0)
 				return -1;
 			return ds;
 		}
@@ -1096,7 +1119,7 @@ namespace AudioToolbox {
 
 		public int GetUserData (int userDataID, int index, ref int size, IntPtr userData)
 		{
-			return AudioFileGetUserData (handle, userDataID, index, ref size, userData);
+			return AudioFileGetUserData (Handle, userDataID, index, ref size, userData);
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -1105,8 +1128,8 @@ namespace AudioToolbox {
 		public int SetUserData (int userDataId, int index, int userDataSize, IntPtr userData)
 		{
 			if (userData == IntPtr.Zero)
-				throw new ArgumentNullException ("userData");
-			return AudioFileSetUserData (handle, userDataId, index, userDataSize, userData);
+				throw new ArgumentNullException (nameof (userData));
+			return AudioFileSetUserData (Handle, userDataId, index, userDataSize, userData);
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -1114,7 +1137,7 @@ namespace AudioToolbox {
 
 		public int RemoveUserData (int userDataId, int index)
 		{
-			return AudioFileRemoveUserData (handle, userDataId, index);
+			return AudioFileRemoveUserData (Handle, userDataId, index);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -1122,14 +1145,14 @@ namespace AudioToolbox {
 
 		public bool GetPropertyInfo (AudioFileProperty property, out int size, out int writable)
 		{
-			return AudioFileGetPropertyInfo (handle, property, out size, out writable) == 0;
+			return AudioFileGetPropertyInfo (Handle, property, out size, out writable) == 0;
 		}
 
 		public bool IsPropertyWritable (AudioFileProperty property)
 		{
 			int writable;
 			int size;
-			return AudioFileGetPropertyInfo (handle, property, out size, out writable) == 0 && writable != 0;
+			return AudioFileGetPropertyInfo (Handle, property, out size, out writable) == 0 && writable != 0;
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -1137,14 +1160,14 @@ namespace AudioToolbox {
 
 		public bool GetProperty (AudioFileProperty property, ref int dataSize, IntPtr outdata)
 		{
-			return AudioFileGetProperty (handle, property, ref dataSize, outdata) == 0;
+			return AudioFileGetProperty (Handle, property, ref dataSize, outdata) == 0;
 		}
 
 		public IntPtr GetProperty (AudioFileProperty property, out int size)
 		{
 			int writable;
 
-			var r = AudioFileGetPropertyInfo (handle, property, out size, out writable);
+			var r = AudioFileGetPropertyInfo (Handle, property, out size, out writable);
 			if (r != 0)
 				return IntPtr.Zero;
 
@@ -1152,7 +1175,7 @@ namespace AudioToolbox {
 			if (buffer == IntPtr.Zero)
 				return IntPtr.Zero;
 
-			r = AudioFileGetProperty (handle, property, ref size, buffer);
+			r = AudioFileGetProperty (Handle, property, ref size, buffer);
 			if (r == 0)
 				return buffer;
 			Marshal.FreeHGlobal (buffer);
@@ -1163,14 +1186,14 @@ namespace AudioToolbox {
 		{
 			int size, writable;
 
-			if (AudioFileGetPropertyInfo (handle, property, out size, out writable) != 0)
+			if (AudioFileGetPropertyInfo (Handle, property, out size, out writable) != 0)
 				return null;
 			var buffer = Marshal.AllocHGlobal (size);
 			if (buffer == IntPtr.Zero)
 				return null;
 			try {
 				var ptype = typeof (T);
-				var r = AudioFileGetProperty (handle, property, ref size, buffer);
+				var r = AudioFileGetProperty (Handle, property, ref size, buffer);
 				switch (ptype.Name) {
 				case nameof (AudioFilePacketTableInfo):
 					PacketTableInfoStatus = (AudioFileError) r;
@@ -1180,8 +1203,7 @@ namespace AudioToolbox {
 					break;
 				}
 				if (r == 0){
-					T t = (T) Marshal.PtrToStructure (buffer, ptype);
-					return t;
+					return Marshal.PtrToStructure<T> (buffer)!;
 				}
 
 				return null;
@@ -1195,7 +1217,7 @@ namespace AudioToolbox {
 			unsafe {
 				int val = 0;
 				int size = 4;
-				if (AudioFileGetProperty (handle, property, ref size, (IntPtr) (&val)) == 0)
+				if (AudioFileGetProperty (Handle, property, ref size, (IntPtr) (&val)) == 0)
 					return val;
 				return 0;
 			}
@@ -1206,7 +1228,7 @@ namespace AudioToolbox {
 			unsafe {
 				IntPtr val = IntPtr.Zero;
 				int size = sizeof (IntPtr);
-				if (AudioFileGetProperty (handle, property, ref size, (IntPtr) (&val)) == 0)
+				if (AudioFileGetProperty (Handle, property, ref size, (IntPtr) (&val)) == 0)
 					return val;
 				return IntPtr.Zero;
 			}
@@ -1217,7 +1239,7 @@ namespace AudioToolbox {
 			unsafe {
 				double val = 0;
 				int size = 8;
-				if (AudioFileGetProperty (handle, property, ref size, (IntPtr) (&val)) == 0)
+				if (AudioFileGetProperty (Handle, property, ref size, (IntPtr) (&val)) == 0)
 					return val;
 				return 0;
 			}
@@ -1228,7 +1250,7 @@ namespace AudioToolbox {
 			unsafe {
 				long val = 0;
 				int size = 8;
-				if (AudioFileGetProperty (handle, property, ref size, (IntPtr) (&val)) == 0)
+				if (AudioFileGetProperty (Handle, property, ref size, (IntPtr) (&val)) == 0)
 					return val;
 				return 0;
 			}
@@ -1243,20 +1265,20 @@ namespace AudioToolbox {
 		public bool SetProperty (AudioFileProperty property, int dataSize, IntPtr propertyData)
 		{
 			if (propertyData == IntPtr.Zero)
-					throw new ArgumentNullException ("propertyData");
-			return AudioFileSetProperty (handle, property, dataSize, propertyData) == 0;
+					throw new ArgumentNullException (nameof (propertyData));
+			return AudioFileSetProperty (Handle, property, dataSize, propertyData) == 0;
 		}
 
 		void SetInt (AudioFileProperty property, int value)
 		{
 			unsafe {
-				AudioFileSetProperty (handle, property, 4, (IntPtr) (&value));
+				AudioFileSetProperty (Handle, property, 4, (IntPtr) (&value));
 			}
 		}
 
 		unsafe AudioFileError SetDouble (AudioFileProperty property, double value)
 		{
-			return AudioFileSetProperty (handle, property, sizeof (double), (IntPtr) (&value));
+			return AudioFileSetProperty (Handle, property, sizeof (double), (IntPtr) (&value));
 		}
 		
 		public AudioFileType FileType {
@@ -1280,7 +1302,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public AudioFormat [] AudioFormats {
+		public AudioFormat []? AudioFormats {
 			get {
 				unsafe {
 					int size;
@@ -1322,8 +1344,8 @@ namespace AudioToolbox {
 			}
 
 			set {
-				if (value == null)
-					throw new ArgumentNullException ("value");
+				if (value is null)
+					throw new ArgumentNullException (nameof (value));
 
 				unsafe {
 					fixed (byte *bp = &value [0]){
@@ -1351,13 +1373,13 @@ namespace AudioToolbox {
 			}
 		}
 
-		public NSData AlbumArtwork {
+		public NSData? AlbumArtwork {
 			get {
-				return (NSData)ObjCRuntime.Runtime.GetNSObject (GetIntPtr (AudioFileProperty.AlbumArtwork));
+				return Runtime.GetNSObject<NSData> (GetIntPtr (AudioFileProperty.AlbumArtwork));
 			}
 		}
 		
-		public AudioChannelLayout ChannelLayout {
+		public AudioChannelLayout? ChannelLayout {
 			get {
 				int size;
 				var h = GetProperty (AudioFileProperty.ChannelLayout, out size);
@@ -1404,7 +1426,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public AudioFileMarkerList MarkerList {
+		public AudioFileMarkerList? MarkerList {
 			get {
 				int size;
 				int writable;
@@ -1413,7 +1435,7 @@ namespace AudioToolbox {
 					return null;
 
 				IntPtr ptr = Marshal.AllocHGlobal (size);
-				if (AudioFileGetProperty (handle, AudioFileProperty.MarkerList, ref size, (IntPtr) ptr) != 0) {
+				if (AudioFileGetProperty (Handle, AudioFileProperty.MarkerList, ref size, (IntPtr) ptr) != 0) {
 					Marshal.FreeHGlobal (ptr);
 					return null;
 				}
@@ -1422,7 +1444,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public AudioFileRegionList RegionList {
+		public AudioFileRegionList? RegionList {
 			get {
 				int size;
 				int writable;
@@ -1431,7 +1453,7 @@ namespace AudioToolbox {
 					return null;
 
 				IntPtr ptr = Marshal.AllocHGlobal (size);
-				if (AudioFileGetProperty (handle, AudioFileProperty.RegionList, ref size, (IntPtr) ptr) != 0) {
+				if (AudioFileGetProperty (Handle, AudioFileProperty.RegionList, ref size, (IntPtr) ptr) != 0) {
 					Marshal.FreeHGlobal (ptr);
 					return null;
 				}
@@ -1447,17 +1469,17 @@ namespace AudioToolbox {
 				return GetProperty<AudioFilePacketTableInfo> (AudioFileProperty.PacketTableInfo);
 			}
 			set {
-				if (value == null)
-					throw new ArgumentNullException ("value");
+				if (value is null)
+					throw new ArgumentNullException (nameof (value));
 
 				AudioFilePacketTableInfo afpti = value.Value;
-				var res = AudioFileSetProperty (handle, AudioFileProperty.PacketTableInfo, sizeof (AudioFilePacketTableInfo), ref afpti);
+				var res = AudioFileSetProperty (Handle, AudioFileProperty.PacketTableInfo, sizeof (AudioFilePacketTableInfo), ref afpti);
 				if (res != 0)
 					throw new ArgumentException (res.ToString ());
 			}
 		}
 
-		public unsafe AudioFileChunkType[] ChunkIDs {
+		public unsafe AudioFileChunkType[]? ChunkIDs {
 			get {
 				int size;
 				int writable;
@@ -1467,7 +1489,7 @@ namespace AudioToolbox {
 
 				var data = new AudioFileChunkType[size / sizeof (AudioFileChunkType)];
 				fixed (AudioFileChunkType* ptr = data) {
-					if (AudioFileGetProperty (handle, AudioFileProperty.ChunkIDs, ref size, (IntPtr) ptr) != 0)
+					if (AudioFileGetProperty (Handle, AudioFileProperty.ChunkIDs, ref size, (IntPtr) ptr) != 0)
 						return null;
 
 					return data;
@@ -1475,7 +1497,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe byte[] ID3Tag {
+		public unsafe byte[]? ID3Tag {
 			get {
 				int size;
 				int writable;
@@ -1485,7 +1507,7 @@ namespace AudioToolbox {
 
 				var data = new byte[size];
 				fixed (byte* ptr = data) {
-					if (AudioFileGetProperty (handle, AudioFileProperty.ID3Tag, ref size, (IntPtr) ptr) != 0)
+					if (AudioFileGetProperty (Handle, AudioFileProperty.ID3Tag, ref size, (IntPtr) ptr) != 0)
 						return null;
 
 					return data;
@@ -1493,7 +1515,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public AudioFileInfoDictionary InfoDictionary {
+		public AudioFileInfoDictionary? InfoDictionary {
 			get {
 				var ptr = GetIntPtr (AudioFileProperty.InfoDictionary);
 				if (ptr == IntPtr.Zero)
@@ -1511,7 +1533,7 @@ namespace AudioToolbox {
 			unsafe {
 				AudioFramePacketTranslation *p = &buffer;
 				int size = sizeof (AudioFramePacketTranslation);
-				if (AudioFileGetProperty (handle, AudioFileProperty.PacketToFrame, ref size, (IntPtr) p) == 0)
+				if (AudioFileGetProperty (Handle, AudioFileProperty.PacketToFrame, ref size, (IntPtr) p) == 0)
 					return buffer.Frame;
 				return -1;
 			}
@@ -1525,7 +1547,7 @@ namespace AudioToolbox {
 			unsafe {
 				AudioFramePacketTranslation *p = &buffer;
 				int size = sizeof (AudioFramePacketTranslation);
-				if (AudioFileGetProperty (handle, AudioFileProperty.FrameToPacket, ref size, (IntPtr) p) == 0){
+				if (AudioFileGetProperty (Handle, AudioFileProperty.FrameToPacket, ref size, (IntPtr) p) == 0){
 					frameOffsetInPacket = buffer.FrameOffsetInPacket;
 					return buffer.Packet;
 				}
@@ -1542,7 +1564,7 @@ namespace AudioToolbox {
 			unsafe {
 				AudioBytePacketTranslation *p = &buffer;
 				int size = sizeof (AudioBytePacketTranslation);
-				if (AudioFileGetProperty (handle, AudioFileProperty.PacketToByte, ref size, (IntPtr) p) == 0){
+				if (AudioFileGetProperty (Handle, AudioFileProperty.PacketToByte, ref size, (IntPtr) p) == 0){
 					isEstimate = (buffer.Flags & BytePacketTranslationFlags.IsEstimate) != 0;
 					return buffer.Byte;
 				}
@@ -1559,7 +1581,7 @@ namespace AudioToolbox {
 			unsafe {
 				AudioBytePacketTranslation *p = &buffer;
 				int size = sizeof (AudioBytePacketTranslation);
-				if (AudioFileGetProperty (handle, AudioFileProperty.ByteToPacket, ref size, (IntPtr) p) == 0){
+				if (AudioFileGetProperty (Handle, AudioFileProperty.ByteToPacket, ref size, (IntPtr) p) == 0){
 					isEstimate = (buffer.Flags & BytePacketTranslationFlags.IsEstimate) != 0;
 					byteOffsetInPacket = buffer.ByteOffsetInPacket;
 					return buffer.Packet;
@@ -1578,133 +1600,133 @@ namespace AudioToolbox {
 		{
 		}
 
-		public string Album {
+		public string? Album {
 			get {
 				return GetStringValue ("album");
 			}
 		}
 
-		public string ApproximateDurationInSeconds {
+		public string? ApproximateDurationInSeconds {
 			get {
 				return GetStringValue ("approximate duration in seconds");
 			}
 		}
 
-		public string Artist {
+		public string? Artist {
 			get {
 				return GetStringValue ("artist");
 			}
 		}
 
-		public string ChannelLayout	 {
+		public string? ChannelLayout	 {
 			get {
 				return GetStringValue ("channel layout");				
 			}
 		}
 
-		public string Composer {
+		public string? Composer {
 			get {
 				return GetStringValue ("composer");
 			}
 		}
 
-		public string Comments {
+		public string? Comments {
 			get {
 				return GetStringValue ("comments");
 			}
 		}
 
-		public string Copyright {
+		public string? Copyright {
 			get {
 				return GetStringValue ("copyright");
 			}
 		}
 
-		public string EncodingApplication {
+		public string? EncodingApplication {
 			get {
 				return GetStringValue ("encoding application");
 			}
 		}
 
-		public string Genre {
+		public string? Genre {
 			get {
 				return GetStringValue ("genre");
 			}
 		}
 
-		public string ISRC {
+		public string? ISRC {
 			get {
 				return GetStringValue ("ISRC");
 			}
 		}
 
-		public string KeySignature {
+		public string? KeySignature {
 			get {
 				return GetStringValue ("key signature");
 			}
 		}
 
-		public string Lyricist {
+		public string? Lyricist {
 			get {
 				return GetStringValue ("lyricist");
 			}
 		}
 
-		public string NominalBitRate {
+		public string? NominalBitRate {
 			get {
 				return GetStringValue ("nominal bit rate");				
 			}
 		}
 
-		public string RecordedDate {
+		public string? RecordedDate {
 			get {
 				return GetStringValue ("recorded date");
 			}
 		}
 
-		public string SourceBitDepth {
+		public string? SourceBitDepth {
 			get {
 				return GetStringValue ("source bit depth");
 			}
 		}
 
-		public string SourceEncoder {
+		public string? SourceEncoder {
 			get {
 				return GetStringValue ("source encoder");
 			}
 		}
 
-		public string SubTitle {
+		public string? SubTitle {
 			get {
 				return GetStringValue ("subtitle");
 			}
 		}
 
-		public string Tempo {
+		public string? Tempo {
 			get {
 				return GetStringValue ("tempo");
 			}
 		}
 
-		public string TimeSignature {
+		public string? TimeSignature {
 			get {
 				return GetStringValue ("time signature");
 			}
 		}
 
-		public string Title {
+		public string? Title {
 			get {
 				return GetStringValue ("title");
 			}
 		}
 
-		public string TrackNumber {
+		public string? TrackNumber {
 			get {
 				return GetStringValue ("track number");
 			}
 		}
 
-		public string Year {
+		public string? Year {
 			get {
 				return GetStringValue ("year");
 			}
@@ -1732,40 +1754,43 @@ namespace AudioToolbox {
 			dSetSize = SourceSetSize;
 		}
 
-		[MonoPInvokeCallback(typeof(ReadProc))]
+		[MonoPInvokeCallback (typeof(ReadProc))]
 		static int SourceRead (IntPtr clientData, long inPosition, int requestCount, IntPtr buffer, out int actualCount)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var audioSource = handle.Target as AudioSource;
-			return audioSource.Read (inPosition, requestCount, buffer, out actualCount) ? 0 : 1;
+			actualCount = 0;
+			return audioSource?.Read (inPosition, requestCount, buffer, out actualCount) == true ? 0 : 1;
 		}
 
 		public abstract bool Read (long position, int requestCount, IntPtr buffer, out int actualCount);
 
-		[MonoPInvokeCallback(typeof(WriteProc))]
+		[MonoPInvokeCallback (typeof(WriteProc))]
 		static int SourceWrite (IntPtr clientData, long position, int requestCount, IntPtr buffer, out int actualCount)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var audioSource = handle.Target as AudioSource;
-			return audioSource.Write (position, requestCount, buffer, out actualCount) ? 0 : 1;
+			actualCount = 0;
+			return audioSource?.Write (position, requestCount, buffer, out actualCount) == true ? 0 : 1;
 		}
 		public abstract bool Write (long position, int requestCount, IntPtr buffer, out int actualCount);
 
-		[MonoPInvokeCallback(typeof(GetSizeProc))]
+		[MonoPInvokeCallback (typeof(GetSizeProc))]
 		static long SourceGetSize (IntPtr clientData)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var audioSource = handle.Target as AudioSource;
-			return audioSource.Size;
+			return audioSource?.Size ?? 0;
 		}
 
-		[MonoPInvokeCallback(typeof(SetSizeProc))]
+		[MonoPInvokeCallback (typeof(SetSizeProc))]
 		static int SourceSetSize (IntPtr clientData, long size)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var audioSource = handle.Target as AudioSource;
-			
-			audioSource.Size = size;
+
+			if (audioSource is not null)
+				audioSource.Size = size;
 			return 0;
 		}
 		public abstract long Size { get; set; }
@@ -1782,23 +1807,21 @@ namespace AudioToolbox {
 			IntPtr inClientData, ReadProc inReadFunc, WriteProc inWriteFunc, GetSizeProc inGetSizeFunc, SetSizeProc inSetSizeFunc,
 			AudioFileType inFileType, ref AudioStreamBasicDescription format, uint flags, out IntPtr id);
 
-		public AudioSource (AudioFileType inFileType, AudioStreamBasicDescription format) : base (true)
+		public AudioSource (AudioFileType inFileType, AudioStreamBasicDescription format)
 		{
 			Initialize (inFileType, format);
 		}
 
-		public AudioSource () : base (true)
+		public AudioSource ()
 		{
 		}
 			
 		protected void Initialize (AudioFileType inFileType, AudioStreamBasicDescription format) 
 		{
-			IntPtr h;
-
 			gch = GCHandle.Alloc (this);
-			var code = AudioFileInitializeWithCallbacks (GCHandle.ToIntPtr (gch), dRead, dWrite, dGetSize, dSetSize, inFileType, ref format, 0, out h);
+			var code = AudioFileInitializeWithCallbacks (GCHandle.ToIntPtr (gch), dRead, dWrite, dGetSize, dSetSize, inFileType, ref format, 0, out var handle);
 			if (code == 0){
-				handle = h;
+				InitializeHandle (handle);
 				return;
 			}
 			throw new Exception (String.Format ("Unable to create AudioSource, code: 0x{0:x}", code));
@@ -1809,19 +1832,17 @@ namespace AudioToolbox {
 			IntPtr inClientData, ReadProc inReadFunc, WriteProc inWriteFunc,
 			GetSizeProc inGetSizeFunc, SetSizeProc	inSetSizeFunc, AudioFileType inFileTypeHint, out IntPtr outAudioFile);
 		
-		public AudioSource (AudioFileType fileTypeHint) : base (true)
+		public AudioSource (AudioFileType fileTypeHint)
 		{
 			Open (fileTypeHint);
 		}
 		
 		protected void Open (AudioFileType fileTypeHint)
 		{
-			IntPtr h;
-
 			gch = GCHandle.Alloc (this);
-			var code = AudioFileOpenWithCallbacks (GCHandle.ToIntPtr (gch), dRead, dWrite, dGetSize, dSetSize, fileTypeHint, out h);
+			var code = AudioFileOpenWithCallbacks (GCHandle.ToIntPtr (gch), dRead, dWrite, dGetSize, dSetSize, fileTypeHint, out var handle);
 			if (code == 0){
-				handle = h;
+				InitializeHandle (handle);
 				return;
 			}
 			throw new Exception (String.Format ("Unable to create AudioSource, code: 0x{0:x}", code));

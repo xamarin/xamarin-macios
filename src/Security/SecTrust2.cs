@@ -19,6 +19,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
 #if !NET
@@ -29,8 +33,12 @@ namespace Security {
 	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecTrust2 : NativeObject {
-		internal SecTrust2 (IntPtr handle) : base (handle, false) {}
-		public SecTrust2 (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal SecTrust2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public SecTrust2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_trust_create (IntPtr sectrustHandle);

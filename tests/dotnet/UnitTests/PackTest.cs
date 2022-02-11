@@ -19,12 +19,12 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
-		public void BindingProject (ApplePlatform platform)
+		public void BindingOldStyle (ApplePlatform platform)
 		{
-			var project = "bindings-test";
+			var project = "BindingOldStyle";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
+			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
@@ -110,6 +110,7 @@ namespace Xamarin.Tests {
 		public void BindingXcFrameworksProject (ApplePlatform platform, bool noBindingEmbedding)
 		{
 			var project = "bindings-xcframework-test";
+			var assemblyName = "bindings-framework-test";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
@@ -123,23 +124,22 @@ namespace Xamarin.Tests {
 			properties ["OutputPath"] = outputPath + Path.DirectorySeparatorChar;
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 			properties ["NoBindingEmbedding"] = noBindingEmbedding ? "true" : "false";
-			properties ["AssemblyName"] = project;
 
 			DotNet.AssertPack (project_path, properties);
 
-			var nupkg = Path.Combine (outputPath, project + ".1.0.0.nupkg");
+			var nupkg = Path.Combine (outputPath, assemblyName + ".1.0.0.nupkg");
 			Assert.That (nupkg, Does.Exist, "nupkg existence");
 
 			var archive = ZipFile.OpenRead (nupkg);
 			var files = archive.Entries.Select (v => v.FullName).ToHashSet ();
 			Assert.That (archive.Entries.Count, Is.EqualTo (noBindingEmbedding ? 6 : 5), $"nupkg file count - {nupkg}");
-			Assert.That (files, Does.Contain (project + ".nuspec"), "nuspec");
+			Assert.That (files, Does.Contain (assemblyName + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
 			Assert.That (files, Does.Contain ("[Content_Types].xml"), "[Content_Types].xml");
-			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.dll"), $"{project}.dll");
+			Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{assemblyName}.dll"), $"{assemblyName}.dll");
 			Assert.That (files, Has.Some.Matches<string> (v => v.StartsWith ("package/services/metadata/core-properties/", StringComparison.Ordinal) && v.EndsWith (".psmdcp", StringComparison.Ordinal)), "psmdcp");
 			if (noBindingEmbedding) {
-				Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{project}.resources.zip"), $"{project}.resources.zip");
+				Assert.That (files, Does.Contain ($"lib/{platform.ToFrameworkWithDefaultVersion ()}/{assemblyName}.resources.zip"), $"{assemblyName}.resources.zip");
 			}
 		}
 

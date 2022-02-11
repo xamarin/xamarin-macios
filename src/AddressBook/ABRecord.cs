@@ -27,6 +27,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -37,48 +39,48 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-#else
-	[UnsupportedOSPlatform ("ios9.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-#endif
-	public class ABRecord : INativeObject, IDisposable {
+	public class ABRecord : NativeObject {
 
 		public const int InvalidRecordId = -1;
 		public const int InvalidPropertyId = -1;
 
-		IntPtr handle;
-
 		[Preserve (Conditional = true)]
-		internal ABRecord (IntPtr handle, bool owns)
+		internal ABRecord (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
 		}
 
-		public static ABRecord FromHandle (IntPtr handle)
+		public static ABRecord? FromHandle (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
 			return FromHandle (handle, null, false);
 		}
 		
-		internal static ABRecord FromHandle (IntPtr handle, ABAddressBook addressbook, bool owns = true)
+		internal static ABRecord FromHandle (IntPtr handle, ABAddressBook? addressbook, bool owns = true)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException ("handle");
+				throw new ArgumentNullException (nameof (handle));
 			// TODO: does ABGroupCopyArrayOfAllMembers() have Create or Get
 			// semantics for the array elements?
 			var type = ABRecordGetRecordType (handle);
@@ -102,43 +104,14 @@ namespace AddressBook {
 			return rec;
 		}
 
-		~ABRecord ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero)
-				CFObject.CFRelease (handle);
-			handle = IntPtr.Zero;
 			AddressBook = null;
+			base.Dispose (disposing);
 		}
 
-		void AssertValid ()
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("");
-		}
-
-		internal ABAddressBook AddressBook {
+		internal ABAddressBook? AddressBook {
 			get; set;
-		}
-
-		public IntPtr Handle {
-			get {
-				AssertValid ();
-				return handle;
-			}
-			internal set {
-				handle = value;				
-			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -155,10 +128,9 @@ namespace AddressBook {
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABRecordCopyCompositeName (IntPtr record);
-		public override string ToString ()
+		public override string? ToString ()
 		{
-			using (var s = new NSString (ABRecordCopyCompositeName (Handle)))
-				return s.ToString ();
+			return CFString.FromHandle (ABRecordCopyCompositeName (Handle));
 		}
 
 		// TODO: Should SetValue/CopyValue/RemoveValue be public?
@@ -173,15 +145,19 @@ namespace AddressBook {
 				throw CFException.FromCFError (error);
 		}
 
-		internal void SetValue (int property, NSObject value)
+		internal void SetValue (int property, NSObject? value)
 		{
-			SetValue (property, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (property, value.GetHandle ());
 		}
 
-		internal void SetValue (int property, string value)
+		internal void SetValue (int property, string? value)
 		{
-			using (NSObject v = value == null ? null : new NSString (value))
-				SetValue (property, v);
+			var valueHandle = CFString.CreateNative (value);
+			try {
+				SetValue (property, valueHandle);
+			} finally {
+				CFString.ReleaseNative (valueHandle);
+			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -202,22 +178,16 @@ namespace AddressBook {
 				throw CFException.FromCFError (error);
 		}
 
-		internal T PropertyTo<T> (int id)
+		internal T? PropertyTo<T> (int id)
 			where T : NSObject
 		{
 			IntPtr value = CopyValue (id);
-			if (value == IntPtr.Zero)
-				return null;
-			return (T) Runtime.GetNSObject (value);
+			return (T?) Runtime.GetNSObject (value);
 		}
 
-		internal string PropertyToString (int id)
+		internal string? PropertyToString (int id)
 		{
-			IntPtr value = CopyValue (id);
-			if (value == IntPtr.Zero)
-				return null;
-			using (var s = new NSString (value))
-				return s.ToString ();
+			return CFString.FromHandle (CopyValue (id));
 		}
 	}
 }

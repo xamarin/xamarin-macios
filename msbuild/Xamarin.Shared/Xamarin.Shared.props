@@ -132,6 +132,11 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And ('$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != '')">true</_RequireProvisioningProfile>
 		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'MacCatalyst' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
 		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == ''">false</_RequireProvisioningProfile>
+
+		<!-- If we should automatically try to detect the app manifest (Info.plist) from any None, BundleResource or Content items -->
+		<!-- It might be desirable to turn off the automatic detection if the current logic detects Info.plist that aren't the app manifest -->
+		<!-- One example would be when including native frameworks in the app bundle - frameworks have an Info.plist that might be picked up -->
+		<AppManifestDetectionEnabled Condition="'$(AppManifestDetectionEnabled)' == ''">true</AppManifestDetectionEnabled>
 	</PropertyGroup>
 
 	<!-- RequireCodeSigning -->

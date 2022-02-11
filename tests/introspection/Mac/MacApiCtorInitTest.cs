@@ -15,6 +15,7 @@ using Foundation;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
 
@@ -35,7 +36,7 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
-#if !XAMCORE_4_0
+#if !NET
 			case "AppKit.NSDraggingInfo":
 			case "MonoMac.AppKit.NSDraggingInfo": // binding mistakes.
 				return true;
@@ -94,24 +95,6 @@ namespace Introspection {
 			case "MonoMac.AppKit.NSWindow":
 			case "AppKit.NSWindow":
 				return true;
-			case "MonoMac.Foundation.NSUrlSession":
-			case "Foundation.NSUrlSession":
-			case "MonoMac.Foundation.NSUrlSessionTask":
-			case "Foundation.NSUrlSessionTask":
-			case "MonoMac.Foundation.NSUrlSessionDataTask":
-			case "Foundation.NSUrlSessionDataTask":
-			case "MonoMac.Foundation.NSUrlSessionUploadTask":
-			case "Foundation.NSUrlSessionUploadTask":
-			case "MonoMac.Foundation.NSUrlSessionDownloadTask":
-			case "Foundation.NSUrlSessionDownloadTask":
-			case "MonoMac.Foundation.NSUrlSessionConfiguration":
-			case "Foundation.NSUrlSessionConfiguration":
-				// These types were introduced as 64-bit only in Mavericks, and 32+64bits in Yosemite. We can't
-				// express that with our AvailabilityAttribute, we set it as available (for all architectures, since
-				// we can't distinguish them) starting with Mavericks.
-				if (Mac.Is32BitMavericks)
-					return true;
-				break;
 
 			case "GLKit.GLKSkyboxEffect":
 				// Crashes inside libGL.dylib, most likely because something hasn't been initialized yet, because
@@ -125,15 +108,6 @@ namespace Introspection {
 				if (IntPtr.Size == 8)
 					return true;
 				break;
-
-#if !XAMCORE_3_0
-			case "SpriteKit.SKView":
-				// Causes a crash later. Filed as radar://18440271.
-				// Apple said they won't fix this ('init' isn't a designated initializer)
-				if (IntPtr.Size == 8)
-					return true;
-				break;
-#endif
 
 			case "MonoMac.AppKit.NSSpeechRecognizer":
 			case "AppKit.NSSpeechRecognizer":
@@ -169,7 +143,7 @@ namespace Introspection {
 				// https://trello.com/c/T6vkA2QF/62-29311598-ikpicturetaker-crashes-randomly-upon-deallocation?menu=filter&filter=corenfc
 				return true;
 			case "Photos.PHProjectChangeRequest":
-				if (TestRuntime.CheckSystemVersion (ObjCRuntime.PlatformName.MacOSX, 10, 15)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15)) {
 					/*
 	 Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'This method can only be called from inside of -[PHPhotoLibrary performChanges:completionHandler:] or -[PHPhotoLibrary performChangesAndWait:error:]'
 	0   CoreFoundation                      0x00007fff34f29063 __exceptionPreprocess + 250
@@ -203,8 +177,6 @@ namespace Introspection {
 			case "MetalPerformanceShaders.MPSPredicate":
 				// Fails on Catalina: Could not initialize an instance of the type 
 				// 'MetalPerformanceShaders.MPSPredicate': the native 'init' method returned nil. 
-				if (Mac.CheckSystemVersion (10, 14))
-					break;
 				if (Mac.CheckSystemVersion (10, 15))
 					return true;
 				break;

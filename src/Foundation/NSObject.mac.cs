@@ -48,7 +48,9 @@ namespace Foundation {
 		static IntPtr ct = Dlfcn.dlopen (Constants.CoreTextLibrary, 1);
 		static IntPtr wl = Dlfcn.dlopen (Constants.WebKitLibrary, 1);
 		static IntPtr zl = Dlfcn.dlopen (Constants.QuartzLibrary, 1);
+#if !NET
 		static IntPtr ql = Dlfcn.dlopen (Constants.QTKitLibrary, 1);
+#endif
 		static IntPtr cl = Dlfcn.dlopen (Constants.CoreLocationLibrary, 1);
 		static IntPtr ll = Dlfcn.dlopen (Constants.SecurityLibrary, 1);
 		static IntPtr zc = Dlfcn.dlopen (Constants.QuartzComposerLibrary, 1);
@@ -109,7 +111,7 @@ namespace Foundation {
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif

@@ -75,7 +75,6 @@ namespace Xamarin.Bundler {
 		static bool generate_plist;
 		static bool no_executable;
 		static bool embed_mono = true;
-		static List<string> link_flags;
 		static string machine_config_path = null;
 		static bool bypass_linking_checks = false;
 
@@ -196,11 +195,7 @@ namespace Xamarin.Bundler {
 				},
 				{ "link_flags=", "Specifies additional arguments to the native linker.",
 					v => {
-						if (!StringUtils.TryParseArguments (v, out var lf, out var ex))
-							throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"-link_flags={v}", ex.Message);
-						if (link_flags == null)
-							link_flags = new List<string> ();
-						link_flags.AddRange (lf);
+						App.ParseCustomLinkFlags (v, "link_flags");
 					}
 				},
 				{ "ignore-native-library=", "Add a native library to be ignored during assembly scanning and packaging",
@@ -997,8 +992,8 @@ namespace Xamarin.Bundler {
 						args.Add (registrarPath);
 					args.Add ("-fno-caret-diagnostics");
 					args.Add ("-fno-diagnostics-fixit-info");
-					if (link_flags != null)
-						args.AddRange (link_flags);
+					if (App.CustomLinkFlags is not null)
+						args.AddRange (App.CustomLinkFlags);
 					if (!string.IsNullOrEmpty (DeveloperDirectory)) {
 						var sysRootSDKVersion = new Version (App.SdkVersion.Major, App.SdkVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
 						args.Add ("-isysroot");

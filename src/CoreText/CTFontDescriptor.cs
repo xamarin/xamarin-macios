@@ -27,6 +27,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -36,6 +39,10 @@ using ObjCRuntime;
 using CoreFoundation;
 using CoreGraphics;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreText {
 
@@ -107,28 +114,28 @@ namespace CoreText {
 		static CTFontDescriptorAttributeKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Url                 = Dlfcn.GetStringConstant (handle, "kCTFontURLAttribute");
-			Name                = Dlfcn.GetStringConstant (handle, "kCTFontNameAttribute");
-			DisplayName         = Dlfcn.GetStringConstant (handle, "kCTFontDisplayNameAttribute");
-			FamilyName          = Dlfcn.GetStringConstant (handle, "kCTFontFamilyNameAttribute");
-			StyleName           = Dlfcn.GetStringConstant (handle, "kCTFontStyleNameAttribute");
-			Traits              = Dlfcn.GetStringConstant (handle, "kCTFontTraitsAttribute");
-			Variation           = Dlfcn.GetStringConstant (handle, "kCTFontVariationAttribute");
-			Size                = Dlfcn.GetStringConstant (handle, "kCTFontSizeAttribute");
-			Matrix              = Dlfcn.GetStringConstant (handle, "kCTFontMatrixAttribute");
-			CascadeList         = Dlfcn.GetStringConstant (handle, "kCTFontCascadeListAttribute");
-			CharacterSet        = Dlfcn.GetStringConstant (handle, "kCTFontCharacterSetAttribute");
-			Languages           = Dlfcn.GetStringConstant (handle, "kCTFontLanguagesAttribute");
-			BaselineAdjust      = Dlfcn.GetStringConstant (handle, "kCTFontBaselineAdjustAttribute");
-			MacintoshEncodings  = Dlfcn.GetStringConstant (handle, "kCTFontMacintoshEncodingsAttribute");
-			Features            = Dlfcn.GetStringConstant (handle, "kCTFontFeaturesAttribute");
-			FeatureSettings     = Dlfcn.GetStringConstant (handle, "kCTFontFeatureSettingsAttribute");
-			FixedAdvance        = Dlfcn.GetStringConstant (handle, "kCTFontFixedAdvanceAttribute");
-			FontOrientation     = Dlfcn.GetStringConstant (handle, "kCTFontOrientationAttribute");
-			FontFormat          = Dlfcn.GetStringConstant (handle, "kCTFontFormatAttribute");
-			RegistrationScope   = Dlfcn.GetStringConstant (handle, "kCTFontRegistrationScopeAttribute");
-			Priority            = Dlfcn.GetStringConstant (handle, "kCTFontPriorityAttribute");
-			Enabled             = Dlfcn.GetStringConstant (handle, "kCTFontEnabledAttribute");
+			Url                 = Dlfcn.GetStringConstant (handle, "kCTFontURLAttribute")!;
+			Name                = Dlfcn.GetStringConstant (handle, "kCTFontNameAttribute")!;
+			DisplayName         = Dlfcn.GetStringConstant (handle, "kCTFontDisplayNameAttribute")!;
+			FamilyName          = Dlfcn.GetStringConstant (handle, "kCTFontFamilyNameAttribute")!;
+			StyleName           = Dlfcn.GetStringConstant (handle, "kCTFontStyleNameAttribute")!;
+			Traits              = Dlfcn.GetStringConstant (handle, "kCTFontTraitsAttribute")!;
+			Variation           = Dlfcn.GetStringConstant (handle, "kCTFontVariationAttribute")!;
+			Size                = Dlfcn.GetStringConstant (handle, "kCTFontSizeAttribute")!;
+			Matrix              = Dlfcn.GetStringConstant (handle, "kCTFontMatrixAttribute")!;
+			CascadeList         = Dlfcn.GetStringConstant (handle, "kCTFontCascadeListAttribute")!;
+			CharacterSet        = Dlfcn.GetStringConstant (handle, "kCTFontCharacterSetAttribute")!;
+			Languages           = Dlfcn.GetStringConstant (handle, "kCTFontLanguagesAttribute")!;
+			BaselineAdjust      = Dlfcn.GetStringConstant (handle, "kCTFontBaselineAdjustAttribute")!;
+			MacintoshEncodings  = Dlfcn.GetStringConstant (handle, "kCTFontMacintoshEncodingsAttribute")!;
+			Features            = Dlfcn.GetStringConstant (handle, "kCTFontFeaturesAttribute")!;
+			FeatureSettings     = Dlfcn.GetStringConstant (handle, "kCTFontFeatureSettingsAttribute")!;
+			FixedAdvance        = Dlfcn.GetStringConstant (handle, "kCTFontFixedAdvanceAttribute")!;
+			FontOrientation     = Dlfcn.GetStringConstant (handle, "kCTFontOrientationAttribute")!;
+			FontFormat          = Dlfcn.GetStringConstant (handle, "kCTFontFormatAttribute")!;
+			RegistrationScope   = Dlfcn.GetStringConstant (handle, "kCTFontRegistrationScopeAttribute")!;
+			Priority            = Dlfcn.GetStringConstant (handle, "kCTFontPriorityAttribute")!;
+			Enabled             = Dlfcn.GetStringConstant (handle, "kCTFontEnabledAttribute")!;
 		}
 	}
 
@@ -141,8 +148,8 @@ namespace CoreText {
 
 		public CTFontDescriptorAttributes (NSDictionary dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+			if (dictionary is null)
+				throw new ArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -173,27 +180,25 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.StyleName, value);}
 		}
 
-		public CTFontTraits Traits {
+		public CTFontTraits? Traits {
 			get {
 				var traits = (NSDictionary) Dictionary [CTFontDescriptorAttributeKey.Traits];
-				if (traits == null)
+				if (traits is null)
 					return null;
 				return new CTFontTraits (traits);
 			}
 			set {
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Traits, 
-						value == null ? null : value.Dictionary);
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Traits, value?.Dictionary);
 			}
 		}
 
-		public CTFontVariation Variation {
+		public CTFontVariation? Variation {
 			get {
 				var variation = (NSDictionary) Dictionary [CTFontDescriptorAttributeKey.Variation];
-				return variation == null ? null : new CTFontVariation (variation);
+				return variation is null ? null : new CTFontVariation (variation);
 			}
 			set {
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Variation,
-						value == null ? null : value.Dictionary);
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Variation, value?.Dictionary);
 			}
 		}
 
@@ -208,11 +213,11 @@ namespace CoreText {
 				var d = (NSData) Dictionary [CTFontDescriptorAttributeKey.Matrix];
 				if (d == null)
 					return null;
-				return (CGAffineTransform) Marshal.PtrToStructure (d.Bytes, typeof (CGAffineTransform));
+				return Marshal.PtrToStructure<CGAffineTransform> (d.Bytes);
 			}
 			set {
 				if (!value.HasValue)
-					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix, (NSObject) null);
+					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix, (NSObject?) null);
 				else {
 					byte[] data = new byte [sizeof (CGAffineTransform)];
 					fixed (byte* p = data) {
@@ -255,12 +260,12 @@ namespace CoreText {
 		public IEnumerable<CTFontFeatures> Features {
 			get {
 				return Adapter.GetNativeArray (Dictionary, CTFontDescriptorAttributeKey.Features,
-						d => new CTFontFeatures ((NSDictionary) Runtime.GetNSObject (d)));
+						d => new CTFontFeatures ((NSDictionary) Runtime.GetNSObject (d)!));
 			}
 			set {
 				List<CTFontFeatures> v;
-				if (value == null || (v = new List<CTFontFeatures> (value)).Count == 0) {
-					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features, (NSObject) null);
+				if (value is null || (v = new List<CTFontFeatures> (value)).Count == 0) {
+					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features, (NSObject?) null);
 					return;
 				}
 				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features,
@@ -271,12 +276,12 @@ namespace CoreText {
 		public IEnumerable<CTFontFeatureSettings> FeatureSettings {
 			get {
 				return Adapter.GetNativeArray (Dictionary, CTFontDescriptorAttributeKey.Features,
-						d => new CTFontFeatureSettings ((NSDictionary) Runtime.GetNSObject (d)));
+						d => new CTFontFeatureSettings ((NSDictionary) Runtime.GetNSObject (d)!));
 			}
 			set {
 				List<CTFontFeatureSettings> v;
-				if (value == null || (v = new List<CTFontFeatureSettings> (value)).Count == 0) {
-					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features, (NSObject) null);
+				if (value is null || (v = new List<CTFontFeatureSettings> (value)).Count == 0) {
+					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features, (NSObject?) null);
 					return;
 				}
 
@@ -338,7 +343,7 @@ namespace CoreText {
 		public bool Enabled {
 			get {
 				var value = (NSNumber) Dictionary [CTFontDescriptorAttributeKey.Enabled];
-				if (value == null)
+				if (value is null)
 					return false;
 				return value.Int32Value != 0;
 			}
@@ -349,342 +354,307 @@ namespace CoreText {
 		}
 	}
 
-	public class CTFontDescriptor : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CTFontDescriptor (IntPtr handle)
-			: this (handle, false)
+	public class CTFontDescriptor : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CTFontDescriptor (NativeHandle handle, bool owns)
+			: base (handle, owns, true)
 		{
-		}
-
-		internal CTFontDescriptor (IntPtr handle, bool owns)
-		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-
-		~CTFontDescriptor ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get {return handle;}
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 #region Descriptor Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateWithNameAndSize (IntPtr name, nfloat size);
-		public CTFontDescriptor (string name, nfloat size)
+		static IntPtr Create (string name, nfloat size)
 		{
-			if (name == null)
-				throw ConstructorError.ArgumentNull (this, "name");
-			using (CFString n = name)
-				handle = CTFontDescriptorCreateWithNameAndSize (n.Handle, size);
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
+			if (name is null)
+				throw new ArgumentNullException (nameof (name));
+			var nameHandle = CFString.CreateNative (name);
+			try {
+				return CTFontDescriptorCreateWithNameAndSize (nameHandle, size);
+			} finally {
+				CFString.ReleaseNative (nameHandle);
+			}
+		}
+
+		public CTFontDescriptor (string name, nfloat size)
+			: base (Create (name, size), true, true)
+		{
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateWithAttributes (IntPtr attributes);
 		public CTFontDescriptor (CTFontDescriptorAttributes attributes)
+			: base (CTFontDescriptorCreateWithAttributes (Runtime.ThrowOnNull (attributes, nameof (attributes)).Dictionary.Handle), true, true)
 		{
-			if (attributes == null)
-				throw ConstructorError.ArgumentNull (this, "attributes");
-			handle = CTFontDescriptorCreateWithAttributes (attributes.Dictionary.Handle);
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateCopyWithAttributes (IntPtr original, IntPtr attributes);
-		public CTFontDescriptor WithAttributes (NSDictionary attributes)
+		public CTFontDescriptor? WithAttributes (NSDictionary attributes)
 		{
-			if (attributes == null)
-				throw new ArgumentNullException ("attributes");
-			return CreateDescriptor (CTFontDescriptorCreateCopyWithAttributes (handle, attributes.Handle));
+			if (attributes is null)
+				throw new ArgumentNullException (nameof (attributes));
+			return CreateDescriptor (CTFontDescriptorCreateCopyWithAttributes (Handle, attributes.Handle));
 		}
 
-		static CTFontDescriptor CreateDescriptor (IntPtr h)
+		static CTFontDescriptor? CreateDescriptor (IntPtr h)
 		{
 			if (h == IntPtr.Zero)
 				return null;
 			return new CTFontDescriptor (h, true);
 		}
 
-		public CTFontDescriptor WithAttributes (CTFontDescriptorAttributes attributes)
+		public CTFontDescriptor? WithAttributes (CTFontDescriptorAttributes attributes)
 		{
 			if (attributes == null)
-				throw new ArgumentNullException ("attributes");
-			return CreateDescriptor (CTFontDescriptorCreateCopyWithAttributes (handle, attributes.Dictionary.Handle));
+				throw new ArgumentNullException (nameof (attributes));
+			return CreateDescriptor (CTFontDescriptorCreateCopyWithAttributes (Handle, attributes.Dictionary.Handle));
 		}
 
 		// TODO: is there a better type to use for variationIdentifier?  
 		// uint perhaps?  "This is the four character code of the variation axis"
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateCopyWithVariation (IntPtr original, IntPtr variationIdentifier, nfloat variationValue);
-		public CTFontDescriptor WithVariation (uint variationIdentifier, nfloat variationValue)
+		public CTFontDescriptor? WithVariation (uint variationIdentifier, nfloat variationValue)
 		{
 			using (var id = new NSNumber (variationIdentifier))
-				return CreateDescriptor (CTFontDescriptorCreateCopyWithVariation  (handle, 
+				return CreateDescriptor (CTFontDescriptorCreateCopyWithVariation (Handle, 
 							id.Handle, variationValue));
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateCopyWithFeature (IntPtr original, IntPtr featureTypeIdentifier, IntPtr featureSelectorIdentifier);
 
-		public CTFontDescriptor WithFeature (CTFontFeatureAllTypographicFeatures.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureAllTypographicFeatures.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.AllTypographicFeatures, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureLigatures.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureLigatures.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.Ligatures, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureCursiveConnection.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureCursiveConnection.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.CursiveConnection, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureVerticalSubstitutionConnection.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureVerticalSubstitutionConnection.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.VerticalSubstitution, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureLinguisticRearrangementConnection.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureLinguisticRearrangementConnection.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.LinguisticRearrangement, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureNumberSpacing.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureNumberSpacing.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.NumberSpacing, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureSmartSwash.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureSmartSwash.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.SmartSwash, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureDiacritics.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureDiacritics.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.Diacritics, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureVerticalPosition.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureVerticalPosition.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.VerticalPosition, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureFractions.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureFractions.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.Fractions, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureOverlappingCharacters.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureOverlappingCharacters.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.OverlappingCharacters, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureTypographicExtras.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureTypographicExtras.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.TypographicExtras, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureMathematicalExtras.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureMathematicalExtras.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.MathematicalExtras, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureOrnamentSets.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureOrnamentSets.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.OrnamentSets, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureCharacterAlternatives.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureCharacterAlternatives.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.CharacterAlternatives, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureDesignComplexity.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureDesignComplexity.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.DesignComplexity, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureStyleOptions.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureStyleOptions.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.StyleOptions, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureCharacterShape.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureCharacterShape.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.CharacterShape, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureNumberCase.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureNumberCase.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.NumberCase, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureTextSpacing.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureTextSpacing.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.TextSpacing, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureTransliteration.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureTransliteration.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.Transliteration, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureAnnotation.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureAnnotation.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.Annotation, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureKanaSpacing.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureKanaSpacing.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.KanaSpacing, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureIdeographicSpacing.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureIdeographicSpacing.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.IdeographicSpacing, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureUnicodeDecomposition.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureUnicodeDecomposition.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.UnicodeDecomposition, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureRubyKana.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureRubyKana.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.RubyKana, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureCJKSymbolAlternatives.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureCJKSymbolAlternatives.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.CJKSymbolAlternatives, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureIdeographicAlternatives.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureIdeographicAlternatives.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.IdeographicAlternatives, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureCJKVerticalRomanPlacement.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureCJKVerticalRomanPlacement.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.CJKVerticalRomanPlacement, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureItalicCJKRoman.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureItalicCJKRoman.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.ItalicCJKRoman, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureCaseSensitiveLayout.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureCaseSensitiveLayout.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.CaseSensitiveLayout, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureAlternateKana.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureAlternateKana.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.AlternateKana, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureStylisticAlternatives.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureStylisticAlternatives.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.StylisticAlternatives, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureContextualAlternates.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureContextualAlternates.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.ContextualAlternates, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureLowerCase.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureLowerCase.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.LowerCase, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureUpperCase.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureUpperCase.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.UpperCase, (int) featureSelector);
 		}
 
-		public CTFontDescriptor WithFeature (CTFontFeatureCJKRomanSpacing.Selector featureSelector)
+		public CTFontDescriptor? WithFeature (CTFontFeatureCJKRomanSpacing.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.CJKRomanSpacing, (int) featureSelector);
 		}
 
-		CTFontDescriptor WithFeature (FontFeatureGroup featureGroup, int featureSelector)
+		CTFontDescriptor? WithFeature (FontFeatureGroup featureGroup, int featureSelector)
 		{
 			using (NSNumber t = new NSNumber ((int) featureGroup), f = new NSNumber (featureSelector)) {
-				return CreateDescriptor (CTFontDescriptorCreateCopyWithFeature (handle, t.Handle, f.Handle));
+				return CreateDescriptor (CTFontDescriptorCreateCopyWithFeature (Handle, t.Handle, f.Handle));
 			}
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateMatchingFontDescriptors (IntPtr descriptor, IntPtr mandatoryAttributes);
-		public CTFontDescriptor[] GetMatchingFontDescriptors (NSSet mandatoryAttributes)
+		public CTFontDescriptor[] GetMatchingFontDescriptors (NSSet? mandatoryAttributes)
 		{
-			var cfArrayRef = CTFontDescriptorCreateMatchingFontDescriptors (handle, 
-						mandatoryAttributes == null ? IntPtr.Zero : mandatoryAttributes.Handle);
+			var cfArrayRef = CTFontDescriptorCreateMatchingFontDescriptors (Handle, mandatoryAttributes.GetHandle ());
 			if (cfArrayRef == IntPtr.Zero)
-				return new CTFontDescriptor [0];
-			var matches = NSArray.ArrayFromHandle (cfArrayRef,
-					fd => new CTFontDescriptor (cfArrayRef, false));
-			CFObject.CFRelease (cfArrayRef);
-			return matches;
+				return Array.Empty<CTFontDescriptor> ();
+			return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (cfArrayRef, false), true)!;
 		}
 
-		public CTFontDescriptor[] GetMatchingFontDescriptors (params NSString[] mandatoryAttributes)
+		public CTFontDescriptor?[]? GetMatchingFontDescriptors (params NSString[] mandatoryAttributes)
 		{
 			NSSet attrs = NSSet.MakeNSObjectSet (mandatoryAttributes);
 			return GetMatchingFontDescriptors (attrs);
 		}
 
-		public CTFontDescriptor[] GetMatchingFontDescriptors ()
+		public CTFontDescriptor?[]? GetMatchingFontDescriptors ()
 		{
-			NSSet attrs = null;
+			NSSet? attrs = null;
 			return GetMatchingFontDescriptors (attrs);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateMatchingFontDescriptor (IntPtr descriptor, IntPtr mandatoryAttributes);
-		public CTFontDescriptor GetMatchingFontDescriptor (NSSet mandatoryAttributes)
+		public CTFontDescriptor? GetMatchingFontDescriptor (NSSet? mandatoryAttributes)
 		{
-			return CreateDescriptor (CTFontDescriptorCreateMatchingFontDescriptors (handle, 
-						mandatoryAttributes == null ? IntPtr.Zero : mandatoryAttributes.Handle));
+			return CreateDescriptor (CTFontDescriptorCreateMatchingFontDescriptors (Handle, mandatoryAttributes.GetHandle ()));
 		}
 
-		public CTFontDescriptor GetMatchingFontDescriptor (params NSString[] mandatoryAttributes)
+		public CTFontDescriptor? GetMatchingFontDescriptor (params NSString[] mandatoryAttributes)
 		{
 			NSSet attrs = NSSet.MakeNSObjectSet (mandatoryAttributes);
 			return GetMatchingFontDescriptor (attrs);
 		}
 
-		public CTFontDescriptor GetMatchingFontDescriptor ()
+		public CTFontDescriptor? GetMatchingFontDescriptor ()
 		{
-			NSSet attrs = null;
+			NSSet? attrs = null;
 			return GetMatchingFontDescriptor (attrs);
 		}
 #endregion
@@ -692,46 +662,37 @@ namespace CoreText {
 #region Descriptor Accessors
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCopyAttributes (IntPtr descriptor);
-		public CTFontDescriptorAttributes GetAttributes()
+		public CTFontDescriptorAttributes? GetAttributes()
 		{
-			var cfDictRef = CTFontDescriptorCopyAttributes (handle);
-			if (cfDictRef == IntPtr.Zero)
+			var cfDictRef = CTFontDescriptorCopyAttributes (Handle);
+			var dict = Runtime.GetNSObject<NSDictionary> (cfDictRef, true);
+			if (dict is null)
 				return null;
-			var dict = (NSDictionary) Runtime.GetNSObject (cfDictRef);
-			dict.DangerousRelease ();
 			return new CTFontDescriptorAttributes (dict);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCopyAttribute (IntPtr descriptor, IntPtr attribute);
-		public NSObject GetAttribute (NSString attribute)
+		public NSObject? GetAttribute (NSString attribute)
 		{
-			if (attribute == null)
-				throw new ArgumentNullException ("attribute");
-			var obj = Runtime.GetNSObject (CTFontDescriptorCopyAttribute (handle, attribute.Handle));
-			obj.DangerousRelease ();
-			return obj;
+			if (attribute is null)
+				throw new ArgumentNullException (nameof (attribute));
+			return Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyAttribute (Handle, attribute.Handle), true);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCopyLocalizedAttribute (IntPtr descriptor, IntPtr attribute, IntPtr language);
-		public NSObject GetLocalizedAttribute (NSString attribute)
+		public NSObject? GetLocalizedAttribute (NSString attribute)
 		{
-			var obj = Runtime.GetNSObject (CTFontDescriptorCopyLocalizedAttribute (handle, attribute.Handle, IntPtr.Zero));
-			obj.DangerousRelease ();
-			return obj;
+			return Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyLocalizedAttribute (Handle, attribute.Handle, IntPtr.Zero), true);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCopyLocalizedAttribute (IntPtr descriptor, IntPtr attribute, out IntPtr language);
-		public NSObject GetLocalizedAttribute (NSString attribute, out NSString language)
+		public NSObject? GetLocalizedAttribute (NSString attribute, out NSString? language)
 		{
-			IntPtr lang;
-			var o = Runtime.GetNSObject (CTFontDescriptorCopyLocalizedAttribute (handle, attribute.Handle, out lang));
-			o.DangerousRelease ();
-			language = (NSString) Runtime.GetNSObject (lang);
-			if (lang != IntPtr.Zero)
-				CFObject.CFRelease (lang);
+			var o = Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyLocalizedAttribute (Handle, attribute.Handle, out var lang), true);
+			language = Runtime.GetNSObject<NSString> (lang, true);
 			return o;
 		}
 #endregion

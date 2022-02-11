@@ -41,7 +41,7 @@ namespace Introspection {
 			case "MediaSetup":
 			case "Phase":
 			case "ThreadNetwork":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
@@ -55,7 +55,7 @@ namespace Introspection {
 			case "PKPushCredentials":
 			case "PKPushPayload":
 			case "PKPushRegistry":
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 
 				// Requires iOS 8.2 or later in 32-bit mode
@@ -70,7 +70,7 @@ namespace Introspection {
 			case "MTLHeap":
 			case "MTLSharedTextureHandle":
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 
 				// Requires iOS 10
@@ -81,7 +81,7 @@ namespace Introspection {
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
 				// Symbol not available in simulator - but works on BigSur (others might too)
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "CMMovementDisorderManager":
@@ -91,7 +91,7 @@ namespace Introspection {
 				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
 				// I also tried enabling every entitlement in Xcode, but it still didn't work.
 				return true;
-#if __WATCHOS__ && !XAMCORE_4_0
+#if __WATCHOS__ && !NET
 			case "INCarAirCirculationModeResolutionResult":
 			case "INCarAudioSourceResolutionResult":
 			case "INCarDefrosterResolutionResult":
@@ -99,7 +99,7 @@ namespace Introspection {
 			case "INRadioTypeResolutionResult":
 			case "INRelativeSettingResolutionResult":
 			case "INRelativeReferenceResolutionResult":
-				// These were bound by mistake, and they're gone in XAMCORE_4_0.
+				// These were bound by mistake, and they're gone in NET.
 				return true;
 #endif
 			case "SNClassificationResult": // Class is not being created properly
@@ -133,7 +133,7 @@ namespace Introspection {
 			case "MonoTouch.CoreAudioKit":
 			case "CoreAudioKit":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 
@@ -148,7 +148,7 @@ namespace Introspection {
 
 			switch (type.Name) {
 			case "CAMetalLayer":
-				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 #if !XAMCORE_3_0
 				// mistake (base type) fixed by a breaking change
 			case "MFMailComposeViewControllerDelegate":
@@ -739,6 +739,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.3
 				case "WKPreferences": // Conformance not in headers
+				case "QLPreviewSceneActivationConfiguration":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 using NUnit.Framework;
 
@@ -260,7 +261,7 @@ namespace Xamarin.Tests
 			sdk_version = GetVariable ("IOS_SDK_VERSION", "8.0");
 			watchos_sdk_version = GetVariable ("WATCH_SDK_VERSION", "2.0");
 			tvos_sdk_version = GetVariable ("TVOS_SDK_VERSION", "9.0");
-			macos_sdk_version = GetVariable ("OSX_SDK_VERSION", "10.12");
+			macos_sdk_version = GetVariable ("MACOS_SDK_VERSION", "10.12");
 			xcode_root = GetVariable ("XCODE_DEVELOPER_ROOT", "/Applications/Xcode.app/Contents/Developer");
 			xcode83_root = GetVariable ("XCODE83_DEVELOPER_ROOT", "/Applications/Xcode83.app/Contents/Developer");
 			xcode94_root = GetVariable ("XCODE94_DEVELOPER_ROOT", "/Applications/Xcode94.app/Contents/Developer");
@@ -347,6 +348,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string XamarinCatalystDll {
+			get {
+				return Path.Combine (mt_root, "lib", "mono", "Xamarin.MacCatalyst", "Xamarin.MacCatalyst.dll");
+			}
+		}
+
 		public static string XamarinWatchOSDll {
 			get {
 				return Path.Combine (mt_root, "lib", "mono", "Xamarin.WatchOS", "Xamarin.WatchOS.dll");
@@ -409,11 +416,15 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string GetRefNuGetName (TargetFramework targetFramework)
-		{
-			switch (targetFramework.Platform) {
+		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
+
+		static string GetRefNuGetName (ApplePlatform platform)
+        {
+			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Microsoft.iOS.Ref";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Ref";
 			case ApplePlatform.TVOS:
 				return "Microsoft.tvOS.Ref";
 			case ApplePlatform.WatchOS:
@@ -421,13 +432,34 @@ namespace Xamarin.Tests
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Ref";
 			default:
-				throw new InvalidOperationException (targetFramework.ToString ());
+				throw new InvalidOperationException (platform.ToString ());
+			}
+		}
+
+		static string GetRuntimeNuGetName (ApplePlatform platform, string runtimeIdentifier)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return "Microsoft.iOS.Runtime." + runtimeIdentifier;
+			case ApplePlatform.TVOS:
+				return "Microsoft.tvOS.Runtime." + runtimeIdentifier;
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Runtime." + runtimeIdentifier;
+			case ApplePlatform.MacOSX:
+				return "Microsoft.macOS.Runtime." + runtimeIdentifier;
+			default:
+				throw new InvalidOperationException (platform.ToString ());
 			}
 		}
 
 		static string GetSdkNuGetName (TargetFramework targetFramework)
 		{
-			switch (targetFramework.Platform) {
+			return GetSdkNuGetName (targetFramework.Platform);
+		}
+
+		static string GetSdkNuGetName (ApplePlatform platform)
+		{
+			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Microsoft.iOS.Sdk";
 			case ApplePlatform.TVOS:
@@ -437,13 +469,18 @@ namespace Xamarin.Tests
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Sdk";
 			default:
-				throw new InvalidOperationException (targetFramework.ToString ());
+				throw new InvalidOperationException (platform.ToString ());
 			}
 		}
 
 		public static string GetDotNetRoot ()
 		{
 			return Path.Combine (SourceRoot, "_build");
+		}
+
+		public static string GetRefDirectory (ApplePlatform platform)
+		{
+			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
@@ -453,6 +490,12 @@ namespace Xamarin.Tests
 
 			// This is only applicable for .NET
 			throw new InvalidOperationException (targetFramework.ToString ());
+		}
+
+		// This is only applicable for .NET
+		public static string GetRuntimeDirectory (ApplePlatform platform, string runtimeIdentifier)
+		{
+			return Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier), "runtimes", runtimeIdentifier);
 		}
 
 		public static string GetTargetDirectory (ApplePlatform platform)
@@ -483,6 +526,12 @@ namespace Xamarin.Tests
 			default:
 				throw new InvalidOperationException ();
 			}
+		}
+
+		// Only valid for .NET
+		public static string GetSdkRoot (ApplePlatform platform)
+		{
+			return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform), "tools");
 		}
 
 		public static string SdkRootXI {
@@ -599,7 +648,12 @@ namespace Xamarin.Tests
 
 		static string GetBaseLibraryName (TargetFramework targetFramework)
 		{
-			switch (targetFramework.Platform) {
+			return GetBaseLibraryName (targetFramework.Platform);
+		}
+
+		public static string GetBaseLibraryName (ApplePlatform platform)
+		{
+			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Xamarin.iOS.dll";
 			case ApplePlatform.TVOS:
@@ -608,8 +662,10 @@ namespace Xamarin.Tests
 				return "Xamarin.WatchOS.dll";
 			case ApplePlatform.MacOSX:
 				return "Xamarin.Mac.dll";
+			case ApplePlatform.MacCatalyst:
+				return "Xamarin.MacCatalyst.dll";
 			default:
-				throw new InvalidOperationException (targetFramework.ToString ());
+				throw new InvalidOperationException (platform.ToString ());
 			}
 		}
 
@@ -634,6 +690,69 @@ namespace Xamarin.Tests
 			}
 
 			throw new InvalidOperationException (targetFramework.ToString ());
+		}
+
+		public static IEnumerable<string> GetBaseLibraryImplementations (Profile profile)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				yield return Path.Combine (mt_root, "lib", "32bits", "Xamarin.iOS.dll");
+				yield return Path.Combine (mt_root, "lib", "64bits", "Xamarin.iOS.dll");
+				break;
+			case Profile.macOSMobile:
+				yield return Path.Combine (SdkRootXM, "lib", "x86_64", "mobile", "Xamarin.Mac.dll");
+				yield return Path.Combine (SdkRootXM, "lib", "i386", "mobile", "Xamarin.Mac.dll");
+				break;
+			case Profile.macOSFull:
+				yield return Path.Combine (SdkRootXM, "lib", "x86_64", "full", "Xamarin.Mac.dll");
+				yield return Path.Combine (SdkRootXM, "lib", "i386", "full", "Xamarin.Mac.dll");
+				break;
+			case Profile.tvOS:
+				yield return Path.Combine (mt_root, "lib", "64bits", "Xamarin.TVOS.dll");
+				break;
+			case Profile.watchOS:
+				yield return Path.Combine (mt_root, "lib", "32bits", "Xamarin.WatchOS.dll");
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
+		{
+			// variables with more than one value are wrapped in ', get the var remove the '' and split
+			var variable = GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Trim ('\'');
+			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		}
+
+		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
+		{
+			var runtimeIdentifiers = GetRuntimeIdentifiers (platform);
+			foreach (var rid in runtimeIdentifiers) {
+				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
+				yield return Path.Combine (libdir, GetBaseLibraryName (platform));
+			}
+		}
+
+
+		public static IEnumerable<string> GetRefLibraries ()
+		{
+			foreach (var platform in GetIncludedPlatforms (true))
+				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform));
+		}
+
+		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
+		{
+			if (include_ios)
+				yield return ApplePlatform.iOS;
+			if (include_tvos)
+				yield return ApplePlatform.TVOS;
+			if (include_mac)
+				yield return ApplePlatform.MacOSX;
+			if (include_maccatalyst)
+				yield return ApplePlatform.MacCatalyst;
+			if (include_watchos && !dotnet)
+				yield return ApplePlatform.WatchOS;
 		}
 
 		public static string GetTargetFramework (Profile profile)
@@ -769,20 +888,23 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string [] CopyDotNetSupportingFiles (string targetDirectory)
+		public static string [] CopyDotNetSupportingFiles (params string[] targetDirectories)
 		{
 			var srcDirectory = Path.Combine (SourceRoot, "tests", "dotnet");
 			var files = new string [] { "global.json", "NuGet.config" };
-			var targets = new string [files.Length];
+			var targets = new List<string> ();
 			for (var i = 0; i < files.Length; i++) {
 				var fn = files [i];
-				targets [i] = Path.Combine (targetDirectory, fn);
 				var src = Path.Combine (srcDirectory, fn);
 				if (!File.Exists (src))
 					ExecutionHelper.Execute ("make", new [] { "-C", srcDirectory, fn });
-				File.Copy (src, targets [i], true);
+				foreach (var targetDirectory in targetDirectories) {
+					var target = Path.Combine (targetDirectory, fn);
+					File.Copy (src, target, true);
+					targets.Add (target);
+				}
 			}
-			return targets;
+			return targets.ToArray ();
 		}
 
 		public static Dictionary<string, string> GetBuildEnvironment (ApplePlatform platform)
@@ -870,5 +992,63 @@ namespace Xamarin.Tests
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
 		}
+
+		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
+		{
+			string dir;
+
+			switch (platform) {
+			case ApplePlatform.iOS:
+				dir = simulator.Value ? "iphonesimulator" : "iphoneos";
+				break;
+			case ApplePlatform.MacOSX:
+				dir = "macos";
+				break;
+			case ApplePlatform.WatchOS:
+				dir = simulator.Value ? "watchsimulator" : "watchos";
+				break;
+			case ApplePlatform.TVOS:
+				dir = simulator.Value ? "tvsimulator" : "tvos";
+				break;
+			case ApplePlatform.MacCatalyst:
+				dir = "maccatalyst";
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+
+			return Path.Combine (SourceRoot, "tests", "test-libraries", ".libs", dir);
+		}
+
+		// This implementation of Touch is to update a timestamp (not to make sure a certain file exists).
+		public static void Touch (string file)
+		{
+			if (!File.Exists (file))
+				throw new FileNotFoundException ($"Can't touch the file '{file}' because it doesn't exist.");
+			EnsureFilestampChange ();
+			File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
+			EnsureFilestampChange ();
+		}
+
+		static bool? is_apfs;
+		static bool IsAPFS {
+			get {
+				if (!is_apfs.HasValue) {
+					var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
+					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
+				}
+				return is_apfs.Value;
+			}
+		}
+
+		// Some file systems have a rather low resolution for file timestamps, so make sure enough time passes that
+		// touching a file will update the timestamp.
+		static void EnsureFilestampChange ()
+		{
+			if (IsAPFS)
+				return; // APFS has high resolution timestamps, so no need to wait at all.
+			Thread.Sleep (1000);
+		}
+
 	}
 }

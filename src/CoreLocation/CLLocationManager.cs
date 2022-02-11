@@ -42,7 +42,7 @@ namespace CoreLocation {
 #if IOS
 		public static bool IsMonitoringAvailable (Type t)
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion(7,0))
+			if (SystemVersion.CheckiOS (7,0))
 				return IsMonitoringAvailable (new Class (t));
 			return false;
 		}

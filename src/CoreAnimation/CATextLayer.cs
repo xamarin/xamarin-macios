@@ -90,13 +90,13 @@ namespace CoreAnimation {
 				var handle = _Font;
 				nint type = CFType.GetTypeID (handle);
 				if (type == CTFont.GetTypeID ())
-					return new CTFont (handle);
+					return new CTFont (handle, false);
 				else if (type == CGFont.GetTypeID ())
 					return new CGFont (handle, false);
 				else if (type == CFString.GetTypeID ())
 					return CFString.FromHandle (handle);
 #if MONOMAC
-				else return (NSFont) Runtime.GetNSObject (handle);
+				else return Runtime.GetNSObject<NSFont> (handle);
 #else
 				return null;
 #endif
@@ -133,7 +133,7 @@ namespace CoreAnimation {
 				}
 			}
 		}
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TextTruncationMode' instead.")]
 		public virtual string TruncationMode {
 			get { return (string) WeakTruncationMode; }
@@ -145,7 +145,7 @@ namespace CoreAnimation {
 			get { return (string) WeakAlignmentMode; }
 			set { WeakAlignmentMode = (NSString) value; }
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 		public CATextLayerTruncationMode TextTruncationMode {
 			get { return CATextLayerTruncationModeExtensions.GetValue (WeakTruncationMode); }
 			set { WeakTruncationMode = value.GetConstant ()!; }

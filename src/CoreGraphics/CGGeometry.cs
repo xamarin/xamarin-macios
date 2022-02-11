@@ -42,7 +42,11 @@ namespace CoreGraphics {
 		MaxYEdge,
 	}
 
+#if NET
+	public static class CGRectExtensions {
+#else
 	public static class RectangleFExtensions {
+#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGFloat */ nfloat CGRectGetMinX (CGRect rect);

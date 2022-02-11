@@ -21,6 +21,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !NET
+
 using System;
 using System.Reflection;
 using System.Collections;
@@ -28,8 +31,8 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
-#if XAMCORE_4_0
-#error Turn this entire file into generated code.
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
@@ -40,7 +43,7 @@ namespace Foundation {
 #endif
 	{
 #if !COREBUILD
-		public override IntPtr ClassHandle { get { return Class.GetHandle ("NSAutoreleasePool"); } }
+		public override NativeHandle ClassHandle { get { return Class.GetHandle ("NSAutoreleasePool"); } }
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[Export ("init")]
@@ -53,20 +56,11 @@ namespace Foundation {
 			}
 		}
 
-#if XAMCORE_4_0
-		protected
-#else
-		public
-#endif
-		NSAutoreleasePool (NSObjectFlag t) : base (t) {}
-
-#if XAMCORE_4_0
-		protected
-#else
-		public
-#endif
-		NSAutoreleasePool (IntPtr handle) : base (handle) {}
+		public NSAutoreleasePool (NSObjectFlag t) : base (t) {}
+		public NSAutoreleasePool (IntPtr handle) : base (handle) {}
 
 #endif
 	}
 }
+
+#endif // !NET

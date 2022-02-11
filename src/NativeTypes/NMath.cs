@@ -7,9 +7,14 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+using System;
 using System.Runtime.CompilerServices;
 
+#if NET
+namespace ObjCRuntime
+#else
 namespace System
+#endif
 {
 	public static class NMath
 	{

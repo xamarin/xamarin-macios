@@ -7,12 +7,19 @@
 // Copyright 2010 Novell, Inc
 // Copyright 2012-2014 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 #nullable enable
 
@@ -22,44 +29,13 @@ namespace CoreVideo {
 #if !NET
 	[Watch (4,0)]
 #endif
-	public partial class CVPixelBufferPool : INativeObject
+	public partial class CVPixelBufferPool : NativeObject
+	{
 #if !COREBUILD
-		, IDisposable
-#endif
-		{
-#if !COREBUILD
-		IntPtr handle;
-
-		internal CVPixelBufferPool (IntPtr handle)
-		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentException ("Invalid parameters to context creation");
-
-			this.handle = CVPixelBufferPoolRetain (handle);
-		}
-
 		[Preserve (Conditional=true)]
-		internal CVPixelBufferPool (IntPtr handle, bool owns)
+		internal CVPixelBufferPool (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CVPixelBufferPoolRetain (handle);
-
-			this.handle = handle;
-		}
-
-		~CVPixelBufferPool ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
 		}
 	
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -68,13 +44,15 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CVPixelBufferPoolRef __nullable */ IntPtr CVPixelBufferPoolRetain (
 			/* CVPixelBufferPoolRef __nullable */ IntPtr handle);
-		
-		protected virtual void Dispose (bool disposing)
+
+		protected override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CVPixelBufferPoolRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CVPixelBufferPoolRetain (GetCheckedHandle ());
+		}
+
+		protected override void Release ()
+		{
+			CVPixelBufferPoolRelease (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -90,9 +68,9 @@ namespace CoreVideo {
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pool);
 
 		// TODO: Return type is CVPixelBufferAttributes but need different name when this one is not WeakXXXX
-		public NSDictionary PixelBufferAttributes {
+		public NSDictionary? PixelBufferAttributes {
 			get {
-				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetPixelBufferAttributes (handle));
+				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetPixelBufferAttributes (Handle));
 			}
 		}
 
@@ -100,16 +78,16 @@ namespace CoreVideo {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CVPixelBufferPoolGetAttributes (
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pool);
 
-		public NSDictionary Attributes {
+		public NSDictionary? Attributes {
 			get {
-				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetAttributes (handle));
+				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetAttributes (Handle));
 			}
 		}
 
 		public CVPixelBufferPoolSettings? Settings {
 			get {
 				var attr = Attributes;
-				return attr == null ? null : new CVPixelBufferPoolSettings (attr);
+				return attr is null ? null : new CVPixelBufferPoolSettings (attr);
 			}
 		}
 
@@ -121,8 +99,7 @@ namespace CoreVideo {
 
 		public CVPixelBuffer CreatePixelBuffer ()
 		{
-			IntPtr pixelBufferOut;
-			CVReturn ret = CVPixelBufferPoolCreatePixelBuffer (IntPtr.Zero, handle, out pixelBufferOut);
+			var ret = CVPixelBufferPoolCreatePixelBuffer (IntPtr.Zero, Handle, out var pixelBufferOut);
 
 			if (ret != CVReturn.Success)
 				throw new Exception ("CVPixelBufferPoolCreatePixelBuffer returned " + ret.ToString ());
@@ -137,10 +114,9 @@ namespace CoreVideo {
 			/* CFDictionaryRef __nullable */ IntPtr auxAttributes,
 			/* CVPixelBufferRef  __nullable * __nonnull */ out IntPtr pixelBufferOut);
 
-		public CVPixelBuffer? CreatePixelBuffer (CVPixelBufferPoolAllocationSettings allocationSettings, out CVReturn error)
+		public CVPixelBuffer? CreatePixelBuffer (CVPixelBufferPoolAllocationSettings? allocationSettings, out CVReturn error)
 		{
-			IntPtr pb;
-			error = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes (IntPtr.Zero, handle, allocationSettings.GetHandle (), out pb);
+			error = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes (IntPtr.Zero, Handle, allocationSettings.GetHandle (), out var pb);
 			if (error != CVReturn.Success)
 				return null;
 
@@ -153,35 +129,49 @@ namespace CoreVideo {
 			/* CFDictionaryRef __nullable */ IntPtr pixelBufferAttributes,
 			/* CVPixelBufferPoolRef  __nullable * __nonnull */ out IntPtr poolOut);
 
-		[Advice ("Use overload with CVPixelBufferPoolSettings")]
-		public CVPixelBufferPool (NSDictionary poolAttributes, NSDictionary pixelBufferAttributes)
+		static IntPtr Create (NSDictionary? poolAttributes, NSDictionary? pixelBufferAttributes)
 		{
-			CVReturn ret = CVPixelBufferPoolCreate (IntPtr.Zero, poolAttributes.GetHandle (), 
-				pixelBufferAttributes.GetHandle (), out handle);
+			var ret = CVPixelBufferPoolCreate (IntPtr.Zero, poolAttributes.GetHandle (), pixelBufferAttributes.GetHandle (), out var handle);
 
 			if (ret != CVReturn.Success)
 				throw new Exception ("CVPixelBufferPoolCreate returned " + ret.ToString ());
+
+			return handle;
 		}
 
-		public CVPixelBufferPool (CVPixelBufferPoolSettings settings, CVPixelBufferAttributes pixelBufferAttributes)
-			: this (settings.GetDictionary ()!, pixelBufferAttributes.GetDictionary ()!)
+		[Advice ("Use overload with CVPixelBufferPoolSettings")]
+		public CVPixelBufferPool (NSDictionary? poolAttributes, NSDictionary? pixelBufferAttributes)
+			: base (Create (poolAttributes, pixelBufferAttributes), true)
+		{
+		}
+
+		public CVPixelBufferPool (CVPixelBufferPoolSettings? settings, CVPixelBufferAttributes? pixelBufferAttributes)
+			: this (settings?.GetDictionary (), pixelBufferAttributes?.GetDictionary ())
 		{
 		}
 
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern void CVPixelBufferPoolFlush (/* CVPixelBufferPoolRef __nonnull */ IntPtr pool,
 			CVPixelBufferPoolFlushFlags options);
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		public void Flush (CVPixelBufferPoolFlushFlags options)
 		{
-			CVPixelBufferPoolFlush (handle, options);
+			CVPixelBufferPoolFlush (Handle, options);
 		}
 
 #endif // !COREBUILD

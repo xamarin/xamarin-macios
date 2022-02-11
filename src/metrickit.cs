@@ -13,6 +13,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MetricKit {
 
 	interface NSUnitDuration : NSUnit { }
@@ -64,7 +68,7 @@ namespace MetricKit {
 
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("bars", ArgumentSemantic.Copy)]
@@ -80,7 +84,7 @@ namespace MetricKit {
 
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		NativeHandle Constructor (string symbol, NSUnitConverter converter);
 
 		[Static]
 		[Export ("apl", ArgumentSemantic.Copy)]
@@ -221,6 +225,10 @@ namespace MetricKit {
 
 		[Export ("histogrammedApplicationResumeTime", ArgumentSemantic.Strong)]
 		MXHistogram<NSUnitDuration> HistogrammedApplicationResumeTime { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (15,2), MacCatalyst (15,2)]
+		[Export ("histogrammedOptimizedTimeToFirstDraw", ArgumentSemantic.Strong)]
+		MXHistogram<NSUnitDuration> HistogrammedOptimizedTimeToFirstDraw { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -421,7 +429,7 @@ namespace MetricKit {
 	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[Protocol]
 	interface MXMetricManagerSubscriber {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 #endif
 		[NoMac]

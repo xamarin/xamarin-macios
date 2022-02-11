@@ -684,6 +684,11 @@ namespace UserNotifications {
 		[Export ("defaultSound")]
 		UNNotificationSound Default { get; }
 
+		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,2)]
+		[Static]
+		[Export ("defaultRingtoneSound", ArgumentSemantic.Copy)]
+		UNNotificationSound DefaultRingtoneSound { get; }
+
 		[Unavailable (PlatformName.WatchOS)]
 		[Static]
 		[Export ("soundNamed:")]
@@ -698,6 +703,11 @@ namespace UserNotifications {
 		[Static]
 		[Export ("defaultCriticalSoundWithAudioVolume:")]
 		UNNotificationSound GetDefaultCriticalSound (float volume);
+
+		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,2)]
+		[Static]
+		[Export ("ringtoneSoundNamed:")]
+		UNNotificationSound GetRingtoneSound (string name);
 
 		[NoWatch, iOS (12,0)]
 		[Static]
@@ -774,6 +784,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[Watch (3, 0)]
 	[NoMac]
+	[NoMacCatalyst]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)

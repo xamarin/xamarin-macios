@@ -18,8 +18,8 @@ IS_APPLE_SILICON=1
 endif
 
 MACOS_VERSION:=$(shell sw_vers -productVersion)
-MACOS_MAJOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $1}')
-MACOS_MINOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $2}')
+MACOS_MAJOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $$1}')
+MACOS_MINOR_VERSION:=$(shell echo $(MACOS_VERSION) | awk -F'.' '{print $$2}')
 SUPPORTS_MACCATALYST:=$(shell echo '$(MACOS_MAJOR_VERSION).$(MACOS_MINOR_VERSION) >= 10.15' | bc)
 
 CONFIG?=Debug
@@ -159,7 +159,7 @@ endif
 
 build-$(1): .stamp-nuget-restore-mac
 	$$(Q) rm -f ".$$@-failure.stamp"
-	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || cat .$$@-legacy-failure.stamp                     >> ".$$@-failure.stamp"
+	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || echo "build-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-x64-$(1)           || echo "build-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-arm64-$(1)         || echo "build-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-x64-$(1)   || echo "build-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
@@ -168,7 +168,7 @@ build-$(1): .stamp-nuget-restore-mac
 
 exec-$(1):
 	$$(Q) rm -f ".$$@-failure.stamp"
-	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || cat .$$@-legacy-failure.stamp                    >> ".$$@-failure.stamp"
+	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
@@ -228,7 +228,7 @@ endif
 
 build-$(1): .stamp-nuget-restore-mac
 	$$(Q) rm -f ".$$@-failure.stamp"
-	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || cat .$$@-legacy-failure.stamp                     >> ".$$@-failure.stamp"
+	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || echo "build-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-x64-$(1)           || echo "build-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-arm64-$(1)         || echo "build-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-x64-$(1)   || echo "build-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
@@ -237,7 +237,7 @@ build-$(1): .stamp-nuget-restore-mac
 
 exec-$(1):
 	$$(Q) rm -f ".$$@-failure.stamp"
-	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || cat .$$@-legacy-failure.stamp                    >> ".$$@-failure.stamp"
+	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
@@ -290,17 +290,11 @@ exec-legacy-dontlink:
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-modern-dontlink       || echo "exec-mac-modern-dont link failed"       >> ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-full-dontlink         || echo "exec-mac-full-dont link failed"         >> ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-system-dontlink       || echo "exec-mac-system-dont link failed"       >> ".$@-failure.stamp"
-	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-dontlink   || echo "exec-mac-dotnet-x64-dont link failed"   >> ".$@-failure.stamp"
-	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-dontlink || echo "exec-mac-dotnet-arm64-dont link failed" >> ".$@-failure.stamp"
 	$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
 
 exec-legacy-introspection:
 	$(Q) rm -f ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-modern-introspection               || echo "exec-mac-modern-introspection failed"               >> ".$@-failure.stamp"
-	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-introspection           || echo "exec-mac-dotnet-x64-introspection failed"           >> ".$@-failure.stamp"
-	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-introspection         || echo "exec-mac-dotnet-arm64-introspection failed"         >> ".$@-failure.stamp"
-	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-introspection   || echo "exec-maccatalyst-dotnet-x64-introspection failed"   >> ".$@-failure.stamp"
-	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-introspection || echo "exec-maccatalyst-dotnet-arm64-introspection failed" >> ".$@-failure.stamp"
 	$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
 
 exec-xammac_tests:

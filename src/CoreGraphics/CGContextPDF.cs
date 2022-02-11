@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -71,32 +73,38 @@ namespace CoreGraphics {
 
 	public partial class CGPDFInfo : CGPDFPageInfo {
 
-		public string Title { get; set; }
-		public string Author { get; set; }
-		public string Subject { get; set; }
-		public string [] Keywords { get; set; }
-		public string Creator { get; set; }
-		public string OwnerPassword { get; set; }
-		public string UserPassword { get; set; }
+		public string? Title { get; set; }
+		public string? Author { get; set; }
+		public string? Subject { get; set; }
+		public string []? Keywords { get; set; }
+		public string? Creator { get; set; }
+		public string? OwnerPassword { get; set; }
+		public string? UserPassword { get; set; }
 		public int? EncryptionKeyLength { get; set; }
 		public bool? AllowsPrinting { get; set; }
 		public bool? AllowsCopying { get; set; }
 		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
-#if !NET
-		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
 #endif
 		public bool? CreateLinearizedPdf { get; set; }
-#if !NET
-		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
-#else
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+#else
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
 #endif
 		public bool? CreatePdfA2u { get; set; }
 
@@ -104,24 +112,24 @@ namespace CoreGraphics {
 		{
 			var ret = base.ToDictionary ();
 
-			if (Title != null)
-				ret.LowlevelSetObject ((NSString) Title, kCGPDFContextTitle);
-			if (Author != null)
-				ret.LowlevelSetObject ((NSString) Author, kCGPDFContextAuthor);
-			if (Subject != null)
-				ret.LowlevelSetObject ((NSString) Subject, kCGPDFContextSubject);
-			if (Keywords != null && Keywords.Length > 0){
+			if (Title is not null)
+				ret.LowlevelSetObject (Title, kCGPDFContextTitle);
+			if (Author is not null)
+				ret.LowlevelSetObject (Author, kCGPDFContextAuthor);
+			if (Subject is not null)
+				ret.LowlevelSetObject (Subject, kCGPDFContextSubject);
+			if (Keywords is not null && Keywords.Length > 0){
 				if (Keywords.Length == 1)
-					ret.LowlevelSetObject ((NSString) Keywords [0], kCGPDFContextKeywords);
+					ret.LowlevelSetObject (Keywords [0], kCGPDFContextKeywords);
 				else
 					ret.LowlevelSetObject (NSArray.FromStrings (Keywords), kCGPDFContextKeywords);
 			}
-			if (Creator != null)
-				ret.LowlevelSetObject ((NSString) Creator, kCGPDFContextCreator);
-			if (OwnerPassword != null)
-				ret.LowlevelSetObject ((NSString) OwnerPassword, kCGPDFContextOwnerPassword);
-			if (UserPassword != null)
-				ret.LowlevelSetObject ((NSString) UserPassword, kCGPDFContextUserPassword);
+			if (Creator is not null)
+				ret.LowlevelSetObject (Creator, kCGPDFContextCreator);
+			if (OwnerPassword is not null)
+				ret.LowlevelSetObject (OwnerPassword, kCGPDFContextOwnerPassword);
+			if (UserPassword is not null)
+				ret.LowlevelSetObject (UserPassword, kCGPDFContextUserPassword);
 			if (EncryptionKeyLength.HasValue)
 				ret.LowlevelSetObject (NSNumber.FromInt32 (EncryptionKeyLength.Value), kCGPDFContextEncryptionKeyLength);
 			if (AllowsPrinting.HasValue && AllowsPrinting.Value == false)
@@ -149,13 +157,18 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static /* CGContextRef */ IntPtr CGPDFContextCreate (/* CGDataConsumerRef */ IntPtr consumer, CGRect *mediaBox, /* CFDictionaryRef */ IntPtr auxiliaryInfo);
 
-		unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect *mediaBox, CGPDFInfo info)
+		unsafe static IntPtr Create (CGDataConsumer? dataConsumer, CGRect *mediaBox, CGPDFInfo? info)
 		{
-			using (var dict = info == null ? null : info.ToDictionary ())
-				Handle = CGPDFContextCreate (dataConsumer.GetHandle (), mediaBox, dict.GetHandle ());
+			using (var dict = info?.ToDictionary ())
+				return CGPDFContextCreate (dataConsumer.GetHandle (), mediaBox, dict.GetHandle ());
 		}
 
-		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect mediaBox, CGPDFInfo info) :
+		unsafe CGContextPDF (CGDataConsumer? dataConsumer, CGRect *mediaBox, CGPDFInfo? info)
+			: base (Create (dataConsumer, mediaBox, info), true)
+		{
+		}
+
+		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect mediaBox, CGPDFInfo? info) :
 			this (dataConsumer, &mediaBox, info)
 		{
 		}
@@ -165,7 +178,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGPDFInfo info) :
+		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGPDFInfo? info) :
 			this (dataConsumer, null, info)
 		{
 		}
@@ -175,13 +188,18 @@ namespace CoreGraphics {
 		{
 		}
 
-		unsafe CGContextPDF (NSUrl url, CGRect *mediaBox, CGPDFInfo info)
+		unsafe static IntPtr Create (NSUrl? url, CGRect* mediaBox, CGPDFInfo? info)
 		{
-			using (var dict = info == null ? null : info.ToDictionary ())
-				Handle = CGPDFContextCreateWithURL (url.GetHandle (), mediaBox, dict.GetHandle ());
+			using (var dict = info?.ToDictionary ())
+				return CGPDFContextCreateWithURL (url.GetHandle (), mediaBox, dict.GetHandle ());
 		}
 
-		public unsafe CGContextPDF (NSUrl url, CGRect mediaBox, CGPDFInfo info) :
+		unsafe CGContextPDF (NSUrl? url, CGRect *mediaBox, CGPDFInfo? info)
+			: base (Create (url, mediaBox, info), true)
+		{
+		}
+
+		public unsafe CGContextPDF (NSUrl url, CGRect mediaBox, CGPDFInfo? info) :
 			this (url, &mediaBox, info)
 		{
 		}
@@ -191,7 +209,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		public unsafe CGContextPDF (NSUrl url, CGPDFInfo info) :
+		public unsafe CGContextPDF (NSUrl url, CGPDFInfo? info) :
 			this (url, null, info)
 		{
 		}
@@ -215,10 +233,10 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFContextBeginPage (/* CGContextRef */ IntPtr context, /* CFDictionaryRef */ IntPtr pageInfo);
 		
-		public void BeginPage (CGPDFPageInfo info)
+		public void BeginPage (CGPDFPageInfo? info)
 		{
-			using (var dict = info == null ? null : info.ToDictionary ())
-				CGPDFContextBeginPage (Handle, dict == null ? IntPtr.Zero : dict.Handle);
+			using (var dict = info?.ToDictionary ())
+				CGPDFContextBeginPage (Handle, dict.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -234,7 +252,7 @@ namespace CoreGraphics {
 
 		public void AddDocumentMetadata (NSData data)
 		{
-			if (data == null)
+			if (data is null)
 				return;
 			CGPDFContextAddDocumentMetadata (Handle, data.Handle);
 		}
@@ -244,8 +262,8 @@ namespace CoreGraphics {
 
 		public void SetUrl (NSUrl url, CGRect region)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
+			if (url is null)
+				throw new ArgumentNullException (nameof (url));
 			CGPDFContextSetURLForRect (Handle, url.Handle, region);
 		}
 
@@ -254,11 +272,15 @@ namespace CoreGraphics {
 
 		public void AddDestination (string name, CGPoint point)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
+			if (name is null)
+				throw new ArgumentNullException (nameof (name));
 
-			using (var s = new CFString (name))
-				CGPDFContextAddDestinationAtPoint (Handle, s.Handle, point);
+			var nameHandle = CFString.CreateNative (name);
+			try {
+				CGPDFContextAddDestinationAtPoint (Handle, nameHandle, point);
+			} finally {
+				CFString.ReleaseNative (nameHandle);
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -266,50 +288,54 @@ namespace CoreGraphics {
 
 		public void SetDestination (string name, CGRect rect)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
+			if (name is null)
+				throw new ArgumentNullException (nameof (name));
 
-			using (var s = new CFString (name))
-				CGPDFContextSetDestinationForRect (Handle, s.Handle, rect);
+			var nameHandle = CFString.CreateNative (name);
+			try {
+				CGPDFContextSetDestinationForRect (Handle, nameHandle, rect);
+			} finally {
+				CFString.ReleaseNative (nameHandle);
+			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextBeginTag (/* CGContextRef* */ IntPtr context, CGPdfTagType tagType, /* CFDictionaryRef* _Nullable */ IntPtr tagProperties);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		public void BeginTag (CGPdfTagType tagType, NSDictionary tagProperties)
 		{
 			CGPDFContextBeginTag (Handle, tagType, tagProperties.GetHandle ());
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		public void BeginTag (CGPdfTagType tagType, CGPdfTagProperties tagProperties)
 		{
@@ -317,28 +343,28 @@ namespace CoreGraphics {
 			CGPDFContextBeginTag (Handle, tagType, d.GetHandle ());
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextEndTag (/* CGContextRef* */ IntPtr context);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
 #endif
 		public void EndTag ()
 		{

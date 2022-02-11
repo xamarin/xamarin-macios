@@ -7,6 +7,8 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 #if MONOMAC
 using System;
 using Foundation;
@@ -17,12 +19,15 @@ using System.Runtime.Versioning;
 namespace NetworkExtension {
 	public partial class NEVpnManager {
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10,11)]
 #endif
 		public void SetAuthorization (Authorization authorization)
 		{
-			if (authorization == null)
+			if (authorization is null)
 				throw new ArgumentNullException (nameof (authorization));
 
 			_SetAuthorization (authorization.Handle);

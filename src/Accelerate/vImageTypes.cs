@@ -38,7 +38,11 @@ using Pixel16S = System.Int16;
 using ResamplingFilter = System.IntPtr;
 using GammaFunction = System.IntPtr;
 
+#if NET
+using vImagePixelCount = System.IntPtr;
+#else
 using vImagePixelCount = System.nint;
+#endif
 
 namespace Accelerate {
 	// vImage_Buffer - vImage_Types.h
@@ -61,12 +65,12 @@ namespace Accelerate {
 
 		public int Width {
 			get { return (int) WidthIntPtr; }
-			set { WidthIntPtr = value; }
+			set { WidthIntPtr = (vImagePixelCount) value; }
 		}
 
 		public int Height {
 			get { return (int) HeightIntPtr; }
-			set { HeightIntPtr = value; }
+			set { HeightIntPtr = (vImagePixelCount) value; }
 		}
 	}
 

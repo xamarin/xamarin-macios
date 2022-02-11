@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -32,6 +35,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreText {
 
@@ -59,11 +66,11 @@ namespace CoreText {
 		static CTFrameAttributeKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Progression = Dlfcn.GetStringConstant (handle, "kCTFrameProgressionAttributeName");
-			PathFillRule = Dlfcn.GetStringConstant (handle, "kCTFramePathFillRuleAttributeName");
-			PathWidth = Dlfcn.GetStringConstant (handle, "kCTFramePathWidthAttributeName");
-			ClippingPaths = Dlfcn.GetStringConstant (handle, "kCTFrameClippingPathsAttributeName");
-			PathClippingPath = Dlfcn.GetStringConstant (handle, "kCTFramePathClippingPathAttributeName");
+			Progression = Dlfcn.GetStringConstant (handle, "kCTFrameProgressionAttributeName")!;
+			PathFillRule = Dlfcn.GetStringConstant (handle, "kCTFramePathFillRuleAttributeName")!;
+			PathWidth = Dlfcn.GetStringConstant (handle, "kCTFramePathWidthAttributeName")!;
+			ClippingPaths = Dlfcn.GetStringConstant (handle, "kCTFrameClippingPathsAttributeName")!;
+			PathClippingPath = Dlfcn.GetStringConstant (handle, "kCTFramePathClippingPathAttributeName")!;
 		}
 	}
 
@@ -76,8 +83,8 @@ namespace CoreText {
 
 		public CTFrameAttributes (NSDictionary dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+			if (dictionary is null)
+				throw new ArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -95,41 +102,22 @@ namespace CoreText {
 		}
 	}
 
-	public class CTFrame : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CTFrame (IntPtr handle, bool owns)
+	internal static class CTFrameAttributesExtensions {
+		public static IntPtr GetHandle (this CTFrameAttributes? self)
 		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
+			if (self is null)
+				return IntPtr.Zero;
+			return self.Dictionary.GetHandle ();
+		}
+	}
+
+	public class CTFrame : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CTFrame (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
+		{
 		}
 		
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		~CTFrame ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static NSRange CTFrameGetStringRange (IntPtr handle);
 		[DllImport (Constants.CoreTextLibrary)]
@@ -137,30 +125,30 @@ namespace CoreText {
 		
 		public NSRange GetStringRange ()
 		{
-			return CTFrameGetStringRange (handle);
+			return CTFrameGetStringRange (Handle);
 		}
 
 		public NSRange GetVisibleStringRange ()
 		{
-			return CTFrameGetVisibleStringRange (handle);
+			return CTFrameGetVisibleStringRange (Handle);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static IntPtr CTFrameGetPath (IntPtr handle);
 		
-		public CGPath GetPath ()
+		public CGPath? GetPath ()
 		{
-			IntPtr h = CTFrameGetPath (handle);
+			IntPtr h = CTFrameGetPath (Handle);
 			return h == IntPtr.Zero ? null : new CGPath (h, false);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static IntPtr CTFrameGetFrameAttributes (IntPtr handle);
 
-		public CTFrameAttributes GetFrameAttributes ()
+		public CTFrameAttributes? GetFrameAttributes ()
 		{
-			var attrs = (NSDictionary) Runtime.GetNSObject (CTFrameGetFrameAttributes (handle));
-			return attrs == null ? null : new CTFrameAttributes (attrs);
+			var attrs = Runtime.GetNSObject<NSDictionary> (CTFrameGetFrameAttributes (Handle));
+			return attrs is null ? null : new CTFrameAttributes (attrs);
 		}
 		
 		[DllImport (Constants.CoreTextLibrary)]
@@ -168,27 +156,27 @@ namespace CoreText {
 
 		public CTLine [] GetLines ()
 		{
-			var cfArrayRef = CTFrameGetLines (handle);
+			var cfArrayRef = CTFrameGetLines (Handle);
 			if (cfArrayRef == IntPtr.Zero)
-				return new CTLine [0];
+				return Array.Empty<CTLine> ();
 
 			return NSArray.ArrayFromHandleFunc<CTLine> (cfArrayRef, (p) => {
 					// We need to take a ref, since we dispose it later.
 					return new CTLine (p, false);
-				});
+				})!;
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static void CTFrameGetLineOrigins(IntPtr handle, NSRange range, [Out] CGPoint[] origins);
 		public void GetLineOrigins (NSRange range, CGPoint[] origins)
 		{
-			if (origins == null)
-				throw new ArgumentNullException ("origins");
+			if (origins is null)
+				throw new ArgumentNullException (nameof (origins));
 			if (range.Length != 0 && origins.Length < range.Length)
-				throw new ArgumentException ("origins must contain at least range.Length elements.", "origins");
-			else if (origins.Length < CFArray.GetCount (CTFrameGetLines (handle)))
-				throw new ArgumentException ("origins must contain at least GetLines().Length elements.", "origins");
-			CTFrameGetLineOrigins (handle, range, origins);
+				throw new ArgumentException ("origins must contain at least range.Length elements.", nameof (origins));
+			else if (origins.Length < CFArray.GetCount (CTFrameGetLines (Handle)))
+				throw new ArgumentException ("origins must contain at least GetLines().Length elements.", nameof (origins));
+			CTFrameGetLineOrigins (Handle, range, origins);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -196,10 +184,10 @@ namespace CoreText {
 
 		public void Draw (CGContext ctx)
 		{
-			if (ctx == null)
-				throw new ArgumentNullException ("ctx");
+			if (ctx is null)
+				throw new ArgumentNullException (nameof (ctx));
 
-			CTFrameDraw (handle, ctx.Handle);
+			CTFrameDraw (Handle, ctx.Handle);
 		}
 	}
 }

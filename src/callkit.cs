@@ -13,6 +13,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CallKit {
 
 	[iOS (10, 0), NoMac]
@@ -23,7 +27,8 @@ namespace CallKit {
 		Enabled = 2
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+#if !MONOMAC
+	[iOS (10, 0), NoMac]
 	[ErrorDomain ("CXErrorDomain")]
 	[Native]
 	public enum CXErrorCode : long {
@@ -33,7 +38,7 @@ namespace CallKit {
 		MissingVoIPBackgroundMode = 3,
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[ErrorDomain ("CXErrorDomainIncomingCall")]
 	[Native]
 	public enum CXErrorCodeIncomingCallError : long {
@@ -44,7 +49,7 @@ namespace CallKit {
 		FilteredByBlockList = 4
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[ErrorDomain ("CXErrorDomainRequestTransaction")]
 	[Native]
 	public enum CXErrorCodeRequestTransactionError : long {
@@ -58,7 +63,7 @@ namespace CallKit {
 		MaximumCallGroupsReached = 7,
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[ErrorDomain ("CXErrorDomainCallDirectoryManager")]
 	[Native]
 	public enum CXErrorCodeCallDirectoryManagerError : long {
@@ -83,8 +88,16 @@ namespace CallKit {
 		InvalidClientProcess = 1,
 		MissingNotificationFilteringEntitlement = 2,
 	}
+#endif // !MONOMAC
 
-	[iOS (10, 0), Mac (11, 0)]
+#if NET
+	[NoMac]
+#else
+	[Mac (11,0)]
+	[Obsoleted (PlatformName.MacOSX, 12,1)]
+#endif
+	[MacCatalyst (13,0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum CXPlayDtmfCallActionType : long {
 		SingleTone = 1,
@@ -92,7 +105,14 @@ namespace CallKit {
 		HardPause = 3,
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+#if NET
+	[NoMac]
+#else
+	[Mac (11,0)]
+	[Obsoleted (PlatformName.MacOSX, 12,1)]
+#endif
+	[MacCatalyst (13,0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum CXCallEndedReason : long {
 		Failed = 1,
@@ -102,7 +122,14 @@ namespace CallKit {
 		DeclinedElsewhere = 5,
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+#if NET
+	[NoMac]
+#else
+	[Mac (11,0)]
+	[Obsoleted (PlatformName.MacOSX, 12,1)]
+#endif
+	[MacCatalyst (13,0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum CXHandleType : long {
 		Generic = 1,
@@ -110,7 +137,7 @@ namespace CallKit {
 		EmailAddress = 3,
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXHandle : NSCopying, NSSecureCoding {
@@ -123,20 +150,20 @@ namespace CallKit {
 
 		[Export ("initWithType:value:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CXHandleType type, string value);
+		NativeHandle Constructor (CXHandleType type, string value);
 
 		[Export ("isEqualToHandle:")]
 		bool IsEqual (CXHandle handle);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
 	interface CXAction : NSCopying, NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }
@@ -154,20 +181,20 @@ namespace CallKit {
 		void Fail ();
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXAnswerCallAction {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid);
+		NativeHandle Constructor (NSUuid callUuid);
 
 		[Export ("fulfillWithDateConnected:")]
 		void Fulfill (NSDate dateConnected);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXCall {
@@ -191,7 +218,7 @@ namespace CallKit {
 		bool IsEqual (CXCall call);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (CXAction))]
 	[DisableDefaultCtor]
 	interface CXCallAction {
@@ -201,16 +228,16 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid);
+		NativeHandle Constructor (NSUuid callUuid);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	interface CXCallController {
 
 		[Export ("initWithQueue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (DispatchQueue queue);
+		NativeHandle Constructor (DispatchQueue queue);
 
 		[Export ("callObserver", ArgumentSemantic.Strong)]
 		CXCallObserver CallObserver { get; }
@@ -310,7 +337,7 @@ namespace CallKit {
 
 	interface ICXCallObserverDelegate { }
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserverDelegate {
@@ -320,7 +347,7 @@ namespace CallKit {
 		void CallChanged (CXCallObserver callObserver, CXCall call);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserver {
 
@@ -331,7 +358,7 @@ namespace CallKit {
 		void SetDelegate ([NullAllowed] ICXCallObserverDelegate aDelegate, [NullAllowed] DispatchQueue queue);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	interface CXCallUpdate : NSCopying {
 
@@ -357,27 +384,27 @@ namespace CallKit {
 		bool HasVideo { get; set; }
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXEndCallAction {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid);
+		NativeHandle Constructor (NSUuid callUuid);
 
 		[Export ("fulfillWithDateEnded:")]
 		void Fulfill (NSDate dateEnded);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction), Name = "CXPlayDTMFCallAction")]
 	interface CXPlayDtmfCallAction {
 
 		[Export ("initWithCallUUID:digits:type:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, string digits, CXPlayDtmfCallActionType type);
+		NativeHandle Constructor (NSUuid callUuid, string digits, CXPlayDtmfCallActionType type);
 
 		[Export ("digits")]
 		string Digits { get; set; }
@@ -389,7 +416,7 @@ namespace CallKit {
 	interface ICXProviderDelegate { }
 
 	[Protocol, Model]
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	interface CXProviderDelegate {
 
@@ -436,14 +463,14 @@ namespace CallKit {
 #endif
 	}
 
-	[iOS (10, 0)]
+	[iOS (10, 0)] [NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXProvider {
 
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CXProviderConfiguration configuration);
+		NativeHandle Constructor (CXProviderConfiguration configuration);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] ICXProviderDelegate aDelegate, [NullAllowed] DispatchQueue queue);
@@ -520,55 +547,55 @@ namespace CallKit {
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the default constructor instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the default constructor instead.")]
 		[Export ("initWithLocalizedName:")]
-		IntPtr Constructor (string localizedName);
+		NativeHandle Constructor (string localizedName);
 
 		[iOS (14, 0)]
 		[MacCatalyst (14,0)]
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0)] [NoMac]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXSetGroupCallAction {
 
 		[Export ("initWithCallUUID:callUUIDToGroupWith:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, [NullAllowed] NSUuid callUuidToGroupWith);
+		NativeHandle Constructor (NSUuid callUuid, [NullAllowed] NSUuid callUuidToGroupWith);
 
 		[NullAllowed, Export ("callUUIDToGroupWith", ArgumentSemantic.Copy)]
 		NSUuid CallUuidToGroupWith { get; set; }
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXSetHeldCallAction {
 
 		[Export ("initWithCallUUID:onHold:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, bool onHold);
+		NativeHandle Constructor (NSUuid callUuid, bool onHold);
 
 		[Export ("onHold")]
 		bool OnHold { [Bind ("isOnHold")] get; set; }
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXSetMutedCallAction {
 
 		[Export ("initWithCallUUID:muted:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, bool muted);
+		NativeHandle Constructor (NSUuid callUuid, bool muted);
 
 		[Export ("muted")]
 		bool Muted { [Bind ("isMuted")] get; set; }
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXStartCallAction {
@@ -577,7 +604,7 @@ namespace CallKit {
 
 		[Export ("initWithCallUUID:handle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUuid, CXHandle callHandle);
+		NativeHandle Constructor (NSUuid callUuid, CXHandle callHandle);
 
 		[Export ("handle", ArgumentSemantic.Copy)]
 		CXHandle CallHandle { get; set; }
@@ -592,17 +619,17 @@ namespace CallKit {
 		void Fulfill (NSDate dateStarted);
 	}
 
-	[iOS (10, 0), Mac (11, 0)]
+	[iOS (10, 0), NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // there's a designated initializer that does not accept null
 	interface CXTransaction : NSCopying, NSSecureCoding {
 
 		[Export ("initWithActions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CXAction[] actions);
+		NativeHandle Constructor (CXAction[] actions);
 
 		[Export ("initWithAction:")]
-		IntPtr Constructor (CXAction action);
+		NativeHandle Constructor (CXAction action);
 
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }

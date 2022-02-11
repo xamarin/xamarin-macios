@@ -1107,6 +1107,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not parse the custom linker argument(s) &apos;-{0}&apos;: {1}.
+        /// </summary>
+        public static string E0189 {
+            get {
+                return ResourceManager.GetString("E0189", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not resolve host IPs for WiFi debugger settings.
         ///        .
         /// </summary>
@@ -1931,11 +1940,65 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The &quot;{0}&quot; task was not given a value for the required parameter &quot;{1}&quot;, nor was there a &quot;{2}&quot; metadata on the resource {3}..
+        /// </summary>
+        public static string E7085 {
+            get {
+                return ResourceManager.GetString("E7085", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; is invalid for the Compress property. Valid values: &apos;true&apos;, &apos;false&apos; or &apos;auto&apos;..
         /// </summary>
         public static string E7086 {
             get {
                 return ResourceManager.GetString("E7086", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;PublishFolderType&apos; metadata value &apos;{0}&apos; on the item &apos;{1}&apos; is not recognized. The file will not be copied to the app bundle..
+        /// </summary>
+        public static string E7088 {
+            get {
+                return ResourceManager.GetString("E7088", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file &apos;{0}&apos; does not specify a &apos;PublishFolderType&apos; metadata, and a default value could not be calculated. The file will not be copied to the app bundle..
+        /// </summary>
+        public static string E7089 {
+            get {
+                return ResourceManager.GetString("E7089", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;PublishFolderType&apos; metadata value &apos;{0}&apos; on the item &apos;{1}&apos; is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the &apos;{2}&apos; metadata on the item..
+        /// </summary>
+        public static string E7090 {
+            get {
+                return ResourceManager.GetString("E7090", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; is not a valid framework: {1}.
+        /// </summary>
+        public static string E7092 {
+            get {
+                return ResourceManager.GetString("E7092", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file or directory &apos;{0}&apos; is not a framework nor a file within a framework..
+        /// </summary>
+        public static string E7094 {
+            get {
+                return ResourceManager.GetString("E7094", resourceCulture);
             }
         }
         
@@ -2553,6 +2616,24 @@ namespace Xamarin.Localization.MSBuild {
         public static string W7087 {
             get {
                 return ResourceManager.GetString("W7087", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The framework {0} is a framework of static libraries, and will not be copied to the app..
+        /// </summary>
+        public static string W7091 {
+            get {
+                return ResourceManager.GetString("W7091", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The binding resource package {0} does not exist..
+        /// </summary>
+        public static string W7093 {
+            get {
+                return ResourceManager.GetString("W7093", resourceCulture);
             }
         }
     }

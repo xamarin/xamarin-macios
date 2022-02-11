@@ -13,16 +13,15 @@ using ObjCRuntime;
 using System.ComponentModel;
 using System.Runtime.Versioning;
 
-#if !XAMCORE_4_0
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#if !NET
 namespace CarPlay {
 	[Register (SkipRegistration = true)]
-#if !NET
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
 	[Obsolete ("This API has been removed from the native SDK.")]
-#else
-	[UnsupportedOSPlatform ("ios")]
-	[Obsolete ("This API has been removed from the native SDK.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class CPEntity : NSObject, INSSecureCoding {
 
@@ -32,11 +31,11 @@ namespace CarPlay {
 
 		protected CPEntity (NSObjectFlag t) => throw new NotSupportedException ();
 
-		protected internal CPEntity (IntPtr handle) => throw new NotSupportedException ();
+		protected internal CPEntity (NativeHandle handle) : base (handle) => throw new NotSupportedException ();
 
 		public virtual void EncodeTo (NSCoder encoder) => throw new NotSupportedException ();
 
-		public override IntPtr ClassHandle => throw new NotSupportedException ();
+		public override NativeHandle ClassHandle => throw new NotSupportedException ();
 	}
 }
 #endif

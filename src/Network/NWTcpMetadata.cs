@@ -15,17 +15,26 @@ using Foundation;
 using CoreFoundation;
 using System.Runtime.Versioning;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-#if !NET
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
+#if NET
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
 #endif
 	public class NWTcpMetadata : NWProtocolMetadata {
 
-		internal NWTcpMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWTcpMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public uint AvailableReceiveBuffer => nw_tcp_get_available_receive_buffer (GetCheckedHandle ());
 

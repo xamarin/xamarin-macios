@@ -11,35 +11,6 @@ SUBDIRS += dotnet
 endif
 
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
-UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
-UNIT_SERVER=$(UNIT_SERVER_DIR)/bin/Debug/Touch.Server.exe
-TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini mono-native
-BCL_TEST_SUITES=mscorlib \
-	System \
-	System.Core \
-	System.Data \
-	System.Net.Http \
-	System.Numerics \
-	System.Runtime.Serialization \
-	System.Transactions \
-	System.Web.Services \
-	System.Xml \
-	System.Xml.Linq \
-	Mono.Security \
-	System.ComponentModel.DataAnnotations \
-	System.Json \
-	System.ServiceModel.Web \
-	Mono.Data.Sqlite \
-	Mono.Data.Tds \
-	System.IO.Compression \
-	System.IO.Compression.FileSystem \
-	Mono.CSharp \
-	System.Security \
-	System.ServiceModel \
-	System.IdentityModel \
-
-ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)
-EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(SYSTEM_MONO) --debug $(UNIT_SERVER)
 
 export MD_APPLE_SDK_ROOT=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
@@ -102,9 +73,10 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
-	@echo "OSX_SDK_VERSION=$(OSX_SDK_VERSION)" >> $@
+	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
 	@echo "DOTNET6_BCL_DIR=$(DOTNET6_BCL_DIR)" >> $@
 	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -120,7 +92,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
-	@echo "OSX_SDK_VERSION=$(OSX_SDK_VERSION)" >> $@
+	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -184,9 +156,6 @@ check-result:
 
 logdev:
 	$(MTOUCH) --logdev
-
-$(UNIT_SERVER): $(wildcard $(UNIT_SERVER_DIR)/*.cs)
-	(cd $(UNIT_SERVER_DIR) && $(SYSTEM_MSBUILD) /bl)
 
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries

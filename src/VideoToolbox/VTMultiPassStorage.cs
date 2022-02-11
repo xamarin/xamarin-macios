@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -16,56 +18,43 @@ using ObjCRuntime;
 using Foundation;
 using CoreMedia;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoToolbox {
 
 #if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("tvos10.2")]
 #else
-	[Mac (10,10), iOS (8,0), TV (10,2)]
+	[Mac (10,10)]
+	[iOS (8,0)]
+	[TV (10,2)]
 #endif
-	public class VTMultiPassStorage : INativeObject, IDisposable {
-		IntPtr handle;
+	public class VTMultiPassStorage : NativeObject {
 		bool closed;
 		VTStatus closedStatus;
 
-		/* invoked by marshallers */
-		protected internal VTMultiPassStorage (IntPtr handle)
+#if !NET
+		protected internal VTMultiPassStorage (NativeHandle handle)
+			: base (handle, false)
 		{
-			this.handle = handle;
-			CFObject.CFRetain (this.handle);
 		}
-
-		public IntPtr Handle {
-			get {return handle; }
-		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal VTMultiPassStorage (IntPtr handle, bool owns)
+		internal VTMultiPassStorage (NativeHandle handle, bool owns)
+			: base (handle, false)
 		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (this.handle);
 		}
 
-		~VTMultiPassStorage ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				if (!closed)
-					Close ();
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			if (Handle != IntPtr.Zero)
+				Close ();
+			base.Dispose (disposing);
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
@@ -77,26 +66,25 @@ namespace VideoToolbox {
 			/* VTMultiPassStorageRef */ out IntPtr multiPassStorageOut);
 
 		// Convenience method taking a strong dictionary
-		public static VTMultiPassStorage Create (
-			VTMultiPassStorageCreationOptions options,
-			NSUrl fileUrl = null, 
+		public static VTMultiPassStorage? Create (
+			VTMultiPassStorageCreationOptions? options,
+			NSUrl? fileUrl = null,
 			CMTimeRange? timeRange = null)
 		{
-			return Create (fileUrl, timeRange, options != null ? options.Dictionary : null); 
+			return Create (fileUrl, timeRange, options?.Dictionary);
 		}
 
-		public static VTMultiPassStorage Create (
-			NSUrl fileUrl = null, 
-			CMTimeRange? timeRange = null, 
-			NSDictionary options = null)
+		public static VTMultiPassStorage? Create (
+			NSUrl? fileUrl = null,
+			CMTimeRange? timeRange = null,
+			NSDictionary? options = null)
 		{
-			IntPtr ret;
 			var status = VTMultiPassStorageCreate (
 				IntPtr.Zero,
-				fileUrl == null ? IntPtr.Zero : fileUrl.Handle, 
+				fileUrl.GetHandle (),
 				timeRange ?? CMTimeRange.InvalidRange, 
-				options == null ? IntPtr.Zero : options.Handle, 
-				out ret);
+				options.GetHandle (),
+				out var ret);
 
 			if (status != VTStatus.Ok)
 				return null;
@@ -111,7 +99,7 @@ namespace VideoToolbox {
 		{
 			if (closed)
 				return closedStatus;
-			closedStatus = VTMultiPassStorageClose (handle);
+			closedStatus = VTMultiPassStorageClose (Handle);
 			closed = true;
 			return closedStatus;
 		}

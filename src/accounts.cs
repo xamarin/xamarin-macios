@@ -6,6 +6,10 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Accounts {
 	
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
@@ -33,7 +37,7 @@ namespace Accounts {
 
 		[DesignatedInitializer]
 		[Export ("initWithAccountType:")]
-		IntPtr Constructor (ACAccountType type);
+		NativeHandle Constructor (ACAccountType type);
 
 #if !XAMCORE_3_0
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
@@ -51,10 +55,10 @@ namespace Accounts {
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
 		[Export ("initWithOAuthToken:tokenSecret:")]
-		IntPtr Constructor (string oauthToken, string tokenSecret);
+		NativeHandle Constructor (string oauthToken, string tokenSecret);
 
 		[Export ("initWithOAuth2Token:refreshToken:expiryDate:")]
-		IntPtr Constructor (string oauth2Token, string refreshToken, NSDate expiryDate);
+		NativeHandle Constructor (string oauth2Token, string refreshToken, NSDate expiryDate);
 
 		[NullAllowed] // by default this property is null
 		[Export ("oauthToken", ArgumentSemantic.Copy)]
@@ -85,11 +89,11 @@ namespace Accounts {
 		[Async]
 		void SaveAccount (ACAccount account, ACAccountStoreSaveCompletionHandler completionHandler);
 
-#if XAMCORE_4_0
+#if NET
 		[NoMac] // marked as unavailable in xcode10 beta 2
 #endif
 		[Export ("requestAccessToAccountsWithType:withCompletionHandler:")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, ACRequestCompletionHandler completionHandler);
 

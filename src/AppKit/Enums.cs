@@ -100,7 +100,7 @@ namespace AppKit {
 		Cancelled, Success, Failure, ReplyLater
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Native]
 	public enum NSApplicationLayoutDirection : long {
@@ -250,7 +250,7 @@ namespace AppKit {
 	
 #region NSCell Defines 
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use formatters instead.")]
@@ -546,12 +546,14 @@ namespace AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
-#if !XAMCORE_4_0
+	// This enum is defined as an untyped enum in MacOSX.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
+	// It represents values that may be returned by NSEvent.KeyCode (which isn't typed as 'NSKey' because it may be many other values as well).
 	[NoMacCatalyst]
+#if NET
+	public enum NSKey {
+#else
 	[Native]
 	public enum NSKey : ulong {
-#else
-	public enum NSKey : int
 #endif
 		A              = 0x00,
 		S              = 0x01,
@@ -672,8 +674,9 @@ namespace AppKit {
 		UpArrow        = 0x7E
 	}
 
-#if !XAMCORE_4_0
+	// This is an untyped enum in AppKit's NSEvent.h
 	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSFunctionKey : ulong {
 #else
@@ -753,50 +756,58 @@ namespace AppKit {
 		ModeSwitch     = 0xF747
 	}
 
-#if !XAMCORE_4_0 && !__MACCATALYST__
+	[NoMacCatalyst]
+#if !NET
 	[Native]
 	public enum NSEventSubtype : ulong {
 #else
 	public enum NSEventSubtype : short {
 #endif
+		/* event subtypes for NSEventTypeAppKitDefined events */
 		WindowExposed = 0,
 		ApplicationActivated = 1,
 		ApplicationDeactivated = 2,
-		[Mac (10,10)]
-		Touch = 3,
 		WindowMoved = 4,
 		ScreenChanged = 8,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This API is not available on this platform.")]
 		AWT = 16,
 #endif
+		/* event subtypes for NSEventTypeSystemDefined events */
+		/* the value is repeated from above */
+		PowerOff = 1,
+
+		/* event subtypes for mouse events */
+		/* the values are repeated from above */
+		MouseEvent = 0, /* NX_SUBTYPE_DEFAULT */
+		TabletPoint = 1, /* NX_SUBTYPE_TABLET_POINT */
+		TabletProximity = 2, /* NX_SUBTYPE_TABLET_PROXIMITY */
+		Touch = 3, /* NX_SUBTYPE_MOUSE_TOUCH */
 	}
 
+#if !NET
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSSystemDefinedEvents : ulong {
-#else
-	public enum NSSystemDefinedEvents : short {
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.PowerOff' instead.")]
 		NSPowerOffEventType = 1
 	}
+#endif // !NET
 
+#if !NET
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSEventMouseSubtype : ulong {
-#else
-	public enum NSEventMouseSubtype : short {
-#endif
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.MouseEvent' instead.")]
 		Mouse, 
-#if !XAMCORE_4_0
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletPoint' instead.")]
 		TablePoint, 
-#else
-		TabletPoint, 
-#endif
-		TabletProximity, Touch
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.TabletProximity' instead.")]
+		TabletProximity,
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'NSEventSubtype.Touch' instead.")]
+		Touch,
 	}
+#endif // !NET
 	
 #endregion
 
@@ -857,14 +868,11 @@ namespace AppKit {
 #endregion
 	
 #region NSWindow
+	// This enum is called NSWindowStyleMask in the headers.
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : ulong {
-#else
-	public enum NSWindowStyle : int {
-#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
@@ -873,10 +881,12 @@ namespace AppKit {
 		Utility		       					= 1 << 4,
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
-		[Advice ("'TexturedBackground' should no longer be used.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Don't use 'TexturedBackground' anymore.")]
 		TexturedBackground     				= 1 << 8,
-		[Deprecated (PlatformName.MacOSX, 10, 14)]
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Don't use, this value has no effect.")]
 		Unscaled	       					= 1 << 11,
+#endif
 		UnifiedTitleAndToolbar 				= 1 << 12,
 		Hud		       						= 1 << 13,
 		FullScreenWindow       				= 1 << 14,
@@ -916,12 +926,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : ulong {
-#else
-	public enum NSWindowNumberListOptions : int {
-#endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
 	}
@@ -1256,7 +1262,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	public enum NSStackViewVisibilityPriority : int {
 		MustHold = 1000,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'MustHold' instead.")]
 		Musthold = MustHold,
 #endif
@@ -1313,11 +1319,9 @@ namespace AppKit {
 		Natural = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC
-	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
-	// properly fix all the API using this.
+#if !NET && MONOMAC
+	// Use Foundation.NSWritingDirection in .NET.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	// [Obsolete ("Use NSWritingDirection in Foundation instead.")]
 	[Flags]
 	[Native]
 	public enum NSWritingDirection : long {
@@ -1327,15 +1331,11 @@ namespace AppKit {
 		[Obsolete ("This API is not available on this platform.")]
 		Override = 2,
 	}
-#endif // !XAMCORE_4_0 && MONOMAC
+#endif // !NET && MONOMAC
 
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : long {
-#else
-	public enum NSTextMovement : int {
-#endif
 		Other = 0,
 		Return = 0x10,
 		Tab = 0x11,
@@ -1375,7 +1375,7 @@ namespace AppKit {
 		AsKeyedArchive = 4
 	}
 
-#if !XAMCORE_4_0 && MONOMAC // Use the one in Foundation instead, only keep this in macOS until XAMCORE_4_0.
+#if !NET && MONOMAC // Use the one in Foundation instead, only keep this in macOS until .NET.
 	[Native]
 	public enum NSUnderlineStyle : long {
 		None                = 0x00,
@@ -1511,21 +1511,19 @@ namespace AppKit {
 		Auto, Fit, Clip
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : ulong {
-#else
-	public enum NSGlyphStorageOptions : int
-#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
+#endif // !NET
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use NSTextStorageEditActions instead.")]
 	[Flags]
@@ -1714,21 +1712,19 @@ namespace AppKit {
 		Default, Regular, Small
 	}
 
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : long {
-#else
-	public enum NSAlertType : int {
-#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
 		DefaultReturn
 	}
+#endif // !NET
 
-#if !XAMCORE_4_0
+#if !NET
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSModalResponse instead.")]
 	[Native]
@@ -1829,7 +1825,7 @@ namespace AppKit {
 	[Native]
 	public enum NSSpeechBoundary : ulong {
 		Immediate =  0,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Word' instead.")]
 		hWord,
 #endif
@@ -2125,7 +2121,7 @@ namespace AppKit {
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
 		TripleBuffer = 3,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TripleBuffer' instead.")]
 		TrippleBuffer = TripleBuffer,
 #endif
@@ -2181,25 +2177,16 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-#if XAMCORE_4_0
-	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
-	public enum NSOpenGLProfile : long {
-#else
 	public enum NSOpenGLProfile : int {
-#endif
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
 		Version4_1Core  = 0x4100
 	}
 	
 	[NoMacCatalyst]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertButtonReturn : long {
-#else
-	public enum NSAlertButtonReturn : int {
-#endif
 		First = 1000,
 		Second = 1001,
 		Third = 1002,
@@ -2312,7 +2299,7 @@ namespace AppKit {
 		GenericPreferencesIcon        = 0x70726566,   //'pref'
 		GenericQueryDocumentIcon      = 0x71657279,   //'qery'
 		GenericRamDiskIcon            = 0x72616D64,   //'ramd'
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GenericSharedLibraryIcon' instead.")]
 		GenericSharedLibaryIcon       = 0x73686C62,   //'shlb'
 #endif
@@ -2707,12 +2694,8 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-#if !XAMCORE_4_0
 	[Native]
 	public enum NSFontPanelMode : ulong {
-#else
-	public enum NSFontPanelMode : int {
-#endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
 		CollectionMask = 1 << 2,
@@ -2768,7 +2751,7 @@ namespace AppKit {
 	public enum NSWindowTitleVisibility : long {
 		Visible = 0,
 		Hidden = 1,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This API is not available on this platform.")]
 		HiddenWhenActive = 2,
 #endif

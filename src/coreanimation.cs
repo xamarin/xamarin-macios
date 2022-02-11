@@ -50,6 +50,10 @@ using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
@@ -126,7 +130,7 @@ namespace CoreAnimation {
 		CAConstraint Create (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttribute);
 
 		[Export ("initWithAttribute:relativeTo:attribute:scale:offset:")]
-		IntPtr Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
+		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
 #endif
 
@@ -170,9 +174,16 @@ namespace CoreAnimation {
 		[Export ("targetTimestamp")]
 		double TargetTimestamp { get; }
 
+		[Deprecated (PlatformName.iOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.TvOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.WatchOS, 8,0, message: "Use 'PreferredFrameRateRange' property.")]
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 #endif
 
@@ -734,11 +745,21 @@ namespace CoreAnimation {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
-#if XAMCORE_4_0
+#if NET
 		[Protected]
-#endif
+		[Export ("scrollMode", ArgumentSemantic.Copy)]
+		NSString WeakScrollMode { get; set; }
+
+		CAScroll ScrollMode {
+			[Wrap ("CAScrollExtensions.GetValue (WeakScrollMode)")]
+			get;
+			[Wrap ("WeakScrollMode = value.GetConstant ()!")]
+			set;
+		}
+#else
 		[Export ("scrollMode", ArgumentSemantic.Copy)]
 		NSString ScrollMode { get; set;  }
+#endif
 
 		[Export ("scrollToPoint:")]
 		void ScrollToPoint (CGPoint p);
@@ -903,7 +924,7 @@ namespace CoreAnimation {
 		[Export ("alignmentMode", ArgumentSemantic.Copy)]
 		NSString WeakAlignmentMode { get; set; }
 
-#if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
+#if !NET // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
 		[Obsolete ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerTruncationMode.None.GetConstant ()")]
@@ -948,7 +969,7 @@ namespace CoreAnimation {
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Justified.GetConstant ()")]
 		NSString AlignmentJustified { get; }
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 		[iOS(9,0)]
 		[Export ("allowsFontSubpixelQuantization")]
@@ -1011,7 +1032,7 @@ namespace CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject)
-#if XAMCORE_4_0
+#if NET
 		, Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (CAAnimationDelegate) }
 #endif
 	)]
@@ -1028,7 +1049,7 @@ namespace CoreAnimation {
 		[Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
 	
-#if XAMCORE_4_0
+#if NET
 		// before that we need to be wrap this manually to avoid the BI1110 error
 		[Wrap ("WeakDelegate")]
 		ICAAnimationDelegate Delegate { get; set; }
@@ -1077,7 +1098,7 @@ namespace CoreAnimation {
 		[Field ("kCAAnimationLinear")]
 		NSString AnimationLinear { get; }
 				
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("kCAAnimationDiscrete")]
 		[Obsolete ("The name has been fixed, use 'AnimationDiscrete' instead.")]
 		NSString AnimationDescrete { get; }
@@ -1126,6 +1147,10 @@ namespace CoreAnimation {
 		SCNAnimationEvent [] AnimationEvents { get; set; }
 
 		#endregion
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 
 	interface ICAAnimationDelegate {}
@@ -1385,11 +1410,11 @@ namespace CoreAnimation {
 		[Export ("endPoint")]
 		CGPoint EndPoint { get; set;  }
 
-#if XAMCORE_4_0
+#if NET
 		CAGradientLayerType LayerType {
 			[Wrap ("CAGradientLayerTypeExtensions.GetValue (WeakLayerType)")]
 			get;
-			[Wrap ("WeakLayerType = value.GetConstant ()")]
+			[Wrap ("WeakLayerType = value.GetConstant ()!")]
 			set;
 		}
 
@@ -1439,7 +1464,7 @@ namespace CoreAnimation {
 		CAMediaTimingFunction FromControlPoints (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("initWithControlPoints::::")]
-		IntPtr Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
+		NativeHandle Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("getControlPointAtIndex:values:"), Internal]
 		void GetControlPointAtIndex (nint idx, IntPtr /* float[2] */ point);
@@ -1770,13 +1795,13 @@ namespace CoreAnimation {
 // rdar #33590997 was filled - no news
 // 'initWithType:', 'behaviorWithType:' and 'behaviorTypes' API now cause rejection
 // https://trello.com/c/J8BDDUV9/86-33590997-coreanimation-quartzcore-api-removals
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterBehavior : NSSecureCoding {
 
 		// [Export ("initWithType:")]
-		// IntPtr Constructor (NSString type);
+		// NativeHandle Constructor (NSString type);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }

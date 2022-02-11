@@ -3,10 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>xcframeworktest</RootNamespace>
 
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
     <FrameworkTestDirectory>$(RootTestsDirectory)\xcframework-test</FrameworkTestDirectory>
 
@@ -19,11 +18,6 @@
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
 
   <ItemGroup>
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
-    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
-    <PackageReference Include="System.Json" Version="4.7.1" />
-
     <ProjectReference Include="$(RootTestsDirectory)\bindings-xcframework-test\dotnet\$(_PlatformName)\bindings-xcframework-test.csproj" />
   </ItemGroup>
 
@@ -38,6 +32,4 @@
     <Compile Include="$(FrameworkTestDirectory)\iOS\XCFrameworkTests.cs" />
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
   </ItemGroup>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

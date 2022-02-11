@@ -144,7 +144,7 @@ namespace UIKit {
 			if (ctx == IntPtr.Zero)
 				return null;
 
-			return new CGContext (ctx);
+			return new CGContext (ctx, false);
 		}
 
 		public static void PushContext (CGContext ctx)

@@ -29,7 +29,7 @@ namespace UIKit {
 
 		public UIImage Capture ()
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
+			if (SystemVersion.CheckiOS (7, 0)) {
 				// This is from https://developer.apple.com/library/content/qa/qa1817/_index.html
 				try {
 					var view = UIApplication.SharedApplication.KeyWindow;

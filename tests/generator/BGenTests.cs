@@ -207,8 +207,13 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 
+#if NET
+			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalInProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#else
 			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalInProperty.Shared getter");
 			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#endif
 		}
 
 		[Test]
@@ -574,7 +579,11 @@ namespace GeneratorTests
 		public void GHIssue3869 () => BuildFile (Profile.iOS, "ghissue3869.cs");
 
 		[Test]
+#if NET
+		[TestCase ("issue3875.cs", "api0__Issue3875_AProtocol")]
+#else
 		[TestCase ("issue3875.cs", "AProtocol")]
+#endif
 		[TestCase ("issue3875B.cs", "BProtocol")]
 		[TestCase ("issue3875C.cs", "api0__Issue3875_AProtocol")]
 		public void Issue3875 (string file, string modelName)
@@ -749,6 +758,116 @@ namespace GeneratorTests
 			bgen.ApiDefinitions = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum.cs") }.ToList ();
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
+		}
+
+		[Test]
+		public void DelegateWithINativeObjectReturnType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/delegate-with-inativeobject-return-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("ObjCRuntime", "Trampolines").NestedTypes.First (v => v.Name == "DMyHandler");
+			Assert.NotNull (type, "DMyHandler");
+			var method = type.Methods.First (v => v.Name == "Invoke");
+#if NET
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", method.ReturnType.FullName, "Return type");
+#else
+			Assert.AreEqual ("System.IntPtr", method.ReturnType.FullName, "Return type");
+#endif
+		}
+
+		[Test]
+		public void ProtocolBindProperty ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/protocol-bind-property.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocol_Extensions");
+			Assert.NotNull (type, "MyProtocol_Extensions");
+
+			var method = type.Methods.First (v => v.Name == "GetOptionalProperty");
+			var ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isOptionalProperty", (string) ldstr.Operand, "isOptionalProperty");
+
+
+			method = type.Methods.First (v => v.Name == "SetOptionalProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setOptionalProperty:", (string) ldstr.Operand, "setOptionalProperty");
+
+			type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocolWrapper");
+			Assert.NotNull (type, "MyProtocolWrapper");
+
+			method = type.Methods.First (v => v.Name == "get_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isAbstractProperty", (string) ldstr.Operand, "isAbstractProperty");
+
+			method = type.Methods.First (v => v.Name == "set_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setAbstractProperty:", (string) ldstr.Operand, "setAbstractProperty");
+		}
+
+		[Test]
+		public void AbstractTypeTest ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/abstract-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyObject");
+			Assert.NotNull (type, "MyObject");
+#if NET
+			Assert.IsFalse (type.IsAbstract, "IsAbstract");
+#else
+			Assert.IsTrue (type.IsAbstract, "IsAbstract");
+#endif
+
+			var method = type.Methods.First (v => v.Name == ".ctor" && !v.HasParameters && !v.IsStatic);
+#if NET
+			Assert.IsTrue (method.IsFamily, "IsProtected ctor");
+#else
+			Assert.IsFalse (method.IsPublic, "IsPublic ctor");
+#endif
+
+			method = type.Methods.First (v => v.Name == "AbstractMember" && !v.HasParameters && !v.IsStatic);
+			var throwInstruction = method.Body?.Instructions?.FirstOrDefault (v => v.OpCode == OpCodes.Throw);
+			Assert.IsTrue (method.IsPublic, "IsPublic ctor");
+			Assert.IsTrue (method.IsVirtual, "IsVirtual");
+#if NET
+			Assert.IsFalse (method.IsAbstract, "IsAbstract");
+			Assert.IsNotNull (throwInstruction, "Throw");
+#else
+			Assert.IsTrue (method.IsAbstract, "IsAbstract");
+			Assert.IsNull (throwInstruction, "Throw");
+#endif
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void NativeIntDelegates ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nint-delegates.cs");
+
+			Func<string, bool> verifyDelegate = (typename) => {
+				// Assert that the return type from the delegate is IntPtr
+				var type = bgen.ApiAssembly.MainModule.GetType ("NS", typename);
+				Assert.NotNull (type, typename);
+				var method = type.Methods.First (m => m.Name == "Invoke");
+				Assert.IsNotNull (method.MethodReturnType.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), "Return type for delegate " + typename);
+				foreach (var p in method.Parameters) {
+					Assert.IsNotNull (p.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), $"Parameter {p.Name}'s type for delegate " + typename);
+				}
+
+				return false;
+			};
+
+			verifyDelegate ("D1");
+			verifyDelegate ("D2");
+			verifyDelegate ("D3");
+			verifyDelegate ("NSTableViewColumnRowPredicate");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

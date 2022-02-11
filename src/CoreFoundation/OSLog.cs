@@ -21,14 +21,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+
+using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
-#if !NET
-	[Mac (10,12), iOS (10,0), Watch (3,0), TV (10,0)]
+#if NET
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+#else
+	[Mac (10,12)]
+	[iOS (10,0)]
+	[Watch (3,0)]
+	[TV (10,0)]
 #endif
 	public sealed class OSLog : NativeObject {
 
@@ -70,7 +84,8 @@ namespace CoreFoundation {
 		[DllImport ("__Internal")]
 		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, string message);
 
-		internal OSLog (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal OSLog (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}

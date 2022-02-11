@@ -20,6 +20,9 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public bool Recursive { get; set; }
+
+		[Required]
+		public bool IncludeDirectories { get; set; }
 		#endregion
 
 		#region Outputs
@@ -32,7 +35,9 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			var searchOption = Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-			var entriesFullPath = Directory.GetFileSystemEntries (DirectoryPath, Pattern, searchOption);
+			var entriesFullPath = IncludeDirectories ?
+				Directory.GetFileSystemEntries (DirectoryPath, Pattern, searchOption) :
+				Directory.GetFiles (DirectoryPath, Pattern, searchOption);
 
 			Entries = entriesFullPath.Select (v => new TaskItem (v)).ToArray ();
 

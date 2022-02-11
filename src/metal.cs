@@ -24,6 +24,14 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#if TVOS
+using MTLAccelerationStructureSizes = Foundation.NSObject;
+#endif
+
 namespace Metal {
 
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);
@@ -164,7 +172,7 @@ namespace Metal {
 	
 		[Mac (10,13)]
 		[return: NullAllowed]
-#if XAMCORE_4_0 || !MONOMAC
+#if NET || !MONOMAC
 		[Abstract]
 #endif
 		[Export ("newTextureWithDescriptor:offset:bytesPerRow:")]
@@ -172,32 +180,33 @@ namespace Metal {
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset, nuint bytesPerRow);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("addDebugMarker:range:")]
 		void AddDebugMarker (string marker, NSRange range);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("removeAllDebugMarkers")]
 		void RemoveAllDebugMarkers ();
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[NullAllowed, Export ("remoteStorageBuffer")]
 		IMTLBuffer RemoteStorageBuffer { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10,15)]
 		[Export ("newRemoteBufferViewForDevice:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLBuffer CreateRemoteBuffer (IMTLDevice device);
 	}
 	
@@ -278,7 +287,7 @@ namespace Metal {
 		IMTLComputeCommandEncoder ComputeCommandEncoder { get; }
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("computeCommandEncoderWithDispatchType:")]
@@ -286,14 +295,14 @@ namespace Metal {
 		IMTLComputeCommandEncoder ComputeCommandEncoderDispatch (MTLDispatchType dispatchType);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("encodeWaitForEvent:value:")]
 		void EncodeWait (IMTLEvent @event, ulong value);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("encodeSignalEvent:value:")]
@@ -315,7 +324,7 @@ namespace Metal {
 		[Export ("presentDrawable:atTime:")]
 		void PresentDrawable (IMTLDrawable drawable, double presentationTime);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -327,51 +336,49 @@ namespace Metal {
 		[Export ("renderCommandEncoderWithDescriptor:")]
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder (MTLRenderPassDescriptor renderPassDescriptor);
 
-#if !XAMCORE_4_0 || !MONOMAC // These were incorrectly released as available for mac, but are actually iOS/tvOS only.  Have to wait for XAMCORE_4_0 to remove the mac availability since it's a breaking change.
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[iOS (10,3)][TV (10,2)][Mac (10,12,4)]
 		[Export ("kernelStartTime")]
 		double /* CFTimeInterval */ KernelStartTime { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[iOS (10,3)][TV (10,2)][Mac (10,12,4)]
 		[Export ("kernelEndTime")]
 		double /* CFTimeInterval */ KernelEndTime { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[iOS (10,3)][TV (10,2)][Mac (10,12,4)]
 		[Export ("GPUStartTime")]
 		double /* CFTimeInterval */ GpuStartTime { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[iOS (10,3)][TV (10,2)][Mac (10,12,4)]
 		[Export ("GPUEndTime")]
 		double /* CFTimeInterval */ GpuEndTime { get; }
-#endif // !XAMCORE_4_0 || !MONOMAC
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Export ("pushDebugGroup:")]
 		void PushDebugGroup (string @string);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Export ("popDebugGroup")]
 		void PopDebugGroup ();
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -380,42 +387,42 @@ namespace Metal {
 		IMTLResourceStateCommandEncoder ResourceStateCommandEncoder { get; }
 
 		[Mac (11, 0), iOS (14, 0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("errorOptions")]
 		MTLCommandBufferErrorOption ErrorOptions { get; }
 
 		[Mac (11, 0), iOS (14, 0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("logs")]
 		IMTLLogContainer Logs { get; }
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("computeCommandEncoderWithDescriptor:")]
 		IMTLComputeCommandEncoder CreateComputeCommandEncoder (MTLComputePassDescriptor computePassDescriptor);
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("blitCommandEncoderWithDescriptor:")]
 		IMTLBlitCommandEncoder CreateBlitCommandEncoder (MTLBlitPassDescriptor blitPassDescriptor);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("resourceStateCommandEncoderWithDescriptor:")]
 		IMTLResourceStateCommandEncoder CreateResourceStateCommandEncoder (MTLResourceStatePassDescriptor resourceStatePassDescriptor);
 
 		[Mac (11, 0), iOS (14, 0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("accelerationStructureCommandEncoder")]
@@ -450,7 +457,7 @@ namespace Metal {
 		void InsertDebugCaptureBoundary ();
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("commandBufferWithDescriptor:")]
@@ -464,7 +471,7 @@ namespace Metal {
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLComputeCommandEncoder : MTLCommandEncoder {
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("dispatchType")]
@@ -491,14 +498,14 @@ namespace Metal {
 		[Abstract, Export ("dispatchThreadgroups:threadsPerThreadgroup:")]
 		void DispatchThreadgroups (MTLSize threadgroupsPerGrid, MTLSize threadsPerThreadgroup);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (9,0)]
 		[Export ("dispatchThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerThreadgroup:")]
 		void DispatchThreadgroups (IMTLBuffer indirectBuffer, nuint indirectBufferOffset, MTLSize threadsPerThreadgroup);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 		[Export ("setBuffers:offsets:withRange:")]
 		void SetBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
@@ -532,28 +539,28 @@ namespace Metal {
 		void SetBytes (IntPtr bytes, nuint length, nuint index);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setStageInRegion:")]
 		void SetStage (MTLRegion region);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setStageInRegionWithIndirectBuffer:indirectBufferOffset:")]
 		void SetStageInRegion (IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("waitForFence:")]
@@ -562,35 +569,35 @@ namespace Metal {
 		[Mac (10,13)]
 		[iOS (11,0)]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("dispatchThreads:threadsPerThreadgroup:")]
 		void DispatchThreads (MTLSize threadsPerGrid, MTLSize threadsPerThreadgroup);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useResource:usage:")]
 		void UseResource (IMTLResource resource, MTLResourceUsage usage);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useResources:count:usage:")]
 		void UseResources (IMTLResource[] resources, nuint count, MTLResourceUsage usage);
 		
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useHeap:")]
 		void UseHeap (IMTLHeap heap);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useHeaps:count:")]
@@ -599,46 +606,46 @@ namespace Metal {
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (11,0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setImageblockWidth:height:")]
 		void SetImageblock (nuint width, nuint height);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithScope:")]
 		void MemoryBarrier (MTLBarrierScope scope);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithResources:count:")]
 		void MemoryBarrier (IMTLResource[] resources, nuint count);
 
 		[TV (13,0), Mac (11,0), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("executeCommandsInBuffer:withRange:")]
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandBuffer, NSRange executionRange);
 
 		[TV (13,0), Mac (11,0), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("executeCommandsInBuffer:indirectBuffer:indirectBufferOffset:")]
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandbuffer, IMTLBuffer indirectRangeBuffer, nuint indirectBufferOffset);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), TV (14,0), Mac (10,15)]
 		[Export ("sampleCountersInBuffer:atSampleIndex:withBarrier:")]
-#if XAMCORE_4_0
+#if NET
 		void SampleCounters (IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
 #else
 		[Obsolete ("Use the overload that takes an IMTLCounterSampleBuffer instead.")]
@@ -646,35 +653,35 @@ namespace Metal {
 #endif
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setVisibleFunctionTable:atBufferIndex:")]
 		void SetVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable visibleFunctionTable, nuint bufferIndex);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setVisibleFunctionTables:withBufferRange:")]
 		void SetVisibleFunctionTables (IMTLVisibleFunctionTable[] visibleFunctionTables, NSRange range);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setIntersectionFunctionTable:atBufferIndex:")]
 		void SetIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setIntersectionFunctionTables:withBufferRange:")]
 		void SetIntersectionFunctionTables (IMTLIntersectionFunctionTable[] intersectionFunctionTables, NSRange range);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setAccelerationStructure:atBufferIndex:")]
@@ -686,7 +693,7 @@ namespace Metal {
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePipelineReflection {
 		[Export ("arguments")]
-#if XAMCORE_4_0
+#if NET
 		MTLArgument [] Arguments { get; }
 #else
 		NSObject [] Arguments { get; }
@@ -707,14 +714,14 @@ namespace Metal {
 		nuint ThreadExecutionWidth { get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("label")]
 		string Label { get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("staticThreadgroupMemoryLength")]
@@ -722,45 +729,48 @@ namespace Metal {
 
 		[iOS (11,0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("imageblockMemoryLengthForDimensions:")]
 		nuint GetImageblockMemoryLength (MTLSize imageblockDimensions);
 
 		[TV (13, 0), Mac (11,0), iOS (13, 0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportIndirectCommandBuffers")]
 		bool SupportIndirectCommandBuffers { get; }
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("functionHandleWithFunction:")]
 		IMTLFunctionHandle CreateFunctionHandle (IMTLFunction function);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newComputePipelineStateWithAdditionalBinaryFunctions:error:")]
+		[return: Release]
 		IMTLComputePipelineState CreateComputePipelineState (IMTLFunction[] functions, [NullAllowed] out NSError error);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newVisibleFunctionTableWithDescriptor:")]
+		[return: Release]
 		IMTLVisibleFunctionTable CreateVisibleFunctionTable (MTLVisibleFunctionTableDescriptor descriptor);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newIntersectionFunctionTableWithDescriptor:")]
+		[return: Release]
 		IMTLIntersectionFunctionTable CreateIntersectionFunctionTable (MTLIntersectionFunctionTableDescriptor descriptor);
 	}
 
@@ -785,7 +795,7 @@ namespace Metal {
 		void CopyFromBuffer (IMTLBuffer sourceBuffer, nuint sourceOffset, nuint sourceBytesPerRow, nuint sourceBytesPerImage,  MTLSize sourceSize, IMTLTexture destinationTexture, nuint destinationSlice, nuint destinationLevel,  MTLOrigin destinationOrigin);
 
 		[iOS (9,0)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -796,7 +806,7 @@ namespace Metal {
 		void CopyFromTexture (IMTLTexture sourceTexture, nuint sourceSlice, nuint sourceLevel, MTLOrigin sourceOrigin,  MTLSize sourceSize, IMTLBuffer destinationBuffer, nuint destinationOffset, nuint destinatinBytesPerRow, nuint destinationBytesPerImage);
 
 		[iOS (9,0)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -813,76 +823,76 @@ namespace Metal {
 		void CopyFromBuffer (IMTLBuffer sourceBuffer, nuint sourceOffset, IMTLBuffer destinationBuffer, nuint destinationOffset, nuint size);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("waitForFence:")]
 		void Wait (IMTLFence fence);
 
 		[Mac (10,14), iOS (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForGPUAccess:")]
 		void OptimizeContentsForGpuAccess (IMTLTexture texture);
 
 		[Mac (10,14), iOS (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForGPUAccess:slice:level:")]
 		void OptimizeContentsForGpuAccess (IMTLTexture texture, nuint slice, nuint level);
 
 		[Mac (10,14), iOS (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForCPUAccess:")]
 		void OptimizeContentsForCpuAccess (IMTLTexture texture);
 
 		[Mac (10,14), iOS (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForCPUAccess:slice:level:")]
 		void OptimizeContentsForCpuAccess (IMTLTexture texture, nuint slice, nuint level);
 
 		[Mac (10,14), iOS (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("resetCommandsInBuffer:withRange:")]
 		void ResetCommands (IMTLIndirectCommandBuffer buffer, NSRange range);
 
 		[Mac (10,14), iOS (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("copyIndirectCommandBuffer:sourceRange:destination:destinationIndex:")]
 		void Copy (IMTLIndirectCommandBuffer source, NSRange sourceRange, IMTLIndirectCommandBuffer destination, nuint destinationIndex);
 
 		[Mac (10,14), iOS (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("optimizeIndirectCommandBuffer:withRange:")]
 		void Optimize (IMTLIndirectCommandBuffer indirectCommandBuffer, NSRange range);
 
-#if XAMCORE_4_0
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Mac (11,0), NoTV, iOS (13,0), MacCatalyst (15,0)]
 		[Export ("getTextureAccessCounters:region:mipLevel:slice:resetCounters:countersBuffer:countersBufferOffset:")]
 		void GetTextureAccessCounters (IMTLTexture texture, MTLRegion region, nuint mipLevel, nuint slice, bool resetCounters, IMTLBuffer countersBuffer, nuint countersBufferOffset);
 
-#if XAMCORE_4_0
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Mac (11,0), NoTV, iOS (13,0), MacCatalyst (15,0)]
@@ -890,32 +900,40 @@ namespace Metal {
 		void ResetTextureAccessCounters (IMTLTexture texture, MTLRegion region, nuint mipLevel, nuint slice);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("copyFromTexture:sourceSlice:sourceLevel:toTexture:destinationSlice:destinationLevel:sliceCount:levelCount:")]
 		void Copy (IMTLTexture sourceTexture, nuint sourceSlice, nuint sourceLevel, IMTLTexture destinationTexture, nuint destinationSlice, nuint destinationLevel, nuint sliceCount, nuint levelCount);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("copyFromTexture:toTexture:")]
 		void Copy (IMTLTexture sourceTexture, IMTLTexture destinationTexture);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), TV (14,0), Mac (10,15)]
 		[Export ("sampleCountersInBuffer:atSampleIndex:withBarrier:")]
+#if NET
+		void SampleCounters (IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#else
 		void SampleCounters (MTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), TV (14,0), Mac (10,15)]
 		[Export ("resolveCounters:inRange:destinationBuffer:destinationOffset:")]
+#if NET
+		void ResolveCounters (IMTLCounterSampleBuffer sampleBuffer, NSRange range, IMTLBuffer destinationBuffer, nuint destinationOffset);
+#else
 		void ResolveCounters (MTLCounterSampleBuffer sampleBuffer, NSRange range, IMTLBuffer destinationBuffer, nuint destinationOffset);
+#endif
 	}
 	
 	interface IMTLFence {}
@@ -942,14 +960,14 @@ namespace Metal {
 		[Abstract, Export ("name")]
 		string Name { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
 #endif
 		[iOS (9,0)]
 		[Export ("maxThreadsPerThreadgroup")]
 		MTLSize MaxThreadsPerThreadgroup { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
 #endif
 		[MacCatalyst (15,0)]
@@ -958,7 +976,7 @@ namespace Metal {
 		[Export ("lowPower")]
 		bool LowPower { [Bind ("isLowPower")] get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
 #endif
 		[MacCatalyst (15,0)]
@@ -968,13 +986,13 @@ namespace Metal {
 		bool Headless { [Bind ("isHeadless")] get; }
 		
 		[NoiOS, NoTV, NoWatch, Mac (10,12), MacCatalyst (15,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("recommendedMaxWorkingSetSize")]
 		ulong RecommendedMaxWorkingSetSize { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
 #endif
 		[MacCatalyst (15,0)]
@@ -984,21 +1002,21 @@ namespace Metal {
 		bool Depth24Stencil8PixelFormatSupported { [Bind ("isDepth24Stencil8PixelFormatSupported")] get; }
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("heapTextureSizeAndAlignWithDescriptor:")]
 		MTLSizeAndAlign GetHeapTextureSizeAndAlign (MTLTextureDescriptor desc);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("heapBufferSizeAndAlignWithLength:options:")]
 		MTLSizeAndAlign GetHeapBufferSizeAndAlignWithLength (nuint length, MTLResourceOptions options);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10, 13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newHeapWithDescriptor:")]
@@ -1041,7 +1059,7 @@ namespace Metal {
 		[return: Release]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (11,0), TV (11,0), NoWatch, Mac (10,11)]
@@ -1051,7 +1069,7 @@ namespace Metal {
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, IOSurface.IOSurface iosurface, nuint plane);
 
 		[iOS (13,0), TV (13,0), Mac (10,14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newSharedTextureWithDescriptor:")]
@@ -1060,7 +1078,7 @@ namespace Metal {
 		IMTLTexture CreateSharedTexture (MTLTextureDescriptor descriptor);
 
 		[iOS (13,0), TV (13,0), Mac (10,14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newSharedTextureWithHandle:")]
@@ -1081,14 +1099,14 @@ namespace Metal {
 		[return: Release]
 		IMTLLibrary CreateLibrary (string filepath, out NSError error);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract, Export ("newLibraryWithData:error:")]
 		[return: Release]
 		[Obsolete ("Use the overload that take a 'DispatchData' instead.")]
 		IMTLLibrary CreateLibrary (NSObject data, out NSError error);
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 		[Export ("newLibraryWithData:error:")]
 		[return: Release]
@@ -1103,11 +1121,14 @@ namespace Metal {
 		[Async]
 		void CreateLibrary (string source, MTLCompileOptions options, Action<IMTLLibrary, NSError> completionHandler);
 		
+#if NET
+		[Abstract]
+#endif
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		[Export ("newDefaultLibraryWithBundle:error:")]
 		[return: Release]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		IMTLLibrary CreateDefaultLibrary (NSBundle bundle, out NSError error);
 #else
 		[Obsolete ("Use 'CreateDefaultLibrary' instead.")]
@@ -1147,7 +1168,7 @@ namespace Metal {
 		void CreateComputePipelineState (IMTLFunction computeFunction, MTLPipelineOption options, Action<IMTLComputePipelineState, MTLComputePipelineReflection, NSError> completionHandler);
 
 		[iOS (9,0)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -1156,7 +1177,7 @@ namespace Metal {
 		IMTLComputePipelineState CreateComputePipelineState (MTLComputePipelineDescriptor descriptor, MTLPipelineOption options, out MTLComputePipelineReflection reflection, out NSError error);
 
 		[iOS (9,0)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -1164,7 +1185,7 @@ namespace Metal {
 		void CreateComputePipelineState (MTLComputePipelineDescriptor descriptor, MTLPipelineOption options, MTLNewComputePipelineStateWithReflectionCompletionHandler completionHandler);
 		
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newFence")]
@@ -1175,7 +1196,7 @@ namespace Metal {
 		bool SupportsFeatureSet (MTLFeatureSet featureSet);
 
 		[iOS (9,0)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -1183,35 +1204,35 @@ namespace Metal {
 		bool SupportsTextureSampleCount (nuint sampleCount);
 
 		[Mac (10, 13), NoiOS, NoWatch, NoTV, MacCatalyst (15,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("removable")]
 		bool Removable { [Bind ("isRemovable")] get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("readWriteTextureSupport")]
 		MTLReadWriteTextureTier ReadWriteTextureSupport { get; }
 
 		[Mac (10, 13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("argumentBuffersSupport")]
 		MTLArgumentBuffersTier ArgumentBuffersSupport { get; }
 
 		[Mac (10, 13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("rasterOrderGroupsSupported")]
 		bool RasterOrderGroupsSupported { [Bind ("areRasterOrderGroupsSupported")] get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newLibraryWithURL:error:")]
@@ -1220,49 +1241,49 @@ namespace Metal {
 		IMTLLibrary CreateLibrary (NSUrl url, [NullAllowed] out NSError error);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("minimumLinearTextureAlignmentForPixelFormat:")]
 		nuint GetMinimumLinearTextureAlignment (MTLPixelFormat format);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("minimumTextureBufferAlignmentForPixelFormat:")]
 		nuint GetMinimumTextureBufferAlignment (MTLPixelFormat format);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("maxThreadgroupMemoryLength")]
 		nuint MaxThreadgroupMemoryLength { get; }
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("maxArgumentBufferSamplerCount")]
 		nuint MaxArgumentBufferSamplerCount { get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("programmableSamplePositionsSupported")]
 		bool ProgrammableSamplePositionsSupported { [Bind ("areProgrammableSamplePositionsSupported")] get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("getDefaultSamplePositions:count:")]
 		void GetDefaultSamplePositions (IntPtr positions, nuint count);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithArguments:")]
@@ -1271,7 +1292,7 @@ namespace Metal {
 		IMTLArgumentEncoder CreateArgumentEncoder (MTLArgumentDescriptor[] arguments);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newIndirectCommandBufferWithDescriptor:maxCommandCount:options:")]
@@ -1280,7 +1301,7 @@ namespace Metal {
 		IMTLIndirectCommandBuffer CreateIndirectCommandBuffer (MTLIndirectCommandBufferDescriptor descriptor, nuint maxCount, MTLResourceOptions options);
 
 		[Mac (10, 14), iOS (12, 0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[return: NullAllowed]
@@ -1289,7 +1310,7 @@ namespace Metal {
 		IMTLEvent CreateEvent ();
 
 		[Mac (10, 14), iOS (12, 0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[return: NullAllowed]
@@ -1298,7 +1319,7 @@ namespace Metal {
 		IMTLSharedEvent CreateSharedEvent ();
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newSharedEventWithHandle:")]
@@ -1307,21 +1328,21 @@ namespace Metal {
 		IMTLSharedEvent CreateSharedEvent (MTLSharedEventHandle sharedEventHandle);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("maxBufferLength")]
 		nuint MaxBufferLength { get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("registryID")]
 		ulong RegistryId { get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("currentAllocatedSize")]
@@ -1347,7 +1368,7 @@ namespace Metal {
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (11,0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newRenderPipelineStateWithTileDescriptor:options:reflection:error:")]
@@ -1358,13 +1379,13 @@ namespace Metal {
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (11,0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newRenderPipelineStateWithTileDescriptor:options:completionHandler:")]
 		void CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -1372,7 +1393,7 @@ namespace Metal {
 		[Export ("supportsVertexAmplificationCount:")]
 		bool SupportsVertexAmplification (nuint count);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -1380,7 +1401,7 @@ namespace Metal {
 		[Export ("supportsRasterizationRateMapWithLayerCount:")]
 		bool SupportsRasterizationRateMap (nuint layerCount);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -1388,7 +1409,7 @@ namespace Metal {
 		[Export ("sparseTileSizeWithTextureType:pixelFormat:sampleCount:")]
 		MTLSize GetSparseTileSize (MTLTextureType textureType, MTLPixelFormat pixelFormat, nuint sampleCount);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -1396,13 +1417,14 @@ namespace Metal {
 		[Export ("sparseTileSizeInBytes")]
 		nuint SparseTileSizeInBytes { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
 		[Mac (10,15,4), NoTV, iOS (13,0)]
 		[Export ("newRasterizationRateMapWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLRasterizationRateMap CreateRasterizationRateMap (MTLRasterizationRateMapDescriptor descriptor);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -1416,101 +1438,102 @@ namespace Metal {
 		void ConvertSparsePixelRegions (IntPtr pixelRegions, IntPtr tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions);
 
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("hasUnifiedMemory")]
 		bool HasUnifiedMemory { get; }
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsFamily:")]
 		bool SupportsFamily (MTLGpuFamily gpuFamily);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), NoTV, Mac (10, 15), NoMacCatalyst]
 		[Export ("barycentricCoordsSupported")]
 		bool BarycentricCoordsSupported { [Bind ("areBarycentricCoordsSupported")] get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), NoTV, Mac (10, 15), NoMacCatalyst]
 		[Export ("supportsShaderBarycentricCoordinates")]
 		bool SupportsShaderBarycentricCoordinates { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[Export ("peerIndex")]
 		uint PeerIndex { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[Export ("peerCount")]
 		uint PeerCount { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), TV (14,0), Mac (10, 15)]
 		[NullAllowed, Export ("counterSets")]
-#if XAMCORE_4_0
+#if NET
 		IMTLCounterSet[] CounterSets { get; }
 #else
 		[Obsolete ("Use 'GetIMTLCounterSets' instead.")]
 		MTLCounterSet[] CounterSets { get; }
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), TV (14,0), Mac (10,15)]
 		[Export ("newCounterSampleBufferWithDescriptor:error:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
+		[return: Release]
+#if NET
 		IMTLCounterSampleBuffer CreateCounterSampleBuffer (MTLCounterSampleBufferDescriptor descriptor, [NullAllowed] out NSError error);
 #else
 		[Obsolete ("Use 'CreateIMTLCounterSampleBuffer' instead.")]
 		MTLCounterSampleBuffer CreateCounterSampleBuffer (MTLCounterSampleBufferDescriptor descriptor, [NullAllowed] out NSError error);
 #endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), TV (14,0), Mac (10,15)]
 		[Export ("sampleTimestamps:gpuTimestamp:")]
 		void GetSampleTimestamps (nuint cpuTimestamp, nuint gpuTimestamp);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[Export ("peerGroupID")]
 		ulong PeerGroupId { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[Export ("maxTransferRate")]
 		ulong MaxTransferRate { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[Export ("location")]
 		MTLDeviceLocation Location { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
@@ -1519,7 +1542,7 @@ namespace Metal {
 
 		[Mac (11, 0), NoTV]
 		[iOS (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supports32BitFloatFiltering")]
@@ -1527,96 +1550,101 @@ namespace Metal {
 
 		[Mac (11, 0), NoTV]
 		[iOS (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supports32BitMSAA")]
 		bool Supports32BitMsaa { get; }
 
 		[NoiOS, Mac (11, 0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsBCTextureCompression")]
 		bool SupportsBCTextureCompression { get; }
 
 		[Mac (11, 0), iOS (14, 0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsPullModelInterpolation")]
 		bool SupportsPullModelInterpolation { get; }
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsCounterSampling:")]
 		bool SupportsCounterSampling (MTLCounterSamplingPoint samplingPoint);
 
 		[Mac (11, 0), iOS (14, 0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsDynamicLibraries")]
 		bool SupportsDynamicLibraries { get; }
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newDynamicLibrary:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLDynamicLibrary CreateDynamicLibrary (IMTLLibrary library, [NullAllowed] out NSError error);
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newDynamicLibraryWithURL:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLDynamicLibrary CreateDynamicLibrary (NSUrl url, [NullAllowed] out NSError error);
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newBinaryArchiveWithDescriptor:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLBinaryArchive CreateBinaryArchive (MTLBinaryArchiveDescriptor descriptor, [NullAllowed] out NSError error);
 
 		[Mac (11, 0), iOS (14, 0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsRaytracing")]
 		bool SupportsRaytracing { get; }
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("accelerationStructureSizesWithDescriptor:")]
 		MTLAccelerationStructureSizes CreateAccelerationStructureSizes (MTLAccelerationStructureDescriptor descriptor);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newAccelerationStructureWithSize:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLAccelerationStructure CreateAccelerationStructure (nuint size);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newAccelerationStructureWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLAccelerationStructure CreateAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
 
 		[Mac (11, 0), iOS (14, 0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsFunctionPointers")]
@@ -1624,49 +1652,50 @@ namespace Metal {
 
 		[Mac (11, 0), NoTV]
 		[iOS (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportsQueryTextureLOD")]
 		bool SupportsQueryTextureLod { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), TV (15,0)]
 		[Export ("supportsRenderDynamicLibraries")]
 		bool SupportsRenderDynamicLibraries { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoTV]
 		[Export ("supportsRaytracingFromRender")]
 		bool SupportsRaytracingFromRender { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoTV]
 		[Export ("supportsPrimitiveMotionBlur")]
 		bool SupportsPrimitiveMotionBlur { get; }
 		
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoTV, NoWatch]
 		[Export ("supportsFunctionPointersFromRender")]
 		bool SupportsFunctionPointersFromRender { get; }
 		
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), TV (15,0)]
 		[Export ("newLibraryWithStitchedDescriptor:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLLibrary CreateLibrary (MTLStitchedLibraryDescriptor descriptor, [NullAllowed] out NSError error);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Async]
@@ -1686,7 +1715,7 @@ namespace Metal {
 		[Abstract, Export ("presentAtTime:")]
 		void Present (double presentationTime);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -1694,7 +1723,7 @@ namespace Metal {
 		[Export ("presentAfterMinimumDuration:")]
 		void PresentAfter (double duration);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -1702,7 +1731,7 @@ namespace Metal {
 		[Export ("addPresentedHandler:")]
 		void AddPresentedHandler (Action<IMTLDrawable> block);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -1710,13 +1739,17 @@ namespace Metal {
 		[Export ("presentedTime")]
 		double /* CFTimeInterval */ PresentedTime { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
 		[iOS (10,3)][TV (10,2)][Mac (10,15,4)]
 		[Export ("drawableID")]
+#if NET
+		nuint DrawableId { get; }
+#else
 		nuint DrawableID { get; }
+#endif
 	}
 
 	interface IMTLTexture {}
@@ -1726,11 +1759,12 @@ namespace Metal {
 	[iOS (8,0)][Mac (10,11)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLTexture : MTLResource {
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0)]
+		[iOS (8, 0)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Abstract, Export ("rootResource")]
 		IMTLResource RootResource { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (9,0)][Mac (10,11)]
@@ -1738,21 +1772,21 @@ namespace Metal {
 		[Export ("parentTexture")]
 		IMTLTexture ParentTexture { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("parentRelativeLevel")]
 		nuint ParentRelativeLevel { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("parentRelativeSlice")]
 		nuint ParentRelativeSlice { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (9,0)][Mac (10,11)]
@@ -1760,14 +1794,14 @@ namespace Metal {
 		[Export ("buffer")]
 		IMTLBuffer Buffer { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("bufferOffset")]
 		nuint BufferOffset { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (9,0)][Mac (10,11)]
@@ -1802,24 +1836,31 @@ namespace Metal {
 		bool FramebufferOnly { [Bind ("isFramebufferOnly")] get; }
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; }
+
+		[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+#if NET
+		[Abstract]
+#endif
+		[Export ("compressionType")]
+		MTLTextureCompressionType CompressionType { get; }
 
 		[Abstract, Export ("newTextureViewWithPixelFormat:")]
 		[return: NullAllowed]
 		[return: Release]
 		IMTLTexture CreateTextureView (MTLPixelFormat pixelFormat);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("usage")]
 		MTLTextureUsage Usage { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newTextureViewWithPixelFormat:textureType:levels:slices:")]
@@ -1844,28 +1885,28 @@ namespace Metal {
 		void ReplaceRegion (MTLRegion region, nuint level, IntPtr pixelBytes, nuint bytesPerRow);
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("iosurface")]
 		IOSurface.IOSurface IOSurface { get; }
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("iosurfacePlane")]
 		nuint IOSurfacePlane { get; }
 
 		[iOS (13,0), TV (13,0), Mac (10, 14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("shareable")]
 		bool Shareable { [Bind ("isShareable")] get; }
 
 		[iOS (13,0), TV (13,0), Mac (10, 14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[return: NullAllowed]
@@ -1873,7 +1914,7 @@ namespace Metal {
 		[Export ("newSharedTextureHandle")]
 		MTLSharedTextureHandle CreateSharedTextureHandle ();
 
-#if XAMCORE_4_0
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract]
 #endif
 		
@@ -1881,48 +1922,50 @@ namespace Metal {
 		[Export ("firstMipmapInTail")]
 		nuint FirstMipmapInTail { get; }
 
-#if XAMCORE_4_0
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Mac (11,0), NoTV, iOS (13, 0), MacCatalyst (15,0)]
 		[Export ("tailSizeInBytes")]
 		nuint TailSizeInBytes { get; }
 
-#if XAMCORE_4_0
+#if NET && !__MACOS__ && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Mac (11,0), NoTV, iOS (13, 0), MacCatalyst (15,0)]
 		[Export ("isSparse")]
 		bool IsSparse { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (10, 15), TV (13,0), iOS (13, 0)]
 		[Export ("swizzle")]
 		MTLTextureSwizzleChannels Swizzle { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (10,15), TV (13,0), iOS (13,0)]
 		[Export ("newTextureViewWithPixelFormat:textureType:levels:slices:swizzle:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture Create (MTLPixelFormat pixelFormat, MTLTextureType textureType, NSRange levelRange, NSRange sliceRange, MTLTextureSwizzleChannels swizzle);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[NullAllowed, Export ("remoteStorageTexture")]
 		IMTLTexture RemoteStorageTexture { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NoiOS, NoTV, Mac (10,15)]
 		[Export ("newRemoteTextureViewForDevice:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateRemoteTexture (IMTLDevice device);
 	}
 	
@@ -1983,6 +2026,10 @@ namespace Metal {
 		[Mac (10,14), iOS (12,0), TV (12,0)]
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; set; }
+
+		[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+		[Export ("compressionType")]
+		MTLTextureCompressionType CompressionType { get; set; }
 
 		[Mac (10, 15), iOS (13, 0), TV (13,0)]
 		[Export ("hazardTrackingMode", ArgumentSemantic.Assign)]
@@ -2221,7 +2268,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("maxTotalThreadsPerThreadgroup")]
@@ -2229,7 +2276,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("threadgroupSizeMatchesTileSize")]
@@ -2237,7 +2284,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("imageblockSampleLength")]
@@ -2245,20 +2292,20 @@ namespace Metal {
 
 		[iOS (11,0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("imageblockMemoryLengthForDimensions:")]
 		nuint GetImageblockMemoryLength (MTLSize imageblockDimensions);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("supportIndirectCommandBuffers")]
 		bool SupportIndirectCommandBuffers { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, NoWatch, MacCatalyst (15,0)]
@@ -2266,28 +2313,31 @@ namespace Metal {
 		[return: NullAllowed]
 		IMTLFunctionHandle FunctionHandleWithFunction (IMTLFunction function, MTLRenderStages stage);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, NoWatch, MacCatalyst (15,0)]
 		[Export ("newVisibleFunctionTableWithDescriptor:stage:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLVisibleFunctionTable NewVisibleFunctionTableWithDescriptor (MTLVisibleFunctionTableDescriptor descriptor, MTLRenderStages stage);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, NoWatch, MacCatalyst (15,0)]
 		[Export ("newIntersectionFunctionTableWithDescriptor:stage:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLIntersectionFunctionTable NewIntersectionFunctionTableWithDescriptor (MTLIntersectionFunctionTableDescriptor descriptor, MTLRenderStages stage);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, NoWatch, MacCatalyst (15,0)]
 		[Export ("newRenderPipelineStateWithAdditionalBinaryFunctions:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLRenderPipelineState NewRenderPipelineStateWithAdditionalBinaryFunctions (MTLRenderPipelineFunctionsDescriptor additionalBinaryFunctions, [NullAllowed] out NSError error);
 	}
 
@@ -2435,7 +2485,7 @@ namespace Metal {
 	{
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("setConstantValue:type:atIndex:")]
 		void SetConstantValue (IntPtr value, MTLDataType type, nuint index);
@@ -2473,7 +2523,7 @@ namespace Metal {
 	partial interface MTLFunction  {
 
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("label")]
@@ -2492,35 +2542,35 @@ namespace Metal {
 		string Name { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("patchType")]
 		MTLPatchType PatchType { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("patchControlPointCount")]
 		nint PatchControlPointCount { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("stageInputAttributes")]
 		MTLAttribute[] StageInputAttributes { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("functionConstantsDictionary")]
 		NSDictionary<NSString, MTLFunctionConstant> FunctionConstants { get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithBufferIndex:")]
@@ -2528,7 +2578,7 @@ namespace Metal {
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint bufferIndex);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithBufferIndex:reflection:")]
@@ -2536,7 +2586,7 @@ namespace Metal {
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint bufferIndex, [NullAllowed] out MTLArgument reflection);
 
 		[Mac (11, 0), iOS (14, 0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("options")]
@@ -2563,7 +2613,7 @@ namespace Metal {
 		IMTLFunction CreateFunction (string functionName);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newFunctionWithName:constantValues:error:")]
@@ -2572,7 +2622,7 @@ namespace Metal {
 		IMTLFunction CreateFunction (string name, MTLFunctionConstantValues constantValues, out NSError error);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newFunctionWithName:constantValues:completionHandler:")]
@@ -2583,45 +2633,47 @@ namespace Metal {
 		NSString ErrorDomain { get; }
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newFunctionWithDescriptor:completionHandler:")]
 		void CreateFunction (MTLFunctionDescriptor descriptor, Action<IMTLFunction, NSError> completionHandler);
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newFunctionWithDescriptor:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLFunction CreateFunction (MTLFunctionDescriptor descriptor, [NullAllowed] out NSError error);
 
 		// protocol, so no Async
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newIntersectionFunctionWithDescriptor:completionHandler:")]
 		void CreateIntersectionFunction (MTLIntersectionFunctionDescriptor descriptor, Action<IMTLFunction, NSError> completionHandler);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newIntersectionFunctionWithDescriptor:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLFunction CreateIntersectionFunction (MTLIntersectionFunctionDescriptor descriptor, [NullAllowed] out NSError error);
 
 		[Mac (11, 0), iOS (14, 0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("type")]
 		MTLLibraryType Type { get; }
 
 		[Mac (11, 0), iOS (14, 0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("installName")]
@@ -2634,7 +2686,7 @@ namespace Metal {
 
 		[NullAllowed] // by default this property is null
 		[Export ("preprocessorMacros", ArgumentSemantic.Copy)]
-#if XAMCORE_4_0
+#if NET
 		NSDictionary<NSString, NSObject> PreprocessorMacros { get; set; }
 #else
 		NSDictionary PreprocessorMacros { get; set; }
@@ -2699,7 +2751,7 @@ namespace Metal {
 		[Export ("dataType")]
 		MTLDataType DataType { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Export ("structType")]
 		[NullAllowed]
 		MTLStructType StructType { get; }
@@ -2790,42 +2842,42 @@ namespace Metal {
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder ();
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setColorStoreAction:atIndex:")]
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setDepthStoreAction:")]
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setStencilStoreAction:")]
 		void SetStencilStoreAction (MTLStoreAction storeAction);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setColorStoreActionOptions:atIndex:")]
 		void SetColorStoreActionOptions (MTLStoreActionOptions storeActionOptions, nuint colorAttachmentIndex);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setDepthStoreActionOptions:")]
 		void SetDepthStoreActionOptions (MTLStoreActionOptions storeActionOptions);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setStencilStoreActionOptions:")]
@@ -2864,7 +2916,7 @@ namespace Metal {
 
 		[iOS (9,0)] // Current headers claim this member was introduced in iOS 11, but it also shows up in Xcode 7's header (as introduced in iOS 9)
 		[Mac (10,11), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -2910,7 +2962,7 @@ namespace Metal {
 		void SetStencilReferenceValue (uint /* uint32_t */ referenceValue);
 
 		[iOS (9,0)][Mac (10,11)]
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -2921,21 +2973,21 @@ namespace Metal {
 		void SetVisibilityResultMode (MTLVisibilityResultMode mode, nuint offset);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setColorStoreAction:atIndex:")]
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setDepthStoreAction:")]
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setStencilStoreAction:")]
@@ -2953,7 +3005,7 @@ namespace Metal {
 		[Abstract, Export ("drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferOffset:")]
 		void DrawIndexedPrimitives (MTLPrimitiveType primitiveType, nuint indexCount, MTLIndexType indexType, IMTLBuffer indexBuffer, nuint indexBufferOffset);
 
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -2961,7 +3013,7 @@ namespace Metal {
 		[Export ("drawPrimitives:vertexStart:vertexCount:instanceCount:baseInstance:")]
 		void DrawPrimitives (MTLPrimitiveType primitiveType, nuint vertexStart, nuint vertexCount, nuint instanceCount, nuint baseInstance);
 
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -2969,7 +3021,7 @@ namespace Metal {
 		[Export ("drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferOffset:instanceCount:baseVertex:baseInstance:")]
 		void DrawIndexedPrimitives (MTLPrimitiveType primitiveType, nuint indexCount, MTLIndexType indexType, IMTLBuffer indexBuffer, nuint indexBufferOffset, nuint instanceCount, nint baseVertex, nuint baseInstance);
 
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -2977,7 +3029,7 @@ namespace Metal {
 		[Export ("drawPrimitives:indirectBuffer:indirectBufferOffset:")]
 		void DrawPrimitives (MTLPrimitiveType primitiveType, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
-#if XAMCORE_4_0
+#if NET
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
 #endif
@@ -3020,42 +3072,42 @@ namespace Metal {
 
 		[NoiOS, NoTV, NoWatch, Mac (10,11)]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'MemoryBarrier (MTLBarrierScope, MTLRenderStages, MTLRenderStages)' instead.")]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("textureBarrier")]
 		void TextureBarrier ();
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("updateFence:afterStages:")]
 		void Update (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("waitForFence:beforeStages:")]
 		void Wait (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTessellationFactorBuffer:offset:instanceStride:")]
 		void SetTessellationFactorBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint instanceStride);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTessellationFactorScale:")]
 		void SetTessellationFactorScale (float scale);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:")]
@@ -3064,14 +3116,14 @@ namespace Metal {
 		[iOS (12,0)]
 		[NoWatch, Mac (10,12)]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:")]
@@ -3080,7 +3132,7 @@ namespace Metal {
 		[iOS (12,0)]
 		[NoWatch, Mac (10,12)]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset:")]
@@ -3090,7 +3142,7 @@ namespace Metal {
 		[Mac (10,13), NoWatch]
 		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setViewports:count:")]
@@ -3100,84 +3152,84 @@ namespace Metal {
 		[Mac (10,13), NoWatch]
 		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setScissorRects:count:")]
 		void SetScissorRects (IntPtr scissorRects, nuint count);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setColorStoreActionOptions:atIndex:")]
 		void SetColorStoreActionOptions (MTLStoreActionOptions storeActionOptions, nuint colorAttachmentIndex);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setDepthStoreActionOptions:")]
 		void SetDepthStoreActionOptions (MTLStoreActionOptions storeActionOptions);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setStencilStoreActionOptions:")]
 		void SetStencilStoreActionOptions (MTLStoreActionOptions storeActionOptions);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useResource:usage:")]
 		void UseResource (IMTLResource resource, MTLResourceUsage usage);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useResources:count:usage:")]
 		void UseResources (IMTLResource[] resources, nuint count, MTLResourceUsage usage);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useHeap:")]
 		void UseHeap (IMTLHeap heap);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("useHeaps:count:")]
 		void UseHeaps (IMTLHeap[] heaps, nuint count);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("executeCommandsInBuffer:withRange:")]
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandBuffer, NSRange executionRange);
 
 		[iOS (13,0), TV (13,0), Mac (10,14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("executeCommandsInBuffer:indirectBuffer:indirectBufferOffset:")]
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandbuffer, IMTLBuffer indirectRangeBuffer, nuint indirectBufferOffset);
 
 		[NoiOS, NoTV, Mac (10,14), MacCatalyst (15,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithScope:afterStages:beforeStages:")]
 		void MemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
 
 		[NoiOS, NoTV, Mac (10,14), MacCatalyst (15,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
@@ -3185,7 +3237,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("tileWidth")]
@@ -3193,7 +3245,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("tileHeight")]
@@ -3201,7 +3253,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileBytes:length:atIndex:")]
@@ -3209,7 +3261,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileBuffer:offset:atIndex:")]
@@ -3217,7 +3269,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileBufferOffset:atIndex:")]
@@ -3225,7 +3277,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileBuffers:offsets:withRange:")]
@@ -3233,7 +3285,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileTexture:atIndex:")]
@@ -3241,7 +3293,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileTextures:withRange:")]
@@ -3249,7 +3301,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileSamplerState:atIndex:")]
@@ -3257,7 +3309,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileSamplerStates:withRange:")]
@@ -3265,7 +3317,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex:")]
@@ -3273,7 +3325,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
@@ -3281,7 +3333,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("dispatchThreadsPerTile:")]
@@ -3289,13 +3341,13 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setThreadgroupMemoryLength:offset:atIndex:")]
 		void SetThreadgroupMemoryLength (nuint length, nuint offset, nuint index);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -3303,140 +3355,144 @@ namespace Metal {
 		[Export ("setVertexAmplificationCount:viewMappings:")]
 		void SetVertexAmplificationCount (nuint count, MTLVertexAmplificationViewMapping viewMappings);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("useResource:usage:stages:")]
 		void UseResource (IMTLResource resource, MTLResourceUsage usage, MTLRenderStages stages);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("useResources:count:usage:stages:")]
 		void UseResources (IMTLResource[] resources, nuint count, MTLResourceUsage usage, MTLRenderStages stages);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("useHeap:stages:")]
 		void UseHeap (IMTLHeap heap, MTLRenderStages stages);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV(13,0), Mac (10,15), iOS (13,0)]
 		[Export ("useHeaps:count:stages:")]
 		void UseHeaps (IMTLHeap[] heaps, nuint count, MTLRenderStages stages);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (14,0), TV (14,0), Mac (10,15)]
 		[Export ("sampleCountersInBuffer:atSampleIndex:withBarrier:")]
+#if NET
+		void SampleCounters (IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#else
 		void SampleCounters (MTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setVertexVisibleFunctionTable:atBufferIndex:")]
 		void SetVertexVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setVertexVisibleFunctionTables:withBufferRange:")]
 		void SetVertexVisibleFunctionTables (IMTLVisibleFunctionTable[] functionTables, NSRange range);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setVertexIntersectionFunctionTable:atBufferIndex:")]
 		void SetVertexIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setVertexIntersectionFunctionTables:withBufferRange:")]
 		void SetVertexIntersectionFunctionTables (IMTLIntersectionFunctionTable[] intersectionFunctionTable, NSRange range);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setVertexAccelerationStructure:atBufferIndex:")]
 		void SetVertexAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setFragmentAccelerationStructure:atBufferIndex:")]
 		void SetFragmentAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setFragmentIntersectionFunctionTable:atBufferIndex:")]
 		void SetFragmentIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setFragmentIntersectionFunctionTables:withBufferRange:")]
 		void SetFragmentIntersectionFunctionTables (IMTLIntersectionFunctionTable[] intersectionFunctionTable, NSRange range);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setFragmentVisibleFunctionTable:atBufferIndex:")]
 		void SetFragmentVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setFragmentVisibleFunctionTables:withBufferRange:")]
 		void SetFragmentVisibleFunctionTables (IMTLVisibleFunctionTable[] functionTables, NSRange range);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setTileAccelerationStructure:atBufferIndex:")]
 		void SetTileAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setTileIntersectionFunctionTable:atBufferIndex:")]
 		void SetTileIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setTileIntersectionFunctionTables:withBufferRange:")]
 		void SetTileIntersectionFunctionTables (IMTLIntersectionFunctionTable[] intersectionFunctionTable, NSRange range);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
 		[Export ("setTileVisibleFunctionTable:atBufferIndex:")]
 		void SetTileVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), NoTV, MacCatalyst(15,0), NoWatch]
@@ -3481,7 +3537,7 @@ namespace Metal {
 	interface MTLRenderPipelineReflection {
 		[Export ("vertexArguments")]
 		[NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		MTLArgument [] VertexArguments { get; }
 #else
 		NSObject [] VertexArguments { get; }
@@ -3489,7 +3545,7 @@ namespace Metal {
 
 		[Export ("fragmentArguments")]
 		[NullAllowed]
-#if XAMCORE_4_0
+#if NET
 		MTLArgument [] FragmentArguments { get; }
 #else
 		NSObject [] FragmentArguments { get; }
@@ -3752,47 +3808,49 @@ namespace Metal {
 		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
 
 		[Mac (10, 13), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("currentAllocatedSize")]
 		nuint CurrentAllocatedSize { get; }
 
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("hazardTrackingMode")]
 		MTLHazardTrackingMode HazardTrackingMode { get; }
 
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("resourceOptions")]
 		MTLResourceOptions ResourceOptions { get; }
 
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("type")]
 		MTLHeapType Type { get; }
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newBufferWithLength:options:offset:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLBuffer CreateBuffer (nuint length, MTLResourceOptions options, nuint offset);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("newTextureWithDescriptor:offset:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset);
 	}
 	
@@ -3811,7 +3869,7 @@ namespace Metal {
 		[Abstract, Export ("cpuCacheMode")]
 		MTLCpuCacheMode CpuCacheMode { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
 #endif
 		[iOS (9,0)]
@@ -3822,48 +3880,48 @@ namespace Metal {
 		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
 		
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[NullAllowed, Export ("heap")]
 		IMTLHeap Heap { get; }
 
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("makeAliasable")]
 		void MakeAliasable ();
 
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("isAliasable")]
 		bool IsAliasable { get; }
 
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,13)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("allocatedSize")]
 		nuint AllocatedSize { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("resourceOptions")]
 		MTLResourceOptions ResourceOptions { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("heapOffset")]
 		nuint HeapOffset { get; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
@@ -4013,7 +4071,11 @@ namespace Metal {
 	interface IMTLCaptureScope { }
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof(NSObject))]
 	interface MTLCaptureScope
 	{
@@ -4174,7 +4236,7 @@ namespace Metal {
 		[Export ("setBuffer:offset:atIndex:")]
 		void SetBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint index);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 		[Export ("setBuffers:offsets:withRange:")]
 		void SetBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
@@ -4206,7 +4268,7 @@ namespace Metal {
 
 		[iOS (13,0), TV (13,0)]
 		[Mac (10,14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setRenderPipelineState:atIndex:")]
@@ -4214,27 +4276,27 @@ namespace Metal {
 
 		[iOS (13,0), TV (13,0)]
 		[Mac (10,14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setRenderPipelineStates:withRange:")]
 		void SetRenderPipelineStates (IMTLRenderPipelineState[] pipelines, NSRange range);
 
 		[Mac (10,14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setIndirectCommandBuffer:atIndex:")]
 		void SetIndirectCommandBuffer ([NullAllowed] IMTLIndirectCommandBuffer indirectCommandBuffer, nuint index);
 
 		[Mac (10,14)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setIndirectCommandBuffers:withRange:")]
 		void SetIndirectCommandBuffers (IMTLIndirectCommandBuffer[] buffers, NSRange range);
 
-#if MONOMAC || XAMCORE_4_0
+#if MONOMAC || NET
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderForBufferAtIndex:")]
@@ -4243,49 +4305,49 @@ namespace Metal {
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint index);
 
 		[TV (13,0), Mac (11,0), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setComputePipelineState:atIndex:")]
 		void SetComputePipelineState ([NullAllowed] IMTLComputePipelineState pipeline, nuint index);
 
 		[TV (13,0), Mac (11,0), iOS (13,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setComputePipelineStates:withRange:")]
 		void SetComputePipelineStates (IMTLComputePipelineState[] pipelines, NSRange range);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setAccelerationStructure:atIndex:")]
 		void SetAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint index);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setVisibleFunctionTable:atIndex:")]
 		void SetVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable visibleFunctionTable, nuint index);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setVisibleFunctionTables:withRange:")]
 		void SetVisibleFunctionTables (IMTLVisibleFunctionTable[] visibleFunctionTables, NSRange range);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setIntersectionFunctionTable:atIndex:")]
 		void SetIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint index);
 
 		[Mac (11,0), iOS (14,0), NoTV]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setIntersectionFunctionTables:withRange:")]
@@ -4338,7 +4400,7 @@ namespace Metal {
 		[Export ("addRenderPipelineFunctionsWithDescriptor:error:")]
 		bool AddRenderPipelineFunctions (MTLRenderPipelineDescriptor descriptor, [NullAllowed] out NSError error);
 
-#if !TVOS || XAMCORE_4_0
+#if !TVOS || NET
 		[Abstract]
 #endif
 		[TV (14,5)]
@@ -4349,7 +4411,7 @@ namespace Metal {
 		[Export ("serializeToURL:error:")]
 		bool Serialize (NSUrl url, [NullAllowed] out NSError error);
 
-#if XAMCORE_4_0 
+#if NET 
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
@@ -4430,7 +4492,7 @@ namespace Metal {
 	interface MTLSharedEventListener {
 		[Export ("initWithDispatchQueue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (DispatchQueue dispatchQueue);
+		NativeHandle Constructor (DispatchQueue dispatchQueue);
 
 		[Export ("dispatchQueue")]
 		DispatchQueue DispatchQueue { get; }
@@ -4470,10 +4532,10 @@ namespace Metal {
 	[Protocol]
 	interface MTLIndirectRenderCommand {
 
-#if MONOMAC && !XAMCORE_4_0 
+#if MONOMAC && !NET
 		[Abstract]
 #endif
-#if XAMCORE_4_0 
+#if NET
 		[Abstract]
 #endif
 		[iOS (13,0), TV (13,0)]
@@ -4488,14 +4550,14 @@ namespace Metal {
 		[Export ("setFragmentBuffer:offset:atIndex:")]
 		void SetFragmentBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
-#if !TVOS || XAMCORE_4_0
+#if !TVOS || NET
 		[Abstract]
 #endif
 		[TV (14,5)]
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance, IMTLBuffer buffer, nuint offset, nuint instanceStride);
 
-#if !TVOS || XAMCORE_4_0
+#if !TVOS || NET
 		[Abstract]
 #endif
 		[TV (14,5)]
@@ -4556,7 +4618,7 @@ namespace Metal {
 		[Export ("indirectRenderCommandAtIndex:")]
 		IMTLIndirectRenderCommand GetCommand (nuint commandIndex);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[TV (13,0), Mac (11,0), iOS (13,0)]
@@ -4634,11 +4696,11 @@ namespace Metal {
 
 		[Export ("initWithSampleCount:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MTLSize sampleCount);
+		NativeHandle Constructor (MTLSize sampleCount);
 
 		[Internal]
 		[Export ("initWithSampleCount:horizontal:vertical:")]
-		IntPtr Constructor (MTLSize sampleCount, IntPtr horizontal, IntPtr vertical);
+		NativeHandle Constructor (MTLSize sampleCount, IntPtr horizontal, IntPtr vertical);
 		
 		[MacCatalyst (15,0)]
 		[Internal]
@@ -4732,31 +4794,31 @@ namespace Metal {
 	[Mac (11,0), iOS (13,0), NoTV]
 	[Protocol]
 	interface MTLResourceStateCommandEncoder : MTLCommandEncoder {
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Export ("updateTextureMappings:mode:regions:mipLevels:slices:numRegions:")]
 		void Update (IMTLTexture texture, MTLSparseTextureMappingMode mode, IntPtr regions, IntPtr mipLevels, IntPtr slices, nuint numRegions);
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Export ("updateTextureMapping:mode:region:mipLevel:slice:")]
 		void Update (IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion region, nuint mipLevel, nuint slice);
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Export ("updateTextureMapping:mode:indirectBuffer:indirectBufferOffset:")]
 		void Update (IMTLTexture texture, MTLSparseTextureMappingMode mode, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Abstract]
 #endif
 		[Export ("waitForFence:")]
@@ -4818,7 +4880,7 @@ namespace Metal {
 		void SetStageInRegion (MTLRegion region);
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("setImageblockWidth:height:")]
@@ -4829,7 +4891,7 @@ namespace Metal {
 
 	[iOS (14,0), TV (14,0), Mac (10,15)]
 	[Protocol]
-#if !XAMCORE_4_0
+#if !NET
 	[BaseType (typeof(NSObject))]
 #endif
 	interface MTLCounter {
@@ -4842,7 +4904,7 @@ namespace Metal {
 
 	[iOS (14,0), TV (14,0), Mac (10,15)]
 	[Protocol]
-#if !XAMCORE_4_0
+#if !NET
 	[BaseType (typeof(NSObject))]
 #endif
 	interface MTLCounterSet {
@@ -4859,7 +4921,7 @@ namespace Metal {
 
 	[iOS (14,0), TV (14,0), Mac (10,15)]
 	[Protocol]
-#if !XAMCORE_4_0
+#if !NET
 	[BaseType (typeof (NSObject))]
 #endif
 	interface MTLCounterSampleBuffer {
@@ -5404,9 +5466,13 @@ namespace Metal {
 
 		[Abstract]
 		[Export ("sampleCountersInBuffer:atSampleIndex:withBarrier:")]
+#if NET
+		void SampleCountersInBuffer (IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#else
 		void SampleCountersInBuffer (MTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#endif
 
-#if XAMCORE_4_0 
+#if NET 
 		[Abstract]
 #endif
 		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
@@ -5625,7 +5691,7 @@ namespace Metal {
 		nuint ArgumentIndex { get; set; }
 
 		[Export ("initWithArgumentIndex:")]
-		IntPtr Constructor (nuint argument);
+		NativeHandle Constructor (nuint argument);
 	}
 
 	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15, 0), NoWatch]
@@ -5646,7 +5712,7 @@ namespace Metal {
 		IMTLFunctionStitchingAttribute[] Attributes { get; set; }
 
 		[Export ("initWithFunctionName:nodes:outputNode:attributes:")]
-		IntPtr Constructor (string functionName, MTLFunctionStitchingFunctionNode[] nodes, [NullAllowed] MTLFunctionStitchingFunctionNode outputNode, IMTLFunctionStitchingAttribute[] attributes);
+		NativeHandle Constructor (string functionName, MTLFunctionStitchingFunctionNode[] nodes, [NullAllowed] MTLFunctionStitchingFunctionNode outputNode, IMTLFunctionStitchingAttribute[] attributes);
 	}
 	
 	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15, 0), NoWatch]
@@ -5664,7 +5730,7 @@ namespace Metal {
 		MTLFunctionStitchingFunctionNode[] ControlDependencies { get; set; }
 
 		[Export ("initWithName:arguments:controlDependencies:")]
-		IntPtr Constructor (string name, IMTLFunctionStitchingNode[] arguments, MTLFunctionStitchingFunctionNode[] controlDependencies);
+		NativeHandle Constructor (string name, IMTLFunctionStitchingNode[] arguments, MTLFunctionStitchingFunctionNode[] controlDependencies);
 	}
 	
 	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15, 0), NoWatch]

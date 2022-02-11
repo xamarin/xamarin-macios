@@ -9,6 +9,7 @@ using GLKit;
 using ObjCRuntime;
 using OpenTK;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GLKit {
 	
@@ -19,7 +20,7 @@ namespace MonoTouchFixtures.GLKit {
 		[Test]
 		public void Properties ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var light = new GLKEffectPropertyLight ();
 			Assert.That (light.AmbientColor.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "AmbientColor");

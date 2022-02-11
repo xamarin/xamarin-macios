@@ -7,6 +7,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Collections.Generic;
 
 using CoreFoundation;
@@ -84,7 +85,10 @@ namespace VideoToolbox {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[iOS (10,0)]
 #endif
 		public VTColorPrimaries DestinationColorPrimaries { 
@@ -124,7 +128,10 @@ namespace VideoToolbox {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[iOS (10,0)]
 #endif
 		public VTTransferFunction DestinationTransferFunction { 

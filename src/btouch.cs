@@ -42,7 +42,7 @@ using Foundation;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
-public class BindingTouch {
+public class BindingTouch : IDisposable {
 	TargetFramework? target_framework;
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
@@ -59,7 +59,7 @@ public class BindingTouch {
 	public TypeManager TypeManager = new TypeManager ();
 	public Frameworks? Frameworks;
 	public AttributeManager? AttributeManager;
-
+	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
 		get { return ikvm_type_lookup;  }
@@ -73,7 +73,7 @@ public class BindingTouch {
 		get { return "bgen"; }
 	}
 
-	bool IsDotNet {
+	internal bool IsDotNet {
 		get { return TargetFramework.IsDotNet; }
 	}
 
@@ -99,6 +99,9 @@ public class BindingTouch {
 	{
 		if (!string.IsNullOrEmpty (attributedll))
 			return attributedll!;
+
+		if (IsDotNet)
+			return Path.Combine (GetSDKRoot (), "lib", "Xamarin.Apple.BindingAttributes.dll");
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -195,7 +198,7 @@ public class BindingTouch {
 
 	static int Main2 (string [] args)
 	{
-		var touch = new BindingTouch ();
+		using var touch = new BindingTouch ();
 		return touch.Main3 (args);
 	}
 
@@ -371,6 +374,8 @@ public class BindingTouch {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+				else if (target_framework == TargetFramework.DotNet_5_0_macOS)
+					baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else
 					throw ErrorHelper.CreateError (1053, target_framework); 
 			}
@@ -438,6 +443,9 @@ public class BindingTouch {
 			cargs.Add ("-r:" + baselibdll);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (paths);
 			if (nostdlib) {
 				cargs.Add ("-nostdlib");
@@ -559,6 +567,9 @@ public class BindingTouch {
 			cargs.Add ("-out:" + outfile);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (g.GeneratedFiles);
 			cargs.AddRange (core_sources);
 			cargs.AddRange (extra_sources);
@@ -592,6 +603,24 @@ public class BindingTouch {
 			var di = Directory.CreateDirectory (p);
 			return di.FullName;
 		}
+	}
+
+	protected virtual void Dispose (bool disposing)
+	{
+		if (!disposedValue) {
+			if (disposing) {
+				universe?.Dispose ();
+				universe = null;
+			}
+
+			disposedValue = true;
+		}
+	}
+
+	public void Dispose ()
+	{
+		Dispose (disposing: true);
+		GC.SuppressFinalize (this);
 	}
 }
 

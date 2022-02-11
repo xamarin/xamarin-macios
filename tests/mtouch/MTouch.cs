@@ -905,7 +905,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = "-a'-b"; // 1 single quote
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
-				mtouch.AssertError (26, "Could not parse the command line argument '--gcc-flags=-a'-b': No matching quote found.");
+				mtouch.AssertError (26, "Could not parse the command line argument '--gcc_flags=-a'-b': No matching quote found.");
 			}
 		}
 
@@ -919,7 +919,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = gcc_flags;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (26, $"Could not parse the command line argument '--gcc-flags={gcc_flags}': {error}.");
+				mtouch.AssertError (26, $"Could not parse the command line argument '--gcc_flags={gcc_flags}': {error}.");
 			}
 		}
 
@@ -4246,6 +4246,22 @@ class C {
 			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunitlite.dll' is not valid and was ignored.*");
 			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunit.framework.dll' is not valid and was ignored.*");
 			Tool.AssertWarningCount (messages, 2);
+		}
+
+		[Test]
+		public void BindingLibraryDSymCreated ()
+		{
+			// framework-test for macOS has binding library that should have dSYMs
+			var testDir = Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS");
+			var csproj = Path.Combine (testDir, "framework-test-mac.csproj");
+			var arguments = new string [] {
+				"/p:ArchiveOnBuild=true",
+				"/p:EnableCodeSigning=false",
+				"/p:EnablePackageSigning=false",
+				"/p:_CodeSigningKey=-",
+			};
+			XBuild.BuildXM (csproj, "Release", "x86", arguments: arguments, timeout: TimeSpan.FromMinutes (15));
+			DirectoryAssert.Exists(Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS", "bin", "x86", "Release", "XTest.framework.dSYM"));
 		}
 
 		public void XamarinSdkAdjustLibs ()

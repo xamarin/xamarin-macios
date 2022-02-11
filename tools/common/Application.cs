@@ -78,6 +78,7 @@ namespace Xamarin.Bundler {
 
 		public DlsymOptions DlsymOptions;
 		public List<Tuple<string, bool>> DlsymAssemblies;
+		public List<string> CustomLinkFlags;
 
 		public string CompilerPath;
 
@@ -101,7 +102,25 @@ namespace Xamarin.Bundler {
 		}
 
 		// Linker config
+#if !NET
 		public LinkMode LinkMode = LinkMode.Full;
+#endif
+		bool? are_any_assemblies_trimmed;
+		public bool AreAnyAssembliesTrimmed {
+			get {
+				if (are_any_assemblies_trimmed.HasValue)
+					return are_any_assemblies_trimmed.Value;
+#if NET
+				// This shouldn't happen, we should always set AreAnyAssembliesTrimmed to some value for .NET.
+				throw ErrorHelper.CreateError (99, "A custom LinkMode value is not supported for .NET");
+#else
+				return LinkMode != LinkMode.None;
+#endif
+			}
+			set {
+				are_any_assemblies_trimmed = value;
+			}
+		}
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
 		public I18nAssemblies I18n;
@@ -135,6 +154,7 @@ namespace Xamarin.Bundler {
 
 		public XamarinRuntime XamarinRuntime;
 		public bool? UseMonoFramework;
+		public string RuntimeIdentifier; // Only used for build-time --run-registrar support
 
 		// The bitcode mode to compile to.
 		// This variable does not apply to macOS, because there's no bitcode on macOS.
@@ -326,9 +346,9 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
 				case ApplePlatform.MacCatalyst:
-					return LinkMode == LinkMode.None;
+					return !AreAnyAssembliesTrimmed;
 				case ApplePlatform.MacOSX:
-					return Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
+					return Registrar == RegistrarMode.Static && !AreAnyAssembliesTrimmed;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
@@ -369,6 +389,9 @@ namespace Xamarin.Bundler {
 
 		public bool IsDeviceBuild {
 			get {
+				if (!string.IsNullOrEmpty (RuntimeIdentifier))
+					return !IsSimulatorBuild;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -385,6 +408,9 @@ namespace Xamarin.Bundler {
 
 		public bool IsSimulatorBuild {
 			get {
+				if (!string.IsNullOrEmpty (RuntimeIdentifier))
+					return RuntimeIdentifier.IndexOf ("simulator", StringComparison.OrdinalIgnoreCase) >= 0;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -489,6 +515,15 @@ namespace Xamarin.Bundler {
 			get {
 				return Optimizations.RemoveDynamicRegistrar != true;
 			}
+		}
+
+		public void ParseCustomLinkFlags (string value, string value_name)
+		{
+			if (!StringUtils.TryParseArguments (value, out var lf, out var ex))
+				throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"-{value_name}={value}", ex.Message);
+			if (CustomLinkFlags is null)
+				CustomLinkFlags = new List<string> ();
+			CustomLinkFlags.AddRange (lf);
 		}
 
 		public void ParseInterpreter (string value)
@@ -938,7 +973,7 @@ namespace Xamarin.Bundler {
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
 					if (lastAssembly == null) {
-						ErrorHelper.CreateWarning (7, Errors.MX0007, rootName);
+						ErrorHelper.Warning (7, Errors.MX0007, rootName);
 						continue;
 					}
 					
@@ -1324,7 +1359,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalManagedExceptions) {
 			case MarshalManagedExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
 				} else if (EnableCoopGC.Value) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
@@ -1359,7 +1394,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalObjectiveCExceptions) {
 			case MarshalObjectiveCExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 				} else if (EnableCoopGC.Value) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
@@ -1439,6 +1474,9 @@ namespace Xamarin.Bundler {
 				if (Platform == ApplePlatform.MacCatalyst)
 					return IsArchEnabled (Abi.ARM64);
 
+				if (IsSimulatorBuild && IsArchEnabled (Abi.ARM64))
+					return true;
+
 				return IsDeviceBuild;
 			}
 
@@ -1508,6 +1546,12 @@ namespace Xamarin.Bundler {
 				aotArguments.Add ("full");
 			} else
 				aotArguments.Add ("full");
+
+			if (IsDeviceBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/0");
+			} else if (IsSimulatorBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/1");
+			}
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
 			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
@@ -1636,6 +1680,13 @@ namespace Xamarin.Bundler {
 			// etc. We make sure we don't strip away symbols needed for pinvoke calls.
 			// https://github.com/mono/mono/issues/14206
 			if (UseInterpreter)
+				return true;
+
+			// There are native frameworks which aren't available in the simulator, and we have
+			// bound P/Invokes to those native frameworks. This means that AOT-compiling for
+			// the simulator will fail because the corresponding native functions don't exist.
+			// So default to dlsym for the simulator.
+			if (IsSimulatorBuild && Profile.IsProductAssembly (Path.GetFileNameWithoutExtension (assembly)))
 				return true;
 
 			switch (Platform) {

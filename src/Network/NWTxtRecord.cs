@@ -22,18 +22,26 @@ using nw_advertise_descriptor_t=System.IntPtr;
 using OS_nw_advertise_descriptor=System.IntPtr;
 using OS_nw_txt_record=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 
 namespace Network {
 
-#if !NET
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios13.0")]
+#if NET
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
 #endif
 	public class NWTxtRecord : NativeObject {
-		internal NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
+		[Preserve (Conditional = true)]
+		internal NWTxtRecord (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte *txtBytes, nuint len);
@@ -124,7 +132,7 @@ namespace Network {
 		delegate bool nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_apply_t static_ApplyHandler = TrampolineApplyHandler;
 
-#if XAMCORE_4_0
+#if NET
 		public delegate bool NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey result, ReadOnlySpan<byte> value);
 #else
 		public delegate void NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey rersult, ReadOnlySpan<byte> value);
@@ -134,7 +142,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_txt_record_apply_t))]
 		unsafe static bool TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
-#if XAMCORE_4_0
+#if NET
 			var del = BlockLiteral.GetTarget<NWTxtRecordApplyDelegate> (block);
 #else
 			var del = BlockLiteral.GetTarget<MulticastDelegate> (block);
@@ -143,7 +151,7 @@ namespace Network {
 				return false;
 
 			var mValue = new ReadOnlySpan<byte> ((void*)value, (int)valueLen);
-#if XAMCORE_4_0
+#if NET
 			return del (key, found, mValue);
 #else
 			if (del is NWTxtRecordApplyDelegate apply) {
@@ -157,7 +165,7 @@ namespace Network {
 #endif
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload that takes an NWTxtRecordApplyDelegate2 instead.")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -175,7 +183,7 @@ namespace Network {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate2 handler)
 		{

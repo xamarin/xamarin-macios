@@ -5,6 +5,7 @@ using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 [assembly: Preserve (typeof (NSExpression), AllMembers = true)]
 
@@ -227,7 +228,7 @@ namespace MonoTouchFixtures.Foundation
 		public void AnyKeyPropertiesTest ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var availableProperties = new List<string> { };
 			using (var expression = NSExpression.FromAnyKey ()) {

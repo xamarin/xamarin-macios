@@ -41,6 +41,13 @@ namespace Xamarin.Tests {
 			return Execute ("publish", project, properties, true);
 		}
 
+		public static ExecutionResult AssertPublishFailure (string project, Dictionary<string, string> properties = null)
+		{
+			var rv = Execute ("publish", project, properties, false);
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			return rv;
+		}
+
 		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
 		{
 			return Execute ("build", project, properties, true);
@@ -51,6 +58,11 @@ namespace Xamarin.Tests {
 			var rv = Execute ("build", project, properties, false);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
+		}
+
+		public static ExecutionResult Build (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("build", project, properties, false);
 		}
 
 		public static ExecutionResult AssertNew (string outputDirectory, string template)
@@ -111,6 +123,7 @@ namespace Xamarin.Tests {
 					args.Add ("/t:" + target);
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
+				Console.WriteLine ($"Binlog: {binlogPath}");
 				var env = new Dictionary<string, string> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;

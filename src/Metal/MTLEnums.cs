@@ -451,11 +451,13 @@ namespace Metal {
 		FileNotFound,
 	}
 
+#if !NET // this enum/error was removed from the headers a few years ago (the macOS 10.12 SDK has it, the 10.13 SDK doesn't)
 	[Native]
 	[ErrorDomain ("MTLRenderPipelineErrorDomain")]
 	public enum MTLRenderPipelineError : ulong {
 		Internal = 1, Unsupported, InvalidInput
 	}
+#endif
 
 	[Native]
 	public enum MTLCompareFunction : ulong {
@@ -541,7 +543,7 @@ namespace Metal {
 		ShaderRead      = 0x0001,
 		ShaderWrite     = 0x0002,
 		RenderTarget    = 0x0004,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This option is unavailable.")]
 		Blit            = 0x0008,
 #endif
@@ -867,7 +869,7 @@ namespace Metal {
 		Sample0, Min, Max
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoTV]
 #endif
 	[Mac (10,12), iOS (14,0)]
@@ -1380,5 +1382,13 @@ namespace Metal {
 		Default = 0,
 		UserID = 1,
 		Motion = 2,
+	}
+
+	[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+	[Native]
+	public enum MTLTextureCompressionType : long
+	{
+		Lossless = 0,
+		Lossy = 1,
 	}
 }

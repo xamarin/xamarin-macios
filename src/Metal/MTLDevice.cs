@@ -15,6 +15,10 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Metal {
@@ -23,8 +27,12 @@ namespace Metal {
 	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, NSString notifyName);
 #endif
 
-#if !NET
-	[iOS (8,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (8,0)]
+	[Mac (10,11)]
 #endif
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
@@ -53,18 +61,22 @@ namespace Metal {
 		
 #if MONOMAC || __MACCATALYST__
 
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		public static IMTLDevice [] GetAllDevices ()
 		{
@@ -78,17 +90,23 @@ namespace Metal {
 		
 #if MONOMAC
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, ref BlockLiteral handler);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 13)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject observer)
+		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject? observer)
 		{
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_notificationHandler, handler);
@@ -105,12 +123,15 @@ namespace Metal {
 			return obj;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 13)]
 #endif
 		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
+		public static IMTLDevice [] GetAllDevices (ref NSObject? observer, MTLDeviceNotificationHandler handler)
 		{
 			var rv = GetAllDevices (handler, out var obs);
 			observer = obs;
@@ -125,17 +146,27 @@ namespace Metal {
 			var descriptor = (BlockLiteral*) block;
 			var del = (MTLDeviceNotificationHandler) (descriptor->Target);
 			if (del != null)
-				del ((IMTLDevice) Runtime.GetNSObject (device), (Foundation.NSString) Runtime.GetNSObject (notifyName));
+				del ((IMTLDevice) Runtime.GetNSObject (device)!, (Foundation.NSString) Runtime.GetNSObject (notifyName)!);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
-#if !NET
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10, 13)]
+		[NoiOS]
+		[NoWatch]
+		[NoTV]
 #endif
 		public static void RemoveObserver (NSObject observer)
 		{
@@ -162,7 +193,7 @@ namespace Metal {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload that takes an IntPtr instead. The 'data' parameter must be page-aligned and allocated using vm_allocate or mmap, which won't be the case for managed arrays, so this method will always fail.")]
 		public static IMTLBuffer? CreateBufferNoCopy<T> (this IMTLDevice This, T [] data, MTLResourceOptions options, MTLDeallocator deallocator) where T : struct
 		{
@@ -186,16 +217,22 @@ namespace Metal {
 			if (positions.Length < (nint)count)
 				throw new ArgumentException ("Length of 'positions' cannot be less than 'count'.");
 			fixed (void * handle = positions)
+#if NET
+				This.GetDefaultSamplePositions ((IntPtr) handle, count);
+#else
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);
+#endif
 		}
 #if IOS
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoMac, NoTV, iOS (13,0)]
+		[NoMac]
+		[NoTV]
+		[iOS (13,0)]
 #endif
 		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
 		{
@@ -218,10 +255,12 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoMac, NoTV, iOS (13,0)]
+		[NoMac]
+		[NoTV]
+		[iOS (13,0)]
 #endif
 		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
 		{
@@ -243,19 +282,17 @@ namespace Metal {
 		}
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[return: Release]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError error)
+		public static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError? error)
 		{
-			if (data == null)
+			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
-			IntPtr errorValue = IntPtr.Zero;
+			var errorValue = NativeHandle.Zero;
 
-			IMTLLibrary ret;
-			ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+			var ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
 			error = Runtime.GetNSObject<NSError> (errorValue);
-
 			return ret;
 		}
 

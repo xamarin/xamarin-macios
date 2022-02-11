@@ -10,6 +10,7 @@
 using System;
 using System.Runtime.Versioning;
 
+using CoreFoundation;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -19,44 +20,61 @@ using ObjCRuntime;
 namespace PdfKit {
 	public partial class PdfAnnotation {
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
 		[Mac (10,12)]
 #endif
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
-			if (value == null)
+			if (value is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 			return _SetValue (value.Handle, key.GetConstant ()!);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
 		[Mac (10,12)]
 #endif
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
-			var nstr = NSString.CreateNative (str);
+			var nstr = CFString.CreateNative (str);
 			try {
 				return _SetValue (nstr, key.GetConstant ()!);
 			} finally {
-				NSString.ReleaseNative (nstr);
+				CFString.ReleaseNative (nstr);
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
 		[Mac (10,12)]
 #endif
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
-			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()!), true);
+			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()!), true)!;
 		}
 
 		public PdfAnnotationKey AnnotationType {
+#if NET
+			get { return PdfAnnotationKeyExtensions.GetValue (Type!); }
+			set { Type = value.GetConstant ()!; }
+#else
 			get { return PdfAnnotationKeyExtensions.GetValue ((NSString) Type); }
 			set { Type = value.GetConstant (); }
+#endif
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+#else
 		[Mac (10,13)]
 #endif
 		public CGPoint[] QuadrilateralPoints {

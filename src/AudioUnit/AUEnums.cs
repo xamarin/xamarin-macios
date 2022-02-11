@@ -172,7 +172,7 @@ namespace AudioUnit
 		System = 0,
 	}
 
-#if !XAMCORE_3_0 || MONOMAC
+#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 	public enum AudioObjectPropertySelector : uint
 	{
 		PropertyDevices = 1684370979, // 'dev#'
@@ -237,7 +237,7 @@ namespace AudioUnit
 
 	public enum AudioObjectPropertyElement : uint
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Main' element instead.")]
 		Master = 0, // 0
 #endif
@@ -758,8 +758,9 @@ namespace AudioUnit
 	[iOS (9,0), Mac (10,11)]
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
+		[NoiOS, NoTV, NoMacCatalyst]
 		InProcess = 2,
-		[iOS (14,5), TV (14,5), Mac (11,3)]
+		[iOS (14,5), TV (14,5), NoMac]
 		LoadedRemotely = 1u << 31,
 	}
 

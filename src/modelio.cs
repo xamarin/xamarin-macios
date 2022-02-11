@@ -26,7 +26,7 @@ using NVector3d = global::OpenTK.NVector3d;
 using Vector4 = global::OpenTK.Vector4;
 using Vector4i = global::OpenTK.Vector4i;
 using Vector4d = global::OpenTK.Vector4d;
-#if XAMCORE_4_0
+#if NET
 using Matrix2 = global::OpenTK.NMatrix2;
 using Matrix3 = global::OpenTK.NMatrix3;
 using Matrix4 = global::OpenTK.NMatrix4;
@@ -49,6 +49,10 @@ using AUViewControllerBase = AppKit.NSViewController;
 #else
 using UIKit;
 using AUViewControllerBase = UIKit.UIViewController;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace ModelIO {
@@ -106,19 +110,19 @@ namespace ModelIO {
 	interface MDLAsset : NSCopying
 	{
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:")]
-		IntPtr Constructor ([NullAllowed] NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+		NativeHandle Constructor ([NullAllowed] NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Mac (10,12)]
 		[Export ("initWithBufferAllocator:")]
-		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+		NativeHandle Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:preserveTopology:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator, bool preserveTopology, out NSError error);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator, bool preserveTopology, out NSError error);
 
 		// note: by choice we do not export "exportAssetToURL:"
 		[Export ("exportAssetToURL:error:")]
@@ -290,14 +294,14 @@ namespace ModelIO {
 	interface MDLCamera
 	{
 		[Export ("projectionMatrix")]
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'ProjectionMatrix4x4' instead.")]
 #endif
 		Matrix4 ProjectionMatrix {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("projectionMatrix")]
 		MatrixFloat4x4 ProjectionMatrix4x4 {
@@ -421,12 +425,12 @@ namespace ModelIO {
 	{
 		[Export ("initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
+		NativeHandle Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
 		// -(instancetype __nonnull)initWithDivisions:(float)divisions name:(NSString * __nullable)name dimensions:(vector_int2)dimensions channelCount:(int)channelCount channelEncoding:(MDLTextureChannelEncoding)channelEncoding color1:(CGColorRef __nonnull)color1 color2:(CGColorRef __nonnull)color2;
 		[Export ("initWithDivisions:name:dimensions:channelCount:channelEncoding:color1:color2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (float divisions, [NullAllowed] string name, Vector2i dimensions, int channelCount, MDLTextureChannelEncoding channelEncoding, CGColor color1, CGColor color2);
+		NativeHandle Constructor (float divisions, [NullAllowed] string name, Vector2i dimensions, int channelCount, MDLTextureChannelEncoding channelEncoding, CGColor color1, CGColor color2);
 
 		[Export ("divisions")]
 		float Divisions { get; set; }
@@ -447,15 +451,15 @@ namespace ModelIO {
 	{
 		[Export ("initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
+		NativeHandle Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
 		[Export ("initWithColorTemperatureGradientFrom:toColorTemperature:name:textureDimensions:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (float colorTemperature1, float colorTemperature2, [NullAllowed] string name, Vector2i textureDimensions);
+		NativeHandle Constructor (float colorTemperature1, float colorTemperature2, [NullAllowed] string name, Vector2i textureDimensions);
 
 		[Export ("initWithColorGradientFrom:toColor:name:textureDimensions:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (CGColor color1, CGColor color2, [NullAllowed] string name, Vector2i textureDimensions);
+		NativeHandle Constructor (CGColor color1, CGColor color2, [NullAllowed] string name, Vector2i textureDimensions);
 	}
 
 
@@ -491,7 +495,7 @@ namespace ModelIO {
 	interface MDLLightProbe
 	{
 		[Export ("initWithReflectiveTexture:irradianceTexture:")]
-		IntPtr Constructor ([NullAllowed] MDLTexture reflectiveTexture, [NullAllowed] MDLTexture irradianceTexture);
+		NativeHandle Constructor ([NullAllowed] MDLTexture reflectiveTexture, [NullAllowed] MDLTexture irradianceTexture);
 
 		[Export ("generateSphericalHarmonicsFromIrradiance:")]
 		void GenerateSphericalHarmonicsFromIrradiance (nuint sphericalHarmonicsLevel);
@@ -522,7 +526,7 @@ namespace ModelIO {
 	interface MDLMaterial : MDLNamed, INSFastEnumeration
 	{
 		[Export ("initWithName:scatteringFunction:")]
-		IntPtr Constructor (string name, MDLScatteringFunction scatteringFunction);
+		NativeHandle Constructor (string name, MDLScatteringFunction scatteringFunction);
 
 		[Export ("setProperty:")]
 		void SetProperty (MDLMaterialProperty property);
@@ -591,49 +595,49 @@ namespace ModelIO {
 	{
 		[DesignatedInitializer]
 		[Export ("initWithName:semantic:")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic);
 
 		[Export ("initWithName:semantic:float:")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, float value);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, float value);
 
 		[Export ("initWithName:semantic:float2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, Vector2 value);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, Vector2 value);
 
 		[Export ("initWithName:semantic:float3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, Vector3 value);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, Vector3 value);
 
 		[Export ("initWithName:semantic:float4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, Vector4 value);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, Vector4 value);
 
 		[Export ("initWithName:semantic:matrix4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the '(string, MDLMaterialSemantic, MatrixFloat4x4)' overload instead.")]
 #endif
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, Matrix4 value);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, Matrix4 value);
 
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("initWithName:semantic:matrix4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, MatrixFloat4x4 value);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, MatrixFloat4x4 value);
 #endif
 
 		[Export ("initWithName:semantic:URL:")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, [NullAllowed] NSUrl url);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, [NullAllowed] NSUrl url);
 
 		[Export ("initWithName:semantic:string:")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, [NullAllowed] string stringValue);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, [NullAllowed] string stringValue);
 
 		[Export ("initWithName:semantic:textureSampler:")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, [NullAllowed] MDLTextureSampler textureSampler);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, [NullAllowed] MDLTextureSampler textureSampler);
 
 		[Export ("initWithName:semantic:color:")]
-		IntPtr Constructor (string name, MDLMaterialSemantic semantic, CGColor color);
+		NativeHandle Constructor (string name, MDLMaterialSemantic semantic, CGColor color);
 
 		[Export ("setProperties:")]
 		void SetProperties (MDLMaterialProperty property);
@@ -682,7 +686,7 @@ namespace ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'MatrixFloat4x4' instead.")]
 #endif
 		[Export ("matrix4x4", ArgumentSemantic.Assign)]
@@ -691,7 +695,7 @@ namespace ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("matrix4x4", ArgumentSemantic.Assign)]
 		MatrixFloat4x4 MatrixFloat4x4 {
@@ -714,7 +718,7 @@ namespace ModelIO {
 	interface MDLMaterialPropertyConnection : MDLNamed
 	{
 		[Export ("initWithOutput:input:")]
-		IntPtr Constructor (MDLMaterialProperty output, MDLMaterialProperty input);
+		NativeHandle Constructor (MDLMaterialProperty output, MDLMaterialProperty input);
 
 		[NullAllowed, Export ("output", ArgumentSemantic.Weak)]
 		MDLMaterialProperty Output { get; }
@@ -730,7 +734,7 @@ namespace ModelIO {
 	interface MDLMaterialPropertyNode : MDLNamed
 	{
 		[Export ("initWithInputs:outputs:evaluationFunction:")]
-		IntPtr Constructor (MDLMaterialProperty[] inputs, MDLMaterialProperty[] outputs, Action<MDLMaterialPropertyNode> function);
+		NativeHandle Constructor (MDLMaterialProperty[] inputs, MDLMaterialProperty[] outputs, Action<MDLMaterialPropertyNode> function);
 
 		[Export ("evaluationFunction", ArgumentSemantic.Copy)]
 		Action<MDLMaterialPropertyNode> EvaluationFunction { get; set; }
@@ -749,7 +753,7 @@ namespace ModelIO {
 	interface MDLMaterialPropertyGraph
 	{
 		[Export ("initWithNodes:connections:")]
-		IntPtr Constructor (MDLMaterialPropertyNode[] nodes, MDLMaterialPropertyConnection[] connections);
+		NativeHandle Constructor (MDLMaterialPropertyNode[] nodes, MDLMaterialPropertyConnection[] connections);
 
 		[Export ("evaluate")]
 		void Evaluate ();
@@ -769,13 +773,13 @@ namespace ModelIO {
 		[Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithBufferAllocator:")]
-		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+		NativeHandle Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
 		[Export ("initWithVertexBuffer:vertexCount:descriptor:submeshes:")]
-		IntPtr Constructor (IMDLMeshBuffer vertexBuffer, nuint vertexCount, MDLVertexDescriptor descriptor, MDLSubmesh [] submeshes);
+		NativeHandle Constructor (IMDLMeshBuffer vertexBuffer, nuint vertexCount, MDLVertexDescriptor descriptor, MDLSubmesh [] submeshes);
 
 		[Export ("initWithVertexBuffers:vertexCount:descriptor:submeshes:")]
-		IntPtr Constructor (IMDLMeshBuffer[] vertexBuffers, nuint vertexCount, MDLVertexDescriptor descriptor, MDLSubmesh[] submeshes);
+		NativeHandle Constructor (IMDLMeshBuffer[] vertexBuffers, nuint vertexCount, MDLVertexDescriptor descriptor, MDLSubmesh[] submeshes);
 
 		[Internal]
 		[Export ("vertexAttributeDataForAttributeNamed:")]
@@ -1039,16 +1043,28 @@ namespace ModelIO {
 		[Export ("map")]
 		MDLMeshBufferMap Map { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("length")]
 		nuint Length { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("allocator", ArgumentSemantic.Retain)]
 		IMDLMeshBufferAllocator Allocator { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("zone", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		IMDLMeshBufferZone Zone { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("type")]
 		MDLMeshBufferType Type { get; }
 	}
@@ -1109,10 +1125,10 @@ namespace ModelIO {
 	interface MDLMeshBufferData : MDLMeshBuffer, NSCopying
 	{
 		[Export ("initWithType:length:")]
-		IntPtr Constructor (MDLMeshBufferType type, nuint length);
+		NativeHandle Constructor (MDLMeshBufferType type, nuint length);
 
 		[Export ("initWithType:data:")]
-		IntPtr Constructor (MDLMeshBufferType type, [NullAllowed] NSData data);
+		NativeHandle Constructor (MDLMeshBufferType type, [NullAllowed] NSData data);
 
 		[Export ("data", ArgumentSemantic.Retain)]
 		NSData Data { get; }
@@ -1123,9 +1139,15 @@ namespace ModelIO {
 	[Protocol]
 	interface MDLMeshBufferZone
 	{
+#if NET
+		[Abstract]
+#endif
 		[Export ("capacity")]
 		nuint Capacity { get; }
 
+#if NET
+		[Abstract]
+#endif
 		[Export ("allocator")]
 		IMDLMeshBufferAllocator Allocator { get; }
 	}
@@ -1145,7 +1167,7 @@ namespace ModelIO {
 	{
 		[Export ("initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
+		NativeHandle Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
 		[Internal]
 		[Export ("initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:")]
@@ -1154,7 +1176,7 @@ namespace ModelIO {
 
 		[Export ("initScalarNoiseWithSmoothness:name:textureDimensions:channelCount:channelEncoding:grayscale:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (float smoothness, [NullAllowed] string name, Vector2i textureDimensions, int channelCount, MDLTextureChannelEncoding channelEncoding, bool grayscale);
+		NativeHandle Constructor (float smoothness, [NullAllowed] string name, Vector2i textureDimensions, int channelCount, MDLTextureChannelEncoding channelEncoding, bool grayscale);
 
 		[Internal]
 		[iOS (10,2), Mac (10,12,2)]
@@ -1170,10 +1192,10 @@ namespace ModelIO {
 	{
 		[Export ("initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
+		NativeHandle Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
 		[Export ("initByGeneratingNormalMapWithTexture:name:smoothness:contrast:")]
-		IntPtr Constructor (MDLTexture sourceTexture, [NullAllowed] string name, float smoothness, float contrast);
+		NativeHandle Constructor (MDLTexture sourceTexture, [NullAllowed] string name, float smoothness, float contrast);
 	}
 
 	[iOS (9,0), Mac(10,11)]
@@ -1190,16 +1212,19 @@ namespace ModelIO {
 		[Wrap ("SetComponent (component, new Protocol (type!))")]
 		void SetComponent (IMDLComponent component, Type type);
 
-#if XAMCORE_4_0
-		[Internal]
-#endif
+#if !NET
 		[Obsolete ("Use 'GetComponent (Type type)'.")]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
 		IMDLComponent IsComponentConforming (Protocol protocol);
+#endif
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
+#if NET
+		[Export ("componentConformingToProtocol:")]
+#else
 		[Wrap ("IsComponentConforming (protocol!)")]
+#endif
 		[return: NullAllowed]
 		IMDLComponent GetComponent (Protocol protocol);
 
@@ -1281,14 +1306,14 @@ namespace ModelIO {
 		[Export ("removeObject:")]
 		void RemoveObject (MDLObject @object);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		[Export ("objectAtIndexedSubscript:")]
 		MDLObject GetObject (nuint index);
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
@@ -1313,7 +1338,7 @@ namespace ModelIO {
 	interface MDLPhotometricLight
 	{
 		[Export ("initWithIESProfile:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("generateSphericalHarmonicsFromLight:")]
 		void GenerateSphericalHarmonics (nuint sphericalHarmonicsLevel);
@@ -1438,16 +1463,16 @@ namespace ModelIO {
 	{
 		[Export ("initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
+		NativeHandle Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
 		[Export ("initWithName:channelEncoding:textureDimensions:turbidity:sunElevation:upperAtmosphereScattering:groundAlbedo:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float upperAtmosphereScattering, float groundAlbedo);
+		NativeHandle Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float upperAtmosphereScattering, float groundAlbedo);
 
 		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithName:channelEncoding:textureDimensions:turbidity:sunElevation:sunAzimuth:upperAtmosphereScattering:groundAlbedo:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float sunAzimuth, float upperAtmosphereScattering, float groundAlbedo);
+		NativeHandle Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float sunAzimuth, float upperAtmosphereScattering, float groundAlbedo);
 
 		[Export ("updateTexture")]
 		void UpdateTexture ();
@@ -1513,7 +1538,7 @@ namespace ModelIO {
 		[Export ("overlap")]
 		float Overlap { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'LeftViewMatrix4x4' instead.")]
 #endif
 		[Export ("leftViewMatrix")]
@@ -1522,7 +1547,7 @@ namespace ModelIO {
 			get;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("leftViewMatrix")]
 		MatrixFloat4x4 LeftViewMatrix4x4 {
@@ -1531,7 +1556,7 @@ namespace ModelIO {
 		}
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'RightViewMatrix4x4' instead.")]
 #endif
 		[Export ("rightViewMatrix")]
@@ -1540,7 +1565,7 @@ namespace ModelIO {
 			get;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("rightViewMatrix")]
 		MatrixFloat4x4 RightViewMatrix4x4 {
@@ -1549,7 +1574,7 @@ namespace ModelIO {
 		}
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'LeftProjectionMatrix4x4' instead.")]
 #endif
 		[Export ("leftProjectionMatrix")]
@@ -1558,7 +1583,7 @@ namespace ModelIO {
 			get;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("leftProjectionMatrix")]
 		MatrixFloat4x4 LeftProjectionMatrix4x4 {
@@ -1567,7 +1592,7 @@ namespace ModelIO {
 		}
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'RightProjectionMatrix4x4' instead.")]
 #endif
 		[Export ("rightProjectionMatrix")]
@@ -1576,7 +1601,7 @@ namespace ModelIO {
 			get;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("rightProjectionMatrix")]
 		MatrixFloat4x4 RightProjectionMatrix4x4 {
@@ -1591,16 +1616,16 @@ namespace ModelIO {
 	interface MDLSubmesh : MDLNamed
 	{
 		[Export ("initWithName:indexBuffer:indexCount:indexType:geometryType:material:")]
-		IntPtr Constructor (string name, IMDLMeshBuffer indexBuffer, nuint indexCount, MDLIndexBitDepth indexType, MDLGeometryType geometryType, [NullAllowed] MDLMaterial material);
+		NativeHandle Constructor (string name, IMDLMeshBuffer indexBuffer, nuint indexCount, MDLIndexBitDepth indexType, MDLGeometryType geometryType, [NullAllowed] MDLMaterial material);
 
 		[Export ("initWithIndexBuffer:indexCount:indexType:geometryType:material:")]
-		IntPtr Constructor (IMDLMeshBuffer indexBuffer, nuint indexCount, MDLIndexBitDepth indexType, MDLGeometryType geometryType, [NullAllowed] MDLMaterial material);
+		NativeHandle Constructor (IMDLMeshBuffer indexBuffer, nuint indexCount, MDLIndexBitDepth indexType, MDLGeometryType geometryType, [NullAllowed] MDLMaterial material);
 
 		[Export ("initWithName:indexBuffer:indexCount:indexType:geometryType:material:topology:")]
-		IntPtr Constructor (string name, IMDLMeshBuffer indexBuffer, nuint indexCount, MDLIndexBitDepth indexType, MDLGeometryType geometryType, [NullAllowed] MDLMaterial material, [NullAllowed] MDLSubmeshTopology topology);
+		NativeHandle Constructor (string name, IMDLMeshBuffer indexBuffer, nuint indexCount, MDLIndexBitDepth indexType, MDLGeometryType geometryType, [NullAllowed] MDLMaterial material, [NullAllowed] MDLSubmeshTopology topology);
 
 		[Export ("initWithMDLSubmesh:indexType:geometryType:")]
-		IntPtr Constructor (MDLSubmesh indexBuffer, MDLIndexBitDepth indexType, MDLGeometryType geometryType);
+		NativeHandle Constructor (MDLSubmesh indexBuffer, MDLIndexBitDepth indexType, MDLGeometryType geometryType);
 
 		[Export ("indexBuffer", ArgumentSemantic.Retain)]
 		IMDLMeshBuffer IndexBuffer { get; }
@@ -1648,9 +1673,9 @@ namespace ModelIO {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Static]
 		[Obsolete ("Use 'CreateTexture' instead.")]
 		[Wrap ("CreateTexture (name)")]
@@ -1663,7 +1688,7 @@ namespace ModelIO {
 		[return: NullAllowed]
 		MDLTexture CreateTexture (string name);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Static]
 		[Obsolete ("Use 'CreateTexture' instead.")]
 		[Wrap ("CreateTexture (name, bundleOrNil)")]
@@ -1705,7 +1730,7 @@ namespace ModelIO {
 		[Export ("initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
+		NativeHandle Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
 		[Export ("writeToURL:")]
 		bool WriteToUrl (NSUrl url);
@@ -1815,29 +1840,29 @@ namespace ModelIO {
 	interface MDLTransform : MDLTransformComponent, NSCopying {
 
 		[Export ("initWithTransformComponent:")]
-		IntPtr Constructor (IMDLTransformComponent component);
+		NativeHandle Constructor (IMDLTransformComponent component);
 
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithTransformComponent:resetsTransform:")]
-		IntPtr Constructor (IMDLTransformComponent component, bool resetsTransform);
+		NativeHandle Constructor (IMDLTransformComponent component, bool resetsTransform);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the '(MatrixFloat4x4)' overload instead.")]
 #endif
 		[Export ("initWithMatrix:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Matrix4 matrix);
+		NativeHandle Constructor (Matrix4 matrix);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("initWithMatrix:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (MatrixFloat4x4 matrix);
+		NativeHandle Constructor (MatrixFloat4x4 matrix);
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the '(MatrixFloat4x4, bool)' overload instead.")]
 #endif
 		[iOS (10,0)]
@@ -1845,14 +1870,14 @@ namespace ModelIO {
 		[TV (10,0)]
 		[Export ("initWithMatrix:resetsTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Matrix4 matrix, bool resetsTransform);
+		NativeHandle Constructor (Matrix4 matrix, bool resetsTransform);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[iOS (10,0), Mac (10,12), TV (10,0)]
 		[Export ("initWithMatrix:resetsTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (MatrixFloat4x4 matrix, bool resetsTransform);
+		NativeHandle Constructor (MatrixFloat4x4 matrix, bool resetsTransform);
 #endif
 
 		[Export ("setIdentity")]
@@ -1874,14 +1899,14 @@ namespace ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector3 GetRotation (double atTime);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetRotationMatrix4x4' instead.")]
 #endif
 		[Export ("rotationMatrixAtTime:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Matrix4 GetRotationMatrix (double atTime);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("rotationMatrixAtTime:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1907,12 +1932,12 @@ namespace ModelIO {
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		[Export ("setMatrix:forTime:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'SetMatrix4x4' instead.")]
 #endif
 		void SetMatrix (Matrix4 matrix, double time);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		[Export ("setMatrix:forTime:")]
@@ -1968,7 +1993,7 @@ namespace ModelIO {
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("resetsTransform")]
@@ -1984,7 +2009,7 @@ namespace ModelIO {
 
 		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
 		[Mac (10,12)]
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("keyTimes", ArgumentSemantic.Copy)]
@@ -2002,7 +2027,7 @@ namespace ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Matrix4 GetLocalTransform (double atTime);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateGlobalTransform4x4' instead.")]
 #endif
 		[Static]
@@ -2018,10 +2043,10 @@ namespace ModelIO {
 	{
 		[Export ("initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
+		NativeHandle Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
 		[Export ("initWithURL:name:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] string name);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] string name);
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
@@ -2032,7 +2057,7 @@ namespace ModelIO {
 	interface MDLVertexAttribute : NSCopying
 	{
 		[Export ("initWithName:format:offset:bufferIndex:")]
-		IntPtr Constructor (string name, MDLVertexFormat format, nuint offset, nuint bufferIndex);
+		NativeHandle Constructor (string name, MDLVertexFormat format, nuint offset, nuint bufferIndex);
 
 		[Export ("name")]
 		string Name { get; set; }
@@ -2087,7 +2112,7 @@ namespace ModelIO {
 	{
 		// FIXME: provide better API.
 		[Export ("initWithBytes:deallocator:")]
-		IntPtr Constructor (IntPtr bytes, [NullAllowed] Action deallocator);
+		NativeHandle Constructor (IntPtr bytes, [NullAllowed] Action deallocator);
 
 		[Export ("bytes")]
 		IntPtr Bytes { get; }
@@ -2098,7 +2123,7 @@ namespace ModelIO {
 	interface MDLVertexDescriptor : NSCopying
 	{
 		[Export ("initWithVertexDescriptor:")]
-		IntPtr Constructor (MDLVertexDescriptor vertexDescriptor);
+		NativeHandle Constructor (MDLVertexDescriptor vertexDescriptor);
 
 		[Export ("attributeNamed:")]
 		[return: NullAllowed]
@@ -2137,22 +2162,22 @@ namespace ModelIO {
 
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 		[Export ("initWithAsset:divisions:interiorShells:exteriorShells:patchRadius:")]
-		IntPtr Constructor (MDLAsset asset, int divisions, int interiorShells, int exteriorShells, float patchRadius);
+		NativeHandle Constructor (MDLAsset asset, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
 		[Export ("initWithAsset:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
-		IntPtr Constructor (MDLAsset asset, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
+		NativeHandle Constructor (MDLAsset asset, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithAsset:divisions:patchRadius:")]
-		IntPtr Constructor (MDLAsset asset, int divisions, float patchRadius);
+		NativeHandle Constructor (MDLAsset asset, int divisions, float patchRadius);
 
 		[Export ("initWithData:boundingBox:voxelExtent:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (NSData voxelData, MDLAxisAlignedBoundingBox boundingBox, float voxelExtent);
+		NativeHandle Constructor (NSData voxelData, MDLAxisAlignedBoundingBox boundingBox, float voxelExtent);
 		
 		[Export ("meshUsingAllocator:")]
 		[return: NullAllowed]
@@ -2182,14 +2207,16 @@ namespace ModelIO {
 		[Export ("setVoxelsForMesh:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetVoxels (MDLVoxelIndexExtent2)' instead.")]
+#else
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #endif
 		[Export ("voxelsWithinExtent:")]
 		[return: NullAllowed]
 		NSData GetVoxels (MDLVoxelIndexExtent withinExtent);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 		[Export ("voxelsWithinExtent:")]
 		[return: NullAllowed]
@@ -2225,13 +2252,18 @@ namespace ModelIO {
 		[Export ("count")]
 		nuint Count { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'VoxelIndexExtent2' instead.")]
 #endif
 		[Export ("voxelIndexExtent")]
-		MDLVoxelIndexExtent VoxelIndexExtent { get; }
+		MDLVoxelIndexExtent VoxelIndexExtent {
+#if NET
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#endif
+			get;
+		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("voxelIndexExtent")]
 		[Sealed]
 		MDLVoxelIndexExtent2 VoxelIndexExtent2 {
@@ -2342,7 +2374,7 @@ namespace ModelIO {
 		[Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithStride:")]
-		IntPtr Constructor (nuint stride);
+		NativeHandle Constructor (nuint stride);
 
 		[Export ("stride", ArgumentSemantic.Assign)]
 		nuint Stride { get; set; }
@@ -2354,7 +2386,7 @@ namespace ModelIO {
 		[iOS (10,2), Mac (10,12,2)]
 		[TV (10,1)]
 		[Export ("initWithSubmesh:")]
-		IntPtr Constructor (MDLSubmesh submesh);
+		NativeHandle Constructor (MDLSubmesh submesh);
 
 		[NullAllowed, Export ("faceTopology", ArgumentSemantic.Retain)]
 		IMDLMeshBuffer FaceTopology { get; set; }
@@ -2429,7 +2461,7 @@ namespace ModelIO {
 		nuint ElementCount { get; }
 
 		[Export ("initWithElementCount:")]
-		IntPtr Constructor (nuint arrayElementCount);
+		NativeHandle Constructor (nuint arrayElementCount);
 
 		[Internal]
 		[Export ("setFloatArray:count:atTime:")]
@@ -2472,7 +2504,7 @@ namespace ModelIO {
 		nuint ElementCount { get; }
 
 		[Export ("initWithElementCount:")]
-		IntPtr Constructor (nuint arrayElementCount);
+		NativeHandle Constructor (nuint arrayElementCount);
 
 		[Internal]
 		[Export ("setFloat3Array:count:atTime:")]
@@ -2515,7 +2547,7 @@ namespace ModelIO {
 		nuint ElementCount { get; }
 
 		[Export ("initWithElementCount:")]
-		IntPtr Constructor (nuint arrayElementCount);
+		NativeHandle Constructor (nuint arrayElementCount);
 
 		[Internal]
 		[Export ("setFloatQuaternionArray:count:atTime:")]
@@ -2747,7 +2779,7 @@ namespace ModelIO {
 		MDLMatrix4x4Array JointRestTransforms { get; }
 
 		[Export ("initWithName:jointPaths:")]
-		IntPtr Constructor (string name, string[] jointPaths);
+		NativeHandle Constructor (string name, string[] jointPaths);
 	}
 
 	interface IMDLJointAnimation { }
@@ -2775,7 +2807,7 @@ namespace ModelIO {
 		MDLAnimatedVector3Array Scales { get; }
 
 		[Export ("initWithName:jointPaths:")]
-		IntPtr Constructor (string name, string [] jointPaths);
+		NativeHandle Constructor (string name, string [] jointPaths);
 	}
 
 	[iOS (11,0), Mac (10,13), TV (11,0)]
@@ -2821,7 +2853,7 @@ namespace ModelIO {
 	interface MDLRelativeAssetResolver : MDLAssetResolver {
 
 		[Export ("initWithAsset:")]
-		IntPtr Constructor (MDLAsset asset);
+		NativeHandle Constructor (MDLAsset asset);
 
 		[NullAllowed, Export ("asset", ArgumentSemantic.Weak)]
 		MDLAsset Asset { get; set; }
@@ -2833,7 +2865,7 @@ namespace ModelIO {
 	interface MDLPathAssetResolver : MDLAssetResolver {
 
 		[Export ("initWithPath:")]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[Export ("path")]
 		string Path { get; set; }
@@ -2845,7 +2877,7 @@ namespace ModelIO {
 	interface MDLBundleAssetResolver : MDLAssetResolver {
 
 		[Export ("initWithBundle:")]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[Export ("path")]
 		string Path { get; set; }
@@ -3038,7 +3070,7 @@ namespace ModelIO {
 		void Clear ();
 
 		[Export ("initWithElementCount:")]
-		IntPtr Constructor (nuint arrayElementCount);
+		NativeHandle Constructor (nuint arrayElementCount);
 
 		[Internal]
 		[Export ("setFloat4x4Array:count:")]

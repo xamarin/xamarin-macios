@@ -11,15 +11,30 @@ using Xamarin.Utils;
 
 namespace Xamarin.Tests {
 	[TestFixture]
-	public class TemplateTest {
+	public class TemplateTest : TestBaseClass {
+		public struct TemplateInfo {
+			public readonly ApplePlatform Platform;
+			public readonly string Template;
+			public readonly bool ValidateSuccessfulBuild;
+			public readonly bool Execute;
 
-		public static string [][] Templates = {
-			// { platform, template_name }
-			new [] { "iOS", "ios" },
-			new [] { "iOS", "ioslib" },
-			new [] { "tvOS", "tvos" },
-			new [] { "MacCatalyst", "maccatalyst" },
-			new [] { "macOS", "macos" },
+			public TemplateInfo (ApplePlatform platform, string template, bool validateSuccessfulBuild = true, bool execute = false)
+			{
+				Platform = platform;
+				Template = template;
+				ValidateSuccessfulBuild = validateSuccessfulBuild;
+				Execute = execute;
+			}
+		}
+
+		public static TemplateInfo[] Templates = {
+			new TemplateInfo (ApplePlatform.iOS, "ios"),
+			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
+			new TemplateInfo (ApplePlatform.iOS, "iosbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo (ApplePlatform.TVOS, "tvos"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", execute: true),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo (ApplePlatform.MacOSX, "macos", execute: true),
 		};
 
 		public class TemplateConfig {
@@ -36,7 +51,7 @@ namespace Xamarin.Tests {
 		[Test]
 		public void AreAllTemplatesListed ()
 		{
-			var allListedTemplates = Templates.Select (v => v [1]).ToArray ();
+			var allListedTemplates = Templates.Select (v => v.Template).ToArray ();
 			var allTemplates = new List<string> ();
 			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
 				var dir = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates");
@@ -66,17 +81,51 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCaseSource (nameof (Templates))]
-		public void CreateAndBuildTemplate (string platform, string template)
+		public void CreateAndBuildTemplate (TemplateInfo info)
 		{
-			Configuration.IgnoreIfIgnoredPlatform (platform);
+			if (!info.ValidateSuccessfulBuild) {
+				return;
+			}
+
+			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			Configuration.CopyDotNetSupportingFiles (tmpDir);
-			var outputDir = Path.Combine (tmpDir, template);
-			DotNet.AssertNew (outputDir, template);
-			var csproj = Path.Combine (outputDir, template + ".csproj");
+			var outputDir = Path.Combine (tmpDir, info.Template);
+			DotNet.AssertNew (outputDir, info.Template);
+			var csproj = Path.Combine (outputDir, info.Template + ".csproj");
 			var rv = DotNet.AssertBuild (csproj);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
+
+			if (info.Execute) {
+				var platform = info.Platform;
+				var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+
+				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
+
+				// First add some code to exit the template if it launches successfully.
+				var mainFile = Path.Combine (outputDir, "Main.cs");
+				var mainContents = File.ReadAllText (mainFile);
+				var exitSampleWithSuccess = @"NSTimer.CreateScheduledTimer (1, (v) => {
+	Console.WriteLine (Environment.GetEnvironmentVariable (""MAGIC_WORD""));
+	Environment.Exit (0);
+			});
+			";
+				var modifiedMainContents = mainContents.Replace ("// This is the main entry point of the application.", exitSampleWithSuccess);
+				Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
+				File.WriteAllText (mainFile, modifiedMainContents);
+
+				// Build the sample
+				rv = DotNet.AssertBuild (csproj);
+
+				// There should still not be any warnings
+				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
+				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
+
+				var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
+				var appExecutable = GetNativeExecutable (platform, appPath);
+				ExecuteWithMagicWordAndAssert (appExecutable);
+			}
 		}
 	}
 }
