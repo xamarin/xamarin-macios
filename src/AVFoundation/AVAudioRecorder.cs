@@ -48,7 +48,7 @@ namespace AVFoundation {
 
 		public static AVAudioRecorder? Create (NSUrl url, AudioSettings settings, out NSError? error)
 		{
-			if (settings == null)
+			if (settings is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			error = null;
 			try {

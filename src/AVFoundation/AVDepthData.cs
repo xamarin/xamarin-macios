@@ -27,7 +27,7 @@ namespace AVFoundation {
 		public CVPixelFormatType []? AvailableDepthDataTypes {
 			get {
 				var values = WeakAvailableDepthDataTypes;
-				if (values == null)
+				if (values is null)
 					return null;
 
 				var count = values.Length;

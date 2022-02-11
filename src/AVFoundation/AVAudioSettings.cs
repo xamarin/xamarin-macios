@@ -255,7 +255,7 @@ namespace AVFoundation {
 		
 		public AudioChannelLayout ChannelLayout {
 			set {
-				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value == null ? null : value.AsData ());
+				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value is null ? null : value.AsData ());
 			}
 		}
 

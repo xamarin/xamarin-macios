@@ -71,7 +71,7 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void FinishedPlaying (AVAudioPlayer player, bool flag)
 		{
-			if (cbFinishedPlaying != null)
+			if (cbFinishedPlaying is not null)
 				cbFinishedPlaying (player, new AVStatusEventArgs (flag));
 			if (player.Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("player", "the player object was Dispose()d during the callback, this has corrupted the state of the program");
@@ -87,14 +87,14 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void BeginInterruption (AVAudioPlayer  player)
 		{
-			if (cbBeginInterruption != null)
+			if (cbBeginInterruption is not null)
 				cbBeginInterruption (player, EventArgs.Empty);
 		}
 	
 		[Preserve (Conditional = true)]
 		public override void EndInterruption (AVAudioPlayer player)
 		{
-			if (cbEndInterruption != null)
+			if (cbEndInterruption is not null)
 				cbEndInterruption (player, EventArgs.Empty);
 		}
 #endif
@@ -105,7 +105,7 @@ namespace AVFoundation {
 		InternalAVAudioPlayerDelegate EnsureEventDelegate ()
 		{
 			var del = WeakDelegate as InternalAVAudioPlayerDelegate;
-			if (del == null){
+			if (del is null){
 				del = new InternalAVAudioPlayerDelegate ();
 				WeakDelegate = del;
 			}
@@ -171,7 +171,7 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void FinishedRecording (AVAudioRecorder recorder, bool flag)
 		{
-			if (cbFinishedRecording != null)
+			if (cbFinishedRecording is not null)
 				cbFinishedRecording (recorder, new AVStatusEventArgs (flag));
 		}
 	
@@ -185,14 +185,14 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void BeginInterruption (AVAudioRecorder  recorder)
 		{
-			if (cbBeginInterruption != null)
+			if (cbBeginInterruption is not null)
 				cbBeginInterruption (recorder, EventArgs.Empty);
 		}
 	
 		[Preserve (Conditional = true)]
 		public override void EndInterruption (AVAudioRecorder recorder)
 		{
-			if (cbEndInterruption != null)
+			if (cbEndInterruption is not null)
 				cbEndInterruption (recorder, EventArgs.Empty);
 		}
 #endif
@@ -202,7 +202,7 @@ namespace AVFoundation {
 		InternalAVAudioRecorderDelegate EnsureEventDelegate ()
 		{
 			var del = WeakDelegate as InternalAVAudioRecorderDelegate;
-			if (del == null){
+			if (del is null){
 				del = new InternalAVAudioRecorderDelegate ();
 				WeakDelegate = del;
 			}
@@ -300,21 +300,21 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void BeginInterruption ()
 		{
-			if (cbBeginInterruption != null)
+			if (cbBeginInterruption is not null)
 				cbBeginInterruption (session, EventArgs.Empty);
 		}
 	
 		[Preserve (Conditional = true)]
 		public override void EndInterruption ()
 		{
-			if (cbEndInterruption != null)
+			if (cbEndInterruption is not null)
 				cbEndInterruption (session, EventArgs.Empty);
 		}
 
 		[Preserve (Conditional = true)]
 		public override void InputIsAvailableChanged (bool isInputAvailable)
 		{
-			if (cbInputAvailabilityChanged != null)
+			if (cbInputAvailabilityChanged is not null)
 				cbInputAvailabilityChanged (session, new AVStatusEventArgs (isInputAvailable));
 		}		
 	
@@ -324,7 +324,7 @@ namespace AVFoundation {
 		InternalAVAudioSessionDelegate EnsureEventDelegate ()
 		{
 			var del = WeakDelegate as InternalAVAudioSessionDelegate;
-			if (del == null){
+			if (del is null){
 				del = new InternalAVAudioSessionDelegate (this);
 				WeakDelegate = del;
 			}
