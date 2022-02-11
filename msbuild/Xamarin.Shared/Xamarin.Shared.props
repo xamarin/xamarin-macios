@@ -145,8 +145,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	<!-- RequireCodeSigning -->
 	<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
 	<PropertyGroup Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
-		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
-		<_RequireCodeSigning Condition="'$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning> <!-- except that device builds must be signed -->
+		<!-- Make it possible to override the default logic by setting EnableCodeSigning -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning>
+		<!-- Device builds must be signed -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == '' And '$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning>
+		<!-- Otherwise code signing is disabled by default (simulator builds)-->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning>
 	</PropertyGroup>
 	<!-- macOS is a bit more complicated:
 		* 'EnableCodeSigning' specifies whether the app is signed or not, and this defaults to false if it's not set.
