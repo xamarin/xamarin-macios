@@ -20,6 +20,7 @@ namespace Metal {
 	public static partial class MTLResourceStateCommandEncoder_Extensions {
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else

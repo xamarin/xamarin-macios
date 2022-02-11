@@ -139,6 +139,8 @@ namespace AudioToolbox {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -172,6 +174,8 @@ namespace AudioToolbox {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -187,6 +191,8 @@ namespace AudioToolbox {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -202,6 +208,8 @@ namespace AudioToolbox {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -217,6 +225,8 @@ namespace AudioToolbox {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -487,6 +497,8 @@ namespace AudioToolbox {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios5.0")]
 #if IOS
 		[Obsolete ("Starting with ios5.0 use 'InputRoute' or 'OutputRoute' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

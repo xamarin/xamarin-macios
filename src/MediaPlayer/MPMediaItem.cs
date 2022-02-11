@@ -268,6 +268,7 @@ namespace MediaPlayer {
 		
 #if NET
 		[SupportedOSPlatform ("ios9.2")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (9,2)]
 #endif
@@ -279,6 +280,7 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -290,6 +292,7 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -301,6 +304,7 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,3)]
 #endif

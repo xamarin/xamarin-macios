@@ -168,6 +168,7 @@ namespace GameController {
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -190,6 +191,7 @@ namespace GameController {
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos9.0")]
 		[UnsupportedOSPlatform ("macos10.14.4")]
 		[UnsupportedOSPlatform ("tvos12.2")]
 		[UnsupportedOSPlatform ("ios12.2")]

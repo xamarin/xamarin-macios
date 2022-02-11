@@ -53,6 +53,7 @@ namespace AudioToolbox {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)] // 10.5
 #endif
@@ -61,6 +62,7 @@ namespace AudioToolbox {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)] // 10.5
 #endif

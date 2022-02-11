@@ -149,6 +149,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (14,0)]
 		[TV (14,0)]

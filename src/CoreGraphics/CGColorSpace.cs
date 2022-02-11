@@ -274,6 +274,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -284,6 +285,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -294,6 +296,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -304,6 +307,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -314,6 +318,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -324,6 +329,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -334,6 +340,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -447,6 +454,8 @@ namespace CoreGraphics {
 		}
 			
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
@@ -480,6 +489,8 @@ namespace CoreGraphics {
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCData (/* CFTypeRef cg_nullable */ IntPtr data);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
@@ -557,6 +568,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
@@ -578,6 +591,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
@@ -637,6 +651,7 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -647,6 +662,7 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]

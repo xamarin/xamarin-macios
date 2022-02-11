@@ -11,6 +11,7 @@ using System.Runtime.Versioning;
 namespace UIKit {
 	public unsafe static partial class UIStringDrawing  {
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGPoint, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -26,6 +27,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -41,6 +43,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -56,6 +59,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -71,6 +75,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -86,6 +91,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -101,6 +107,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -116,6 +123,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -131,6 +139,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -146,6 +155,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -161,6 +171,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -176,6 +187,7 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

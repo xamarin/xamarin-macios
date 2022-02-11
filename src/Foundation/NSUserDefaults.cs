@@ -12,6 +12,7 @@ namespace Foundation {
 	public partial class NSUserDefaults {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -30,6 +31,7 @@ namespace Foundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif

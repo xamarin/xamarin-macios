@@ -121,6 +121,7 @@ namespace UIKit
 #if !MONOMAC || NET
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst13.0")]
 #else
 		[iOS (10, 0)]
 #endif
@@ -131,6 +132,7 @@ namespace UIKit
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst13.0")]
 #else
 		[iOS (10, 0)]
 #endif

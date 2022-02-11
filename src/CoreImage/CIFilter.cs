@@ -124,6 +124,7 @@ namespace CoreImage {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif

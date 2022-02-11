@@ -11,6 +11,7 @@ namespace HomeKit {
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (9,0)]
 #endif

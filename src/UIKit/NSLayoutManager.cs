@@ -114,6 +114,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst13.1")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]

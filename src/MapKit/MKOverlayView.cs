@@ -19,6 +19,7 @@ namespace MapKit {
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if IOS
 		[Obsolete ("Starting with ios7.0 use 'MKOverlayRenderer' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

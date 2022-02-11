@@ -250,6 +250,7 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -288,6 +289,8 @@ namespace CoreFoundation {
 		}
 	
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if MONOMAC
@@ -586,6 +589,8 @@ namespace CoreFoundation {
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if MONOMAC

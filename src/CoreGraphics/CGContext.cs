@@ -818,6 +818,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -834,6 +836,8 @@ namespace CoreGraphics {
 			/* const char* __nullable */ string? name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -865,6 +869,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -880,6 +886,8 @@ namespace CoreGraphics {
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ string? s, /* size_t */ nint length);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -901,6 +909,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -918,6 +928,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -933,6 +945,8 @@ namespace CoreGraphics {
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ byte[]? bytes, /* size_t */ nint length);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -954,6 +968,8 @@ namespace CoreGraphics {
 		}
 		
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -971,6 +987,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -987,6 +1005,8 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat y, /* const char* __nullable */ string? str, /* size_t */ nint length);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1004,6 +1024,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1021,6 +1043,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1046,6 +1070,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1062,6 +1088,8 @@ namespace CoreGraphics {
 			/* const CGGlyph * __nullable */ ushort []? glyphs, /* size_t */ nint count);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1079,6 +1107,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1100,6 +1130,8 @@ namespace CoreGraphics {
 		}
 		
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1116,6 +1148,8 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat y, /* const CGGlyph * __nullable */ ushort []? glyphs, /* size_t */ nint count);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1137,6 +1171,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1154,6 +1190,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1171,6 +1209,8 @@ namespace CoreGraphics {
 			/* const CGSize * __nullable */ CGSize []? advances, /* size_t */ nint count);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC

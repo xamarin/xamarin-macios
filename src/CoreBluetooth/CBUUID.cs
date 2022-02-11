@@ -123,6 +123,7 @@ namespace CoreBluetooth {
 		// try new constant (10.13+) and fallback to the old/misnamed one
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios")]
 #else
 		[Mac (10, 13)]
 #endif

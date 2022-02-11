@@ -158,6 +158,8 @@ namespace AudioToolbox {
 		const AudioFormatFlags AudioFormatFlagIsBigEndian = 0;
 
 #if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
 #if MONOMAC
