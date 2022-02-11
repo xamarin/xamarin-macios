@@ -5546,7 +5546,11 @@ namespace MetalPerformanceShaders {
 
 		[Abstract]
 		[Export ("load")]
+#if NET
+		bool Load ();
+#else
 		bool Load { get; }
+#endif
 
 		[Abstract]
 		[Export ("purge")]

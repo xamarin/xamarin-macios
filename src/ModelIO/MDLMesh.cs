@@ -9,6 +9,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
@@ -78,16 +79,28 @@ namespace ModelIO {
 
 		// Note: we turn these constructors into static constructors because we don't want to lose the shape name. Also, the signatures of these constructors differ so it would not be possible to use an enum to differentiate the shapes.
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateBox (Vector3 dimensions, Vector3i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator)
 		{
 			return CreateBox (dimensions, segments, geometryType, inwardNormals, allocator, MDLMeshVectorType.Dimensions);
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateBox (Vector3 vector, Vector3i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator, MDLMeshVectorType type = MDLMeshVectorType.Dimensions)
 		{
@@ -101,56 +114,98 @@ namespace ModelIO {
 			}
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateSphere (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, null, null, null);
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateHemisphere (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, bool cap, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, null, cap, false);
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateCylinder (Vector3 extent, Vector2i segments, bool inwardNormals, bool topCap, bool bottomCap, MDLGeometryType geometryType, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (extent, segments, inwardNormals, topCap, bottomCap, geometryType, allocator);
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateCapsule (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, int hemisphereSegments, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, hemisphereSegments, null, null);
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateCone (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, bool cap, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, null, cap, true);
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreatePlane (Vector3 extent, Vector2i segments, MDLGeometryType geometryType, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (extent, segments, geometryType, allocator);
 		}
 
-#if !NET
-		[iOS (10,0)][TV (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Mac (10,12)]
 #endif
 		public static MDLMesh CreateIcosahedron (Vector3 extent, bool inwardNormals, MDLGeometryType geometryType, IMDLMeshBufferAllocator allocator)
 		{

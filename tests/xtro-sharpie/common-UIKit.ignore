@@ -53,7 +53,7 @@
 ## it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
 !incorrect-protocol-member! UIInputViewAudioFeedback::enableInputClicksWhenVisible is OPTIONAL and should NOT be abstract
 
-## fixed in XAMCORE_4_0 - API break
+## fixed in .NET - API break
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
@@ -151,7 +151,7 @@
 !missing-selector! NSObject::setShouldGroupAccessibilityChildren: not bound
 !missing-selector! NSObject::shouldGroupAccessibilityChildren not bound
 
-## @required members added to exixting interfaces (breaking change), fixed on XAMCORE_4_0
+## @required members added to exixting interfaces (breaking change), fixed on .NET
 !incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::documentIdentifier is REQUIRED and should be abstract
@@ -167,15 +167,11 @@
 !missing-enum! NSTextAlignment not bound
 
 ## It got renamed from UITextWritingDirection to NSWritingDirection but it is a breaking change
-## Fixed in XAMCORE_4_0
+## Fixed in .NET
 !unknown-native-enum! UITextWritingDirection bound
 
 ## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
 !unknown-native-enum! UIToolbarPosition bound
-
-## Protocol Inlined Maybe we want to change this in XAMCORE_4_0 since this predates our Category support
-!missing-protocol! UIResponderStandardEditActions not bound
-!missing-protocol-conformance! UIResponder should conform to UIResponderStandardEditActions
 
 ## there's no UI_APPEARANCE_SELECTOR in headers - but they can (unofficially) work, YYMV
 !extra-ui-appearance-support! UIKit.UIColor UIKit.UIBarButtonItem::get_TintColor() should NOT be decorated with [Appearance]
