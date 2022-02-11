@@ -87,6 +87,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateInstallerPackage" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreatePkgInfo" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileProductDefinition" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeCodesignItems" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DetectDebugNetworkConfiguration" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DSymUtil" AssemblyFile="$(_TaskAssemblyName)" />
@@ -374,7 +375,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_IpaPackageFile Include="$(DeviceSpecificOutputPath)*.ipa" />
 		</ItemGroup>
 
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign-bundle.items" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
 	</Target>
 
@@ -1754,17 +1756,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<!-- Code signing -->
 
 	<PropertyGroup>
+		<_CollectCodesigningDataDependsOn>
+			$(_CollectCodesigningData);
+			_PlaceAppExtensions;
+		</_CollectCodesigningDataDependsOn>
+		<_CollectCodesigningDataDependsOn Condition="'$(_PlatformName)' != 'macOS'">
+			$(_CollectCodesigningData);
+			_ResolveWatchAppReferences;
+		</_CollectCodesigningDataDependsOn>
+
 		<_CodesignAppBundleDependsOn>
 			$(_CodesignAppBundleDependsOn);
 			_CleanAppBundleRootDirectory;
 			_EmbedProvisionProfile;
-			_CodesignNativeLibraries;
-			_CollectFrameworks;
-			_CodesignFrameworks;
-			_ReadAppExtensionCodesignProperties;
-			_CodesignAppExtensions;
-			_PrepareCodesignAppExtension;
-			_CalculateCodesignAppBundleInputs;
+			_CollectCodesigningData;
+			_StoreCodesigningData;
 		</_CodesignAppBundleDependsOn>
 
 		<CoreCodesignDependsOn>
@@ -1788,6 +1794,263 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="AfterCodesign" />
 
 	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CodesignDependsOn)" />
+
+	<!--
+
+		Code signing
+		============
+
+		A main point in code signing is that signing will be done in the
+		outermost executable project, not in any app extension projects or
+		watch projects, nor during the RID-specific build of a universal .NET
+		app. This makes codesigning easier to reason about and other affected
+		logic (such as strip/dsymutil) easier to handle, in particular for
+		.NET universal apps.
+
+		The first step is to collect all the information we need from the
+		targets files. Every app bundle (be it app extension, watch app or
+		main app) will add its own output app bundle (.app/.appex) to the
+		_CodesignBundle item group. Then every app bundle will load this
+		information from referenced app bundles, and finally store this
+		information on disk (in the 'codesign-bundle.items' file). This means
+		that in the end the main app bundle will have a list of all contained
+		app bundles in the app (recursively), in the _CodesignBundle item
+		group.
+
+		Separately we keep a list of other items that need signing, in the
+		_CodesignItems item group, and we do the same store/load logic for
+		every contained/contained app bundle (in the 'codesign.items' file, so
+		a the end the main app bundle will have a list of all the
+		_CodesignItems for all contained app bundles (recursively).
+
+		The previous steps occur in the _CollectCodesigningData and
+		_StoreCodesigningData targets.
+
+		The next step is to use the ComputeCodesignItems task to compute
+		everything we need to know for code signing. This task has the
+		responsibility for listing all the *.dylib and *.metallib files, and
+		the *.framework directories in the app bundles, that need signing.
+		This logic is significantly easier to write, debug and test in C# than
+		MSBuild.
+
+		In addition the ComputeCodesignItems also figures out a stamp file
+		path we use to determine if something needs (re-)signing.
+
+		Finally we give the list of _ComputedCodesignItems to the Codesign
+		task for signing.
+
+		At the very end, and only if we signed the main app bundle, we verify
+		that the signature is correct (in the _CodesignVerify target).
+
+	-->
+
+	<!--
+		_CodesignVerify: verify that the app bundle we've produced is valid and signed properly.
+		This target is only executed for app bundles (and not when only dylibs and frameworks are signed, but the app bundle itself is not).
+	-->
+	<Target
+		Name="_CodesignVerify"
+		Condition="'$(_CodesignAppBundleCondition)' == 'true' And '$(_RequireCodeSigning)' == 'true'"
+		DependsOnTargets="_CodesignAppBundle"
+		>
+		<CodesignVerify
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="$(_CodesignAllocate)"
+			Resource="$(_AppContainerDir)\%(_CodesignBundle.Identity)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+		</CodesignVerify>
+	</Target>
+
+	<!--
+
+		_CollectCodesigningData: This target collects all the data required to sign the app bundle.
+
+		* We iterate over all app extensions, and load the signing data from
+		  each of them (and since each app extension does the same thing, we
+		  effectively end up collecting codesigning data from nested app
+		  extensions as well).
+		* We load signing data from any watch apps (which already contains
+		  codesigning data for the watch extension (and any other contained
+		  extensions), we effectively end up collecting codesigning data
+		  recursively).
+		* We add signing data for the current project's app bundle (if that's
+		  what we're building).
+
+		Item groups:
+
+		* _CodesignBundle: all the bundles (*.app, *.appex) that must be
+		  signed (including the watch app). The identity is relative to the
+		  output directory where we put the app bundle (because this makes
+		  it easy to update the identity when loading data from contained
+		  projects - we just have to prepend the relative path to where the
+		  contained app bundle is to be placed in the current app bundle)
+		* _CodesignItems: other files and directories that must be signed
+		  (*.dylib, *.framework, createdump, etc.). The identity is the same
+		  as for _CodesignBundle.
+
+	-->
+	<Target
+		Name="_CollectCodesigningData"
+		DependsOnTargets="$(_CollectCodesigningDataDependsOn)"
+		>
+
+		<!-- Get app bundles to sign from app extensions -->
+		<ReadItemsFromFile File="@(_ResolvedAppExtensionReferences->'%(Identity)\..\codesign-bundle.items')" Condition="Exists('%(Identity)\..\codesign-bundle.items')">
+			<Output TaskParameter="Items" ItemName="_CodesignAppExtensionBundle" />
+		</ReadItemsFromFile>
+		<ItemGroup>
+			<_CodesignBundle Include="@(_CodesignAppExtensionBundle->'$(_AppBundleName)$(AppBundleExtension)/$(_AppPlugInsRelativePath)/%(Identity)')" />
+		</ItemGroup>
+		<!-- Get items to sign from app extensions -->
+		<ReadItemsFromFile File="@(_ResolvedAppExtensionReferences->'%(Identity)\..\codesign.items')" Condition="Exists('%(Identity)\..\codesign.items')">
+			<Output TaskParameter="Items" ItemName="_CodesignAppExtensionItem" />
+		</ReadItemsFromFile>
+		<ItemGroup>
+			<_CodesignItems Include="@(_CodesignAppExtensionItem->'$(_AppBundleName)$(AppBundleExtension)/$(_AppPlugInsRelativePath)/%(Identity)')" />
+		</ItemGroup>
+
+		<!-- Get app bundles to sign from watch apps -->
+		<ReadItemsFromFile File="@(_ResolvedWatchAppReferences->'%(Identity)\..\codesign-bundle.items')" Condition="Exists('%(Identity)\..\codesign-bundle.items')">
+			<Output TaskParameter="Items" ItemName="_CodesignWatchBundle" />
+		</ReadItemsFromFile>
+		<ItemGroup>
+			<_CodesignBundle Include="@(_CodesignWatchBundle->'$(_AppBundleName)$(AppBundleExtension)/Watch/%(Identity)')" />
+		</ItemGroup>
+		<!-- Get items to sign from watch apps -->
+		<ReadItemsFromFile File="@(_ResolvedWatchAppReferences->'%(Identity)\..\codesign.items')" Condition="Exists('%(Identity)\..\codesign.items')">
+			<Output TaskParameter="Items" ItemName="_CodesignWatchItem" />
+		</ReadItemsFromFile>
+		<ItemGroup>
+			<_CodesignItems Include="@(_CodesignWatchItem->'$(_AppBundleName)$(AppBundleExtension)/Watch/%(Identity)')" />
+		</ItemGroup>
+
+		<!-- Add this app bundle to _CodesignBundle -->
+		<ItemGroup>
+			<_CodesignBundle Include="$(_AppBundleName)$(AppBundleExtension)">
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<CodesignDisableTimestamp>false</CodesignDisableTimestamp>
+				<CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">true</CodesignDisableTimestamp>
+				<CodesignEntitlements>$(_CompiledCodesignEntitlements)</CodesignEntitlements>
+				<CodesignExtraArgs>$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
+				<CodesignResourceRules>$(_PreparedResourceRules)</CodesignResourceRules>
+				<CodesignSigningKey>$(_CodeSigningKey)</CodesignSigningKey>
+				<CodesignUseHardenedRuntime>$(UseHardenedRuntime)</CodesignUseHardenedRuntime>
+				<CodesignUseSecureTimestamp>$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
+				<RequireCodeSigning>$(_RequireCodeSigning)</RequireCodeSigning>
+				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
+			</_CodesignBundle>
+
+			<!-- Set the SourceProjectPath metadata on all items that don't have it already -->
+			<_CodesignItems>
+				<SourceProjectPath Condition="'%(_CodesignItems.SourceProjectPath)' == ''">$(MSBuildProjectDirectory)</SourceProjectPath>
+			</_CodesignItems>
+		</ItemGroup>
+
+		<PropertyGroup>
+			<!--
+				We only run the CodesignAppBundle target on the outer-most executable project
+			    * Not on app extensions
+			    * Not on watch apps
+			-->
+			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == '' And '$(IsAppExtension)' != 'true' And '$(IsWatchApp)' != 'true' And '$(_CanOutputAppBundle)' == 'true'">true</_CodesignAppBundleCondition>
+			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == ''">false</_CodesignAppBundleCondition>
+		</PropertyGroup>
+	</Target>
+
+	<!-- This target writes all the properties required to sign items for this project, so that they can be read in containing projects.
+	     The _CodesignBundle item group also contains items for contained projects this project may have (extension projects may have extension projects, etc.). -->
+	<Target
+		Name="_StoreCodesigningData"
+		DependsOnTargets="_CollectCodesigningData"
+		>
+
+		<WriteItemsToFile
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			Items="@(_CodesignBundle)"
+			ItemName="_CodesignBundle"
+			File="$(DeviceSpecificOutputPath)codesign-bundle.items"
+			IncludeMetadata="true"
+			Overwrite="true"
+		/>
+
+		<WriteItemsToFile
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			Items="@(_CodesignItems)"
+			ItemName="_CodesignItems"
+			File="$(DeviceSpecificOutputPath)codesign.items"
+			IncludeMetadata="true"
+			Overwrite="true"
+		/>
+	</Target>
+
+	<!--
+
+		_CodesignAppBundle: sign the app bundle and anything inside that needs
+		signing
+
+		This target does not have Inputs/Outputs, because computing what needs
+		signing or not is quite complex:
+
+		* The ComputeCodesignItems will add items to sign (this computation is
+		  much easier to do in C# than here)
+		* If any file inside a directory has been modified, we need to
+		  (re)sign
+		* If any file or directory inside a directory needs to be signed, then
+		  the containing directory must be signed as well
+
+		This logic is implemented in the Codesign task.
+
+	-->
+	<Target Name="_CodesignAppBundle"
+			Condition="'$(_CodesignAppBundleCondition)' == 'true'"
+			DependsOnTargets="$(_CodesignAppBundleDependsOn)"
+		>
+
+		<ComputeCodesignItems
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			AppBundleDir="$(AppBundleDir)"
+			CodesignBundle="@(_CodesignBundle)"
+			CodesignItems="@(_CodesignItems)"
+			CodesignStampPath="$(DeviceSpecificIntermediateOutputPath)codesign\"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="OutputCodesignItems" ItemName="_ComputedCodesignItems" />
+		</ComputeCodesignItems>
+
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Resources="@(_ComputedCodesignItems)"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			>
+		</Codesign>
+	</Target>
+
+	<!-- LinkMode -->
+	<PropertyGroup>
+		<_ComputeLinkModeDependsOn>
+			$(_ComputeLinkModeDependsOn);
+			_DetectSdkLocations;
+		</_ComputeLinkModeDependsOn>
+	</PropertyGroup>
+	<Target Name="_ComputeLinkMode" DependsOnTargets="$(_ComputeLinkModeDependsOn)">
+		<PropertyGroup>
+			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
+			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
+			<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode> <!-- Let the .NET targets chime in -->
+			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
+			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
+		</PropertyGroup>
+	</Target>
 
 	<PropertyGroup>
 		<_CollectFrameworksDependsOn>
@@ -2266,8 +2529,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_ParseBundlerArguments">
 		<PropertyGroup Condition="'$(AppBundleDir)' == ''">
-			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<AppBundleDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<_AppContainerDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)</_AppContainerDir>
+			<_AppContainerDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\</_AppContainerDir>
+			<AppBundleDir>$(_AppContainerDir)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 		</PropertyGroup>
 		<PropertyGroup>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
