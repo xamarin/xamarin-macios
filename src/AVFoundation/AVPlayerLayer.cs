@@ -26,14 +26,14 @@ namespace AVFoundation {
 #endif
 		public CVPixelBufferAttributes? PixelBufferAttributes {
 			get {
-				if (WeakPixelBufferAttributes != null) {
+				if (WeakPixelBufferAttributes is not null) {
 					var strongDict = new CVPixelBufferAttributes (WeakPixelBufferAttributes);
 					return strongDict;
 				}
 				return null;
 			}
 			set {
-				WeakPixelBufferAttributes = value != null ? value.Dictionary : null;
+				WeakPixelBufferAttributes = value is not null ? value.Dictionary : null;
 			}
 		}
 	}

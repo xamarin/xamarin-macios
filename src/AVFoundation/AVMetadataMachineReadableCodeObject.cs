@@ -39,7 +39,7 @@ namespace AVFoundation {
 		public CGPoint[]? Corners {
 			get {
 				var arr = WeakCorners;
-				if (arr == null)
+				if (arr is null)
 					return null;
 				var rv = new CGPoint[arr.Length];
 				for (int i = 0; i < rv.Length; i++) {

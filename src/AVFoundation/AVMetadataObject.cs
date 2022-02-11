@@ -46,7 +46,7 @@ namespace AVFoundation {
 		{
 			AVMetadataObjectType rv = AVMetadataObjectType.None;
 
-			if (arr == null || arr.Length == 0)
+			if (arr is null || arr.Length == 0)
 				return rv;
 
 			foreach (var str in arr) {

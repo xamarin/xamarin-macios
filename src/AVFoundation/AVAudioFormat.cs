@@ -25,7 +25,7 @@ namespace AVFoundation {
 		{
 			if ((object) a == (object) b)
 				return true;
-			if ((object) a == null ^ (object) b == null)
+			if ((object) a is null ^ (object) b is null)
 				return false;
 			return a!.Equals (b);
 		}

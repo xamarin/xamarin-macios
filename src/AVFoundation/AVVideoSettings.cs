@@ -85,7 +85,7 @@ namespace AVFoundation {
 
 		internal static AVVideoScalingMode? ScalingModeFromNSString (NSString k)
 		{
-			if (k == null)
+			if (k is null)
 				return null;
 			if (k == AVVideoScalingModeKey.Fit)
 				return AVVideoScalingMode.Fit;
@@ -126,7 +126,7 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.ScalingModeKey);
 				else
 					SetNativeValue (AVVideo.ScalingModeKey, v);
@@ -182,7 +182,7 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.CodecKey);
 				else
 					SetNativeValue (AVVideo.CodecKey, v);
@@ -246,7 +246,7 @@ namespace AVFoundation {
 		public AVVideoH264EntropyMode? EntropyEncoding {
 			get {
 				var k = GetNSStringValue (AVVideo.H264EntropyModeKey);
-				if (k == null)
+				if (k is null)
 					return null;
 				if (k == AVVideo.H264EntropyModeCABAC)
 					return AVVideoH264EntropyMode.AdaptiveBinaryArithmetic;
@@ -270,7 +270,7 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.H264EntropyModeKey);
 				else
 					SetNativeValue (AVVideo.H264EntropyModeKey, v);
@@ -336,7 +336,7 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.ScalingModeKey);
 				else
 					SetNativeValue (AVVideo.ScalingModeKey, v);
@@ -346,13 +346,13 @@ namespace AVFoundation {
 		public AVVideoCodecSettings? CodecSettings {
 			get {
 				var dict = GetNSDictionary (AVVideo.CompressionPropertiesKey);
-				if (dict == null)
+				if (dict is null)
 					return null;
 				return new AVVideoCodecSettings (dict);
 			}
 
 			set {
-				SetNativeValue (AVVideo.CompressionPropertiesKey, value == null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.CompressionPropertiesKey, value is null ? null : value.Dictionary);
 			}
 		}
 #endif
@@ -488,7 +488,7 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.ProfileLevelKey);
 				else
 					SetNativeValue (AVVideo.ProfileLevelKey, v);
@@ -498,26 +498,26 @@ namespace AVFoundation {
 		public AVVideoPixelAspectRatioSettings? PixelAspectRatio {
 			get {
 				var dict = GetNSDictionary (AVVideo.PixelAspectRatioKey);
-				if (dict == null)
+				if (dict is null)
 					return null;
 				return new AVVideoPixelAspectRatioSettings (dict);
 			}
 
 			set {
-				SetNativeValue (AVVideo.PixelAspectRatioKey, value == null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.PixelAspectRatioKey, value is null ? null : value.Dictionary);
 			}
 		}
 
 		public AVVideoCleanApertureSettings? VideoCleanAperture {
 			get {
 				var dict = GetNSDictionary (AVVideo.CleanApertureKey);
-				if (dict == null)
+				if (dict is null)
 					return null;
 				return new AVVideoCleanApertureSettings (dict);
 			}
 
 			set {
-				SetNativeValue (AVVideo.CleanApertureKey, value == null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.CleanApertureKey, value is null ? null : value.Dictionary);
 			}			
 		} 
 #endif
