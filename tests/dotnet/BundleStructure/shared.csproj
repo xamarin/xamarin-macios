@@ -10,6 +10,8 @@
 		<AppManifestDetectionEnabled>false</AppManifestDetectionEnabled>
 
 		<RootTestsDirectory Condition="'$(RootTestsDirectory)' == ''">$(MSBuildThisFileDirectory)/../..</RootTestsDirectory>
+		<!-- disable IL stripping, because some of our assemblies aren't actually assemblies, they're just placeholder files -->
+		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />

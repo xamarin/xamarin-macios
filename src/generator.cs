@@ -911,7 +911,7 @@ public partial class Generator : IMemberGatherer {
 		get {
 #if NET
 			return 4;
-#endif
+#else
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
 			case PlatformName.iOS:
@@ -922,6 +922,7 @@ public partial class Generator : IMemberGatherer {
 			default:
 				return 4;
 			}
+#endif
 		}
 	}
 	Type [] types, strong_dictionaries;
@@ -5726,7 +5727,7 @@ public partial class Generator : IMemberGatherer {
 					print ("[MonoNativeFunctionWrapper]\n");
 
 				print ("public delegate {0} {1} ({2});",
-				       RenderType (mi.ReturnType),
+				       RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes),
 				       shortName,
 				       RenderParameterDecl (mi.GetParameters ()));
 			}
@@ -8008,9 +8009,9 @@ public partial class Generator : IMemberGatherer {
 		string name;
 		if (pt.IsByRef) {
 			pt = pt.GetElementType ();
-			name = (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + prefix + RenderType (pt);
+			name = (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + prefix + RenderType (pt, p);
 		} else
-			name = prefix + RenderType (pt);
+			name = prefix + RenderType (pt, p);
 		if (!pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p))
 			name += "?";
 		return name;
@@ -8161,8 +8162,16 @@ public partial class Generator : IMemberGatherer {
 
 		return def;
 	}
-	
-	string RenderType (Type t)
+
+	bool HasNativeAttribute (ICustomAttributeProvider provider)
+	{
+		if (provider is null)
+			return false;
+
+		return AttributeManager.HasAttribute (provider, "NativeIntegerAttribute");
+	}
+
+	string RenderType (Type t, ICustomAttributeProvider provider = null)
 	{
 		t = GetCorrectGenericType (t);
 
@@ -8197,6 +8206,12 @@ public partial class Generator : IMemberGatherer {
 		
 		if (t == TypeManager.System_Void)
 			return "void";
+
+		if (t == TypeManager.System_IntPtr) {
+			return HasNativeAttribute (provider) ? "nint" : "IntPtr";
+		} else if (t == TypeManager.System_UIntPtr) {
+			return HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+		}
 
 		string ns = t.Namespace;
 		if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
