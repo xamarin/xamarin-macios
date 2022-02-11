@@ -37,6 +37,8 @@ namespace Xamarin.MacDev.Tasks {
 				Environment.CurrentDirectory = tmpdir;
 				var codesignItems = new List<ITaskItem> ();
 				var codesignBundle = new List<ITaskItem> ();
+				var generateDSymItems = new List<ITaskItem> ();
+				var nativeStripItems = new List<ITaskItem> ();
 
 				string codeSignatureSubdirectory = string.Empty;
 				switch (platform) {
@@ -202,8 +204,30 @@ namespace Xamarin.MacDev.Tasks {
 					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex", wp3Metadata),
 				};
 
+				nativeStripItems = new List<ITaskItem> {
+					new TaskItem ("Bundle.app/Bundle", new Dictionary<string, string> { { "StripStampFile", "bundle-strip-stamp-file" } } ),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/P1"),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/P2"),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/PlugIns/P3.appex/P3", new Dictionary<string, string> { { "StripStampFile", "p3-strip-stamp-file" } } ),
+					new TaskItem ("Bundle.app/Watch/W1.app/W1"),
+					new TaskItem ("Bundle.app/Watch/W1W1app/PlugIns/WP1.appex/WP1"),
+					new TaskItem ("Bundle.app/Watch/Watch.app/PlugIns/WP1.appex/PlugIns/WP2.appex/WP2"),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/WP3", new Dictionary<string, string> { { "StripStampFile", "wp3-strip-stamp-file" } } ),
+				};
+
+				generateDSymItems = new List<ITaskItem> {
+					new TaskItem ("Bundle.app/Bundle", new Dictionary<string, string> { { "dSYMUtilStampFile", "Bundle.app.dSYM/Contents/Info.plist" } } ),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/P1", new Dictionary<string, string> { { "dSYMUtilStampFile", "P1.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/P2", new Dictionary<string, string> { { "dSYMUtilStampFile", "P2.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/PlugIns/P3.appex/P3", new Dictionary<string, string> { { "dSYMUtilStampFile", "P3.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/W1", new Dictionary<string, string> { { "dSYMUtilStampFile", "W1.app.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/WP1", new Dictionary<string, string> { { "dSYMUtilStampFile", "WP1.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/WP2", new Dictionary<string, string> { { "dSYMUtilStampFile", "WP2.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/WP3", new Dictionary<string, string> { { "dSYMUtilStampFile", "WP3.appex.dSYM/Contents/Info.plist" } }),
+				};
+
 				var infos = new CodesignInfo [] {
-					new CodesignInfo ("Bundle.app", Platforms.All, bundleAppMetadata.Set ("CodesignAdditionalFilesToTouch", "Bundle.app.dSYM/Contents/Info.plist")),
+					new CodesignInfo ("Bundle.app", Platforms.All, bundleAppMetadata.Set ("CodesignAdditionalFilesToTouch", "Bundle.app.dSYM/Contents/Info.plist;bundle-strip-stamp-file")),
 					new CodesignInfo ("Bundle.app/a.dylib", Platforms.Mobile, bundleAppMetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/a.dylib")),
 					new CodesignInfo ("Bundle.app/Contents/b.dylib", Platforms.All, bundleAppMetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Contents/b.dylib")),
 					new CodesignInfo ("Bundle.app/Contents/MonoBundle/c.dylib", Platforms.All, bundleAppMetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Contents/MonoBundle/c.dylib")),
@@ -246,7 +270,7 @@ namespace Xamarin.MacDev.Tasks {
 						Platforms.All,
 						p3Metadata.
 							Set ("CodesignStampFile", $"Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/PlugIns/P3.appex/{codeSignatureSubdirectory}_CodeSignature/CodeResources").
-							Set ("CodesignAdditionalFilesToTouch", "P3.appex.dSYM/Contents/Info.plist")
+							Set ("CodesignAdditionalFilesToTouch", "P3.appex.dSYM/Contents/Info.plist;p3-strip-stamp-file")
 					),
 					new CodesignInfo ("Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/P3a.dylib", Platforms.Mobile, p3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/P3a.dylib")),
 					new CodesignInfo ("Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/Contents/P3b.dylib", Platforms.All, p3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/Contents/P3b.dylib")),
@@ -305,7 +329,7 @@ namespace Xamarin.MacDev.Tasks {
 						Platforms.All,
 						wp3Metadata.
 							Set ("CodesignStampFile", $"Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/{codeSignatureSubdirectory}_CodeSignature/CodeResources").
-							Set ("CodesignAdditionalFilesToTouch", "WP3.appex.dSYM/Contents/Info.plist")
+							Set ("CodesignAdditionalFilesToTouch", "WP3.appex.dSYM/Contents/Info.plist;wp3-strip-stamp-file")
 					),
 					new CodesignInfo ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/W3a.dylib", Platforms.Mobile, wp3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/W3a.dylib")),
 					new CodesignInfo ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/Contents/W3b.dylib", Platforms.All, wp3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/Contents/W3b.dylib")),
@@ -327,6 +351,8 @@ namespace Xamarin.MacDev.Tasks {
 				task.CodesignBundle = codesignBundle.ToArray ();
 				task.CodesignItems = codesignItems.ToArray ();
 				task.CodesignStampPath = "codesign-stamp-path/";
+				task.GenerateDSymItems = generateDSymItems.ToArray ();
+				task.NativeStripItems = nativeStripItems.ToArray ();
 				task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, isDotNet).ToString ();
 				Assert.IsTrue (task.Execute (), "Execute");
 
