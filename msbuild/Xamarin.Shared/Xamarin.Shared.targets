@@ -2473,6 +2473,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<PropertyGroup>
+		<_PostProcessAppBundleDependsOn>
+			$(_PostProcessAppBundleDependsOn);
+			_ReadAppExtensionDebugSymbolProperties;
+			_GenerateAppExtensionDebugSymbols;
+			_PrepareDebugSymbolGeneration;
+			_GenerateDebugSymbols;
+		</_PostProcessAppBundleDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_PostProcessAppBundle" DependsOnTargets="$(_PostProcessAppBundleDependsOn)" />
+
+	<PropertyGroup>
 		<ArchiveDependsOn>
 			_CoreArchive
 		</ArchiveDependsOn>
