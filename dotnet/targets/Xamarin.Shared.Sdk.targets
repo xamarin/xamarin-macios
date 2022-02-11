@@ -447,6 +447,7 @@
 				AssemblyName=$(AssemblyName).dll
 				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
+				AppBundleManifestPath=$(_AppBundleManifestPath)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
 				Debug=$(_BundlerDebug)
