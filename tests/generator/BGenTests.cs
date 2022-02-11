@@ -808,6 +808,33 @@ namespace GeneratorTests
 			Assert.AreEqual ("setAbstractProperty:", (string) ldstr.Operand, "setAbstractProperty");
 		}
 
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void NativeIntDelegates ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nint-delegates.cs");
+
+			Func<string, bool> verifyDelegate = (typename) => {
+				// Assert that the return type from the delegate is IntPtr
+				var type = bgen.ApiAssembly.MainModule.GetType ("NS", typename);
+				Assert.NotNull (type, typename);
+				var method = type.Methods.First (m => m.Name == "Invoke");
+				Assert.IsNotNull (method.MethodReturnType.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), "Return type for delegate " + typename);
+				foreach (var p in method.Parameters) {
+					Assert.IsNotNull (p.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), $"Parameter {p.Name}'s type for delegate " + typename);
+				}
+
+				return false;
+			};
+
+			verifyDelegate ("D1");
+			verifyDelegate ("D2");
+			verifyDelegate ("D3");
+			verifyDelegate ("NSTableViewColumnRowPredicate");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
