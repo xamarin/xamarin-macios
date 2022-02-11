@@ -24,11 +24,9 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-		[Obsolete ("Starting with ios9.0 use 'AVPlayerViewController' (AVKit) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		[UnsupportedOSPlatform ("tvos")]
 #if IOS
+		[Obsolete ("Starting with ios9.0 use 'AVPlayerViewController' (AVKit) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 		[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
