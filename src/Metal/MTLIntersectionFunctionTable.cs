@@ -13,12 +13,13 @@ namespace Metal {
 	public static class MTLIntersectionFunctionTableExtensions {
 
 #if NET
-		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (11,0), iOS (14,0), NoTV]
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[NoTV]
 #endif
 		public static void SetBuffers (this IMTLIntersectionFunctionTable table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{

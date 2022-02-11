@@ -174,12 +174,12 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
-#if !XAMCORE_4_0
+#if !NET
 			case "NSUrl":
 			case "ARQuickLookPreviewItem":
 				switch (selectorName) {
 				case "previewItemTitle":
-					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in XAMCORE_4_0)
+					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in .NET)
 					return true;
 				}
 				break;

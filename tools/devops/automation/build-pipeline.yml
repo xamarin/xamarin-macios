@@ -30,7 +30,7 @@ parameters:
 - name: runGovernanceTests
   displayName: Run Governance Checks
   type: boolean
-  default: true 
+  default: true
 
 - name: runSamples
   displayName: Run Samples

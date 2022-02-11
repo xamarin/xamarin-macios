@@ -12,7 +12,7 @@
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=35021
 !missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 
-## the API exists but is [Sealed], until XAMCORE_4_0, to keep compatible with iOS/Mac profiles
+## the API exists but is [Sealed], until .NET, to keep compatible with iOS/Mac profiles
 !missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 
 # missing - pending decision for implementation
@@ -41,10 +41,10 @@
 # fixed in XAMCORE_3_0 - API break
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
 
-## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
+## should not have been [Native] it's 32bits only values -> .NET
 !unknown-native-enum! NSBundleExecutableArchitecture bound
 
-## enum was [re]named to NSCalendarOptions - excluding from XAMCORE_4_0
+## enum was [re]named to NSCalendarOptions - excluding from .NET
 !unknown-native-enum! NSDateComponentsWrappingBehavior bound
 
 ## collections - many are special
