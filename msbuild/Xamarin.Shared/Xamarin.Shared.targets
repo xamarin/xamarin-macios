@@ -616,7 +616,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="_CompileEntitlements"
-		Condition="'$(_RequireCodeSigning)' == 'true' Or ('$(CodesignEntitlements)' != '' And '$(_PlatformName)' != 'macOS')"
+		Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''"
 		DependsOnTargets="$(_CompileEntitlementsDependsOn)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
 		<CompileEntitlements
@@ -640,7 +640,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<!-- $(_CompiledEntitlements) will be passed to the MTouch task, it's used to embed the entitlements in the executable -->
 			<Output TaskParameter="EntitlementsInExecutable" PropertyName="_CompiledEntitlements" />
 
-			<!-- $(_CompiledCodesignEntitlements) will be used only with Codesign tasks when building for device. MUST NOT BE SET for iOS Simulator builds. -->
+			<!-- $(_CompiledCodesignEntitlements) will be used only with Codesign tasks when building for device or desktop. MUST NOT BE SET for iOS Simulator builds. -->
 			<Output TaskParameter="EntitlementsInSignature" PropertyName="_CompiledCodesignEntitlements" />
 		</CompileEntitlements>
 	</Target>
