@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
@@ -43,6 +44,12 @@ using Quaterniond = global::OpenTK.Quaterniond;
 // https://github.com/apple/swift/blob/cbdf0ff1e7bfbd192c33d64c9c7d31fbb11f712c/stdlib/public/SDK/ModelIO/ModelIO.swift
 
 namespace ModelIO {
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedValue {
 
 		public double []? KeyTimes {
@@ -79,6 +86,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedScalarArray {
 
 		public virtual void SetValues (float [] array, double time)
@@ -180,6 +193,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedVector3Array {
 
 		public virtual void SetValues (Vector3 [] array, double time)
@@ -291,6 +310,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedQuaternionArray {
 
 		public virtual void SetValues (Quaternion [] array, double time)
@@ -401,6 +426,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedScalar {
 
 		public virtual void Reset (float [] values, double [] times)
@@ -456,6 +487,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedVector2 {
 
 		public virtual void Reset (Vector2 [] values, double [] times)
@@ -519,6 +556,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedVector3 {
 
 		public virtual void Reset (Vector3 [] values, double [] times)
@@ -582,6 +625,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedVector4 {
 
 		public virtual void Reset (Vector4 [] values, double [] times)
@@ -645,6 +694,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedMatrix4x4 {
 
 		public virtual void Reset (Matrix4 [] values, double [] times)
@@ -708,6 +763,12 @@ namespace ModelIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLMatrix4x4Array {
 
 		public virtual void SetValues (Matrix4 [] array)

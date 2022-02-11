@@ -30,6 +30,12 @@ namespace CFNetwork {
 namespace CoreServices {
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CFHTTPMessage : CFType {
 		[Preserve (Conditional = true)]
 		internal CFHTTPMessage (NativeHandle handle, bool owns)
@@ -226,6 +232,12 @@ namespace CoreServices {
 		#region Authentication
 
 		// CFStream.h
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		struct CFStreamError {
 			public /* CFIndex (CFStreamErrorDomain) */ nint domain;
 			public /* SInt32 */ int code;

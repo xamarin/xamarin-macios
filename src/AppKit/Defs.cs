@@ -24,8 +24,12 @@ using System;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSEdgeInsets {
 		public nfloat Top, Left, Bottom, Right;

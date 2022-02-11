@@ -13,12 +13,29 @@ using System.Runtime.Versioning;
 
 #if MONOMAC
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 #else
 namespace UIKit {
 #endif
 	partial class NSLayoutManager {
 #if !NET && MONOMAC
+#if NET
+		[SupportedOSPlatform ("maccatalyst13.1")]
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+#endif
 		public CGRect [] GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, NSTextContainer textContainer)
 		{
 			if (textContainer == null)

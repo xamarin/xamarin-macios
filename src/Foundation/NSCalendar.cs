@@ -43,6 +43,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 10)]
 		[iOS (8, 0)]
@@ -51,6 +53,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 10)]
 		[iOS (8, 0)]
@@ -60,7 +64,13 @@ namespace Foundation {
 		Taiwan = RepublicOfChina
 #pragma warning restore 612
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSCalendar {
 		static NSString GetCalendarIdentifier (NSCalendarType type)
 		{

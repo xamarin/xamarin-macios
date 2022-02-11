@@ -36,7 +36,12 @@ using System.Runtime.Versioning;
 
 namespace CoreBluetooth {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public class PeripheralConnectionOptions : DictionaryContainer

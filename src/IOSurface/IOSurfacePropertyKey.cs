@@ -26,9 +26,16 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace IOSurface {
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	internal static partial class IOSurfacePropertyKey {
 
 		static bool CheckSystemVersion ()

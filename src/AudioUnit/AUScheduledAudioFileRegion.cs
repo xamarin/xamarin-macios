@@ -15,13 +15,26 @@ using System.Runtime.InteropServices;
 
 using AudioToolbox;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AudioUnit {
 
 	public delegate void AUScheduledAudioFileRegionCompletionHandler (AUScheduledAudioFileRegion audioFileRegion, AudioUnitStatus status);
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AUScheduledAudioFileRegion : IDisposable {
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		[StructLayout (LayoutKind.Sequential)]
 		internal struct ScheduledAudioFileRegion
 		{

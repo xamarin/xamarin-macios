@@ -30,6 +30,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -37,6 +38,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class DispatchData : DispatchObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]

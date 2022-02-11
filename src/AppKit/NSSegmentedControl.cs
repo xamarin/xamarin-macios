@@ -14,6 +14,10 @@ using System.Runtime.Versioning;
 
 namespace AppKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSSegmentedControl {
 		NSActionDispatcher dispatcher;
 		
@@ -24,6 +28,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -37,6 +42,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif

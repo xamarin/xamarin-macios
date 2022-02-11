@@ -11,9 +11,16 @@
 
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AuthenticationServices {
 
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class ASAuthorization {
 		public T? GetProvider<T> () where T : NSObject, IASAuthorizationProvider => Runtime.GetINativeObject<T> (_Provider, false);
 

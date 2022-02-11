@@ -32,8 +32,13 @@ using System.Threading;
 
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSApplication : NSResponder {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;

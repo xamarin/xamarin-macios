@@ -12,6 +12,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Foundation {
+
 #if !NET
 	public partial class NSUnit {
 		[Obsolete ("Use .ctor(string)")]

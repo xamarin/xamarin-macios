@@ -8,9 +8,16 @@
 
 using System;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace Photos {
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	partial class PHAssetCreationRequest {
 		public bool SupportsAssetResourceTypes (params PHAssetResourceType [] resourceTypes)
 		{

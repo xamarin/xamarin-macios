@@ -26,6 +26,7 @@
 //
 
 using System;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using CoreText;
 using ObjCRuntime;
@@ -34,6 +35,12 @@ using UIKit;
 #endif
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSAttributedString {
 
 		public string Value {
@@ -185,6 +192,7 @@ namespace Foundation {
 		{
 			return (null as NSAttributedString).FromTextAttachment (attachment);
 		}
+
 #endif
 #endif						      
 	}

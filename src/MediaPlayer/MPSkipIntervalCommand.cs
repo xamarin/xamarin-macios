@@ -10,10 +10,17 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace MediaPlayer {
+#if NET
+	[SupportedOSPlatform ("macos10.12.2")]
+	[SupportedOSPlatform ("ios7.1")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class MPSkipIntervalCommand {
 		public double[]? PreferredIntervals {
 			get {

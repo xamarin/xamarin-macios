@@ -31,6 +31,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
@@ -40,6 +41,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {	
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CFBase.h
 	public partial class CFAllocator : NativeObject
 	{

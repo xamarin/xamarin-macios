@@ -32,6 +32,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 #if NET
@@ -49,7 +50,13 @@ namespace CoreFoundation {
 		HTTPS,
 		SOCKS
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFProxy {
 		NSDictionary settings;
 		
@@ -330,7 +337,13 @@ namespace CoreFoundation {
 			}
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFProxySettings {
 		NSDictionary settings;
 		
@@ -475,7 +488,13 @@ namespace CoreFoundation {
 			}
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static partial class CFNetwork {
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFArrayRef __nullable */ IntPtr CFNetworkCopyProxiesForAutoConfigurationScript (

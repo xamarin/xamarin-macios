@@ -11,11 +11,17 @@ using System;
 
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace WebKit
 {
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class WKWindowFeatures
 	{
 		public bool? MenuBarVisibility {

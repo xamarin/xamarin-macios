@@ -1,9 +1,15 @@
 #if !MONOMAC
 
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace NetworkExtension {
 
+#if NET
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NEFilterProvider {
 
 		// not fields, but defines :|

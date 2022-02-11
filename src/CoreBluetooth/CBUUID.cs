@@ -17,6 +17,12 @@ using System.Runtime.Versioning;
 
 namespace CoreBluetooth {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CBUUID : IEquatable<CBUUID> {
 
 		const string format16bits = "{0:x2}{1:x2}";
@@ -123,6 +129,9 @@ namespace CoreBluetooth {
 		// try new constant (10.13+) and fallback to the old/misnamed one
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 13)]
 #endif

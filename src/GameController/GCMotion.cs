@@ -18,6 +18,7 @@ namespace GameController {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Introduced (PlatformName.iOS, 13, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 15)]
@@ -32,6 +33,7 @@ namespace GameController {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Introduced (PlatformName.iOS, 13, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 15)]
@@ -47,6 +49,7 @@ namespace GameController {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Introduced (PlatformName.iOS, 13, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 15)]

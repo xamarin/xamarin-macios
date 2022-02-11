@@ -24,9 +24,14 @@
 #if !__MACCATALYST__
 
 using System;
+using System.Runtime.Versioning;
 
 namespace AppKit {
-	
+
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSSpellChecker {
 		
 		// note: if needed override the protected Get|Set methods

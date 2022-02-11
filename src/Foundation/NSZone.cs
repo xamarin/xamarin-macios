@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -15,6 +16,12 @@ using NativeHandle = System.IntPtr;
 namespace Foundation {
 
 	// Helper to (mostly) support NS[Mutable]Copying protocols
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSZone : INativeObject {
 		[DllImport (Constants.FoundationLibrary)]
 		static extern /* NSZone* */ IntPtr NSDefaultMallocZone ();

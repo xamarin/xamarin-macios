@@ -12,12 +12,17 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreData;
 
 namespace AppKit
 {
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSPredicateEditorRowTemplate
 	{
 		public NSPredicateEditorRowTemplate (params NSCompoundPredicateType [] compoundTypes)
@@ -121,8 +126,8 @@ namespace AppKit
 			IEnumerable<NSPredicateOperatorType> operators,
 			NSComparisonPredicateModifier modifier = NSComparisonPredicateModifier.Direct,
 			NSComparisonPredicateOptions options = NSComparisonPredicateOptions.None)
-			: this (
-				new [] { leftExpressionFromKeyPath },
+			: this (			
+			new [] { leftExpressionFromKeyPath },
 				attributeType,
 				operators,
 				modifier,

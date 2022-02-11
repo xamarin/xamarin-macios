@@ -68,6 +68,12 @@ namespace AVFoundation {
 		HighAutoLevel,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 #if !WATCH
 	public class AVVideoSettingsUncompressed : CVPixelBufferAttributes
 	{
@@ -139,7 +145,13 @@ namespace AVFoundation {
 		AdaptiveBinaryArithmetic
 	}
 #endif
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVVideoSettingsCompressed : DictionaryContainer
 	{
 #if !COREBUILD
@@ -208,6 +220,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -223,6 +238,9 @@ namespace AVFoundation {
 #if !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -237,6 +255,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -277,6 +298,9 @@ namespace AVFoundation {
 		// frame rate can be floating point (29.97 is common for instance)
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -292,6 +316,9 @@ namespace AVFoundation {
 		// frame rate can be floating point (29.97 is common for instance)
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -354,6 +381,12 @@ namespace AVFoundation {
 #endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVVideoCodecSettings : DictionaryContainer
 	{
 #if !COREBUILD
@@ -519,6 +552,12 @@ namespace AVFoundation {
 #endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVVideoPixelAspectRatioSettings : DictionaryContainer
 	{
 #if !COREBUILD
@@ -552,6 +591,12 @@ namespace AVFoundation {
 #endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVVideoCleanApertureSettings : DictionaryContainer
 	{
 #if !COREBUILD

@@ -28,6 +28,7 @@ namespace CoreGraphics {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -470,6 +471,9 @@ namespace CoreGraphics {
 
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public struct CGEventTapInformation {
 		public uint /* uint32_t */ EventTapID;
 		public CGEventTapLocation TapPoint;

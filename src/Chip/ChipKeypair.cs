@@ -13,6 +13,12 @@ using Security;
 #nullable enable
 
 namespace Chip {
+#if NET
+    [SupportedOSPlatform ("macos12.1")]
+    [SupportedOSPlatform ("tvos15.2")]
+    [SupportedOSPlatform ("ios15.2")]
+    [SupportedOSPlatform ("maccatalyst15.2")]
+#endif
     public partial class ChipKeypair {
 
 #if NET

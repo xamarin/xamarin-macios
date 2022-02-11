@@ -43,6 +43,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPDFArray.h
 	public class CGPDFArray : CGPDFObject {
 		// The lifetime management of CGPDFObject (and CGPDFArray, CGPDFDictionary and CGPDFStream) are tied to
@@ -233,6 +240,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
 		[Mac (10, 14)]
@@ -247,6 +255,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
 		[Mac (10, 14)]

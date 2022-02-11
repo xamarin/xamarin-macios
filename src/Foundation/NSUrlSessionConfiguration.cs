@@ -14,7 +14,13 @@ namespace Foundation {
 	// the following was added to make the use of the configuration easier for the NUrlSessionHandler. 
 	// Apple APIs do not give an easy way to know the type of configuration that was created, this is an 
 	// issue when we want to interact with the cookie containers, since depending on the configuration type
-	// the cookie container can be shared or not. This code should be transparent to the user, and is only used internaly.
+	// the cookie container can be shared or not. This code should be transparent to the user, and is only used internally.
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSUrlSessionConfiguration 
 	{
 		public enum SessionConfigurationType {
@@ -42,6 +48,10 @@ namespace Foundation {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
 #if MONOMAC

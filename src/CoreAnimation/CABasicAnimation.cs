@@ -6,10 +6,17 @@ using ObjCRuntime;
 using AppKit;
 #endif
 using CoreGraphics;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreAnimation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CABasicAnimation {
 		public T GetFromAs <T> () where T : class, INativeObject
 		{

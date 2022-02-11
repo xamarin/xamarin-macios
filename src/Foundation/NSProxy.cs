@@ -18,6 +18,7 @@ using System;
 using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 	[EditorBrowsable (EditorBrowsableState.Never)]
@@ -31,6 +32,12 @@ namespace WebKit {
 	// We need to keep NSProxy if WKNavigationDelegate or IWKNavigationDelegate are used
 	// This cannot be done on an interface but the protocol won't be used without a WKWebView
 	// so a reference (from the static constructor) ensure NSProxy will be available
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class WKWebView {
 		static Type hack = typeof (NSProxy);
 	}

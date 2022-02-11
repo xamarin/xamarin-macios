@@ -39,6 +39,9 @@ using Foundation;
 
 namespace CFNetwork {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	class WebRequestStream {
 		Stream stream;
 		CFReadStream readStream;

@@ -19,6 +19,9 @@ namespace MetalPerformanceShaders {
 	// uses NSInteger
 #if NET
 	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10, 13)]
 #endif
@@ -31,6 +34,9 @@ namespace MetalPerformanceShaders {
 	// really use double, not CGFloat
 #if NET
 	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10, 13)]
 #endif
@@ -43,6 +49,9 @@ namespace MetalPerformanceShaders {
 	// really use double, not CGFloat
 #if NET
 	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10, 13)]
 #endif
@@ -57,6 +66,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -69,6 +79,9 @@ namespace MetalPerformanceShaders {
 
 #if NET
 	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10, 13)]
 #endif
@@ -80,6 +93,9 @@ namespace MetalPerformanceShaders {
 	// really use double, not CGFloat
 #if NET
 	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10, 13)]
 #endif
@@ -94,6 +110,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("ios11.3")]
 	[SupportedOSPlatform ("tvos11.3")]
 	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (11,3)]
 	[TV (11,3)]
@@ -109,6 +126,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("ios11.3")]
 	[SupportedOSPlatform ("tvos11.3")]
 	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (11,3)]
 	[TV (11,3)]
@@ -122,6 +140,9 @@ namespace MetalPerformanceShaders {
 	// MPSImageHistogram.h
 #if NET
 	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10, 13)]
 #endif
@@ -150,6 +171,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11, 0)]
 	[Mac (10, 13)]
@@ -166,6 +188,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11, 0)]
 	[Mac (10, 13)]
@@ -180,6 +203,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11, 0)]
 	[Mac (10, 13)]
@@ -194,6 +218,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("tvos11.3")]
 	[SupportedOSPlatform ("ios11.3")]
 	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11, 3)]
 	[iOS (11, 3)]
@@ -238,6 +263,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("tvos12.0")]
 	[SupportedOSPlatform ("macos10.14")]
 	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
 	[Mac (10, 14)]
@@ -249,6 +275,12 @@ namespace MetalPerformanceShaders {
 		public Vector3 Max;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class MPSConstants
 	{
 		public const uint FunctionConstantIndex = 127;
@@ -263,6 +295,7 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("ios11.2")]
 	[SupportedOSPlatform ("tvos11.2")]
 	[SupportedOSPlatform ("macos10.13.2")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (11,2)]
 	[TV (11,2)]

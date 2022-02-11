@@ -29,6 +29,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -37,7 +38,13 @@ using Foundation;
 namespace CoreGraphics {
 
 	// CGAffineTransform.h
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct CGAffineTransform {
 #if NET
 		public /* CGFloat */ nfloat A;

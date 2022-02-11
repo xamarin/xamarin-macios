@@ -5,6 +5,11 @@ using ObjCRuntime;
 
 namespace PassKit {
 
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class PKContactFieldsExtensions {
 
 		static public PKContactFields GetValue (NSSet set)
@@ -40,11 +45,17 @@ namespace PassKit {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class PKPaymentRequest {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)]
 		[iOS (11,0)]
@@ -57,6 +68,7 @@ namespace PassKit {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)]
 		[iOS (11,0)]

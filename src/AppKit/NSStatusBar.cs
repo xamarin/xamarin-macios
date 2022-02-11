@@ -10,6 +10,7 @@
 #if !__MACCATALYST__
 
 using System;
+using System.Runtime.Versioning;
 
 namespace AppKit
 {
@@ -19,12 +20,17 @@ namespace AppKit
 		Square = -2
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSStatusBar
 	{
 		public NSStatusItem CreateStatusItem (NSStatusItemLength length)
 		{
 			return CreateStatusItem ((float)length);
 		}
+
 	}
 }
 #endif // !__MACCATALYST__

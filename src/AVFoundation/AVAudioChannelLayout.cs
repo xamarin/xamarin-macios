@@ -18,8 +18,15 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class AVAudioChannelLayout {
 		static IntPtr CreateLayoutPtr (AudioChannelLayout layout, out IntPtr handleToLayout)
 		{

@@ -36,9 +36,16 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace AudioToolbox {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public unsafe static class AudioFileGlobalInfo
 	{
 		public static AudioFileType[]? ReadableTypes {
@@ -246,7 +253,13 @@ namespace AudioToolbox {
 		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, IntPtr inSpecifier, ref uint ioDataSize, out uint outPropertyData);
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	struct AudioFileTypeAndFormatID
 	{
 		public AudioFileType FileType;

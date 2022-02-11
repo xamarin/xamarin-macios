@@ -29,6 +29,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if !COREBUILD
 using CoreFoundation;
@@ -48,6 +49,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Foundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class DictionaryContainer
 	{
 #if !COREBUILD

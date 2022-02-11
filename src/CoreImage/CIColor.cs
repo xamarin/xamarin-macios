@@ -8,6 +8,8 @@
 //
 using System;
 using System.Diagnostics;
+using System.Runtime.Versioning;
+
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
@@ -18,6 +20,12 @@ using UIKit;
 #nullable enable
 
 namespace CoreImage {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CIColor {
 
 		public nfloat [] Components {

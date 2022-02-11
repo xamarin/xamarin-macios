@@ -1,9 +1,14 @@
 using System;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
 namespace AppKit {
 
+#if NET
+	[SupportedOSPlatform ("macos10.12.2")]
+	[SupportedOSPlatform ("maccatalyst13.0")]
+#endif
 	public partial class NSSliderTouchBarItem {
 		// If you modify, also search for other other XM_ACTIVATED_COPY and update as well
 		NSObject target;
@@ -24,6 +29,7 @@ namespace AppKit {
 				action = null;
 				MarkDirty ();
 			}
+
 		}
 
 

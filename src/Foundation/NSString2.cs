@@ -26,11 +26,18 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace Foundation {
 
+#if NET && !COREBUILD
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSString : IComparable<NSString> {
 		const string selDataUsingEncodingAllow = "dataUsingEncoding:allowLossyConversion:";
 

@@ -33,6 +33,7 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -40,6 +41,13 @@ using NativeHandle = System.IntPtr;
 
 namespace AudioToolbox
 {
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CoreAudio.framework - CoreAudioTypes.h
 	public class AudioBuffers : IDisposable, INativeObject
 	{

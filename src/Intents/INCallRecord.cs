@@ -11,8 +11,15 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Intents {
+#if NET
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#endif
 	public partial class INCallRecord {
 
 		public double? CallDuration {

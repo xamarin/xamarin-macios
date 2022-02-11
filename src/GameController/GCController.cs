@@ -7,12 +7,19 @@
 // Copyright 2013,2015 Xamarin Inc.
 
 using System;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
 namespace GameController {
 
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class GCController {
 
 #if !NET

@@ -6,6 +6,12 @@ using ObjCRuntime;
 #nullable enable
 
 namespace GameKit {
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class GKLocalPlayerListener {
 
 		// GKInviteEventListener and GKTurnBasedEventListener both export same selector

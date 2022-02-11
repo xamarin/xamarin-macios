@@ -26,6 +26,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -42,6 +43,12 @@ namespace CoreText {
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
 	delegate nfloat CTRunDelegateGetCallback (IntPtr refCon);
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct CTRunDelegateCallbacks {
 		public /* CFIndex */ nint version;
@@ -52,6 +59,12 @@ namespace CoreText {
 	}
 #endregion
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTRunDelegateOperations : IDisposable {
 		// This instance is kept alive using a GCHandle until the Deallocate callback has been called,
 		// which is called when the corresponding CTRunDelegate is freed (retainCount reaches 0).
@@ -178,6 +191,12 @@ namespace CoreText {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTRunDelegate : NativeObject, IDisposable {
 		[Preserve (Conditional = true)]
 		internal CTRunDelegate (NativeHandle handle, bool owns)

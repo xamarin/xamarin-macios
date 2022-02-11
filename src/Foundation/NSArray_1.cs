@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -19,6 +20,12 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register (SkipRegistration = true)]
 	public sealed partial class NSArray<TKey> : NSArray, IEnumerable<TKey> 
 		where TKey : class, INativeObject {

@@ -1,7 +1,14 @@
+using System.Runtime.Versioning;
+
 using Foundation;
 
 namespace NetworkExtension {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class NEVpnConnectionStartOptions : DictionaryContainer {
 
 #if !COREBUILD

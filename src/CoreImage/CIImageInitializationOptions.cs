@@ -26,6 +26,7 @@
 //
 
 using System;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -36,6 +37,12 @@ using CoreGraphics;
 
 namespace CoreImage {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CIImageInitializationOptions
 	{
 #if !COREBUILD
@@ -50,6 +57,13 @@ namespace CoreImage {
 #endif
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// Keeping 'CIImageInitializationOptionsWithMetadata' to avoid breaking change
 	public class CIImageInitializationOptionsWithMetadata : CIImageInitializationOptions
 	{

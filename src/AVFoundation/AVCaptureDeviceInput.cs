@@ -33,8 +33,15 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("tvos")]
+#endif
 	public partial class AVCaptureDeviceInput {
 		static public AVCaptureDeviceInput FromDevice (AVCaptureDevice device)
 		{

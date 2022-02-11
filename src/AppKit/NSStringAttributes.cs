@@ -13,9 +13,13 @@ using System;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace AppKit
 {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class NSStringAttributes : DictionaryContainer
 	{
 		static internal NSDictionary ToDictionary (

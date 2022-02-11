@@ -25,8 +25,15 @@ using Foundation;
 using ObjCRuntime;
 using AudioToolbox;
 using System;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 #if !WATCH
 	public partial class AVAudioPlayer {
 

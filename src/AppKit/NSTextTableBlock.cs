@@ -12,6 +12,7 @@ using System;
 
 namespace AppKit
 {
+
 #if !NET
 	public partial class NSTextTableBlock
 	{

@@ -9,8 +9,15 @@
 
 using System;
 using CoreGraphics;
+using System.Runtime.Versioning;
 
 namespace Vision {
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class VNFaceLandmarkRegion2D {
 
 		public virtual CGPoint [] NormalizedPoints {

@@ -28,6 +28,12 @@ using Vector3i = global::OpenTK.Vector3i;
 
 namespace ModelIO {
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	partial class MDLMesh {
 
 		public enum  MDLMeshVectorType {
@@ -83,6 +89,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -97,6 +104,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -118,6 +126,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -132,6 +141,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -146,6 +156,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -160,6 +171,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -174,6 +186,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -188,6 +201,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -202,6 +216,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]

@@ -25,12 +25,16 @@
 #if !__MACCATALYST__
 
 using System;
-
+using System.Runtime.Versioning;
 using Foundation;
 using CoreGraphics;
 
 namespace AppKit {
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst13.0")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class NSImage {
 		public CGImage CGImage {
 			get {
@@ -76,6 +80,10 @@ namespace AppKit {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSImageRep {
 
 		public CGImage CGImage {
@@ -83,6 +91,7 @@ namespace AppKit {
 				var rect = CGRect.Empty;
 				return AsCGImage (ref rect, null, null);
 			}
+
 		}
 	}
 }

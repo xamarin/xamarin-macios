@@ -51,6 +51,13 @@ namespace CoreGraphics {
 		CloseSubpath
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPath.h
 	public struct CGPathElement {
 		public CGPathElementType Type;
@@ -70,7 +77,13 @@ namespace CoreGraphics {
 		// Set for AddCurveToPoint
 		public CGPoint Point3;
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGPath : NativeObject {
 #if !COREBUILD
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -621,6 +634,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -633,6 +648,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -648,6 +665,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -660,6 +679,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]

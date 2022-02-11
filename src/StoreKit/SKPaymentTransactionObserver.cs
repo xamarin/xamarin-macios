@@ -8,6 +8,12 @@ using StoreKit;
 
 namespace StoreKit {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SKPaymentTransactionObserver {
 
 		[Obsolete ("Use RestoreCompletedTransactionsFinished (SKPaymentQueue) instead.")]
@@ -17,6 +23,12 @@ namespace StoreKit {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static partial class SKPaymentTransactionObserver_Extensions {
 		
 		[Obsolete ("Use RestoreCompletedTransactionsFinished (SKPaymentQueue) instead.")]

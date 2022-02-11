@@ -1,6 +1,7 @@
 #if !__MACCATALYST__
 using System;
 using System.Diagnostics;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreGraphics;
@@ -8,9 +9,16 @@ using ObjCRuntime;
 
 namespace AppKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	[DebuggerTypeProxy (typeof(NSEvent.NSEventDebuggerProxy))]
 	public partial class NSEvent {
-		
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		class NSEventDebuggerProxy {
 			NSEvent target;
 			

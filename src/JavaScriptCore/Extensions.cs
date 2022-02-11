@@ -8,9 +8,16 @@
 
 using System;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace JavaScriptCore {
 
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class JSContext {
 		
 		public JSValue this[NSObject key] {
@@ -19,6 +26,12 @@ namespace JavaScriptCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class JSValue {
 
 		public override string ToString ()

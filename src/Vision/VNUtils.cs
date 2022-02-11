@@ -27,6 +27,7 @@ namespace Vision {
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11,0)]
 	[Mac (10,13)]
@@ -151,6 +152,7 @@ namespace Vision {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -163,6 +165,7 @@ namespace Vision {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -171,6 +174,12 @@ namespace Vision {
 		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#endif
 	public partial class VNGeometryUtils {
 
 		public static VNCircle CreateBoundingCircle (Vector2 [] points, out NSError error)

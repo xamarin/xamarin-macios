@@ -10,6 +10,12 @@ using ObjCRuntime;
 #nullable enable
 
 namespace Metal {
+#if NET
+	[SupportedOSPlatform ("maccatalyst13.4")]
+	[SupportedOSPlatform ("macos10.15.4")]
+	[SupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos")]
+#endif
 	public partial class MTLRasterizationRateLayerDescriptor
 	{
 #if NET

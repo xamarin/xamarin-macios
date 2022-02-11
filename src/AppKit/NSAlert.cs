@@ -30,12 +30,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
 
 namespace AppKit
 {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	[Register ("__MonoMac_NSAlertDidEndDispatcher")]
 	internal class NSAlertDidEndDispatcher : NSObject
 	{
@@ -65,6 +69,10 @@ namespace AppKit
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSAlert
 	{
 		public void BeginSheet (NSWindow window)

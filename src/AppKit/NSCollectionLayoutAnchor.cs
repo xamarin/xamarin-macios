@@ -19,6 +19,12 @@ namespace AppKit {
 		Fractional,
 	}
 
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst13.0")]
+#endif
 	public partial class NSCollectionLayoutAnchor {
 		public static NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges, NSCollectionLayoutAnchorOffsetType offsetType, CGPoint offset) =>
 		    offsetType switch

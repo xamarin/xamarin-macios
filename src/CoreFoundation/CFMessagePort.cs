@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -44,6 +45,12 @@ namespace CoreFoundation {
 		public Func<NSString>? CopyDescription { get; set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFMessagePort : NativeObject {
 
 		// CFMessagePortContext

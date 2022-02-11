@@ -13,11 +13,18 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreAnimation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SceneKit
 {
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SCNAnimatable {
 		
 		public void AddAnimation (CAAnimation animation, string? key = null)

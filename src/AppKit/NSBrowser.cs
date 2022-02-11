@@ -24,9 +24,14 @@
 #if !__MACCATALYST__
 
 using System;
+using System.Runtime.Versioning;
 
 namespace AppKit {
-	
+
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSBrowser {
 		
 		// note: if needed override the protected Get|Set methods
@@ -35,6 +40,7 @@ namespace AppKit {
 			// ignore return value (bool)
 			set { SetPath (value); }
 		}
+
 	}
 }
 #endif // !__MACCATALYST__

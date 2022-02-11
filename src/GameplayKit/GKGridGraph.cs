@@ -9,6 +9,8 @@
 
 using System;
 using ObjCRuntime;
+using System.Runtime.Versioning;
+
 #if NET
 using Vector2i = global::CoreGraphics.NVector2i;
 #else
@@ -16,6 +18,12 @@ using Vector2i = global::OpenTK.Vector2i;
 #endif // NET
 
 namespace GameplayKit {
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class GKGridGraph {
 		
 #if !NET

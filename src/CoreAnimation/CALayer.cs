@@ -40,6 +40,12 @@ using CoreGraphics;
 
 namespace CoreAnimation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CALayer {
 		const string selInitWithLayer = "initWithLayer:";
 
@@ -140,6 +146,7 @@ namespace CoreAnimation {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]

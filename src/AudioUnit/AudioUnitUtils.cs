@@ -36,9 +36,16 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using AudioToolbox;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace AudioUnit
 {
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     public static class AudioUnitUtils
     {
         public const int SampleFractionBits = 24;

@@ -10,6 +10,11 @@ using ObjCRuntime;
 
 namespace Contacts {
 
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public static partial class CNGroup_PredicatesExtension {
 
 #if !MONOMAC

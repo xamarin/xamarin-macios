@@ -2,12 +2,19 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace Metal {
 
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static partial class MTLArgumentEncoder_Extensions {
 #if NET
 		public static void SetBuffers (this IMTLArgumentEncoder encoder, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)

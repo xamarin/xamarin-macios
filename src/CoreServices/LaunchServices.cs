@@ -79,6 +79,9 @@ namespace CoreServices
 		MultipleSessionsNotSupported = -10829
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public static class LaunchServices
 	{
 		#region Locating an Application
@@ -283,6 +286,7 @@ namespace CoreServices
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -294,6 +298,7 @@ namespace CoreServices
 		static extern IntPtr LSCopyAllHandlersForURLScheme (IntPtr inUrlScheme);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15 use 'GetApplicationUrlsForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -312,6 +317,7 @@ namespace CoreServices
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -323,6 +329,7 @@ namespace CoreServices
 		static extern IntPtr LSCopyDefaultHandlerForURLScheme (IntPtr inUrlScheme);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15 use 'GetDefaultApplicationUrlForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

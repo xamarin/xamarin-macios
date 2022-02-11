@@ -62,7 +62,13 @@ namespace CoreText {
 		UseOpticalBounds           = 1 << 4,
 		IncludeLanguageExtents     = 1 << 5, // iOS8 and Mac 10.11
     }
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTLine : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTLine (NativeHandle handle, bool owns)
@@ -208,6 +214,8 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -228,6 +236,8 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]

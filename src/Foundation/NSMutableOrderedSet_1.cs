@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -18,6 +19,12 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSMutableOrderedSet", SkipRegistration = true)]
 	public sealed partial class NSMutableOrderedSet<TKey> : NSMutableOrderedSet, IEnumerable<TKey>
 		where TKey : class, INativeObject {

@@ -19,6 +19,12 @@ using AVFoundation;
 
 // VTPixelTransferProperties are available in iOS 9 radar://22614931 https://trello.com/c/bTl6hRu9
 namespace VideoToolbox {
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class VTPixelTransferProperties : DictionaryContainer {
 
 		public VTScalingMode ScalingMode { 
@@ -88,6 +94,8 @@ namespace VideoToolbox {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -131,6 +139,8 @@ namespace VideoToolbox {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 #endif

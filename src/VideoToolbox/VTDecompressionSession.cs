@@ -28,6 +28,8 @@ namespace VideoToolbox {
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[iOS (8,0)]
 	[TV (10,2)]
@@ -369,6 +371,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 		[iOS (11,0)]
@@ -382,6 +385,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 		[iOS (11,0)]

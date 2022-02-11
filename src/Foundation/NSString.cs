@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Collections;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if !COREBUILD
 using CoreFoundation;
@@ -47,7 +48,12 @@ namespace Foundation {
 	[Protocol]
 	public interface INSSecureCoding {}
 #endif
-
+#if NET && !COREBUILD
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSString : NSObject
 #if COREBUILD
 		, INSCopying, INSSecureCoding

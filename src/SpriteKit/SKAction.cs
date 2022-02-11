@@ -10,6 +10,7 @@
 using System;
 using CoreGraphics;
 using CoreFoundation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -20,6 +21,12 @@ namespace SpriteKit {
 	public delegate void SKActionTimingFunction (float /* float, not CGFloat */ time);
 #endif
 
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SKAction {
 
 		public static SKAction ResizeTo (CGSize size, double duration)

@@ -4,9 +4,16 @@ using System;
 
 using ObjCRuntime;
 using Security;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSUrlProtectionSpace {
 
 		public NSUrlProtectionSpace (string host, int port, string protocol, string realm, string authenticationMethod)

@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -38,6 +39,12 @@ using Quaterniond = global::OpenTK.Quaterniond;
 #nullable enable
 
 namespace ModelIO {
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MDLAnimatedQuaternion {
 		public virtual void Reset (Quaternion [] values, double [] times)
 		{

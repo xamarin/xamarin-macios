@@ -32,6 +32,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
@@ -42,6 +43,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SecPolicy : NativeObject {
 #if !NET
 		public SecPolicy (NativeHandle handle)

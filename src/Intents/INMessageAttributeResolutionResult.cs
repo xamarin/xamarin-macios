@@ -11,9 +11,17 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Intents {
+
 #if !(NET && __MACOS__)
+#if NET
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#endif
 	public partial class INMessageAttributeResolutionResult {
 
 		public static INMessageAttributeResolutionResult GetSuccess (INMessageAttribute resolvedValue)

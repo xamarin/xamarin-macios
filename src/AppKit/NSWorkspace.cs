@@ -9,13 +9,19 @@ using ObjCRuntime;
 
 namespace AppKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSWorkspace {
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 #if MONOMAC
 		[Obsolete ("Starting with macos11.0 use 'NSWorkspace.OpenUrls' with completion handler.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 #endif
@@ -26,10 +32,12 @@ namespace AppKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 #if MONOMAC
 		[Obsolete ("Starting with macos11.0 use 'NSWorkspace.OpenUrls' with completion handler.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 #endif

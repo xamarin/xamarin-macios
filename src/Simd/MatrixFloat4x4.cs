@@ -14,6 +14,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if NET
 using VectorFloat4 = global::System.Numerics.Vector4;
@@ -27,6 +28,12 @@ namespace CoreGraphics
 namespace OpenTK
 #endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix4 : IEquatable<NMatrix4>
 	{

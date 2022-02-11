@@ -37,6 +37,12 @@ using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVErrorEventArgs : EventArgs {
 		public AVErrorEventArgs (NSError error)
 		{
@@ -45,7 +51,13 @@ namespace AVFoundation {
 
 		public NSError Error { get; private set; }
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVStatusEventArgs : EventArgs {
 		public AVStatusEventArgs (bool status)
 		{
@@ -55,6 +67,12 @@ namespace AVFoundation {
 		public bool Status { get; private set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	#pragma warning disable 672
 	sealed class InternalAVAudioPlayerDelegate : AVAudioPlayerDelegate {
 		internal EventHandler cbEndInterruption, cbBeginInterruption;
@@ -97,8 +115,14 @@ namespace AVFoundation {
 		}
 #endif
 	}
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	#pragma warning restore 672
-	
 	public partial class AVAudioPlayer {
 		InternalAVAudioPlayerDelegate EnsureEventDelegate ()
 		{
@@ -152,6 +176,11 @@ namespace AVFoundation {
 	}
 
 #if !TVOS
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	internal class InternalAVAudioRecorderDelegate : AVAudioRecorderDelegate {
 		internal EventHandler cbEndInterruption, cbBeginInterruption;
 		internal EventHandler<AVStatusEventArgs> cbFinishedRecording;
@@ -192,6 +221,12 @@ namespace AVFoundation {
 #endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("tvos")]
+#endif
 	public partial class AVAudioRecorder {
 		InternalAVAudioRecorderDelegate EnsureEventDelegate ()
 		{
@@ -245,6 +280,12 @@ namespace AVFoundation {
 	}
 #endif // !TVOS
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVSampleRateEventArgs : EventArgs {
 		public AVSampleRateEventArgs (double sampleRate)
 		{
@@ -253,6 +294,12 @@ namespace AVFoundation {
 		public double SampleRate { get; private set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVChannelsEventArgs : EventArgs {
 		public AVChannelsEventArgs (int numberOfChannels)
 		{
@@ -261,6 +308,12 @@ namespace AVFoundation {
 		public int NumberOfChannels { get; private set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AVCategoryEventArgs : EventArgs {
 		public AVCategoryEventArgs (string category)
 		{
@@ -310,6 +363,12 @@ namespace AVFoundation {
 	
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class AVAudioSession {
 		InternalAVAudioSessionDelegate EnsureEventDelegate ()
 		{
@@ -323,6 +382,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveInterruption' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -341,6 +403,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveInterruption' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -359,6 +424,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -377,6 +445,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -395,6 +466,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -414,6 +488,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -433,6 +510,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

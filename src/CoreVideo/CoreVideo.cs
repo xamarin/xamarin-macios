@@ -37,7 +37,12 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// CVPixelBuffer.h
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public struct CVPlanarComponentInfo {
@@ -46,7 +51,12 @@ namespace CoreVideo {
 	}
 
 	// CVPixelBuffer.h
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public struct CVPlanarPixelBufferInfo {
@@ -54,7 +64,12 @@ namespace CoreVideo {
 	}
 
 	// CVPixelBuffer.h
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public struct CVPlanarPixelBufferInfo_YCbCrPlanar {
@@ -63,7 +78,12 @@ namespace CoreVideo {
 		public CVPlanarComponentInfo ComponentInfoCr;
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
@@ -71,7 +91,12 @@ namespace CoreVideo {
 		public CVPlanarComponentInfo ComponentInfoCbCr;
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public struct CVTimeStamp {
@@ -86,7 +111,12 @@ namespace CoreVideo {
 		public UInt64 		Reserved;
 	}
         
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public struct CVSMPTETime {
@@ -101,7 +131,12 @@ namespace CoreVideo {
 		public Int16	Frames;
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public struct CVFillExtendedPixelsCallBackData {

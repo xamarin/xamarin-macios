@@ -24,6 +24,7 @@ namespace MapKit {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
@@ -33,7 +34,12 @@ namespace MapKit {
 #endif
 		Default
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MKLaunchOptions
 	{
 		public MKDirectionsMode? DirectionsMode { get; set; }
@@ -50,6 +56,8 @@ namespace MapKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -126,7 +134,13 @@ namespace MapKit {
 			return NSDictionary.FromObjectsAndKeys (values, keys);
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("tvos9.2")]
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MKMapItem {
 		public void OpenInMaps (MKLaunchOptions? launchOptions = null)
 		{

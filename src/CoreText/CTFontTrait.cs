@@ -32,9 +32,16 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace CoreText {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 #if !NET
 	public static class CTFontTraitKey {
 		public static readonly NSString Symbolic;
@@ -86,6 +93,12 @@ namespace CoreText {
 		Symbolic            = ((uint) 12 << CTFontTraits.ClassMaskShift),
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFontTraits {
 
 		public CTFontTraits ()

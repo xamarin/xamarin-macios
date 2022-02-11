@@ -4,11 +4,18 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreLocation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace MapKit {
 
+#if NET
+	[SupportedOSPlatform ("tvos9.2")]
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MKPolyline {
 		
 		public static unsafe MKPolyline FromPoints (MKMapPoint [] points)

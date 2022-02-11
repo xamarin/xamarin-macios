@@ -22,6 +22,12 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace GameplayKit {
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class GKPath {
 
 		public static GKPath FromPoints (Vector2[] points, float radius, bool cyclical)
@@ -61,6 +67,7 @@ namespace GameplayKit {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -87,6 +94,7 @@ namespace GameplayKit {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[TV (10,0)]

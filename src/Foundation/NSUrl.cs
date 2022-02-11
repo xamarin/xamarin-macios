@@ -20,6 +20,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 
@@ -28,6 +29,12 @@ namespace Foundation {
 		// NSObject.Equals calls the native isEqual: implementation, so that's fine as well, and no need to override.
 #pragma warning disable 660 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.Equals(object o)
 #pragma warning disable 661 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.GetHashCode()
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSUrl : IEquatable<NSUrl> {
 
 		public NSUrl (string path, string relativeToUrl)

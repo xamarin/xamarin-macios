@@ -2,8 +2,15 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSProgress {
 		//Manual bindings until BindAs support is merged
 		public nint? EstimatedTimeRemaining {

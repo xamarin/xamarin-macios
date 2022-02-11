@@ -35,6 +35,7 @@ using Foundation;
 using System.Runtime.Versioning;
 
 namespace AVFoundation {
+
 #if !NET
 	public partial class AVCaptureConnection {
 		[Obsolete ("Use AvailableAudioChannels property instead.")]

@@ -11,9 +11,15 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using Accounts;
+using System.Runtime.Versioning;
 
 namespace Social {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class SLRequest {
 		internal static NSString KindToType (SLServiceKind kind)
 		{

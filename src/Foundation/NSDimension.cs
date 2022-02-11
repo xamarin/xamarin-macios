@@ -1,7 +1,14 @@
 using System;
+using System.Runtime.Versioning;
 
 namespace Foundation {
-	
+
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSDimension {
 
 		// this is something that need to be overridden by subclasses, which is not something we _usually_ do in C#

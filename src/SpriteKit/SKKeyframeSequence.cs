@@ -14,10 +14,17 @@ using System.Drawing;
 #endif
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SpriteKit {
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SKKeyframeSequence {
 
 		[DesignatedInitializer]

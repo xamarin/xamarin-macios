@@ -14,6 +14,7 @@ using ObjCRuntime;
 #nullable enable
 
 namespace SpriteKit {
+
 #if !XAMCORE_3_0 && !MONOMAC
 	public partial class SKFieldNode  {
 		

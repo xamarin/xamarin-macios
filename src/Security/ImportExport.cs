@@ -31,9 +31,16 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace Security {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SecImportExport {
 		
 		[DllImport (Constants.SecurityLibrary)]

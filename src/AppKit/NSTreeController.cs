@@ -24,11 +24,15 @@
 #if !__MACCATALYST__
 
 using System;
-
+using System.Runtime.Versioning;
 using Foundation;
 
 namespace AppKit {
-	
+
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSTreeController {
 		
 		// note: if needed override the protected Get|Set methods
@@ -44,6 +48,7 @@ namespace AppKit {
 			// ignore return value (bool)
 			set { SetSelectionIndexPaths (value); }
 		}
+
 	}
 }
 #endif // !__MACCATALYST__

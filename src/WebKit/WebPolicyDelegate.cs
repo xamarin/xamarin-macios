@@ -21,11 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
 namespace WebKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("macos10.14")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public partial class WebPolicyDelegate {
 		static IntPtr selUse = Selector.GetHandle ("use");
 		static IntPtr selDownload = Selector.GetHandle ("download");
@@ -54,6 +62,7 @@ namespace WebKit {
 			
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selIgnore);
 		}
+
 		
 	}
 }

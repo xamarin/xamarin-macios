@@ -13,11 +13,18 @@ using System.Collections.Generic;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SceneKit
 {
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SCNSceneSource {
 
 		public NSObject? GetEntryWithIdentifier<T> (string uid)

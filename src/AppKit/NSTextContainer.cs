@@ -6,6 +6,12 @@ using System.Runtime.Versioning;
 
 namespace AppKit
 {
+#if NET
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSTextContainer
 	{
 #if !NET
@@ -26,6 +32,9 @@ namespace AppKit
 
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,11)]
 #endif
@@ -35,6 +44,10 @@ namespace AppKit
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.11 use NSTextContainer.FromSize instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

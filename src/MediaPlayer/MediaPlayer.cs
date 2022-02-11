@@ -127,6 +127,7 @@ namespace MediaPlayer {
 		VideoPodcast = 1 << 10,
 		[Mac (10,12,2)]
 		MusicVideo = 1 << 11,
+
 		[Mac (10,12,2)]
 		VideoITunesU = 1 << 12,
 		[iOS (7,0)]

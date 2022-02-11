@@ -27,6 +27,7 @@
 
 using System;
 using Foundation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -39,6 +40,12 @@ namespace CoreImage {
 		Low
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CIDetector {
 		public static CIDetector? CreateFaceDetector (CIContext context, bool highAccuracy)
 		{

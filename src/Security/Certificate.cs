@@ -49,6 +49,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SecCertificate : NativeObject {
 #if !NET
 		public SecCertificate (NativeHandle handle)
@@ -228,6 +234,10 @@ namespace Security {
 		extern static /* CFDictionaryRef */ IntPtr SecCertificateCopyValues (/* SecCertificateRef */ IntPtr certificate, /* CFArrayRef */ IntPtr keys, /* CFErrorRef _Nullable * */ IntPtr error);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.14")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.14 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -258,6 +268,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if TVOS
@@ -278,6 +290,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if TVOS
@@ -304,6 +318,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -317,6 +332,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -332,6 +348,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,3)] // [Mac (10,5)]
 		[TV (10,3)]
@@ -343,6 +361,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,3)]
 		[TV (10,3)]
@@ -358,6 +378,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,3)] // [Mac (10,5)]
 		[TV (10,3)]
@@ -369,6 +391,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,3)]
 		[TV (10,3)]
@@ -385,6 +409,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,3)]
 		[Mac (10,12,4)]
@@ -398,6 +423,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,3)]
 		[Mac (10,12,4)]
@@ -414,6 +440,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,3)]
 		[Mac (10,12,4)]
@@ -427,6 +454,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,3)]
 		[Mac (10,12,4)]
@@ -441,6 +469,10 @@ namespace Security {
 
 #if MONOMAC
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -454,6 +486,9 @@ namespace Security {
 #else // !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
@@ -476,6 +511,9 @@ namespace Security {
 #endif
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
@@ -507,6 +545,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[TV (11,0)]
@@ -520,6 +559,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[TV (11,0)]
@@ -537,6 +577,12 @@ namespace Security {
 #endif // COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SecIdentity : NativeObject {
 #if !NET
 		public SecIdentity (NativeHandle handle)
@@ -602,6 +648,12 @@ namespace Security {
 #endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class SecKey : NativeObject {
 #if !NET
 		public SecKey (IntPtr handle)
@@ -625,6 +677,10 @@ namespace Security {
 		public extern static nint GetTypeID ();
 		
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos12.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
@@ -651,6 +707,10 @@ namespace Security {
 		// TODO: pull all the TypeRefs needed for the NSDictionary
 		
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos12.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
@@ -738,6 +798,10 @@ namespace Security {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -758,6 +822,10 @@ namespace Security {
 		extern static SecStatusCode SecKeyRawSign (IntPtr handle, SecPadding padding, IntPtr dataToSign, nint dataToSignLen, IntPtr sig, ref nint sigLen);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -804,6 +872,10 @@ namespace Security {
 		}
 		
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -824,6 +896,10 @@ namespace Security {
 		extern static SecStatusCode SecKeyRawVerify (IntPtr handle, SecPadding padding, IntPtr signedData, nint signedLen, IntPtr sign, nint signLen);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -865,6 +941,10 @@ namespace Security {
 		}
 		
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -885,6 +965,10 @@ namespace Security {
 		extern static SecStatusCode SecKeyEncrypt (IntPtr handle, SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLengh);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -928,6 +1012,10 @@ namespace Security {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -948,6 +1036,10 @@ namespace Security {
 		extern static SecStatusCode SecKeyDecrypt (IntPtr handle, SecPadding padding, IntPtr cipherTextLen, nint cipherLen, IntPtr plainText, ref nint plainTextLen);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
@@ -999,6 +1091,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1012,6 +1105,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1033,6 +1127,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1053,6 +1148,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3, 0)]
 		[TV (10, 0)]
@@ -1075,6 +1171,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1088,6 +1185,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1111,6 +1209,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1132,6 +1231,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1145,6 +1245,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1162,6 +1263,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1178,6 +1280,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1191,6 +1294,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1207,6 +1311,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1220,6 +1325,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1236,6 +1342,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1250,6 +1357,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1265,6 +1373,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1278,6 +1387,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1298,6 +1408,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1312,6 +1423,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1334,6 +1446,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1347,6 +1460,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1367,6 +1481,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1380,6 +1495,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1400,6 +1516,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1413,6 +1530,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]
@@ -1435,6 +1553,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3,0)]
 		[TV (10,0)]

@@ -7,6 +7,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AppKit {
+
 #if !NET
 	public partial class NSSharingServiceDelegate {
 		CGRect SourceFrameOnScreenForShareItem (NSSharingService sharingService, NSPasteboardWriting item)

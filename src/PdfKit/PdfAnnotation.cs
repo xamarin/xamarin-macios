@@ -18,11 +18,17 @@ using ObjCRuntime;
 #nullable enable
 
 namespace PdfKit {
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class PdfAnnotation {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -37,6 +43,7 @@ namespace PdfKit {
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -53,6 +60,7 @@ namespace PdfKit {
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -74,6 +82,7 @@ namespace PdfKit {
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif

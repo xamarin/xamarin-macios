@@ -1,9 +1,17 @@
 // Copyright 2014, Xamarin Inc. All rights reserved.
 
+using System.Runtime.Versioning;
+
 #if !COREBUILD
 
 namespace Foundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSPredicate {
 
 		public static NSPredicate FromFormat (string predicateFormat)

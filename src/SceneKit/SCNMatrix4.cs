@@ -50,6 +50,12 @@ namespace SceneKit
     /// <summary>
     /// Represents a 4x4 Matrix
     /// </summary>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     [Advice ("This is a row major matrix representation.")]

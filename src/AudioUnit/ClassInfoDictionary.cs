@@ -33,9 +33,16 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using CoreImage;
+using System.Runtime.Versioning;
 
 namespace AudioUnit
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class ClassInfoDictionary : DictionaryContainer
 	{
 		const string VersionKey  		= "version";

@@ -32,9 +32,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class NSMutableSet : IEnumerable<NSObject> {
 		public NSMutableSet (params NSObject [] objs)
 			: this (NSArray.FromNSObjects (objs))

@@ -32,6 +32,12 @@ namespace OpenTK
     /// <remarks>
     /// The Vector4i structure is suitable for interoperation with unmanaged code requiring four consecutive int32_t.
     /// </remarks>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector4i : IEquatable<Vector4i>

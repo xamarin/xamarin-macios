@@ -28,11 +28,16 @@
 
 using System;
 using System.Collections;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSApplication {
 		public void BeginSheet (NSWindow sheet, NSWindow docWindow)
 		{
@@ -46,6 +51,10 @@ namespace AppKit {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSOpenPanel {
 		public void BeginSheet (string directory, string fileName, string []fileTypes, NSWindow modalForWindow)
 		{
@@ -59,6 +68,10 @@ namespace AppKit {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSPageLayout {
 		public void BeginSheet (NSPrintInfo printInfo, NSWindow docWindow)
 		{
@@ -70,6 +83,7 @@ namespace AppKit {
 			var obj = new NSAsyncActionDispatcher (onEnded);
 			BeginSheet (printInfo, docWindow, obj, NSActionDispatcher.Selector, IntPtr.Zero);
 		}
+
 	}
 }
 #endif // !__MACCATALYST__

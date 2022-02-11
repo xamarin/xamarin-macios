@@ -21,6 +21,7 @@ namespace NetworkExtension {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (13,0)]
@@ -33,6 +34,7 @@ namespace NetworkExtension {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (13,0)]

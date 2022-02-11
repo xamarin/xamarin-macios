@@ -12,18 +12,31 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreBluetooth {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	internal static class CFUUID {
 
 		// CFUUID.h
 		[DllImport (Constants.CoreFoundationLibrary)]
 		public extern static /* CFUUIDRef */ IntPtr CFUUIDCreateFromString ( /* CFAllocatorRef */ IntPtr alloc, /* CFStringRef */ IntPtr uuidStr);
 	}		
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CBCentralManager {
 
 		public void ConnectPeripheral (CBPeripheral peripheral, PeripheralConnectionOptions? options = null)
@@ -68,6 +81,12 @@ namespace CoreBluetooth {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CBPeripheral {
 
 		public void DiscoverServices ()

@@ -30,6 +30,7 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -43,6 +44,11 @@ namespace Accounts {
 		OnlyMe
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class AccountStoreOptions : DictionaryContainer
 	{
 #if !COREBUILD

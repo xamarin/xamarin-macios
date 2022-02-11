@@ -29,9 +29,14 @@
 using System;
 
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace AppKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSTableView {
 		public NSTableViewSource Source {
 			get {

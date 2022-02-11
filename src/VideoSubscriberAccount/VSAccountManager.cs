@@ -12,8 +12,15 @@
 using System;
 using System.Threading.Tasks;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace VideoSubscriberAccount {
+#if NET
+	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class VSAccountManager {
 
 		public void CheckAccessStatus (VSAccountManagerAccessOptions accessOptions, Action<VSAccountAccessStatus, NSError> completionHandler)

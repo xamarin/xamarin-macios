@@ -9,9 +9,14 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AppKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSView {
 
 #if !NET
@@ -19,6 +24,10 @@ namespace AppKit {
 		static view_compare_func view_comparer = view_compare;
 #endif
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		sealed class SortData
 		{
 			public Exception Exception;

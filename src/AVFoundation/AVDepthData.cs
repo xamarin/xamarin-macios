@@ -13,8 +13,15 @@ using Foundation;
 using ObjCRuntime;
 using CoreVideo;
 using ImageIO;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+#endif
 	public partial class AVDepthData {
 
 		public static AVDepthData Create (CGImageAuxiliaryDataInfo dataInfo, out NSError error)

@@ -12,9 +12,16 @@ using System.Collections.Generic;
 
 using Foundation;
 using Security;
+using System.Runtime.Versioning;
 
 namespace MultipeerConnectivity {
 
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class MCSession {
 
 		public MCSession (MCPeerID myPeerID, SecIdentity identity, MCEncryptionPreference encryptionPreference)

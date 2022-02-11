@@ -33,6 +33,7 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AudioToolbox {
 
@@ -51,7 +52,13 @@ namespace AudioToolbox {
 		IsUISound 					= 0x69737569, // 'isui'
 		CompletePlaybackIfAppDies	= 0x69666469  // 'ifdi'
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	static class AudioServices {
 
 		//[DllImport (Constants.AudioToolboxLibrary)]

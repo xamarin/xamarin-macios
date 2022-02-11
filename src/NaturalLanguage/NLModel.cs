@@ -7,6 +7,12 @@ using ObjCRuntime;
 
 namespace NaturalLanguage {
 
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NLModel {
 
 #if NET

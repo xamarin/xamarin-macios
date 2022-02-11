@@ -1,12 +1,17 @@
 #if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 #if NET
 	public static partial class INSDraggingInfo_Extensions {
 		public static void EnumerateDraggingItems (this INSDraggingInfo self, NSDraggingItemEnumerationOptions enumOpts, NSView view, INSPasteboardReading [] classArray, NSDictionary searchOptions, NSDraggingEnumerator enumerator)
@@ -34,6 +39,7 @@ namespace AppKit {
 		{
 			EnumerateDraggingItems (enumOpts, view, classArray.Handle, searchOptions, enumerator);
 		}
+
 	}
 #endif
 }

@@ -1,8 +1,13 @@
 #if !__MACCATALYST__
 using System;
 using PrintCore;
+using System.Runtime.Versioning;
 
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NSPrintInfo {
 		public PMPrintSession GetPrintSession ()
 		{

@@ -25,10 +25,17 @@ using CoreMidi;
 #endif
 
 using MidiEndpointRef = System.Int32;
+using System.Runtime.Versioning;
 
 namespace AudioToolbox {
 
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiNoteMessage {
 		public byte Channel;
@@ -48,6 +55,12 @@ namespace AudioToolbox {
 	}
 	
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiChannelMessage {
 		public byte Status;
@@ -64,6 +77,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	//
 	// Since we can not express this in the way that C does, we expose a
 	// high level API, and we provide a ToUnmanaged that returns an allocated
@@ -112,6 +131,12 @@ namespace AudioToolbox {
 		internal abstract IntPtr ToUnmanaged ();
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 #if !COREBUILD
 #if NET
 	public class MidiRawData : MidiData {
@@ -137,6 +162,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class MusicEventUserData : MidiRawData {
 		public MusicEventUserData () {}
 
@@ -155,6 +186,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	//
 	// Since we can not express this in the way that C does, we expose a
 	// high level API, and we provide a ToUnmanaged that returns an allocated
@@ -187,6 +224,12 @@ namespace AudioToolbox {
 	}
 
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct ExtendedNoteOnEvent {
 		public /* MusicDeviceInstrumentID */ uint InstrumentID;
@@ -202,8 +245,15 @@ namespace AudioToolbox {
 		public float Pitch;
 		public float Velocity;
 	}
+
 #endif
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class MusicTrack : DisposableObject
 	{
 #if !COREBUILD

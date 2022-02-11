@@ -28,6 +28,7 @@
 // exists on these enums for when a key cannot be mapped.
 
 #if !__MACCATALYST__
+using System.Runtime.Versioning;
 
 using Foundation;
 
@@ -41,6 +42,9 @@ namespace AppKit
 		Renamed
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class NSFontCollectionChangedEventArgs
 	{
 		public NSFontCollectionAction Action {
@@ -69,6 +73,9 @@ namespace AppKit
 		DetachToWindow
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class NSPopoverCloseEventArgs
 	{
 		public NSPopoverCloseReason Reason {

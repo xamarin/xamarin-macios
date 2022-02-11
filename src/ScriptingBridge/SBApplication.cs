@@ -2,11 +2,15 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.Versioning;
 using AppKit;
 using Foundation;
 using ObjCRuntime;
 
 namespace ScriptingBridge {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public partial class SBApplication
 	{
 		public static SBApplication? GetApplication (string ident)  => Runtime.GetNSObject<SBApplication> (_FromBundleIdentifier (ident));
@@ -40,5 +44,6 @@ namespace ScriptingBridge {
 		[Obsolete ("Use 'GetApplication' instead.")]
 		public static T? FromProcessIdentifier<T> (int pid) where T : SBApplication => Runtime.GetINativeObject<T> (_FromProcessIdentifier (pid), forced_type: true, owns: false);
 #endif
+
 	}
 }

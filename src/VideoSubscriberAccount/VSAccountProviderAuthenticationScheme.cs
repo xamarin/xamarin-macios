@@ -2,9 +2,16 @@
 using System;
 using System.Threading.Tasks;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace VideoSubscriberAccount {
 
+#if NET
+	[SupportedOSPlatform ("ios10.2")]
+	[SupportedOSPlatform ("tvos10.1")]
+	[SupportedOSPlatform ("macos10.14")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 	public static partial class VSAccountProviderAuthenticationSchemeExtensions {
 
 		// these are less common pattern so it's not automatically generated

@@ -17,11 +17,17 @@ using Security;
 using System.Runtime.Versioning;
 
 namespace NetworkExtension {
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public partial class NEVpnManager {
 
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,11)]
 #endif

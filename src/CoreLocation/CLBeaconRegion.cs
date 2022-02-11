@@ -6,11 +6,18 @@ using ObjCRuntime;
 
 namespace CoreLocation {
 
+#if NET
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#endif
 	public partial class CLBeaconRegion {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]

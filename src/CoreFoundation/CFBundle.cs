@@ -18,6 +18,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CFBundle : NativeObject {
 
 		public enum PackageType {
@@ -26,6 +32,12 @@ namespace CoreFoundation {
 			Bundle
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public struct PackageInfo {
 			public PackageInfo (CFBundle.PackageType type, string creator)
 			{
@@ -583,6 +595,8 @@ namespace CoreFoundation {
 #if MONOMAC
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -594,6 +608,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -609,6 +625,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -620,6 +638,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -635,6 +655,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -646,6 +668,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]

@@ -27,6 +27,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -49,6 +50,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -164,6 +166,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.14.6")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14,6)]
 		[iOS (13,0)]
@@ -187,6 +190,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.14.6")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14,6)]
 		[iOS (13,0)]
@@ -202,6 +206,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]

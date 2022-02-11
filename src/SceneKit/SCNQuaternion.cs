@@ -51,6 +51,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -59,6 +60,12 @@ namespace SceneKit
     /// <summary>
     /// Represents a Quaternion.
     /// </summary>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct SCNQuaternion : IEquatable<SCNQuaternion>

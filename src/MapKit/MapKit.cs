@@ -22,6 +22,12 @@ namespace MapKit {
 
 #if !WATCH
 	// MKTileOverlay.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKTileOverlayPath
 	{
@@ -34,6 +40,12 @@ namespace MapKit {
 
 	// MKGeometry.h
 	// note: CLLocationDegrees is double - see CLLocation.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKCoordinateSpan {
 		public /* CLLocationDegrees */ double LatitudeDelta;
@@ -55,6 +67,9 @@ namespace MapKit {
 	// MKGeometry.h
 #if NET
 	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10,9)]
 #endif
@@ -86,6 +101,9 @@ namespace MapKit {
 	// MKGeometry.h
 #if NET
 	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10,9)]
 #endif
@@ -140,6 +158,12 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapSize {
 		public double Width, Height;
@@ -153,6 +177,9 @@ namespace MapKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[TV (9,2)]
 #endif
@@ -194,6 +221,9 @@ namespace MapKit {
 	// MKGeometry.h
 #if NET
 	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10,9)]
 #endif
@@ -202,6 +232,8 @@ namespace MapKit {
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (9,2)]
 #endif
@@ -298,6 +330,8 @@ namespace MapKit {
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (9,2)]
 #endif
@@ -413,6 +447,9 @@ namespace MapKit {
 	// MKGeometry.h
 #if NET
 	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10,9)]
 #endif

@@ -9,8 +9,15 @@
 
 using System;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace Vision {
+#if NET
+	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	public static partial class VNBarcodeSymbologyExtensions {
 		public static NSString [] GetConstants (this VNBarcodeSymbology [] self)
 		{

@@ -12,8 +12,15 @@ using System;
 using Foundation;
 using CoreMedia;
 using CoreVideo;
+using System.Runtime.Versioning;
 
 namespace AVFoundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class AVPlayerItemVideoOutput {
 		public CVPixelBuffer CopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay)
 		{
