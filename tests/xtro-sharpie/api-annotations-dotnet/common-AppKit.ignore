@@ -6,9 +6,6 @@
 ## 42814697 NSViewLayerContentScaleDelegate defined in header but never used
 !missing-protocol! NSViewLayerContentScaleDelegate not bound
 
-## 42781537 Classes fail to conformsToProtocol despite header declaration
-!missing-protocol! NSUserActivityRestoring not bound
-
 ## recent fox top xtro reported additional missing API (to be reviewed)
 !missing-selector! +NSBezierPath::bezierPath not bound
 !missing-selector! +NSCursor::pop not bound

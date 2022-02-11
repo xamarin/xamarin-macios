@@ -305,6 +305,7 @@ namespace Bug52570Tests {
 			bgen.AssertNoWarnings ();
 		}
 
+#if !NET
 		[Test]
 		public void BI1117_allowstaticmembers ()
 		{
@@ -314,6 +315,7 @@ namespace Bug52570Tests {
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 		}
+#endif
 
 		[Test]
 		public void BindAsNoMultidimensionalArrays ()

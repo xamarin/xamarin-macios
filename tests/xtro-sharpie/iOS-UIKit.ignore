@@ -15,7 +15,7 @@
 ## exception name, not clear if useful
 !missing-field! UIApplicationInvalidInterfaceOrientationException not bound
 
-## fixed for XAMCORE_4_0
+## fixed for .NET
 !incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
@@ -29,7 +29,7 @@
 !extra-protocol-member! unexpected selector UITableViewDelegate::tableView:accessoryTypeForRowWithIndexPath: found
 !extra-protocol-member! unexpected selector UIImagePickerControllerDelegate::imagePickerController:didFinishPickingImage:editingInfo: found
 
-# fixed in XAMCORE_4_0 - API break
+# fixed in .NET - API break
 !incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
 
 ## the category name is clear enough: UIPrintPaper_Deprecated_Nonfunctional
@@ -337,7 +337,6 @@
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISearchBar::GetScopeBarButtonBackgroundImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISearchBar::GetScopeBarButtonDividerImage(UIKit.UIControlState,UIKit.UIControlState)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISearchBar::GetSearchFieldBackgroundImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UISegmentedControl::DividerImageForLeftSegmentStaterightSegmentStatebarMetrics(UIKit.UIControlState,UIKit.UIControlState,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISegmentedControl::GetBackgroundImage(UIKit.UIControlState,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISegmentedControl::ImageAt(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISlider::get_CurrentMaxTrackImage()' is missing an [NullAllowed] on return type

@@ -302,6 +302,7 @@ namespace UIKit {
 		Characters = 2,
 	}
 
+	[MacCatalyst (13,1)]
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]

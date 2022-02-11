@@ -68,6 +68,27 @@ without this type change would be impossible to expose correctly.
 There are implicit conversions between `System.IntPtr` and
 `ObjCRuntime.NativeHandle`, so most code should compile without changes.
 
+One major caveat however is that user code with an `IntPtr` constructor like
+the following:
+
+```csharp
+public class MyViewController : UIViewController {
+  public MyViewController (IntPtr handle) : base (handle) {}
+}
+```
+
+will have to be updated to:
+
+
+```csharp
+public class MyViewController : UIViewController {
+  public MyViewController (NativeHandle handle) : base (handle) {}
+}
+```
+
+Note that code that has the `IntPtr` constructor will compile just fine (no
+warnings nor errors), but it will fail at runtime.
+
 ## The ObjCRuntime.Arch enum and the Runtime.Arch property have been removed.
 
 These APIs are used to determine whether we're executing in the simulator or
@@ -129,6 +150,14 @@ You can query if the build-time feature is enabled with the following code:
 AppContext.TryGetSwitch ("System.Threading.Thread.EnableAutoreleasePool", out var enabled);
 ```
 
+## The types `NSFileProviderExtension` and `NSFileProviderExtensionFetchThumbnailsHandler` moved
+
+The types `NSFileProviderExtension` and
+`NSFileProviderExtensionFetchThumbnailsHandler` moved from the `UIKit`
+namespace to the `NSFileProvider` namespace (this is reflecting that Apple
+originally added these types to `UIKit`, but then moved them to their own
+namespace, `NSFileExtension`).
+
 ## The 'Foundation.MonoTouchException' and 'Foundation.ObjCException' types have been renamed/moved to 'ObjCRuntime.ObjCException'.
 
 The type `Foundation.MonoTouchException` (for iOS, tvOS and Mac Catalyst) and
@@ -136,3 +165,9 @@ the type `Foundation.ObjCException` (for macOS) have been renamed/moved to
 `ObjCRuntime.ObjCException`. Both types had the exact same functionality: they
 were wrapping a native NSException, and were renamed so that we have identical
 API and behavior on all platforms.
+
+## The type 'CFNetwork.MessageHandler' has been removed.
+
+The type 'CFNetwork.MessageHandler' has been removed. Please use
+'System.Net.Http.CFNetworkHandler' or the more recent
+'Foundation.NSUrlSessionHandler' instead.

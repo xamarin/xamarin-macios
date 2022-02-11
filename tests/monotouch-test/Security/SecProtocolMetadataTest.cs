@@ -58,8 +58,13 @@ namespace MonoTouchFixtures.Security {
 				// Wait until the connection is ready.
 				Assert.True (ready.WaitOne (TimeSpan.FromSeconds (10)), "Connection is ready");
 
+#if NET
+				using (var m = connection.GetProtocolMetadata<NWTlsMetadata> (NWProtocolDefinition.CreateTlsDefinition ())) {
+					var s = m.SecProtocolMetadata;
+#else
 				using (var m = connection.GetProtocolMetadata (NWProtocolDefinition.TlsDefinition)) {
 					var s = m.TlsSecProtocolMetadata;
+#endif
 					Assert.False (s.EarlyDataAccepted, "EarlyDataAccepted");
 #if !NET
 					Assert.That (s.NegotiatedCipherSuite, Is.Not.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipherSuite");

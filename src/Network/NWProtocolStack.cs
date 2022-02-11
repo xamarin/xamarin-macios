@@ -28,12 +28,15 @@ using NativeHandle = System.IntPtr;
 
 namespace Network {
 
-#if !NET
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
+#if NET
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
 #endif
 	public class NWProtocolStack : NativeObject {
 		[Preserve (Conditional = true)]
@@ -142,7 +145,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
-#if XAMCORE_4_0 
+#if NET
 		public NWProtocolIPOptions? InternetProtocol {
 #else
 		public NWProtocolOptions? InternetProtocol {

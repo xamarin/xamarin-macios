@@ -164,7 +164,7 @@ namespace Introspection {
 
 		protected override void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
 		{
-#if !XAMCORE_4_0 // let's review the tests exceptions if we break things
+#if !XAMCORE_5_0 // let's review the tests exceptions if we break things
 			switch (m.Name) {
 			case "get_Source":
 			case "set_Source":
@@ -181,14 +181,18 @@ namespace Introspection {
 				if (t.Name == "UISearchDisplayController")
 					return;
 				break;
+#endif // !XAMCORE_5_0
+#if !NET
 			case "get_ImagePickerControllerDelegate":
 			case "set_ImagePickerControllerDelegate":
 			case "get_NavigationControllerDelegate":
 			case "set_NavigationControllerDelegate":
-				// fixed in XAMCORE_4_0 - alternative are the Weak* delegates
+				// fixed in NET - alternative are the Weak* delegates
 				if (t.Name == "UIImagePickerController")
 					return;
 				break;
+#endif
+#if !XAMCORE_5_0 // let's review the tests exceptions if we break things
 			case "get_Model":
 			case "set_Model":
 				// UIPickerViewModel is our own creation and we did not make an interface out of it

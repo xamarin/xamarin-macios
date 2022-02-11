@@ -152,7 +152,7 @@ jobs:
       enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 - job: upload_azure_blob
-  displayName: 'Upload packages to Azure'
+  displayName: 'Upload packages to Azure & SBOM'
   timeoutInMinutes: 1000
   dependsOn:
   - configure
@@ -172,6 +172,7 @@ jobs:
   - template: upload-azure.yml
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
+      sbomFilter: '*.nupkg;*.pkg;*.msi'
 
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'

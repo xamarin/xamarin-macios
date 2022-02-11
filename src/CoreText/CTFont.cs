@@ -55,7 +55,7 @@ namespace CoreText {
 		Default = 0,
 		PreventAutoActivation = 1 << 0,
 		PreferSystemFont      = 1 << 2,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This API is not available on this platform.")]
 		IncludeDisabled       = 1 << 7,
 #endif

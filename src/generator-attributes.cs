@@ -61,7 +61,7 @@ public class ForcedTypeAttribute : Attribute {
 //
 // Valid on return values and parameters
 //
-// To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for XAMCORE_4_0, etc
+// To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for NET, etc
 //
 public class ProtocolizeAttribute : Attribute {
 	public ProtocolizeAttribute ()
@@ -648,15 +648,17 @@ public class AppearanceAttribute : Attribute {
 // }
 [AttributeUsage (AttributeTargets.Interface, AllowMultiple=false)]
 public class CategoryAttribute : Attribute {
+#if !NET
 	public bool AllowStaticMembers;
-	public CategoryAttribute () { }
-#if XAMCORE_4_0
-	[Obsolete ("Inline the static members in this category in the category's class (and remove this obsolete once fixed)"]
 #endif
+	public CategoryAttribute () { }
+#if !NET
+	[Obsolete ("Inline the static members in this category in the category's class (and remove this obsolete once fixed)")]
 	public CategoryAttribute (bool allowStaticMembers)
 	{
 		AllowStaticMembers = allowStaticMembers;
 	}
+#endif
 }
 
 //
