@@ -2421,14 +2421,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
 		>
 		</Touch>
-
-		<!-- make sure spotlight indexes everything we've built -->
-		<SpotlightIndexer
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
-			Input="$(AppBundleDir)/../"
-		>
-		</SpotlightIndexer>
 	</Target>
 
 	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false' And '$(_PlatformName)' != 'MacCatalyst' And '$(_PlatformName)' != 'macOS'"
@@ -2479,10 +2471,34 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_GenerateAppExtensionDebugSymbols;
 			_PrepareDebugSymbolGeneration;
 			_GenerateDebugSymbols;
+			_NotifySpotlight;
 		</_PostProcessAppBundleDependsOn>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(_PostProcess)' == ''">
+		<!-- we don't run dsymutil/strip in app extensions, only in the main executable project -->
+		<_PostProcess Condition="'$(IsAppExtension)' == 'true'">false</_PostProcess>
+		<!-- we don't post-process watch apps, only the main executable project -->
+		<_PostProcess Condition="'$(IsWatchApp)' == 'true'">false</_PostProcess>
+		<!-- we don't post-process inner builds of multi-rid builds (in .NET), only the outermost build -->
+		<_PostProcess Condition="'$(_IsMultiRidBuild)' == 'true'">false</_PostProcess>
+		<!-- otherwise post-process -->
+		<_PostProcess Condition="'$(_PostProcess)' == ''">true</_PostProcess>
+	</PropertyGroup>
+
 	<Target Name="_PostProcessAppBundle" DependsOnTargets="$(_PostProcessAppBundleDependsOn)" />
+
+	<!-- make sure spotlight indexes everything we've built -->
+	<Target
+		Name="_NotifySpotlight"
+		Condition="'$(_PostProcess)' == 'true'"
+		>
+		<SpotlightIndexer
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Input="$(_AppContainerDir)"
+		/>
+	</Target>
 
 	<PropertyGroup>
 		<ArchiveDependsOn>
