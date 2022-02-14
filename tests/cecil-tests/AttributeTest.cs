@@ -37,7 +37,7 @@ namespace Cecil.Tests {
 		//
 		// This test should find Extension, note that it has an ios attribute,
 		// and insist that some maccatalyst must also be set.
-		[TestCaseSource (typeof (Helper), "NetPlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void ChildElementsListAvailabilityForAllPlatformsOnParent (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
@@ -180,18 +180,18 @@ namespace Cecil.Tests {
 		bool Ignore (string fullName)
 		{
 			string ns;
-			if (fullName.Split(' ').Length < 2) {
-				ns = fullName.Split('.').First ();
+			if (fullName.Split (' ').Length < 2) {
+				ns = fullName.Split ('.').First ();
 			}
 			else {
 				// Skip the return type, then split namespace off
-				ns = fullName.Split(' ')[1].Split('.').First ();
+				ns = fullName.Split (' ') [1].Split ('.').First ();
 			}
 			switch (ns) {
-				case "Security":
-				case "CoreMedia":
-				case "CoreText":
-					return true;
+			case "Security":
+			case "CoreMedia":
+			case "CoreText":
+				return true;
 			}
 			switch (fullName) {
 			// Generated code DictionaryContainer
