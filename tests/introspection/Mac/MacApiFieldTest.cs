@@ -178,7 +178,7 @@ namespace Introspection {
 		protected override bool SkipNotification (Type declaredType, string notificationName)
 		{
 			switch (declaredType.Name){
-#if !XAMCORE_4_0
+#if !NET
 			case "NSWorkspaceAccessibilityNotifications":
 			case "NSAccessibilityNotifications":
 				return true;

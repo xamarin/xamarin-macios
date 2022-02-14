@@ -560,6 +560,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_AssetPack>
 				<DirectoryName>$([System.IO.Path]::GetFileName('%(_AssetPack._DirectoryName)'))</DirectoryName>
 			</_AssetPack>
+			<_AssetPack>
+				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\%(DirectoryName)</CodesignStampFile>
+			</_AssetPack>
 		</ItemGroup>
 
 		<!-- Sign assetpacks -->
@@ -590,6 +593,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
 
 		<!-- Re-sign app bundle if anything changed inside of it -->
+		<ItemGroup>
+			<_IpaAppBundleToSign Include="$(_IpaAppBundleDir)">
+				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\$(_AppBundleName).app</CodesignStampFile>
+			</_IpaAppBundleToSign>
+		</ItemGroup>
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
@@ -600,7 +608,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(_CompiledCodesignEntitlements)"
 			ResourceRules="$(_PreparedResourceRules)"
-			Resources="$(_IpaAppBundleDir)"
+			Resources="@(_IpaAppBundleToSign)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			/>

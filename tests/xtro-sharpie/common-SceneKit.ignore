@@ -1,4 +1,4 @@
-## Breaking changes fixed in XAMCORE_4_0
+## Breaking changes fixed in .NET
 ## we cannot add abstract members to existing SCNSceneRenderer or SCNAnimatable protocols (breaking changes)
 !incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::animationPlayerForKey: is REQUIRED and should be abstract
@@ -27,7 +27,7 @@
 !incorrect-protocol-member! SCNSceneRenderer::usesReverseZ is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::currentRenderPassDescriptor is REQUIRED and should be abstract
 
-## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
+## same for SCNActionable, it is required member of a protocol added to .NET
 !incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
 
 ## We have managed counterparts that comes from OpenTK code

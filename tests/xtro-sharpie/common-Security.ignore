@@ -34,6 +34,6 @@
 ## extra value for initialization
 !extra-enum-value! Managed value -1 for SslSessionState.Invalid not found in native headers
 
-## enum moved from long to ulong -> breaking change under XAMCORE_4_0
+## enum moved from long to ulong -> breaking change under .NET
 !extra-enum-value! Managed value -2147483648 for SecAccessControlCreateFlags.ApplicationPassword not found in native headers
 !missing-enum-value! SecAccessControlCreateFlags native value kSecAccessControlApplicationPassword = 2147483648 not bound
