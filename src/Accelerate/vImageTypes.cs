@@ -271,11 +271,11 @@ namespace Accelerate {
 									Pixel8888 backgroundColor, 
 									vImageFlags flags)
 		{
-			if (kernels == null)
+			if (kernels is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
-			if (divisors == null)
+			if (divisors is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (divisors));
-			if (biases == null)
+			if (biases is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
@@ -327,9 +327,9 @@ namespace Accelerate {
 								       PixelFFFF backgroundColor,
 								       vImageFlags flags)
 		{
-			if (kernels == null)
+			if (kernels is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
-			if (biases == null)
+			if (biases is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
@@ -437,11 +437,11 @@ namespace Accelerate {
 								   int [] post_bias,     //Must be an array of 4 int32_t's. NULL is okay. 
 								   vImageFlags flags)
 		{
-			if (matrix == null)
+			if (matrix is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (matrix));
-			if (pre_bias != null && pre_bias.Length != 4)
+			if (pre_bias is not null && pre_bias.Length != 4)
 				throw new ArgumentException ("Must have four elements", "pre_bias");
-			if (post_bias != null && post_bias.Length != 4)
+			if (post_bias is not null && post_bias.Length != 4)
 				throw new ArgumentException ("Must have four elements", "post_bias");
 			return (vImageError) (long) vImageMatrixMultiply_ARGB8888 (ref src, ref dest, matrix, divisor, pre_bias, post_bias, flags);
 		}
