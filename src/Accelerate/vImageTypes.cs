@@ -272,11 +272,11 @@ namespace Accelerate {
 									vImageFlags flags)
 		{
 			if (kernels == null)
-				throw new ArgumentNullException ("kernels");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
 			if (divisors == null)
-				throw new ArgumentNullException ("divisors");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (divisors));
 			if (biases == null)
-				throw new ArgumentNullException ("biases");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
 			if (divisors.Length < 4)
@@ -328,9 +328,9 @@ namespace Accelerate {
 								       vImageFlags flags)
 		{
 			if (kernels == null)
-				throw new ArgumentNullException ("kernels");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
 			if (biases == null)
-				throw new ArgumentNullException ("biases");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
 			if (biases.Length < 4)
@@ -438,7 +438,7 @@ namespace Accelerate {
 								   vImageFlags flags)
 		{
 			if (matrix == null)
-				throw new ArgumentNullException ("matrix");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (matrix));
 			if (pre_bias != null && pre_bias.Length != 4)
 				throw new ArgumentException ("Must have four elements", "pre_bias");
 			if (post_bias != null && post_bias.Length != 4)
