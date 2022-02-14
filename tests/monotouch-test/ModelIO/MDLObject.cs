@@ -18,7 +18,6 @@ using SceneKit;
 #if !MONOMAC
 using UIKit;
 #endif
-using OpenTK;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ModelIO {

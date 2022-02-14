@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
+#if !NET
 namespace OpenTK
 {
     /// <summary>
@@ -1322,3 +1323,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET

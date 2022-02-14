@@ -19,7 +19,6 @@ using CoreAnimation;
 using CoreGraphics;
 using CoreLocation;
 #if !__WATCHOS__
-using OpenTK;
 #endif
 using NUnit.Framework;
 

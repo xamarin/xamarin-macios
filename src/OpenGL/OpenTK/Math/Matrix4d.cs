@@ -25,6 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 
+#if !NET
 namespace OpenTK
 {
     /// <summary>
@@ -1213,3 +1214,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET

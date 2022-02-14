@@ -47,6 +47,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET6_BCL_DIR)/System.Net.Security.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Net.ServicePoint.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Net.Sockets.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Numerics.Vectors.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Resources.ResourceManager.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Runtime.dll \
 	/r:$(DOTNET6_BCL_DIR)/System.Runtime.CompilerServices.Unsafe.dll \
@@ -118,7 +119,6 @@ $(SHARED_DESIGNER_CS): $(SHARED_RESX)
 # Add new bindings + source files in frameworks.sources, not here.
 
 IOS_DOTNET_EXTRA_SOURCES = \
-	$(IOS_OPENTK_1_0_CORE_SOURCES)   \
 	$(IOS_BUILD_DIR)/Constants.cs    \
 	$(DOTNET_BUILD_DIR)/Constants.ios.generated.cs \
 	$(IOS_BUILD_DIR)/AssemblyInfo.cs \
@@ -1105,7 +1105,6 @@ TVOS_DOTNET_EXTRA_CORE_SOURCES = \
 	$(TVOS_BUILD_DIR)/Constants.cs    \
 	$(DOTNET_BUILD_DIR)/Constants.tvos.generated.cs \
 	$(TVOS_BUILD_DIR)/AssemblyInfo.cs \
-	$(IOS_OPENTK_1_0_CORE_SOURCES)    \
 
 TVOS_EXTRA_CORE_SOURCES = \
 	$(TVOS_BUILD_DIR)/Constants.cs    \
@@ -1333,7 +1332,6 @@ MACCATALYST_DOTNET_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_BUILD_DIR)/Constants.cs    \
 	$(DOTNET_BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs \
-	$(IOS_OPENTK_1_0_CORE_SOURCES)    \
 
 MACCATALYST_DOTNET_CORE_SOURCES += \
 	$(MACCATALYST_DOTNET_EXTRA_CORE_SOURCES) \
