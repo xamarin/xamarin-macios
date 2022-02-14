@@ -98,6 +98,11 @@
 			<!-- Not bundled; warning -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libSkipInstallNameTool.dylib">
+			<!-- Bundled, linked with, install_name_tool must have been executed -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -120,6 +120,7 @@ namespace Xamarin.Tests {
 			// NoneK.txt is not bundled
 			expectedFiles.Add ($"{assemblyDirectory}NoneL.config");
 			// NoneM.unknown is not bundled
+			expectedFiles.Add ($"{assemblyDirectory}libSkipInstallNameTool.dylib");
 
 			expectedFiles.Add ($"{resourcesDirectory}basn3p08.png");
 			expectedFiles.Add ($"{resourcesDirectory}iTunesArtwork.jpg");
@@ -313,6 +314,57 @@ namespace Xamarin.Tests {
 
 			Assert.That (unexpectedFiles, Is.Empty, "No unexpected files");
 			Assert.That (missingFiles, Is.Empty, "No missing files");
+
+			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.dylib");
+		}
+
+		void AssertDynamicLibraryId (ApplePlatform platform, string appPath, string dylibDirectory, string library)
+		{
+			var dylibPath = Path.Combine (appPath, dylibDirectory, library);
+			Assert.That (dylibPath, Does.Exist, "dylib existence");
+
+			var invalidLoadCommands = new List<string> ();
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			foreach (var file in MachO.Read (appExecutable)) {
+				foreach (var lc in file.load_commands) {
+					if (lc is DylibLoadCommand loadCommand) {
+						if (!IsValidLoadLibrary (loadCommand.name)) {
+							invalidLoadCommands.Add ($"Invalid load library '{loadCommand.name}' in '{file.Filename}'");
+						}
+					}
+				}
+			}
+
+			var dylibs = Directory.GetFiles (Path.Combine (appPath, dylibDirectory), "*.dylib");
+			foreach (var dylib in dylibs) {
+				foreach (var file in MachO.Read (dylib)) {
+					foreach (var lc in file.load_commands) {
+						if (lc is DylibIdCommand loadCommand) {
+							if (!IsValidLoadLibrary (loadCommand.name)) {
+								invalidLoadCommands.Add ($"Invalid id '{loadCommand.name}' for library '{file.Filename}'");
+							}
+						}
+					}
+				}
+			}
+
+			Assert.That (invalidLoadCommands, Is.Empty);
+		}
+
+		static bool IsValidLoadLibrary (string library)
+		{
+			var valid_prefixes = new string [] {
+				"/System/Library/",
+				"/usr/lib/",
+				"@rpath",
+				"@executable_path",
+			};
+			foreach (var valid_prefix in valid_prefixes) {
+				if (library.StartsWith (valid_prefix, StringComparison.Ordinal))
+					return true;
+			}
+			return false;
 		}
 
 
