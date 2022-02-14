@@ -1882,6 +1882,10 @@
 		</value>
 	</data>
 
+	<data name="MT4186" xml:space="preserve">
+		<value>The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
+
 	<data name="MT5101" xml:space="preserve">
 		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
 		</value>
