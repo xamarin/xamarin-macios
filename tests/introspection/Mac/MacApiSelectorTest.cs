@@ -392,6 +392,10 @@ namespace Introspection {
 						if (Mac.CheckSystemVersion (10, 13))
 							return true;
 						break;
+					case "progress":
+						if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+							return true;
+						break;
 					}
 					break;
 				case "NSUrlSessionConfiguration":
