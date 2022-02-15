@@ -19810,6 +19810,7 @@ namespace AppKit {
 #if NET
 		[Abstract]
 #endif
+		[return: NullAllowed]
 		[Export ("attributedSubstringForProposedRange:actualRange:")]
 		NSAttributedString GetAttributedSubstring (NSRange proposedRange, out NSRange actualRange);
 
