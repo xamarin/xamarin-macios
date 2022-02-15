@@ -2410,7 +2410,7 @@ public partial class Generator : IMemberGatherer {
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
 		print (m, "namespace {0} {{", ns.ObjCRuntime);
-		print (m, "\tpartial class Messaging {");
+		print (m, "\tstatic partial class Messaging {");
 
 		print (m, "\t\tinternal const string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";\n");
 		if (BindThirdPartyLibrary){
