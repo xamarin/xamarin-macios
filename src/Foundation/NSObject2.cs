@@ -373,7 +373,7 @@ namespace Foundation {
 				var h = GCHandle.ToIntPtr (gchandle);
 				if (!xamarin_set_gchandle_with_flags_safe (handle, h, flags)) {
 					// A GCHandle already existed: this shouldn't happen, but let's handle it anyway.
-					Runtime.NSLog ("Tried to create a managed reference from an object that already has a managed reference (type: {0})", GetType ());
+					Runtime.NSLog ($"Tried to create a managed reference from an object that already has a managed reference (type: {GetType ()})");
 					gchandle.Free ();
 				}
 			}

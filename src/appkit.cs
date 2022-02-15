@@ -9908,6 +9908,7 @@ namespace AppKit {
 		[Export ("layerContentsForContentsScale:")]
 		NSObject GetLayerContentsForContentsScale (nfloat layerContentsScale);
 
+		[NoMacCatalyst]
 		[Mac (11,0)]
 		[Static]
 		[Export ("imageWithSystemSymbolName:accessibilityDescription:")]

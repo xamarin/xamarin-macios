@@ -3,7 +3,12 @@ using CoreGraphics;
 using Foundation;
 using Metal;
 using ObjCRuntime;
+
+#if NET
+using Vector4 = global::System.Numerics.Vector4;
+#else
 using Vector4 = global::OpenTK.Vector4;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;

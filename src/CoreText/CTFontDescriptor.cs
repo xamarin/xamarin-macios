@@ -86,8 +86,8 @@ namespace CoreText {
 		FailedWithError
 	}
 	
+#if !NET
 	public static class CTFontDescriptorAttributeKey {
-
 		public static readonly NSString Url;
 		public static readonly NSString Name;
 		public static readonly NSString DisplayName;
@@ -138,6 +138,7 @@ namespace CoreText {
 			Enabled             = Dlfcn.GetStringConstant (handle, "kCTFontEnabledAttribute")!;
 		}
 	}
+#endif // !NET
 
 	public class CTFontDescriptorAttributes {
 
