@@ -28,6 +28,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -110,14 +112,20 @@ namespace AddressBook {
 		}
 
 		public string Name {
-			get {return PropertyToString (ABGroupProperty.Name);}
+			get
+			{
+				var str = PropertyToString (ABGroupProperty.Name);
+				if (str is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException ("PropertyToString returned null");
+				return str;
+			}
 			set {SetValue (ABGroupProperty.Name, value);}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABGroupCopySource (IntPtr group);
 
-		public ABRecord Source {
+		public ABRecord? Source {
 			get {
 				var h = ABGroupCopySource (Handle);
 				if (h == IntPtr.Zero)
@@ -150,7 +158,7 @@ namespace AddressBook {
 		public IEnumerator<ABRecord> GetEnumerator ()
 		{
 			var cfArrayRef = ABGroupCopyArrayOfAllMembers (Handle);
-			IEnumerable<ABRecord> e = null;
+			IEnumerable<ABRecord>? e = null;
 			if (cfArrayRef == IntPtr.Zero)
 				e = new ABRecord [0];
 			else
