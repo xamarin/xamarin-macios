@@ -211,16 +211,11 @@ namespace ObjCRuntime {
 
 		internal static Type Lookup (IntPtr klass)
 		{
-			return LookupClass (klass, true)!;
-		}
-
-		internal static Type? Lookup (IntPtr klass, bool throw_on_error)
-		{
-			return LookupClass (klass, throw_on_error);
+			return Lookup (klass, true)!;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		static Type? LookupClass (IntPtr klass, bool throw_on_error)
+		internal static Type? Lookup (IntPtr klass, bool throw_on_error)
 		{
 			bool is_custom_type;
 			var find_class = klass;
