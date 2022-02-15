@@ -427,8 +427,8 @@ namespace Accelerate {
 									ref vImageBuffer dest,
 									short [] matrix, // matrix is [4*4],
 									int divisor,
-									short [] pre_bias,      //Must be an array of 4 int16_t's. NULL is okay. 
-									int [] post_bias,     //Must be an array of 4 int32_t's. NULL is okay. 
+									short []? pre_bias,      //Must be an array of 4 int16_t's. NULL is okay.
+									int []? post_bias,     //Must be an array of 4 int32_t's. NULL is okay.
 									vImageFlags flags );
 
 		public static vImageError MatrixMultiplyARGB8888 (ref vImageBuffer src,
@@ -441,17 +441,10 @@ namespace Accelerate {
 		{
 			if (matrix is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (matrix));
-
-			if (pre_bias is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pre_bias));
-			else if (pre_bias.Length != 4)
-				throw new ArgumentException ("Must have four elements", "pre_bias");
-
-			if (post_bias is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (post_bias));
-			else if (post_bias.Length != 4)
-				throw new ArgumentException ("Must have four elements", "post_bias");
-
+			if (pre_bias is not null && pre_bias.Length != 4)
+				throw new ArgumentException ("Must have four elements", nameof (pre_bias));
+			if (post_bias is not null && post_bias.Length != 4)
+				throw new ArgumentException ("Must have four elements", nameof (post_bias));
 			return (vImageError) (long) vImageMatrixMultiply_ARGB8888 (ref src, ref dest, matrix, divisor, pre_bias, post_bias, flags);
 		}
 
