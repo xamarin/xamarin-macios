@@ -50,6 +50,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
+#if !NET
 	public static class CTFontCollectionOptionKey {
 		public static readonly NSString RemoveDuplicates;
 
@@ -58,6 +59,7 @@ namespace CoreText {
 			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption")!;
 		}
 	}
+#endif
 
 	public class CTFontCollectionOptions {
 
