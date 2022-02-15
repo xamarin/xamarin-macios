@@ -436,6 +436,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<FileWrites Include="$(_ProcessedBundleResourcesPath)" />
 			<FileWrites Include="$(_ProcessedContentPath)" />
 		</ItemGroup>
+
+		<!-- Copy any items with the PublishFolderType metadata directly to the ResolvedFileToPublish item group -->
+		<ItemGroup>
+			<ResolvedFileToPublish Include="@(BundleResource)" Condition="'%(BundleResource.PublishFolderType)' != ''" />
+			<ResolvedFileToPublish Include="@(Content)" Condition="'%(Content.PublishFolderType)' != ''" />
+		</ItemGroup>
 	</Target>
 
 	<!--
