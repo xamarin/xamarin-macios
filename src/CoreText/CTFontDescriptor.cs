@@ -697,7 +697,9 @@ namespace CoreText {
 			return o;
 		}
 #endregion
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -705,7 +707,9 @@ namespace CoreText {
 		static extern bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes,
 			Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[Mac (10,9)]
 #endif
 		public static bool MatchFontDescriptors (CTFontDescriptor[] descriptors, NSSet mandatoryAttributes, Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler)
