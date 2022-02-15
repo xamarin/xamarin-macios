@@ -74,17 +74,10 @@ namespace ObjCRuntime {
 			this.handle = GetHandle (type);
 		}
 
-		public Class (IntPtr handle)
-		{
-			this.handle = handle;
-		}
-
-#if NET
 		public Class (NativeHandle handle)
 		{
 			this.handle = handle;
 		}
-#endif
 
 		[Preserve (Conditional = true)]
 #if NET
