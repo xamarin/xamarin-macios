@@ -447,6 +447,7 @@
 				AssemblyName=$(AssemblyName).dll
 				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
+				AppBundleManifestPath=$(_AppBundleManifestPath)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
 				Debug=$(_BundlerDebug)
@@ -460,6 +461,7 @@
 				IntermediateLinkDir=$(IntermediateLinkDir)
 				InvariantGlobalization=$(InvariantGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
+				IsAppExtension=$(IsAppExtension)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LibMonoLinkMode=$(_LibMonoLinkMode)
 				LibXamarinLinkMode=$(_LibXamarinLinkMode)
