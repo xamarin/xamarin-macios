@@ -184,7 +184,7 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(IOS_BUILD_DI
 	$(Q) touch $@
 
 $(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(IOS_DOTNET_BUILD_DIR)
-	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g;'
+	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|Microsoft.iOS|g;'
 
 $(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.ios.xml | $(IOS_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $< $@
@@ -556,7 +556,7 @@ $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MAC_BUILD_DI
 	$(Q) touch $@
 
 $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(MACOS_DOTNET_BUILD_DIR)
-	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g;'
+	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|Microsoft.macOS|g;'
 
 $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.macOS.xml | $(MACOS_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $< $@
@@ -861,7 +861,7 @@ $(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.co
 
 $(WATCH_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in
 	$(Q) mkdir -p $(WATCH_DOTNET_BUILD_DIR)
-	$(call Q_PROF_GEN,watch) sed < $< > $@ 's|@PRODUCT_NAME@|Xamarin.WatchOS|g;'
+	$(call Q_PROF_GEN,watch) sed < $< > $@ 's|@PRODUCT_NAME@|Microsoft.watchOS|g;'
 
 $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/watchos-defines.rsp | $(WATCH_BUILD_DIR)/watch
 	@mkdir -p $(WATCH_BUILD_DIR)/watch
@@ -1384,7 +1384,7 @@ $(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/M
 	$(Q) touch $@
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $(MACCATALYST_DOTNET_BUILD_DIR)
-	$(call Q_PROF_GEN,maccatalyst) sed < $< > $@ 's|@PRODUCT_NAME@|Xamarin.MacCatalyst|g;'
+	$(call Q_PROF_GEN,maccatalyst) sed < $< > $@ 's|@PRODUCT_NAME@|Microsoft.MacCatalyst|g;'
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.MacCatalyst.xml | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $< $@
