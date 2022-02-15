@@ -258,7 +258,11 @@ namespace Foundation
 		IntPtr LowLevelValue { get; }
 
 		[Export ("attributesAtIndex:effectiveRange:")]
+#if NET
+		IntPtr LowLevelGetAttributes (nint location, IntPtr effectiveRange);
+#else
 		IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange);
+#endif
 
 		[Export ("length")]
 		nint Length { get; }
@@ -4929,26 +4933,32 @@ namespace Foundation
 		[Wrap ("Perform (modes.GetConstants ()!, block)")]
 		void Perform (NSRunLoopMode[] modes, Action block);
 
-#if !XAMCORE_4_0
+#if !NET
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[Field ("NSDefaultRunLoopMode")]
 		NSString NSDefaultRunLoopMode { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[Field ("NSRunLoopCommonModes")]
 		NSString NSRunLoopCommonModes { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message:  "Use 'NSXpcConnection' instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSModalPanelRunLoopMode", "AppKit")]
 		NSString NSRunLoopModalPanelMode { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSEventTrackingRunLoopMode", "AppKit")]
 		NSString NSRunLoopEventTracking { get; }
 
+		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[NoMac][NoWatch]
 		[Field ("UITrackingRunLoopMode", "UIKit")]
 		NSString UITrackingRunLoopMode { get; }
@@ -7659,13 +7669,9 @@ namespace Foundation
 		[Export ("levelsOfUndo")]
 		nint LevelsOfUndo { get; set; }
 		
-#if XAMCORE_4_0
-		[Internal]
-		[Export ("runLoopModes")]
-		NSString [] _RunLoopModes { get; set; } 
-
-		[Wrap ("RunLoopModes.GetConstants ()")]
-		NSRunLoop [] RunLoopModes { get; set; } 
+#if NET
+		[Export ("runLoopModes", ArgumentSemantic.Copy)]
+		NSString [] WeakRunLoopModes { get; set; }
 #else
 		[Export ("runLoopModes")]
 		string [] RunLoopModes { get; set; } 
@@ -7710,9 +7716,14 @@ namespace Foundation
 		[Export ("redoActionName")]
 		string RedoActionName { get; }
 
+#if NET
+		[Export ("setActionName:")]
+		void SetActionName (string actionName);
+#else
 		[Advice ("Use the correctly named method: 'SetActionName'.")]
 		[Export ("setActionName:")]
 		void SetActionname (string actionName); 
+#endif
 
 		[Export ("undoMenuItemTitle")]
 		string UndoMenuItemTitle { get; }
@@ -8802,13 +8813,13 @@ namespace Foundation
 		NSString ChangeNotificationIsPriorKey { get; }
 #if MONOMAC
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("valueClassForBinding:")]
 		Class GetBindingValueClass (NSString binding);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options)' instead.")]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
@@ -8845,25 +8856,25 @@ namespace Foundation
 		NSString[] ExposedBindings { get; }
 #endif
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("unbind:")]
 		void Unbind (NSString binding);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("infoForBinding:")]
 		NSDictionary GetBindingInfo (NSString binding);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Sealed]
 #endif
 		[Export ("optionDescriptionsForBinding:")]

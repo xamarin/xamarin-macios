@@ -31,6 +31,16 @@
 
 using System.ComponentModel;
 
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+using NMatrix3 = global::CoreGraphics.NMatrix3;
+using NMatrix4x3 = global::CoreGraphics.NMatrix4x3;
+#else
+using Vector3 = global::OpenTK.Vector3;
+using NMatrix3 = global::OpenTK.NMatrix3;
+using NMatrix4x3 = global::OpenTK.NMatrix4x3;
+#endif
+
 #if !WATCH
 using AudioUnit;
 using AVKit;
@@ -52,7 +62,6 @@ using UniformTypeIdentifiers;
 using ImageIO;
 using System;
 
-using OpenTK;
 #if MONOMAC
 using AppKit;
 using UIImage = AppKit.NSImage;

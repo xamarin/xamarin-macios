@@ -16,9 +16,16 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
 using Xamarin.Utils;
+
+#if NET
+using System.Numerics;
+using Vector2i = global::CoreGraphics.NVector2i;
+using Vector3i = global::CoreGraphics.NVector3i;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO {
 

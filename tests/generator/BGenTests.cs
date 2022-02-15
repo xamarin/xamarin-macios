@@ -816,6 +816,68 @@ namespace GeneratorTests
 			Assert.AreEqual ("setAbstractProperty:", (string) ldstr.Operand, "setAbstractProperty");
 		}
 
+		[Test]
+		public void AbstractTypeTest ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/abstract-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyObject");
+			Assert.NotNull (type, "MyObject");
+#if NET
+			Assert.IsFalse (type.IsAbstract, "IsAbstract");
+#else
+			Assert.IsTrue (type.IsAbstract, "IsAbstract");
+#endif
+
+			var method = type.Methods.First (v => v.Name == ".ctor" && !v.HasParameters && !v.IsStatic);
+#if NET
+			Assert.IsTrue (method.IsFamily, "IsProtected ctor");
+#else
+			Assert.IsFalse (method.IsPublic, "IsPublic ctor");
+#endif
+
+			method = type.Methods.First (v => v.Name == "AbstractMember" && !v.HasParameters && !v.IsStatic);
+			var throwInstruction = method.Body?.Instructions?.FirstOrDefault (v => v.OpCode == OpCodes.Throw);
+			Assert.IsTrue (method.IsPublic, "IsPublic ctor");
+			Assert.IsTrue (method.IsVirtual, "IsVirtual");
+#if NET
+			Assert.IsFalse (method.IsAbstract, "IsAbstract");
+			Assert.IsNotNull (throwInstruction, "Throw");
+#else
+			Assert.IsTrue (method.IsAbstract, "IsAbstract");
+			Assert.IsNull (throwInstruction, "Throw");
+#endif
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void NativeIntDelegates ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nint-delegates.cs");
+
+			Func<string, bool> verifyDelegate = (typename) => {
+				// Assert that the return type from the delegate is IntPtr
+				var type = bgen.ApiAssembly.MainModule.GetType ("NS", typename);
+				Assert.NotNull (type, typename);
+				var method = type.Methods.First (m => m.Name == "Invoke");
+				Assert.IsNotNull (method.MethodReturnType.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), "Return type for delegate " + typename);
+				foreach (var p in method.Parameters) {
+					Assert.IsNotNull (p.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), $"Parameter {p.Name}'s type for delegate " + typename);
+				}
+
+				return false;
+			};
+
+			verifyDelegate ("D1");
+			verifyDelegate ("D2");
+			verifyDelegate ("D3");
+			verifyDelegate ("NSTableViewColumnRowPredicate");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

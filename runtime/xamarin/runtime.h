@@ -220,6 +220,7 @@ bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exceptio
 void			xamarin_install_nsautoreleasepool_hooks ();
 void			xamarin_enable_new_refcount ();
 const char * const	xamarin_get_original_working_directory_path ();
+int				xamarin_get_runtime_arch ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -260,7 +261,7 @@ MonoException *	xamarin_create_system_invalid_cast_exception (const char *messag
 MonoException *	xamarin_create_system_entry_point_not_found_exception (const char *entrypoint);
 NSString *		xamarin_print_all_exceptions (GCHandle handle);
 bool			xamarin_log_marshalled_exceptions ();
-void			xamarin_log_managed_exception (GCHandle handle, MarshalManagedExceptionMode mode);
+void			xamarin_log_managed_exception (MonoObject *exception, MarshalManagedExceptionMode mode);
 void			xamarin_log_objectivec_exception (NSException *exception, MarshalObjectiveCExceptionMode mode);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);

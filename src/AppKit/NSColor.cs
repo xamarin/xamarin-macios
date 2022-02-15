@@ -239,14 +239,6 @@ namespace AppKit {
 				return base.ToString ();
 			}
 		}
-
-		[Obsolete ("Use 'UnderPageBackgroundColor' instead.")]
-		public static NSColor UnderPageBackground {
-			get {
-				return UnderPageBackgroundColor;
-			}
-		}
-
 	}
 }
 #endif // !__MACCATALYST__

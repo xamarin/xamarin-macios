@@ -5,8 +5,12 @@ using System.Diagnostics;
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+#else
 using OpenTK;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+#endif
 
 using NUnit.Framework;
 
@@ -25,9 +29,12 @@ namespace MonoTouchFixtures.Simd
 				R2C2 = 1f,
 			};
 			Asserts.AreEqual (identity, MatrixFloat3x3.Identity, "identity");
+#if !NET
 			Asserts.AreEqual (Matrix3.Identity, MatrixFloat3x3.Identity, "opentk identity");
+#endif
 		}
 
+#if !NET //we no longer have OpentK.Matrix3 for comparison
 		[Test]
 		public void ElementConstructor ()
 		{
@@ -245,7 +252,7 @@ namespace MonoTouchFixtures.Simd
 			Asserts.AreEqual (MatrixFloat3x3.Identity, actual, "tomatrix4 identity");
 			Asserts.AreEqual (Matrix3.Identity, actual, "tomatrix4 identity2");
 		}
-
+#endif // !NET
 		[Test]
 		public void ToStringTest ()
 		{
@@ -256,6 +263,7 @@ namespace MonoTouchFixtures.Simd
 
 		// GetHashCode doesn't have to be identical, so no need to test
 
+#if !NET
 		[Test]
 		public void Equals_Object ()
 		{
@@ -317,5 +325,6 @@ namespace MonoTouchFixtures.Simd
 				counter = 0;
 			return test_matrices [counter];
 		}
+#endif // !NET
 	}
 }

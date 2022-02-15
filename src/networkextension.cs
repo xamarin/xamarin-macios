@@ -627,9 +627,15 @@ namespace NetworkExtension {
 		[Export ("filterConfiguration")]
 		NEFilterProviderConfiguration FilterConfiguration { get; }
 
+#if NET
+		[NoMac]
+#endif
 		[Field ("NEFilterProviderRemediationMapRemediationButtonTexts")]
 		NSString RemediationMapRemediationButtonTexts { get; }
 
+#if NET
+		[NoMac]
+#endif
 		[Field ("NEFilterProviderRemediationMapRemediationURLs")]
 		NSString RemediationMapRemediationUrls { get; }
 	}

@@ -45,8 +45,9 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if !(__TVOS__ && NET)
 using WebKit;
-using OpenTK;
+#endif
 using NUnit.Framework;
 using Bindings.Test;
 
