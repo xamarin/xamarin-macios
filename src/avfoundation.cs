@@ -3119,6 +3119,7 @@ namespace AVFoundation {
 		string [] AvailableMediaCharacteristicsWithMediaSelectionOptions { get; }
 
 #if !MONOMAC
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[Export ("compatibleWithSavedPhotosAlbum")]
 		bool CompatibleWithSavedPhotosAlbum  { [Bind ("isCompatibleWithSavedPhotosAlbum")] get; }
 #endif

@@ -1037,7 +1037,6 @@ namespace SpriteKit {
 		[Export ("fieldBitMask")]
 		uint FieldBitMask { get; set; } /* uint32_t */
 
-		[iOS (8,0), Mac(10,10)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 8, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
