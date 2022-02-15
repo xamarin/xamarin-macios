@@ -2731,7 +2731,7 @@ namespace Registrar {
 			// we'll end up crashing/infinite recursion since Console.WriteLine is redirected
 			// to NSLog and is using NSString (and we haven't necessarily finished registering
 			// everything yet).
-			R.NSLog (message, args);
+			R.NSLog (String.Format (message, args));
 		}
 
 		protected virtual void ReportWarning (int code, string message, params object[] args)

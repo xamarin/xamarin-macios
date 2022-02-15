@@ -220,17 +220,17 @@ namespace ObjCRuntime {
 			var watch = new Stopwatch ();
 #endif
 			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
-				string msg = "Version mismatch between the native " + ProductName + " runtime and " + AssemblyName + ". Please reinstall " + ProductName + ".";
+				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
 #if MONOMAC
 				try {
 					// Print out where Xamarin.Mac.dll and the native runtime was loaded from.
-					NSLog (AssemblyName + " was loaded from {0}", typeof (nint).Assembly.Location);
+					NSLog ($"{AssemblyName} was loaded from {typeof (NSObject).Assembly.Location}");
 
 					var sym2 = Dlfcn.dlsym (Dlfcn.RTLD.Default, "xamarin_initialize");
 					Dlfcn.Dl_info info2;
 					if (Dlfcn.dladdr (sym2, out info2) == 0) {
-						NSLog ("The native runtime was loaded from {0}", Marshal.PtrToStringAuto (info2.dli_fname));
+						NSLog ($"The native runtime was loaded from {Marshal.PtrToStringAuto (info2.dli_fname)}");
 					} else if (Dlfcn.dlsym (Dlfcn.RTLD.MainOnly, "xamarin_initialize") != IntPtr.Zero) {
 						var buf = new byte [128];
 						int length = buf.Length;
@@ -246,7 +246,7 @@ namespace ObjCRuntime {
 							var str_length = 0;
 							for (int i = 0; i < buf.Length && buf [i] != 0; i++)
 								str_length++;
-							NSLog ("The native runtime was loaded from {0}", System.Text.Encoding.UTF8.GetString (buf, 0, str_length));
+							NSLog ($"The native runtime was loaded from {Encoding.UTF8.GetString (buf, 0, str_length)}");
 						}
 					} else {
 						NSLog ("Could not find out where the native runtime was loaded from.");
@@ -613,7 +613,7 @@ namespace ObjCRuntime {
 				catch (FileNotFoundException fefe) {
 					// that's more important for XI because device builds don't go thru this step
 					// and we can end up with simulator-only failures - bug #29211
-					NSLog ("Could not find `{0}` referenced by assembly `{1}`.", fefe.FileName, assembly.FullName);
+					NSLog ($"Could not find `{fefe.FileName}` referenced by assembly `{assembly.FullName}`.");
 #if MONOMAC && !NET
 					if (!NSApplication.IgnoreMissingAssembliesDuringRegistration)
 						throw;
@@ -1754,11 +1754,6 @@ namespace ObjCRuntime {
 				write (2 /* STDERR */, utf8, utf8.Length);
 				// Ignore any errors writing to stderr (might happen on devices if the developer tools haven't been mounted, but xamarin_log should always work on devices).
 			}
-		}
-
-		internal static void NSLog (string format, params object?[] args)
-		{
-			NSLog (string.Format (format, args));
 		}
 
 		internal static string ToFourCCString (uint value)
