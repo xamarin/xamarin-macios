@@ -457,13 +457,13 @@ namespace ObjCRuntime {
 #else
 			ex = new MonoTouchException (Runtime.GetNSObject<NSException> (ns_exception)!);
 #endif
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr CreateRuntimeException (int code, IntPtr message)
 		{
 			var ex = ErrorHelper.CreateError (code, Marshal.PtrToStringAuto (message)!);
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr UnwrapNSException (IntPtr exc_handle)
@@ -827,7 +827,7 @@ namespace ObjCRuntime {
 			} else {
 				ex = ErrorHelper.CreateError (code, msg);
 			}
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr TypeGetFullName (IntPtr type) 
@@ -1994,9 +1994,9 @@ namespace ObjCRuntime {
 		}
 
 		// Allocate a GCHandle and return the IntPtr to it.
-		internal static IntPtr AllocGCHandle (object? value)
+		internal static IntPtr AllocGCHandle (object? value, GCHandleType type = GCHandleType.Normal)
 		{
-			return GCHandle.ToIntPtr (GCHandle.Alloc (value));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (value, type));
 		}
 
 #if __MACCATALYST__
