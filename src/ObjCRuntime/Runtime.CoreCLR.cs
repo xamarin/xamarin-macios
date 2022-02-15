@@ -288,8 +288,7 @@ namespace ObjCRuntime {
 			object obj = null;
 			if (gchandle != IntPtr.Zero)
 				obj = GetGCHandleTarget (gchandle);
-			var rv = GCHandle.Alloc (obj, type);
-			return GCHandle.ToIntPtr (rv);
+			return AllocGCHandle (obj, type);
 		}
 
 		static void FreeGCHandle (IntPtr gchandle)
