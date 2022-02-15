@@ -44,6 +44,8 @@ using vImagePixelCount = System.IntPtr;
 using vImagePixelCount = System.nint;
 #endif
 
+#nullable enable
+
 namespace Accelerate {
 	// vImage_Buffer - vImage_Types.h
 	[StructLayout(LayoutKind.Sequential)]
@@ -439,10 +441,17 @@ namespace Accelerate {
 		{
 			if (matrix is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (matrix));
-			if (pre_bias is not null && pre_bias.Length != 4)
+
+			if (pre_bias is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pre_bias));
+			else if (pre_bias.Length != 4)
 				throw new ArgumentException ("Must have four elements", "pre_bias");
-			if (post_bias is not null && post_bias.Length != 4)
+
+			if (post_bias is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (post_bias));
+			else if (post_bias.Length != 4)
 				throw new ArgumentException ("Must have four elements", "post_bias");
+
 			return (vImageError) (long) vImageMatrixMultiply_ARGB8888 (ref src, ref dest, matrix, divisor, pre_bias, post_bias, flags);
 		}
 
