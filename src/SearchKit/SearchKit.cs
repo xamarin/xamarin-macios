@@ -305,9 +305,8 @@ namespace SearchKit
 
 		protected override void Dispose (bool disposing)
 		{
-			if (Handle != IntPtr.Zero) {
+			if (Handle != NativeHandle.Zero) {
 				SKIndexClose (Handle);
-				ClearHandle ();
 			}
 			base.Dispose (disposing);
 		}
