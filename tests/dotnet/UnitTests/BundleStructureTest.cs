@@ -187,14 +187,20 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{resourcesDirectory}ContentA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentC.txt");
+			expectedFiles.Add ($"{resourcesDirectory}ContentD.txt");
+			expectedFiles.Add ($"{resourcesDirectory}ContentE.txt");
 
 			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceC.txt");
+			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceD.txt");
+			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceE.txt");
 
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceC.txt");
+			expectedFiles.Add ($"{resourcesDirectory}BundleResourceD.txt");
+			expectedFiles.Add ($"{resourcesDirectory}BundleResourceE.txt");
 
 			expectedFiles.Add ($"{resourcesDirectory}AutoIncluded.txt");
 			expectedFiles.Add ($"{resourcesDirectory}SubDirectory");
