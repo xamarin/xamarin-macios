@@ -845,7 +845,7 @@ namespace ObjCRuntime {
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)
 		{
-			return Marshal.StringToHGlobalAuto (Class.LookupFullName (klass));
+			return Marshal.StringToHGlobalAuto (Class.Lookup (klass)?.FullName);
 		}
 #endregion
 
