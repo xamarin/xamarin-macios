@@ -31,7 +31,7 @@ namespace Xamarin.Tests
 			string version;
 #if __MACCATALYST__
 			name = "MacCatalyst";
-			version = UIDevice.CurrentDevice.SystemVersion;
+			version = iOSSupportVersion;
 #elif __TVOS__ || __IOS__
 			name = UIDevice.CurrentDevice.SystemName;
 			version = UIDevice.CurrentDevice.SystemVersion;
@@ -91,6 +91,22 @@ namespace Xamarin.Tests
 
 			return platformInfo;
 		}
+
+#if __MACCATALYST__
+		static string? _iOSSupportVersion;
+		internal static string iOSSupportVersion {
+			get {
+				if (_iOSSupportVersion is null) {
+					// This is how Apple does it: https://github.com/llvm/llvm-project/blob/62ec4ac90738a5f2d209ed28c822223e58aaaeb7/lldb/source/Host/macosx/objcxx/HostInfoMacOSX.mm#L100-L105
+					using var dict = NSMutableDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist");
+					using var str = (NSString) "iOSSupportVersion";
+					using var obj = dict.ObjectForKey (str);
+					_iOSSupportVersion = obj.ToString ();
+				}
+				return _iOSSupportVersion;
+			}
+		}
+#endif
 
 		public static readonly PlatformInfo Host = GetHostPlatformInfo ();
 
