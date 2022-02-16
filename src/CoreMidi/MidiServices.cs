@@ -501,8 +501,9 @@ namespace CoreMidi {
 		extern static int /* OSStatus = SInt32 */ MIDIClientDispose (MidiObjectRef handle);
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -551,8 +552,9 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -579,8 +581,9 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -910,8 +913,9 @@ namespace CoreMidi {
 #if !COREBUILD
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -1021,8 +1025,9 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -1038,8 +1043,9 @@ namespace CoreMidi {
 		extern static MidiError /* OSStatus = SInt32 */ MIDISend (MidiPortRef port, MidiEndpointRef endpoint, IntPtr packets);
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -1471,8 +1477,9 @@ namespace CoreMidi {
 		extern static MidiEntityRef MIDIDeviceGetEntity (MidiDeviceRef handle, nint item);
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -1498,8 +1505,9 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if IOS
 		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -1588,6 +1596,7 @@ namespace CoreMidi {
 #if NET
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -2011,8 +2020,9 @@ namespace CoreMidi {
 		extern static int /* OSStatus = SInt32 */ MIDIEndpointDispose (MidiEndpointRef handle);
 		
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -2031,8 +2041,9 @@ namespace CoreMidi {
 		extern static int /* OSStatus = SInt32 */ MIDIFlushOutput (MidiEndpointRef handle);
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC
@@ -2134,8 +2145,9 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
 #if MONOMAC

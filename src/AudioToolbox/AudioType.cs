@@ -85,6 +85,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13,0)]
@@ -158,8 +159,10 @@ namespace AudioToolbox {
 		const AudioFormatFlags AudioFormatFlagIsBigEndian = 0;
 
 #if NET
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
 #if MONOMAC

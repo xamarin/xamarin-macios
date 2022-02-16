@@ -621,6 +621,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -633,6 +635,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -648,6 +652,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -660,6 +666,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]

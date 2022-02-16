@@ -96,7 +96,9 @@ namespace CoreVideo {
 		extern static /* CGColorSpaceRef */ IntPtr CVImageBufferGetColorSpace (/* CVImageBufferRef */ IntPtr imageBuffer);
 		
 #if NET
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.4")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -142,6 +144,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -154,6 +157,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -168,6 +172,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -180,6 +185,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -194,6 +200,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -206,6 +213,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -220,6 +228,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -232,6 +241,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -247,6 +257,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -259,6 +270,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -274,6 +286,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]
@@ -286,6 +299,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[Mac (10, 13)]

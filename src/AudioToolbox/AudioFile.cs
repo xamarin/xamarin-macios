@@ -57,6 +57,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (11,0)]
@@ -82,6 +83,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (11,0)]
@@ -93,6 +95,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13,0)]

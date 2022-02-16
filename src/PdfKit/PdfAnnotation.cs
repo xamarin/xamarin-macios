@@ -23,6 +23,7 @@ namespace PdfKit {
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -37,6 +38,7 @@ namespace PdfKit {
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -53,6 +55,7 @@ namespace PdfKit {
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -74,6 +77,7 @@ namespace PdfKit {
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif

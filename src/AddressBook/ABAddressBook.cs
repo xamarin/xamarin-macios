@@ -141,7 +141,6 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios6.0")]

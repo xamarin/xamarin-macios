@@ -13,6 +13,7 @@ namespace Metal {
 #if MONOMAC
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -29,6 +30,7 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -47,6 +49,7 @@ namespace Metal {
 #if IOS
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
@@ -63,6 +66,7 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else

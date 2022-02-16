@@ -53,7 +53,9 @@ namespace AudioToolbox {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)] // 10.5
 #endif
@@ -62,7 +64,9 @@ namespace AudioToolbox {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)] // 10.5
 #endif
@@ -84,6 +88,8 @@ namespace AudioToolbox {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -94,6 +100,8 @@ namespace AudioToolbox {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]

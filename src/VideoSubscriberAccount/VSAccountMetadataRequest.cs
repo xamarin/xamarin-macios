@@ -12,6 +12,7 @@ namespace VideoSubscriberAccount {
 		[SupportedOSPlatform ("tvos10.1")]
 		[SupportedOSPlatform ("ios10.2")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (10,1)]

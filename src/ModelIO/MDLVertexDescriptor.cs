@@ -25,6 +25,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -37,6 +38,7 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[Mac (10,12)]

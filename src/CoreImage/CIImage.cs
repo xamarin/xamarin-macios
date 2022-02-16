@@ -54,14 +54,18 @@ namespace CoreImage {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustCrop;
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 #endif

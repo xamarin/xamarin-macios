@@ -13,7 +13,7 @@ namespace ARKit {
 
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14,0)]
 #endif
@@ -22,7 +22,7 @@ namespace ARKit {
 		
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14,0)]
 #endif

@@ -61,6 +61,7 @@ namespace Intents {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[iOS (13,0)]
@@ -72,6 +73,7 @@ namespace Intents {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[iOS (13,0)]

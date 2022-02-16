@@ -29,7 +29,7 @@ namespace MediaPlayer {
 	public partial class MPPlayableContentDataSource : NSObject {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else

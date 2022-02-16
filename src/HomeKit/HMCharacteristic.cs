@@ -41,7 +41,6 @@ namespace HomeKit {
 		[SupportedOSPlatform ("ios9.3")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (9,3)]
 		[Watch (2,2)]

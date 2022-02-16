@@ -96,6 +96,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,11)]
 		[iOS (9,0)]
@@ -115,6 +117,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,11)]
 		[iOS (9,0)]

@@ -233,6 +233,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
 		[Mac (10, 14)]
@@ -247,6 +248,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
 		[Mac (10, 14)]

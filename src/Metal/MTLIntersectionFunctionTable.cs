@@ -15,6 +15,7 @@ namespace Metal {
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (11,0)]

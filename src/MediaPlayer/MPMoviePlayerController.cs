@@ -22,7 +22,6 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #if IOS

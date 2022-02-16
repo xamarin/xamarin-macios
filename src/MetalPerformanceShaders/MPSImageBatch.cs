@@ -56,6 +56,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]
@@ -69,6 +70,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]

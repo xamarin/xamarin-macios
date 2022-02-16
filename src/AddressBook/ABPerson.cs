@@ -716,7 +716,6 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios7.0")]
@@ -735,7 +734,6 @@ namespace AddressBook {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
@@ -752,7 +750,6 @@ namespace AddressBook {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
@@ -771,7 +768,6 @@ namespace AddressBook {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__
@@ -788,7 +784,6 @@ namespace AddressBook {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if __MACCATALYST__

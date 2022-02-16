@@ -208,7 +208,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -224,7 +226,9 @@ namespace AVFoundation {
 #if !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -239,7 +243,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -280,7 +286,9 @@ namespace AVFoundation {
 		// frame rate can be floating point (29.97 is common for instance)
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -296,7 +304,9 @@ namespace AVFoundation {
 		// frame rate can be floating point (29.97 is common for instance)
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif

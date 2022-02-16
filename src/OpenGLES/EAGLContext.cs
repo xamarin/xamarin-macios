@@ -25,7 +25,7 @@ namespace OpenGLES
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if TVOS
@@ -45,7 +45,7 @@ namespace OpenGLES
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.2")]
-		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if TVOS

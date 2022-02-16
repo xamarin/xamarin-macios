@@ -153,8 +153,9 @@ namespace MapKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[TV (9,2)]
 #endif
@@ -205,6 +206,7 @@ namespace MapKit {
 		[SupportedOSPlatform ("tvos9.2")]
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (9,2)]
 #endif
@@ -302,6 +304,7 @@ namespace MapKit {
 		[SupportedOSPlatform ("tvos9.2")]
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (9,2)]
 #endif

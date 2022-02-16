@@ -11,7 +11,6 @@ namespace HomeKit {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
 #if TVOS
@@ -33,7 +32,6 @@ namespace HomeKit {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
 #if TVOS

@@ -368,6 +368,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 		[iOS (11,0)]
@@ -381,6 +382,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 		[iOS (11,0)]
