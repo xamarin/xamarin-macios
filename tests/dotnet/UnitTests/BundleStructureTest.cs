@@ -341,6 +341,7 @@ namespace Xamarin.Tests {
 		{
 			var valid_prefixes = new string [] {
 				"/System/Library/",
+				"/System/iOSSupport/System/Library/",
 				"/usr/lib/",
 				"@rpath",
 				"@executable_path",
