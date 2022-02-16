@@ -2622,9 +2622,8 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			try {
 				Generate (t);
-			}
-			catch (Exception e) {
-				throw new InvalidOperationException ($"When processing type {t} exception {e}");
+			} catch (Exception e) {
+				throw new InvalidOperationException ($"When processing type {t} exception {e}", e);
 			}
 		}
 
