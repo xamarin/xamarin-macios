@@ -2620,8 +2620,12 @@ public partial class Generator : IMemberGatherer {
 		foreach (Type t in types){
 			if (SkipGenerationOfType (t))
 				continue;
-
-			Generate (t);
+			try {
+				Generate (t);
+			}
+			catch (Exception e) {
+				throw new InvalidOperationException ($"When processing type {t} exception {e}");
+			}
 		}
 
 		//DumpChildren (0, GeneratedType.Lookup (TypeManager.NSObject));
