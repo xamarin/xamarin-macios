@@ -10,6 +10,8 @@
 #if !__WATCHOS__
 
 using System;
+
+using CoreGraphics;
 using Foundation;
 #if !MONOMAC
 using UIKit;
@@ -19,12 +21,21 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 
+#if NET
+using System.Numerics;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using VectorFloat3 =   global::CoreGraphics.NVector3;
+#else
+using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 using Bindings.Test;
 using NUnit.Framework;
@@ -116,6 +127,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (m4, obj.Matrix, 0.0001f, "Matrix 3");
 			}
 
+#if !NET
 			var m4x4 = new MatrixFloat4x4 (
 				4, 0, 0, 2,
 				0, 3, 0, 3,
@@ -132,6 +144,7 @@ namespace MonoTouchFixtures.ModelIO {
 #endif
 				Asserts.AreEqual (m4x4, CFunctions.GetMatrixFloat4x4 (obj, "matrix"), 0.0001f, "Matrix4x4-native 4");
 			}
+#endif
 		}
 			
 		[Test]

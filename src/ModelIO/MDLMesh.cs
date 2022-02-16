@@ -14,16 +14,15 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 using ObjCRuntime;
+#if NET
+using Vector2i = global::CoreGraphics.NVector2i;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector3i = global::CoreGraphics.NVector3i;
+#else
 using Vector2i = global::OpenTK.Vector2i;
-using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector3i = global::OpenTK.Vector3i;
-using Vector4 = global::OpenTK.Vector4;
-using Matrix2 = global::OpenTK.Matrix2;
-using Matrix3 = global::OpenTK.Matrix3;
-using Matrix4 = global::OpenTK.Matrix4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+#endif
 
 #nullable enable
 

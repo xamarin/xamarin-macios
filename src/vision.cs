@@ -19,9 +19,15 @@ using Metal;
 using ObjCRuntime;
 using ImageIO;
 
-using Matrix3 = global::OpenTK.NMatrix3;
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Matrix3 = global::CoreGraphics.NMatrix3;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
+using Matrix3 = global::OpenTK.NMatrix3;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;

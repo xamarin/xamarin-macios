@@ -2042,15 +2042,24 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ItemGroup>
 			<!-- Compute the relative path of the item in the app bundle -->
 			<_CodesignItems>
-				<CodesignRelativeAppBundlePath>$([System.String]::new('%(Identity)')).Substring($([System.String]::new('%(Identity)')).LastIndexOf('.app/')+5)</CodesignRelativeAppBundlePath>
+				<CodesignRelativeAppBundlePath>$([System.String]::new('%(Identity)').Substring($([MSBuild]::Add($([System.String]::new('%(Identity)').LastIndexOf('.app/')),5))))</CodesignRelativeAppBundlePath>
 			</_CodesignItems>
 			<!-- Set CodesignStampPath if it's not set already -->
-			<_CodesignItems>
-				<CodesignStampPath Condition="'%(_CodesignItems.CodesignStampPath)' == ''">$(DeviceSpecificIntermediateOutputPath)codesign\</CodesignStampPath>
+			<_CodesignItems Condition="'%(_CodesignItems.CodesignStampPath)' == ''">
+				<CodesignStampPath>$(DeviceSpecificIntermediateOutputPath)codesign\</CodesignStampPath>
+				<IsInputDirectory Condition="Exists('%(_CodesignItems.Identity)') And !$([System.IO.File]::Exists('%(_CodesignItems.Identity)'))">true</IsInputDirectory>
 			</_CodesignItems>
 			<!-- Set CodesignStampFile if it's not set already -->
-			<_CodesignItems>
-				<CodesignStampFile Condition="'%(_CodesignItems.CodesignStampFile)' == ''">%(_CodesignItems.CodesignStampPath)\%(_CodesignItems.CodesignRelativeAppBundlePath)</CodesignStampFile>
+			<!-- Don't use a directory as a stamp file, instead use a file inside that directory -->
+			<!-- This checks if the input is a directory, because we can't check if the stamp location might be (it might not exist yet) -->
+			<!-- Unfortunately System.IO.Directory.Exists can't be called from MSBuild, so we combine two other methods:
+				1. The built-in 'Exists' condition returns true if the input is either a file or a directory (and it exists)
+				2. We can call System.IO.File.Exists, which only returns true if the input is a file (and it exists).
+				3. So we can determine that the input is a directory, if the built-in 'Exists' return true, but System.IO.File.Exists return false
+			-->
+			<_CodesignItems Condition="'%(_CodesignItems.CodesignStampFile)' == ''">
+				<CodesignStampFile Condition="'%(_CodesignItems.IsInputDirectory)' != 'true'">%(_CodesignItems.CodesignStampPath)\%(_CodesignItems.CodesignRelativeAppBundlePath)</CodesignStampFile>
+				<CodesignStampFile Condition="'%(_CodesignItems.IsInputDirectory)' == 'true'">%(_CodesignItems.CodesignStampPath)\%(_CodesignItems.CodesignRelativeAppBundlePath)\.directory-stamp</CodesignStampFile>
 			</_CodesignItems>
 		</ItemGroup>
 	</Target>

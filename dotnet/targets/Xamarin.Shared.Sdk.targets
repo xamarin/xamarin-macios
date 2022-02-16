@@ -138,6 +138,9 @@
 		<_AggressiveAttributeTrimming Condition="'$(_AggressiveAttributeTrimming)' == ''">true</_AggressiveAttributeTrimming>		
 		<NullabilityInfoContextSupport Condition="'$(NullabilityInfoContextSupport)' == ''">false</NullabilityInfoContextSupport>
 		<BuiltInComInteropSupport Condition="'$(BuiltInComInteropSupport)' == ''">false</BuiltInComInteropSupport>
+		<!-- Verify DI trimmability at development-time, but turn the validation off for production/trimmed builds. -->
+		<VerifyDependencyInjectionOpenGenericServiceTrimmability Condition="'$(VerifyDependencyInjectionOpenGenericServiceTrimmability)' == '' And '$(_BundlerDebug)' != 'true'">false</VerifyDependencyInjectionOpenGenericServiceTrimmability>
+		<VerifyDependencyInjectionOpenGenericServiceTrimmability Condition="'$(VerifyDependencyInjectionOpenGenericServiceTrimmability)' == ''">true</VerifyDependencyInjectionOpenGenericServiceTrimmability>
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
@@ -447,6 +450,7 @@
 				AssemblyName=$(AssemblyName).dll
 				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
+				AppBundleManifestPath=$(_AppBundleManifestPath)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
 				Debug=$(_BundlerDebug)
@@ -460,6 +464,7 @@
 				IntermediateLinkDir=$(IntermediateLinkDir)
 				InvariantGlobalization=$(InvariantGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
+				IsAppExtension=$(IsAppExtension)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LibMonoLinkMode=$(_LibMonoLinkMode)
 				LibXamarinLinkMode=$(_LibXamarinLinkMode)
@@ -1177,7 +1182,7 @@
 	</PropertyGroup>
 
 	<Target Name="_ComputePublishLocation"
-		DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries"
+		DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries;_DetectSigningIdentity;_PrepareResourceRules"
 		Condition="'$(_CanOutputAppBundle)' == 'true'"
 		>
 		<PropertyGroup>
@@ -1266,8 +1271,8 @@
 
 			<!-- Put the 'createdump' executable in the expected location in the app bundle when using CoreCLR -->
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/11432 -->
-			<ResolvedFileToPublish
-				Update="@(ResolvedFileToPublish)"
+			<_CreateDumpExecutable
+				Include="@(ResolvedFileToPublish)"
 				Condition=" '$(UseMonoRuntime)' == 'false' And
 				            '%(ResolvedFileToPublish.Filename)' == 'createdump' And
 				            '%(ResolvedFileToPublish.Extension)' == '' And
@@ -1277,6 +1282,18 @@
 				            "
 				PublishFolderType="Assembly"
 			/>
+			<ResolvedFileToPublish Remove="@(_CreateDumpExecutable)" />
+			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" />
+			<!-- The 'createdump' executable must be signed. -->
+			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/13417 -->
+			<_CodesignItems Include="@(_CreateDumpExecutable)" Condition="'$(_RequireCodeSigning)' == 'true'">
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<CodesignDisableTimestamp Condition="'$(_BundlerDebug)' == 'true'">true</CodesignDisableTimestamp>
+				<CodesignExtraArgs>$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
+				<CodesignResourceRules>$(_PreparedResourceRules)</CodesignResourceRules>
+				<CodesignSigningKey>$(_CodeSigningKey)</CodesignSigningKey>
+			</_CodesignItems>
 
 			<!-- Remove any dylibs Mono told us not to link with -->
 			<ResolvedFileToPublish

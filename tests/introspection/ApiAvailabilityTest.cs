@@ -471,6 +471,31 @@ namespace Introspection {
 		protected virtual bool SkipUnavailable (Type type, string memberName)
 		{
 			switch (type.FullName) {
+#if __MACOS__
+				case "AppKit.NSDrawer":
+					switch (memberName) {
+					case "AccessibilityChildrenInNavigationOrder":
+					case "get_AccessibilityChildrenInNavigationOrder":
+					case "set_AccessibilityChildrenInNavigationOrder":
+					case "AccessibilityCustomActions":
+					case "get_AccessibilityCustomActions":
+					case "set_AccessibilityCustomActions":
+					case "AccessibilityCustomRotors":
+					case "get_AccessibilityCustomRotors":
+					case "set_AccessibilityCustomRotors":
+						// NSDrawer was deprecated in macOS 10.13, but implements (and inlines) NSAccessibility, which added several new members in macOS 10.13, so ignore those members here.
+						return true;
+					}
+					break;
+				case "GLKit.GLKTextureLoader":
+					switch (memberName) {
+					case "GrayscaleAsAlpha":
+					case "get_GrayscaleAsAlpha":
+						// GLKTextureLoader is deprecated, but the GLKTextureLoaderGrayscaleAsAlpha value, which we've put inside the GLKTextureLoader class, isn't.
+						return true;
+					}
+					break;
+#endif
 #if __MACCATALYST__
 				case "AudioUnit.AudioComponent":
 					switch (memberName) {

@@ -323,6 +323,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     separately) allow, so `latest` it is.
 		-->
 		<LangVersion>latest</LangVersion>
+
+		<!-- Default NoBindingEmbedding to 'true' for .NET projects, it's the new way -->
+		<NoBindingEmbedding Condition="'$(NoBindingEmbedding)' == '' And '$(UsingAppleNETSdk)' == 'true'">true</NoBindingEmbedding>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">

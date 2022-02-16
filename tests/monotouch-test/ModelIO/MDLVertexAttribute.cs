@@ -19,8 +19,14 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
+
+#if NET
+using System.Numerics;
+#else
+using CoreGraphics;
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO {
 
