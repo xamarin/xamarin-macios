@@ -188,12 +188,6 @@ namespace ObjCRuntime {
 			return Messaging.IntPtr_objc_msgSend (obj, Selector.GetHandle (Selector.Class));
 		}
 
-		internal static string? LookupFullName (IntPtr klass)
-		{
-			var type = Lookup (klass);
-			return type?.FullName;
-		}
-
 		public static Type? Lookup (Class? @class)
 		{
 			if (@class is null)

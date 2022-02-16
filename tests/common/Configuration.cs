@@ -648,26 +648,57 @@ namespace Xamarin.Tests
 
 		static string GetBaseLibraryName (TargetFramework targetFramework)
 		{
-			return GetBaseLibraryName (targetFramework.Platform);
+			return GetBaseLibraryName (targetFramework.Platform, targetFramework.IsDotNet);
 		}
 
-		public static string GetBaseLibraryName (ApplePlatform platform)
+		public static string GetBaseLibraryName (ApplePlatform platform, bool isDotNet)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return "Xamarin.iOS.dll";
+				return isDotNet ? "Microsoft.iOS.dll" : "Xamarin.iOS.dll";
 			case ApplePlatform.TVOS:
-				return "Xamarin.TVOS.dll";
+				return isDotNet ? "Microsoft.tvOS.dll" : "Xamarin.TVOS.dll";
 			case ApplePlatform.WatchOS:
-				return "Xamarin.WatchOS.dll";
+				return isDotNet ? "Microsoft.watchOS.dll" : "Xamarin.WatchOS.dll";
 			case ApplePlatform.MacOSX:
-				return "Xamarin.Mac.dll";
+				return isDotNet ? "Microsoft.macOS.dll" : "Xamarin.Mac.dll";
 			case ApplePlatform.MacCatalyst:
-				return "Xamarin.MacCatalyst.dll";
+				return isDotNet ? "Microsoft.MacCatalyst.dll" : "Xamarin.MacCatalyst.dll";
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
 		}
+
+		public static ApplePlatform GetPlatform (string assemblyName, bool isDotNet)
+		{
+			if (isDotNet) {
+				switch (Path.GetFileNameWithoutExtension (assemblyName)) {
+				case "Microsoft.iOS":
+					return ApplePlatform.iOS;
+				case "Microsoft.MacCatalyst":
+					return ApplePlatform.MacCatalyst;
+				case "Microsoft.tvOS":
+					return ApplePlatform.TVOS;
+				case "Microsoft.macOS":
+					return ApplePlatform.MacOSX;
+				default:
+					throw new NotSupportedException ($"Unknown assembly: {assemblyName}");
+				}
+			} else {
+				switch (Path.GetFileNameWithoutExtension (assemblyName)) {
+				case "Xamarin.iOS":
+					return ApplePlatform.iOS;
+				case "Xamarin.WatchOS":
+					return ApplePlatform.WatchOS;
+				case "Xamarin.TVOS":
+					return ApplePlatform.TVOS;
+				case "Xamarin.Mac":
+					return ApplePlatform.MacOSX;
+				default:
+					throw new NotSupportedException ($"Unknown assembly: {assemblyName}");
+				}
+			}
+		}		
 
 		public static string GetBaseLibrary (TargetFramework targetFramework)
 		{
@@ -730,7 +761,7 @@ namespace Xamarin.Tests
 			var runtimeIdentifiers = GetRuntimeIdentifiers (platform);
 			foreach (var rid in runtimeIdentifiers) {
 				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
-				yield return Path.Combine (libdir, GetBaseLibraryName (platform));
+				yield return Path.Combine (libdir, GetBaseLibraryName (platform, true));
 			}
 		}
 
@@ -738,7 +769,7 @@ namespace Xamarin.Tests
 		public static IEnumerable<string> GetRefLibraries ()
 		{
 			foreach (var platform in GetIncludedPlatforms (true))
-				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform));
+				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, true));
 		}
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)

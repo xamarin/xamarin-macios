@@ -7,13 +7,13 @@
 using System;
 using System.Collections.Generic;
 
-#if !BUNDLER
+#if !BUNDLER && !TESTS
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 
 #nullable enable
 
-#if BUNDLER || MSBUILD_TASKS
+#if BUNDLER || MSBUILD_TASKS || TESTS
 namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {

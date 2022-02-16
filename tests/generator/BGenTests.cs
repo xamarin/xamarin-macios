@@ -688,12 +688,16 @@ namespace GeneratorTests
 		[Test]
 		public void DisposeAttributeOptimizable ()
 		{
-			var bgen = BuildFile (Profile.iOS, "tests/dispose-attribute.cs");
+			var profile = Profile.iOS;
+			var bgen = BuildFile (profile, "tests/dispose-attribute.cs");
 
 			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
-			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+#if NET
+			resolver.AddSearchDirectory (Configuration.GetRefDirectory (profile.AsPlatform ()));
+#else
 			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+#endif
 
 			// [Dispose] is, by default, not optimizable
 			var with_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDispose").Methods.First ((v) => v.Name == "Dispose");
@@ -714,12 +718,16 @@ namespace GeneratorTests
 		[Test]
 		public void SnippetAttributesOptimizable ()
 		{
-			var bgen = BuildFile (Profile.iOS, "tests/snippet-attributes.cs");
+			var profile = Profile.iOS;
+			var bgen = BuildFile (profile, "tests/snippet-attributes.cs");
 
 			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
-			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+#if NET
+			resolver.AddSearchDirectory (Configuration.GetRefDirectory (profile.AsPlatform ()));
+#else
 			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+#endif
 
 			// [SnippetAttribute] subclasses are, by default, not optimizable
 			var not_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "NotOptimizable");

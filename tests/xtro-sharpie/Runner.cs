@@ -37,11 +37,11 @@ namespace Extrospection {
 				var name = Path.GetFileNameWithoutExtension (assemblyName);
 				if (name.EndsWith (".iOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.iOS;
-				else if (name.EndsWith (".Mac", StringComparison.Ordinal))
+				else if (name.EndsWith (".Mac", StringComparison.Ordinal) || name.EndsWith (".macOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.macOS;
 				else if (name.EndsWith (".WatchOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.watchOS;
-				else if (name.EndsWith (".TVOS", StringComparison.Ordinal))
+				else if (name.EndsWith (".TVOS", StringComparison.Ordinal) || name.EndsWith (".tvOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.tvOS;
 				else if (name.EndsWith (".MacCatalyst", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.MacCatalyst;

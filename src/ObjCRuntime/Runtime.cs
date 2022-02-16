@@ -457,13 +457,13 @@ namespace ObjCRuntime {
 #else
 			ex = new MonoTouchException (Runtime.GetNSObject<NSException> (ns_exception)!);
 #endif
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr CreateRuntimeException (int code, IntPtr message)
 		{
 			var ex = ErrorHelper.CreateError (code, Marshal.PtrToStringAuto (message)!);
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr UnwrapNSException (IntPtr exc_handle)
@@ -827,7 +827,7 @@ namespace ObjCRuntime {
 			} else {
 				ex = ErrorHelper.CreateError (code, msg);
 			}
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr TypeGetFullName (IntPtr type) 
@@ -845,7 +845,7 @@ namespace ObjCRuntime {
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)
 		{
-			return Marshal.StringToHGlobalAuto (Class.LookupFullName (klass));
+			return Marshal.StringToHGlobalAuto (Class.Lookup (klass)?.FullName);
 		}
 #endregion
 
@@ -1206,7 +1206,11 @@ namespace ObjCRuntime {
 
 			var ctorArguments = new object [1];
 #if NET
-			ctorArguments [0] = new NativeHandle (ptr);
+			if (ctor.GetParameters () [0].ParameterType == typeof (IntPtr)) {
+				ctorArguments [0] = ptr;
+			} else {
+				ctorArguments [0] = new NativeHandle (ptr);
+			}
 #else
 			ctorArguments [0] = ptr;
 #endif
@@ -1232,7 +1236,11 @@ namespace ObjCRuntime {
 
 			var ctorArguments = new object [2];
 #if NET
-			ctorArguments [0] = new NativeHandle (ptr);
+			if (ctor.GetParameters () [0].ParameterType == typeof (IntPtr)) {
+				ctorArguments [0] = ptr;
+			} else {
+				ctorArguments [0] = new NativeHandle (ptr);
+			}
 #else
 			ctorArguments [0] = ptr;
 #endif
@@ -1253,11 +1261,17 @@ namespace ObjCRuntime {
 					return rv;
 			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+			ConstructorInfo? backupConstructor = null;
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
 				if (param.Length != 1)
 					continue;
 #if NET
+				if (param [0].ParameterType == typeof (IntPtr)) {
+					backupConstructor = ctors [i];
+					continue;
+				}
+
 				if (param [0].ParameterType != typeof (NativeHandle))
 #else
 				if (param [0].ParameterType != typeof (IntPtr))
@@ -1268,6 +1282,16 @@ namespace ObjCRuntime {
 					intptr_ctor_cache [type] = ctors [i];
 				return ctors [i];
 			}
+
+#if NET
+			if (backupConstructor is not null) {
+				Console.WriteLine ("The type {0} does not have a constructor that takes an ObjCRuntime.NativeHandle parameter, but a constructor that takes an System.IntPtr parameter was found instead. It's highly recommended to change the signature of the System.IntPtr constructor to be ObjCRuntime.NativeHandle instead.", type.FullName);
+				lock (intptr_ctor_cache)
+					intptr_ctor_cache [type] = backupConstructor;
+				return backupConstructor;
+			}
+#endif
+
 			return null;
 		}
 
@@ -1278,23 +1302,40 @@ namespace ObjCRuntime {
 					return rv;
 			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+			ConstructorInfo? backupConstructor = null;
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
 				if (param.Length != 2)
 					continue;
+
+				if (param [1].ParameterType != typeof (bool))
+					continue;
 #if NET
+				if (param [0].ParameterType == typeof (IntPtr)) {
+					backupConstructor = ctors [i];
+					continue;
+				}
+
 				if (param [0].ParameterType != typeof (NativeHandle))
 #else
 				if (param [0].ParameterType != typeof (IntPtr))
 #endif
-					continue;
-				if (param [1].ParameterType != typeof (bool))
 					continue;
 
 				lock (intptr_bool_ctor_cache)
 					intptr_bool_ctor_cache [type] = ctors [i];
 				return ctors [i];
 			}
+
+#if NET
+			if (backupConstructor is not null) {
+				Console.WriteLine ("The type {0} does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) parameters was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).", type.FullName);
+				lock (intptr_bool_ctor_cache)
+					intptr_bool_ctor_cache [type] = backupConstructor;
+				return backupConstructor;
+			}
+#endif
+
 			return null;
 		}
 
@@ -1953,9 +1994,9 @@ namespace ObjCRuntime {
 		}
 
 		// Allocate a GCHandle and return the IntPtr to it.
-		internal static IntPtr AllocGCHandle (object? value)
+		internal static IntPtr AllocGCHandle (object? value, GCHandleType type = GCHandleType.Normal)
 		{
-			return GCHandle.ToIntPtr (GCHandle.Alloc (value));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (value, type));
 		}
 
 #if __MACCATALYST__
