@@ -5,9 +5,14 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using SpriteKit;
-using OpenTK;
 using NUnit.Framework;
 using Xamarin.Utils;
+
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.SpriteKit {
 
@@ -36,4 +41,5 @@ namespace MonoTouchFixtures.SpriteKit {
 	}
 }
 
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__;
+

@@ -7,8 +7,13 @@ using Foundation;
 using ObjCRuntime;
 using NearbyInteraction;
 using NUnit.Framework;
-using OpenTK;
 using Xamarin.Utils;
+
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.NearbyInteraction {
 

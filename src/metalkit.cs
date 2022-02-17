@@ -6,8 +6,6 @@ using Metal;
 using ModelIO;
 using ObjCRuntime;
 
-using OpenTK;
-
 #if MONOMAC
 using AppKit;
 #endif

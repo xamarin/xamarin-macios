@@ -6,8 +6,12 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 #if !COREBUILD
-using OpenTK;
-#endif
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+#else
+using Vector3 = global::OpenTK.Vector3;
+#endif // NET
+#endif // !COREBUILD
 using CoreGraphics;
 using ObjCRuntime;
 

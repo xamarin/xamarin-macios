@@ -26,6 +26,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
+#if !NET
 namespace OpenTK
 {
     /// <summary>Represents a 4D vector using four single-precision floating-point numbers.</summary>
@@ -1212,3 +1213,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif

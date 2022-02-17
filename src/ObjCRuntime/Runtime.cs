@@ -220,17 +220,17 @@ namespace ObjCRuntime {
 			var watch = new Stopwatch ();
 #endif
 			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
-				string msg = "Version mismatch between the native " + ProductName + " runtime and " + AssemblyName + ". Please reinstall " + ProductName + ".";
+				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
 #if MONOMAC
 				try {
 					// Print out where Xamarin.Mac.dll and the native runtime was loaded from.
-					NSLog (AssemblyName + " was loaded from {0}", typeof (nint).Assembly.Location);
+					NSLog ($"{AssemblyName} was loaded from {typeof (NSObject).Assembly.Location}");
 
 					var sym2 = Dlfcn.dlsym (Dlfcn.RTLD.Default, "xamarin_initialize");
 					Dlfcn.Dl_info info2;
 					if (Dlfcn.dladdr (sym2, out info2) == 0) {
-						NSLog ("The native runtime was loaded from {0}", Marshal.PtrToStringAuto (info2.dli_fname));
+						NSLog ($"The native runtime was loaded from {Marshal.PtrToStringAuto (info2.dli_fname)}");
 					} else if (Dlfcn.dlsym (Dlfcn.RTLD.MainOnly, "xamarin_initialize") != IntPtr.Zero) {
 						var buf = new byte [128];
 						int length = buf.Length;
@@ -246,7 +246,7 @@ namespace ObjCRuntime {
 							var str_length = 0;
 							for (int i = 0; i < buf.Length && buf [i] != 0; i++)
 								str_length++;
-							NSLog ("The native runtime was loaded from {0}", System.Text.Encoding.UTF8.GetString (buf, 0, str_length));
+							NSLog ($"The native runtime was loaded from {Encoding.UTF8.GetString (buf, 0, str_length)}");
 						}
 					} else {
 						NSLog ("Could not find out where the native runtime was loaded from.");
@@ -457,13 +457,13 @@ namespace ObjCRuntime {
 #else
 			ex = new MonoTouchException (Runtime.GetNSObject<NSException> (ns_exception)!);
 #endif
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr CreateRuntimeException (int code, IntPtr message)
 		{
 			var ex = ErrorHelper.CreateError (code, Marshal.PtrToStringAuto (message)!);
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr UnwrapNSException (IntPtr exc_handle)
@@ -613,7 +613,7 @@ namespace ObjCRuntime {
 				catch (FileNotFoundException fefe) {
 					// that's more important for XI because device builds don't go thru this step
 					// and we can end up with simulator-only failures - bug #29211
-					NSLog ("Could not find `{0}` referenced by assembly `{1}`.", fefe.FileName, assembly.FullName);
+					NSLog ($"Could not find `{fefe.FileName}` referenced by assembly `{assembly.FullName}`.");
 #if MONOMAC && !NET
 					if (!NSApplication.IgnoreMissingAssembliesDuringRegistration)
 						throw;
@@ -827,7 +827,7 @@ namespace ObjCRuntime {
 			} else {
 				ex = ErrorHelper.CreateError (code, msg);
 			}
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal));
+			return AllocGCHandle (ex);
 		}
 
 		static IntPtr TypeGetFullName (IntPtr type) 
@@ -845,7 +845,7 @@ namespace ObjCRuntime {
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)
 		{
-			return Marshal.StringToHGlobalAuto (Class.LookupFullName (klass));
+			return Marshal.StringToHGlobalAuto (Class.Lookup (klass)?.FullName);
 		}
 #endregion
 
@@ -1206,7 +1206,11 @@ namespace ObjCRuntime {
 
 			var ctorArguments = new object [1];
 #if NET
-			ctorArguments [0] = new NativeHandle (ptr);
+			if (ctor.GetParameters () [0].ParameterType == typeof (IntPtr)) {
+				ctorArguments [0] = ptr;
+			} else {
+				ctorArguments [0] = new NativeHandle (ptr);
+			}
 #else
 			ctorArguments [0] = ptr;
 #endif
@@ -1232,7 +1236,11 @@ namespace ObjCRuntime {
 
 			var ctorArguments = new object [2];
 #if NET
-			ctorArguments [0] = new NativeHandle (ptr);
+			if (ctor.GetParameters () [0].ParameterType == typeof (IntPtr)) {
+				ctorArguments [0] = ptr;
+			} else {
+				ctorArguments [0] = new NativeHandle (ptr);
+			}
 #else
 			ctorArguments [0] = ptr;
 #endif
@@ -1253,11 +1261,17 @@ namespace ObjCRuntime {
 					return rv;
 			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+			ConstructorInfo? backupConstructor = null;
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
 				if (param.Length != 1)
 					continue;
 #if NET
+				if (param [0].ParameterType == typeof (IntPtr)) {
+					backupConstructor = ctors [i];
+					continue;
+				}
+
 				if (param [0].ParameterType != typeof (NativeHandle))
 #else
 				if (param [0].ParameterType != typeof (IntPtr))
@@ -1268,6 +1282,16 @@ namespace ObjCRuntime {
 					intptr_ctor_cache [type] = ctors [i];
 				return ctors [i];
 			}
+
+#if NET
+			if (backupConstructor is not null) {
+				Console.WriteLine ("The type {0} does not have a constructor that takes an ObjCRuntime.NativeHandle parameter, but a constructor that takes an System.IntPtr parameter was found instead. It's highly recommended to change the signature of the System.IntPtr constructor to be ObjCRuntime.NativeHandle instead.", type.FullName);
+				lock (intptr_ctor_cache)
+					intptr_ctor_cache [type] = backupConstructor;
+				return backupConstructor;
+			}
+#endif
+
 			return null;
 		}
 
@@ -1278,23 +1302,40 @@ namespace ObjCRuntime {
 					return rv;
 			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+			ConstructorInfo? backupConstructor = null;
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
 				if (param.Length != 2)
 					continue;
+
+				if (param [1].ParameterType != typeof (bool))
+					continue;
 #if NET
+				if (param [0].ParameterType == typeof (IntPtr)) {
+					backupConstructor = ctors [i];
+					continue;
+				}
+
 				if (param [0].ParameterType != typeof (NativeHandle))
 #else
 				if (param [0].ParameterType != typeof (IntPtr))
 #endif
-					continue;
-				if (param [1].ParameterType != typeof (bool))
 					continue;
 
 				lock (intptr_bool_ctor_cache)
 					intptr_bool_ctor_cache [type] = ctors [i];
 				return ctors [i];
 			}
+
+#if NET
+			if (backupConstructor is not null) {
+				Console.WriteLine ("The type {0} does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) parameters was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).", type.FullName);
+				lock (intptr_bool_ctor_cache)
+					intptr_bool_ctor_cache [type] = backupConstructor;
+				return backupConstructor;
+			}
+#endif
+
 			return null;
 		}
 
@@ -1756,11 +1797,6 @@ namespace ObjCRuntime {
 			}
 		}
 
-		internal static void NSLog (string format, params object?[] args)
-		{
-			NSLog (string.Format (format, args));
-		}
-
 		internal static string ToFourCCString (uint value)
 		{
 			return ToFourCCString (unchecked((int) value));
@@ -1958,9 +1994,9 @@ namespace ObjCRuntime {
 		}
 
 		// Allocate a GCHandle and return the IntPtr to it.
-		internal static IntPtr AllocGCHandle (object? value)
+		internal static IntPtr AllocGCHandle (object? value, GCHandleType type = GCHandleType.Normal)
 		{
-			return GCHandle.ToIntPtr (GCHandle.Alloc (value));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (value, type));
 		}
 
 #if __MACCATALYST__

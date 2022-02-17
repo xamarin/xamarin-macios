@@ -44,6 +44,8 @@ using vImagePixelCount = System.IntPtr;
 using vImagePixelCount = System.nint;
 #endif
 
+#nullable enable
+
 namespace Accelerate {
 	// vImage_Buffer - vImage_Types.h
 	[StructLayout(LayoutKind.Sequential)]
@@ -271,12 +273,12 @@ namespace Accelerate {
 									Pixel8888 backgroundColor, 
 									vImageFlags flags)
 		{
-			if (kernels == null)
-				throw new ArgumentNullException ("kernels");
-			if (divisors == null)
-				throw new ArgumentNullException ("divisors");
-			if (biases == null)
-				throw new ArgumentNullException ("biases");
+			if (kernels is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
+			if (divisors is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (divisors));
+			if (biases is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
 			if (divisors.Length < 4)
@@ -327,10 +329,10 @@ namespace Accelerate {
 								       PixelFFFF backgroundColor,
 								       vImageFlags flags)
 		{
-			if (kernels == null)
-				throw new ArgumentNullException ("kernels");
-			if (biases == null)
-				throw new ArgumentNullException ("biases");
+			if (kernels is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
+			if (biases is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
 			if (biases.Length < 4)
@@ -425,8 +427,8 @@ namespace Accelerate {
 									ref vImageBuffer dest,
 									short [] matrix, // matrix is [4*4],
 									int divisor,
-									short [] pre_bias,      //Must be an array of 4 int16_t's. NULL is okay. 
-									int [] post_bias,     //Must be an array of 4 int32_t's. NULL is okay. 
+									short []? pre_bias,      //Must be an array of 4 int16_t's. NULL is okay.
+									int []? post_bias,     //Must be an array of 4 int32_t's. NULL is okay.
 									vImageFlags flags );
 
 		public static vImageError MatrixMultiplyARGB8888 (ref vImageBuffer src,
@@ -437,12 +439,12 @@ namespace Accelerate {
 								   int [] post_bias,     //Must be an array of 4 int32_t's. NULL is okay. 
 								   vImageFlags flags)
 		{
-			if (matrix == null)
-				throw new ArgumentNullException ("matrix");
-			if (pre_bias != null && pre_bias.Length != 4)
-				throw new ArgumentException ("Must have four elements", "pre_bias");
-			if (post_bias != null && post_bias.Length != 4)
-				throw new ArgumentException ("Must have four elements", "post_bias");
+			if (matrix is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (matrix));
+			if (pre_bias is not null && pre_bias.Length != 4)
+				throw new ArgumentException ("Must have four elements", nameof (pre_bias));
+			if (post_bias is not null && post_bias.Length != 4)
+				throw new ArgumentException ("Must have four elements", nameof (post_bias));
 			return (vImageError) (long) vImageMatrixMultiply_ARGB8888 (ref src, ref dest, matrix, divisor, pre_bias, post_bias, flags);
 		}
 
