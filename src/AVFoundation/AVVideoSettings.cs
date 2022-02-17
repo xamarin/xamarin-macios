@@ -351,7 +351,7 @@ namespace AVFoundation {
 			}
 
 			set {
-				SetNativeValue (AVVideo.CompressionPropertiesKey, value is null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.CompressionPropertiesKey, value?.Dictionary);
 			}
 		}
 #endif
@@ -503,7 +503,7 @@ namespace AVFoundation {
 			}
 
 			set {
-				SetNativeValue (AVVideo.PixelAspectRatioKey, value is null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.PixelAspectRatioKey, value?.Dictionary);
 			}
 		}
 
@@ -516,7 +516,7 @@ namespace AVFoundation {
 			}
 
 			set {
-				SetNativeValue (AVVideo.CleanApertureKey, value is null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.CleanApertureKey, value?.Dictionary);
 			}			
 		} 
 #endif
