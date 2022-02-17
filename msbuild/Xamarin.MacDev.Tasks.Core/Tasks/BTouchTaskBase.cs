@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using Microsoft.Build.Framework;
@@ -21,6 +22,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public string BTouchToolExe { get; set; }
+
+		public ITaskItem[] CompileCommand { get; set; }
 
 		public ITaskItem[] ObjectiveCLibraries { get; set; }
 
@@ -142,6 +145,9 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (AllowUnsafeBlocks)
 				cmd.Add ("/unsafe");
+
+			if (CompileCommand?.Length > 0)
+				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (CompileCommand.Select (v => v.ItemSpec).ToArray ())));
 
 			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
 
