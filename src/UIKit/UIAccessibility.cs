@@ -326,19 +326,15 @@ namespace UIKit {
 			}
 		}
 
-#if NET
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("tvos")]
-#else
+#if !NET
 		[iOS (8,0)]
-#endif
 		[Obsolete ("Use 'DarkerSystemColorsEnabled' instead.")]
 		public static bool DarkerSystemColosEnabled {
 			get {
 				return UIAccessibilityDarkerSystemColorsEnabled ();
 			}
 		}
+#endif
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
