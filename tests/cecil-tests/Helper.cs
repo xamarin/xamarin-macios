@@ -19,7 +19,7 @@ namespace Cecil.Tests {
 		static Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition> ();
 
 		// make sure we load assemblies only once into memory
-		public static AssemblyDefinition? GetAssembly (string assembly, ReaderParameters? parameters = null)
+		public static AssemblyDefinition? GetAssembly (string assembly, ReaderParameters? parameters = null, bool readSymbols = false)
 		{
 			if (!File.Exists (assembly))
 				return null;
@@ -29,6 +29,7 @@ namespace Cecil.Tests {
 					resolver.AddSearchDirectory (GetBCLDirectory (assembly));
 					parameters = new ReaderParameters () {
 						AssemblyResolver = resolver,
+						ReadSymbols = readSymbols,
 					};
 				}
 
@@ -178,6 +179,8 @@ namespace Cecil.Tests {
 		}
 
 		public static IEnumerable NetPlatformAssemblies => Configuration.GetRefLibraries ();
+
+		public static IEnumerable NetPlatformImplementationAssemblies => Configuration.GetBaseLibraryImplementations ();
 
 		public static IEnumerable TaskAssemblies {
 			get {
