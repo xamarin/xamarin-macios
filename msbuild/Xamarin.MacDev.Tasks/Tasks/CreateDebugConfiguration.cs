@@ -1,9 +1,9 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
-	public class CreateDebugSettings : CreateDebugSettingsTaskBase, ICancelableTask
+	public class CreateDebugConfiguration : CreateDebugConfigurationTaskBase, ICancelableTask
 	{
 		public override bool Execute ()
 		{
