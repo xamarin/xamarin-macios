@@ -65,8 +65,8 @@ namespace ObjCRuntime {
 		{
 			this.handle = objc_getClass (name);
 
-			if (this.handle == IntPtr.Zero)
-				throw new ArgumentException (String.Format ("'{0}' is an unknown class", name));
+			if (handle == NativeHandle.Zero)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (name), "Unknown class");
 		}
 
 		public Class (Type type)
@@ -94,7 +94,7 @@ namespace ObjCRuntime {
 			get { return this.handle; }
 		}
 
-		public IntPtr SuperClass {
+		public NativeHandle SuperClass {
 			get { return class_getSuperclass (Handle); }
 		}
 
