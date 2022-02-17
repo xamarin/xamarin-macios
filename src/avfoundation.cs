@@ -9060,62 +9060,69 @@ namespace AVFoundation {
 		[Export ("isVideoOrientationSupported")]
 		bool SupportsVideoOrientation { get; }
 
-		[Export ("supportsVideoMinFrameDuration"), Internal]
-		bool _SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get;  }
+		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Export ("supportsVideoMinFrameDuration")]
+		bool SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get; }
 
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set;  }
-#if !MONOMAC
-		[Export ("supportsVideoMaxFrameDuration"), Internal]
-		bool _SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get;  }
+
+		[Export ("supportsVideoMaxFrameDuration")]
+		bool SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get; }
 
 		[Export ("videoMaxFrameDuration")]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)] 
 		CMTime VideoMaxFrameDuration { get; set;  }
 
+		[NoMac]
 		[Export ("videoMaxScaleAndCropFactor")]
 		nfloat VideoMaxScaleAndCropFactor { get;  }
 
+		[NoMac]
 		[Export ("videoScaleAndCropFactor")]
 		nfloat VideoScaleAndCropFactor { get; set;  }
-#endif
+
 		[NullAllowed]
 		[Export ("videoPreviewLayer")]
 		AVCaptureVideoPreviewLayer VideoPreviewLayer { get;  }
 
 		[Export ("automaticallyAdjustsVideoMirroring")]
 		bool AutomaticallyAdjustsVideoMirroring { get; set;  }
-#if !MONOMAC
+
+		[NoMac]
 		[Export ("supportsVideoStabilization")]
 		bool SupportsVideoStabilization { [Bind ("isVideoStabilizationSupported")] get;  }
 
+		[NoMac]
 		[Export ("videoStabilizationEnabled")]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'ActiveVideoStabilizationMode' instead.")]
 		bool VideoStabilizationEnabled { [Bind ("isVideoStabilizationEnabled")] get;  }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PreferredVideoStabilizationMode' instead.")]
 		[Export ("enablesVideoStabilizationWhenAvailable")]
 		bool EnablesVideoStabilizationWhenAvailable { get; set;  }
 
+		[NoMac]
 		[iOS (8,0)]
 		[Export ("preferredVideoStabilizationMode")]
 		AVCaptureVideoStabilizationMode PreferredVideoStabilizationMode { get; set; }
 
+		[NoMac]
 		[iOS (8,0)]
 		[Export ("activeVideoStabilizationMode")]
 		AVCaptureVideoStabilizationMode ActiveVideoStabilizationMode { get; }
-#endif
+
 		[Unavailable (PlatformName.MacCatalyst)]
 		[NoiOS]
 		[Export ("supportsVideoFieldMode")]
 		bool SupportsVideoFieldMode { [Bind ("isVideoFieldModeSupported")] get; }
 
-#if MONOMAC
+		[NoiOS]
 		[Unavailable (PlatformName.MacCatalyst)]
 		[Export ("videoFieldMode")]
 		AVVideoFieldMode VideoFieldMode { get; set; }
-#endif
 
 		[iOS (11, 0), NoMac, TV (11, 0), NoWatch]
 		[Export ("cameraIntrinsicMatrixDeliverySupported")]
