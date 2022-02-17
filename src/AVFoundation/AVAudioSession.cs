@@ -96,14 +96,13 @@ namespace AVFoundation {
 		
 		public NSError? SetCategory (AVAudioSessionCategory category)
 		{
-			var token = CategoryToToken (category);
-			return token is not null ? SetCategory (token) : null;
+			return SetCategory (CategoryToToken (category)!);
 		}
 
 		public NSError? SetCategory (AVAudioSessionCategory category, AVAudioSessionCategoryOptions options)
 		{
 			NSError error;
-			if (SetCategory (CategoryToToken (category), options, out error))
+			if (SetCategory (CategoryToToken (category)!, options, out error))
 				return null;
 			return error;
 		}
