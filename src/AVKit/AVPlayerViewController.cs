@@ -22,9 +22,7 @@ namespace AVKit {
 				return AVPlayerLayer.KeyToEnum (WeakVideoGravity);
 			}
 			set {
-				var val = AVPlayerLayer.EnumToKey (value);
-				if (val is not null)
-					WeakVideoGravity = val;
+				WeakVideoGravity = AVPlayerLayer.EnumToKey (value)!;
 			}
 		}
 	}
