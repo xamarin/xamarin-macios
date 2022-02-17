@@ -78,8 +78,7 @@ namespace AVFoundation {
 		public AVLayerVideoGravity VideoGravity
 		{
 			set {
-				if (EnumToKey (value) is NSString val)
-					WeakVideoGravity = val;
+				WeakVideoGravity = EnumToKey (value)!;
 			}
 			get {
 				return KeyToEnum (WeakVideoGravity);
@@ -94,8 +93,7 @@ namespace AVFoundation {
 		public AVLayerVideoGravity VideoGravity
 		{
 			set {
-				if (AVPlayerLayer.EnumToKey (value) is NSString val)
-					WeakVideoGravity = val;
+				WeakVideoGravity = AVPlayerLayer.EnumToKey (value)!;
 			}
 			get {
 				return AVPlayerLayer.KeyToEnum (WeakVideoGravity);
@@ -108,8 +106,7 @@ namespace AVFoundation {
 	{
 		public AVLayerVideoGravity? ExternalPlaybackVideoGravity {
 			set {
-				if (value.HasValue && AVPlayerLayer.EnumToKey (value.Value) is NSString val)
-					WeakExternalPlaybackVideoGravity = val;
+				WeakExternalPlaybackVideoGravity = value.HasValue ? AVPlayerLayer.EnumToKey (value.Value)! : null!;
 			}
 			get {
 				var r = AVPlayerLayer.KeyToEnum (WeakExternalPlaybackVideoGravity, false);

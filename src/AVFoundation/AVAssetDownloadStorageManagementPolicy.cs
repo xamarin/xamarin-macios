@@ -20,12 +20,7 @@ namespace AVFoundation {
 		
 		public override AVAssetDownloadedAssetEvictionPriority Priority {
 			get { return AVAssetDownloadedAssetEvictionPriorityExtensions.GetValue (_Priority); }
-			set
-			{
-				var val = value.GetConstant ();
-				if (val is not null)
-					_Priority = val;
-			}
+			set { _Priority = value.GetConstant ()!; }
 		}
 	}
 }

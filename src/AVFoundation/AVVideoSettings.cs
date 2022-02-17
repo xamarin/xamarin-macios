@@ -83,7 +83,7 @@ namespace AVFoundation {
 		{
 		}
 
-		internal static AVVideoScalingMode? ScalingModeFromNSString (NSString k)
+		internal static AVVideoScalingMode? ScalingModeFromNSString (NSString? k)
 		{
 			if (k is null)
 				return null;
@@ -100,8 +100,7 @@ namespace AVFoundation {
 
 		public AVVideoScalingMode? ScalingMode {
 			get {
-				var val = GetNSStringValue (AVVideo.ScalingModeKey);
-				return val is not null ? ScalingModeFromNSString (val) : null;
+				return ScalingModeFromNSString (GetNSStringValue (AVVideo.ScalingModeKey));
 			}
 
 			set {

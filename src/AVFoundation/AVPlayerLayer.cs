@@ -33,7 +33,7 @@ namespace AVFoundation {
 				return null;
 			}
 			set {
-				WeakPixelBufferAttributes = value is not null ? value.Dictionary : null;
+				WeakPixelBufferAttributes = value?.Dictionary;
 			}
 		}
 	}

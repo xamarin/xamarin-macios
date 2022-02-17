@@ -86,11 +86,11 @@ namespace AVFoundation {
 		}
 
 #if !WATCH
-		public AVAudioDataSourcePolarPattern []SupportedPolarPatterns {
+		public AVAudioDataSourcePolarPattern []? SupportedPolarPatterns {
 			get {
 				var x = SupportedPolarPatterns_;
 				if (x is null)
-					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (x));
+					return null;
 
 				int n = x.Length;
 				var r = new AVAudioDataSourcePolarPattern [n];
