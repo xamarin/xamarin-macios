@@ -295,12 +295,10 @@ namespace SearchKit
 
 		protected override void Retain ()
 		{
-			throw new InvalidOperationException ();
 		}
 
 		protected override void Release ()
 		{
-			throw new InvalidOperationException ();
 		}
 
 		protected override void Dispose (bool disposing)
