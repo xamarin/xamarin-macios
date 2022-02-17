@@ -1566,6 +1566,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ApiDefinitions="@(ObjcBindingApiDefinition)"
 			AttributeAssembly="$(_GeneratorAttributeAssembly)"
 			BaseLibDll="$(BaseLibDllPath)"
+			CompileCommand="@(_BTouchCompileCommand)"
 			CoreSources="@(ObjcBindingCoreSource)"
 			DefineConstants="$(DefineConstants)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
