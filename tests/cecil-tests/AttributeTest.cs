@@ -182,8 +182,7 @@ namespace Cecil.Tests {
 			string ns;
 			if (fullName.Split (' ').Length < 2) {
 				ns = fullName.Split ('.').First ();
-			}
-			else {
+			} else {
 				// Skip the return type, then split namespace off
 				ns = fullName.Split (' ') [1].Split ('.').First ();
 			}
