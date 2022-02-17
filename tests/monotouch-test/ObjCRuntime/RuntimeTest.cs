@@ -527,9 +527,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if !MONOMAC // Failing with 10 broken
 		[TestCase (typeof (NSObject))]
-#endif
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
 		public void ResurrectedObjectsDisposedTest (Type type)
 		{
