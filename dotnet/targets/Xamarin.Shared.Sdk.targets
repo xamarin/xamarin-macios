@@ -10,6 +10,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FilterStaticFrameworks" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -99,11 +100,7 @@
 	
 	<PropertyGroup>
 		<!-- Add a property that specifies the name of the platform assembly for each platform -->
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_PlatformAssemblyName>
-		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'MacCatalyst' ">Xamarin.MacCatalyst</_PlatformAssemblyName>
+		<_PlatformAssemblyName>Microsoft.$(_PlatformName)</_PlatformAssemblyName>
 
 		<!-- We have to set DebuggerSupport before importing Microsoft.NET.Sdk -->
 		<!-- That means we have to set _BundlerDebug before that, because DebuggerSupport depends on it -->
@@ -671,7 +668,7 @@
 	</Target>
 
 	<!-- Look in the NativeReference items for dylibs that need to be added to the app bundle, and add all those frameworks to ResolvedFileToPublish (as separate files) -->
-	<Target Name="_ComputeDynamicLibrariesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables;_LoadLinkerOutput">
+	<Target Name="_ComputeDynamicLibrariesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables;_LoadLinkerOutput;_ReidentifyDynamicLibraries">
 		<ItemGroup>
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
 			<_DynamicLibraryToPublish Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.Kind)' == 'Dynamic' And '%(_FileNativeReference.CopyToAppBundle)' != 'false'">
@@ -1088,6 +1085,7 @@
 			_ReadAppManifest;
 			_WriteAppManifest;
 			_CompileNativeExecutable;
+			_ReidentifyDynamicLibraries;
 			_ComputeLinkNativeExecutableInputs;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
@@ -1115,6 +1113,64 @@
 			<_LinkNativeExecutableInputs Include="@(_FileNativeReference)" />
 		</ItemGroup>
 	</Target>
+
+	<!-- Any .dylibs we link with might have an incorrect identity (see https://github.com/xamarin/xamarin-macios/issues/13999),
+	     so we have to fix the identity so that the correct value is embedded into the main executable (and we have to do it
+	     before linking the main executable).
+
+	$ otool -l ~/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.0.7/runtimes/osx-x64/native/libe_sqlite3.dylib | grep LC_ID_DYLIB -A 2
+          cmd LC_ID_DYLIB
+      cmdsize 72
+         name ./bin/e_sqlite3/mac/x86_64/libe_sqlite3.dylib (offset 24)
+	-->
+
+	<PropertyGroup>
+		<_ReidentifyDynamicLibrariesDependsOn>
+			_ComputeVariables;
+			_ParseBundlerArguments;
+			_ComputePublishLocation;
+			_ComputeDynamicLibrariesToReidentify;
+			_InstallNameTool;
+			_UpdateWithReidentifiedDynamicLibraries;
+		</_ReidentifyDynamicLibrariesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputeDynamicLibrariesToReidentify">
+		<PropertyGroup>
+			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS'">@executable_path/</_ExecutablePathPrefix>
+			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">@executable_path/../$(_CustomBundleName)/</_ExecutablePathPrefix>
+		</PropertyGroup>
+		<ItemGroup>
+			<_DynamicLibraryToReidentify Include="@(_FileNativeReference)" Condition="'%(Extension)' == '.dylib'">
+				<DynamicLibraryId>$(_ExecutablePathPrefix)%(Filename)%(Extension)</DynamicLibraryId>
+				<SourceItemGroup>_FileNativeReference</SourceItemGroup>
+				<ReidentifiedPath>$(_IntermediateNativeLibraryDir)/%(Filename)%(Extension)</ReidentifiedPath>
+			</_DynamicLibraryToReidentify>
+		</ItemGroup>
+	</Target>
+
+	<Target
+		Name="_InstallNameTool"
+		Inputs="@(_DynamicLibraryToReidentify)"
+		Outputs="@(_DynamicLibraryToReidentify -> '%(ReidentifiedPath)')"
+	>
+		<InstallNameTool
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			DynamicLibrary="@(_DynamicLibraryToReidentify)"
+			SdkDevPath="$(_SdkDevPath)"
+		/>
+	</Target>
+
+	<Target Name="_UpdateWithReidentifiedDynamicLibraries">
+		<!-- Update our item groups -->
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
+			<_FileNativeReference Remove="@(_DynamicLibraryToReidentify)" Condition="'%(_DynamicLibraryToReidentify.SourceItemGroup)' == '_FileNativeReference'" />
+			<_FileNativeReference Include="@(_DynamicLibraryToReidentify -> '%(ReidentifiedPath)')" Condition="'%(_DynamicLibraryToReidentify.SourceItemGroup)' == '_FileNativeReference'" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_ReidentifyDynamicLibraries" DependsOnTargets="$(_ReidentifyDynamicLibrariesDependsOn)" />
 
 	<Target Name="_LinkNativeExecutable"
 			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"

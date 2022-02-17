@@ -57,6 +57,20 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
+		void AddResourceFiles (ITaskItem[]? items)
+		{
+			if (items is null || items.Length == 0)
+				return;
+
+			var resources = items.
+				// Remove any items with PublishFolderType set
+				Where (v => string.IsNullOrEmpty (v.GetMetadata ("PublishFolderType"))).
+				// Get the full path
+				Select (v => Path.GetFullPath (v.ItemSpec));
+
+			resourceFilesSet.UnionWith (resources);
+		}
+
 		public override bool Execute ()
 		{
 			if (ResolvedFileToPublish is null || ResolvedFileToPublish.Length == 0)
@@ -69,12 +83,9 @@ namespace Xamarin.MacDev.Tasks {
 			ResourceDirectory = ResourceDirectory.Replace ('\\', Path.DirectorySeparatorChar);
 
 			// Collect all our BundleResource, Content and EmbeddedResource paths into one big dictionary for later lookup.
-			if (BundleResource?.Length > 0)
-				resourceFilesSet.UnionWith (BundleResource.Select (v => Path.GetFullPath (v.ItemSpec)));
-			if (Content?.Length > 0)
-				resourceFilesSet.UnionWith (Content.Select (v => Path.GetFullPath (v.ItemSpec)));
-			if (EmbeddedResource?.Length > 0)
-				resourceFilesSet.UnionWith (EmbeddedResource.Select (v => Path.GetFullPath (v.ItemSpec)));
+			AddResourceFiles (BundleResource);
+			AddResourceFiles (Content);
+			AddResourceFiles (EmbeddedResource);
 
 			var appleFrameworks = new Dictionary<string, List<ITaskItem>> ();
 			var list = ResolvedFileToPublish.ToList ();

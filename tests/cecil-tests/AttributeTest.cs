@@ -157,13 +157,13 @@ namespace Cecil.Tests {
 		string AssemblyToAttributeName (string assemblyPath)
 		{
 			var baseName = Path.GetFileName (assemblyPath);
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_iOS.Platform) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_iOS.Platform, true) == baseName)
 				return "ios";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_tvOS.Platform) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_tvOS.Platform, true) == baseName)
 				return "tvos";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_macOS.Platform) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_macOS.Platform, true) == baseName)
 				return "macos";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_MacCatalyst.Platform) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_5_0_MacCatalyst.Platform, true) == baseName)
 				return "maccatalyst";
 			throw new NotImplementedException ();
 		}

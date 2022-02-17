@@ -41,9 +41,9 @@ IOS_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.iOS/$(file))    $
 MAC_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.Mac/$(file))     $(MAC_SRC_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(foreach file,$(filter-out Mono.Data.Tds Mono.Security,$(MONO_ASSEMBLIES)),Xamarin.WatchOS/$(file)) $(WATCHOS_SRC_ASSEMBLIES)
 TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    $(TVOS_SRC_ASSEMBLIES)
-DOTNET_LEGACY_ASSEMBLIES = Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS \
-	Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac
-DOTNET_ASSEMBLIES = $(DOTNET_LEGACY_ASSEMBLIES) Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst
+DOTNET_LEGACY_ASSEMBLIES = Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS \
+	Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS
+DOTNET_ASSEMBLIES = $(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Ref/ref/net6.0/Microsoft.$(platform))
 
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
 MAC_ARCH_ASSEMBLIES =                       native-64/Xamarin.Mac
@@ -114,10 +114,10 @@ $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVO
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml $< $(APIDIFF_IGNORE) $@
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(Q) sed -e 's_<assembly name="Xamarin.MacCatalyst" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.xml > $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.MacCatalyst-as-iOS.xml
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.MacCatalyst-as-iOS.xml $(APIDIFF_IGNORE) $@
+	$(Q) sed -e 's_<assembly name="Xamarin.MacCatalyst" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml > $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.MacCatalyst-as-iOS.xml
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.MacCatalyst-as-iOS.xml $(APIDIFF_IGNORE) $@
 
 # this is a hack to show the difference between iOS and tvOS
 $(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(MONO_API_HTML)

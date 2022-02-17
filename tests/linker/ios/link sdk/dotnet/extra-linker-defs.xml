@@ -8,13 +8,13 @@
 			<method name="ParseValue" />
 		</type>
 	</assembly>
-	<assembly fullname="Xamarin.iOS">
+	<assembly fullname="Microsoft.iOS">
 		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
 	</assembly>
-	<assembly fullname="Xamarin.TVOS">
+	<assembly fullname="Microsoft.tvOS">
 		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
 	</assembly>
-	<assembly fullname="Xamarin.MacCatalyst">
+	<assembly fullname="Microsoft.MacCatalyst">
 		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
 	</assembly>
 </linker>
