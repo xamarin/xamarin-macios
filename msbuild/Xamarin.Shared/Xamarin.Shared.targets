@@ -1574,6 +1574,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
 			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
 			Namespace="$(Namespace)"
+			NoNFloatUsing="$(NoNFloatUsing)"
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
