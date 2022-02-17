@@ -66,7 +66,7 @@ namespace ObjCRuntime {
 			this.handle = objc_getClass (name);
 
 			if (handle == NativeHandle.Zero)
-				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (name), "Unknown class");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (name), $"Unknown class {name}");
 		}
 
 		public Class (Type type)
