@@ -21,8 +21,7 @@ namespace AVFoundation {
 		{
 			var arr = new NSMutableArray ();
 			foreach (var device in deviceTypes)
-				if (device.GetConstant () is NSObject deviceType)
-					arr.Add (deviceType);
+				arr.Add (device.GetConstant ()!);
 
 			return _Create (arr, mediaType, position);
 		}

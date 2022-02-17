@@ -62,11 +62,11 @@ namespace AVFoundation {
 		}
 #endif
 
-		public NSError? SetCategory (NSString? theCategory)
+		public NSError? SetCategory (NSString theCategory)
 		{
 			NSError outError;
 			
-			if (theCategory is null || SetCategory (theCategory, out outError))
+			if (SetCategory (theCategory, out outError))
 				return null;
 			return outError;
 		}
@@ -96,7 +96,8 @@ namespace AVFoundation {
 		
 		public NSError? SetCategory (AVAudioSessionCategory category)
 		{
-			return SetCategory (CategoryToToken (category));
+			var token = CategoryToToken (category);
+			return token is not null ? SetCategory (token) : null;
 		}
 
 		public NSError? SetCategory (AVAudioSessionCategory category, AVAudioSessionCategoryOptions options)

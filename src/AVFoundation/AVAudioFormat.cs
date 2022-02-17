@@ -25,9 +25,9 @@ namespace AVFoundation {
 		{
 			if ((object) a == (object) b)
 				return true;
-			if ((object) a == null ^ (object) b == null)
+			if (a is null || b is null)
 				return false;
-			return a!.Equals (b);
+			return a.Equals (b);
 		}
 		
 		public static bool operator != (AVAudioFormat a, AVAudioFormat b)
