@@ -64,8 +64,8 @@ namespace AddressBookUI {
 #endif
 	partial class ABNewPersonViewController {
 
-		ABPerson displayedPerson;
-		public ABPerson DisplayedPerson {
+		ABPerson? displayedPerson;
+		public ABPerson? DisplayedPerson {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref displayedPerson, _DisplayedPerson, h => new ABPerson (h, AddressBook));
@@ -76,8 +76,8 @@ namespace AddressBookUI {
 			}
 		}
 
-		ABAddressBook addressBook;
-		public ABAddressBook AddressBook {
+		ABAddressBook? addressBook;
+		public ABAddressBook? AddressBook {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref addressBook, _AddressBook, h => new ABAddressBook (h, false));
@@ -88,8 +88,8 @@ namespace AddressBookUI {
 			}
 		}
 
-		ABGroup parentGroup;
-		public ABGroup ParentGroup {
+		ABGroup? parentGroup;
+		public ABGroup? ParentGroup {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref parentGroup, _ParentGroup, h => new ABGroup (h, AddressBook));

@@ -70,8 +70,8 @@ namespace AddressBookUI {
 #endif
 	partial class ABPersonViewController {
 
-		ABPerson displayedPerson;
-		public ABPerson DisplayedPerson {
+		ABPerson? displayedPerson;
+		public ABPerson? DisplayedPerson {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref displayedPerson, _DisplayedPerson, h => new ABPerson (h, AddressBook));
@@ -82,8 +82,8 @@ namespace AddressBookUI {
 			}
 		}
 
-		DisplayedPropertiesCollection displayedProperties;
-		public DisplayedPropertiesCollection DisplayedProperties {
+		DisplayedPropertiesCollection? displayedProperties;
+		public DisplayedPropertiesCollection? DisplayedProperties {
 			get {
 				if (displayedProperties is null) {
 					displayedProperties = new DisplayedPropertiesCollection (
@@ -95,8 +95,8 @@ namespace AddressBookUI {
 			}
 		}
 
-		ABAddressBook addressBook;
-		public ABAddressBook AddressBook {
+		ABAddressBook? addressBook;
+		public ABAddressBook? AddressBook {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref addressBook, _AddressBook, h => new ABAddressBook (h, false));
