@@ -81,7 +81,7 @@ namespace AddressBookUI {
 		public void CopyTo (ABPersonProperty[] array, int arrayIndex)
 		{
 			if (array is null)
-				throw new ArgumentNullException ("array");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			if (arrayIndex < 0)
 				throw new ArgumentOutOfRangeException ("arrayIndex");
 			if (arrayIndex > array.Length)
