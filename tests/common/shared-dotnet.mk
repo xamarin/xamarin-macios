@@ -36,6 +36,19 @@ run: prepare
 run-bare:
 	$(Q) ./bin/Debug/net6.0-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
 
+run-remote:
+	$(Q) test -n "$(REMOTE_HOST)" || ( echo "Must specify the remote machine by setting the REMOTE_HOST environment variable"; exit 1 )
+	@echo "Copying the '$(TESTNAME)' test app to $(REMOTE_HOST)..."
+	rsync -avz ./bin/Debug/net6.0-*/*/"$(TESTNAME)".app $(USER)@$(REMOTE_HOST):/tmp/test-run-remote-execution/
+	@echo "Killing any existing test executables ('$(TESTNAME)')"
+	ssh $(USER)@$(REMOTE_HOST) -- pkill -9 "$(TESTNAME)" || true
+	@echo "Executing '$(TESTNAME)' on $(REMOTE_HOST)..."
+	ssh $(USER)@$(REMOTE_HOST) -- /tmp/test-run-remote-execution/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
+
+delete-remote:
+	$(Q) test -n "$(REMOTE_HOST)" || ( echo "Must specify the remote machine by setting the REMOTE_HOST environment variable"; exit 1 )
+	ssh $(USER)@$(REMOTE_HOST) -- rm -rf /tmp/test-run-remote-execution/"$(TESTNAME)".app
+
 BINLOGS:=$(wildcard *.binlog)
 diag: prepare
 	$(Q) if [[ "$(words $(BINLOGS))" == "1" ]]; then \

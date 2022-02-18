@@ -916,15 +916,15 @@ namespace Xamarin.Bundler {
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return "Xamarin.iOS";
+				return IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
 			case ApplePlatform.WatchOS:
-				return "Xamarin.WatchOS";
+				return IsDotNet ? "Microsoft.watchOS" : "Xamarin.WatchOS";
 			case ApplePlatform.TVOS:
-				return "Xamarin.TVOS";
+				return IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
 			case ApplePlatform.MacOSX:
-				return "Xamarin.Mac";
+				return IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
 			case ApplePlatform.MacCatalyst:
-				return "Xamarin.MacCatalyst";
+				return IsDotNet ? "Microsoft.MacCatalyst" : "Xamarin.MacCatalyst";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
