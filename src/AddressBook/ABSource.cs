@@ -72,14 +72,8 @@ namespace AddressBook {
 			AddressBook = addressbook;
 		}
 		
-		public string Name {
-			get
-			{
-				var str = PropertyToString (ABSourcePropertyId.Name);
-				if (str is null)
-					ObjCRuntime.ThrowHelper.ThrowArgumentNullException ("PropertyToString returned null");
-				return str;
-			}
+		public string? Name {
+			get { return PropertyToString (ABSourcePropertyId.Name); }
 			set { SetValue (ABSourcePropertyId.Name, value); }
 		}
 		
