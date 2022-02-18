@@ -116,40 +116,41 @@ jobs:
       skipESRP: ${{ parameters.skipESRP }}
       enableAPIDiff: false # this step should never execute the api diff, that should be left for the parallel job
 
-- job: api_diff
-  dependsOn:
-  - AgentPoolSelector
-  - configure
-  displayName: 'Generate API diff'
-  timeoutInMinutes: 1000
-  variables:
-    AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
-    # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
-  pool:
-    name: $(AgentPoolComputed)
-    demands:
-    - Agent.OS -equals Darwin
-    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
-  workspace:
-    clean: all
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - job: api_diff
+    dependsOn:
+    - AgentPoolSelector
+    - configure
+    displayName: 'Generate API diff'
+    timeoutInMinutes: 1000
+    variables:
+      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+      # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+      XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+    pool:
+      name: $(AgentPoolComputed)
+      demands:
+      - Agent.OS -equals Darwin
+      - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+    workspace:
+      clean: all
 
-  steps:
-  - template: build.yml
-    parameters:
-      runTests: false
-      runDeviceTests: false
-      uploadBinlogs: false
-      signAndNotarize: false
-      skipPackages: true
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-      keyringPass: ${{ parameters.keyringPass }}
-      gitHubToken: ${{ parameters.gitHubToken }}
-      xqaCertPass: ${{ parameters.xqaCertPass }}
-      enableDotnet: ${{ parameters.enableDotnet }}
-      enableAPIDiff: ${{ parameters.enableAPIDiff }}
+    steps:
+    - template: build.yml
+      parameters:
+        runTests: false
+        runDeviceTests: false
+        uploadBinlogs: false
+        signAndNotarize: false
+        skipPackages: true
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+        keyringPass: ${{ parameters.keyringPass }}
+        gitHubToken: ${{ parameters.gitHubToken }}
+        xqaCertPass: ${{ parameters.xqaCertPass }}
+        enableDotnet: ${{ parameters.enableDotnet }}
+        enableAPIDiff: true
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure & SBOM'
