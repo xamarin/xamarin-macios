@@ -758,7 +758,7 @@ namespace ObjCRuntime {
 			 * This method is called from marshalling bridge (dynamic mode).
 			 */
 			var type = (System.Type) GetGCHandleTarget (type_ptr)!;
-			return AllocGCHandle (GetINativeObject (ptr, owns, type));
+			return AllocGCHandle (GetINativeObject (ptr, owns, type, null));
 		}
 			
 		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, uint iface_token, uint implementation_token)
@@ -821,12 +821,7 @@ namespace ObjCRuntime {
 				inner_exception = (Exception?) gchandle.Target;
 				gchandle.Free ();
 			}
-			Exception ex;
-			if (inner_exception is not null) {
-				ex = ErrorHelper.CreateError (code, inner_exception, msg);
-			} else {
-				ex = ErrorHelper.CreateError (code, msg);
-			}
+			Exception ex = ErrorHelper.CreateError (code, inner_exception, msg);
 			return AllocGCHandle (ex);
 		}
 
