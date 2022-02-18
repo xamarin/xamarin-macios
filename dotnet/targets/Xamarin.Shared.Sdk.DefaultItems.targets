@@ -113,4 +113,25 @@
     <!-- Add a reference to our custom nfloat reference assembly for .NET 6 (but only for .NET 6, once we switch to .NET 7 this can be removed) -->
     <PackageReference Include="System.Runtime.InteropServices.NFloat.Internal" Condition="'$(BundledNETCorePlatformsPackageVersion.Substring(0,1))' == '6'" Version="[6.0.1, )" />
   </ItemGroup>
+
+  <!--
+    This a workaround for an issue with the Microsoft.NETCore.App runtime pack selection.
+    The Microsoft.NETCore.App known framework reference sets LatestRuntimeFrameworkVersion=6.0.1, which means that when a project is restored,
+    the 6.0.1 packages (from NuGet) will be selected instead of the bundled packages (which has version 6.0.3). The main problem with this is
+    that the 6.0.1 packages don't have the new nfloat API.
+  -->
+  <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
+    <KnownFrameworkReference Remove="Microsoft.NETCore.App" />
+    <KnownFrameworkReference Include="Microsoft.NETCore.App"
+                              TargetFramework="net6.0"
+                              RuntimeFrameworkName="Microsoft.NETCore.App"
+                              DefaultRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"
+                              LatestRuntimeFrameworkVersion="6.0.3"
+                              TargetingPackName="Microsoft.NETCore.App.Ref"
+                              TargetingPackVersion="$(BundledNETCorePlatformsPackageVersion)"
+                              RuntimePackNamePatterns="Microsoft.NETCore.App.Runtime.**RID**"
+                              RuntimePackRuntimeIdentifiers="osx-x64;osx-arm64"
+                              IsTrimmable="true"
+                              />
+  </ItemGroup>
 </Project>
