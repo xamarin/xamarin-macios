@@ -52,7 +52,7 @@ namespace AddressBookUI {
 		{
 			List<NSNumber> values;
 			var dp = g ();
-			if (dp != null)
+			if (dp is not null)
 				values = new List<NSNumber> (dp);
 			else
 				values = new List<NSNumber> ();
@@ -69,7 +69,7 @@ namespace AddressBookUI {
 		{
 			int id = ABPersonPropertyId.ToId (item);
 			var values = g ();
-			if (values == null)
+			if (values is null)
 				return false;
 
 			for (int i = 0; i < values.Length; ++i)
@@ -80,7 +80,7 @@ namespace AddressBookUI {
 
 		public void CopyTo (ABPersonProperty[] array, int arrayIndex)
 		{
-			if (array == null)
+			if (array is null)
 				throw new ArgumentNullException ("array");
 			if (arrayIndex < 0)
 				throw new ArgumentOutOfRangeException ("arrayIndex");
@@ -97,7 +97,7 @@ namespace AddressBookUI {
 		public bool Remove (ABPersonProperty item)
 		{
 			var dp = g ();
-			if (dp == null)
+			if (dp is null)
 				return false;
 			var id = ABPersonPropertyId.ToId (item);
 			var values = new List<NSNumber> (dp);

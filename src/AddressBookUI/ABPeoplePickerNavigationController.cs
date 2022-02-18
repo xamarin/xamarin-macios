@@ -109,13 +109,13 @@ namespace AddressBookUI {
 		{
 			switch (sel?.Name) {
 			case "peoplePickerNavigationController:shouldContinueAfterSelectingPerson:":
-				return (selectPerson != null);
+				return (selectPerson is not null);
 			case "peoplePickerNavigationController:shouldContinueAfterSelectingPerson:property:identifier:":
-				return (performAction != null);
+				return (performAction is not null);
 			case "peoplePickerNavigationController:didSelectPerson:":
-				return (selectPerson2 != null);
+				return (selectPerson2 is not null);
 			case "peoplePickerNavigationController:didSelectPerson:property:identifier:":
-				return (performAction2 != null);
+				return (performAction2 is not null);
 			}
 			return base.RespondsToSelector (sel);
 		}
@@ -182,7 +182,7 @@ namespace AddressBookUI {
 		DisplayedPropertiesCollection displayedProperties;
 		public DisplayedPropertiesCollection DisplayedProperties {
 			get {
-				if (displayedProperties == null) {
+				if (displayedProperties is null) {
 					displayedProperties = new DisplayedPropertiesCollection (
 						() => _DisplayedProperties, 
 						v => _DisplayedProperties = v);
@@ -206,8 +206,8 @@ namespace AddressBookUI {
 
 		T EnsureEventDelegate<T> () where T : NSObject, new()
 		{
-			var d = WeakDelegate == null ? null : (T)WeakDelegate;
-			if (d == null) {
+			var d = WeakDelegate is null ? null : (T)WeakDelegate;
+			if (d is null) {
 				d = new T ();
 				WeakDelegate = d;
 			}
@@ -217,35 +217,35 @@ namespace AddressBookUI {
 		protected internal virtual void OnSelectPerson (ABPeoplePickerSelectPersonEventArgs e)
 		{
 			var h = EnsureEventDelegate<InternalABPeoplePickerNavigationControllerDelegate> ().selectPerson;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected internal virtual void OnSelectPerson2 (ABPeoplePickerSelectPerson2EventArgs e)
 		{
 			var h = EnsureEventDelegate<InternalABPeoplePickerNavigationControllerDelegate> ().selectPerson2;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected internal virtual void OnPerformAction (ABPeoplePickerPerformActionEventArgs e)
 		{
 			var h = EnsureEventDelegate<InternalABPeoplePickerNavigationControllerDelegate> ().performAction;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected internal virtual void OnPerformAction2 (ABPeoplePickerPerformAction2EventArgs e)
 		{
 			var h = EnsureEventDelegate<InternalABPeoplePickerNavigationControllerDelegate> ().performAction2;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected internal virtual void OnCancelled (EventArgs e)
 		{
 			var h = EnsureEventDelegate<InternalABPeoplePickerNavigationControllerDelegate> ().cancelled;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 

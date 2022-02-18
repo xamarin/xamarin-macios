@@ -98,7 +98,7 @@ namespace AddressBookUI {
 		InternalABUnknownPersonViewControllerDelegate EnsureEventDelegate ()
 		{
 			var d = WeakDelegate as InternalABUnknownPersonViewControllerDelegate;
-			if (d == null) {
+			if (d is null) {
 				d = new InternalABUnknownPersonViewControllerDelegate ();
 				WeakDelegate = d;
 			}
@@ -108,14 +108,14 @@ namespace AddressBookUI {
 		protected internal virtual void OnPerformDefaultAction (ABPersonViewPerformDefaultActionEventArgs e)
 		{
 			var h = EnsureEventDelegate ().performDefaultAction;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected internal virtual void OnPersonCreated (ABUnknownPersonCreatedEventArgs e)
 		{
 			var h = EnsureEventDelegate ().personCreated;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 

@@ -85,7 +85,7 @@ namespace AddressBookUI {
 		DisplayedPropertiesCollection displayedProperties;
 		public DisplayedPropertiesCollection DisplayedProperties {
 			get {
-				if (displayedProperties == null) {
+				if (displayedProperties is null) {
 					displayedProperties = new DisplayedPropertiesCollection (
 							() => _DisplayedProperties, 
 							v => _DisplayedProperties = v);
@@ -124,7 +124,7 @@ namespace AddressBookUI {
 		InternalABPersonViewControllerDelegate EnsureEventDelegate ()
 		{
 			var d = WeakDelegate as InternalABPersonViewControllerDelegate;
-			if (d == null) {
+			if (d is null) {
 				d = new InternalABPersonViewControllerDelegate ();
 				WeakDelegate = d;
 			}
@@ -134,7 +134,7 @@ namespace AddressBookUI {
 		protected internal virtual void OnPerformDefaultAction (ABPersonViewPerformDefaultActionEventArgs e)
 		{
 			var h = EnsureEventDelegate ().performDefaultAction;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 

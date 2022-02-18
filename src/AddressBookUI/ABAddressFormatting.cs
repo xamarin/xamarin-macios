@@ -34,7 +34,7 @@ namespace AddressBookUI {
 		
 		static public string ToString (NSDictionary address, bool addCountryName)
 		{
-			if (address == null)
+			if (address is null)
 				throw new ArgumentNullException ("address");
 			
 			using (NSString s = new NSString (ABCreateStringWithAddressDictionary (address.Handle, addCountryName)))

@@ -34,7 +34,7 @@ namespace AddressBookUI {
 
 		public ABPerson? Person {get; private set;}
 		public bool Completed {
-			get {return Person != null;}
+			get {return Person is not null;}
 		}
 	}
 
@@ -103,7 +103,7 @@ namespace AddressBookUI {
 		InternalABNewPersonViewControllerDelegate EnsureEventDelegate ()
 		{
 			var d = WeakDelegate as InternalABNewPersonViewControllerDelegate;
-			if (d == null) {
+			if (d is null) {
 				d = new InternalABNewPersonViewControllerDelegate ();
 				WeakDelegate = d;
 			}
@@ -113,7 +113,7 @@ namespace AddressBookUI {
 		protected internal virtual void OnNewPersonComplete (ABNewPersonCompleteEventArgs e)
 		{
 			var h = EnsureEventDelegate ().newPersonComplete;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
