@@ -139,9 +139,9 @@ $(APIDIFF_DIR)/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html
 $(APIDIFF_DIR)/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.html
 
 # Compare new dotnet vs. stable legacy
-$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html:     $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.html
-$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.macOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.macOS.html
-$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.tvOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.tvOS.html
+$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html:     $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.html
+$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.html
+$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.html
 
 # Compare Dotnet iOS vs. Dotnet MacCatalyst
 $(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst.html
@@ -385,19 +385,19 @@ $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURREN
 	$(QF_GEN) mono --debug $(MONO_API_INFO) -d $(dir $<) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
 # The dotnet references xmls may come from different hashes, so we need to have separate rules for all of them
-$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
