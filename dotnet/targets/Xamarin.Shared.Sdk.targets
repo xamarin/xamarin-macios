@@ -244,7 +244,7 @@
 		</CreateAppBundleDependsOn>
 
 		<!-- not inner build for multi-rid build (single-rid build or outer build for multi-rid build) -->
-		<CreateAppBundleDependsOn Condition="'$(_PlatformName)' != 'macOS' And '$(_IsMultiRidBuild)' != 'true'">
+		<CreateAppBundleDependsOn Condition="'$(_IsMultiRidBuild)' != 'true'">
 			_CreateDebugSettings;
 			_CreateDebugConfiguration;
 			$(CreateAppBundleDependsOn);
