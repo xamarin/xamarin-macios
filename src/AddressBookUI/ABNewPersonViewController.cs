@@ -6,6 +6,8 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 
 using AddressBook;
@@ -25,12 +27,12 @@ namespace AddressBookUI {
 #endif
 	public class ABNewPersonCompleteEventArgs : EventArgs {
 
-		public ABNewPersonCompleteEventArgs (ABPerson person)
+		public ABNewPersonCompleteEventArgs (ABPerson? person)
 		{
 			Person = person;
 		}
 
-		public ABPerson Person {get; private set;}
+		public ABPerson? Person {get; private set;}
 		public bool Completed {
 			get {return Person != null;}
 		}
@@ -38,7 +40,7 @@ namespace AddressBookUI {
 
 	class InternalABNewPersonViewControllerDelegate : ABNewPersonViewControllerDelegate {
 
-		internal EventHandler<ABNewPersonCompleteEventArgs> newPersonComplete;
+		internal EventHandler<ABNewPersonCompleteEventArgs>? newPersonComplete;
 
 		public InternalABNewPersonViewControllerDelegate ()
 		{
@@ -46,7 +48,7 @@ namespace AddressBookUI {
 		}
 
 		[Preserve (Conditional = true)]
-		public override void DidCompleteWithNewPerson (ABNewPersonViewController controller, ABPerson person)
+		public override void DidCompleteWithNewPerson (ABNewPersonViewController controller, ABPerson? person)
 		{
 			controller.OnNewPersonComplete (new ABNewPersonCompleteEventArgs (person));
 		}

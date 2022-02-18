@@ -6,6 +6,8 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 
 using AddressBook;
@@ -96,14 +98,14 @@ namespace AddressBookUI {
 	}
 
 	class InternalABPeoplePickerNavigationControllerDelegate : ABPeoplePickerNavigationControllerDelegate {
-		internal EventHandler<ABPeoplePickerSelectPersonEventArgs> selectPerson;
-		internal EventHandler<ABPeoplePickerPerformActionEventArgs> performAction;
-		internal EventHandler<ABPeoplePickerSelectPerson2EventArgs> selectPerson2;
-		internal EventHandler<ABPeoplePickerPerformAction2EventArgs> performAction2;
-		internal EventHandler cancelled;
+		internal EventHandler<ABPeoplePickerSelectPersonEventArgs>? selectPerson;
+		internal EventHandler<ABPeoplePickerPerformActionEventArgs>? performAction;
+		internal EventHandler<ABPeoplePickerSelectPerson2EventArgs>? selectPerson2;
+		internal EventHandler<ABPeoplePickerPerformAction2EventArgs>? performAction2;
+		internal EventHandler? cancelled;
 
 		[Preserve (Conditional = true)]
-		public override bool RespondsToSelector (Selector sel)
+		public override bool RespondsToSelector (Selector? sel)
 		{
 			switch (sel?.Name) {
 			case "peoplePickerNavigationController:shouldContinueAfterSelectingPerson:":

@@ -6,6 +6,8 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 
 using AddressBook;
@@ -39,7 +41,7 @@ namespace AddressBookUI {
 
 	class InternalABPersonViewControllerDelegate : ABPersonViewControllerDelegate {
 
-		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs> performDefaultAction;
+		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs>? performDefaultAction;
 
 		public InternalABPersonViewControllerDelegate ()
 		{
@@ -108,14 +110,14 @@ namespace AddressBookUI {
 		public void SetHighlightedItemForProperty (ABPersonProperty property, int? identifier)
 		{
 			SetHighlightedItemForProperty (
-					ABPersonPropertyId.ToId (property),
-					identifier.HasValue ? identifier.Value : ABRecord.InvalidPropertyId);
+					property,
+					identifier ?? ABRecord.InvalidPropertyId);
 		}
 
 		public void SetHighlightedProperty (ABPersonProperty property)
 		{
 			SetHighlightedItemForProperty (
-					ABPersonPropertyId.ToId (property),
+					property,
 					ABRecord.InvalidPropertyId);
 		}
 

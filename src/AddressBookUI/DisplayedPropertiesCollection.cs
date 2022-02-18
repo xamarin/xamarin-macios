@@ -6,6 +6,8 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,17 +31,17 @@ namespace AddressBookUI {
 #endif
 	public class DisplayedPropertiesCollection : ICollection<ABPersonProperty> {
 
-		ABFunc<NSNumber[]> g;
-		Action<NSNumber[]> s;
+		ABFunc<NSNumber[]?> g;
+		Action<NSNumber[]?> s;
 
-		internal DisplayedPropertiesCollection (ABFunc<NSNumber[]> g, Action<NSNumber[]> s)
+		internal DisplayedPropertiesCollection (ABFunc<NSNumber[]?> g, Action<NSNumber[]?> s)
 		{
 			this.g = g;
 			this.s = s;
 		}
 
 		public int Count {
-			get {return g ().Length;}
+			get {return g ()!.Length;}
 		}
 
 		bool ICollection<ABPersonProperty>.IsReadOnly {
@@ -117,7 +119,7 @@ namespace AddressBookUI {
 
 		public IEnumerator<ABPersonProperty> GetEnumerator ()
 		{
-			var values = g ();
+			var values = g ()!;
 			for (int i = 0; i < values.Length; ++i)
 				yield return ABPersonPropertyId.ToPersonProperty (values [i].Int32Value);
 		}

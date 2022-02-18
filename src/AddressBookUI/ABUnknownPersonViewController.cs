@@ -6,6 +6,8 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 
 using AddressBook;
@@ -24,17 +26,17 @@ namespace AddressBookUI {
 #endif
 	public class ABUnknownPersonCreatedEventArgs : EventArgs {
 
-		public ABUnknownPersonCreatedEventArgs (ABPerson person)
+		public ABUnknownPersonCreatedEventArgs (ABPerson? person)
 		{
 			Person = person;
 		}
 
-		public ABPerson Person {get; private set;}
+		public ABPerson? Person {get; private set;}
 	}
 
 	class InternalABUnknownPersonViewControllerDelegate : ABUnknownPersonViewControllerDelegate {
-		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs> performDefaultAction;
-		internal EventHandler<ABUnknownPersonCreatedEventArgs> personCreated;
+		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs>? performDefaultAction;
+		internal EventHandler<ABUnknownPersonCreatedEventArgs>? personCreated;
 
 		public InternalABUnknownPersonViewControllerDelegate ()
 		{
@@ -42,7 +44,7 @@ namespace AddressBookUI {
 		}
 
 		[Preserve (Conditional = true)]
-		public override void DidResolveToPerson (ABUnknownPersonViewController personViewController, ABPerson person)
+		public override void DidResolveToPerson (ABUnknownPersonViewController personViewController, ABPerson? person)
 		{
 			personViewController.OnPersonCreated (new ABUnknownPersonCreatedEventArgs (person));
 		}
