@@ -9061,18 +9061,23 @@ namespace AVFoundation {
 		bool SupportsVideoOrientation { get; }
 
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("supportsVideoMinFrameDuration")]
 		bool SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get; }
 
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set;  }
 
+		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("supportsVideoMaxFrameDuration")]
 		bool SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get; }
 
 		[Export ("videoMaxFrameDuration")]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)] 
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		CMTime VideoMaxFrameDuration { get; set;  }
 
 		[NoMac]
