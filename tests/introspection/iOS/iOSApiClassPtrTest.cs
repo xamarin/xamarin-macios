@@ -23,7 +23,7 @@ namespace Introspection {
 			case "Phase": // missing in the sim
 			case "ShazamKit": // missing in the sim
 			case "ThreadNetwork": // missing in the sim
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			}

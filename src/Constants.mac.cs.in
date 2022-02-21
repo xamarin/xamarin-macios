@@ -30,7 +30,7 @@ namespace ObjCRuntime {
 	public static partial class Constants {
 		public const string Version = "@VERSION@";
 		internal const string Revision = "@REVISION@";
-		public const string SdkVersion = "@OSX_SDK_VERSION@";
+		public const string SdkVersion = "@MACOS_SDK_VERSION@";
 		internal const string MinMonoVersion = "@MIN_XM_MONO_VERSION@";
 
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";

@@ -4,8 +4,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 namespace Xharness {
 	public class iOSTestProject : TestProject {
 		public bool SkipiOSVariation;
-		public bool SkipiOS32Variation;
-		public bool SkipiOS64Variation;
 		public bool SkipwatchOSVariation; // skip both
 		public bool SkipwatchOSARM64_32Variation;
 		public bool SkipwatchOS32Variation;
@@ -13,10 +11,6 @@ namespace Xharness {
 		public bool SkipTodayExtensionVariation;
 		public bool SkipDeviceVariations;
 		public bool BuildOnly;
-
-		public iOSTestProject ()
-		{
-		}
 
 		public iOSTestProject (string path, bool isExecutableProject = true)
 			: base (path, isExecutableProject)
@@ -34,10 +28,13 @@ namespace Xharness {
 
 		public override TestProject Clone ()
 		{
-			var rv = (iOSTestProject) base.Clone ();
+			return CompleteClone (new iOSTestProject (Path, IsExecutableProject));
+		}
+
+		protected override TestProject CompleteClone (TestProject project)
+		{
+			var rv = (iOSTestProject) project;
 			rv.SkipiOSVariation = SkipiOSVariation;
-			rv.SkipiOS32Variation = SkipiOS32Variation;
-			rv.SkipiOS64Variation = SkipiOS64Variation;
 			rv.SkipwatchOSVariation = SkipwatchOSVariation;
 			rv.SkipwatchOSARM64_32Variation = SkipwatchOSARM64_32Variation;
 			rv.SkipwatchOS32Variation = SkipwatchOS32Variation;
@@ -45,7 +42,7 @@ namespace Xharness {
 			rv.SkipTodayExtensionVariation = SkipTodayExtensionVariation;
 			rv.SkipDeviceVariations = SkipDeviceVariations;
 			rv.BuildOnly = BuildOnly;
-			return rv;
+			return base.CompleteClone (rv);
 		}
 	}
 }

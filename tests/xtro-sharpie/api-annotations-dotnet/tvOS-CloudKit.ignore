@@ -1,0 +1,4 @@
+## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
+## In reality the selectors only answer in the simulator, not on AppleTV devices
+!missing-selector! CKContainer::fetchAllLongLivedOperationIDsWithCompletionHandler: not bound
+!missing-selector! CKContainer::fetchLongLivedOperationWithID:completionHandler: not bound

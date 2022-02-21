@@ -33,7 +33,7 @@
 
 	<!-- Default Asset Catalog file inclusion -->
 	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
-		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.pdf;**\*.xcassets\**\*.json" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+		<ImageAsset Include="**\*.xcassets\**\*.*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.xcassets\**\*.DS_Store">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<Visible>false</Visible>
 			<IsDefaultItem>true</IsDefaultItem>
@@ -77,5 +77,25 @@
 		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<IsDefaultItem>true</IsDefaultItem>
 		</SceneKitAsset>
+	</ItemGroup>
+
+	<!-- Default font files inclusion -->
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
+		<!-- Include everything in the project's Resources folder (as represented by the _ResourcePrefix property, which is set from the IPhoneResourcePrefix/XamMacResourcePrefix properties),
+		     except for files that are already in any of the other resource type item groups -->
+		<BundleResource Include="$(_ResourcePrefix)\**\*" Exclude="
+			$(DefaultItemExcludes);
+			$(DefaultExcludesInProjectFolder);
+			$(_ResourcePrefix)\**\*.xcassets\**\*.*;
+			$(_ResourcePrefix)\**\*.storyboard;**\*.xib;
+			$(_ResourcePrefix)\**\*.atlas\*.png;
+			$(_ResourcePrefix)\**\*.mlmodel;
+			$(_ResourcePrefix)\**\*.metal;
+			$(_ResourcePrefix)\**\*.scnassets\*;
+			$(_ResourcePrefix)\**\*.DS_Store;
+			" Condition="'$(_ResourcePrefix)' != ''" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</BundleResource>
 	</ItemGroup>
 </Project>

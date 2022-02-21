@@ -28,6 +28,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 //
+
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -94,9 +97,9 @@ namespace ObjCRuntime {
 		public static extern int dlclose (IntPtr handle);
 
 		[DllImport (Constants.libSystemLibrary, EntryPoint="dlopen")]
-		internal static extern IntPtr _dlopen (string path, int mode /* this is int32, not nint */);
+		internal static extern IntPtr _dlopen (string? path, int mode /* this is int32, not nint */);
 
-		public static IntPtr dlopen (string path, int mode)
+		public static IntPtr dlopen (string? path, int mode)
 		{
 			return dlopen (path, mode, showWarning: true);
 		}
@@ -110,7 +113,7 @@ namespace ObjCRuntime {
 			warningShown = true;
 		}
 
-		internal static IntPtr dlopen (string path, int mode, bool showWarning)
+		internal static IntPtr dlopen (string? path, int mode, bool showWarning)
 		{
 			var x = _dlopen (path, mode);
 			if (x != IntPtr.Zero)
@@ -119,7 +122,7 @@ namespace ObjCRuntime {
 			// In iOS < 9, you could dlopen ("libc") and that would work.
 			// In iOS >= 9, this fails with:
 			// "no cache image with name (<top>)"
-			if (path.IndexOf ('/') == -1){
+			if (path?.IndexOf ('/') == -1){
 				if (showWarning)
 					WarnOnce ();
 				return dlopen ("/usr/lib/" + path, mode, false);
@@ -138,13 +141,13 @@ namespace ObjCRuntime {
 		[DllImport (Constants.libSystemLibrary, EntryPoint="dlerror")]
 		internal static extern IntPtr dlerror_ ();
 
-		public static string dlerror ()
+		public static string? dlerror ()
 		{
 			// we can't free the string returned from dlerror
 			return Marshal.PtrToStringAnsi (dlerror_ ());
 		}
 
-		public static NSString GetStringConstant (IntPtr handle, string symbol)
+		public static NSString? GetStringConstant (IntPtr handle, string symbol)
 		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
@@ -152,7 +155,7 @@ namespace ObjCRuntime {
 			var actual = Marshal.ReadIntPtr (indirect);
 			if (actual == IntPtr.Zero)
 				return null;
-			return (NSString) Runtime.GetNSObject (actual);
+			return Runtime.GetNSObject<NSString> (actual);
 		}
 
 		public static IntPtr GetIndirect (IntPtr handle, string symbol)
@@ -160,7 +163,7 @@ namespace ObjCRuntime {
 			return dlsym (handle, symbol);
 		}
 
-		public static NSNumber GetNSNumber (IntPtr handle, string symbol)
+		public static NSNumber? GetNSNumber (IntPtr handle, string symbol)
 		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
@@ -168,7 +171,7 @@ namespace ObjCRuntime {
 			var actual = Marshal.ReadIntPtr (indirect);
 			if (actual == IntPtr.Zero)
 				return null;
-			return (NSNumber) Runtime.GetNSObject (actual);
+			return Runtime.GetNSObject<NSNumber> (actual);
 		}
 
 		public static int GetInt32 (IntPtr handle, string symbol)
@@ -228,7 +231,7 @@ namespace ObjCRuntime {
 			return (ulong) Marshal.ReadInt64 (indirect);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'SetInt64' for long values instead.")]
 		public static void SetUInt64 (IntPtr handle, string symbol, long value)
 		{
@@ -249,31 +252,31 @@ namespace ObjCRuntime {
 			Marshal.WriteInt64 (indirect, (long) value);
 		}
 
-		public static void SetString (IntPtr handle, string symbol, string value)
+		public static void SetString (IntPtr handle, string symbol, string? value)
 		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
 				return;
-			Marshal.WriteIntPtr (indirect, value == null ? IntPtr.Zero : NSString.CreateNative (value));
+			Marshal.WriteIntPtr (indirect, CFString.CreateNative (value));
 		}
 
-		public static void SetString (IntPtr handle, string symbol, NSString value)
+		public static void SetString (IntPtr handle, string symbol, NSString? value)
 		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
 				return;
-			var strHandle = value == null ? IntPtr.Zero : value.Handle;
+			var strHandle = value.GetHandle ();
 			if (strHandle != IntPtr.Zero)
 				CFObject.CFRetain (strHandle);
 			Marshal.WriteIntPtr (indirect, strHandle);
 		}
 
-		public static void SetArray (IntPtr handle, string symbol, NSArray array)
+		public static void SetArray (IntPtr handle, string symbol, NSArray? array)
 		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
 				return;
-			var arrayHandle = array == null ? IntPtr.Zero : array.Handle;
+			var arrayHandle = array.GetHandle ();
 			if (arrayHandle != IntPtr.Zero)
 				CFObject.CFRetain (arrayHandle);
 			Marshal.WriteIntPtr (indirect, arrayHandle);
@@ -291,12 +294,12 @@ namespace ObjCRuntime {
 
 		public static nuint GetNUInt (IntPtr handle, string symbol)
 		{
-			return (nuint)GetIntPtr (handle, symbol);
+			return (nuint) (ulong) GetUIntPtr (handle, symbol);
 		}
 
 		public static void SetNUInt (IntPtr handle, string symbol, nuint value)
 		{
-			SetIntPtr (handle, symbol, (IntPtr) value);
+			SetUIntPtr (handle, symbol, (UIntPtr) (ulong) value);
 		}
 
 		public static nfloat GetNFloat (IntPtr handle, string symbol)
@@ -331,6 +334,22 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return IntPtr.Zero;
 			return Marshal.ReadIntPtr (indirect);
+		}
+
+		public static UIntPtr GetUIntPtr (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return UIntPtr.Zero;
+			return (UIntPtr) (long) Marshal.ReadIntPtr (indirect);
+		}
+
+		public static void SetUIntPtr (IntPtr handle, string symbol, UIntPtr value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+			Marshal.WriteIntPtr (indirect, (IntPtr) (ulong) value);
 		}
 
 		public static void SetIntPtr (IntPtr handle, string symbol, IntPtr value)
@@ -419,7 +438,7 @@ namespace ObjCRuntime {
 			}
 		}
 		
-		internal static int SlowGetInt32 (string lib, string symbol)
+		internal static int SlowGetInt32 (string? lib, string symbol)
 		{
 			var handle = dlopen (lib, 0);
 			if (handle == IntPtr.Zero)
@@ -431,7 +450,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		internal static long SlowGetInt64 (string lib, string symbol)
+		internal static long SlowGetInt64 (string? lib, string symbol)
 		{
 			var handle = dlopen (lib, 0);
 			if (handle == IntPtr.Zero)
@@ -443,7 +462,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		internal static IntPtr SlowGetIntPtr (string lib, string symbol)
+		internal static IntPtr SlowGetIntPtr (string? lib, string symbol)
 		{
 			var handle = dlopen (lib, 0);
 			if (handle == IntPtr.Zero)
@@ -455,7 +474,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		internal static double SlowGetDouble (string lib, string symbol)
+		internal static double SlowGetDouble (string? lib, string symbol)
 		{
 			var handle = dlopen (lib, 0);
 			if (handle == IntPtr.Zero)
@@ -467,7 +486,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		internal static NSString SlowGetStringConstant (string lib, string symbol)
+		internal static NSString? SlowGetStringConstant (string? lib, string symbol)
 		{
 			var handle = dlopen (lib, 0);
 			if (handle == IntPtr.Zero)

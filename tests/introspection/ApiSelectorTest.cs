@@ -26,6 +26,10 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Introspection {
 
 	public abstract class ApiSelectorTest : ApiBaseTest {
@@ -170,12 +174,12 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
-#if !XAMCORE_4_0
+#if !NET
 			case "NSUrl":
 			case "ARQuickLookPreviewItem":
 				switch (selectorName) {
 				case "previewItemTitle":
-					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in XAMCORE_4_0)
+					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in .NET)
 					return true;
 				}
 				break;
@@ -191,21 +195,21 @@ namespace Introspection {
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "ARBodyTrackingConfiguration":
 			case "ARGeoTrackingConfiguration":
 			switch (selectorName) {
 				case "supportsAppClipCodeTracking": // Only available on device
-					return Runtime.Arch == Arch.SIMULATOR;
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			case "CSImportExtension":
 				switch (selectorName) {
 				case "beginRequestWithExtensionContext:": 
 				case "updateAttributes:forFileAtURL:error:":
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -213,7 +217,7 @@ namespace Introspection {
 			case "HKQuery":
 				switch (selectorName) {
 				case "predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:": // not available in the sim
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
 						return true;
 					break;
 				}
@@ -269,6 +273,17 @@ namespace Introspection {
 				case "initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:":
 				case "initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:":
 					return true;
+				}
+				break;
+			case "NSOperationQueue":
+				switch (selectorName) {
+				case "progress":
+					// The "progress" property comes from the NSProgressReporting protocol, where it was introduced a long time ago.
+					// Then NSOperationQueue started implementing the NSProgressReporting, but only in iOS 13, which means that
+					// this selector does not exist on earlier iOS versions, even to the managed property (from the protocol) claims so.
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSImage":
@@ -338,6 +353,14 @@ namespace Introspection {
 				switch (selectorName) {
 				case "initWithColumns:rows:sourcePositions:destPositions:":
 					return true;
+				}
+				break;
+			case "SKNode":
+				switch (selectorName) {
+				case "focusItemContainer":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
 				}
 				break;
 			case "INPriceRange":
@@ -643,6 +666,16 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSMenu":
+				switch (selectorName) {
+				case "appearance":
+				case "setAppearance:":
+				case "effectiveAppearance":
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+						return true;
+					break;
+				}
+				break;
 			case "NSQueryGenerationToken": // A test was added in monotouch tests to ensure the selector works
 				switch (selectorName) {
 				case "encodeWithCoder:":
@@ -771,6 +804,12 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
+				case "objectWithItemProviderData:typeIdentifier:error:":
+				case "readableTypeIdentifiersForItemProvider":
+					// Conformance added in Xcode 12
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
 				}
 				break;
 			case "MPSNNNeuronDescriptor":
@@ -792,7 +831,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if __MACOS__ || __MACCATALYST__ || __WATCHOS__
 			case "MLDictionaryFeatureProvider":
 			case "MLMultiArray":
 			case "MLFeatureValue":
@@ -804,7 +842,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-#endif
 			case "BGTaskScheduler":
 				switch (selectorName) {
 				case "sharedScheduler":
@@ -818,7 +855,7 @@ namespace Introspection {
 				case "defaultBody2DSkeletonDefinition":
 				case "defaultBody3DSkeletonDefinition":
 					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					break;
 				}
@@ -849,6 +886,13 @@ namespace Introspection {
 				if (selectorName == "waitUntilExit")
 					return true;
 				break;
+			case "NSTextStorage":
+				switch (selectorName) {
+				// declared in a superclass, and implemented in a concrete subclass, so it doesn't show up during inspection of NSTextStorage itself.
+				case "initWithString:":
+					return true;
+				}
+				break;
 			case "MPSImageDescriptor":
 				switch (selectorName) {
 				case "copyWithZone:":
@@ -856,6 +900,26 @@ namespace Introspection {
 						return true;
 					break;
 				}
+				break;
+			case "UIControl":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "contextMenuInteraction:configurationForMenuAtLocation:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "UISceneConnectionOptions":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "shortcutItem":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
 				break;
 			}
 
@@ -952,7 +1016,11 @@ namespace Introspection {
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 			if (fi == null)
 				return IntPtr.Zero; // e.g. *Delegate
+#if NET
+			return (NativeHandle) fi.GetValue (null);
+#else
 			return (IntPtr) fi.GetValue (null);
+#endif
 		}
 
 		[Test]
@@ -1067,6 +1135,9 @@ namespace Introspection {
 			case "initWithUUID:identifier:":
 			case "initWithUUID:major:identifier:":
 			case "initWithUUID:major:minor:identifier:":
+			// Intents
+			case "initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:suggestionType:":
+			case "initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isContactSuggestion:suggestionType:":
 			// NEHotspotConfiguration
 			case "initWithSSID:":
 			case "initWithSSID:passphrase:isWEP:":
@@ -1128,7 +1199,7 @@ namespace Introspection {
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
 					continue; // e.g. *Delegate
-				IntPtr class_ptr = (IntPtr) fi.GetValue (null);
+				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 				
 				foreach (var m in t.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
 					if (SkipDueToAttribute (m))

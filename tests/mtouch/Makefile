@@ -31,7 +31,7 @@ run-tests: bin/Debug/mtouchtests.dll test.config
 -include mtouchtests.csproj.inc
 
 bin/Debug/mtouchtests.dll: $(mtouch_dependencies)
-	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY)
+	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
 	$(Q) rm -f .failed-stamp
 
 build: bin/Debug/mtouchtests.dll

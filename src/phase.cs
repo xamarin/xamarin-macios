@@ -4,13 +4,23 @@ using Foundation;
 using ModelIO;
 using ObjCRuntime;
 
-using Quaternion = global::OpenTK.Quaternion;
+#if NET
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector3 = global::System.Numerics.Vector3;
+using NMatrix4 = global::CoreGraphics.NMatrix4;
+using Quaternion = global::System.Numerics.Quaternion;
+#else
 using Vector2d = global::OpenTK.Vector2d;
 using Vector3 = global::OpenTK.Vector3;
 using NMatrix4 = global::OpenTK.NMatrix4;
-
+using Quaternion = global::OpenTK.Quaternion;
+#endif
 
 using System;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Phase {
 
@@ -231,7 +241,7 @@ namespace Phase {
 	interface PhaseNumericPair
 	{
 		[Export ("initWithFirstValue:secondValue:")]
-		IntPtr Constructor (double first, double second);
+		NativeHandle Constructor (double first, double second);
 
 		[Export ("first")]
 		double First { get; set; }
@@ -246,7 +256,7 @@ namespace Phase {
 	{
 		[Export ("initWithEndPoint:curveType:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector2d endPoint, PhaseCurveType curveType);
+		NativeHandle Constructor (Vector2d endPoint, PhaseCurveType curveType);
 
 		[Export ("endPoint", ArgumentSemantic.Assign)]	
 		Vector2d EndPoint { 
@@ -267,7 +277,7 @@ namespace Phase {
 		[Export ("initWithStartPoint:segments:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (Vector2d startPoint, PhaseEnvelopeSegment[] segments);
+		NativeHandle Constructor (Vector2d startPoint, PhaseEnvelopeSegment[] segments);
 
 		[Export ("evaluateForValue:")]
 		double Evaluate (double x);
@@ -311,17 +321,17 @@ namespace Phase {
 	interface PhaseNumberMetaParameterDefinition
 	{
 		[Export ("initWithValue:identifier:")]
-		IntPtr Constructor (double value, string identifier);
+		NativeHandle Constructor (double value, string identifier);
 
 		[Export ("initWithValue:")]
-		IntPtr Constructor (double value);
+		NativeHandle Constructor (double value);
 
 		[Export ("initWithValue:minimum:maximum:identifier:")]
-		IntPtr Constructor (double value, double minimum, double maximum, string identifier);
+		NativeHandle Constructor (double value, double minimum, double maximum, string identifier);
 
 		[Export ("initWithValue:minimum:maximum:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double value, double minimum, double maximum);
+		NativeHandle Constructor (double value, double minimum, double maximum);
 
 		[Export ("minimum")]
 		double Minimum { get; }
@@ -336,11 +346,11 @@ namespace Phase {
 	interface PhaseStringMetaParameterDefinition
 	{
 		[Export ("initWithValue:identifier:")]
-		IntPtr Constructor (string value, string identifier);
+		NativeHandle Constructor (string value, string identifier);
 
 		[Export ("initWithValue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string value);
+		NativeHandle Constructor (string value);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -349,18 +359,18 @@ namespace Phase {
 	interface PhaseMappedMetaParameterDefinition
 	{
 		[Export ("initWithValue:identifier:")]
-		IntPtr Constructor (double value, string identifier);
+		NativeHandle Constructor (double value, string identifier);
 
 		[Export ("initWithValue:minimum:maximum:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double value, double minimum, double maximum);
+		NativeHandle Constructor (double value, double minimum, double maximum);
 
 		[Export ("initWithInputMetaParameterDefinition:envelope:identifier:")]
-		IntPtr Constructor (PhaseNumberMetaParameterDefinition inputMetaParameterDefinition, PhaseEnvelope envelope, string identifier);
+		NativeHandle Constructor (PhaseNumberMetaParameterDefinition inputMetaParameterDefinition, PhaseEnvelope envelope, string identifier);
 
 		[Export ("initWithInputMetaParameterDefinition:envelope:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseNumberMetaParameterDefinition inputMetaParameterDefinition, PhaseEnvelope envelope);
+		NativeHandle Constructor (PhaseNumberMetaParameterDefinition inputMetaParameterDefinition, PhaseEnvelope envelope);
 
 		[Export ("envelope", ArgumentSemantic.Strong)]
 		PhaseEnvelope Envelope { get; }
@@ -420,10 +430,10 @@ namespace Phase {
 	{
 		[Export ("initWithSpatialPipeline:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseSpatialPipeline spatialPipeline);
+		NativeHandle Constructor (PhaseSpatialPipeline spatialPipeline);
 
 		[Export ("initWithSpatialPipeline:identifier:")]
-		IntPtr Constructor (PhaseSpatialPipeline spatialPipeline, string identifier);
+		NativeHandle Constructor (PhaseSpatialPipeline spatialPipeline, string identifier);
 
 		[Export ("spatialPipeline", ArgumentSemantic.Strong)]
 		PhaseSpatialPipeline SpatialPipeline { get; }
@@ -445,12 +455,12 @@ namespace Phase {
 	{
 		[Export ("initWithChannelLayout:orientation:identifier:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (AVAudioChannelLayout layout, Quaternion orientation, NSString identifier);
+		NativeHandle Constructor (AVAudioChannelLayout layout, Quaternion orientation, NSString identifier);
 
 		[Export ("initWithChannelLayout:orientation:")]
 		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (AVAudioChannelLayout layout, Quaternion orientation);
+		NativeHandle Constructor (AVAudioChannelLayout layout, Quaternion orientation);
 
 		[Export ("orientation")]
 		Quaternion Orientation {
@@ -468,11 +478,11 @@ namespace Phase {
 	interface PhaseChannelMixerDefinition
 	{
 		[Export ("initWithChannelLayout:identifier:")]
-		IntPtr Constructor (AVAudioChannelLayout layout, string identifier);
+		NativeHandle Constructor (AVAudioChannelLayout layout, string identifier);
 
 		[Export ("initWithChannelLayout:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioChannelLayout layout);
+		NativeHandle Constructor (AVAudioChannelLayout layout);
 
 		[Export ("inputChannelLayout", ArgumentSemantic.Strong)]
 		AVAudioChannelLayout InputChannelLayout { get; }
@@ -511,7 +521,7 @@ namespace Phase {
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("registerWithEngine:")]
 		void Register (PhaseEngine engine);
@@ -598,11 +608,11 @@ namespace Phase {
 	interface PhaseSamplerNodeDefinition
 	{
 		[Export ("initWithSoundAssetIdentifier:mixerDefinition:identifier:")]
-		IntPtr Constructor (string soundAssetIdentifier, PhaseMixerDefinition mixerDefinition, string identifier);
+		NativeHandle Constructor (string soundAssetIdentifier, PhaseMixerDefinition mixerDefinition, string identifier);
 
 		[Export ("initWithSoundAssetIdentifier:mixerDefinition:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string soundAssetIdentifier, PhaseMixerDefinition mixerDefinition);
+		NativeHandle Constructor (string soundAssetIdentifier, PhaseMixerDefinition mixerDefinition);
 
 		[Export ("assetIdentifier", ArgumentSemantic.Strong)]
 		string AssetIdentifier { get; }
@@ -624,7 +634,7 @@ namespace Phase {
 		PhaseContainerNodeDefinition Create ();
 
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("addSubtree:")]
 		void Add (PhaseSoundEventNodeDefinition subtree);
@@ -636,18 +646,18 @@ namespace Phase {
 	interface PhaseBlendNodeDefinition
 	{
 		[Export ("initWithBlendMetaParameterDefinition:identifier:")]
-		IntPtr Constructor (PhaseNumberMetaParameterDefinition blendMetaParameterDefinition, string identifier);
+		NativeHandle Constructor (PhaseNumberMetaParameterDefinition blendMetaParameterDefinition, string identifier);
 
 		[Export ("initWithBlendMetaParameterDefinition:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseNumberMetaParameterDefinition blendMetaParameterDefinition);
+		NativeHandle Constructor (PhaseNumberMetaParameterDefinition blendMetaParameterDefinition);
 
 		[Export ("initDistanceBlendWithSpatialMixerDefinition:identifier:")]
-		IntPtr Constructor (PhaseSpatialMixerDefinition spatialMixerDefinition, string identifier);
+		NativeHandle Constructor (PhaseSpatialMixerDefinition spatialMixerDefinition, string identifier);
 
 		[Export ("initDistanceBlendWithSpatialMixerDefinition:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseSpatialMixerDefinition spatialMixerDefinition);
+		NativeHandle Constructor (PhaseSpatialMixerDefinition spatialMixerDefinition);
 
 		[NullAllowed, Export ("blendParameterDefinition", ArgumentSemantic.Strong)]
 		PhaseNumberMetaParameterDefinition BlendParameterDefinition { get; }
@@ -674,11 +684,11 @@ namespace Phase {
 	interface PhaseSwitchNodeDefinition
 	{
 		[Export ("initWithSwitchMetaParameterDefinition:identifier:")]
-		IntPtr Constructor (PhaseStringMetaParameterDefinition switchMetaParameterDefinition, string identifier);
+		NativeHandle Constructor (PhaseStringMetaParameterDefinition switchMetaParameterDefinition, string identifier);
 
 		[Export ("initWithSwitchMetaParameterDefinition:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseStringMetaParameterDefinition switchMetaParameterDefinition);
+		NativeHandle Constructor (PhaseStringMetaParameterDefinition switchMetaParameterDefinition);
 
 		[Export ("addSubtree:switchValue:")]
 		void AddSubtree (PhaseSoundEventNodeDefinition subtree, string switchValue);
@@ -694,10 +704,10 @@ namespace Phase {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithIdentifier:")]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("addSubtree:weight:")]
 		void AddSubtree (PhaseSoundEventNodeDefinition subtree, NSNumber weight);
@@ -712,11 +722,11 @@ namespace Phase {
 	interface PhasePushStreamNodeDefinition
 	{
 		[Export ("initWithMixerDefinition:format:identifier:")]
-		IntPtr Constructor (PhaseMixerDefinition mixerDefinition, AVAudioFormat format, string identifier);
+		NativeHandle Constructor (PhaseMixerDefinition mixerDefinition, AVAudioFormat format, string identifier);
 
 		[Export ("initWithMixerDefinition:format:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseMixerDefinition mixerDefinition, AVAudioFormat format);
+		NativeHandle Constructor (PhaseMixerDefinition mixerDefinition, AVAudioFormat format);
 
 		[Export ("format", ArgumentSemantic.Strong)]
 		AVAudioFormat Format { get; }
@@ -869,7 +879,7 @@ namespace Phase {
 	interface PhaseCardioidDirectivityModelParameters
 	{
 		[Export ("initWithSubbandParameters:")]
-		IntPtr Constructor (PhaseCardioidDirectivityModelSubbandParameters[] subbandParameters);
+		NativeHandle Constructor (PhaseCardioidDirectivityModelSubbandParameters[] subbandParameters);
 
 		[Export ("subbandParameters", ArgumentSemantic.Strong)]
 		PhaseCardioidDirectivityModelSubbandParameters[] SubbandParameters { get; }
@@ -880,7 +890,7 @@ namespace Phase {
 	interface PhaseConeDirectivityModelParameters
 	{
 		[Export ("initWithSubbandParameters:")]
-		IntPtr Constructor (PhaseConeDirectivityModelSubbandParameters[] subbandParameters);
+		NativeHandle Constructor (PhaseConeDirectivityModelSubbandParameters[] subbandParameters);
 
 		[Export ("subbandParameters", ArgumentSemantic.Strong)]
 		PhaseConeDirectivityModelSubbandParameters[] SubbandParameters { get; }
@@ -893,7 +903,7 @@ namespace Phase {
 	{
 		[Export ("initWithCullDistance:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double cullDistance);
+		NativeHandle Constructor (double cullDistance);
 
 		[Export ("cullDistance")]
 		double CullDistance { get; }
@@ -923,7 +933,7 @@ namespace Phase {
 	{
 		[Export ("initWithEnvelope:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEnvelope envelope);
+		NativeHandle Constructor (PhaseEnvelope envelope);
 
 		[Export ("envelope", ArgumentSemantic.Strong)]
 		PhaseEnvelope Envelope { get; }
@@ -935,7 +945,7 @@ namespace Phase {
 	interface PhaseDucker
 	{
 		[Export ("initWithEngine:sourceGroups:targetGroups:gain:attackTime:releaseTime:attackCurve:releaseCurve:")]
-		IntPtr Constructor (PhaseEngine engine, NSSet<PhaseGroup> sourceGroups, NSSet<PhaseGroup> targetGroups, double gain, double attackTime, double releaseTime, PhaseCurveType attackCurve, PhaseCurveType releaseCurve);
+		NativeHandle Constructor (PhaseEngine engine, NSSet<PhaseGroup> sourceGroups, NSSet<PhaseGroup> targetGroups, double gain, double attackTime, double releaseTime, PhaseCurveType attackCurve, PhaseCurveType releaseCurve);
 
 		[Export ("activate")]
 		void Activate ();
@@ -977,7 +987,7 @@ namespace Phase {
 	interface PhaseGroupPresetSetting
 	{
 		[Export ("initWithGain:rate:gainCurveType:rateCurveType:")]
-		IntPtr Constructor (double gain, double rate, PhaseCurveType gainCurveType, PhaseCurveType rateCurveType);
+		NativeHandle Constructor (double gain, double rate, PhaseCurveType gainCurveType, PhaseCurveType rateCurveType);
 
 		[Export ("gain")]
 		double Gain { get; }
@@ -999,7 +1009,7 @@ namespace Phase {
 	{
 		[Export ("initWithEngine:settings:timeToTarget:timeToReset:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine, NSDictionary<NSString, PhaseGroupPresetSetting> settings, double timeToTarget, double timeToReset);
+		NativeHandle Constructor (PhaseEngine engine, NSDictionary<NSString, PhaseGroupPresetSetting> settings, double timeToTarget, double timeToReset);
 
 		[Export ("settings")]
 		NSDictionary<NSString, PhaseGroupPresetSetting> Settings { get; }
@@ -1029,7 +1039,7 @@ namespace Phase {
 	interface PhaseMedium
 	{
 		[Export ("initWithEngine:preset:")]
-		IntPtr Constructor (PhaseEngine engine, PhaseMediumPreset preset);
+		NativeHandle Constructor (PhaseEngine engine, PhaseMediumPreset preset);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1039,7 +1049,7 @@ namespace Phase {
 	{
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine);
+		NativeHandle Constructor (PhaseEngine engine);
 
 		[Export ("addChild:error:")]
 		bool AddChild (PhaseObject child, [NullAllowed] out NSError error);
@@ -1093,10 +1103,10 @@ namespace Phase {
 	interface PhaseSoundEvent
 	{
 		[Export ("initWithEngine:assetIdentifier:mixerParameters:error:")]
-		IntPtr Constructor (PhaseEngine engine, string assetIdentifier, PhaseMixerParameters mixerParameters, [NullAllowed] out NSError error);
+		NativeHandle Constructor (PhaseEngine engine, string assetIdentifier, PhaseMixerParameters mixerParameters, [NullAllowed] out NSError error);
 
 		[Export ("initWithEngine:assetIdentifier:error:")]
-		IntPtr Constructor (PhaseEngine engine, string assetIdentifier, [NullAllowed] out NSError error);
+		NativeHandle Constructor (PhaseEngine engine, string assetIdentifier, [NullAllowed] out NSError error);
 
 		[Async]
 		[Export ("prepareWithCompletion:")]
@@ -1151,7 +1161,7 @@ namespace Phase {
 	{
 		[Export ("initWithUpdateMode:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseUpdateMode updateMode);
+		NativeHandle Constructor (PhaseUpdateMode updateMode);
 
 		[Export ("startAndReturnError:")]
 		bool Start ([NullAllowed] out NSError error);
@@ -1209,7 +1219,7 @@ namespace Phase {
 	{
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine);
+		NativeHandle Constructor (PhaseEngine engine);
 
 		[Export ("gain")]
 		double Gain { get; set; }
@@ -1221,7 +1231,7 @@ namespace Phase {
 	interface PhaseMaterial
 	{
 		[Export ("initWithEngine:preset:")]
-		IntPtr Constructor (PhaseEngine engine, PhaseMaterialPreset preset);
+		NativeHandle Constructor (PhaseEngine engine, PhaseMaterialPreset preset);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1240,10 +1250,10 @@ namespace Phase {
 	{
 		[Export ("initWithEngine:mesh:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine, MDLMesh mesh);
+		NativeHandle Constructor (PhaseEngine engine, MDLMesh mesh);
 
 		[Export ("initWithEngine:mesh:materials:")]
-		IntPtr Constructor (PhaseEngine engine, MDLMesh mesh, PhaseMaterial[] materials);
+		NativeHandle Constructor (PhaseEngine engine, MDLMesh mesh, PhaseMaterial[] materials);
 
 		[Export ("elements", ArgumentSemantic.Copy)]
 		PhaseShapeElement[] Elements { get; }
@@ -1256,11 +1266,11 @@ namespace Phase {
 	{
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine);
+		NativeHandle Constructor (PhaseEngine engine);
 
 		[Export ("initWithEngine:shapes:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine, PhaseShape[] shapes);
+		NativeHandle Constructor (PhaseEngine engine, PhaseShape[] shapes);
 
 		[Export ("shapes", ArgumentSemantic.Copy)]
 		PhaseShape[] Shapes { get; }
@@ -1273,11 +1283,11 @@ namespace Phase {
 	{
 		[Export ("initWithEngine:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine);
+		NativeHandle Constructor (PhaseEngine engine);
 
 		[Export ("initWithEngine:shapes:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseEngine engine, PhaseShape[] shapes);
+		NativeHandle Constructor (PhaseEngine engine, PhaseShape[] shapes);
 
 		[Export ("gain")]
 		double Gain { get; set; }
@@ -1304,7 +1314,7 @@ namespace Phase {
 	{
 		[Export ("initWithFlags:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseSpatialPipelineFlags flags);
+		NativeHandle Constructor (PhaseSpatialPipelineFlags flags);
 
 		// @property (readonly, nonatomic) PHASESpatialPipelineFlags flags;
 		[Export ("flags")]

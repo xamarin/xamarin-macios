@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
+using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class ParseBundlerArgumentsTaskBase : XamarinTask {
 		public string ExtraArgs { get; set; }
@@ -23,6 +26,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string CustomBundleName { get; set; }
 
 		[Output]
+		public ITaskItem[] CustomLinkFlags { get; set; }
+
+		[Output]
 		public string NoSymbolStrip { get; set; }
 
 		[Output]
@@ -32,9 +38,15 @@ namespace Xamarin.MacDev.Tasks {
 		public string Optimize { get; set; }
 
 		[Output]
+		public string PackageDebugSymbols { get; set; }
+
+		[Output]
 		public string Registrar { get; set; }
 
 		// This is input too
+		[Output]
+		public string NoStrip { get; set; }
+
 		[Output]
 		public int Verbosity { get; set; }
 
@@ -52,6 +64,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				List<string> xml = null;
+				List<string> customLinkFlags = null;
 				var envVariables = new List<ITaskItem> ();
 				var dlsyms = new List<ITaskItem> ();
 
@@ -76,9 +89,14 @@ namespace Xamarin.MacDev.Tasks {
 					var eq = arg.IndexOfAny (separators);
 					var value = string.Empty;
 					var name = arg;
+					var nextValue = string.Empty;
+					var hasValue = false;
 					if (eq >= 0) {
 						name = arg.Substring (0, eq);
 						value = arg.Substring (eq + 1);
+						hasValue = true;
+					} else if (i < args.Length - 1) {
+						nextValue = args [i + 1];
 					}
 
 					switch (name) {
@@ -104,12 +122,15 @@ namespace Xamarin.MacDev.Tasks {
 						Verbosity--;
 						break;
 					case "marshal-managed-exceptions":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						MarshalManagedExceptionMode = value;
 						break;
 					case "marshal-objectivec-exceptions":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						MarshalObjectiveCExceptionMode = value;
 						break;
 					case "custom_bundle_name":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						CustomBundleName = value;
 						break;
 					case "optimize":
@@ -117,10 +138,15 @@ namespace Xamarin.MacDev.Tasks {
 							Optimize += ",";
 						Optimize += value;
 						break;
+					case "package-debug-symbols":
+						PackageDebugSymbols = string.IsNullOrEmpty (value) ? "true" : value;
+						break;
 					case "registrar":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						Registrar = value;
 						break;
 					case "setenv":
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						var colon = value.IndexOfAny (separators);
 						var item = new TaskItem (value.Substring (0, colon));
 						item.SetMetadata ("Value", value.Substring (colon + 1));
@@ -129,7 +155,22 @@ namespace Xamarin.MacDev.Tasks {
 					case "xml":
 						if (xml == null)
 							xml = new List<string> ();
+						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						xml.Add (value);
+						break;
+					case "nostrip":
+						// Output is EnableAssemblyILStripping so we enable if --nostrip=false and disable if true
+						NoStrip = ParseBool (value) ? "false" : "true";
+						break;
+					case "gcc_flags": // mtouch uses gcc_flags
+					case "link_flags": // mmp uses link_flags
+						if (!StringUtils.TryParseArguments (value, out var lf, out var ex)) {
+							Log.LogError (MSBStrings.E0189 /* Could not parse the custom linker argument(s) '-{0}': {1} */, $"-{name}={value}", ex.Message);
+							continue;
+						}
+						if (customLinkFlags is null)
+							customLinkFlags = new List<string> ();
+						customLinkFlags.AddRange (lf);
 						break;
 					default:
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
@@ -144,6 +185,15 @@ namespace Xamarin.MacDev.Tasks {
 					foreach (var x in xml)
 						defs.Add (new TaskItem (x));
 					XmlDefinitions = defs.ToArray ();
+				}
+
+				if (customLinkFlags is not null) {
+					var defs = new List<ITaskItem> ();
+					if (CustomLinkFlags is not null)
+						defs.AddRange (CustomLinkFlags);
+					foreach (var lf in customLinkFlags)
+						defs.Add (new TaskItem (lf));
+					CustomLinkFlags = defs.ToArray ();
 				}
 
 				if (envVariables.Count > 0) {

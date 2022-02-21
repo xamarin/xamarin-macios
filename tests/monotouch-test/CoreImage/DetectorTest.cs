@@ -10,9 +10,6 @@
 
 #if !__WATCHOS__
 
-using System;
-using System.IO;
-
 using Foundation;
 using CoreImage;
 using CoreGraphics;

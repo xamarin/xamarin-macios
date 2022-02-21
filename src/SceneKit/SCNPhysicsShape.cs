@@ -35,7 +35,7 @@ namespace SceneKit
 			return Create (shapes, t);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Create' method that takes a 'SCNMatrix4 []'.")]
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNVector3 [] transforms)
 		{
@@ -97,7 +97,10 @@ namespace SceneKit
 		}
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
 #endif

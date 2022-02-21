@@ -16,6 +16,7 @@ using AddressBookUI;
 using ObjCRuntime;
 using UIKit;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AddressBookUI {
 	
@@ -27,7 +28,7 @@ namespace MonoTouchFixtures.AddressBookUI {
 		public void Setup ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -66,7 +67,7 @@ namespace MonoTouchFixtures.AddressBookUI {
 				// iOS 8.2 beta 5 (12D5480a) simulator (Xcode 6.2 beta 5): working
 
 				// we don't check before 8.2 - where both device and simulators works again properly
-				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 2))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 2))
 					return;
 
 				// iOS 11.0 beta 1, 2, 3 and 4 are broken

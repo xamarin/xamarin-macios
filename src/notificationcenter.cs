@@ -10,6 +10,10 @@ using UIKit;
 using AppKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace NotificationCenter {
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
@@ -48,7 +52,7 @@ namespace NotificationCenter {
 		[Export ("widgetAllowsEditing")]
 		bool WidgetAllowsEditing {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
@@ -69,7 +73,12 @@ namespace NotificationCenter {
 #if !MONOMAC
 	[iOS (8,0)]
 	[BaseType (typeof (UIVibrancyEffect))]
+#if NET
+	[Internal]
+	[Category]
+#else
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+#endif
 	interface UIVibrancyEffect_NotificationCenter {
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]
@@ -129,7 +138,7 @@ namespace NotificationCenter {
 	interface NCWidgetListViewController
 	{
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 		
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INCWidgetListViewDelegate Delegate { get; set; }
@@ -190,7 +199,7 @@ namespace NotificationCenter {
 	interface NCWidgetSearchViewController
 	{
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INCWidgetSearchViewDelegate Delegate { get; set; }
@@ -220,7 +229,7 @@ namespace NotificationCenter {
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetSearchViewDelegate
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 		[Export ("widgetSearch:searchForTerm:maxResults:"), EventArgs ("NSWidgetSearchForTerm"), DefaultValue (false)]
 		void SearchForTearm (NCWidgetSearchViewController controller, string searchTerm, nuint max);

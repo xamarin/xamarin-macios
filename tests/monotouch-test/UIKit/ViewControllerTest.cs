@@ -18,6 +18,7 @@ using ObjCRuntime;
 using iAd;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
@@ -178,7 +179,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InterstitialAds_New ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			UIViewController.PrepareForInterstitialAds ();
 		}

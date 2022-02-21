@@ -17,17 +17,29 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-#if !NET
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
+#if NET
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
 #endif
 	public class NWPath : NativeObject {
-		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static NWPathStatus nw_path_get_status (IntPtr handle);
@@ -35,31 +47,31 @@ namespace Network {
 		public NWPathStatus Status => nw_path_get_status (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs(UnmanagedType.U1)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool nw_path_is_expensive (IntPtr handle);
 
 		public bool IsExpensive => nw_path_is_expensive (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs(UnmanagedType.U1)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool nw_path_has_ipv4 (IntPtr handle);
 
 		public bool HasIPV4 => nw_path_has_ipv4 (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs(UnmanagedType.U1)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool nw_path_has_ipv6 (IntPtr handle);
 
 		public bool HasIPV6 => nw_path_has_ipv6 (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs(UnmanagedType.U1)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool nw_path_has_dns (IntPtr handle);
 
 		public bool HasDns => nw_path_has_dns (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs(UnmanagedType.U1)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool nw_path_uses_interface_type (IntPtr handle, NWInterfaceType type);
 
 		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (GetCheckedHandle (), type);
@@ -89,7 +101,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs(UnmanagedType.U1)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool nw_path_is_equal (IntPtr p1, IntPtr p2);
 
 		public bool EqualsTo (NWPath other)
@@ -130,32 +142,38 @@ namespace Network {
 			}
 		}
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_path_is_constrained (IntPtr path);
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public bool IsConstrained => nw_path_is_constrained (GetCheckedHandle ());
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_path_enumerate_gateways (IntPtr path, ref BlockLiteral enumerate_block);
@@ -173,12 +191,14 @@ namespace Network {
 			}
 		}
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateGateways (Action<NWEndpoint> callback)
@@ -196,26 +216,32 @@ namespace Network {
 			}
 		}
 
-#if !NET
-		[iOS (14,2)][TV (14,2)][Watch (7,1)][Mac (11,0)]
-		[MacCatalyst (14,2)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.2")]
 		[SupportedOSPlatform ("tvos14.2")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.2")]
+#else
+		[iOS (14,2)]
+		[TV (14,2)]
+		[Watch (7,1)]
+		[Mac (11,0)]
+		[MacCatalyst (14,2)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWPathUnsatisfiedReason /* nw_path_unsatisfied_reason_t */ nw_path_get_unsatisfied_reason (IntPtr /* OS_nw_path */ path);
 
-#if !NET
-		[iOS (14,2)][TV (14,2)][Watch (7,1)][Mac (11,0)]
-		[MacCatalyst (14,2)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios14.2")]
 		[SupportedOSPlatform ("tvos14.2")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.2")]
+#else
+		[iOS (14,2)]
+		[TV (14,2)]
+		[Watch (7,1)]
+		[Mac (11,0)]
+		[MacCatalyst (14,2)]
 #endif
 		public NWPathUnsatisfiedReason GetUnsatisfiedReason ()
 		{

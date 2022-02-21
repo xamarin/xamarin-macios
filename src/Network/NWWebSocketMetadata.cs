@@ -21,18 +21,26 @@ using OS_nw_protocol_metadata=System.IntPtr;
 using OS_nw_ws_response=System.IntPtr;
 using dispatch_queue_t =System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-#if !NET
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios13.0")]
+#if NET
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
 #endif
 	public class NWWebSocketMetadata : NWProtocolMetadata {
 
-		internal NWWebSocketMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWWebSocketMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ws_create_metadata (NWWebSocketOpCode opcode);

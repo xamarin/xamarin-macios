@@ -157,7 +157,7 @@ namespace Xamarin.Bundler {
 
 		public void ValidateAssembliesBeforeLink ()
 		{
-			if (App.LinkMode != LinkMode.None) {
+			if (App.AreAnyAssembliesTrimmed) {
 				foreach (Assembly assembly in Assemblies) {
 					if ((assembly.AssemblyDefinition.MainModule.Attributes & ModuleAttributes.ILOnly) == 0)
 						throw ErrorHelper.CreateError (2014, Errors.MT2014, assembly.AssemblyDefinition.MainModule.FileName);
@@ -207,7 +207,7 @@ namespace Xamarin.Bundler {
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
 						switch (framework.Name) {
-#if MONOMAC
+#if MONOMAC && !NET
 						case "QTKit":
 							// we already warn in Frameworks.cs Gather method
 							if (!Driver.LinkProhibitedFrameworks)
@@ -242,6 +242,7 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#if !NET
 						case "WatchKit":
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
@@ -249,9 +250,10 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#endif
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
-								if (App.LinkMode != LinkMode.None) {
+								if (App.AreAnyAssembliesTrimmed) {
 									ErrorHelper.Warning (5223, Errors.MX5223, framework.Name, App.PlatformName);
 								} else {
 									Driver.Log (3, Errors.MX5223, framework.Name, App.PlatformName);
@@ -749,7 +751,7 @@ namespace Xamarin.Bundler {
 			if (app.MonoNativeMode != MonoNativeMode.None) {
 				sw.WriteLine ("static const char *xamarin_runtime_libraries_array[] = {");
 				foreach (var lib in app.MonoLibraries)
-					sw.WriteLine ($"\t\"{Path.GetFileName (lib)}\",");
+					sw.WriteLine ($"\t\"{Path.GetFileNameWithoutExtension (lib)}\",");
 				sw.WriteLine ($"\tNULL");
 				sw.WriteLine ("};");
 			}
@@ -775,6 +777,8 @@ namespace Xamarin.Bundler {
 			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {
+				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
+			} else if (app.IsSimulatorBuild && ((abi & Abi.ARM64) == Abi.ARM64)) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			}
 

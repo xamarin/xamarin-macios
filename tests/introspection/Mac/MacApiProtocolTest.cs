@@ -24,9 +24,9 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Name) {
-#if !XAMCORE_4_0
+#if !NET
 			case "NSDraggingInfo":
-				return true; // Incorrectly bound (BaseType on protocol), will be fixed for XAMCORE_4_0.
+				return true; // Incorrectly bound (BaseType on protocol), will be fixed for .NET.
 #endif
 			// special cases wrt sandboxing
 			case "NSRemoteOpenPanel":
@@ -36,8 +36,10 @@ namespace Introspection {
 			case "AVCaptureSynchronizedData":
 			case "CXProvider":
 				return TestRuntime.IsVM; // skip only on vms
+#if !NET // NSMenuView does not exist in .NET
 			case "NSMenuView": // not longer supported
 				return true;
+#endif // !NET
 			default:
 				return base.Skip (type);
 			}
@@ -121,6 +123,8 @@ namespace Introspection {
 				case "OSLogMessageComponent":
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
+				case "MEComposeSession":
+				case "MEComposeContext":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -157,6 +161,7 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSPropertyMapping":
 				case "HMAccessoryOwnershipToken":
+				case "MEComposeSession":
 					return true;
 				}
 				break;
@@ -235,6 +240,7 @@ namespace Introspection {
 				case "OSLogMessageComponent":
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
+				case "MEComposeContext":
 					return true;
 				}
 				break;
@@ -271,7 +277,7 @@ namespace Introspection {
 				if (type.Name == "NSTextView")
 					return true;
 				break;
-#if !XAMCORE_4_0
+#if !NET
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif

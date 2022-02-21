@@ -155,8 +155,7 @@ namespace LinkSdk.Serialization {
 		public void Bug1820_GenericList ()
 		{
 #if NET && (__IOS__ || __TVOS__)
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/mono/linker/issues/2266");
+			TestRuntime.AssertNotDevice ("https://github.com/mono/linker/issues/2266");
 #endif
 			string input = @"
 				<?xml version=""1.0"" encoding=""UTF-8""?>

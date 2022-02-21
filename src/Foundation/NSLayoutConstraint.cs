@@ -12,6 +12,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #if MONOMAC
 using View = AppKit.NSView;
@@ -117,19 +118,27 @@ namespace UIKit
 			return Create ((INativeObject) view1, attribute1, relation, view2, attribute2, multiplier, constant);
 		}
 
-#if !MONOMAC || XAMCORE_4_0
+#if !MONOMAC || NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10, 0)]
+#endif
 		public NSLayoutAnchor<AnchorType> FirstAnchor<AnchorType> () where AnchorType : NSObject
 		{
 			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_FirstAnchor ());
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10, 0)]
+#endif
 		public NSLayoutAnchor<AnchorType> SecondAnchor<AnchorType> () where AnchorType : NSObject
 		{
 			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_SecondAnchor ());
 		}
-#endif // !MONOMAC || XAMCORE_4_0
+#endif // !MONOMAC || NET
 	}
 }
 

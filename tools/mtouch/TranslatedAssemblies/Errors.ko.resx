@@ -742,10 +742,10 @@
 		<value>현재 플랫폼({2})에서 사용할 수 없기 때문에 {1}의 모듈 참조에서 {0} 프레임워크와 연결할 수 없습니다.</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Mac Catalyst용 MacOS 버전에 iOS 버전 {0}을(를) 매핑할 수 없습니다.</value>
+        <value>Mac Catalyst 버전 {0}을(를) 해당 macOS 버전에 매핑할 수 없습니다. 유효한 Mac Catalyst 버전은 다음과 같습니다. {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Mac Catalyst의 해당 iOS 버전에 macOS 버전 {0}을(를) 매핑할 수 없습니다.</value>
+        <value>macOS 버전 {0}을(를) 해당 Mac Catalyst 버전에 매핑할 수 없습니다. 유효한 macOS 버전은 다음과 같습니다. {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>'{0}' 옵션은 CoreCLR을 사용할 때 '{1}' 값을 가져올 수 없습니다.</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>바인딩 라이브러리 '{0}'에 사용자 프레임워크({0})가 포함되어 있지만 포함된 사용자 프레임워크에는 iOS 8.0이 필요합니다(배포 대상 {1}). Info.plist 파일의 배포 대상을 8.0 이상으로 설정하세요.
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>'{0}' 파일의 압축을 풀 수 없습니다. 기본 ‘unzip’ 명령에 대한 자세한 내용은 빌드 로그를 참조하세요.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>필요한 'Xamarin.Mac.dll' 어셈블리가 참조에 없습니다.

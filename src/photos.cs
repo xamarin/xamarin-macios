@@ -16,6 +16,10 @@ using AppKit;
 using UIImage = AppKit.NSImage;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Photos
 {
 	[iOS (8,0)]
@@ -25,7 +29,7 @@ namespace Photos
 	interface PHAdjustmentData : NSCoding, NSSecureCoding {
 
 		[Export ("initWithFormatIdentifier:formatVersion:data:")]
-		IntPtr Constructor (string formatIdentifier, string formatVersion, NSData data);
+		NativeHandle Constructor (string formatIdentifier, string formatVersion, NSData data);
 
 		[Export ("formatIdentifier", ArgumentSemantic.Copy)]
 		string FormatIdentifier { get; }
@@ -510,7 +514,7 @@ namespace Photos
 	[BaseType (typeof (PHObject))]
 	[DisableDefaultCtor] // not user createable (calling description fails, see below) must be fetched by API
 	// NSInternalInconsistencyException Reason: PHCollection has no identifier
-#if TVOS || XAMCORE_4_0
+#if TVOS || NET
 	[Abstract] // Acording to docs: The abstract superclass for Photos asset collections and collection lists.
 #endif
 	interface PHCollection {
@@ -767,7 +771,7 @@ namespace Photos
 		[Export ("fullSizeImageOrientation")]
 		CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0, Message="Use 'AudiovisualAsset' property instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AudiovisualAsset' property instead.")]
 		[NoMac]
 		[NullAllowed, Export ("avAsset", ArgumentSemantic.Strong)]
 		AVAsset AvAsset { get; }
@@ -793,10 +797,10 @@ namespace Photos
 	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
 
 		[Export ("initWithContentEditingInput:")]
-		IntPtr Constructor (PHContentEditingInput contentEditingInput);
+		NativeHandle Constructor (PHContentEditingInput contentEditingInput);
 
 		[Export ("initWithPlaceholderForCreatedAsset:")]
-		IntPtr Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
+		NativeHandle Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
 
 		[NullAllowed] // by default this property is null
 		[Export ("adjustmentData", ArgumentSemantic.Strong)]
@@ -973,7 +977,7 @@ namespace Photos
 
 	delegate void PHImageManagerRequestPlayerHandler (AVPlayerItem playerItem, NSDictionary info);
 	delegate void PHImageManagerRequestExportHandler (AVAssetExportSession exportSession, NSDictionary info);
-#if XAMCORE_4_0
+#if NET
 	delegate void PHImageManagerRequestAVAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
 #else
 	delegate void PHImageManagerRequestAvAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
@@ -1013,7 +1017,7 @@ namespace Photos
 
 		[Mac (10,15)]
 		[Export ("requestAVAssetForVideo:options:resultHandler:")]
-#if XAMCORE_4_0
+#if NET
 		int /* PHImageRequestID = int32_t */ RequestAVAsset (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, PHImageManagerRequestAVAssetHandler resultHandler);
 #else
 		int /* PHImageRequestID = int32_t */ RequestAvAsset (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, PHImageManagerRequestAvAssetHandler resultHandler);
@@ -1063,7 +1067,7 @@ namespace Photos
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // doc -> "abstract base class"
 	// throws "NSInternalInconsistencyException Reason: PHObject has no identifier"
-#if TVOS || XAMCORE_4_0
+#if TVOS || NET
 	[Abstract] // Acording to docs: The abstract base class for Photos model objects (assets and collections).
 #endif
 	interface PHObject : NSCopying {
@@ -1263,7 +1267,7 @@ namespace Photos
 		NSString CancelledKey { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	delegate CIImage PHLivePhotoFrameProcessingBlock (IPHLivePhotoFrame frame, ref NSError error);
 #else
 	delegate CIImage PHLivePhotoFrameProcessingBlock2 (IPHLivePhotoFrame frame, ref NSError error);
@@ -1277,7 +1281,7 @@ namespace Photos
 	interface PHLivePhotoEditingContext {
 		[Export ("initWithLivePhotoEditingInput:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PHContentEditingInput livePhotoInput);
+		NativeHandle Constructor (PHContentEditingInput livePhotoInput);
 
 		[Export ("fullSizeImage")]
 		CIImage FullSizeImage { get; }
@@ -1289,7 +1293,7 @@ namespace Photos
 		CMTime PhotoTime { get; }
 
 		[NullAllowed, Export ("frameProcessor", ArgumentSemantic.Copy)]
-#if XAMCORE_4_0
+#if NET
 		PHLivePhotoFrameProcessingBlock FrameProcessor { get; set; }
 #else
 		PHLivePhotoFrameProcessingBlock2 FrameProcessor2 { get; set; }
@@ -1404,7 +1408,7 @@ namespace Photos
 	interface PHProjectChangeRequest {
 
 		[Export ("initWithProject:")]
-		IntPtr Constructor (PHProject project);
+		NativeHandle Constructor (PHProject project);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -1442,7 +1446,7 @@ namespace Photos
 		string StringValue { get; }
 
 		[Export ("initWithStringValue:")]
-		IntPtr Constructor (string stringValue);
+		NativeHandle Constructor (string stringValue);
 	}
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]

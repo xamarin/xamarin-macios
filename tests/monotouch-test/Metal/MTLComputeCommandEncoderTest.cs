@@ -42,11 +42,12 @@ namespace MonoTouchFixtures.Metal {
 			commandQ = null;
 			commandBuffer?.Dispose ();
 			commandBuffer = null;
+			encoder?.EndEncoding ();
 			encoder?.Dispose ();
 			encoder = null;
 		}
 
-#if XAMCORE_4_0
+#if NET
 		[Test]
 		public void SetBuffers ()
 		{

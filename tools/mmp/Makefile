@@ -69,7 +69,7 @@ $(MMP_DIRECTORIES):
 # Partial static registrar libraries
 #
 
-GENERATE_PART_REGISTRAR = $(Q_GEN) $(LOCAL_MMP_COMMAND) --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION) $(abspath $<) --registrar:static --nolink
+GENERATE_PART_REGISTRAR = $(Q_GEN) $(LOCAL_MMP_COMMAND) --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(MACOS_SDK_VERSION) $(abspath $<) --registrar:static --nolink
 
 Xamarin.Mac.registrar.mobile.x86_64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile -a:$(MOBILE_BCL_DIR)/mscorlib.dll
@@ -79,11 +79,11 @@ Xamarin.Mac.registrar.mobile.arm64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Mac
 	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile -a:$(MOBILE_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.mobile.arm64.m Xamarin.Mac.registrar.mobile.arm64.h
 
-Microsoft.macOS.registrar.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac.dll $(LOCAL_MMP)
+Microsoft.macOS.registrar.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework .NETCoreApp,Version=6.0,Profile=macos -a:$(DOTNET6_BCL_DIR)/System.Runtime.dll
 	$(Q) touch $@ $(basename $@).h
 
-Microsoft.macOS.registrar.coreclr.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac.dll $(LOCAL_MMP)
+Microsoft.macOS.registrar.coreclr.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework .NETCoreApp,Version=6.0,Profile=macos -a:$(DOTNET6_BCL_DIR)/System.Runtime.dll --xamarin-runtime CoreCLR
 	$(Q) touch $@ $(basename $@).h
 
@@ -91,11 +91,11 @@ Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.
 	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework Xamarin.Mac,Version=v4.5,Profile=Full -a:$(FULL_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
-Microsoft.macOS.registrar.arm64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac.dll $(LOCAL_MMP)
+Microsoft.macOS.registrar.arm64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework .NETCoreApp,Version=6.0,Profile=macos -a:$(DOTNET6_BCL_DIR)/System.Runtime.dll
 	$(Q) touch $@ $(basename $@).h
 
-Microsoft.macOS.registrar.coreclr.arm64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac.dll $(LOCAL_MMP)
+Microsoft.macOS.registrar.coreclr.arm64.m: $(TOP)/src/build/dotnet/macos/64/Microsoft.macOS.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework .NETCoreApp,Version=6.0,Profile=macos -a:$(DOTNET6_BCL_DIR)/System.Runtime.dll --xamarin-runtime CoreCLR
 	$(Q) touch $@ $(basename $@).h
 
@@ -104,18 +104,20 @@ Xamarin.Mac.registrar.full.arm64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.d
 	$(Q) touch Xamarin.Mac.registrar.full.arm64.m Xamarin.Mac.registrar.full.arm64.h
 
 %.x86_64.a: %.x86_64.m
-	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
+	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
 
 %.arm64.a: %.arm64.m
-	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch arm64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
+	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch arm64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
 
 Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.x86_64.a Xamarin.Mac.registrar.%.arm64.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
 dotnet: $(MMP_TARGETS_DOTNET)
 ifdef ENABLE_DOTNET
+ifdef INCLUDE_MAC
 install-local:: $(MMP_TARGETS_DOTNET)
 all-local:: $(MMP_TARGETS_DOTNET)
+endif
 endif
 
 ifdef INCLUDE_XAMARIN_LEGACY

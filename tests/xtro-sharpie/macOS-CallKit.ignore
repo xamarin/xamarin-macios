@@ -1,6 +1,2 @@
 # contains references to AVAudioSession, which does not exist on macOS (https://github.com/xamarin/maccore/issues/2257)
-!missing-protocol-member! CXProviderDelegate::provider:didActivateAudioSession: not found
-!missing-protocol-member! CXProviderDelegate::provider:didDeactivateAudioSession: not found
 # deprecated before we added the bindings for it
-!missing-selector! CXProviderConfiguration::initWithLocalizedName: not bound
-!missing-selector! CXProviderConfiguration::localizedName not bound

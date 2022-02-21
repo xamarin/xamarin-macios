@@ -74,14 +74,7 @@
     <Compile Include="..\common\BundlerTool.cs">
       <Link>BundlerTool.cs</Link>
     </Compile>
-    <Compile Include="ToolTasksBinPathTest.cs" />
     <Compile Include="MonoNativeTests.cs" />
-    <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\Metal.cs">
-      <Link>Metal.cs</Link>
-    </Compile>
-    <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\MetalLib.cs">
-      <Link>MetalLib.cs</Link>
-    </Compile>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
@@ -95,6 +88,9 @@
       <Link>BinLog.cs</Link>
     </Compile>
     <Compile Include="LocalizationTests.cs" />
+    <Compile Include="..\common\DotNet.cs">
+      <Link>DotNet.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\tools\mtouch\mtouch.csproj">

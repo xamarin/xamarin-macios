@@ -15,6 +15,7 @@ parameters:
 steps:
 
 - checkout: self
+  path: s/xamarin-macios
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
@@ -65,6 +66,7 @@ steps:
   env:
     BUILD_REVISION: 'jenkins'
   continueOnError: true
+  timeoutInMinutes: 60
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
@@ -112,7 +114,7 @@ steps:
     Dir $(Build.SourcesDirectory)/artifacts
     $json = Get-Content '$(Build.SourcesDirectory)/artifacts/pkg-info/artifacts.json' | Out-String | ConvertFrom-Json
     foreach ($i in $json) {
-      if ($i.tag -like "xamarin-mac*" -and -not ($i.url -like "*notarized*")) {
+      if ($i.url -match ".*/xamarin.mac-[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*[.]pkg$" -and -not ($i.url -like "*notarized*")) {
         $url = $i.url
         Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$url"
         break
@@ -140,6 +142,22 @@ steps:
   displayName: 'Nuke Provisionator Tool Cache'
   condition: ${{ parameters.clearProvisionatorCache }}
 
+# sometimes the make that creates the pkgs fails.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
+
+    if ($Env:MAC_TESTS_PRESENT -eq "Failed") {
+      Set-GitHubStatus -Status "error" -Description "Mac tests were not packaged." -Context "$Env:CONTEXT"
+      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Mac tests were not packaged."
+      Stop-Pipeline
+    } 
+  displayName: Validate tests pacakge
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
+    BUILD_REVISION: $(Build.SourceVersion)
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
 - task: DownloadPipelineArtifact@2
   displayName: Download Mac tests
   inputs:
@@ -157,6 +175,7 @@ steps:
     ls -Rla $(Build.SourcesDirectory)/artifacts
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
+  timeoutInMinutes: 60
   env:
     IGNORE_DOTNET: 1  # Not needed for the tests.
 
@@ -172,11 +191,11 @@ steps:
 
     [System.Collections.Generic.List[string]]$failures = @()
 
-    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests")
+    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests", "monotouch-test")
     foreach ($t in $macTest) {
-      $testName = "exec-mac-$t"
+      $testName = "exec-$t"
       Write-Host "Execution test $testName"
-      make -d -C $testsPath $testName
+      make -d -C $testsPath $testName -f packaged-macos-tests.mk
       if ($LastExitCode -eq 0) {
         Write-Host "$t succeeded"
       } else {
@@ -197,15 +216,19 @@ steps:
           $msg.AppendLine("* $test")
       }
       $request = New-GitHubComment -Header "Tests failed on macOS $Env:CONTEXT" -Description "Tests failed on $Env:CONTEXT." -Message $msg.ToString() -Emoji ":x:"
-
     } else {
       Set-GitHubStatus -Status "success" -Description "Tests passed Xamarin.Mac tests on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
       $request = New-GitHubComment -Header "Tests passed on macOS $Env:CONTEXT" -Description "Tests passed" -Message "**All** tests on macOS X $Env:CONTEXT passed." -Emoji ":white_check_mark:"
     }
+    # we set the result to 0, the reason is that release pipelines do not like failing tests,
+    # yet we do have some  flacky ones, this will allow the release to run. The comment will let use know that we failed
+    exit 0  
   displayName: 'Run tests'
+  timeoutInMinutes: 30
   env:
     CONTEXT: ${{ parameters.statusContext }}
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
+  continueOnError: true

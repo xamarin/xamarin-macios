@@ -124,6 +124,13 @@ namespace Introspection
 
 		protected virtual bool Skip (string symbolName)
 		{
+			switch (symbolName) {
+			// it's not needed for ARM64/ARM64_32 and Apple does not have stubs for them in libobjc.dylib
+			// also the linker normally removes them (unreachable due to other optimizations)
+			case "objc_msgSend_stret":
+			case "objc_msgSendSuper_stret":
+				return true;
+			}
 			return false;
 		}
 

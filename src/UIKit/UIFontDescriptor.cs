@@ -10,6 +10,7 @@ using System;
 using ObjCRuntime;
 using CoreGraphics;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace UIKit {
 	
@@ -223,28 +224,44 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFontDescriptor PreferredTitle1 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title1);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFontDescriptor PreferredTitle2 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title2);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFontDescriptor PreferredTitle3 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title3);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFontDescriptor PreferredCallout {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Callout);

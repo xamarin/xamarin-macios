@@ -1,5 +1,5 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
-
+#if !__MACCATALYST__
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
@@ -51,7 +51,9 @@ namespace CoreWlan {
 			return null;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10,13)]
 #endif
 		public CWNetwork [] ScanForNetworksWithSsid (NSData ssid, bool includeHidden, out NSError error)
@@ -62,7 +64,9 @@ namespace CoreWlan {
 			return null;
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+#else
 		[Mac (10,13)]
 #endif
 		public CWNetwork [] ScanForNetworksWithName (string networkName, bool includeHidden, out NSError error)
@@ -75,3 +79,4 @@ namespace CoreWlan {
 
 	}
 }
+#endif // !__MACCATALYST__

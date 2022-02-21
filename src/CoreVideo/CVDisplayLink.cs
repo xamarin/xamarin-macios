@@ -28,41 +28,61 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 using OpenGL;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
-	public class CVDisplayLink : INativeObject, IDisposable {
-		IntPtr handle;
+	public class CVDisplayLink : NativeObject {
 		GCHandle callbackHandle;
 		
-		public CVDisplayLink (IntPtr handle)
+#if !NET
+		public CVDisplayLink (NativeHandle handle)
+			: base (handle, false, true)
 		{
-			if (handle == IntPtr.Zero)
-				throw new Exception ("Invalid parameters to display link creation");
-
-			CVDisplayLinkRetain (handle);
-			this.handle = handle;
 		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal CVDisplayLink (IntPtr handle, bool owns)
+		internal CVDisplayLink (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CVDisplayLinkRetain (handle);
-
-			this.handle = handle;
 		}
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public static CVDisplayLink? CreateFromDisplayId (uint displayId, out CVReturn error)
 		{
 			error = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
@@ -72,18 +92,48 @@ namespace CoreVideo {
 			return new CVDisplayLink (handle, true);
 		}
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public static CVDisplayLink? CreateFromDisplayId (uint displayId)
 			=> CreateFromDisplayId (displayId, out var _);
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint[] displayArray, nint count, out IntPtr displayLink);
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
 		{
-			if (displayIds == null)
+			if (displayIds is null)
 				throw new ArgumentNullException (nameof (displayIds));
 			error = 0;
 			IntPtr handle = IntPtr.Zero;
@@ -95,15 +145,45 @@ namespace CoreVideo {
 			return new CVDisplayLink (handle, true);
 		}
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds)
 			=> CreateFromDisplayIds (displayIds, out var _);
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public static CVDisplayLink? CreateFromOpenGLMask (uint mask, out CVReturn error)
 		{
 			error = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
@@ -112,97 +192,102 @@ namespace CoreVideo {
 			return new CVDisplayLink (handle, true);
 		}
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public static CVDisplayLink? CreateFromOpenGLMask (uint mask)
 			=> CreateFromOpenGLMask (mask, out var _);
 
-		~CVDisplayLink ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRetain (IntPtr handle);
 		
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRelease (IntPtr handle);
 		
-		protected virtual void Dispose (bool disposing)
+		protected override void Retain ()
+		{
+			CVDisplayLinkRetain (GetCheckedHandle ());
+		}
+
+		protected override void Release ()
+		{
+			CVDisplayLinkRelease (GetCheckedHandle ());
+		}
+
+		protected override void Dispose (bool disposing)
 		{
 			if (callbackHandle.IsAllocated) {
 				callbackHandle.Free();
 			}
 
-			if (handle != IntPtr.Zero){
-				CVDisplayLinkRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			base.Dispose (disposing);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkCreateWithActiveCGDisplays (out IntPtr displayLinkOut);
-		public CVDisplayLink ()
+		static IntPtr Create ()
 		{
-			IntPtr displayLinkOut;
-		
-			CVReturn ret = CVDisplayLinkCreateWithActiveCGDisplays (out displayLinkOut);
-	
+			var ret = CVDisplayLinkCreateWithActiveCGDisplays (out var handle);
+
 			if (ret != CVReturn.Success)
 				throw new Exception ("CVDisplayLink returned: " + ret);
-	
-			this.handle = displayLinkOut;
+
+			return handle;
+
+		}
+		public CVDisplayLink ()
+			: base (Create (), true)
+		{
 		}		
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetCurrentCGDisplay (IntPtr displayLink, int /* CGDirectDisplayID = uint32_t */ displayId);
 		public CVReturn SetCurrentDisplay (int displayId)
 		{
-			return CVDisplayLinkSetCurrentCGDisplay (this.handle, displayId);
+			return CVDisplayLinkSetCurrentCGDisplay (Handle, displayId);
 		}     
 			
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext (IntPtr displayLink, IntPtr cglContext, IntPtr cglPixelFormat);
 		public CVReturn SetCurrentDisplay (CGLContext cglContext, CGLPixelFormat cglPixelFormat)
 		{
-			return CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext (this.handle, cglContext.Handle, cglPixelFormat.Handle);
+			return CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext (Handle, cglContext.Handle, cglPixelFormat.Handle);
 		}     
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static int /* CGDirectDisplayID = uint32_t */ CVDisplayLinkGetCurrentCGDisplay (IntPtr displayLink);
 		public int GetCurrentDisplay ()
 		{
-			return CVDisplayLinkGetCurrentCGDisplay (this.handle);
+			return CVDisplayLinkGetCurrentCGDisplay (Handle);
 		}
 			
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkStart (IntPtr displayLink);
 		public CVReturn Start ()
 		{
-			return CVDisplayLinkStart (this.handle);
+			return CVDisplayLinkStart (Handle);
 		}		     
 			
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkStop (IntPtr displayLink);
 		public CVReturn Stop ()
 		{
-			return CVDisplayLinkStop (this.handle);
+			return CVDisplayLinkStop (Handle);
 		}		     
 			
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVTime CVDisplayLinkGetNominalOutputVideoRefreshPeriod (IntPtr displayLink);
 		public CVTime NominalOutputVideoRefreshPeriod {
 			get {
-				return CVDisplayLinkGetNominalOutputVideoRefreshPeriod (this.handle);
+				return CVDisplayLinkGetNominalOutputVideoRefreshPeriod (Handle);
 			}
 		}
 
@@ -210,7 +295,7 @@ namespace CoreVideo {
 		extern static CVTime CVDisplayLinkGetOutputVideoLatency (IntPtr displayLink);
 		public CVTime OutputVideoLatency {
 			get {
-				return CVDisplayLinkGetOutputVideoLatency (this.handle);
+				return CVDisplayLinkGetOutputVideoLatency (Handle);
 			}
 		}
 
@@ -218,7 +303,7 @@ namespace CoreVideo {
 		extern static double CVDisplayLinkGetActualOutputVideoRefreshPeriod (IntPtr displayLink);
 		public double ActualOutputVideoRefreshPeriod {
 			get {
-				return CVDisplayLinkGetActualOutputVideoRefreshPeriod (this.handle);
+				return CVDisplayLinkGetActualOutputVideoRefreshPeriod (Handle);
 			}
 		}
 			
@@ -227,7 +312,7 @@ namespace CoreVideo {
 		extern static bool CVDisplayLinkIsRunning (IntPtr displayLink);
 		public bool IsRunning {
 			get {
-				return CVDisplayLinkIsRunning (this.handle);
+				return CVDisplayLinkIsRunning (Handle);
 			}
 		}
 			
@@ -266,19 +351,59 @@ namespace CoreVideo {
 			return ret;
 		}
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern nuint CVDisplayLinkGetTypeID ();
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public static nuint GetTypeId ()
 			=> CVDisplayLinkGetTypeID ();
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+#if NET
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (12,0)]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
+#endif
 		public bool TryTranslateTime (CVTimeStamp inTime, ref CVTimeStamp outTime)
 		{
 			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref outTime) == 0) {

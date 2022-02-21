@@ -9,6 +9,7 @@ using CoreLocation;
 using MapKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
 	
@@ -18,7 +19,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 		
 		[Test]
@@ -85,7 +86,11 @@ namespace MonoTouchFixtures.MapKit {
 			try {
 				pl.Coordinate = new CLLocationCoordinate2D (10, 20);
 			}
+#if NET
+			catch (ObjCException mte) {
+#else
 			catch (MonoTouchException mte) {
+#endif
 				Assert.True (mte.Message.Contains ("unrecognized selector sent to instance"));
 			}
 			catch {

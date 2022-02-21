@@ -374,6 +374,124 @@ function Test-JobSuccess {
 
 <# 
     .SYNOPSIS
+        Helper function used to create the content in the comment with the APIDiff
+
+    .PARAMETER APIDiff
+        The path to the the json that contains the content for the PR API diff.
+
+    .PARAMETER APIGeneratorDiffJson
+        The path to the json that contains the content for the generator diffs with stable.
+
+    .PARAMETER APIGeneratorDiff
+        The path to the json that contains the content for the generator diffs.
+#>
+function Write-APIDiffContent {
+    param (
+
+        [Parameter(Mandatory)]
+        [System.Text.StringBuilder]
+        $StringBuilder,
+
+        [String]
+        $APIDiff="",
+
+        [string]
+        $APIGeneratorDiffJson="",
+
+        [string]
+        $APIGeneratorDiff=""
+    )
+
+    if ([string]::IsNullOrEmpty($APIDiff)) {
+        $StringBuilder.AppendLine("* :warning: API diff urls have not been provided.")
+    } else {
+        Write-Diffs -StringBuilder $sb -Header "API diff" -APIDiff $APIDiff
+    }
+    if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
+        $StringBuilder.AppendLine("* :warning: API Current PR diff urls have not been provided.")
+    } else {
+        Write-Diffs -StringBuilder $sb -Header "API Current PR diff" -APIDiff $APIGeneratorDiffJson
+    }
+    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
+        Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
+        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
+            $StringBuilder.AppendLine("* :warning: Path $APIGeneratorDiff was not found!")
+        } else {
+            $StringBuilder.AppendLine("# Generator diff")
+            $StringBuilder.AppendLine("")
+            # ugly workaround to get decent new lines
+            foreach ($line in Get-Content -Path $APIGeneratorDiff)
+            {
+                $StringBuilder.AppendLine($line)
+            }
+            $StringBuilder.AppendLine($apidiffcomments)
+        }
+    } else {
+        $StringBuilder.AppendLine("* :warning: Generator diff comments have not been provided.")
+    }
+}
+
+<# 
+    .SYNOPSIS
+        Helper function used to create the content in the comment with the artifacts.
+
+    .PARAMETER Artifacts
+        The json that contains all the artifacts.
+#>
+function Write-Artifacts {
+
+    param (
+
+        [Parameter(Mandatory)]
+        [System.Text.StringBuilder]
+        $StringBuilder,
+
+        [String]
+        $Artifacts=""
+
+    )
+
+    if (-not [string]::IsNullOrEmpty($Artifacts)) {
+        Write-Host "Parsing artifacts"
+        if (-not (Test-Path $Artifacts -PathType Leaf)) {
+            $StringBuilder.AppendLine("Path $Artifacts was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $Artifacts | ConvertFrom-Json
+            if ($json.Count -gt 0) {
+                $StringBuilder.AppendLine("# Packages generated")
+                $StringBuilder.AppendLine("")
+                $StringBuilder.AppendLine("<details><summary>View packages</summary>")
+                $StringBuilder.AppendLine("") # no new line results in a bad rendering in the links
+                foreach ($a in $json) {
+                    $url = $a.url
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
+                        try {
+                            $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
+                            Write-Host "Adding link for $fileName"
+                            if ($a.url.Contains("notarized")) {
+                                $link = "* [$fileName (notarized)]($($a.url))"
+                            } else {
+                                $link = "* [$fileName]($($a.url))"
+                            }
+                            $StringBuilder.AppendLine($link)
+                        } catch {
+                            Write-Host "Could not get file name for url $url"
+                        }
+                    }
+                }
+                $StringBuilder.AppendLine("</details>")
+            } else {
+                $StringBuilder.AppendLine("No packages found.")
+            }
+        }
+    } else {
+        Write-Host "Artifacts were not provided."
+    }
+}
+
+<# 
+    .SYNOPSIS
         Add a new comment that contains the summaries to the Html Report as well as set the status accordingly.
 
     .PARAMETER Context
@@ -412,7 +530,13 @@ function New-GitHubSummaryComment {
         $APIDiff="",
 
         [string]
-        $APIGeneratorDiff=""
+        $APIGeneratorDiffJson="",
+
+        [string]
+        $APIGeneratorDiff="",
+
+        [switch]
+        $DeviceTest
     )
 
     $envVars = @{
@@ -439,120 +563,13 @@ function New-GitHubSummaryComment {
     $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
-        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
     }
-    if (-not [string]::IsNullOrEmpty($APIDiff)) {
-        Write-Host "Parsing API diff in path $APIDiff"
-        if (-not (Test-Path $APIDiff -PathType Leaf)) {
-            $sb.AppendLine("Path $APIDiff was not found!")
-        } else {
-            # read the json file, convert it to an object and add a line for each artifact
-            $json =  Get-Content $APIDiff | ConvertFrom-Json
-            # we are dealing with an object, not a dictionary
-            $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
-            $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
-            if ($hasHtmlLinks -or $hasMDlinks) {
-                # build the required list
-                $sb.AppendLine("# API diff")
-                Write-Host "Message is '$($json.message)'"
-                $sb.AppendLine($json.message)
-                $sb.AppendLine("<details><summary>View API diff</summary>")
-                $sb.AppendLine("") # no new line results in a bad rendering in the links
 
-                foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
-                    $htmlLink = ""
-                    $gistLink = ""
+    if (-not $DeviceTest) {
+        Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
 
-                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
-                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
-                    
-                    # some do not have md, some do not have html
-                    if ($platformHasHtmlLinks) {
-                        Write-Host "Found html link for $linkPlatform"
-                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform 
-                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
-                    }
-
-                    if ($platformHasMDlinks) {
-                        Write-Host "Found gist link for $linkPlatform"
-                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform 
-                        $gistLink = "[gist]($gistLinkUrl)"
-                    }
-
-                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
-                        $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
-                    } else {
-                        # I don't like extra ' ' when we are missing vars, use join
-                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
-                        $sb.AppendLine($line)
-                    }
-                }
-
-                $sb.AppendLine("</details>")
-                $sb.AppendLine("")
-            } else {
-                $sb.AppendLine("# API diff")
-                $sb.AppendLine("")
-                $sb.AppendLine("**No api diff data found.**")
-            }
-        }
-        
-    } else {
-        Write-Host "API diff urls have not been provided."
-    }
-    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
-        Write-Host "Parsing API diff in path $APIGeneratorDiff"
-        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
-            $sb.AppendLine("Path $APIGeneratorDiff was not found!")
-        } else {
-            $sb.AppendLine("# API & Generator diff")
-            $sb.AppendLine("")
-            # ugly workaround to get decent new lines
-            foreach ($line in Get-Content -Path $APIGeneratorDiff)
-            {
-                $sb.AppendLine($line)
-            }
-            $sb.AppendLine($apidiffcomments)
-        }
-    } else {
-        Write-Host "API & Generator diff comments have not been provided."
-    }
-    if (-not [string]::IsNullOrEmpty($Artifacts)) {
-        Write-Host "Parsing artifacts"
-        if (-not (Test-Path $Artifacts -PathType Leaf)) {
-            $sb.AppendLine("Path $Artifacts was not found!")
-        } else {
-            # read the json file, convert it to an object and add a line for each artifact
-            $json =  Get-Content $Artifacts | ConvertFrom-Json
-            if ($json.Count -gt 0) {
-                $sb.AppendLine("# Packages generated")
-                $sb.AppendLine("")
-                $sb.AppendLine("<details><summary>View packages</summary>")
-                $sb.AppendLine("") # no new line results in a bad rendering in the links
-                foreach ($a in $json) {
-                    $url = $a.url
-                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
-                        try {
-                            $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
-                            Write-Host "Adding link for $fileName"
-                            if ($a.url.Contains("notarized")) {
-                                $link = "* [$fileName (notarized)]($($a.url))"
-                            } else {
-                                $link = "* [$fileName]($($a.url))"
-                            }
-                            $sb.AppendLine($link)
-                        } catch {
-                            Write-Host "Could not get file name for url $url"
-                        }
-                    }
-                }
-                $sb.AppendLine("</details>")
-            } else {
-                $sb.AppendLine("No packages found.")
-            }
-        }
-    } else {
-        Write-Host "Artifacts were not provided."
+        Write-Artifacts -StringBuilder $sb -Artifacts $Artifacts
     }
 
     if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
@@ -591,7 +608,10 @@ function New-GitHubSummaryComment {
         Set-GitHubStatus -Status "failure" -Description "$prefix Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
-        if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
+        if ($Env:TESTS_JOBSTATUS -eq "") {
+            Set-GitHubStatus -Status "error" -Description "Tests didn't execute on $Context." -Context $statusContext
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests didn't execute on $Context." -Description "Tests didn't execute on $Context. $headerLinks"  -Emoji ":x:" -Path $TestSummaryPath
+        } elseif (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
             Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "$prefix Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
@@ -600,6 +620,84 @@ function New-GitHubSummaryComment {
         }
     }
     return $request
+}
+
+function Write-Diffs {
+    param (
+        [Parameter(Mandatory)]
+        [System.Text.StringBuilder]
+        $StringBuilder,
+
+        [Parameter(Mandatory)]
+        [String]
+        $Header,
+
+        [String]
+        $APIDiff
+    )
+
+    Write-Host "Parsing API diff in path $APIDiff"
+    if (-not (Test-Path $APIDiff -PathType Leaf)) {
+        $StringBuilder.AppendLine("Path $APIDiff was not found!")
+    } else {
+        # read the json file, convert it to an object and add a line for each artifact
+        $json =  Get-Content $APIDiff | ConvertFrom-Json
+        # we are dealing with an object, not a dictionary
+        $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
+        $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
+        if ($hasHtmlLinks -or $hasMDlinks) {
+            $StringBuilder.AppendLine("# $Header")
+            Write-Host "Message is '$($json.message)'"
+            $StringBuilder.AppendLine($json.message)
+
+            $commonPlatforms = "iOS", "macOS", "tvOS"
+            $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS");}
+            $dotnetPlatforms = @{Title="dotnet API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
+            $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
+            $dotnetMaciOSPlatforms = @{Title="dotnet iOS-MacCatalayst API diff"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
+            $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
+
+            foreach ($linkGroup in $platforms) {
+                $StringBuilder.AppendLine("<details><summary>View $($linkGroup.Title)</summary>")
+                $StringBuilder.AppendLine("") # no new line results in a bad rendering in the links
+                $htmlLink = ""
+                $gistLink = ""
+
+                foreach ($linkPlatform in $linkGroup.Platforms) {
+                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
+                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
+
+                    # some do not have md, some do not have html
+                    if ($platformHasHtmlLinks) {
+                        Write-Host "Found html link for $linkPlatform"
+                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
+                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
+                    }
+
+                    if ($platformHasMDlinks) {
+                        Write-Host "Found gist link for $linkPlatform"
+                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
+                        $gistLink = "[gist]($gistLinkUrl)"
+                    }
+
+                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
+                        $StringBuilder.AppendLine("* :fire: $linkPlatform :fire: Missing files")
+                    } else {
+                        # I don't like extra ' ' when we are missing vars, use join
+                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
+                        $StringBuilder.AppendLine($line)
+                    }
+                }
+                $StringBuilder.AppendLine("</details>")
+                $StringBuilder.AppendLine("")
+            }
+            $StringBuilder.AppendLine("")
+        } else {
+            $StringBuilder.AppendLine("# API diff")
+            $StringBuilder.AppendLine("")
+            $StringBuilder.AppendLine("**No api diff data found.**")
+        }
+    }
 }
 
 <# 
@@ -831,6 +929,54 @@ function New-GistWithFiles {
     return $request.html_url
 }
 
+<#
+    .SYNOPSIS
+        Puse a repository dispatch stating which branch did trigger it.
+
+    .PARAMETER Org
+        The org of the repository to ping.
+
+    .PARAMETER Repository 
+        The repository to ping.
+
+    .PARAMETER Branch
+        The branch that triggered the event.
+#>
+function Push-RepositoryDispatch {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org, 
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repository,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Branch
+    )
+
+    # create the hashtable that will contain all the information of all types
+    $payload = @{
+        event_type = $Branch;
+    }
+
+    $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
+    Write-Host $url
+    $payloadJson = $payload | ConvertTo-Json
+
+    $headers = @{
+        Accept = "application/vnd.github.v3+json";
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    } 
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
+    Write-Host $request
+    Write-Host $request.Content
+}
+
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function Set-GitHubStatus
 Export-ModuleMember -Function New-GitHubComment
@@ -841,3 +987,4 @@ Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
+Export-ModuleMember -Function Push-RepositoryDispatch 

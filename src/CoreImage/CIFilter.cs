@@ -108,6 +108,7 @@
 //
 using System;
 using System.Diagnostics;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -121,7 +122,9 @@ using UIKit;
 namespace CoreImage {
 	public partial class CIFilter {
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		protected CIFilter () : base ()
@@ -140,55 +143,63 @@ namespace CoreImage {
 
 		public NSObject? this [NSString key] {
 			get {
-				return ValueForKey (key);
+				return ValueForKey (key.GetHandle ());
 			}
 			set {
-				SetValueForKey (value, key);
+				SetValueForKey (value, key.GetHandle ());
 			}
 		}
 
 		internal NSObject? ValueForKey (string key)
 		{
-			using (var nskey = new NSString (key))
-				return ValueForKey (nskey);
+			var ptr = CFString.CreateNative (key);
+			var value = ValueForKey (ptr);
+			CFString.ReleaseNative (ptr);
+			return value;
 		}
 
 		internal void SetValue (string key, NSObject? value)
 		{
-			using (var nskey = new NSString (key)){
-				SetValueForKey (value, nskey);
-			}
+			SetHandle (key, value.GetHandle ());
 		}
 		
 		internal static IntPtr CreateFilter (string name)
 		{
-			using (var nsname = new NSString (name))
-				return ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("filterWithName:"), nsname.Handle);
+			var ptr = CFString.CreateNative (name);
+			var result = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("filterWithName:"), ptr);
+			CFString.ReleaseNative (ptr);
+			return result;
 		}
 
 		// helper methods
 		internal void SetFloat (string key, float value)
 		{
-			using (var nskey = new NSString (key))
-				SetValueForKey (new NSNumber (value), nskey);
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
 		}
 
 		internal void SetInt (string key, int value)
 		{
-			using (var nskey = new NSString (key))
-				SetValueForKey (new NSNumber (value), nskey);
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
 		}
 
 		internal void SetNInt (string key, nint value)
 		{
-			using (var nskey = new NSString (key))
-				SetValueForKey (new NSNumber (value), nskey);
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
+		}
+
+		internal void SetNUInt (string key, nuint value)
+		{
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
 		}
 
 		internal void SetBool (string key, bool value)
 		{
-			using (var nskey = new NSString (key))
-				SetValueForKey (new NSNumber (value ? 1 : 0), nskey);
+			using (var n = new NSNumber (value ? 1 : 0))
+				SetHandle (key, n.Handle);
 		}
 
 		internal void SetString (string key, string value)
@@ -200,25 +211,22 @@ namespace CoreImage {
 
 		internal void SetValue (string key, CGPoint value)
 		{
-			using (var nskey = new NSString (key))
-			using (var nsv = new CIVector (value.X, value.Y)) {
-				SetValueForKey (nsv, nskey);
-			}
+			using (var nsv = new CIVector (value.X, value.Y))
+				SetHandle (key, nsv.Handle);
 		}
 
 		internal void SetValue (string key, CGRect value)
 		{
-			using (var nskey = new NSString (key))
-			using (var nsv = new CIVector (value.X, value.Y, value.Width, value.Height)) {
-				SetValueForKey (nsv, nskey);
-			}
+			using (var nsv = new CIVector (value.X, value.Y, value.Width, value.Height))
+				SetHandle (key, nsv.Handle);
 		}
 
 		internal T? Get<T> (string key) where T : class
 		{
-			using (var nskey = new NSString (key)) {
-				return ValueForKey (nskey) as T;
-			}
+			var ptr = CFString.CreateNative (key);
+			var value = ValueForKey (key) as T;
+			CFString.ReleaseNative (ptr);
+			return value;
 		}
 
 		internal float GetFloat (string key)
@@ -234,6 +242,11 @@ namespace CoreImage {
 		internal nint GetNInt (string key)
 		{
 			return Get<NSNumber> (key)?.NIntValue ?? default (nint);
+		}
+
+		internal nuint GetNUInt (string key)
+		{
+			return Get<NSNumber> (key)?.NUIntValue ?? default (nuint);
 		}
 
 		internal bool GetBool (string key)
@@ -257,7 +270,7 @@ namespace CoreImage {
 
 		internal IntPtr GetHandle (string key)
 		{
-			var nsname = NSString.CreateNative (key);
+			var nsname = CFString.CreateNative (key);
 			IntPtr ret;
 			
 			if (IsDirectBinding) 
@@ -265,7 +278,7 @@ namespace CoreImage {
 			else
 				ret = Messaging.IntPtr_objc_msgSendSuper_IntPtr (SuperHandle, Selector.GetHandle ("valueForKey:"), nsname);
 			
-			NSString.ReleaseNative (nsname);
+			CFString.ReleaseNative (nsname);
 			return ret;
 		}
 		
@@ -461,6 +474,8 @@ namespace CoreImage {
 				return new CIMaximumComponent (handle);
 			case "CIMinimumComponent":
 				return new CIMinimumComponent (handle);
+			case "CIPersonSegmentation":
+				return new CIPersonSegmentation (handle);
 			case "CIPerspectiveTile":
 				return new CIPerspectiveTile (handle);
 			case "CIPerspectiveTransform":
@@ -513,6 +528,16 @@ namespace CoreImage {
 				return new CIConvolution9Horizontal (handle);
 			case "CIConvolution9Vertical":
 				return new CIConvolution9Vertical (handle);
+			case "CIConvolutionRGB3X3":
+				return new CIConvolutionRGB3X3 (handle);
+			case "CIConvolutionRGB5X5":
+				return new CIConvolutionRGB5X5 (handle);
+			case "CIConvolutionRGB7X7":
+				return new CIConvolutionRGB7X7 (handle);
+			case "CIConvolutionRGB9Horizontal":
+				return new CIConvolutionRGB9Horizontal (handle);
+			case "CIConvolutionRGB9Vertical":
+				return new CIConvolutionRGB9Vertical (handle);
 			case "CILinearToSRGBToneCurve":
 				return new CILinearToSRGBToneCurve (handle);
 			case "CIPerspectiveTransformWithExtent":
@@ -559,12 +584,16 @@ namespace CoreImage {
 				return new CILinearBurnBlendMode (handle);
 			case "CILinearDodgeBlendMode":
 				return new CILinearDodgeBlendMode (handle);
+			case "CILinearLightBlendMode":
+				return new CILinearLightBlendMode (handle);
 			case "CIPerspectiveCorrection":
 				return new CIPerspectiveCorrection (handle);
 			case "CIPinLightBlendMode":
 				return new CIPinLightBlendMode (handle);
 			case "CISubtractBlendMode":
 				return new CISubtractBlendMode (handle);
+			case "CIVividLightBlendMode":
+				return new CIVividLightBlendMode (handle);
 			case "CIAccordionFoldTransition":
 				return new CIAccordionFoldTransition (handle);
 			case "CIAreaAverage":
@@ -690,7 +719,7 @@ namespace CoreImage {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// not every CIFilter supports inputImage, i.e.
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger
@@ -701,8 +730,8 @@ namespace CoreImage {
 			}
 			set {
 				if (!SupportsInputImage)
-					throw new ArgumentException ("inputImage is not supported by this filter");
-				SetValueForKey (value, CIFilterInputKey.Image);
+					ObjCRuntime.ThrowHelper.ThrowArgumentException ("inputImage is not supported by this filter");
+				SetValueForKey (value, CIFilterInputKey.Image.GetHandle ());
 			}
 		}
 
@@ -718,7 +747,7 @@ namespace CoreImage {
 #endif
 	}
 
-#if MONOMAC && !XAMCORE_3_0
+#if MONOMAC && !XAMCORE_3_0 && !NET
 	[Obsolete ("This type has been renamed to CICmykHalftone.")]
 	public class CICMYKHalftone : CICmykHalftone {
 		public CICMYKHalftone () {}

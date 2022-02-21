@@ -19,6 +19,10 @@ using nw_endpoint_t=System.IntPtr;
 using nw_parameters_t=System.IntPtr;
 using nw_establishment_report_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	//
@@ -42,15 +46,23 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveReadOnlySpanCompletion (ReadOnlySpan<byte> data, NWContentContext? context, bool isComplete, NWError? error);
 
-#if !NET
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
+#if NET
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
 #endif
 	public class NWConnection : NativeObject {
-		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_connection_t nw_connection_create (nw_endpoint_t endpoint, nw_parameters_t parameters);
@@ -548,9 +560,9 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		public T GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
+		public T? GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
 		{
-			if (definition == null)
+			if (definition is null)
 				throw new ArgumentNullException (nameof (definition));
 
 			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
@@ -570,12 +582,14 @@ namespace Network {
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
 		}
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
@@ -594,12 +608,14 @@ namespace Network {
 			}
 		}
 
-#if !NET
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)

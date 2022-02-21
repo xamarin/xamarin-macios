@@ -15,6 +15,10 @@ using UIKit;
 using NSImage = Foundation.NSObject;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace QuickLookThumbnailing {
 
 	[Mac (10,15), iOS (13,0)]
@@ -79,7 +83,7 @@ namespace QuickLookThumbnailing {
 	interface QLThumbnailGenerationRequest : NSCopying, NSSecureCoding {
 
 		[Export ("initWithFileAtURL:size:scale:representationTypes:")]
-		IntPtr Constructor (NSUrl url, CGSize size, nfloat scale, QLThumbnailGenerationRequestRepresentationTypes representationTypes);
+		NativeHandle Constructor (NSUrl url, CGSize size, nfloat scale, QLThumbnailGenerationRequestRepresentationTypes representationTypes);
 
 		[Export ("minimumDimension")]
 		nfloat MinimumDimension { get; set; }
@@ -101,7 +105,7 @@ namespace QuickLookThumbnailing {
 		UTType ContentType { get; set; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface QLThumbnailRepresentation {
 
@@ -125,7 +129,7 @@ namespace QuickLookThumbnailing {
 	}
 }
 
-#if IOS && !XAMCORE_4_0
+#if IOS && !NET
 namespace QuickLook {
 #else
 namespace QuickLookThumbnailing {

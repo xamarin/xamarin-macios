@@ -22,6 +22,7 @@ using System.Security.Authentication;
 using System.Text;
 using Foundation;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTests.System.Net.Http
 {
@@ -32,7 +33,7 @@ namespace MonoTests.System.Net.Http
 		public MessageHandlerTest ()
 		{
 			// Https seems broken on our macOS 10.9 bot, so skip this test.
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 		}
 
 		void PrintHandlerToTest ()
@@ -60,8 +61,8 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			PrintHandlerToTest ();
 
@@ -173,7 +174,7 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
-			if (!completed)
+			if (!completed || managedCookieResult.Contains ("502 Bad Gateway") || nativeCookieResult.Contains ("502 Bad Gateway"))
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
@@ -336,8 +337,8 @@ namespace MonoTests.System.Net.Http
 		public void RedirectionWithAuthorizationHeaders (Type handlerType)
 		{
 
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false); 
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false); 
 
 			bool containsAuthorizarion = false;
 			bool containsHeaders = false;
@@ -385,11 +386,11 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void RejectSslCertificatesServicePointManager (Type handlerType)
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 #if __MACOS__
-			if (handlerType == typeof (NSUrlSessionHandler) && TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10, 0) && !TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11, 0))
+			if (handlerType == typeof (NSUrlSessionHandler) && TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10, 0) && !TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 11, 0))
 				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
 #endif
 
@@ -474,8 +475,8 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void AcceptSslCertificatesServicePointManager (Type handlerType)
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			bool servicePointManagerCbWasExcuted = false;
 			bool done = false;
@@ -566,7 +567,7 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
-				if (httpStatus == HttpStatusCode.BadGateway)
+				if (httpStatus == HttpStatusCode.BadGateway || httpStatus == HttpStatusCode.GatewayTimeout)
 					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 				Assert.IsNull (ex, "Exception not null");
 				Assert.AreEqual (expectedStatus, httpStatus, "Status not ok");
@@ -606,7 +607,7 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("First request timedout.");
 			} else {
-				if (httpStatus == HttpStatusCode.BadGateway)
+				if (httpStatus == HttpStatusCode.BadGateway || httpStatus == HttpStatusCode.GatewayTimeout)
 					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 				Assert.IsNull (ex, "First request exception not null");
 				Assert.AreEqual (HttpStatusCode.OK, httpStatus, "First status not ok");
@@ -637,7 +638,7 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Second request timedout.");
 			} else {
-				if (httpStatus == HttpStatusCode.BadGateway)
+				if (httpStatus == HttpStatusCode.BadGateway || httpStatus == HttpStatusCode.GatewayTimeout)
 					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 				Assert.IsNull (ex, "Second request exception not null");
 				Assert.AreEqual (HttpStatusCode.Unauthorized, httpStatus, "Second status not ok");

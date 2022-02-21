@@ -11,14 +11,17 @@ using CoreFoundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace Foundation {
 	public partial class NSMetadataItem {
-
+#if !NET
 		bool GetBool (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-			return n == null ? false : n.BoolValue;
+			return n is null ? false : n.BoolValue;
 		}
+#endif
 
 		bool? GetNullableBool (NSString key)
 		{
@@ -29,7 +32,7 @@ namespace Foundation {
 		double GetDouble (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-			return n == null ? 0 : n.DoubleValue;
+			return n is null ? 0 : n.DoubleValue;
 		}
 
 		double? GetNullableDouble (NSString key)
@@ -46,85 +49,111 @@ namespace Foundation {
 
 		// same order as NSMetadataAttributes.h
 
-		public NSString FileSystemName {
+		public NSString? FileSystemName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemFSNameKey));
 			}
 		}
 
-		public NSString DisplayName {
+		public NSString? DisplayName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemDisplayNameKey));
 			}
 		}
 
-		public NSUrl Url {
+		public NSUrl? Url {
 			get {
 				return Runtime.GetNSObject<NSUrl> (GetHandle (NSMetadataQuery.ItemURLKey));
 			}
 		}
 
-		public NSString Path {
+		public NSString? Path {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemPathKey));
 			}
 		}
 
-		public NSNumber FileSystemSize {
+		public NSNumber? FileSystemSize {
 			get {
 				return Runtime.GetNSObject<NSNumber> (GetHandle (NSMetadataQuery.ItemFSSizeKey));
 			}
 		}
 
-		public NSDate FileSystemCreationDate {
+		public NSDate? FileSystemCreationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ItemFSCreationDateKey));
 			}
 		}
 
-		public NSDate FileSystemContentChangeDate {
+		public NSDate? FileSystemContentChangeDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ItemFSContentChangeDateKey));
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
-		public NSString ContentType {
+		public NSString? ContentType {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ContentTypeKey));
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
-		public NSString[] ContentTypeTree {
+		public NSString?[]? ContentTypeTree {
 			get {
 				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContentTypeTreeKey)))
 					return NSArray.FromArray<NSString> (a);
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? IsUbiquitous {
+#else
 		public bool IsUbiquitous {
-			get {
-				return GetBool (NSMetadataQuery.ItemIsUbiquitousKey);
-			}
-		}
-
-		// XAMCORE_4_0 FIXME return nullable
-		public bool UbiquitousItemHasUnresolvedConflicts {
-			get {
-				return GetBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
-			}
-		}
-
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
 #endif
-#if XAMCORE_4_0
+			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#else
+				return GetBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#endif
+			}
+		}
+
+#if NET
+		public bool? UbiquitousItemHasUnresolvedConflicts {
+#else
+		public bool UbiquitousItemHasUnresolvedConflicts {
+#endif
+			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#else
+				return GetBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#endif
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
+#if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
 #else
 		public NSItemDownloadingStatus DownloadingStatus {
@@ -134,226 +163,404 @@ namespace Foundation {
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsDownloading {
+#else
 		public bool UbiquitousItemIsDownloading {
-			get {
-				return GetBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
-			}
-		}
-
-		// XAMCORE_4_0 FIXME return nullable
-		public bool UbiquitousItemIsUploaded {
-			get {
-				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
-			}
-		}
-
-		// XAMCORE_4_0 FIXME return nullable
-		public bool UbiquitousItemIsUploading {
-			get {
-				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
-			}
-		}
-
-		// XAMCORE_4_0 FIXME return nullable
-		public double UbiquitousItemPercentDownloaded {
-			get {
-				return GetDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
-			}
-		}
-
-		// XAMCORE_4_0 FIXME return nullable
-		public double UbiquitousItemPercentUploaded {
-			get {
-				return GetDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
-			}
-		}
-
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
 #endif
-		public NSError UbiquitousItemDownloadingError {
+			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#else
+				return GetBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#endif
+			}
+		}
+
+#if NET
+		public bool? UbiquitousItemIsUploaded {
+#else
+		public bool UbiquitousItemIsUploaded {
+#endif
+			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#else
+				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#endif
+			}
+		}
+
+#if NET
+		public bool? UbiquitousItemIsUploading {
+#else
+		public bool UbiquitousItemIsUploading {
+#endif
+			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#else
+				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#endif
+			}
+		}
+
+#if NET
+		public double? UbiquitousItemPercentDownloaded {
+#else
+		public double UbiquitousItemPercentDownloaded {
+#endif
+			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#else
+				return GetDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#endif
+			}
+		}
+
+#if NET
+		public double? UbiquitousItemPercentUploaded {
+#else
+		public double UbiquitousItemPercentUploaded {
+#endif
+			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#else
+				return GetDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#endif
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
+#endif
+		public NSError? UbiquitousItemDownloadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemDownloadingErrorKey));
 			}
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
-		public NSError UbiquitousItemUploadingError {
+		public NSError? UbiquitousItemUploadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemUploadingErrorKey));
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
+#if NET
+		public bool? UbiquitousItemDownloadRequested {
+#else
 		public bool UbiquitousItemDownloadRequested {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
+#if NET
+		public bool? UbiquitousItemIsExternalDocument {
+#else
 		public bool UbiquitousItemIsExternalDocument {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#endif
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
-		public NSString UbiquitousItemContainerDisplayName {
+		public NSString? UbiquitousItemContainerDisplayName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
 			}
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (8,0)]
+		[Mac (10,9)]
 #endif
-		public NSUrl UbiquitousItemUrlInLocalContainer {
+		public NSUrl? UbiquitousItemUrlInLocalContainer {
 			get {
 				return Runtime.GetNSObject<NSUrl> (GetHandle (NSMetadataQuery.UbiquitousItemURLInLocalContainerKey));
 			}
 		}
 
 #if MONOMAC
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Keywords {
+		public string? []? Keywords {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.KeywordsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Title {
+		public string? Title {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.TitleKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Authors {
+		public string? []? Authors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Editors {
+		public string? []? Editors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EditorsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Participants {
+		public string? []? Participants {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ParticipantsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Projects {
+		public string? []? Projects {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ProjectsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate DownloadedDate {
+		public NSDate? DownloadedDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DownloadedDateKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] WhereFroms {
+		public string? []? WhereFroms {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.WhereFromsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Comment {
+		public string? Comment {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CommentKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Copyright {
+		public string? Copyright {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CopyrightKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate LastUsedDate {
+		public NSDate? LastUsedDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.LastUsedDateKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate ContentCreationDate {
+		public NSDate? ContentCreationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ContentCreationDateKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate ContentModificationDate {
+		public NSDate? ContentModificationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ContentModificationDateKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate DateAdded {
+		public NSDate? DateAdded {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DateAddedKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? DurationSeconds {
 			get {
@@ -361,26 +568,47 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] ContactKeywords {
+		public string? []? ContactKeywords {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContactKeywordsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Version {
+		public string? Version {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.VersionKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? PixelHeight {
 			get {
@@ -388,8 +616,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? PixelWidth {
 			get {
@@ -397,8 +632,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? PixelCount {
 			get {
@@ -406,17 +648,31 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string ColorSpace {
+		public string? ColorSpace {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ColorSpaceKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? BitsPerSample {
 			get {
@@ -424,8 +680,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? FlashOnOff {
 			get {
@@ -433,8 +696,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? FocalLength {
 			get {
@@ -442,26 +712,47 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string AcquisitionMake {
+		public string? AcquisitionMake {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string AcquisitionModel {
+		public string? AcquisitionModel {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionModelKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? IsoSpeed {
 			get {
@@ -469,8 +760,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? Orientation {
 			get {
@@ -478,17 +776,31 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] LayerNames {
+		public string? []? LayerNames {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LayerNamesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? WhiteBalance {
 			get {
@@ -496,8 +808,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Aperture {
 			get {
@@ -505,17 +824,31 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string ProfileName {
+		public string? ProfileName {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProfileNameKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? ResolutionWidthDpi {
 			get {
@@ -523,8 +856,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? ResolutionHeightDpi {
 			get {
@@ -532,8 +872,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? ExposureMode {
 			get {
@@ -541,8 +888,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? ExposureTimeSeconds {
 			get {
@@ -550,26 +904,47 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string ExifVersion {
+		public string? ExifVersion {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifVersionKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string CameraOwner {
+		public string? CameraOwner {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CameraOwnerKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? FocalLength35mm {
 			get {
@@ -577,26 +952,47 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string LensModel {
+		public string? LensModel {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.LensModelKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string ExifGpsVersion {
+		public string? ExifGpsVersion {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Altitude {
 			get {
@@ -604,8 +1000,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Latitude {
 			get {
@@ -613,8 +1016,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Longitude {
 			get {
@@ -622,8 +1032,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Speed {
 			get {
@@ -631,17 +1048,31 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate Timestamp {
+		public NSDate? Timestamp {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.TimestampKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsTrack {
 			get {
@@ -649,8 +1080,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? ImageDirection {
 			get {
@@ -658,35 +1096,63 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string NamedLocation {
+		public string? NamedLocation {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.NamedLocationKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string GpsStatus {
+		public string? GpsStatus {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsStatusKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string GpsMeasureMode {
+		public string? GpsMeasureMode {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDop {
 			get {
@@ -694,17 +1160,31 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string GpsMapDatum {
+		public string? GpsMapDatum {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMapDatumKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestLatitude {
 			get {
@@ -712,8 +1192,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestLongitude {
 			get {
@@ -721,8 +1208,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestBearing {
 			get {
@@ -730,8 +1224,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDestDistance {
 			get {
@@ -739,35 +1240,63 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string GpsProcessingMethod {
+		public string? GpsProcessingMethod {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string GpsAreaInformation {
+		public string? GpsAreaInformation {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate GpsDateStamp {
+		public NSDate? GpsDateStamp {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.GpsDateStampKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? GpsDifferental {
 			get {
@@ -775,26 +1304,47 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Codecs {
+		public string? []? Codecs {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CodecsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] MediaTypes {
+		public string? []? MediaTypes {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.MediaTypesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? Streamable {
 			get {
@@ -802,8 +1352,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? TotalBitRate {
 			get {
@@ -811,8 +1368,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? VideoBitRate {
 			get {
@@ -820,8 +1384,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioBitRate {
 			get {
@@ -829,26 +1400,47 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string DeliveryType {
+		public string? DeliveryType {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.DeliveryTypeKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Album {
+		public string? Album {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AlbumKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? HasAlphaChannel {
 			get {
@@ -856,8 +1448,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? RedEyeOnOff {
 			get {
@@ -865,17 +1464,31 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string MeteringMode {
+		public string? MeteringMode {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MeteringModeKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? MaxAperture {
 			get {
@@ -883,8 +1496,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? FNumber {
 			get {
@@ -892,80 +1512,143 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string ExposureProgram {
+		public string? ExposureProgram {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureProgramKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string ExposureTimeString {
+		public string? ExposureTimeString {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Headline {
+		public string? Headline {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.HeadlineKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Instructions {
+		public string? Instructions {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.InstructionsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string City {
+		public string? City {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CityKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string StateOrProvince {
+		public string? StateOrProvince {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.StateOrProvinceKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Country {
+		public string? Country {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CountryKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string TextContent {
+		public string? TextContent {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.TextContentKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioSampleRate {
 			get {
@@ -973,8 +1656,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioChannelCount {
 			get {
@@ -982,8 +1672,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? Tempo {
 			get {
@@ -991,53 +1688,95 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string KeySignature {
+		public string? KeySignature {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.KeySignatureKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string TimeSignature {
+		public string? TimeSignature {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.TimeSignatureKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string AudioEncodingApplication {
+		public string? AudioEncodingApplication {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Composer {
+		public string? Composer {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ComposerKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Lyricist {
+		public string? Lyricist {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.LyricistKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? AudioTrackNumber {
 			get {
@@ -1045,26 +1784,47 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate RecordingDate {
+		public NSDate? RecordingDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.RecordingDateKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string MusicalGenre {
+		public string? MusicalGenre {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalGenreKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? IsGeneralMidiSequence {
 			get {
@@ -1072,8 +1832,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? RecordingYear {
 			get {
@@ -1081,107 +1848,191 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Organizations {
+		public string? []? Organizations {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.OrganizationsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Languages {
+		public string? []? Languages {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LanguagesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Rights {
+		public string? Rights {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.RightsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Publishers {
+		public string? []? Publishers {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PublishersKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Contributors {
+		public string? []? Contributors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContributorsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Coverage {
+		public string? []? Coverage {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CoverageKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Subject {
+		public string? Subject {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SubjectKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Theme {
+		public string? Theme {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ThemeKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Description {
+		public string? Description {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.DescriptionKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Identifier {
+		public string? Identifier {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.IdentifierKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Audiences {
+		public string? []? Audiences {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AudiencesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public nint? NumberOfPages {
 			get {
@@ -1189,8 +2040,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? PageWidth {
 			get {
@@ -1198,8 +2056,15 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? PageHeight {
 			get {
@@ -1207,44 +2072,79 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string SecurityMethod {
+		public string? SecurityMethod {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.SecurityMethodKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Creator {
+		public string? Creator {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CreatorKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] EncodingApplications {
+		public string? []? EncodingApplications {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EncodingApplicationsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public NSDate DueDate {
+		public NSDate? DueDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DueDateKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public double? StarRating {
 			get {
@@ -1252,233 +2152,415 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] PhoneNumbers {
+		public string? []? PhoneNumbers {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PhoneNumbersKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] EmailAddresses {
+		public string? []? EmailAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EmailAddressesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] InstantMessageAddresses {
+		public string? []? InstantMessageAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.InstantMessageAddressesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Kind {
+		public string? Kind {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.KindKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Recipients {
+		public string? []? Recipients {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string FinderComment {
+		public string? FinderComment {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.FinderCommentKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Fonts {
+		public string? []? Fonts {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.FontsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string AppleLoopsRoot {
+		public string? AppleLoopsRoot {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string AppleLoopsKeyFilterType {
+		public string? AppleLoopsKeyFilterType {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string AppleLoopsLoopMode {
+		public string? AppleLoopsLoopMode {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] AppleLoopDescriptors {
+		public string? []? AppleLoopDescriptors {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string MusicalInstrumentCategory {
+		public string? MusicalInstrumentCategory {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string MusicalInstrumentName {
+		public string? MusicalInstrumentName {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string CFBundleIdentifier {
+		public string? CFBundleIdentifier {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Information {
+		public string? Information {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.InformationKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Director {
+		public string? Director {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.DirectorKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Producer {
+		public string? Producer {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProducerKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string Genre {
+		public string? Genre {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.GenreKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] Performers {
+		public string? []? Performers {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PerformersKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string OriginalFormat {
+		public string? OriginalFormat {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalFormatKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string OriginalSource {
+		public string? OriginalSource {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalSourceKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] AuthorEmailAddresses {
+		public string? []? AuthorEmailAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] RecipientEmailAddresses {
+		public string? []? RecipientEmailAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] AuthorAddresses {
+		public string? []? AuthorAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorAddressesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] RecipientAddresses {
+		public string? []? RecipientAddresses {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientAddressesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? IsLikelyJunk {
 			get {
@@ -1486,35 +2568,63 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] ExecutableArchitectures {
+		public string? []? ExecutableArchitectures {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string ExecutablePlatform {
+		public string? ExecutablePlatform {
 			get {
 				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
-		public string [] ApplicationCategories {
+		public string? []? ApplicationCategories {
 			get {
 				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ApplicationCategoriesKey));
 			}
 		}
 
-#if !NET
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10, 9)]
 #endif
 		public bool? IsApplicationManaged {
 			get {

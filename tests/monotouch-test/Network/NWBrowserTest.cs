@@ -1,12 +1,10 @@
 #if !__WATCHOS__
 using System;
-using System.Collections.Generic;
 using System.Threading;
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
 
 using NUnit.Framework;
 
@@ -99,7 +97,11 @@ namespace MonoTouchFixtures.Network {
 					if (st == NWBrowserState.Ready)
 						browserReady.Set ();
 				});
+#if NET
+				browser.IndividualChangesDelegate = (oldResult, newResult) => {
+#else
 				browser.SetChangesHandler ((oldResult, newResult) => {
+#endif
 					didRun = true;
 					try {
 						receivedNotNullChange = oldResult != null || newResult != null;
@@ -109,8 +111,11 @@ namespace MonoTouchFixtures.Network {
 						changesEvent.Set ();
 						eventsDone = true;
 					}
-
+#if NET
+				};
+#else
 				});
+#endif
 				browser.Start ();
 				browserReady.WaitOne (30000);
 				using (var advertiser = NWAdvertiseDescriptor.CreateBonjourService ("MonoTouchFixtures.Network", type))

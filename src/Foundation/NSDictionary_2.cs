@@ -28,6 +28,10 @@ using System.Collections;
 using System.Collections.Generic;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 	[Register ("NSDictionary", SkipRegistration = true)]
 	public sealed partial class NSDictionary<TKey,TValue> : NSDictionary, IDictionary<TKey, TValue> 
@@ -53,7 +57,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSDictionary (IntPtr handle)
+		internal NSDictionary (NativeHandle handle)
 			: base (handle)
 		{
 		}
@@ -161,7 +165,7 @@ namespace Foundation {
 				return GenericFromObjectsAndKeysInternal (no, nk);
 		}
 
-#if XAMCORE_4_0
+#if NET
 		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (TValue [] objects, TKey [] keys)
 #else
 		[Obsolete ("'TKey' and 'TValue' are inversed and won't work unless both types are identical. Use the generic overload that takes a count parameter instead.")]

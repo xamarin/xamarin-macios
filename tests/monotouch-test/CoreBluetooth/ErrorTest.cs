@@ -9,8 +9,6 @@
 
 #if !__WATCHOS__
 
-using System;
-
 using Foundation;
 using CoreBluetooth;
 using NUnit.Framework;

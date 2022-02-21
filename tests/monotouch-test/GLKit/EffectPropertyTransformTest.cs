@@ -7,11 +7,12 @@ using System.Drawing;
 using Foundation;
 using GLKit;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GLKit {
 	
+#if !NET
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EffectPropertytTransformTest {
@@ -19,7 +20,7 @@ namespace MonoTouchFixtures.GLKit {
 		[Test]
 		public void Properties ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var transform = new GLKEffectPropertyTransform ();
 			Assert.That (transform.ModelViewMatrix.ToString (), Is.EqualTo ("(1, 0, 0, 0)\n(0, 1, 0, 0)\n(0, 0, 1, 0)\n(0, 0, 0, 1)"), "ModelViewMatrix");
@@ -32,6 +33,7 @@ namespace MonoTouchFixtures.GLKit {
 			Assert.That (transform.ProjectionMatrix.ToString (), Is.EqualTo ("(1, 0, 0, 0)\n(0, 1, 0, 0)\n(0, 0, 1, 0)\n(0, 0, 0, 1)"), "ProjectionMatrix");
 		}
 	}
+#endif // !NET
 }
 
 #endif // HAS_GLKIT

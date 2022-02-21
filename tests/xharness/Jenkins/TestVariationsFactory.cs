@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
@@ -34,11 +35,22 @@ namespace Xharness.Jenkins {
 			var ignore = test.TestProject.Ignore;
 			var mac_supports_arm64 = Harness.CanRunArm64;
 			var arm64_runtime_identifier = string.Empty;
+			var arm64_sim_runtime_identifier = string.Empty;
 
-			if (test.Platform == TestPlatform.Mac) {
+			switch (test.Platform) {
+			case TestPlatform.Mac:
 				arm64_runtime_identifier = "osx-arm64";
-			} else if (test.Platform == TestPlatform.MacCatalyst) {
+				break;
+			case TestPlatform.MacCatalyst:
 				arm64_runtime_identifier = "maccatalyst-arm64";
+				break;
+			case TestPlatform.iOS:
+			case TestPlatform.iOS_Unified:
+				arm64_sim_runtime_identifier = "iossimulator-arm64";
+				break;
+			case TestPlatform.tvOS:
+				arm64_sim_runtime_identifier = "tvossimulator-arm64";
+				break;
 			}
 
 			switch (test.ProjectPlatform) {
@@ -92,10 +104,10 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
 						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = (HumanMessage: "#1683", IssueLink: "https://github.com/xamarin/maccore/issues/1683") };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = (HumanMessage:"#1682", IssueLink:"https://github.com/xamarin/maccore/issues/1682") };
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1683", issueLink: "https://github.com/xamarin/maccore/issues/1683") };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1682", issueLink: "https://github.com/xamarin/maccore/issues/1682") };
 						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = (HumanMessage:"#1682", IssueLink:"https://github.com/xamarin/maccore/issues/1682") };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1682", issueLink: "https://github.com/xamarin/maccore/issues/1682") };
 					}
 					break;
 				}
@@ -111,13 +123,19 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore ?? !jenkins.IncludeAll };
+
+					if (test.TestProject.IsDotNetProject && mac_supports_arm64)
+						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !mac_supports_arm64 ? true : ignore, RuntimeIdentifier = arm64_sim_runtime_identifier, };
 					break;
 				case "introspection":
+					if (test.TestProject.IsDotNetProject && mac_supports_arm64)
+						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !mac_supports_arm64 ? true : ignore, RuntimeIdentifier = arm64_sim_runtime_identifier, };
+
 					foreach (var target in test.Platform.GetAppRunnerTargets ())
 						yield return new TestData {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
 							Debug = true,
-							Candidates = jenkins.Simulators.SelectDevices (target, jenkins.SimulatorLoadLog, true),
+							Candidates = jenkins.Simulators.SelectDevices (target.GetTargetOs (true), jenkins.SimulatorLoadLog, true),
 							Ignored = ignore ?? !jenkins.IncludeOldSimulatorTests, 
 						};
 					break;
@@ -189,7 +207,7 @@ namespace Xharness.Jenkins {
 					if (task.TestProject.IsDotNetProject)
 						variation += " [dotnet]";
 
-					if (known_failure.HasValue)
+					if (known_failure is not null)
 						ignored = true;
 
 					var clone = task.TestProject.Clone ();

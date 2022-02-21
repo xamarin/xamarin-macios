@@ -711,10 +711,13 @@
         <value>提供的存档路径并非来自有效的存档文件(.xcarchive)。存档路径:“{0}”</value>
     </data>
   <data name="E0187" xml:space="preserve">
-        <value>无法将 macOS 版本 {0} 映射到相应 iOS 版本</value>
+        <value>无法将 macOS 版本 {0} 映射到相应的 Mac Catalyst 版本。有效的 macOS 版本为: {1}</value>
     </data>
   <data name="E0188" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+        <value>无法将 Mac Catalyst 版本 {0} 映射到相应的 macOS 版本。有效的 Mac Catalyst 版本为: {1}</value>
+    </data>
+  <data name="E0189" xml:space="preserve">
+        <value>无法分析自定义链接器参数 "-{0}": {1}</value>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>无法解析 WiFi 调试程序设置的主机 IP。
@@ -1047,18 +1050,76 @@
         </comment>
     </data>
   <data name="E7081" xml:space="preserve">
-        <value>The AOT compiler '{0}' does not exist.</value>
+        <value>AOT 编译器“{0}”不存在。</value>
         <comment>
             AOT: Ahead-Of-Time
             {0}: the path to the compiler
         </comment>
     </data>
   <data name="E7082" xml:space="preserve">
-        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <value>{0}info.plist 中的值({1})与项目文件中的 SupportedOSPlatformVersion 值({2})不匹配(如果项目文件中没有 SupportedOSPlatformVersion 值，则已假定默认值)。请更改 Info.plist 中的值以匹配 SupportedOSPlatformVersion 值，或删除 Info.plist 中的值(如果尚不存在，则将 SupportedOSPlatformVersion 值添加到项目文件)。</value>
         <comment>
             {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
             {1}: the value from the Info.plist.
             {2}: the value from the project file.
         </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>所有字体文件都必须位于应用捆绑包中的同一目录中。以下字体文件在应用捆绑包中具有不同的目标目录:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>目标目录是 {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>正在创建压缩绑定资源包，因为输入中存在符号链接。</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>值“{0}”对于 Compress 属性无效。有效值: “true”、“false” 或 “auto”。</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>目录中 {0} 应有一个 “manifest” 文件。</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="E7088" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+  <data name="E7089" xml:space="preserve">
+        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+  <data name="E7090" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>框架 {0} 是静态库的框架，不会复制到应用。</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>文件 "{0}" 是无效的框架: {1}</value>
+    </data>
+  <data name="W7093" xml:space="preserve">
+        <value>The binding resource package {0} does not exist.</value>
+    </data>
+  <data name="E7094" xml:space="preserve">
+        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
     </data>
 </root>

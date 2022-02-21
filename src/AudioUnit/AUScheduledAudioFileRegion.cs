@@ -24,7 +24,11 @@ namespace AudioUnit {
 		internal struct ScheduledAudioFileRegion
 		{
 			public AudioTimeStamp TimeStamp;
+#if NET
+			public unsafe delegate* unmanaged<IntPtr, IntPtr, AudioUnitStatus, void> CompletionHandler;
+#else
 			public ScheduledAudioFileRegionCompletionHandler CompletionHandler;
+#endif
 			public /* void * */ IntPtr CompletionHandlerUserData;
 			public IntPtr AudioFile;
 			public uint LoopCount;
@@ -51,9 +55,10 @@ namespace AudioUnit {
 			this.completionHandler = completionHandler;
 		}
 
+#if !NET
 		internal delegate void ScheduledAudioFileRegionCompletionHandler (
 			/* void * */IntPtr userData, 
-			/* ScheduledAudioFileRegion * */ref ScheduledAudioFileRegion fileRegion, 
+			/* ScheduledAudioFileRegion * */ IntPtr fileRegion,
 			/* OSStatus */ AudioUnitStatus result);
 
 		static readonly ScheduledAudioFileRegionCompletionHandler static_ScheduledAudioFileRegionCompletionHandler = new ScheduledAudioFileRegionCompletionHandler (ScheduledAudioFileRegionCallback);
@@ -61,7 +66,10 @@ namespace AudioUnit {
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ScheduledAudioFileRegionCompletionHandler))]
 #endif
-		static void ScheduledAudioFileRegionCallback (IntPtr userData, ref ScheduledAudioFileRegion fileRegion, AudioUnitStatus status)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static void ScheduledAudioFileRegionCallback (IntPtr userData, IntPtr fileRegion, AudioUnitStatus status)
 		{
 			if (userData == IntPtr.Zero)
 				return;
@@ -85,12 +93,21 @@ namespace AudioUnit {
 			var ret = new ScheduledAudioFileRegion {
 				TimeStamp = TimeStamp,
 				CompletionHandlerUserData = ptr,
-				CompletionHandler = ptr != IntPtr.Zero ? static_ScheduledAudioFileRegionCompletionHandler : null,
 				AudioFile = AudioFile.Handle,
 				LoopCount = LoopCount,
 				StartFrame = StartFrame,
 				FramesToPlay = FramesToPlay
 			};
+
+			if (ptr != IntPtr.Zero) {
+				unsafe {
+#if NET
+					ret.CompletionHandler = &ScheduledAudioFileRegionCallback;
+#else
+					ret.CompletionHandler = static_ScheduledAudioFileRegionCompletionHandler;
+#endif
+				}
+			}
 
 			alreadyUsed = true;
 			return ret;

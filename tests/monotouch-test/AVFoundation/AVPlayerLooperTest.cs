@@ -1,5 +1,4 @@
 #if !__WATCHOS__
-using System;
 using System.IO;
 using Foundation;
 using AVFoundation;
@@ -10,7 +9,7 @@ namespace monotouchtest.AVFoundation
 	[Preserve (AllMembers = true)]
 	public class AVPlayerLooperTest
 	{
-#if !XAMCORE_4_0
+#if !NET
 		public void TestLoopingEnabled ()
 		{
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "Hand.wav");

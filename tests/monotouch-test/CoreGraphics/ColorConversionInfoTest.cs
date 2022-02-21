@@ -8,12 +8,15 @@
 //
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
+#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 

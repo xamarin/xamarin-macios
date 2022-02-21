@@ -550,10 +550,10 @@ function check_xcode () {
 	check_specific_xcode
 	install_coresimulator
 
-	local IOS_SDK_VERSION OSX_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
+	local IOS_SDK_VERSION MACOS_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	OSX_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
+	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
 	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
 	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
 
@@ -562,9 +562,9 @@ function check_xcode () {
 		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update IOS_SDK_VERSION in Make.config."
 	fi
 
-	local D=$XCODE_DEVELOPER_ROOT/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${OSX_SDK_VERSION}.sdk
+	local D=$XCODE_DEVELOPER_ROOT/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${MACOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
-		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update OSX_SDK_VERSION in Make.config."
+		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update MACOS_SDK_VERSION in Make.config."
 	fi
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS${TVOS_SDK_VERSION}.sdk

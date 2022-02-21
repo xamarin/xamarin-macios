@@ -8,8 +8,12 @@ using System.Runtime.Versioning;
 
 namespace SceneKit
 {
-#if !NET
-	[iOS (9,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
 #endif
 	public partial class SCNRenderingOptions {
 		public SCNRenderingApi? RenderingApi {

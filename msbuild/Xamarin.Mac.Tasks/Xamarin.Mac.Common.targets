@@ -66,63 +66,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<_CodesignAppBundleDependsOn>
-			_CreateAppBundle;
-			_EmbedProvisionProfile;
-			_CodesignNativeLibraries;
-			_CollectFrameworks;
-			_CodesignFrameworks;
-		</_CodesignAppBundleDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
-		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Keychain="$(CodesignKeychain)"
-			Entitlements="$(IntermediateOutputPath)Entitlements.xcent"
-			Resources="$(AppBundleDir)"
-			SigningKey="$(_CodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			IsAppExtension="$(IsAppExtension)"
-			UseHardenedRuntime="$(UseHardenedRuntime)"
-			UseSecureTimestamp="$(UseHardenedRuntime)"
-			>
-		</Codesign>
-	</Target>
-
-	<PropertyGroup>
-		<_CompileTextureAtlasesDependsOn>
-			$(_CompileTextureAtlasesDependsOn);
-			_DetectSdkLocations;
-			_CoreCompileTextureAtlases;
-		</_CompileTextureAtlasesDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
-
-	<Target Name="_CoreCompileTextureAtlases">
-		<TextureAtlas
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(TextureAtlasExe)"
-			ToolPath="$(TextureAtlasPath)"
-			AtlasTextures="@(AtlasTexture)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)">
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-		</TextureAtlas>
-	</Target>
-
-	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;
 			_ComputeTargetFrameworkMoniker;
@@ -140,7 +83,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
 		Condition = "'$(UsingAppleNETSdk)' != 'true'"
-		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName);$(DeviceSpecificOutputPath)bundler.stamp">
 
 		<Mmp

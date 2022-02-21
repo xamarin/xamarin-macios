@@ -1,15 +1,20 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
 namespace Compression
 {
-#if !NET
-		[iOS (9,0), Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout (LayoutKind.Sequential)]
 		struct CompressionStreamStruct {
 			public IntPtr Destination; // uint8_t * dst_ptr
 			public nint DestinationSize; // size_t dst_size;

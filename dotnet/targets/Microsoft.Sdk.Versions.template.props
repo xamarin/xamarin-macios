@@ -8,4 +8,7 @@
 		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
 		<_DefaultTargetPlatformVersion>@DEFAULT_TARGET_PLATFORM_VERSION@</_DefaultTargetPlatformVersion>
 	</PropertyGroup>
+
+	<ItemGroup>@VALID_RUNTIME_IDENTIFIERS@
+	</ItemGroup>
 </Project>

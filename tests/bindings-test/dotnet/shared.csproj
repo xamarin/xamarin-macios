@@ -4,10 +4,10 @@
     <RootNamespace>bindingstest</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
-    <LangVersion>latest</LangVersion>
     <IsBindingProject>true</IsBindingProject>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
 
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <BindingsTestDirectory>$(RootTestsDirectory)\bindings-test</BindingsTestDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
@@ -30,17 +30,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest.a">
-      <Link>libtest.a</Link>
-    </ObjcBindingNativeLibrary>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\libtest.xcframework">
+      <Kind>Static</Kind>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+    </NativeReference>
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="$(RootTestsDirectory)\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
-    </Compile>
-    <Compile Include="$(BindingsTestDirectory)\libtest.linkwith.cs">
-      <DependentUpon>libtest.a</DependentUpon>
     </Compile>
     <Compile Include="$(BindingsTestDirectory)\ProtocolTest.cs" />
     <Compile Include="$(RootTestsDirectory)\api-shared\ObjCRuntime\Registrar.cs">
@@ -49,6 +47,9 @@
     <Compile Include="$(BindingsTestDirectory)\RegistrarBindingTest.cs" />
     <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
     </Compile>
     <Compile Include="$(BindingsTestDirectory)\RuntimeTest.cs" />
     <Compile Include="$(BindingsTestDirectory)\CodeBehind.cs" />
@@ -70,18 +71,17 @@
     <None Include="$(TestLibrariesDirectory)\testgenerator.cs">
       <Link>testgenerator.cs</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.m" />
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.h" />
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.cs" />
-    <GeneratedTestInput Include="$(TestLibrariesDirectory)\Makefile" />
-    <GeneratedTestOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest.a" />
-    <GeneratedTestOutput Include="$(BindingsTestDirectory)\ApiDefinition.generated.cs" />
-    <GeneratedTestOutput Include="$(BindingsTestDirectory)\StructsAndEnums.generated.cs" />
+    <None Include="$(TestLibrariesDirectory)\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+    <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest.xcframework" />
   </ItemGroup>
 
-  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild">
+  <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

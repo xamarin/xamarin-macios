@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This file is not processed by xharness, and contains logic shared by all our test suites -->
+<!-- This file is processed by xharness, and contains logic shared by all our test suites -->
 <Project>
 	<!-- NativeLibName: the platform-specific subdirectory of tests/test-libraries/.libs where to get libraries with all the relevant architectures -->
 
@@ -9,27 +9,27 @@
 		<NativeLibName>ios-fat</NativeLibName>
 		<!-- We need this because we'd otherwise default to the latest OS version we support, and we'll want to execute on earlier versions -->
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
-		<PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
 	</ItemGroup>
 
 	<!-- Logic for tvOS -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
 		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>tvos-fat</NativeLibName>
 		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-		<PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
 	</ItemGroup>
 
 	<!-- Logic for macOS -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-macos'))">
 		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
 		<NativeLibName>macos-fat</NativeLibName>
-		<SupportedOSPlatformVersion>10.15</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 
 	<!-- Logic for Mac Catalyst -->
@@ -37,7 +37,28 @@
 		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>maccatalyst-fat</NativeLibName>
 		<SupportedOSPlatformVersion>13.3</SupportedOSPlatformVersion>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 
 	<!-- Logic for all test suites -->
+	<PropertyGroup>
+		<!-- Disable the implicit FSharp.Core reference, because sometimes the implicit reference wants a version that isn't available anywhere -->
+		<DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+
+		<!-- There's unsafe code in shared test code, which means pretty much all test suites need unsafe code -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<!-- Always use the latest C# version everywhere -->
+		<LangVersion>latest</LangVersion>
+
+		<!-- XAMCORE_3_0 is always defined for .NET -->
+		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NUnitLite" Version="3.12.0" />
+		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
+	</ItemGroup>
+
+	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" />
 </Project>

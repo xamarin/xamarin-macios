@@ -10,15 +10,17 @@ using NSErrorRef = System.IntPtr;
 
 namespace HealthKit {
 
-#if !NET
-	[Watch (8,0), iOS (15,0)]
-#else
+#if NET
 	[SupportedOSPlatform ("ios15.0")]
+#else
+	[Watch (8,0)]
+	[iOS (15,0)]
 #endif
 	public static class HKAppleWalkingSteadiness
 	{
 
 		[DllImport (Constants.HealthKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool HKAppleWalkingSteadinessClassificationForQuantity (HKQuantityRef value, out nint classificationOut, out NSErrorRef errorOut);
 
 		public static bool TryGetClassification (HKQuantity value, out HKAppleWalkingSteadinessClassification? classification, out NSError? error)
@@ -39,13 +41,13 @@ namespace HealthKit {
 		[DllImport (Constants.HealthKitLibrary)]
 		static extern HKQuantityRef HKAppleWalkingSteadinessMinimumQuantityForClassification (nint classification);
 
-		public static HKQuantity GetMinimumQuantity (HKAppleWalkingSteadinessClassification classification)
+		public static HKQuantity? GetMinimumQuantity (HKAppleWalkingSteadinessClassification classification)
 			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMinimumQuantityForClassification ((nint) (long) classification), false); 
 
 		[DllImport (Constants.HealthKitLibrary)]
 		static extern HKQuantityRef HKAppleWalkingSteadinessMaximumQuantityForClassification (nint classification);
 
-		public static HKQuantity GetMaximumQuantity (HKAppleWalkingSteadinessClassification classification)
+		public static HKQuantity? GetMaximumQuantity (HKAppleWalkingSteadinessClassification classification)
 			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMaximumQuantityForClassification ((nint) (long) classification), false); 
 	}
 

@@ -366,26 +366,25 @@ xamarin_get_managed_object_for_ptr_fast (id self, GCHandle *exception_gchandle)
 	return mobj;
 }
 
-void xamarin_framework_peer_lock ()
+// See comments in the following methods to explain the logic here:
+// xamarin_marshal_return_value_impl in trampolines.m
+// xamarin_release_managed_ref in runtime.m
+void xamarin_framework_peer_waypoint ()
 {
 	// COOP: CHECK
 	MONO_ASSERT_GC_UNSAFE;
-	
+
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&framework_peer_release_lock);
+	pthread_mutex_unlock (&framework_peer_release_lock);
 	MONO_EXIT_GC_SAFE;
 }
 
-// Same as xamarin_framework_peer_lock, except the current mode should be GC Safe.
-void xamarin_framework_peer_lock_safe ()
+// Same as xamarin_framework_peer_waypoint, except the current mode should be GC Safe.
+void xamarin_framework_peer_waypoint_safe ()
 {
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
-
 	pthread_mutex_lock (&framework_peer_release_lock);
-}
-
-void xamarin_framework_peer_unlock ()
-{
 	pthread_mutex_unlock (&framework_peer_release_lock);
 }
 
@@ -699,6 +698,15 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 		return;
 	}
 	
+#if DOTNET
+	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
+	"Could not find an existing managed instance for this object, "
+	"nor was it possible to create a new managed instance "
+	"(because the type '%s' does not have a constructor that takes one NativeHandle argument).\n"
+	"Additional information:\n"
+	"\tSelector: %s\n"
+	"\tMethod: %s\n";
+#else
 	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
 	"Could not find an existing managed instance for this object, "
 	"nor was it possible to create a new managed instance "
@@ -706,6 +714,7 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	"Additional information:\n"
 	"\tSelector: %s\n"
 	"\tMethod: %s\n";
+#endif
 	
 	char *method_full_name = mono_method_full_name (method, TRUE);
 	char *type_name = xamarin_lookup_managed_type_name ([self class], exception_gchandle);
@@ -1860,7 +1869,7 @@ xamarin_release_managed_ref (id self, bool user_type)
 		set_flags_safe (self, (enum XamarinGCHandleFlags) (get_flags_safe (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
 		//
-		// This lock is needed so that we can safely call retainCount in the
+		// This waypoint (lock+unlock) is needed so that we can safely call retainCount in the
 		// toggleref callback.
 		//
 		// The race is between the following actions (given a managed object Z):
@@ -1925,8 +1934,8 @@ xamarin_release_managed_ref (id self, bool user_type)
 		//
 		//    This is https://github.com/xamarin/xamarin-macios/issues/3943
 		//
-		xamarin_framework_peer_lock_safe ();
-		xamarin_framework_peer_unlock ();
+		// See also comment in xamarin_marshal_return_value_impl
+		xamarin_framework_peer_waypoint_safe ();
 	}
 
 	[self release];
@@ -2165,12 +2174,14 @@ xamarin_log_marshalled_exceptions ()
 }
 
 void
-xamarin_log_managed_exception (GCHandle handle, MarshalManagedExceptionMode mode)
+xamarin_log_managed_exception (MonoObject *exception, MarshalManagedExceptionMode mode)
 {
 	if (!xamarin_log_marshalled_exceptions ())
 		return;
 
+	GCHandle handle = xamarin_gchandle_new (exception, false);
 	NSLog (@PRODUCT ": Processing managed exception for exception marshalling (mode: %i):\n%@", mode, xamarin_print_all_exceptions (handle));
+	xamarin_gchandle_free (handle);
 }
 
 void
@@ -2205,7 +2216,11 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	}
 
 	if (mode == MarshalObjectiveCExceptionModeDefault)
+#if DOTNET
+		mode = MarshalObjectiveCExceptionModeThrowManagedException;
+#else
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
+#endif
 	
 	xamarin_log_objectivec_exception (ns_exception, mode);
 
@@ -2275,14 +2290,14 @@ xamarin_process_managed_exception (MonoObject *exception)
 	}
 
 	if (mode == MarshalManagedExceptionModeDefault) {
-#if defined (CORECLR_RUNTIME)
+#if DOTNET
 		mode = MarshalManagedExceptionModeThrowObjectiveCException;
 #else
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
 #endif
 	}
 
-	xamarin_log_managed_exception (handle, mode);
+	xamarin_log_managed_exception (exception, mode);
 
 	switch (mode) {
 #if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
@@ -2355,16 +2370,13 @@ xamarin_process_managed_exception (MonoObject *exception)
 				xamarin_free (fullname);
 			}
 
-			char *message = xamarin_get_exception_message (handle, &exception_gchandle);
+			reason = xamarin_print_all_exceptions (handle);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception when trying to get the message for an exception (this exception will be ignored):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				xamarin_gchandle_free (exception_gchandle);
 				exception_gchandle = INVALID_GCHANDLE;
 				reason = @"Unknown message";
-			} else {
-				reason = [NSString stringWithUTF8String: message];
-				xamarin_free (message);
 			}
 
 			userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
@@ -2449,6 +2461,7 @@ xamarin_compute_trusted_platform_assemblies ()
 	const char *bundle_path = xamarin_get_bundle_path ();
 
 	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *exes = [NSMutableArray array];
 	NSMutableArray<NSString *> *directories = [NSMutableArray array];
 	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
 	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
@@ -2476,10 +2489,13 @@ xamarin_compute_trusted_platform_assemblies ()
 			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
 				[files addObject: [dir stringByAppendingPathComponent: name]];
 			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
-				[files addObject: [dir stringByAppendingPathComponent: name]];
+				[exes addObject: [dir stringByAppendingPathComponent: name]];
 			}
 		}
 	}
+
+	// Any .exe files must be at the end, due to https://github.com/dotnet/runtime/issues/62735
+	[files addObjectsFromArray: exes];
 
 	// Join them all together with a colon separating them
 	NSString *joined = [files componentsJoinedByString: @":"];
@@ -2575,12 +2591,26 @@ xamarin_is_native_library (const char *libraryName)
 	if (xamarin_runtime_libraries == NULL)
 		return false;
 
+	size_t libraryNameLength = strlen (libraryName);
+	// The libraries in xamarin_runtime_libraries are extension-less, so we need to
+	// remove any .dylib extension for the library name we're comparing with too.
+	if (libraryNameLength > 6 && strcmp (libraryName + libraryNameLength - 6, ".dylib") == 0)
+		libraryNameLength -= 6;
+
+	bool rv = false;
 	for (int i = 0; xamarin_runtime_libraries [i] != NULL; i++) {
-		if (!strcmp (xamarin_runtime_libraries [i], libraryName))
-			return true;
+		// Check if the start of the current xamarin_runtime_libraries entry matches libraryName
+		if (!strncmp (xamarin_runtime_libraries [i], libraryName, libraryNameLength)) {
+			// The start matches, now check if that's all there is
+			if (xamarin_runtime_libraries [i] [libraryNameLength] == 0) {
+				// If so, we've got a match
+				rv = true;
+				break;
+			}
+		}
 	}
 
-	return false;
+	return rv;
 }
 
 void*
@@ -3143,6 +3173,18 @@ xamarin_is_managed_exception_marshaling_disabled ()
 	return false;
 #endif
 }
+
+#if DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
+int
+xamarin_get_runtime_arch ()
+{
+	#if TARGET_OS_SIMULATOR
+		return 1;
+	#else
+		return 0;
+	#endif
+}
+#endif // DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
 
 /*
  * XamarinGCHandle

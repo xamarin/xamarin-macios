@@ -12,9 +12,9 @@ using System.Runtime.Versioning;
 namespace CoreWlan {
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
@@ -56,9 +56,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWPhyMode : ulong {
@@ -72,9 +72,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWInterfaceMode : ulong {
@@ -85,9 +85,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWSecurity : ulong {
@@ -111,6 +111,11 @@ namespace CoreWlan {
 		Unknown = long.MaxValue,
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("maccatalyst")]
+#else
+	[NoMacCatalyst]
+#endif
 	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Native]
 	public enum CWIbssModeSecurity : ulong {
@@ -120,9 +125,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWChannelWidth : ulong {
@@ -134,9 +139,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWChannelBand : ulong {
@@ -146,9 +151,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWCipherKeyFlags : ulong {
@@ -160,9 +165,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWKeychainDomain : ulong {
@@ -172,9 +177,9 @@ namespace CoreWlan {
 	}
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[MacCatalyst (15,0)]
+	[NoMacCatalyst]
 #endif
 	[Native]
 	public enum CWEventType : long {

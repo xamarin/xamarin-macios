@@ -19,17 +19,25 @@ using CoreFoundation;
 
 using OS_nw_ws_request=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-#if !NET
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios13.0")]
+#if NET
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
 #endif
 	public class NWWebSocketRequest : NativeObject {
-		internal NWWebSocketRequest (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWWebSocketRequest (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]

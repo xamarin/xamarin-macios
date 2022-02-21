@@ -92,13 +92,16 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
 	</PropertyGroup>
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'MacCatalyst'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_XamarinPlatformAssemblyName)</_XamarinPlatformAssemblyPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' == 'true'">
+		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_PlatformAssemblyName).dll</_XamarinPlatformAssemblyPath>
 	</PropertyGroup>
 
 	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
@@ -132,6 +135,11 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And ('$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != '')">true</_RequireProvisioningProfile>
 		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'MacCatalyst' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
 		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == ''">false</_RequireProvisioningProfile>
+
+		<!-- If we should automatically try to detect the app manifest (Info.plist) from any None, BundleResource or Content items -->
+		<!-- It might be desirable to turn off the automatic detection if the current logic detects Info.plist that aren't the app manifest -->
+		<!-- One example would be when including native frameworks in the app bundle - frameworks have an Info.plist that might be picked up -->
+		<AppManifestDetectionEnabled Condition="'$(AppManifestDetectionEnabled)' == ''">true</AppManifestDetectionEnabled>
 	</PropertyGroup>
 
 	<!-- RequireCodeSigning -->
@@ -284,7 +292,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<_AppBundleManifestRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents/</_AppBundleManifestRelativePath>
 
-		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true' And '$(IsXpcService)' == 'true'">.xpc</AppBundleExtension>
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true' And '$(IsXPCService)' == 'true'">.xpc</AppBundleExtension>
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true'">.appex</AppBundleExtension>
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 
@@ -318,6 +326,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     separately) allow, so `latest` it is.
 		-->
 		<LangVersion>latest</LangVersion>
+
+		<!-- Default NoBindingEmbedding to 'true' for .NET projects, it's the new way -->
+		<NoBindingEmbedding Condition="'$(NoBindingEmbedding)' == '' And '$(UsingAppleNETSdk)' == 'true'">true</NoBindingEmbedding>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">

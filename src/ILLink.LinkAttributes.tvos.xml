@@ -1,5 +1,5 @@
 <linker>
-  <assembly fullname="Xamarin.TVOS">
+  <assembly fullname="Microsoft.tvOS">
     <!-- Foundation -->
     <type fullname="Foundation.AdviceAttribute">
       <attribute internal="RemoveAttributeInstances" />
@@ -30,44 +30,6 @@
       <attribute internal="RemoveAttributeInstances" />
     </type>
     <type fullname="ObjCRuntime.ThreadSafeAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-
-    <type fullname="ObjCRuntime.AvailabilityBaseAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.DeprecatedAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.IntroducedAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.ObsoletedAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.UnavailableAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.NoiOSAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.NoMacAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.NoMacCatalystAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.NoTVAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.NoWatchAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <!-- special case (no namespace) -->
-    <type fullname="iOSAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="MacAttribute">
       <attribute internal="RemoveAttributeInstances" />
     </type>
   </assembly>

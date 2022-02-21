@@ -7,7 +7,13 @@ using Foundation;
 using ObjCRuntime;
 using NearbyInteraction;
 using NUnit.Framework;
+using Xamarin.Utils;
+
+#if NET
+using System.Numerics;
+#else
 using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.NearbyInteraction {
 
@@ -18,7 +24,7 @@ namespace MonoTouchFixtures.NearbyInteraction {
 		public void Setup ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

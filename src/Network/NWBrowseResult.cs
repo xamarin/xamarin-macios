@@ -20,18 +20,26 @@ using OS_nw_browse_result=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using OS_nw_txt_record=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-#if !NET
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-#else
-	[SupportedOSPlatform ("ios13.0")]
+#if NET
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
 #endif
 	public class NWBrowseResult : NativeObject {
 
-		internal NWBrowseResult (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWBrowseResult (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_endpoint nw_browse_result_copy_endpoint (OS_nw_browse_result result);

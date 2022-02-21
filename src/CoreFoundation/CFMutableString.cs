@@ -8,17 +8,27 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 	
 	public class CFMutableString : CFString {
 
-		protected CFMutableString (IntPtr handle)
+#if !NET
+		protected CFMutableString (NativeHandle handle)
 			: this (handle, false)
 		{
 		}
+#endif
 		
 		[Preserve (Conditional = true)]
-		protected CFMutableString (IntPtr handle, bool owns)
+#if NET
+		internal CFMutableString (NativeHandle handle, bool owns)
+#else
+		protected CFMutableString (NativeHandle handle, bool owns)
+#endif
 			: base (handle, owns)
 		{
 		}

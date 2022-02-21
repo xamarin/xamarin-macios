@@ -17,7 +17,7 @@ namespace Xamarin.Mac.Tests
 		public void SKPayment_PaymentWithProduct ()
 		{
 			SKProduct product = new SKProduct();
-			SKPayment payment = SKPayment.PaymentWithProduct (product);
+			SKPayment payment = SKPayment.CreateFrom (product);
 			Assert.IsNotNull (payment);
 		}
 	}

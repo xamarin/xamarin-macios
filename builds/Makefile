@@ -74,7 +74,7 @@ downloads/%: downloads/%.nupkg
 
 downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))): dotnet-install.sh
 	$(Q) echo "Downloading and installing .NET $(DOTNET6_VERSION) into $@..."
-	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET6_VERSION)" --architecture x64 --no-path
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET6_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET6_VERSION) into $@."
@@ -110,6 +110,10 @@ $(eval $(call FixMacCatalystAssembly,System.Net.Http))
 
 ifdef CUSTOM_DOTNET
 DOWNLOAD_DOTNET_VERSION=$(CUSTOM_DOTNET_VERSION)
+else
+ifneq ($(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION),)
+DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
+endif
 endif
 
 .stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
@@ -121,8 +125,12 @@ endif
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
+		/p:DotNetManifestVersionBand="$(MANIFEST_VERSION_BAND)" \
+		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
+	$(Q) $(CP) ./downloads/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET6_VERSION)-osx-x64/sdk-manifests/$(MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
+	$(Q) $(CP) ./downloads/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET6_VERSION)-osx-x64/sdk-manifests/$(MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) touch $@
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
@@ -175,7 +183,7 @@ SDK_ARGS= \
 	TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) \
 	WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) \
 	WATCHOS64_32_VERSION=$(WATCH_SDK_VERSION) WATCHOS64_32_VERSION_MIN=$(MIN_WATCHOS64_32_SDK_VERSION) \
-	MACOS_VERSION=$(OSX_SDK_VERSION) MACOS_VERSION_MIN=$(MIN_OSX_SDK_VERSION)
+	MACOS_VERSION=$(MACOS_SDK_VERSION) MACOS_VERSION_MIN=$(MIN_MACOS_SDK_VERSION)
 
 SDK_CONFIG = $(MONO_PATH)/sdks/Make.config
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
@@ -750,7 +758,7 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: $(TOP)/Make.config.inc
 	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
-	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_MAC_SDK_DESTDIR)/mac-mono-version.txt)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
 
 $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/Versions.plist: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk
@@ -852,7 +860,7 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: $(TOP)/Make.config.inc
 	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
-	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
 
 $(DOTNET_DESTDIR)/%.Sdk/Versions.plist: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist | $(DOTNET_DESTDIR)/%.Sdk

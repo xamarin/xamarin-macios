@@ -33,10 +33,15 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 #nullable enable
 
@@ -87,13 +92,13 @@ namespace CoreFoundation {
 		}
 	}
 
-#if XAMCORE_4_0
+#if NET
 	// nothing is exposed publicly
-	internal
+	internal static class CFObject {
 #else
-	public
+	public static class CFObject {
 #endif
-	static class CFObject {
+	
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFRelease (IntPtr obj);
 
@@ -123,17 +128,17 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static unsafe IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, char* buffer);
 
-		public static IntPtr CreateNative (string? value)
+		public static NativeHandle CreateNative (string? value)
 		{
 			if (value is null)
-				return IntPtr.Zero;
+				return NativeHandle.Zero;
 			
 			return CFStringCreateWithCharacters (IntPtr.Zero, value, value.Length);
 		}
 
-		public static void ReleaseNative (IntPtr handle)
+		public static void ReleaseNative (NativeHandle handle)
 		{
-			if (handle != IntPtr.Zero)
+			if (handle != NativeHandle.Zero)
 				CFObject.CFRelease (handle);
 		}
 
@@ -149,19 +154,25 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFStringGetTypeID")]
 		public extern static nint GetTypeID ();
 		
-		public CFString (IntPtr handle)
+#if !NET
+		public CFString (NativeHandle handle)
 			: this (handle, false)
 		{
 		}
+#endif
 		
 		[Preserve (Conditional = true)]
-		protected internal CFString (IntPtr handle, bool owns)
+#if NET
+		internal CFString (NativeHandle handle, bool owns)
+#else
+		protected internal CFString (NativeHandle handle, bool owns)
+#endif
 			: base (handle, owns)
 		{
 		}
 
 		// to be used when an API like CF*Get* returns a CFString
-		public static string? FromHandle (IntPtr handle)
+		public static string? FromHandle (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
@@ -198,7 +209,7 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Copy* returns a CFString
-		public static string? FromHandle (IntPtr handle, bool releaseHandle)
+		public static string? FromHandle (NativeHandle handle, bool releaseHandle)
 		{
 			var s = FromHandle (handle);
 			if (releaseHandle && (handle != IntPtr.Zero))
@@ -206,16 +217,23 @@ namespace CoreFoundation {
 			return s;
 		}
 
-		public static implicit operator string? (CFString x)
+		public static implicit operator string? (CFString? x)
 		{
+			if (x is null)
+				return null;
+
 			if (x.str == null)
 				x.str = FromHandle (x.Handle);
 			
 			return x.str;
 		}
 
-		public static implicit operator CFString (string s)
+		[return: NotNullIfNotNull ("s")]
+		public static implicit operator CFString? (string? s)
 		{
+			if (s is null)
+				return null;
+
 			return new CFString (s);
 		}
 
@@ -229,6 +247,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.U2)]
 		extern static char CFStringGetCharacterAtIndex (IntPtr handle, nint p);
 		
 		public char this [nint p] {

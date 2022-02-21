@@ -161,7 +161,7 @@ namespace Foundation {
 		Script,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	public enum NSLinguisticTagUnit {
 #else
 	public enum NSLinguisticTag {

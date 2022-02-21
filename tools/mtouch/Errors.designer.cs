@@ -3107,6 +3107,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It&apos;s highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool)..
+        /// </summary>
+        public static string MT4186 {
+            get {
+                return ResourceManager.GetString("MT4186", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing &apos;{0}&apos; compiler. Please install Xcode &apos;Command-Line Tools&apos; component
         ///		.
         /// </summary>
@@ -3749,7 +3758,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the iOS version {0} to a macOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}.
         /// </summary>
         public static string MX0183 {
             get {
@@ -3758,7 +3767,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}.
         /// </summary>
         public static string MX0184 {
             get {
@@ -3782,6 +3791,15 @@ namespace Xamarin.Bundler {
         public static string MX1009 {
             get {
                 return ResourceManager.GetString("MX1009", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not decompress the file &apos;{0}&apos;. Please review the build log for more information from the native &apos;unzip&apos; command..
+        /// </summary>
+        public static string MX1306 {
+            get {
+                return ResourceManager.GetString("MX1306", resourceCulture);
             }
         }
         

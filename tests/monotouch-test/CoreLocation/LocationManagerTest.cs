@@ -2,10 +2,7 @@
 
 #if __IOS__
 
-using System;
-
 using Foundation;
-using UIKit;
 using CoreLocation;
 using ObjCRuntime;
 

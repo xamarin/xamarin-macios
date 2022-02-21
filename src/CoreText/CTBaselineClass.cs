@@ -42,7 +42,8 @@ namespace CoreText {
 		Math,
 	}
 
-	static class CTBaselineClassID {
+	static partial class CTBaselineClassID {
+#if !NET
 		public static readonly NSString Roman;
 		public static readonly NSString IdeographicCentered;
 		public static readonly NSString IdeographicLow;
@@ -60,6 +61,7 @@ namespace CoreText {
 			Hanging = Dlfcn.GetStringConstant (handle, "kCTBaselineClassHanging");
 			Math = Dlfcn.GetStringConstant (handle, "kCTBaselineClassMath");
 		}
+#endif
 
 		public static NSString ToNSString (CTBaselineClass key)
 		{
@@ -94,16 +96,18 @@ namespace CoreText {
 		Original
 	}
 
-	static class CTBaselineFondID {
+	static partial class CTBaselineFontID {
+#if !NET
 		public static readonly NSString Reference;
 		public static readonly NSString Original;
 
-		static CTBaselineFondID ()
+		static CTBaselineFontID ()
 		{
 			var handle = Libraries.CoreText.Handle;
 			Reference = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceFont");
 			Original = Dlfcn.GetStringConstant (handle, "kCTBaselineOriginalFont");
 		}
+#endif // !NET
 
 		public static NSString ToNSString (CTBaselineFont key)
 		{

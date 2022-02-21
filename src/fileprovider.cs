@@ -15,7 +15,11 @@ using CoreGraphics;
 using Foundation;
 using UniformTypeIdentifiers;
 
-#if IOS && !XAMCORE_4_0 && !__MACCATALYST__
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#if IOS && !NET && !__MACCATALYST__
 using FileProvider;
 
 // This is the original (iOS 8) location of `NSFileProviderExtension`
@@ -226,6 +230,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[Static]
 	interface NSFileProviderItemIdentifier {
 
@@ -257,7 +262,7 @@ namespace FileProvider {
 		ExcludingFromSync = 1 << 7,
 		AddingSubItems = Writing,
 		ContentEnumerating = Reading,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This enum value is not constant across OS and versions.")]
 	#if MONOMAC
 		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting | Evicting,
@@ -269,6 +274,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (11,0)]
+	[NoMacCatalyst]
 	[Static]
 	interface NSFileProviderPage {
 
@@ -298,11 +304,11 @@ namespace FileProvider {
 
 		[NoMac]
 		[Export ("initWithIdentifier:displayName:pathRelativeToDocumentStorage:")]
-		IntPtr Constructor (string identifier, string displayName, string pathRelativeToDocumentStorage);
+		NativeHandle Constructor (string identifier, string displayName, string pathRelativeToDocumentStorage);
 
 		[NoiOS]
 		[Export ("initWithIdentifier:displayName:")]
-		IntPtr Constructor (string identifier, string displayName);
+		NativeHandle Constructor (string identifier, string displayName);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -345,6 +351,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderEnumerationObserver {
 
@@ -370,6 +377,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderChangeObserver {
 
@@ -399,6 +407,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderEnumerator {
 
@@ -421,6 +430,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderItem {
 
@@ -436,7 +446,7 @@ namespace FileProvider {
 		[Export ("filename")]
 		string Filename { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		// became optional when deprecated
 		[Abstract]
 #endif
@@ -482,7 +492,7 @@ namespace FileProvider {
 		[Export ("favoriteRank", ArgumentSemantic.Copy)]
 		NSNumber GetFavoriteRank ();
 
-#if XAMCORE_4_0 // Not available in mac
+#if NET // Not available in mac
 		[NoMac]
 #elif MONOMAC
 		[Obsolete ("'IsTrashed' is not available in macOS and will be removed in the future.")]
@@ -536,7 +546,7 @@ namespace FileProvider {
 		[Export ("userInfo")]
 		NSDictionary GetUserInfo ();
 
-		[NoiOS]
+		[NoiOS, NoMacCatalyst]
 		[Export ("fileSystemFlags")]
 		NSFileProviderFileSystemFlags FileSystemFlags { get; }
 
@@ -783,13 +793,18 @@ namespace FileProvider {
 	interface NSFileProviderItemVersion {
 
 		[Export ("initWithContentVersion:metadataVersion:")]
-		IntPtr Constructor (NSData contentVersion, NSData metadataVersion);
+		NativeHandle Constructor (NSData contentVersion, NSData metadataVersion);
 
 		[Export ("contentVersion")]
 		NSData ContentVersion { get; }
 
 		[Export ("metadataVersion")]
 		NSData MetadataVersion { get; }
+
+		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+		[Static]
+		[Export ("beforeFirstSyncComponent")]
+		NSData BeforeFirstSyncComponent { get; }
 	}
 
 	[Mac (11,0)]
@@ -965,7 +980,7 @@ namespace FileProvider {
 		/* see Advice above
 		[Abstract]
 		[Export ("initWithDomain:")]
-		IntPtr Constructor (NSFileProviderDomain domain);
+		NativeHandle Constructor (NSFileProviderDomain domain);
 		*/
 
 		[Abstract]

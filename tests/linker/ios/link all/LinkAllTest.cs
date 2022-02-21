@@ -16,6 +16,7 @@ using System.Net;
 using System.Net.Security;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
@@ -25,6 +26,9 @@ using Foundation;
 using ObjCRuntime;
 #if !__WATCHOS__
 using StoreKit;
+#endif
+#if __MACOS__ || __IOS__
+using PdfKit;
 #endif
 #if !__MACOS__
 using UIKit;
@@ -64,19 +68,39 @@ namespace LinkAll {
 	public class LinkAllRegressionTest {
 #if __MACCATALYST__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.MacCatalyst";
+#else
 		public const string AssemblyName = "Xamarin.MacCatalyst";
+#endif
 #elif __IOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.iOS";
+#else
 		public const string AssemblyName = "Xamarin.iOS";
+#endif
 #elif __TVOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.tvOS";
+#else
 		public const string AssemblyName = "Xamarin.TVOS";
+#endif
 #elif __WATCHOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.watchOS";
+#else
 		public const string AssemblyName = "Xamarin.WatchOS";
+#endif
 #elif __MACOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.macOS";
+#else
 		public const string AssemblyName = "Xamarin.Mac";
+#endif
 #else
 	#error Unknown platform
 #endif
@@ -233,13 +257,18 @@ namespace LinkAll {
 #endif // !__MACOS__
 
 		[Test]
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 		[Availability ()]
 #endif
+#if NET
+		[SupportedOSPlatform ("none")]
+		[UnsupportedOSPlatform ("none)")]
+#else
 		[Introduced (PlatformName.None)]
 		[Deprecated (PlatformName.None)]
 		[Obsoleted (PlatformName.None)]
 		[Unavailable (PlatformName.None)]
+#endif
 		[ThreadSafe]
 		public void RemovedAttributes ()
 		{
@@ -255,6 +284,10 @@ namespace LinkAll {
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ObsoletedAttribute, " + suffix), "ObsoletedAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.UnavailableAttribute, " + suffix), "UnavailableAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ThreadSafeAttribute, " + suffix), "ThreadSafeAttribute");
+#if NET
+			Assert.Null (Helper.GetType ("System.Runtime.Versioning.SupportedOSPlatformAttribute, " + suffix), "SupportedOSPlatformAttribute");
+			Assert.Null (Helper.GetType ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute, " + suffix), "UnsupportedOSPlatformAttribute");
+#endif
 		}
 
 		[Test]
@@ -401,10 +434,7 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_Compare ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Single.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Single.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -413,10 +443,7 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_ToString ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			var ci = CultureInfo.InvariantCulture;
 #if NET
 			Assert.That (Single.Epsilon.ToString (ci), Is.EqualTo ("1E-45"), "Epsilon.ToString()");
@@ -430,10 +457,7 @@ namespace LinkAll {
 		[Test]
 		public void DoubleEpsilon_Compare ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Double.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Double.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -442,10 +466,7 @@ namespace LinkAll {
 		[Test]
 		public void DoubleEpsilon_ToString ()
 		{
-#if !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Known to fail on devices, see bug #15802");
-#endif
+			TestRuntime.AssertNotDevice ("Known to fail on devices, see bug #15802");
 			var ci = CultureInfo.InvariantCulture;
 			// note: unlike Single this works on both my iPhone5S and iPodTouch5
 #if NET
@@ -674,12 +695,32 @@ namespace LinkAll {
 			var suffix = Path.Combine (bundleName, bundleLocation, corelib);
 			Assert.That (corlib, Does.EndWith (suffix), corlib);
 		}
+
+#if __MACOS__ || __IOS__
+		[Test]
+		public void CGPdfPage ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+			var pdfPath = NSBundle.MainBundle.PathForResource ("Tamarin", "pdf");
+			using var view = new PdfView ();
+			view.Document = new PdfDocument (NSUrl.FromFilename (pdfPath));
+			using var page = view.CurrentPage;
+			Assert.IsNotNull (page.Page, "Page");
+		}
+#endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos1.0")]
+	[SupportedOSPlatform ("ios1.0")]
+	[SupportedOSPlatform ("tvos1.0")]
+	[SupportedOSPlatform ("maccatalyst1.0")]
+#else
 	[Introduced (PlatformName.MacOSX, 1, 0, PlatformArchitecture.Arch64)]
 	[Introduced (PlatformName.iOS, 1, 0)]
 	[Introduced (PlatformName.TvOS, 1, 0)]
 	[Introduced (PlatformName.WatchOS, 1, 0)]
+#endif
 	[Preserve]
 	public class ClassFromThePast : NSObject
 	{

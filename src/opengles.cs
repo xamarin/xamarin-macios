@@ -15,6 +15,10 @@ using CoreLocation;
 using UIKit;
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace OpenGLES {
 
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
@@ -35,11 +39,11 @@ namespace OpenGLES {
 	[DisableDefaultCtor] // init now marked with NS_UNAVAILABLE
 	interface EAGLContext {
 		[Export ("initWithAPI:")]
-		IntPtr Constructor (EAGLRenderingAPI api);
+		NativeHandle Constructor (EAGLRenderingAPI api);
 
 		[DesignatedInitializer]
 		[Export ("initWithAPI:sharegroup:")]
-		IntPtr Constructor (EAGLRenderingAPI api, EAGLSharegroup sharegroup);
+		NativeHandle Constructor (EAGLRenderingAPI api, EAGLSharegroup sharegroup);
 
 		[Static, Export("setCurrentContext:")]
 		bool SetCurrentContext([NullAllowed] EAGLContext context);

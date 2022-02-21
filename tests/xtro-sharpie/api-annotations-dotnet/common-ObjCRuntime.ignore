@@ -1,0 +1,41 @@
+!unknown-pinvoke! _Block_copy bound
+!unknown-pinvoke! _Block_release bound
+!unknown-pinvoke! class_addIvar bound
+!unknown-pinvoke! class_addMethod bound
+!unknown-pinvoke! class_addProperty bound
+!unknown-pinvoke! class_addProtocol bound
+!unknown-pinvoke! class_getInstanceMethod bound
+!unknown-pinvoke! class_getInstanceVariable bound
+!unknown-pinvoke! class_getMethodImplementation bound
+!unknown-pinvoke! class_getName bound
+!unknown-pinvoke! class_getSuperclass bound
+!unknown-pinvoke! dlclose bound
+!unknown-pinvoke! dlerror bound
+!unknown-pinvoke! dlopen bound
+!unknown-pinvoke! dlsym bound
+!unknown-pinvoke! NXGetLocalArchInfo bound
+!unknown-pinvoke! objc_allocateClassPair bound
+!unknown-pinvoke! objc_allocateProtocol bound
+!unknown-pinvoke! objc_getClass bound
+!unknown-pinvoke! objc_getProtocol bound
+!unknown-pinvoke! objc_msgSend bound
+!unknown-pinvoke! objc_msgSendSuper bound
+!unknown-pinvoke! objc_registerClassPair bound
+!unknown-pinvoke! objc_registerProtocol bound
+!unknown-pinvoke! object_getClass bound
+!unknown-pinvoke! protocol_addMethodDescription bound
+!unknown-pinvoke! protocol_addProperty bound
+!unknown-pinvoke! protocol_addProtocol bound
+!unknown-pinvoke! protocol_getName bound
+!unknown-pinvoke! sel_getName bound
+!unknown-pinvoke! sel_isMapped bound
+!unknown-pinvoke! sel_registerName bound
+
+## not part of the ARM64 API (which we use for iOS and tvOS extro)
+!unknown-pinvoke! objc_msgSend_stret bound
+!unknown-pinvoke! objc_msgSendSuper_stret bound
+
+## present in <os/log.h>
+!unknown-pinvoke! os_log_create bound
+!unknown-pinvoke! os_release bound
+!unknown-pinvoke! os_retain bound

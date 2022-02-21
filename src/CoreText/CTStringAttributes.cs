@@ -42,6 +42,10 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region CFAttributedStringRef AttributeKey Prototypes
@@ -74,6 +78,7 @@ namespace CoreText {
 		Subscript   = -1,
 	}
 
+#if !NET
 	public static partial class CTStringAttributeKey {
 		public static readonly NSString Font;
 		public static readonly NSString ForegroundColorFromContext;
@@ -120,15 +125,13 @@ namespace CoreText {
 			CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
 			RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
 			BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
-
-#if !MONOMAC
 			BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
 			BaselineInfo                = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName");
 			BaselineReferenceInfo       = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName");
 			WritingDirection            = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName");
-#endif
 		}
 	}
+#endif // !NET
 #endregion
 
 	public class CTStringAttributes {
@@ -188,13 +191,17 @@ namespace CoreText {
 		public CGColor ForegroundColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ForegroundColor.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor, value);}
 		}
 
-#if !NET
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 #endif
 		public CGColor BackgroundColor {
 			get {
@@ -202,7 +209,7 @@ namespace CoreText {
 				var x = CTStringAttributeKey.BackgroundColor;
 				if (x != null)
 					h = CFDictionary.GetValue (Dictionary.Handle, x.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {
 				var x = CTStringAttributeKey.BackgroundColor;
@@ -228,17 +235,20 @@ namespace CoreText {
 		public CGColor StrokeColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.StrokeColor.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor, value);}
 		}
 
-#if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public float? TrackingAdjustment {
 			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.TrackingAttributeName);}
@@ -294,7 +304,7 @@ namespace CoreText {
 		public CGColor UnderlineColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.UnderlineColor.Handle);
-				return h == IntPtr.Zero ? null : new CGColor (h);
+				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.UnderlineColor, value);}
 		}
@@ -311,8 +321,15 @@ namespace CoreText {
 			}
 		}
 
-#if !NET
-		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
 #endif
 		public int? HorizontalInVerticalForms {
 			get {
@@ -326,11 +343,15 @@ namespace CoreText {
 			}
 		}
 
-#if !NET
-		[iOS (11,0), Mac (10,13), TV (11,0), Watch (4,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[Watch (4,0)]
 #endif
 		public float? BaselineOffset {
 			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.BaselineOffset); }
@@ -394,13 +415,16 @@ namespace CoreText {
 		// 'Value must be a CFArray of CFNumberRefs' - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
 		public void SetWritingDirection (params CTWritingDirection[] writingDirections)
 		{
-			var ptrs = new IntPtr [writingDirections.Length];
+			var ptrs = new NativeHandle [writingDirections.Length];
+			var numbers = new NSNumber [writingDirections.Length];
 			for (int i = 0; i < writingDirections.Length; ++i) {
-				ptrs[i] = (new NSNumber ((int) writingDirections[i])).Handle;
+				numbers [i] = new NSNumber ((int) writingDirections [i]);
+				ptrs [i] = numbers [i].Handle;
 			}
 
 			var array = CFArray.Create (ptrs);
 			CFMutableDictionary.SetValue (Dictionary.Handle, CTStringAttributeKey.WritingDirection.Handle, array);
+			GC.KeepAlive (numbers); // make sure the numbers aren't freed until we're done with them
 		}
 	}
 }

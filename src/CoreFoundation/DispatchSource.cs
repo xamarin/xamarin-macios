@@ -17,6 +17,10 @@ using dispatch_source_type_t=System.IntPtr;
 using dispatch_source_t=System.IntPtr;
 using dispatch_queue_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	[Flags]
@@ -48,14 +52,16 @@ namespace CoreFoundation {
 
 		// constructors for use in bindings
 		[Preserve (Conditional = true)]
-		internal DispatchSource (IntPtr handle, bool owns) : base (handle, owns)
+		internal DispatchSource (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
+#if !NET
 		// constructors for use in bindings
-		internal DispatchSource (IntPtr handle) : base (handle, false)
+		internal DispatchSource (NativeHandle handle) : base (handle, false)
 		{
 		}
+#endif
 
 		// Invoked by subclasses in this file that fully initialize both
 		// queue and handle
