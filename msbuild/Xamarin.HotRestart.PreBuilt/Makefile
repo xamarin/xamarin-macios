@@ -3,7 +3,7 @@ TOP=../..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-APP_DIR=Xamarin.PreBuilt.iOS/bin/Debug/net6.0-ios/ios-arm64/Xamarin.PreBuilt.iOS.app
+APP_DIR=Xamarin.PreBuilt.iOS/bin/Debug/$(DOTNET_TFM)-ios/ios-arm64/Xamarin.PreBuilt.iOS.app
 
 Xamarin.PreBuilt.iOS.app.zip: .build-stamp
 	$(Q) rm -rf $@

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-ios</TargetFramework>
+    <TargetFramework>net7.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
