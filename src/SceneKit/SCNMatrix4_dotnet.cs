@@ -36,11 +36,11 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 
-using Vector3 = global::OpenTK.Vector3;
-using Vector3d = global::OpenTK.Vector3d;
-using Vector4 = global::OpenTK.Vector4;
-using Quaternion = global::OpenTK.Quaternion;
-using Quaterniond = global::OpenTK.Quaterniond;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector3d = global::CoreGraphics.NVector3d;
+using Vector4 = global::System.Numerics.Vector4;
+using Quaternion = global::System.Numerics.Quaternion;
+using Quaterniond = global::CoreGraphics.NQuaterniond;
 
 #if PFLOAT_SINGLE
 using pfloat = System.Single;
@@ -376,7 +376,7 @@ namespace SceneKit {
 			pfloat sin = (float) System.Math.Sin (-angle);
 			pfloat t = 1.0f - cos;
 
-			axis.Normalize ();
+			axis = Vector3.Normalize (axis);
 
 			result = new SCNMatrix4 (t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
 			                     t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
@@ -829,7 +829,7 @@ namespace SceneKit {
 			SCNMatrix4 result;
 			Vector3 axis;
 			float angle;
-			q.ToAxisAngle (out axis, out angle);
+			ToAxisAngle (q, out axis, out angle);
 			CreateFromAxisAngle (axis, angle, out result);
 			return result;
 		}
@@ -1161,6 +1161,22 @@ namespace SceneKit {
 		}
 
 		#endregion
+
+		static void ToAxisAngle (Quaternion q, out Vector3 axis, out float angle)
+		{
+			if (q.W > 1.0f)
+			    q = Quaternion.Normalize (q);
+
+			angle = 2.0f * (float) System.Math.Acos (q.W); // angle
+			var den = (float) System.Math.Sqrt (1.0 - q.W * q.W);
+			if (den > 0.0001f) {
+			        axis = new Vector3(q.X, q.Y, q.Z) / den;
+			} else {
+				// This occurs when the angle is zero.
+				// Not a problem: just set an arbitrary normalized axis.
+				axis = Vector3.UnitX;
+			}
+		}
 
 #if false
 

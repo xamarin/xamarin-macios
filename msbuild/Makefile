@@ -20,7 +20,13 @@ MSBUILD_DIRECTORIES          =
 MSBUILD_SYMLINKS             =
 MSBUILD_TASK_ASSEMBLIES      =
 
-ALL_SOURCES:= $(shell git ls-files | sed 's/ /\\ /g') $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.cs) $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj)
+ALL_SOURCES:= \
+	$(shell git ls-files | sed 's/ /\\ /g') \
+	$(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.cs) \
+	$(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj) \
+	Versions.ios.g.cs \
+	Versions.mac.g.cs \
+
 CONFIG      = Debug
 TARGETFRAMEWORK = netstandard2.0
 WINDOWSRUNTIMEIDENTIFIER = win

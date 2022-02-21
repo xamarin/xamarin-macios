@@ -31,6 +31,16 @@
 
 using System.ComponentModel;
 
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+using NMatrix3 = global::CoreGraphics.NMatrix3;
+using NMatrix4x3 = global::CoreGraphics.NMatrix4x3;
+#else
+using Vector3 = global::OpenTK.Vector3;
+using NMatrix3 = global::OpenTK.NMatrix3;
+using NMatrix4x3 = global::OpenTK.NMatrix4x3;
+#endif
+
 #if !WATCH
 using AudioUnit;
 using AVKit;
@@ -52,7 +62,6 @@ using UniformTypeIdentifiers;
 using ImageIO;
 using System;
 
-using OpenTK;
 #if MONOMAC
 using AppKit;
 using UIImage = AppKit.NSImage;
@@ -3110,6 +3119,7 @@ namespace AVFoundation {
 		string [] AvailableMediaCharacteristicsWithMediaSelectionOptions { get; }
 
 #if !MONOMAC
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[Export ("compatibleWithSavedPhotosAlbum")]
 		bool CompatibleWithSavedPhotosAlbum  { [Bind ("isCompatibleWithSavedPhotosAlbum")] get; }
 #endif
@@ -13987,7 +13997,6 @@ namespace AVFoundation {
 		nuint TimeResolution { get; }
 	}
 
-	[Obsoleted (PlatformName.TvOS, 12,0, message: "All fields will return 'null'.")]
 	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Static]
@@ -14136,8 +14145,6 @@ namespace AVFoundation {
 	[Watch (3,0)]
 	[Static]
 	interface AVAudioUnitManufacturerName {
-		
-		[Obsoleted (PlatformName.TvOS, 12,0, message: "Field will return 'null'.")]
 		[Field ("AVAudioUnitManufacturerNameApple")]
 		[Mac (10,10), iOS (9,0)]
 		NSString Apple { get; }

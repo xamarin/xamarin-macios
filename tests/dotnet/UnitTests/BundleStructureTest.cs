@@ -12,6 +12,21 @@ using Xamarin.Utils;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class BundleStructureTest : TestBaseClass {
+		// Returns true if the assembly name is _any_ of our platform assemblies (Microsoft.iOS/tvOS/macOS/MacCatalyst/watchOS.dll)
+		bool IsPlatformAssembly (string assemblyName)
+		{
+			if (assemblyName.EndsWith (".dll", StringComparison.Ordinal) || assemblyName.EndsWith (".pdb", StringComparison.Ordinal))
+				assemblyName = Path.GetFileNameWithoutExtension (assemblyName);
+			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
+				if (platform == ApplePlatform.None)
+					continue;
+				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true));
+				if (platformAssembly == assemblyName)
+					return true;
+			}
+			return false;
+		}
+
 		void CheckAppBundleContents (ApplePlatform platform, string appPath, string[] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild)
 		{
 			// Directory.GetFileSystemEntries will enter symlink directories and iterate inside :/
@@ -66,7 +81,7 @@ namespace Xamarin.Tests {
 				if (fn.StartsWith ("System.", StringComparison.Ordinal) && (fn.EndsWith (".dll", StringComparison.Ordinal) || fn.EndsWith (".pdb", StringComparison.Ordinal)))
 					return true;
 
-				if (fn.StartsWith ("Microsoft.", StringComparison.Ordinal) && (fn.EndsWith (".dll", StringComparison.Ordinal) || fn.EndsWith (".pdb", StringComparison.Ordinal)))
+				if (!IsPlatformAssembly (fn) && fn.StartsWith ("Microsoft.", StringComparison.Ordinal) && (fn.EndsWith (".dll", StringComparison.Ordinal) || fn.EndsWith (".pdb", StringComparison.Ordinal)))
 					return true;
 
 				if (fn.StartsWith ("libSystem.", StringComparison.Ordinal) && fn.EndsWith (".dylib", StringComparison.Ordinal))
@@ -120,6 +135,7 @@ namespace Xamarin.Tests {
 			// NoneK.txt is not bundled
 			expectedFiles.Add ($"{assemblyDirectory}NoneL.config");
 			// NoneM.unknown is not bundled
+			expectedFiles.Add ($"{assemblyDirectory}libSkipInstallNameTool.dylib");
 
 			expectedFiles.Add ($"{resourcesDirectory}basn3p08.png");
 			expectedFiles.Add ($"{resourcesDirectory}iTunesArtwork.jpg");
@@ -187,14 +203,20 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{resourcesDirectory}ContentA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentC.txt");
+			expectedFiles.Add ($"{resourcesDirectory}ContentD.txt");
+			expectedFiles.Add ($"{resourcesDirectory}ContentE.txt");
 
 			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceC.txt");
+			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceD.txt");
+			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceE.txt");
 
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceC.txt");
+			expectedFiles.Add ($"{resourcesDirectory}BundleResourceD.txt");
+			expectedFiles.Add ($"{resourcesDirectory}BundleResourceE.txt");
 
 			expectedFiles.Add ($"{resourcesDirectory}AutoIncluded.txt");
 			expectedFiles.Add ($"{resourcesDirectory}SubDirectory");
@@ -238,7 +260,7 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{assemblyDirectory}Touch.Client.dll");
 			if (includeDebugFiles)
 				expectedFiles.Add ($"{assemblyDirectory}Touch.Client.pdb");
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, hasPdb: false, includeDebugFiles: includeDebugFiles);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, hasPdb: false, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add ($"{assemblyDirectory}runtimeconfig.bin");
 
 			if (platform == ApplePlatform.MacOSX)
@@ -313,6 +335,58 @@ namespace Xamarin.Tests {
 
 			Assert.That (unexpectedFiles, Is.Empty, "No unexpected files");
 			Assert.That (missingFiles, Is.Empty, "No missing files");
+
+			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.dylib");
+		}
+
+		void AssertDynamicLibraryId (ApplePlatform platform, string appPath, string dylibDirectory, string library)
+		{
+			var dylibPath = Path.Combine (appPath, dylibDirectory, library);
+			Assert.That (dylibPath, Does.Exist, "dylib existence");
+
+			var invalidLoadCommands = new List<string> ();
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			foreach (var file in MachO.Read (appExecutable)) {
+				foreach (var lc in file.load_commands) {
+					if (lc is DylibLoadCommand loadCommand) {
+						if (!IsValidLoadLibrary (loadCommand.name)) {
+							invalidLoadCommands.Add ($"Invalid load library '{loadCommand.name}' in '{file.Filename}'");
+						}
+					}
+				}
+			}
+
+			var dylibs = Directory.GetFiles (Path.Combine (appPath, dylibDirectory), "*.dylib");
+			foreach (var dylib in dylibs) {
+				foreach (var file in MachO.Read (dylib)) {
+					foreach (var lc in file.load_commands) {
+						if (lc is DylibIdCommand loadCommand) {
+							if (!IsValidLoadLibrary (loadCommand.name)) {
+								invalidLoadCommands.Add ($"Invalid id '{loadCommand.name}' for library '{file.Filename}'");
+							}
+						}
+					}
+				}
+			}
+
+			Assert.That (invalidLoadCommands, Is.Empty);
+		}
+
+		static bool IsValidLoadLibrary (string library)
+		{
+			var valid_prefixes = new string [] {
+				"/System/Library/",
+				"/System/iOSSupport/System/Library/",
+				"/usr/lib/",
+				"@rpath",
+				"@executable_path",
+			};
+			foreach (var valid_prefix in valid_prefixes) {
+				if (library.StartsWith (valid_prefix, StringComparison.Ordinal))
+					return true;
+			}
+			return false;
 		}
 
 

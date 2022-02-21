@@ -832,10 +832,6 @@ namespace Introspection {
 				case "SKAttributeValue":
 					return !TestRuntime.CheckXcodeVersion (7, 2);
 #endif
-				case "MLDictionaryFeatureProvider":
-				case "MLMultiArray":
-				case "MLFeatureValue":
-					return !TestRuntime.CheckXcodeVersion (10,0);
 				}
 				break;
 			case "mutableCopyWithZone:":

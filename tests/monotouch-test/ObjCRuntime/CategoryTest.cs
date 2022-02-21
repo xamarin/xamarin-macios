@@ -25,7 +25,6 @@ using CoreAnimation;
 using CoreGraphics;
 using CoreLocation;
 using PlatformException = ObjCRuntime.RuntimeException;
-using OpenTK;
 using NUnit.Framework;
 
 using RectangleF=CoreGraphics.CGRect;

@@ -605,7 +605,6 @@
 !missing-null-allowed! 'Foundation.NSArray AppKit.NSWindow::WindowNumbersWithOptions(AppKit.NSWindowNumberListOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray[] AppKit.NSFontManager::AvailableMembersOfFontFamily(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString AppKit.NSHelpManager::Context(Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAttributedString AppKit.NSTextInputClient::GetAttributedSubstring(Foundation.NSRange,Foundation.NSRange&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString Foundation.NSBundle::GetContextHelp(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSBundle AppKit.NSViewController::get_NibBundle()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSBitmapImageRep::get_TiffRepresentation()' is missing an [NullAllowed] on return type

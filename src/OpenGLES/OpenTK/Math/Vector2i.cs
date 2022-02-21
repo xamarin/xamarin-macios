@@ -24,6 +24,8 @@ SOFTWARE.
 
 using System;
 using System.Runtime.InteropServices;
+
+#if !NET
 namespace OpenTK
 {
     /// <summary>Represents a 2D vector using two int32 numbers.</summary>
@@ -311,3 +313,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET
