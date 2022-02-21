@@ -115,23 +115,30 @@
   </ItemGroup>
 
   <!--
-    This a workaround for an issue with the Microsoft.NETCore.App runtime pack selection.
-    The Microsoft.NETCore.App known framework reference sets LatestRuntimeFrameworkVersion=6.0.1, which means that when a project is restored,
-    the 6.0.1 packages (from NuGet) will be selected instead of the bundled packages (which has version 6.0.3). The main problem with this is
-    that the 6.0.1 packages don't have the new nfloat API.
+
+    This a workaround for an issue with the Microsoft.NETCore.App runtime pack
+    selection. The Microsoft.NETCore.App known framework reference sets
+    LatestRuntimeFrameworkVersion=6.0.1, which means that when a project is
+    restored, the 6.0.1 packages (from NuGet) will be selected instead of the
+    bundled packages (which has version 6.0.3). The problem with this is that
+    the 6.0.1 packages don't have the new nfloat API. So we try to override
+    the LatestRuntimeFrameworkVersion=6.0.1 value on the
+    KnownFrameworkReference by explicitly setting the RuntimeFrameworkVersion
+    value on the FrameworkReference when LatestRuntimeFrameworkVersion<6.0.3.
+
+    Ref: https://github.com/dotnet/sdk/blob/31d4db7dc94bb2f1f4d0ef84ebf158d61f2a7c4f/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L587-L594
   -->
   <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
-    <KnownFrameworkReference Remove="Microsoft.NETCore.App" />
-    <KnownFrameworkReference Include="Microsoft.NETCore.App"
-                              TargetFramework="net6.0"
-                              RuntimeFrameworkName="Microsoft.NETCore.App"
-                              DefaultRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"
-                              LatestRuntimeFrameworkVersion="6.0.3"
-                              TargetingPackName="Microsoft.NETCore.App.Ref"
-                              TargetingPackVersion="$(BundledNETCorePlatformsPackageVersion)"
-                              RuntimePackNamePatterns="Microsoft.NETCore.App.Runtime.**RID**"
-                              RuntimePackRuntimeIdentifiers="osx-x64;osx-arm64"
-                              IsTrimmable="true"
-                              />
+    <FrameworkReference
+        Update="Microsoft.NETCore.App"
+        Condition="
+        (
+          @(KnownFrameworkReference->AnyHaveMetadataValue('LatestRuntimeFrameworkVersion', '6.0.1')) Or
+          @(KnownFrameworkReference->AnyHaveMetadataValue('LatestRuntimeFrameworkVersion', '6.0.2'))
+        )
+        "
+        >
+      <RuntimeFrameworkVersion>6.0.3</RuntimeFrameworkVersion>
+    </FrameworkReference>
   </ItemGroup>
 </Project>
