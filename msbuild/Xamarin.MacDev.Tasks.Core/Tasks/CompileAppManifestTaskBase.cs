@@ -146,6 +146,8 @@ namespace Xamarin.MacDev.Tasks
 			if (!Compile (plist))
 				return false;
 
+			AddXamarinVersionNumber (plist);
+
 			// Merge with any partial plists...
 			MergePartialPlistTemplates (plist);
 
@@ -154,6 +156,30 @@ namespace Xamarin.MacDev.Tasks
 				Log.LogMessage (MessageImportance.Low, "The file {0} is up-to-date.", CompiledAppManifest.ItemSpec);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		void AddXamarinVersionNumber (PDictionary plist)
+		{
+			// Add our own version number
+			if (IsWatchApp)
+				return;
+
+			string value;
+
+			// This key is our supported way of determining if an app
+			// was built with Xamarin, so it needs to be present in all apps.
+			if (TargetFramework.IsDotNet) {
+				value = DotNetVersion;
+			} else if (Platform != ApplePlatform.MacOSX) {
+				var version = Sdks.XamIOS.ExtendedVersion;
+				value = string.Format ("{0} ({1}: {2})", version.Version, version.Branch, version.Hash);
+			} else {
+				return;
+			}
+
+			var dict = new PDictionary ();
+			dict.Add ("Version", new PString (value));
+			plist.Add ("com.xamarin.ios", dict);
 		}
 
 		void RegisterFonts (PDictionary plist)
