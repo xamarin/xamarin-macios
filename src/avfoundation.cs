@@ -13997,7 +13997,6 @@ namespace AVFoundation {
 		nuint TimeResolution { get; }
 	}
 
-	[Obsoleted (PlatformName.TvOS, 12,0, message: "All fields will return 'null'.")]
 	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Static]
@@ -14146,8 +14145,6 @@ namespace AVFoundation {
 	[Watch (3,0)]
 	[Static]
 	interface AVAudioUnitManufacturerName {
-		
-		[Obsoleted (PlatformName.TvOS, 12,0, message: "Field will return 'null'.")]
 		[Field ("AVAudioUnitManufacturerNameApple")]
 		[Mac (10,10), iOS (9,0)]
 		NSString Apple { get; }
