@@ -183,7 +183,11 @@ namespace SearchKit
 		}
 	}
 
+#if NET
+	public class SKIndex : DisposableObject
+#else
 	public class SKIndex : NativeObject
+#endif
 	{
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr SKIndexCreateWithURL (IntPtr url, IntPtr str, SKIndexType type, IntPtr dict);
@@ -293,21 +297,20 @@ namespace SearchKit
 			Dispose ();
 		}
 
+#if !NET
 		protected override void Retain ()
 		{
-			throw new InvalidOperationException ();
 		}
 
 		protected override void Release ()
 		{
-			throw new InvalidOperationException ();
 		}
+#endif
 
 		protected override void Dispose (bool disposing)
 		{
-			if (Handle != IntPtr.Zero) {
+			if (Handle != NativeHandle.Zero) {
 				SKIndexClose (Handle);
-				ClearHandle ();
 			}
 			base.Dispose (disposing);
 		}

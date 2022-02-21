@@ -28,13 +28,13 @@ reload-and-run:
 	$(Q) $(MAKE) run
 
 build: prepare
-	$(Q) $(DOTNET6) build "/bl:$@-$(BINLOG_TIMESTAMP).binlog" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
+	$(Q) $(DOTNET6) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
 
 run: prepare
-	$(Q) $(DOTNET6) build "/bl:$@-$(BINLOG_TIMESTAMP).binlog" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
+	$(Q) $(DOTNET6) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
 
 run-bare:
-	$(Q) ./bin/Debug/net6.0-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
+	$(Q) "$(abspath .)"/bin/Debug/net6.0-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
 
 run-remote:
 	$(Q) test -n "$(REMOTE_HOST)" || ( echo "Must specify the remote machine by setting the REMOTE_HOST environment variable"; exit 1 )
