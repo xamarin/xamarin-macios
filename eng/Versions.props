@@ -6,6 +6,6 @@
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>7.0.0-preview.2.22116.9</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETWorkloadEmscriptenManifest60100PackageVersion>6.0.2</MicrosoftNETWorkloadEmscriptenManifest60100PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenManifest70100PackageVersion>7.0.0-alpha.2.22111.1</MicrosoftNETWorkloadEmscriptenManifest70100PackageVersion>
   </PropertyGroup>
 </Project>
