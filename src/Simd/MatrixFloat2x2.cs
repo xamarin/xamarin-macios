@@ -56,10 +56,10 @@ namespace OpenTK
 		[Obsolete ("Use 'M22' instead.")]
 		public float R1C1;
 
-		public float M11 { get => R0C0; set => value = R0C0; }
-		public float M21 { get => R1C0; set => value = R1C0; }
-		public float M12 { get => R0C1; set => value = R0C1; }
-		public float M22 { get => R1C1; set => value = R1C1; }
+		public float M11 { get => R0C0; set => R0C0 = value; }
+		public float M21 { get => R1C0; set => R1C0 = value; }
+		public float M12 { get => R0C1; set => R0C1 = value; }
+		public float M22 { get => R1C1; set => R1C1 = value; }
 #endif
 
 #if NET
