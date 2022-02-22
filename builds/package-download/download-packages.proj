@@ -5,6 +5,8 @@
     <ActualPackageVersion Condition="'$(ActualPackageVersion)' == ''">$(BundledNETCorePlatformsPackageVersion)</ActualPackageVersion>
   </PropertyGroup>
 
+  <Import Project="../../eng/Versions.props" />
+
   <ItemGroup>
     <!-- Download any runtime packs as specified using the PackageRuntimeIdentifiers property -->
     <PackageRuntimeIdentifiers Include="$(PackageRuntimeIdentifiers.Split(' '))" />
@@ -18,7 +20,10 @@
     <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
 
     <!-- and get the mono workload as well -->
-    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-$(DotNetManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+
+    <!-- and get the emscripten workload as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptenManifest60100PackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->

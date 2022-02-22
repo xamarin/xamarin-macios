@@ -73,7 +73,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
 		{
-			if (singleLine.StartsWith ("warning:", StringComparison.Ordinal))
+			if (singleLine.StartsWith ("warning:", StringComparison.Ordinal) && !singleLine.Contains ("unable to open object file: No such file or directory"))
 				Log.LogWarning (singleLine);
 			else
 				Log.LogMessage (messageImportance, singleLine);
