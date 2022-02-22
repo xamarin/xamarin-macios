@@ -28,6 +28,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections;
@@ -252,7 +254,7 @@ namespace AudioToolbox {
 		public IntPtr IntPtrPacketDescriptions;
 		public int PacketDescriptionCount;
 
-		public AudioStreamPacketDescription [] PacketDescriptions {
+		public AudioStreamPacketDescription[]? PacketDescriptions {
 			get {
 				return AudioFile.PacketDescriptionFrom (PacketDescriptionCount, IntPtrPacketDescriptions);
 			}
@@ -327,7 +329,7 @@ namespace AudioToolbox {
 	}
 
 	public class InputCompletedEventArgs : EventArgs {
-		public unsafe InputCompletedEventArgs (IntPtr audioQueueBuffer, AudioTimeStamp timeStamp, AudioStreamPacketDescription [] pdec)
+		public unsafe InputCompletedEventArgs (IntPtr audioQueueBuffer, AudioTimeStamp timeStamp, AudioStreamPacketDescription []? pdec)
 		{
 			IntPtrBuffer = audioQueueBuffer;
 			TimeStamp = timeStamp;
@@ -343,7 +345,7 @@ namespace AudioToolbox {
 			get { return *(AudioQueueBuffer *) IntPtrBuffer; }
 		}
 		public AudioTimeStamp TimeStamp { get; private set; }
-		public AudioStreamPacketDescription [] PacketDescriptions { get; private set; }
+		public AudioStreamPacketDescription []? PacketDescriptions { get; private set; }
 	}
 
 	public abstract class AudioQueue : IDisposable {
@@ -491,7 +493,7 @@ namespace AudioToolbox {
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
-		internal extern unsafe static AudioQueueStatus AudioQueueEnqueueBuffer (IntPtr AQ, AudioQueueBuffer* audioQueueBuffer, int nPackets, AudioStreamPacketDescription [] desc);
+		internal extern unsafe static AudioQueueStatus AudioQueueEnqueueBuffer (IntPtr AQ, AudioQueueBuffer* audioQueueBuffer, int nPackets, AudioStreamPacketDescription []? desc);
 
 		public AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc)
 		{
@@ -526,11 +528,11 @@ namespace AudioToolbox {
 			IntPtr AQ,
 			AudioQueueBuffer *audioQueueBuffer,
 			int nPackets,
-			AudioStreamPacketDescription [] desc,
+			AudioStreamPacketDescription []? desc,
 			int trimFramesAtStart,
 			int trimFramesAtEnd,
 			int nParam,
-			AudioQueueParameterEvent      [] parameterEvents,
+			AudioQueueParameterEvent      []? parameterEvents,
 			ref AudioTimeStamp  startTime,
 			out AudioTimeStamp actualStartTime);
 
@@ -539,11 +541,11 @@ namespace AudioToolbox {
 			IntPtr AQ,
 			AudioQueueBuffer *audioQueueBuffer,
 			int nPackets,
-			AudioStreamPacketDescription [] desc,
+			AudioStreamPacketDescription []? desc,
 			int trimFramesAtStart,
 			int trimFramesAtEnd,
 			int nParam,
-			AudioQueueParameterEvent      [] parameterEvents,
+			AudioQueueParameterEvent      []? parameterEvents,
 			AudioTimeStamp *startTime,
 			out AudioTimeStamp actualStartTime);
 
@@ -619,7 +621,7 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueCreateTimeline (IntPtr AQ, out IntPtr timeline);
 
-		public AudioQueueTimeline CreateTimeline ()
+		public AudioQueueTimeline? CreateTimeline ()
 		{
 			IntPtr thandle;
 			
@@ -744,15 +746,15 @@ namespace AudioToolbox {
 
 		delegate void AudioQueuePropertyListenerProc (IntPtr userData, IntPtr AQ, AudioQueueProperty id);
 
-		Hashtable listeners;
+		Hashtable? listeners;
 		
 		[MonoPInvokeCallback (typeof(AudioQueuePropertyListenerProc))]
 		static void property_changed (IntPtr userData, IntPtr AQ, AudioQueueProperty id)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (userData);
 			var aq = gch.Target as AudioQueue;
-			lock (aq.listeners){
-				ArrayList a = (ArrayList)aq.listeners [id];
+			lock (aq!.listeners!){
+				ArrayList a = (ArrayList)aq.listeners [id]!;
 				if (a == null)
 					return;
 				foreach (AudioQueuePropertyChanged cback in a){
@@ -772,7 +774,7 @@ namespace AudioToolbox {
 			
 			AudioQueueStatus res = AudioQueueStatus.Ok;
 			lock (listeners){
-				var a = (ArrayList) listeners [property];
+				var a = (ArrayList) listeners [property]!;
 				if (a == null){
 					res = AudioQueueAddPropertyListener (handle, property, property_changed, GCHandle.ToIntPtr (gch));
 					if (res != AudioQueueStatus.Ok)
@@ -793,7 +795,7 @@ namespace AudioToolbox {
 			if (listeners == null)
 				return;
 			lock (listeners){
-				var a = (ArrayList) listeners [property];
+				var a = (ArrayList) listeners [property]!;
 				if (a == null)
 					return;
 				a.Remove (callback);
@@ -868,7 +870,7 @@ namespace AudioToolbox {
 			try {
 				r = AudioQueueGetProperty (handle, (uint) property, buffer, ref size);
 				if (r == 0){
-					T result = (T) Marshal.PtrToStructure (buffer, typeof (T));
+					T result = (T) Marshal.PtrToStructure (buffer, typeof (T))!;
 					return result;
 				}
 
@@ -892,7 +894,7 @@ namespace AudioToolbox {
 			try {
 				r = AudioQueueGetProperty (handle, (uint) property, buffer, ref size);
 				if (r == 0){
-					T result = (T) Marshal.PtrToStructure (buffer, typeof (T));
+					T result = (T) Marshal.PtrToStructure (buffer, typeof (T))!;
 					return result;
 				}
 
@@ -956,7 +958,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public string CurrentDevice {
+		public string? CurrentDevice {
 			get {
 				return CFString.FromHandle ((IntPtr) GetInt (AudioQueueProperty.CurrentDevice));
 			}
@@ -998,7 +1000,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public AudioChannelLayout ChannelLayout {
+		public AudioChannelLayout? ChannelLayout {
 			get {
 				int size;
 				var h = GetProperty (AudioQueueProperty.ChannelLayout, out size);
@@ -1146,7 +1148,7 @@ namespace AudioToolbox {
 			IntPtr inClientData, AudioQueueProcessingTapFlags inFlags, out uint outMaxFrames,
 			out AudioStreamBasicDescription outProcessingFormat, out IntPtr outAQTap);
 
-		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapDelegate processingCallback, AudioQueueProcessingTapFlags flags,
+		public AudioQueueProcessingTap? CreateProcessingTap (AudioQueueProcessingTapDelegate processingCallback, AudioQueueProcessingTapFlags flags,
 		                                                    out AudioQueueStatus status)
 		{		
 			var aqpt = new AudioQueueProcessingTap (processingCallback);
@@ -1181,7 +1183,7 @@ namespace AudioToolbox {
 	{
 		internal static readonly AudioQueueProcessingTapCallbackShared CreateTapCallback = TapCallback;
 
-		AudioQueueProcessingTapDelegate callback;
+		AudioQueueProcessingTapDelegate? callback;
 		readonly GCHandle gc_handle;
 
 		internal AudioQueueProcessingTap (AudioQueueProcessingTapDelegate callback)
@@ -1254,10 +1256,10 @@ namespace AudioToolbox {
 		                         out uint outNumberFrames, IntPtr data)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
-			var aqpt = (AudioQueueProcessingTap) gch.Target;
+			var aqpt = (AudioQueueProcessingTap) gch.Target!;
 
 			using (var buffers = new AudioBuffers (data)) {
-				outNumberFrames = aqpt.callback (aqpt, numberFrames, ref timeStamp, ref flags, buffers);
+				outNumberFrames = aqpt.callback !(aqpt, numberFrames, ref timeStamp, ref flags, buffers);
 			}
 		}
 	}
@@ -1267,7 +1269,7 @@ namespace AudioToolbox {
 						
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueNewOutput (ref AudioStreamBasicDescription format, AudioQueueOutputCallback callback,
-							    IntPtr userData, IntPtr cfrunLoop_callbackRunloop, IntPtr cfstr_runMode,
+							    IntPtr userData, IntPtr? cfrunLoop_callbackRunloop, IntPtr? cfstr_runMode,
 							    uint flags, out IntPtr audioQueue);
 
 		[MonoPInvokeCallback (typeof(AudioQueueOutputCallback))]
@@ -1275,10 +1277,10 @@ namespace AudioToolbox {
 		{
 			GCHandle gch = GCHandle.FromIntPtr (userData);
 			var aq = gch.Target as OutputAudioQueue;
-			aq.OnBufferCompleted (audioQueueBuffer);
+			aq!.OnBufferCompleted (audioQueueBuffer);
 		}
 
-		public event EventHandler<BufferCompletedEventArgs> BufferCompleted;
+		public event EventHandler<BufferCompletedEventArgs>? BufferCompleted;
 
 		protected virtual void OnBufferCompleted (IntPtr audioQueueBuffer)
 		{
@@ -1287,7 +1289,7 @@ namespace AudioToolbox {
 				h (this, new BufferCompletedEventArgs (audioQueueBuffer));
 		}
 
-		public OutputAudioQueue (AudioStreamBasicDescription desc) : this (desc, null, (CFString) null)
+		public OutputAudioQueue (AudioStreamBasicDescription desc) : this (desc, null, (CFString) null!)
 		{
 		}
 
@@ -1296,13 +1298,13 @@ namespace AudioToolbox {
 		{
 		}
 
-		public OutputAudioQueue (AudioStreamBasicDescription desc, CFRunLoop runLoop, CFString runMode)
+		public OutputAudioQueue (AudioStreamBasicDescription desc, CFRunLoop? runLoop, CFString? runMode)
 		{
 			IntPtr h;
 			GCHandle gch = GCHandle.Alloc (this);
 
 			var code = AudioQueueNewOutput (ref desc, dOutputCallback, GCHandle.ToIntPtr (gch),
-							runLoop == null ? IntPtr.Zero : runLoop.Handle,
+							runLoop is null ? IntPtr.Zero : runLoop.Handle,
 							runMode == null ? IntPtr.Zero : runMode.Handle, 0, out h);
 
 			if (code != 0) {
@@ -1362,11 +1364,11 @@ namespace AudioToolbox {
 			GCHandle gch = GCHandle.FromIntPtr (userData);
 			var aq = gch.Target as InputAudioQueue;
 
-			aq.OnInputCompleted (audioQueueBuffer, *startTime, AudioFile.PacketDescriptionFrom (descriptors, inPacketDesc));
+			aq!.OnInputCompleted (audioQueueBuffer, *startTime, AudioFile.PacketDescriptionFrom (descriptors, inPacketDesc));
 		}
 
-		public event EventHandler<InputCompletedEventArgs> InputCompleted;
-		protected virtual void OnInputCompleted (IntPtr audioQueueBuffer, AudioTimeStamp timeStamp, AudioStreamPacketDescription [] packetDescriptions)
+		public event EventHandler<InputCompletedEventArgs>? InputCompleted;
+		protected virtual void OnInputCompleted (IntPtr audioQueueBuffer, AudioTimeStamp timeStamp, AudioStreamPacketDescription []? packetDescriptions)
 		{
 			var h = InputCompleted;
 			if (h != null)
@@ -1388,14 +1390,14 @@ namespace AudioToolbox {
 		{
 		}
 
-		public InputAudioQueue (AudioStreamBasicDescription desc, CFRunLoop runLoop, string runMode)
+		public InputAudioQueue (AudioStreamBasicDescription desc, CFRunLoop? runLoop, string? runMode)
 		{
 			IntPtr h;
 			GCHandle mygch = GCHandle.Alloc (this);
-			CFString s = runMode == null ? null : new CFString (runMode);
+			CFString? s = runMode == null ? null : new CFString (runMode);
 			
 			var code = AudioQueueNewInput (ref desc, dInputCallback, GCHandle.ToIntPtr (mygch),
-						       runLoop == null ? IntPtr.Zero : runLoop.Handle,
+						       runLoop is null ? IntPtr.Zero : runLoop.Handle,
 						       s == null ? IntPtr.Zero : s.Handle, 0, out h);
 			if (s != null)
 				s.Dispose ();

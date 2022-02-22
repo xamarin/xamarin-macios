@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -102,7 +104,7 @@ namespace AudioToolbox {
 	}
 
 	public class PacketReceivedEventArgs : EventArgs {
-		public PacketReceivedEventArgs (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription [] packetDescriptions)
+		public PacketReceivedEventArgs (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription []? packetDescriptions)
 		{
 			this.Bytes = numberOfBytes;
 			this.InputData = inputData;
@@ -110,11 +112,11 @@ namespace AudioToolbox {
 		}
 		public int Bytes { get; private set; }
 		public IntPtr InputData { get; private set; }
-		public AudioStreamPacketDescription [] PacketDescriptions { get; private set;}
+		public AudioStreamPacketDescription []? PacketDescriptions { get; private set;}
 
 		public override string ToString ()
 		{
-			return String.Format ("Packet (Bytes={0} InputData={1} PacketDescriptions={2}", Bytes, InputData, PacketDescriptions.Length);
+			return String.Format ("Packet (Bytes={0} InputData={1} PacketDescriptions={2}", Bytes, InputData, PacketDescriptions!.Length);
 		}
 	}
 	
@@ -179,18 +181,18 @@ namespace AudioToolbox {
 			var afs = handle.Target as AudioFileStream;
 
 			var desc = AudioFile.PacketDescriptionFrom (numberPackets, packetDescriptions);
-			afs.OnPacketDecoded (numberBytes, inputData, desc);
+			afs!.OnPacketDecoded (numberBytes, inputData, desc);
 		}
 
-		public EventHandler<PacketReceivedEventArgs> PacketDecoded;
-		protected virtual void OnPacketDecoded (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription [] packetDescriptions)
+		public EventHandler<PacketReceivedEventArgs>? PacketDecoded;
+		protected virtual void OnPacketDecoded (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription []? packetDescriptions)
 		{
 			var p = PacketDecoded;
 			if (p != null)
 				p (this, new PacketReceivedEventArgs (numberOfBytes, inputData, packetDescriptions));
 		}
 
-		public EventHandler<PropertyFoundEventArgs> PropertyFound;
+		public EventHandler<PropertyFoundEventArgs>? PropertyFound;
 		protected virtual void OnPropertyFound (AudioFileStreamProperty propertyID, ref AudioFileStreamPropertyFlag ioFlags)
 		{
 			var p = PropertyFound;
@@ -207,7 +209,7 @@ namespace AudioToolbox {
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var afs = handle.Target as AudioFileStream;
 
-			afs.OnPropertyFound (propertyID, ref ioFlags);
+			afs!.OnPropertyFound (propertyID, ref ioFlags);
 		}
 		
 		public AudioFileStream (AudioFileType fileTypeHint)
@@ -374,7 +376,7 @@ namespace AudioToolbox {
 			try {
 				LastError = AudioFileStreamGetProperty (handle, property, ref size, buffer);
 				if (LastError == 0){
-					return (T) Marshal.PtrToStructure (buffer, typeof (T));
+					return (T) Marshal.PtrToStructure (buffer, typeof (T))!;
 				}
 
 				return null;
@@ -426,7 +428,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe AudioFormat [] FormatList {
+		public unsafe AudioFormat[]? FormatList {
 			get {
 				int size;
 				var r = GetProperty (AudioFileStreamProperty.FormatList, out size);
@@ -491,7 +493,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public AudioChannelLayout ChannelLayout {
+		public AudioChannelLayout? ChannelLayout {
 			get {
 				int size;
 				var h = GetProperty (AudioFileStreamProperty.ChannelLayout, out size);

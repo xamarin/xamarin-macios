@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -33,7 +35,6 @@ using Foundation;
 using AudioUnit;
 
 namespace AudioToolbox {
-
 	// CoreAudio.framework - CoreAudioTypes.h
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioClassDescription

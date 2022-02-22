@@ -28,6 +28,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections;
@@ -92,20 +94,20 @@ namespace AudioToolbox {
 
 	public class AccessoryInfo
 	{
-		internal AccessoryInfo (int id, string description)
+		internal AccessoryInfo (int id, string? description)
 		{
 			ID = id;
 			Description = description;
 		}
 
 		public int ID { get; private set; }
-		public string Description { get; private set; }
+		public string? Description { get; private set; }
 	}
 
 	public class InputSourceInfo
 	{
 		public int ID { get; private set; }
-		public string Description { get; private set; }
+		public string? Description { get; private set; }
 	}
 	
 	public class AudioSessionPropertyEventArgs :EventArgs {
@@ -154,7 +156,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		NSArray Extract (IntPtr key, NSString secondKey)
+		NSArray? Extract (IntPtr key, NSString secondKey)
 		{
 			var dictH = Dictionary.LowlevelObjectForKey (key);
 			if (dictH == IntPtr.Zero)
@@ -181,7 +183,7 @@ namespace AudioToolbox {
 #endif
 		public AudioSessionInputRouteKind PreviousInputRoute {
 			get {
-				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Inputs))
+				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Inputs!))
 					return AudioSession.GetInputRoute (array);
 			}
 		}
@@ -194,9 +196,9 @@ namespace AudioToolbox {
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
-		public AudioSessionOutputRouteKind [] PreviousOutputRoutes {
+		public AudioSessionOutputRouteKind []? PreviousOutputRoutes {
 			get {
-				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Outputs))
+				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Outputs!))
 					return AudioSession.GetOutputRoutes (array);
 			}
 		}
@@ -211,7 +213,7 @@ namespace AudioToolbox {
 #endif
 		public AudioSessionInputRouteKind CurrentInputRoute {
 			get {
-				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Inputs))
+				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Inputs!))
 					return AudioSession.GetInputRoute (array);
 			}
 		}
@@ -224,9 +226,9 @@ namespace AudioToolbox {
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
-		public AudioSessionOutputRouteKind [] CurrentOutputRoutes {
+		public AudioSessionOutputRouteKind []? CurrentOutputRoutes {
 			get {
-				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Outputs))
+				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Outputs!))
 					return AudioSession.GetOutputRoutes (array);
 			}
 		}
@@ -242,32 +244,32 @@ namespace AudioToolbox {
 #endif
 	public static class AudioSession {
 		static bool initialized;
-		public static event EventHandler Interrupted;
-		public static event EventHandler Resumed;
+		public static event EventHandler? Interrupted;
+		public static event EventHandler? Resumed;
 
-		internal static NSString AudioRouteKey_Type;
-		internal static NSString AudioRouteKey_Inputs;
-		internal static NSString AudioRouteKey_Outputs;
+		internal static NSString? AudioRouteKey_Type;
+		internal static NSString? AudioRouteKey_Inputs;
+		internal static NSString? AudioRouteKey_Outputs;
 		
-		static NSString InputRoute_LineIn;
-		static NSString InputRoute_BuiltInMic;
-		static NSString InputRoute_HeadsetMic;
-		static NSString InputRoute_BluetoothHFP;
-		static NSString InputRoute_USBAudio;
+		static NSString? InputRoute_LineIn;
+		static NSString? InputRoute_BuiltInMic;
+		static NSString? InputRoute_HeadsetMic;
+		static NSString? InputRoute_BluetoothHFP;
+		static NSString? InputRoute_USBAudio;
 		
-		static NSString OutputRoute_LineOut;
-		static NSString OutputRoute_Headphones;
-		static NSString OutputRoute_BluetoothHFP;
-		static NSString OutputRoute_BluetoothA2DP;
-		static NSString OutputRoute_BuiltInReceiver;
-		static NSString OutputRoute_BuiltInSpeaker;
-		static NSString OutputRoute_USBAudio;
-		static NSString OutputRoute_HDMI;
-		static NSString OutputRoute_AirPlay;
-		static NSString InputSourceKey_ID;
-		static NSString InputSourceKey_Description;
-		static NSString OutputDestinationKey_ID;
-		static NSString OutputDestinationKey_Description;
+		static NSString? OutputRoute_LineOut;
+		static NSString? OutputRoute_Headphones;
+		static NSString? OutputRoute_BluetoothHFP;
+		static NSString? OutputRoute_BluetoothA2DP;
+		static NSString? OutputRoute_BuiltInReceiver;
+		static NSString? OutputRoute_BuiltInSpeaker;
+		static NSString? OutputRoute_USBAudio;
+		static NSString? OutputRoute_HDMI;
+		static NSString? OutputRoute_AirPlay;
+		static NSString? InputSourceKey_ID;
+		static NSString? InputSourceKey_Description;
+		static NSString? OutputDestinationKey_ID;
+		static NSString? OutputDestinationKey_Description;
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
 #if NET
@@ -281,16 +283,16 @@ namespace AudioToolbox {
 			Initialize (null, null);
 		}
 
-		public static void Initialize (CFRunLoop runLoop, string runMode)
+		public static void Initialize (CFRunLoop? runLoop, string? runMode)
 		{
-			CFString s = runMode == null ? null : new CFString (runMode);
+			CFString? s = runMode == null ? null : new CFString (runMode);
 #if NET
 			int k;
 			unsafe {
 				k = AudioSessionInitialize (runLoop.GetHandle (), s.GetHandle (), &Interruption, IntPtr.Zero);
 			}
 #else
-			int k = AudioSessionInitialize (runLoop == null ? IntPtr.Zero : runLoop.Handle, s == null ? IntPtr.Zero : s.Handle, Interruption, IntPtr.Zero);
+			int k = AudioSessionInitialize (runLoop is null ? IntPtr.Zero : runLoop.Handle, s == null ? IntPtr.Zero : s.Handle, Interruption, IntPtr.Zero);
 #endif
 			if (k != 0 && k != (int)AudioSessionErrors.AlreadyInitialized)
 				throw new AudioSessionException (k);
@@ -342,7 +344,7 @@ namespace AudioToolbox {
 		{
 			EventHandler h;
 
-			h = (state == 1) ? Interrupted : Resumed;
+			h = (state == 1) ? Interrupted! : Resumed!;
 			if (h != null)
 				h (null, EventArgs.Empty);
 		}
@@ -494,7 +496,7 @@ namespace AudioToolbox {
 #else
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'InputRoute' or 'OutputRoute' instead.")]
 #endif
-		static public string AudioRoute {
+		static public string? AudioRoute {
 			get {
 				return CFString.FromHandle (GetIntPtr (AudioSessionProperty.AudioRoute));
 			}
@@ -502,13 +504,13 @@ namespace AudioToolbox {
 
 		static public AccessoryInfo[] InputSources {
 			get {
-				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.InputSources), InputSourceKey_ID, InputSourceKey_Description);
+				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.InputSources), InputSourceKey_ID!, InputSourceKey_Description!);
 			}
 		}
 
 		static public AccessoryInfo[] OutputDestinations {
 			get {
-				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.OutputDestinations), OutputDestinationKey_ID, OutputDestinationKey_Description);
+				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.OutputDestinations), OutputDestinationKey_ID!, OutputDestinationKey_Description!);
 			}
 		}
 
@@ -550,7 +552,7 @@ namespace AudioToolbox {
 
 		*/
 
-		static internal AudioSessionInputRouteKind GetInputRoute (NSArray arr)
+		static internal AudioSessionInputRouteKind GetInputRoute (NSArray? arr)
 		{
 			if (arr == null || arr.Count == 0)
 				return AudioSessionInputRouteKind.None;
@@ -580,7 +582,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		static internal AudioSessionOutputRouteKind [] GetOutputRoutes (NSArray arr)
+		static internal AudioSessionOutputRouteKind []? GetOutputRoutes (NSArray? arr)
 		{
 			if (arr == null || arr.Count == 0)
 				return null;
@@ -629,7 +631,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		static public AudioSessionOutputRouteKind [] OutputRoutes {
+		static public AudioSessionOutputRouteKind []? OutputRoutes {
 			get {
 				return GetOutputRoutes ((NSArray) AudioRouteDescription [AudioRouteKey_Outputs]);
 			}
@@ -775,7 +777,7 @@ namespace AudioToolbox {
 #endif
 		static void Listener (IntPtr userData, AudioSessionProperty prop, int size, IntPtr data)
 		{
-			ArrayList a = (ArrayList) listeners [prop];
+			ArrayList a = (ArrayList) listeners ![prop];
 			if (a == null){
 				// Should never happen
 				return;
@@ -793,7 +795,7 @@ namespace AudioToolbox {
 		extern static AudioSessionErrors AudioSessionAddPropertyListener(AudioSessionProperty id, _PropertyListener inProc, IntPtr userData);
 #endif
 
-		static Hashtable listeners;
+		static Hashtable? listeners;
 
 		public static AudioSessionErrors AddListener (AudioSessionProperty property, PropertyListener listener)
 		{
@@ -827,7 +829,7 @@ namespace AudioToolbox {
 			if (listener == null)
 				throw new ArgumentNullException ("listener");
 
-			ArrayList a = (ArrayList) listeners [property];
+			ArrayList a = (ArrayList) listeners ![property];
 			if (a == null)
 				return;
 			a.Remove (listener);
@@ -835,7 +837,7 @@ namespace AudioToolbox {
 				listeners [property] = null;
 		}
 
-               static Hashtable strongListenerHash;
+               static Hashtable? strongListenerHash;
 
 		static void AddListenerEvent (AudioSessionProperty property, object handler, PropertyListener listener)
 		{
@@ -929,7 +931,7 @@ namespace AudioToolbox {
 		public static event Action<AccessoryInfo[]> InputSourcesChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.InputSources, value, 
-						  (prop, size, data) => value (ExtractAccessoryInfo (data, InputSourceKey_ID, InputSourceKey_Description)));
+						  (prop, size, data) => value (ExtractAccessoryInfo (data, InputSourceKey_ID!, InputSourceKey_Description!)));
 			}
 			remove {
 				RemoveListenerEvent (AudioSessionProperty.InputSources, value);
@@ -939,7 +941,7 @@ namespace AudioToolbox {
 		public static event Action<AccessoryInfo[]> OutputDestinationsChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.OutputDestinations, value, 
-						  (prop, size, data) => value (ExtractAccessoryInfo (data, OutputDestinationKey_ID, OutputDestinationKey_Description)));
+						  (prop, size, data) => value (ExtractAccessoryInfo (data, OutputDestinationKey_ID!, OutputDestinationKey_Description!)));
 			}
 			remove {
 				RemoveListenerEvent (AudioSessionProperty.OutputDestinations, value);

@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -129,7 +132,7 @@ namespace AudioToolbox {
 		public AudioBalanceFadeType Type { get; set; }
 		public AudioChannelLayout ChannelLayout { get; private set; }
 
-		public unsafe float[] GetBalanceFade ()
+		public unsafe float[]? GetBalanceFade ()
 		{
 			var type_size = sizeof (Layout);
 
@@ -201,11 +204,11 @@ namespace AudioToolbox {
 
 		public PanningMode PanningMode { get; set; }
 		public AudioChannelFlags CoordinateFlags { get; set; }
-		public float[] Coordinates { get; private set; }
+		public float [] Coordinates { get; private set; } = Array.Empty<float> ();
 		public float GainScale { get; set; }
 		public AudioChannelLayout OutputChannelMap { get; private set; }
 
-		public unsafe float[] GetPanningMatrix ()
+		public unsafe float[]? GetPanningMatrix ()
 		{
 			var type_size = sizeof (Layout);
 
