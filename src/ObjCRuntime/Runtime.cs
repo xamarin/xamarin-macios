@@ -1280,7 +1280,11 @@ namespace ObjCRuntime {
 
 #if NET
 			if (backupConstructor is not null) {
-				Console.WriteLine ("The type {0} does not have a constructor that takes an ObjCRuntime.NativeHandle parameter, but a constructor that takes an System.IntPtr parameter was found instead. It's highly recommended to change the signature of the System.IntPtr constructor to be ObjCRuntime.NativeHandle instead.", type.FullName);
+				const string p1 = "an ObjCRuntime.NativeHandle parameter";
+				const string p2 = "an System.IntPtr parameter";
+				string p3 = typeof (IntPtr).FullName!;
+				string p4 = typeof (NativeHandle).FullName!;
+				NSLog ($"The type {type.FullName} does not have a constructor that takes {p1} but a constructor that takes {p2} was found (and will be used instead). It's highly recommended to change the signature of the {p3} constructor to be {p4}.");
 				lock (intptr_ctor_cache)
 					intptr_ctor_cache [type] = backupConstructor;
 				return backupConstructor;
@@ -1324,7 +1328,11 @@ namespace ObjCRuntime {
 
 #if NET
 			if (backupConstructor is not null) {
-				Console.WriteLine ("The type {0} does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) parameters was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).", type.FullName);
+				const string p1 = "two (ObjCRuntime.NativeHandle, bool) arguments";
+				const string p2 = "two (System.IntPtr, bool) parameters";
+				const string p3 = "(System.IntPtr, bool)";
+				const string p4 = "(ObjCRuntime.NativeHandle, bool)";
+				NSLog ($"The type {type.FullName} does not have a constructor that takes {p1} but a constructor that takes {p2} was found (and will be used instead). It's highly recommended to change the signature of the {p3} constructor to be {p4}.");
 				lock (intptr_bool_ctor_cache)
 					intptr_bool_ctor_cache [type] = backupConstructor;
 				return backupConstructor;
@@ -1422,7 +1430,7 @@ namespace ObjCRuntime {
 			} else {
 				o = obj as T;
 				if (o is null)
-					throw new InvalidCastException (string.Format ("Unable to cast object of type '{0}' to type '{1}'", obj.GetType ().FullName, typeof(T).FullName));
+					throw new InvalidCastException ($"Unable to cast object of type '{obj.GetType ().FullName}' to type '{typeof(T).FullName}'.");
 			}
 
 			return o;
@@ -1559,7 +1567,7 @@ namespace ObjCRuntime {
 				// found an existing object, but with an incompatible type.
 				if (!interface_check_type.IsInterface) {
 					// if the target type is another class, there's nothing we can do.
-					throw new InvalidCastException (string.Format ("Unable to cast object of type '{0}' to type '{1}'.", o.GetType ().FullName, target_type.FullName));
+					throw new InvalidCastException ($"Unable to cast object of type '{o.GetType ().FullName}' to type '{target_type.FullName}'.");
 				}
 			}
 
@@ -1606,7 +1614,7 @@ namespace ObjCRuntime {
 				// found an existing object, but with an incompatible type.
 				if (!typeof (T).IsInterface && typeof(NSObject).IsAssignableFrom (typeof (T))) {
 					// if the target type is another NSObject subclass, there's nothing we can do.
-					throw new InvalidCastException (string.Format ("Unable to cast object of type '{0}' to type '{1}'.", o.GetType ().FullName, typeof (T).FullName));
+					throw new InvalidCastException ($"Unable to cast object of type '{o.GetType ().FullName}' to type '{typeof (T).FullName}'.");
 				}
 			}
 
