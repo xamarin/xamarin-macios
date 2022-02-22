@@ -292,47 +292,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</Touch>
 	</Target>
 
-	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false' And '$(_PlatformName)' != 'MacCatalyst'"
-		DependsOnTargets="_CopyResourcesToBundle"
-		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
-		<CreateDebugSettings
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			DebuggerPort="$(IOSDebuggerPort)"
-			>
-		</CreateDebugSettings>
-	</Target>
-
-	<Target Name="_CreateDebugConfiguration" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
-		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
-		Outputs="$(_AppResourcesPath)MonoTouchDebugConfiguration.txt" >
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppResourcesPath)" />
-		<CreateDebugConfiguration
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(_AppResourcesPath)"
-			DebugOverWiFi="$(IOSDebugOverWiFi)"
-			DebugIPAddresses="$(_DebugIPAddresses)"
-			DebuggerPort="$(IOSDebuggerPort)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			>
-		</CreateDebugConfiguration>
-	</Target>
-
-	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">
-		<DetectDebugNetworkConfiguration
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			DebugOverWiFi="$(IOSDebugOverWiFi)"
-			DebuggerHosts="$(IOSDebuggerHosts)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			>
-
-			<Output TaskParameter="DebugIPAddresses" PropertyName="_DebugIPAddresses" />
-		</DetectDebugNetworkConfiguration>
-	</Target>
-
 	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
 		<ValidateAppBundleTask
 			Condition="'$(IsMacEnabled)' == 'true'"
