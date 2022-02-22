@@ -5,11 +5,6 @@
 !missing-field! AVMediaCharacteristicEasyToRead not bound
 !missing-field! AVVideoDecompressionPropertiesKey not bound
 
-# Deprecated so won't bind it
-!missing-selector! AVCaptureConnection::isVideoMaxFrameDurationSupported not bound
-!missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
-!missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
-
 ## unsorted
 !unknown-native-enum! AVCaptureAutoFocusRangeRestriction bound
 !unknown-native-enum! AVCaptureLensStabilizationStatus bound
