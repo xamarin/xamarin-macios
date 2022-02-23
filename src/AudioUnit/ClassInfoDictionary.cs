@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 
 using Foundation;
@@ -64,7 +66,7 @@ namespace AudioUnit
 			}
 		}
 
-		public string Name {
+		public string? Name {
 			get {
 				return GetStringValue (NameKey);					
 			}

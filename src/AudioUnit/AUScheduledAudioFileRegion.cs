@@ -8,6 +8,8 @@
 // Copyright 2015 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -37,7 +39,7 @@ namespace AudioUnit {
 		}
 
 		GCHandle handle;
-		AUScheduledAudioFileRegionCompletionHandler completionHandler;
+		AUScheduledAudioFileRegionCompletionHandler? completionHandler;
 		bool alreadyUsed = false;
 
 		public AudioTimeStamp TimeStamp { get; set; }
@@ -46,7 +48,7 @@ namespace AudioUnit {
 		public long StartFrame { get; set; }
 		public uint FramesToPlay { get; set; }
 
-		public AUScheduledAudioFileRegion (AudioFile audioFile, AUScheduledAudioFileRegionCompletionHandler completionHandler = null)
+		public AUScheduledAudioFileRegion (AudioFile audioFile, AUScheduledAudioFileRegionCompletionHandler? completionHandler = null)
 		{
 			if (audioFile == null)
 				throw new ArgumentNullException (nameof (audioFile));
@@ -76,7 +78,7 @@ namespace AudioUnit {
 			
 			var handle = GCHandle.FromIntPtr (userData);
 			var inst = (AUScheduledAudioFileRegion) handle.Target;
-			inst?.completionHandler (inst, status);
+			inst?.completionHandler !(inst, status);
 		}
 
 		internal ScheduledAudioFileRegion GetAudioFileRegion ()

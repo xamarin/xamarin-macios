@@ -29,6 +29,8 @@
 //
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -106,7 +108,7 @@ namespace AudioUnit
             }
         }
 
-        public AudioConverter AudioConverter {
+        public AudioConverter? AudioConverter {
             get {
                 uint size = sizeof (uint);
                 IntPtr value;
@@ -185,7 +187,7 @@ namespace AudioUnit
 		// to the actual error code from the native API and we are not allowed to make Breaking Changes
 		// lets reimplement the method in a way to return the actual native value if any
 		// also we can share the underliying implementation so we so not break api and reduce code suplication
-		public static ExtAudioFile OpenUrl (NSUrl url, out ExtAudioFileError error)
+		public static ExtAudioFile? OpenUrl (NSUrl url, out ExtAudioFileError error)
 		{
 			if (url == null)
 				throw new ArgumentNullException ("url");
@@ -193,7 +195,7 @@ namespace AudioUnit
 			return OpenUrl (url.Handle, out error);
 		}
 
-		public static ExtAudioFile OpenUrl (CFUrl url, out ExtAudioFileError error)
+		public static ExtAudioFile? OpenUrl (CFUrl url, out ExtAudioFileError error)
 		{
 			if (url == null)
 				throw new ArgumentNullException ("url");
@@ -217,7 +219,7 @@ namespace AudioUnit
 			return audioFile;
         }
 
-		static ExtAudioFile OpenUrl (IntPtr urlHandle, out ExtAudioFileError error)
+		static ExtAudioFile? OpenUrl (IntPtr urlHandle, out ExtAudioFileError error)
 		{
 			IntPtr ptr;
 			error = ExtAudioFileOpenUrl (urlHandle, out ptr);
@@ -232,7 +234,7 @@ namespace AudioUnit
 		// to the actual error code from the native API and we are not allowed to make Breaking Changes
 		// lets reimplement the method in a way to return the actual native value if any
 		// also we can share the underliying implementation so we so not break api and reduce code suplication
-		public static ExtAudioFile CreateWithUrl (NSUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags fileFlags, out ExtAudioFileError error)
+		public static ExtAudioFile? CreateWithUrl (NSUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags fileFlags, out ExtAudioFileError error)
 		{
 			if (url == null)
 				throw new ArgumentNullException ("url");
@@ -240,7 +242,7 @@ namespace AudioUnit
 			return CreateWithUrl (url.Handle, fileType, inStreamDesc, fileFlags, out error);
 		}
 
-		public static ExtAudioFile CreateWithUrl (CFUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags flag,	out ExtAudioFileError error)
+		public static ExtAudioFile? CreateWithUrl (CFUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags flag,	out ExtAudioFileError error)
 		{
 			if (url == null)
 				throw new ArgumentNullException ("url");
@@ -268,7 +270,7 @@ namespace AudioUnit
 			return audioFile;
         }
 
-		static ExtAudioFile CreateWithUrl (IntPtr urlHandle, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags flag, out ExtAudioFileError error)
+		static ExtAudioFile? CreateWithUrl (IntPtr urlHandle, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags flag, out ExtAudioFileError error)
 		{
 			IntPtr ptr;
 			error = (ExtAudioFileError) ExtAudioFileCreateWithUrl (urlHandle, fileType, ref inStreamDesc, IntPtr.Zero, (uint)flag, out ptr);
@@ -278,7 +280,7 @@ namespace AudioUnit
 				return new ExtAudioFile (ptr);
 		}
 
-        public static ExtAudioFileError WrapAudioFileID (IntPtr audioFileID, bool forWriting, out ExtAudioFile outAudioFile)
+        public static ExtAudioFileError WrapAudioFileID (IntPtr audioFileID, bool forWriting, out ExtAudioFile? outAudioFile)
         {
             IntPtr ptr;
             ExtAudioFileError res;
