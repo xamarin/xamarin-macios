@@ -13687,7 +13687,11 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, Mac (11,3)]
+#if NET
+	[NoTV]
+#else
 	[Obsoleted (PlatformName.TvOS, 12, 0)]
+#endif
 	[Static, Internal]
 	interface AVAssetDownloadTaskKeys {
 		[iOS (9,0), Mac (12,0)]
@@ -13718,7 +13722,11 @@ namespace AVFoundation {
 
 	[Mac (12,0)]
 	[NoWatch]
+#if NET
+	[NoTV]
+#else
 	[Obsoleted (PlatformName.TvOS, 12, 0)]
+#endif
 	[StrongDictionary ("AVAssetDownloadTaskKeys")]
 	interface AVAssetDownloadOptions {
 		NSNumber MinimumRequiredMediaBitrate { get; set; }
