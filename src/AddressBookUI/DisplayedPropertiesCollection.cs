@@ -119,7 +119,10 @@ namespace AddressBookUI {
 
 		public IEnumerator<ABPersonProperty> GetEnumerator ()
 		{
-			var values = g ()!;
+			var values = g ();
+			if (values is null) {
+				yield break;
+			}
 			for (int i = 0; i < values.Length; ++i)
 				yield return ABPersonPropertyId.ToPersonProperty (values [i].Int32Value);
 		}

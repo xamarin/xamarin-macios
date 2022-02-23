@@ -110,14 +110,14 @@ namespace AddressBookUI {
 		public void SetHighlightedItemForProperty (ABPersonProperty property, int? identifier)
 		{
 			SetHighlightedItemForProperty (
-					property,
+					ABPersonPropertyId.ToId (property),
 					identifier ?? ABRecord.InvalidPropertyId);
 		}
 
 		public void SetHighlightedProperty (ABPersonProperty property)
 		{
 			SetHighlightedItemForProperty (
-					property,
+					ABPersonPropertyId.ToId (property),
 					ABRecord.InvalidPropertyId);
 		}
 
