@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 #if !COREBUILD
@@ -87,6 +88,7 @@ namespace Foundation {
 		}
 
 		[Obsolete ("Use of 'CFString.CreateNative' offers better performance.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static NativeHandle CreateNative (string str)
 		{
 			return CreateNative (str, false);
@@ -169,12 +171,14 @@ namespace Foundation {
 			return new NSString (str);
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use of 'CFString.FromHandle' offers better performance.")]
 		public static string FromHandle (NativeHandle usrhandle)
 		{
 			return FromHandle (usrhandle, false);
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use of 'CFString.FromHandle' offers better performance.")]
 		public static string FromHandle (NativeHandle handle, bool owns)
 		{
