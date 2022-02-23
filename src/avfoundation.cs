@@ -11729,6 +11729,7 @@ namespace AVFoundation {
 		[Export ("audioOutputDeviceUniqueID"), NullAllowed]
 		string AudioOutputDeviceUniqueID { get; set; }
 
+#if !NET
 		[Obsolete ("Use 'AVPlayerWaitingReason' enum instead.")]
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Field ("AVPlayerWaitingToMinimizeStallsReason")]
@@ -11755,6 +11756,7 @@ namespace AVFoundation {
 		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("AVPlayerWaitingForCoordinatedPlaybackReason")]
 		NSString AVPlayerWaitingForCoordinatedPlaybackReason { get; }
+#endif // !NET
 
 		// From AVPlayer (AVPlayerPlaybackCapabilities) Category
 
