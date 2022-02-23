@@ -800,7 +800,7 @@ namespace AudioToolbox {
 		public static AudioSessionErrors AddListener (AudioSessionProperty property, PropertyListener listener)
 		{
 			if (listener == null)
-				throw new ArgumentNullException ("listener");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (listener));
 
 			if (listeners == null)
 				listeners = new Hashtable ();
@@ -827,7 +827,7 @@ namespace AudioToolbox {
 		public static void RemoveListener (AudioSessionProperty property, PropertyListener listener)
 		{
 			if (listener == null)
-				throw new ArgumentNullException ("listener");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (listener));
 
 			ArrayList a = (ArrayList) listeners ![property];
 			if (a == null)

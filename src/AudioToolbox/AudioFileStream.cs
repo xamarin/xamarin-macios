@@ -234,14 +234,14 @@ namespace AudioToolbox {
 		public AudioFileStreamStatus ParseBytes (int size, IntPtr data, bool discontinuity)
 		{
 			if (data == IntPtr.Zero)
-				throw new ArgumentNullException ("data");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			return LastError = AudioFileStreamParseBytes (handle, size, data, discontinuity ? (uint) 1 : (uint) 0);
 		}
 
 		public AudioFileStreamStatus ParseBytes (byte [] bytes, bool discontinuity)
 		{
 			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			unsafe {
 				fixed (byte *bp = &bytes[0]){
 					return LastError = AudioFileStreamParseBytes (handle, bytes.Length, (IntPtr) bp, discontinuity ? (uint) 1 : (uint) 0);
@@ -252,7 +252,7 @@ namespace AudioToolbox {
 		public AudioFileStreamStatus ParseBytes (byte [] bytes, int offset, int count, bool discontinuity)
 		{
 			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			if (offset < 0)
 				throw new ArgumentException ("offset");
 			if (count < 0)
@@ -303,7 +303,7 @@ namespace AudioToolbox {
 		public bool GetProperty (AudioFileStreamProperty property, ref int dataSize, IntPtr outPropertyData)
 		{
 			if (outPropertyData == IntPtr.Zero)
-				throw new ArgumentNullException ("outPropertyData");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outPropertyData));
 			return AudioFileStreamGetProperty (handle, property, ref dataSize, outPropertyData) == 0;
 		}
 
@@ -395,7 +395,7 @@ namespace AudioToolbox {
 		public bool SetProperty (AudioFileStreamProperty property, int dataSize, IntPtr propertyData)
 		{
 			if (propertyData == IntPtr.Zero)
-				throw new ArgumentNullException ("propertyData");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyData));
 			LastError = AudioFileStreamSetProperty (handle, property, dataSize, propertyData);
 			return LastError == 0;
 		}

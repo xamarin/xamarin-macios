@@ -480,7 +480,7 @@ namespace AudioToolbox {
 		public void FreeBuffer (IntPtr audioQueueBuffer)
 		{
 			if (audioQueueBuffer == IntPtr.Zero)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 			AudioQueueFreeBuffer (handle, audioQueueBuffer);
 		}
 		
@@ -498,7 +498,7 @@ namespace AudioToolbox {
 		public AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, int bytes, AudioStreamPacketDescription [] desc)
 		{
 			if (audioQueueBuffer == IntPtr.Zero)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			unsafe {
 				AudioQueueBuffer *buffer = (AudioQueueBuffer *) audioQueueBuffer;
@@ -510,7 +510,7 @@ namespace AudioToolbox {
 		public unsafe AudioQueueStatus EnqueueBuffer (AudioQueueBuffer* audioQueueBuffer, AudioStreamPacketDescription [] desc)
 		{
 			if (audioQueueBuffer == null)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			return AudioQueueEnqueueBuffer (handle, audioQueueBuffer, desc == null ? 0 : desc.Length, desc);
 		}
@@ -518,7 +518,7 @@ namespace AudioToolbox {
 		public unsafe AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, AudioStreamPacketDescription [] desc)
 		{
 			if (audioQueueBuffer == IntPtr.Zero)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			return AudioQueueEnqueueBuffer (handle, (AudioQueueBuffer *) audioQueueBuffer, desc == null ? 0 : desc.Length, desc);
 		}
@@ -554,7 +554,7 @@ namespace AudioToolbox {
 						       ref AudioTimeStamp startTime, out AudioTimeStamp actualStartTime)
 		{
 			if (audioQueueBuffer == IntPtr.Zero)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			unsafe {
 				AudioQueueBuffer *buffer = (AudioQueueBuffer *) audioQueueBuffer;
@@ -573,7 +573,7 @@ namespace AudioToolbox {
 						       out AudioTimeStamp actualStartTime)
 		{
 			if (audioQueueBuffer == IntPtr.Zero)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			unsafe {
 				AudioQueueBuffer *buffer = (AudioQueueBuffer *) audioQueueBuffer;
@@ -593,7 +593,7 @@ namespace AudioToolbox {
 						       ref AudioTimeStamp startTime, out AudioTimeStamp actualStartTime)
 		{
 			if (audioQueueBuffer == null)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			return AudioQueueEnqueueBufferWithParameters (
 				handle, audioQueueBuffer, desc == null ? 0 : desc.Length, desc,
@@ -608,7 +608,7 @@ namespace AudioToolbox {
 						       out AudioTimeStamp actualStartTime)
 		{
 			if (audioQueueBuffer == null)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			return AudioQueueEnqueueBufferWithParameters (
 				handle, audioQueueBuffer, desc == null ? 0 : desc.Length, desc,
@@ -768,7 +768,7 @@ namespace AudioToolbox {
 		public AudioQueueStatus AddListener (AudioQueueProperty property, AudioQueuePropertyChanged callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException ("callback");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 			if (listeners == null)
 				listeners = new Hashtable ();
 			
@@ -791,7 +791,7 @@ namespace AudioToolbox {
 		public void RemoveListener (AudioQueueProperty property, AudioQueuePropertyChanged callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException ("callback");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 			if (listeners == null)
 				return;
 			lock (listeners){
@@ -825,7 +825,7 @@ namespace AudioToolbox {
 		public bool GetProperty (AudioQueueProperty property, ref int dataSize, IntPtr outdata)
 		{
 			if (outdata == IntPtr.Zero)
-				throw new ArgumentNullException ("outdata");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outdata));
 			return AudioQueueGetProperty (handle, (uint) property, outdata, ref dataSize) == 0;
 		}
 
@@ -833,7 +833,7 @@ namespace AudioToolbox {
 		public bool SetProperty (AudioQueueProperty property, int dataSize, IntPtr propertyData)
 		{
 			if (propertyData == IntPtr.Zero)
-				throw new ArgumentNullException ("propertyData");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyData));
 			return AudioQueueSetProperty (handle, property, propertyData, dataSize) == 0;
 		}
 
@@ -987,7 +987,7 @@ namespace AudioToolbox {
 
 			set {
 				if (value == null)
-					throw new ArgumentNullException ("value");
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				if (value.Length == 0)
 					return;
@@ -1015,7 +1015,7 @@ namespace AudioToolbox {
 
 			set {
 				if (value == null)
-					throw new ArgumentNullException ("value"); // TODO: enable ?
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value)); // TODO: enable ?
 
 				int size;
 				var h = value.ToBlock (out size);
@@ -1119,7 +1119,7 @@ namespace AudioToolbox {
 		public AudioQueueStatus SetChannelAssignments (params AudioQueueChannelAssignment[] channelAssignments)
 		{
 			if (channelAssignments == null)
-				throw new ArgumentNullException ("channelAssignments");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (channelAssignments));
 
 			int length;
 			var ptr = MarshalArray (ref channelAssignments, out length);
@@ -1237,7 +1237,7 @@ namespace AudioToolbox {
 		                                        out AudioQueueProcessingTapFlags flags, out uint parentNumberOfFrames, AudioBuffers data)
 		{
 			if (data == null)
-				throw new ArgumentNullException ("data");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			return AudioQueueProcessingTapGetSourceAudio (TapHandle, numberOfFrames, ref timeStamp,
 		                                                  out flags, out parentNumberOfFrames, (IntPtr) data);
@@ -1344,7 +1344,7 @@ namespace AudioToolbox {
 		public unsafe AudioQueueStatus RenderOffline (double timeStamp, AudioQueueBuffer* audioQueueBuffer, int frameCount)
 		{
 			if (audioQueueBuffer == null)
-				throw new ArgumentNullException ("audioQueueBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			var stamp = new AudioTimeStamp () {
 				SampleTime = timeStamp,

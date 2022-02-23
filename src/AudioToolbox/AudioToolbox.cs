@@ -69,7 +69,7 @@ namespace AudioToolbox {
 		public static string? GetName (NSUrl url)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			string? result = null;
 			IntPtr name = IntPtr.Zero;
@@ -101,7 +101,7 @@ namespace AudioToolbox {
 		public static InstrumentInfo []? GetInstrumentInfo (NSUrl url)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			InstrumentInfo []? result = null;
 			IntPtr array = IntPtr.Zero;
