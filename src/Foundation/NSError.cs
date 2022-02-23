@@ -60,7 +60,7 @@ namespace Foundation {
 			return LocalizedDescription;
 		}
 
-#if __IOS__
+#if __IOS__ && !NET
 		[Obsolete (Constants.WatchKitRemoved)]
 		public static NSString WatchKitErrorDomain {
 			get {

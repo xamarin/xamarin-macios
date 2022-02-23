@@ -23,7 +23,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string BTouchToolExe { get; set; }
 
-		public ITaskItem[] CompileCommand { get; set; }
+		public string DotNetCscCompiler { get; set; }
 
 		public ITaskItem[] ObjectiveCLibraries { get; set; }
 
@@ -148,8 +148,13 @@ namespace Xamarin.MacDev.Tasks {
 			if (AllowUnsafeBlocks)
 				cmd.Add ("/unsafe");
 
-			if (CompileCommand?.Length > 0)
-				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (CompileCommand.Select (v => v.ItemSpec).ToArray ())));
+			if (!string.IsNullOrEmpty (DotNetCscCompiler)) {
+				var compileCommand = new string [] {
+					DotNetPath,
+					DotNetCscCompiler,
+				};
+				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (compileCommand)));
+			}
 
 			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
 

@@ -91,6 +91,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DSymUtil" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.EmbedProvisionProfile" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindCscCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
@@ -1556,6 +1557,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(GeneratedSourcesDir)" />
 
+		<FindCscCompiler
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(UsingAppleNETSdk)' == 'true' And !Exists('$(_DotNetCscCompiler)')"
+			CscCompiler="$(_DotNetCscCompiler)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="CscCompiler" PropertyName="_DotNetCscCompiler" />
+		</FindCscCompiler>
+
 		<BTouch
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -1566,9 +1576,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ApiDefinitions="@(ObjcBindingApiDefinition)"
 			AttributeAssembly="$(_GeneratorAttributeAssembly)"
 			BaseLibDll="$(BaseLibDllPath)"
-			CompileCommand="@(_BTouchCompileCommand)"
 			CoreSources="@(ObjcBindingCoreSource)"
 			DefineConstants="$(DefineConstants)"
+			DotNetCscCompiler="$(_DotNetCscCompiler)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
 			ExtraArgs="$(BTouchExtraArgs)"
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
