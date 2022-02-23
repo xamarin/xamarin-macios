@@ -285,14 +285,14 @@ namespace AudioToolbox {
 
 		public static void Initialize (CFRunLoop? runLoop, string? runMode)
 		{
-			CFString? s = runMode == null ? null : new CFString (runMode);
+			CFString? s = runMode is null ? null : new CFString (runMode);
 #if NET
 			int k;
 			unsafe {
 				k = AudioSessionInitialize (runLoop.GetHandle (), s.GetHandle (), &Interruption, IntPtr.Zero);
 			}
 #else
-			int k = AudioSessionInitialize (runLoop is null ? IntPtr.Zero : runLoop.Handle, s == null ? IntPtr.Zero : s.Handle, Interruption, IntPtr.Zero);
+			int k = AudioSessionInitialize (runLoop is null ? IntPtr.Zero : runLoop.Handle, s is null ? IntPtr.Zero : s.Handle, Interruption, IntPtr.Zero);
 #endif
 			if (k != 0 && k != (int)AudioSessionErrors.AlreadyInitialized)
 				throw new AudioSessionException (k);
@@ -345,7 +345,7 @@ namespace AudioToolbox {
 			EventHandler h;
 
 			h = (state == 1) ? Interrupted! : Resumed!;
-			if (h != null)
+			if (h is not null)
 				h (null, EventArgs.Empty);
 		}
 
@@ -554,17 +554,17 @@ namespace AudioToolbox {
 
 		static internal AudioSessionInputRouteKind GetInputRoute (NSArray? arr)
 		{
-			if (arr == null || arr.Count == 0)
+			if (arr is null || arr.Count == 0)
 				return AudioSessionInputRouteKind.None;
 			
 			var dict = new NSDictionary (arr.ValueAt (0));
 			
-			if (dict == null || dict.Count == 0)
+			if (dict is null || dict.Count == 0)
 				return AudioSessionInputRouteKind.None;
 			
 			var val = (NSString) dict [AudioRouteKey_Type];
 			
-			if (val == null)
+			if (val is null)
 				return AudioSessionInputRouteKind.None;
 			
 			if (val == InputRoute_LineIn) {
@@ -584,7 +584,7 @@ namespace AudioToolbox {
 
 		static internal AudioSessionOutputRouteKind []? GetOutputRoutes (NSArray? arr)
 		{
-			if (arr == null || arr.Count == 0)
+			if (arr is null || arr.Count == 0)
 				return null;
 			
 			var result = new AudioSessionOutputRouteKind [arr.Count];
@@ -593,12 +593,12 @@ namespace AudioToolbox {
 				
 				result [i] = AudioSessionOutputRouteKind.None;
 				
-				if (dict == null || dict.Count == 0)
+				if (dict is null || dict.Count == 0)
 					continue;
 				
 				var val = (NSString) dict [AudioRouteKey_Type];
 				
-				if (val == null)
+				if (val is null)
 					continue;
 				
 				if (val == OutputRoute_LineOut) {
@@ -778,7 +778,7 @@ namespace AudioToolbox {
 		static void Listener (IntPtr userData, AudioSessionProperty prop, int size, IntPtr data)
 		{
 			ArrayList a = (ArrayList) listeners ![prop];
-			if (a == null){
+			if (a is null){
 				// Should never happen
 				return;
 			}
@@ -799,14 +799,14 @@ namespace AudioToolbox {
 
 		public static AudioSessionErrors AddListener (AudioSessionProperty property, PropertyListener listener)
 		{
-			if (listener == null)
+			if (listener is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (listener));
 
-			if (listeners == null)
+			if (listeners is null)
 				listeners = new Hashtable ();
 
 			ArrayList a = (ArrayList) listeners [property];
-			if (a == null)
+			if (a is null)
 				listeners [property] = a = new ArrayList ();
 
 			a.Add (listener);
@@ -826,11 +826,11 @@ namespace AudioToolbox {
 
 		public static void RemoveListener (AudioSessionProperty property, PropertyListener listener)
 		{
-			if (listener == null)
+			if (listener is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (listener));
 
 			ArrayList a = (ArrayList) listeners ![property];
-			if (a == null)
+			if (a is null)
 				return;
 			a.Remove (listener);
 			if (a.Count == 0)
@@ -841,7 +841,7 @@ namespace AudioToolbox {
 
 		static void AddListenerEvent (AudioSessionProperty property, object handler, PropertyListener listener)
 		{
-			if (strongListenerHash == null)
+			if (strongListenerHash is null)
 				Interlocked.CompareExchange (ref strongListenerHash, new Hashtable (), null);
 
 			lock (strongListenerHash) {
@@ -853,13 +853,13 @@ namespace AudioToolbox {
 
 		static void RemoveListenerEvent (AudioSessionProperty property, object handler)
 		{
-			if (strongListenerHash == null)
+			if (strongListenerHash is null)
 				return;
 
 			PropertyListener listener;
 			lock (strongListenerHash) {
 				listener = (PropertyListener) strongListenerHash [handler]; 
-				if (listener == null)
+				if (listener is null)
 					return;
 
 				strongListenerHash.Remove (handler);

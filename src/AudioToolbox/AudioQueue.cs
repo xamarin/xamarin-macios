@@ -386,7 +386,7 @@ namespace AudioToolbox {
 		{
 			if (handle != IntPtr.Zero){
 				if (disposing){
-					if (listeners != null){
+					if (listeners is not null){
 						foreach (AudioQueueProperty prop in listeners.Keys){
 							AudioQueueRemovePropertyListener (handle, prop, property_changed, GCHandle.ToIntPtr (gch));
 						}
@@ -509,10 +509,10 @@ namespace AudioToolbox {
 
 		public unsafe AudioQueueStatus EnqueueBuffer (AudioQueueBuffer* audioQueueBuffer, AudioStreamPacketDescription [] desc)
 		{
-			if (audioQueueBuffer == null)
+			if (audioQueueBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
-			return AudioQueueEnqueueBuffer (handle, audioQueueBuffer, desc == null ? 0 : desc.Length, desc);
+			return AudioQueueEnqueueBuffer (handle, audioQueueBuffer, desc?.Length ?? 0, desc);
 		}
 
 		public unsafe AudioQueueStatus EnqueueBuffer (IntPtr audioQueueBuffer, AudioStreamPacketDescription [] desc)
@@ -520,7 +520,7 @@ namespace AudioToolbox {
 			if (audioQueueBuffer == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
-			return AudioQueueEnqueueBuffer (handle, (AudioQueueBuffer *) audioQueueBuffer, desc == null ? 0 : desc.Length, desc);
+			return AudioQueueEnqueueBuffer (handle, (AudioQueueBuffer *) audioQueueBuffer, desc?.Length ?? 0, desc);
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -561,8 +561,8 @@ namespace AudioToolbox {
 				buffer->AudioDataByteSize = (uint) bytes;
 
 				return AudioQueueEnqueueBufferWithParameters (
-					handle, buffer, desc == null ? 0 : desc.Length, desc,
-					trimFramesAtStart, trimFramesAtEnd, parameterEvents == null ? 0 : parameterEvents.Length,
+					handle, buffer, desc?.Length ?? 0, desc,
+					trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
 					parameterEvents,
 					ref startTime,
 					out actualStartTime);
@@ -580,8 +580,8 @@ namespace AudioToolbox {
 				buffer->AudioDataByteSize = (uint) bytes;
 
 				return AudioQueueEnqueueBufferWithParameters (
-					handle, buffer, desc == null ? 0 : desc.Length, desc,
-					trimFramesAtStart, trimFramesAtEnd, parameterEvents == null ? 0 : parameterEvents.Length,
+					handle, buffer, desc?.Length ?? 0, desc,
+					trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
 					parameterEvents,
 					null,
 					out actualStartTime);
@@ -592,12 +592,12 @@ namespace AudioToolbox {
 						       int trimFramesAtStart, int trimFramesAtEnd, AudioQueueParameterEvent [] parameterEvents,
 						       ref AudioTimeStamp startTime, out AudioTimeStamp actualStartTime)
 		{
-			if (audioQueueBuffer == null)
+			if (audioQueueBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			return AudioQueueEnqueueBufferWithParameters (
-				handle, audioQueueBuffer, desc == null ? 0 : desc.Length, desc,
-				trimFramesAtStart, trimFramesAtEnd, parameterEvents == null ? 0 : parameterEvents.Length,
+				handle, audioQueueBuffer, desc?.Length ?? 0, desc,
+				trimFramesAtStart, trimFramesAtEnd,parameterEvents?.Length ?? 0,
 				parameterEvents,
 				ref startTime,
 				out actualStartTime);
@@ -607,12 +607,12 @@ namespace AudioToolbox {
 						       int trimFramesAtStart, int trimFramesAtEnd, AudioQueueParameterEvent [] parameterEvents,
 						       out AudioTimeStamp actualStartTime)
 		{
-			if (audioQueueBuffer == null)
+			if (audioQueueBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			return AudioQueueEnqueueBufferWithParameters (
-				handle, audioQueueBuffer, desc == null ? 0 : desc.Length, desc,
-				trimFramesAtStart, trimFramesAtEnd, parameterEvents == null ? 0 : parameterEvents.Length,
+				handle, audioQueueBuffer, desc?.Length ?? 0, desc,
+				trimFramesAtStart, trimFramesAtEnd, parameterEvents?.Length ?? 0,
 				parameterEvents,
 				null,
 				out actualStartTime);
@@ -636,7 +636,7 @@ namespace AudioToolbox {
 		public AudioQueueStatus GetCurrentTime (AudioQueueTimeline timeline, ref AudioTimeStamp time, ref bool timelineDiscontinuty)
 		{
 			IntPtr arg;
-			if (timeline == null)
+			if (timeline is null)
 				arg = IntPtr.Zero;
 			else {
 				arg = timeline.timelineHandle;
@@ -755,7 +755,7 @@ namespace AudioToolbox {
 			var aq = gch.Target as AudioQueue;
 			lock (aq!.listeners!){
 				ArrayList a = (ArrayList)aq.listeners [id]!;
-				if (a == null)
+				if (a is null)
 					return;
 				foreach (AudioQueuePropertyChanged cback in a){
 					cback (id);
@@ -767,15 +767,15 @@ namespace AudioToolbox {
 		
 		public AudioQueueStatus AddListener (AudioQueueProperty property, AudioQueuePropertyChanged callback)
 		{
-			if (callback == null)
+			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
-			if (listeners == null)
+			if (listeners is null)
 				listeners = new Hashtable ();
 			
 			AudioQueueStatus res = AudioQueueStatus.Ok;
 			lock (listeners){
 				var a = (ArrayList) listeners [property]!;
-				if (a == null){
+				if (a is null){
 					res = AudioQueueAddPropertyListener (handle, property, property_changed, GCHandle.ToIntPtr (gch));
 					if (res != AudioQueueStatus.Ok)
 						return res;
@@ -790,13 +790,13 @@ namespace AudioToolbox {
 
 		public void RemoveListener (AudioQueueProperty property, AudioQueuePropertyChanged callback)
 		{
-			if (callback == null)
+			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
-			if (listeners == null)
+			if (listeners is null)
 				return;
 			lock (listeners){
 				var a = (ArrayList) listeners [property]!;
-				if (a == null)
+				if (a is null)
 					return;
 				a.Remove (callback);
 				if (a.Count == 0){
@@ -986,7 +986,7 @@ namespace AudioToolbox {
 			}
 
 			set {
-				if (value == null)
+				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				if (value.Length == 0)
@@ -1014,7 +1014,7 @@ namespace AudioToolbox {
 			}
 
 			set {
-				if (value == null)
+				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value)); // TODO: enable ?
 
 				int size;
@@ -1118,7 +1118,7 @@ namespace AudioToolbox {
 
 		public AudioQueueStatus SetChannelAssignments (params AudioQueueChannelAssignment[] channelAssignments)
 		{
-			if (channelAssignments == null)
+			if (channelAssignments is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (channelAssignments));
 
 			int length;
@@ -1236,7 +1236,7 @@ namespace AudioToolbox {
 		public AudioQueueStatus GetSourceAudio (uint numberOfFrames, ref AudioTimeStamp timeStamp,
 		                                        out AudioQueueProcessingTapFlags flags, out uint parentNumberOfFrames, AudioBuffers data)
 		{
-			if (data == null)
+			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			return AudioQueueProcessingTapGetSourceAudio (TapHandle, numberOfFrames, ref timeStamp,
@@ -1269,7 +1269,7 @@ namespace AudioToolbox {
 						
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueNewOutput (ref AudioStreamBasicDescription format, AudioQueueOutputCallback callback,
-							    IntPtr userData, IntPtr? cfrunLoop_callbackRunloop, IntPtr? cfstr_runMode,
+							    IntPtr userData, IntPtr cfrunLoop_callbackRunloop, IntPtr cfstr_runMode,
 							    uint flags, out IntPtr audioQueue);
 
 		[MonoPInvokeCallback (typeof(AudioQueueOutputCallback))]
@@ -1285,7 +1285,7 @@ namespace AudioToolbox {
 		protected virtual void OnBufferCompleted (IntPtr audioQueueBuffer)
 		{
 			var h = BufferCompleted;
-			if (h != null)
+			if (h is not null)
 				h (this, new BufferCompletedEventArgs (audioQueueBuffer));
 		}
 
@@ -1294,7 +1294,7 @@ namespace AudioToolbox {
 		}
 
 		public OutputAudioQueue (AudioStreamBasicDescription desc, CFRunLoop runLoop, string runMode)
-			: this (desc, runLoop, runMode == null ? null : new CFString (runMode))
+			: this (desc, runLoop, runMode is null ? null : new CFString (runMode))
 		{
 		}
 
@@ -1305,7 +1305,7 @@ namespace AudioToolbox {
 
 			var code = AudioQueueNewOutput (ref desc, dOutputCallback, GCHandle.ToIntPtr (gch),
 							runLoop is null ? IntPtr.Zero : runLoop.Handle,
-							runMode == null ? IntPtr.Zero : runMode.Handle, 0, out h);
+							runMode is null ? IntPtr.Zero : runMode.Handle, 0, out h);
 
 			if (code != 0) {
 				gch.Free ();
@@ -1325,7 +1325,7 @@ namespace AudioToolbox {
 		public AudioQueueStatus SetOfflineRenderFormat (AudioStreamBasicDescription desc, AudioChannelLayout layout)
 		{
 			int size;
-			var h = layout == null ? IntPtr.Zero : layout.ToBlock (out size);
+			var h = layout is null ? IntPtr.Zero : layout.ToBlock (out size);
 			try {
 				return AudioQueueSetOfflineRenderFormat (handle, ref desc, h);
 			} finally {
@@ -1343,7 +1343,7 @@ namespace AudioToolbox {
 
 		public unsafe AudioQueueStatus RenderOffline (double timeStamp, AudioQueueBuffer* audioQueueBuffer, int frameCount)
 		{
-			if (audioQueueBuffer == null)
+			if (audioQueueBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioQueueBuffer));
 
 			var stamp = new AudioTimeStamp () {
@@ -1371,7 +1371,7 @@ namespace AudioToolbox {
 		protected virtual void OnInputCompleted (IntPtr audioQueueBuffer, AudioTimeStamp timeStamp, AudioStreamPacketDescription []? packetDescriptions)
 		{
 			var h = InputCompleted;
-			if (h != null)
+			if (h is not null)
 				h (this, new InputCompletedEventArgs (audioQueueBuffer, timeStamp, packetDescriptions));
 		}
 		
@@ -1394,12 +1394,12 @@ namespace AudioToolbox {
 		{
 			IntPtr h;
 			GCHandle mygch = GCHandle.Alloc (this);
-			CFString? s = runMode == null ? null : new CFString (runMode);
+			CFString? s = runMode is null ? null : new CFString (runMode);
 			
 			var code = AudioQueueNewInput (ref desc, dInputCallback, GCHandle.ToIntPtr (mygch),
 						       runLoop is null ? IntPtr.Zero : runLoop.Handle,
-						       s == null ? IntPtr.Zero : s.Handle, 0, out h);
-			if (s != null)
+						       s is null ? IntPtr.Zero : s.Handle, 0, out h);
+			if (s is not null)
 				s.Dispose ();
 			
 			if (code == 0){

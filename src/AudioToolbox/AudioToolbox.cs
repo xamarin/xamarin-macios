@@ -68,7 +68,7 @@ namespace AudioToolbox {
 #endif
 		public static string? GetName (NSUrl url)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			string? result = null;
@@ -100,7 +100,7 @@ namespace AudioToolbox {
 #endif
 		public static InstrumentInfo []? GetInstrumentInfo (NSUrl url)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			InstrumentInfo []? result = null;

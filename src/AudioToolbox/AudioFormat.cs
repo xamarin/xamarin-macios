@@ -56,7 +56,7 @@ namespace AudioToolbox {
 #if !WATCH
 		public unsafe static AudioFormat? GetFirstPlayableFormat (AudioFormat[] formatList)
 		{
-			if (formatList == null)
+			if (formatList is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatList));
 			if (formatList.Length < 2)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatList));
@@ -121,7 +121,7 @@ namespace AudioToolbox {
 
 		public AudioBalanceFade (AudioChannelLayout channelLayout)
 		{
-			if (channelLayout == null)
+			if (channelLayout is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (channelLayout));
 
 			this.ChannelLayout = channelLayout;
@@ -165,7 +165,7 @@ namespace AudioToolbox {
 				Type = Type,
 			};
 
-			if (ChannelLayout != null) {
+			if (ChannelLayout is not null) {
 				int temp;
 				l.ChannelLayoutWeak = ChannelLayout.ToBlock (out temp);
 			}
@@ -196,7 +196,7 @@ namespace AudioToolbox {
 
 		public AudioPanningInfo (AudioChannelLayout outputChannelMap)
 		{
-			if (outputChannelMap == null)
+			if (outputChannelMap is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputChannelMap));
 
 			this.OutputChannelMap = outputChannelMap;
@@ -244,7 +244,7 @@ namespace AudioToolbox {
 				GainScale = GainScale
 			};
 
-			if (OutputChannelMap != null) {
+			if (OutputChannelMap is not null) {
 				int temp;
 				l.OutputChannelMapWeak = OutputChannelMap.ToBlock (out temp);
 			}

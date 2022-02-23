@@ -61,7 +61,7 @@ namespace AudioToolbox {
 		// The documentation is wrong too
 		public unsafe static uint? HardwareCodecCapabilities (AudioClassDescription[] descriptions)
 		{
-			if (descriptions == null)
+			if (descriptions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptions));
 
 			fixed (AudioClassDescription* item = &descriptions[0]) {

@@ -188,7 +188,7 @@ namespace AudioToolbox {
 		protected virtual void OnPacketDecoded (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription []? packetDescriptions)
 		{
 			var p = PacketDecoded;
-			if (p != null)
+			if (p is not null)
 				p (this, new PacketReceivedEventArgs (numberOfBytes, inputData, packetDescriptions));
 		}
 
@@ -196,7 +196,7 @@ namespace AudioToolbox {
 		protected virtual void OnPropertyFound (AudioFileStreamProperty propertyID, ref AudioFileStreamPropertyFlag ioFlags)
 		{
 			var p = PropertyFound;
-			if (p != null){
+			if (p is not null){
 				var pf = new PropertyFoundEventArgs (propertyID, ioFlags);
 				p (this, pf);
 				ioFlags = pf.Flags; 
@@ -240,7 +240,7 @@ namespace AudioToolbox {
 
 		public AudioFileStreamStatus ParseBytes (byte [] bytes, bool discontinuity)
 		{
-			if (bytes == null)
+			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			unsafe {
 				fixed (byte *bp = &bytes[0]){
@@ -251,7 +251,7 @@ namespace AudioToolbox {
 		
 		public AudioFileStreamStatus ParseBytes (byte [] bytes, int offset, int count, bool discontinuity)
 		{
-			if (bytes == null)
+			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			if (offset < 0)
 				throw new ArgumentException ("offset");

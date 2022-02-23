@@ -391,7 +391,7 @@ namespace AudioToolbox {
 			unsafe {
 				return AudioServicesAddSystemSoundCompletion (soundId,
 			                                              runLoop.GetHandle (),
-			                                              IntPtr.Zero, // runLoopMode should be enum runLoopMode == null ? IntPtr.Zero : runLoopMode.Handle,
+			                                              IntPtr.Zero, // runLoopMode should be enum runLoopMode is null ? IntPtr.Zero : runLoopMode.Handle,
 #if NET
 			                                              &SoundCompletionShared,
 #else
