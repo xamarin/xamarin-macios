@@ -1026,7 +1026,9 @@
 			<BTouchToolExe>bgen.dll</BTouchToolExe>
 			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
+			<BTouchCompiler>$(RoslynTargetsPath)/bincore/csc.dll</BTouchCompiler>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
+			<_DotNetCscCompiler>$(RoslynTargetsPath)/bincore/csc.dll</_DotNetCscCompiler>
 		</PropertyGroup>
 	</Target>
 
