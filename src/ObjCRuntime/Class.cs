@@ -401,7 +401,7 @@ namespace ObjCRuntime {
 			if (member is Type type)
 				return type;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
 		internal static MethodBase? ResolveMethodTokenReference (uint token_reference)
@@ -412,7 +412,7 @@ namespace ObjCRuntime {
 			if (member is MethodBase method)
 				return method;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
 		unsafe static MemberInfo? ResolveTokenReference (uint token_reference, uint implicit_token_type)
