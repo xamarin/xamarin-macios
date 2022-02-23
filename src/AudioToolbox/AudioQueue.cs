@@ -254,7 +254,7 @@ namespace AudioToolbox {
 		public IntPtr IntPtrPacketDescriptions;
 		public int PacketDescriptionCount;
 
-		public AudioStreamPacketDescription[]? PacketDescriptions {
+		public AudioStreamPacketDescription []? PacketDescriptions {
 			get {
 				return AudioFile.PacketDescriptionFrom (PacketDescriptionCount, IntPtrPacketDescriptions);
 			}

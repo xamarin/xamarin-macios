@@ -428,7 +428,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe AudioFormat[]? FormatList {
+		public unsafe AudioFormat []? FormatList {
 			get {
 				int size;
 				var r = GetProperty (AudioFileStreamProperty.FormatList, out size);

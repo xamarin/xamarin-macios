@@ -204,7 +204,7 @@ namespace AudioToolbox {
 
 		public PanningMode PanningMode { get; set; }
 		public AudioChannelFlags CoordinateFlags { get; set; }
-		public float [] Coordinates { get; private set; } = Array.Empty<float> ();
+		public float[] Coordinates { get; private set; } = Array.Empty<float> ();
 		public float GainScale { get; set; }
 		public AudioChannelLayout OutputChannelMap { get; private set; }
 

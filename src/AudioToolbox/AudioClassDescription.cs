@@ -35,6 +35,7 @@ using Foundation;
 using AudioUnit;
 
 namespace AudioToolbox {
+
 	// CoreAudio.framework - CoreAudioTypes.h
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioClassDescription

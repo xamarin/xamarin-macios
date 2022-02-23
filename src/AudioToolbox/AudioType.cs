@@ -201,7 +201,7 @@ namespace AudioToolbox {
 		}
 
 #if !WATCH
-		public unsafe static AudioChannelLayoutTag []? GetAvailableEncodeChannelLayoutTags (AudioStreamBasicDescription format)
+		public unsafe static AudioChannelLayoutTag[]? GetAvailableEncodeChannelLayoutTags (AudioStreamBasicDescription format)
 		{
 			var type_size = sizeof (AudioStreamBasicDescription);
 			uint size;
@@ -218,7 +218,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe static int []? GetAvailableEncodeNumberChannels (AudioStreamBasicDescription format)
+		public unsafe static int[]? GetAvailableEncodeNumberChannels (AudioStreamBasicDescription format)
 		{
 			uint size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.AvailableEncodeNumberChannels, sizeof (AudioStreamBasicDescription), ref format, out size) != 0)
@@ -234,7 +234,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe AudioFormat []? GetOutputFormatList (byte []? magicCookie = null)
+		public unsafe AudioFormat[]? GetOutputFormatList (byte[]? magicCookie = null)
 		{
 			var afi = new AudioFormatInfo ();
 			afi.AudioStreamBasicDescription = this;
@@ -257,7 +257,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe AudioFormat []? GetFormatList (byte[] magicCookie)
+		public unsafe AudioFormat[]? GetFormatList (byte[] magicCookie)
 		{
 			if (magicCookie is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (magicCookie));
@@ -888,7 +888,7 @@ namespace AudioToolbox {
 
 		public AudioChannelLayoutTag AudioTag;
 		public AudioChannelBit ChannelUsage;
-		public AudioChannelDescription []? Channels;
+		public AudioChannelDescription[]? Channels;
 
 #if !WATCH
 		public unsafe string? Name {
@@ -1000,7 +1000,7 @@ namespace AudioToolbox {
 			return res;
 		}
 
-		public unsafe static int []? GetChannelMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
+		public unsafe static int[]? GetChannelMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
 		{
 			if (inputLayout is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputLayout));
@@ -1034,7 +1034,7 @@ namespace AudioToolbox {
 			return res == 0 ? value : null;
 		}
 
-		public unsafe static float [,]? GetMatrixMixMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
+		public unsafe static float[,]? GetMatrixMixMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
 		{
 			if (inputLayout is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputLayout));
@@ -1102,7 +1102,7 @@ namespace AudioToolbox {
 			return res != 0 ? null : (AudioChannelLayoutTag?) value;
 		}
 
-		public unsafe static AudioChannelLayoutTag []? GetTagsForNumberOfChannels (int count)
+		public unsafe static AudioChannelLayoutTag[]? GetTagsForNumberOfChannels (int count)
 		{
 			const int type_size = sizeof (uint);
 			int size;
