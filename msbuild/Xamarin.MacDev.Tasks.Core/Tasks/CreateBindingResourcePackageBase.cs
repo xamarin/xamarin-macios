@@ -78,7 +78,7 @@ namespace Xamarin.MacDev.Tasks {
 				Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
 				Directory.CreateDirectory (bindingResourcePath);
 				foreach (var nativeRef in NativeReferences)
-					Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath);
+					Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath, FileCopierReportErrorCallback, FileCopierLogCallback);
 			}
 
 			return !Log.HasLoggedErrors;
