@@ -190,7 +190,7 @@ namespace AudioUnit
 		public static ExtAudioFile? OpenUrl (NSUrl url, out ExtAudioFileError error)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return OpenUrl (url.Handle, out error);
 		}
@@ -198,7 +198,7 @@ namespace AudioUnit
 		public static ExtAudioFile? OpenUrl (CFUrl url, out ExtAudioFileError error)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return OpenUrl (url.Handle, out error);
 		}
@@ -206,7 +206,7 @@ namespace AudioUnit
         public static ExtAudioFile OpenUrl (CFUrl url)
         {
             if (url == null)
-                throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			ExtAudioFileError err;
 			var audioFile = OpenUrl (url.Handle, out err);
@@ -237,7 +237,7 @@ namespace AudioUnit
 		public static ExtAudioFile? CreateWithUrl (NSUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags fileFlags, out ExtAudioFileError error)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return CreateWithUrl (url.Handle, fileType, inStreamDesc, fileFlags, out error);
 		}
@@ -245,7 +245,7 @@ namespace AudioUnit
 		public static ExtAudioFile? CreateWithUrl (CFUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags flag,	out ExtAudioFileError error)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return CreateWithUrl (url.Handle, fileType, inStreamDesc, flag, out error);
 		}
@@ -257,7 +257,7 @@ namespace AudioUnit
             AudioFileFlags flag)
         {             
             if (url == null)
-                throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
             ExtAudioFileError err;
 			var audioFile = CreateWithUrl (url.Handle, fileType, inStreamDesc, flag, out err);
@@ -321,7 +321,7 @@ namespace AudioUnit
         public uint Read (uint numberFrames, AudioBuffers audioBufferList, out ExtAudioFileError status)
         {
             if (audioBufferList == null)
-                throw new ArgumentNullException ("audioBufferList");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioBufferList));
 
             status = ExtAudioFileRead (_extAudioFile, ref numberFrames, (IntPtr) audioBufferList);
             return numberFrames;
@@ -330,7 +330,7 @@ namespace AudioUnit
         public ExtAudioFileError WriteAsync (uint numberFrames, AudioBuffers audioBufferList)
         {
             if (audioBufferList == null)
-                throw new ArgumentNullException ("audioBufferList");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioBufferList));
 
             return ExtAudioFileWriteAsync (_extAudioFile, numberFrames, (IntPtr) audioBufferList);
         }
@@ -338,7 +338,7 @@ namespace AudioUnit
         public ExtAudioFileError Write (uint numberFrames, AudioBuffers audioBufferList)
         {
             if (audioBufferList == null)
-                throw new ArgumentNullException ("audioBufferList");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioBufferList));
 
             return ExtAudioFileWrite (_extAudioFile, numberFrames, (IntPtr) audioBufferList);
         }
