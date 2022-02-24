@@ -132,6 +132,13 @@ endif
 
 maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XMACCATALYST_PCH)
 
+ifdef INCLUDE_MACCATALYST
+gen-maccatalyst: maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs .stamp-check-sharpie
+	$(SHARPIE) query -bind $(XMACCATALYST_PCH) > maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs
+else
+gen-maccatalyst: ; @true
+endif
+
 gen-all: gen-ios gen-tvos gen-watchos gen-macos
 
 wrench:
