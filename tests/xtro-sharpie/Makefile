@@ -20,7 +20,7 @@ clean-local::
 
 bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin/Debug/xtro-sanity.exe build: .stamp-build
 
-.stamp-build: $(wildcard *.cs)
+.stamp-build: $(wildcard *.cs) pch-info.proj
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln /r /bl:$@.binlog
 	$(Q) touch $@
 
@@ -93,6 +93,16 @@ dotnet-$(1)-$($(2)_SDK_VERSION).g.cs: .stamp-check-sharpie
 	$$(SHARPIE) query -bind $$(X$(2)_PCH) > $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetAssembly,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
+
+pch-info.proj: Makefile
+	$(Q) rm -f $@.tmp
+	$(Q) printf "<Project>\\n" >> $@.tmp
+	$(Q) printf "\\t<PropertyGroup>\\n" >> $@.tmp
+	$(Q) printf "$(foreach platform,$(ALL_DOTNET_PLATFORMS) watchOS,\\t\\t<$(platform)_PCH>$(X$(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_PCH)</$(platform)_PCH>\\n)" >> $@.tmp
+	$(Q) printf "$(foreach platform,$(ALL_DOTNET_PLATFORMS),\\t\\t<$(platform)_DLL>$(X$(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_DOTNET)</$(platform)_DLL>\\n)" >> $@.tmp
+	$(Q) printf "\\t</PropertyGroup>\\n" >> $@.tmp
+	$(Q) printf "</Project>\\n" >> $@.tmp
+	$(Q_GEN) mv $@.tmp $@
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
 
