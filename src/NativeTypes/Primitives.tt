@@ -32,10 +32,7 @@
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-#if NET
-#define SKIP_nint
-#define SKIP_nuint
-#endif
+#if !NET
 
 using System;
 using System.ComponentModel;
@@ -454,3 +451,5 @@ namespace System
 #endif // !SKIP_<#= type.NSName #>
 }
 <# } #>
+
+#endif // !NET
