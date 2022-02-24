@@ -2277,6 +2277,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreMIDI \
 	CoreMotion \
 	CoreSpotlight \
+	CoreTelephony \
 	CoreText \
 	CoreWlan \
 	DeviceCheck \
