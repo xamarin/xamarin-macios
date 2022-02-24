@@ -4,9 +4,5 @@
 # as per the header comments, the following enum has to be ignored on tvOS
 !missing-enum! AVAudioSessionIOType not bound
 
-# removed in TV 12,0, API that used them was removed in TV 10, added obsolete attr.
-!unknown-field! AVAssetDownloadTaskMediaSelectionKey bound
-!unknown-field! AVAssetDownloadTaskMinimumRequiredMediaBitrateKey bound
-
 # not used on tvOS
 !missing-enum! AVAudioSessionInterruptionReason not bound
