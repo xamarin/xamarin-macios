@@ -360,6 +360,28 @@ stages:
   - template: templates/release/vs-insertion-prep.yml
 
 # Test stages
+
+# always run simulator tests
+- ${{ each config in parameters.simTestsConfigurations }}:
+  - template: templates/tests/stage.yml
+    parameters:
+      testPrefix: ${{ config.testPrefix }} 
+      stageName: ${{ config.stageName }} 
+      displayName: ${{ config.displayName }} 
+      iOSDevicePool: $(CIBuildPool) # hardcoded has to be fixed
+      useXamarinStorage: ${{ config.useXamarinStorage }} 
+      testsLabels: ${{ config.testsLabels }}
+      statusContext: ${{ config.statusContext }} 
+      iOSDeviceDemand: ${{ config.iOSDeviceDemand }} 
+      ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+        makeTarget: 'wrench-jenkins' # override when we are running on CI or manually to run all tests
+      ${{ else }}:
+        makeTarget: ${{ config.makeTarget }} 
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: ${{ variables['GitHub.Token'] }}
+      xqaCertPass: $(xqa--certificates--password)
+
 - ${{ if eq(parameters.runDeviceTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
     - ${{ each config in parameters.deviceTestsConfigurations }}:
