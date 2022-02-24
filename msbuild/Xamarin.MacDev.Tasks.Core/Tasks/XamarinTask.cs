@@ -80,6 +80,23 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
+		public string DotNetVersion {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					return DotNetVersionConstants.Microsoft_iOS_Version;
+				case ApplePlatform.MacCatalyst:
+					return DotNetVersionConstants.Microsoft_MacCatalyst_Version;
+				case ApplePlatform.MacOSX:
+					return DotNetVersionConstants.Microsoft_macOS_Version;
+				case ApplePlatform.TVOS:
+					return DotNetVersionConstants.Microsoft_tvOS_Version;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
 		protected string GetSdkPlatform (bool isSimulator)
 		{
 			return PlatformFrameworkHelper.GetSdkPlatform (Platform, isSimulator);
