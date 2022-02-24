@@ -12,11 +12,16 @@
 
 using System;
 using System.Collections.Generic;
-using OpenTK;
 
 using Foundation;
 using GameplayKit;
 using NUnit.Framework;
+
+#if NET
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.GamePlayKit {
 

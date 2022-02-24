@@ -10,6 +10,7 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
+using CoreGraphics;
 using Foundation;
 #if !MONOMAC
 using UIKit;
@@ -19,12 +20,15 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 
-using MatrixFloat2x2 = global::OpenTK.NMatrix2;
-using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+#if NET
+using System.Numerics;
+using Matrix4 = global::CoreGraphics.NMatrix4;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+#else
+using OpenTK;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
-using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 using Bindings.Test;
 using NUnit.Framework;

@@ -3107,6 +3107,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It&apos;s highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool)..
+        /// </summary>
+        public static string MT4186 {
+            get {
+                return ResourceManager.GetString("MT4186", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing &apos;{0}&apos; compiler. Please install Xcode &apos;Command-Line Tools&apos; component
         ///		.
         /// </summary>
