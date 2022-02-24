@@ -19,8 +19,13 @@ namespace MonoTouchFixtures.Network {
 		[SetUp]
 		public void SetUp ()
 		{
+#if NET
+			using (var tcpOptions = new NWProtocolTcpOptions ())
+			using (var tlsOptions = new NWProtocolTlsOptions ())
+#else
 			using (var tcpOptions = NWProtocolOptions.CreateTcp ())
 			using (var tlsOptions = NWProtocolOptions.CreateTls ())
+#endif
 			using (var parameters = NWParameters.CreateTcp ()) {
 				parameters.ProtocolStack.PrependApplicationProtocol (tlsOptions);
 				parameters.ProtocolStack.PrependApplicationProtocol (tcpOptions);
