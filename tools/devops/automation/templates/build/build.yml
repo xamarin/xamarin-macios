@@ -398,10 +398,10 @@ steps:
         echo "Setting outpur var macTestsPresent to Failed"
         echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
 
-        echo "# macOS tests " >> "$(SYSTEM_DEFAULTWORKINGDIRECTORY)/xamarin-macios/tests/TestSummary.md"
-        echo "" >> "$(SYSTEM_DEFAULTWORKINGDIRECTORY)/xamarin-macios/tests/TestSummary.md"
-        echo "## :warning: Failed to package macOS tests" >> "$(SYSTEM_DEFAULTWORKINGDIRECTORY)/xamarin-macios/tests/TestSummary.md"
-        echo "" >> "$(SYSTEM_DEFAULTWORKINGDIRECTORY)/xamarin-macios/tests/TestSummary.md"
+        echo "# macOS tests " >> "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+        echo "" >> "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+        echo "## :warning: Failed to package macOS tests" >> "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+        echo "" >> "$SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
       fi
       exit $RC
       
