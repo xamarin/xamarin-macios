@@ -30,9 +30,11 @@ namespace MonoTouchFixtures.GLKit {
 
 			var effect = new GLKBaseEffect ();
 #if NET
-#else
 			Assert.That (effect.LightModelAmbientColor.ToString (), Is.EqualTo ("<0.2, 0.2, 0.2, 1>"), "LightModelAmbientColor");
 			Assert.That (effect.ConstantColor.ToString (), Is.EqualTo ("<1, 1, 1, 1>"), "ConstantColor");
+#else
+			Assert.That (effect.LightModelAmbientColor.ToString (), Is.EqualTo ("(0.2, 0.2, 0.2, 1)"), "LightModelAmbientColor");
+			Assert.That (effect.ConstantColor.ToString (), Is.EqualTo ("(1, 1, 1, 1)"), "ConstantColor");
 #endif
 
 			effect.Light0.Enabled = true;
