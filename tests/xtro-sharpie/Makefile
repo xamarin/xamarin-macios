@@ -11,6 +11,18 @@ XCODE=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 ANNOTATIONS_DIR=.
 DOTNET_ANNOTATIONS_DIR=api-annotations-dotnet
 
+# The PCSC framework causes compilation errors if CTCarrier.h is included,
+# but we don't need the PCSC framework (we don't bind it), so just exclude it.
+CORETELEPHONY_HEADERS = \
+	-exclude PCSC \
+	-i CoreTelephony/CoreTelephonyDefines.h \
+	-i CoreTelephony/CTCarrier.h \
+	-i CoreTelephony/CTCall.h \
+	-i CoreTelephony/CTCallCenter.h \
+	-i CoreTelephony/CTTelephonyNetworkInfo.h \
+	-i CoreTelephony/CTSubscriber.h \
+	-i CoreTelephony/CTSubscriberInfo.h \
+
 all-local::
 
 clean-local::
@@ -34,6 +46,8 @@ $(XIOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) \
 	-exclude RealityKit \
 	-i ThreadNetwork/THClient.h \
+	$(CORETELEPHONY_HEADERS) \
+
 
 XWATCHOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll
 XWATCHOS_ARCH = armv7
@@ -57,7 +71,10 @@ XMACOS_PCH = macosx$(MACOS_SDK_VERSION)-$(XMACOS_ARCH).pch
 XMACOS_RID = osx-x64
 
 $(XMACOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) -exclude RealityKit -exclude JavaNativeFoundation
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) \
+		-exclude RealityKit \
+		-exclude JavaNativeFoundation \
+		$(CORETELEPHONY_HEADERS) \
 
 XMACCATALYST_ARCH = x86_64
 XMACCATALYST_PCH = ios$(MACCATALYST_SDK_VERSION)-macabi-$(XMACCATALYST_ARCH).pch
@@ -85,6 +102,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-exclude SecurityInterface \
 	-exclude Virtualization \
 	-i HomeKit/HomeKit.h \
+	$(CORETELEPHONY_HEADERS) \
 
 define DotNetAssembly
 X$(2)_DOTNET ?= $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(X$(2)_RID)/runtimes/$(X$(2)_RID)/lib/$(DOTNET_TFM)/$(DOTNET_$(2)_ASSEMBLY_NAME).dll
