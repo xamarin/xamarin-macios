@@ -39,7 +39,7 @@ using Quaternion = global::OpenTK.Quaternion;
 
 #if MONOMAC
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif
