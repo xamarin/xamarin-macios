@@ -1304,8 +1304,8 @@ namespace AudioToolbox {
 			GCHandle gch = GCHandle.Alloc (this);
 
 			var code = AudioQueueNewOutput (ref desc, dOutputCallback, GCHandle.ToIntPtr (gch),
-							runLoop is null ? IntPtr.Zero : runLoop.Handle,
-							runMode is null ? IntPtr.Zero : runMode.Handle, 0, out h);
+							runLoop.GetHandle (),
+							runMode.GetHandle (), 0, out h);
 
 			if (code != 0) {
 				gch.Free ();
@@ -1397,8 +1397,8 @@ namespace AudioToolbox {
 			CFString? s = runMode is null ? null : new CFString (runMode);
 			
 			var code = AudioQueueNewInput (ref desc, dInputCallback, GCHandle.ToIntPtr (mygch),
-						       runLoop is null ? IntPtr.Zero : runLoop.Handle,
-						       s is null ? IntPtr.Zero : s.Handle, 0, out h);
+						       runLoop.GetHandle (),
+						       s.GetHandle (), 0, out h);
 			if (s is not null)
 				s.Dispose ();
 			

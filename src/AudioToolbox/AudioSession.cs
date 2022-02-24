@@ -292,7 +292,7 @@ namespace AudioToolbox {
 				k = AudioSessionInitialize (runLoop.GetHandle (), s.GetHandle (), &Interruption, IntPtr.Zero);
 			}
 #else
-			int k = AudioSessionInitialize (runLoop is null ? IntPtr.Zero : runLoop.Handle, s is null ? IntPtr.Zero : s.Handle, Interruption, IntPtr.Zero);
+			int k = AudioSessionInitialize (runLoop.GetHandle (), s.GetHandle (), Interruption, IntPtr.Zero);
 #endif
 			if (k != 0 && k != (int)AudioSessionErrors.AlreadyInitialized)
 				throw new AudioSessionException (k);

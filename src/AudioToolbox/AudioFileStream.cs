@@ -116,7 +116,7 @@ namespace AudioToolbox {
 
 		public override string ToString ()
 		{
-			return String.Format ("Packet (Bytes={0} InputData={1} PacketDescriptions={2}", Bytes, InputData, PacketDescriptions!.Length);
+			return String.Format ("Packet (Bytes={0} InputData={1} PacketDescriptions={2}", Bytes, InputData, PacketDescriptions?.Length ?? -1);
 		}
 	}
 	
