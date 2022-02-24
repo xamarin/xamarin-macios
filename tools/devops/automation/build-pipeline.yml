@@ -70,6 +70,67 @@ parameters:
 # the following parameters, define an array of dictionaries with the
 # data required by the templates. Do you want a new stage with 
 # device tests, no more copy paste, just add the new config.
+#
+- name: simTestsConfigurations
+  displayName: Simulator test configurations to run
+  type: object
+  default: [
+    {
+      testPrefix: 'simulator_new_bcl',
+      stageName: 'simulator_new_bcl',
+      displayName: 'BCL Simulator Tests (XUnit)',
+      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
+      useXamarinStorage: False,
+      testsLabels: '--label=skip-all-tests,run-new-bcl-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
+      statusContext: 'VSTS: simulator bcl xunit tests iOS',
+      makeTarget: 'jenkins',
+      iOSDeviceDemand: [] # we do no need extra capabilities
+    },
+    {
+      testPrefix: 'simulator_old_bcl',
+      stageName: 'simulator_old_bcl',
+      displayName: 'BCL Simulator Tests (NUnit)',
+      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
+      useXamarinStorage: False,
+      testsLabels: '--label=skip-all-tests,run-old-bcl-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
+      statusContext: 'VSTS: simulator bcl nunit tests iOS',
+      makeTarget: 'jenkins',
+      iOSDeviceDemand: [] # we do no need extra capabilities
+    },
+    {
+      testPrefix: 'simulator_mscorlib',
+      stageName: 'simulator_mscorlib',
+      displayName: 'mscorlib Simulator Tests',
+      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
+      useXamarinStorage: False,
+      testsLabels: '--label=skip-all-tests,run-mscorlib-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
+      statusContext: 'VSTS: simulator mscorlib tests iOS',
+      makeTarget: 'jenkins',
+      iOSDeviceDemand: [] # we do no need extra capabilities
+    },
+    {
+      testPrefix: 'simulator_xamarin',
+      stageName: 'simulator_xamarin',
+      displayName: 'Xamarin Simulator Tests',
+      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
+      useXamarinStorage: False,
+      testsLabels: '--label=skip-all-tests,run-xamarin-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
+      statusContext: 'VSTS: simulator xamarin tests iOS',
+      makeTarget: 'jenkins',
+      iOSDeviceDemand: [] # we do no need extra capabilities
+    },
+    {
+      testPrefix: 'simulator_monotouch',
+      stageName: 'simulator_monotouch',
+      displayName: 'Monotouch Simulator Tests',
+      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
+      useXamarinStorage: False,
+      testsLabels: '--label=skip-all-tests,run-monotouch-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
+      statusContext: 'VSTS: simulator monotouch tests iOS',
+      makeTarget: 'jenkins',
+      iOSDeviceDemand: [] # we do no need extra capabilities
+    }
+  ]
 
 - name: deviceTestsConfigurations
   displayName: Device test configurations to run
