@@ -133,7 +133,7 @@ parameters:
     {
       testPrefix: 'simulator_dotnet',
       stageName: 'simulator_dotnet',
-      displayName: 'DotnetSimulator Tests',
+      displayName: 'Dotnet Simulator Tests',
       iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
       useXamarinStorage: False,
       testsLabels: '--label=skip-all-tests,run-dotnet-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
