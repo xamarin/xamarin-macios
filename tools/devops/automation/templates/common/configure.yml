@@ -167,9 +167,7 @@ steps:
   inputs:
     targetType: 'filePath'
     filePath: $(Build.SourcesDirectory)\tools\devops\automation\scripts\update-locproject.ps1
-    arguments:
-    - SourcesDirectory: $(Build.SourcesDirectory)
-    - LocProjectPath: $(Build.SourcesDirectory)\Localize\LocProject.json
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocProjectPath "$(Build.SourcesDirectory)\Localize\LocProject.json"
 
 - powershell: |
     git config user.email "valco@microsoft.com"
