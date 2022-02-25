@@ -921,6 +921,16 @@ namespace Introspection {
 				}
 #endif
 				break;
+			case "ARVideoFormat":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "captureDeviceType":
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
 			}
 
 			// old binding mistake

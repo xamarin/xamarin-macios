@@ -13,16 +13,20 @@ namespace ARKit {
 
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 #endif
 		[DllImport (Constants.ARKitLibrary)]
 		static extern IntPtr /* NSString */ ARSkeletonJointNameForRecognizedPointKey (/* NSString */ IntPtr recognizedPointKey);
 		
 #if NET
 		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 #endif
 		public static NSString? CreateJointName (NSString recognizedPointKey)
 		{

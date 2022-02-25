@@ -2257,6 +2257,7 @@ MACCATALYST_FRAMEWORKS = \
 	AdSupport \
 	AddressBook \
 	AppTrackingTransparency \
+	ARKit \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \

@@ -41,9 +41,12 @@ namespace MonoTouchFixtures.ARKit {
 		[Test]
 		public void MarshallingTest ()
 		{
-			if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+			if (TestRuntime.IsSimulator && TestRuntime.CheckXcodeVersion (12, 0))
 				Assert.Ignore ("broken with beta 1 - can't instantiate the object");
-			var model3 = new ARReferenceObject (NSUrl.FromFilename ("Model3.arobject"), out NSError error);
+#if __MACCATALYST__
+			Assert.Ignore ("The [ARReferenceObject initWithArchiveURL:error:] selector is hardcoded to just return nil."); // true as of macOS 12.2.1
+#endif
+			var model3 = new ARReferenceObject (new NSUrl (NSBundle.MainBundle.ResourceUrl.AbsoluteString + "Model3.arobject"), out NSError error);
 			Assert.AreEqual ("Model3", model3.Name, "Name");
 			Assert.NotNull (model3.Center, "Center");
 			Assert.NotNull (model3.Extent, "Extent");

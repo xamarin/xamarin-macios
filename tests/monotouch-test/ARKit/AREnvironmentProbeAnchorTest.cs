@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.ARKit {
 			var probeAnchor = new AREnvironmentProbeAnchor (MatrixFloat4x4.Identity, new VectorFloat3 (1, 1, 1));
 			Assert.AreEqual (MatrixFloat4x4.Identity, probeAnchor.Transform, "Transform");
 			// broken since xcode 12 beta 1 on simulator (only)
-			if ((Runtime.Arch == Arch.DEVICE) || !TestRuntime.CheckXcodeVersion (12, 0))
+			if (TestRuntime.IsDevice || !TestRuntime.CheckXcodeVersion (12, 0))
 				Assert.AreEqual (new VectorFloat3 (1, 1, 1), probeAnchor.Extent, "Extent");
 		}
 
@@ -54,7 +54,7 @@ namespace MonoTouchFixtures.ARKit {
 			var probeAnchorWithName = new AREnvironmentProbeAnchor ("My Anchor", MatrixFloat4x4.Identity, new VectorFloat3 (1, 1, 1));
 			Assert.AreEqual (MatrixFloat4x4.Identity, probeAnchorWithName.Transform, "Transform");
 			// broken since xcode 12 beta 1 on simulator (only)
-			if ((Runtime.Arch == Arch.DEVICE) || !TestRuntime.CheckXcodeVersion (12, 0))
+			if (TestRuntime.IsDevice || !TestRuntime.CheckXcodeVersion (12, 0))
 				Assert.AreEqual (new VectorFloat3 (1, 1, 1), probeAnchorWithName.Extent, "Extent");
 		}
 	}

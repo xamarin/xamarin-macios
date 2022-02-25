@@ -43,6 +43,7 @@ using NativeHandle = System.IntPtr;
 namespace ARKit {
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARTrackingState : long {
@@ -52,6 +53,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARTrackingStateReason : long {
@@ -64,6 +66,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[ErrorDomain ("ARErrorDomain")]
 	[Native]
@@ -93,6 +96,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
@@ -108,6 +112,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARPlaneAnchorAlignment : long {
@@ -117,6 +122,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
@@ -130,6 +136,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARWorldAlignment : long {
@@ -139,6 +146,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
@@ -150,6 +158,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum AREnvironmentTexturing : long {
@@ -159,6 +168,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARWorldMappingStatus : long {
@@ -169,6 +179,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARPlaneClassificationStatus : long {
@@ -179,6 +190,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARPlaneClassification : long {
@@ -195,17 +207,20 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARCoachingGoal : long {
 		Tracking,
 		HorizontalPlane,
 		VerticalPlane,
 		AnyPlane,
+		[MacCatalyst(15,0)]
 		[iOS (15,0)]
 		GeoTracking,
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[Flags]
 	[Native]
 	public enum ARFrameSemantics : long {
@@ -220,6 +235,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARMatteResolution : long {
 		Full = 0,
@@ -227,6 +243,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARRaycastTarget : long {
 		ExistingPlaneGeometry,
@@ -235,6 +252,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARRaycastTargetAlignment : long {
 		Horizontal,
@@ -243,12 +261,14 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	public enum ARSegmentationClass : byte {
 		None = 0,
 		Person = 255,
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARCollaborationDataPriority : long {
 		Critical,
@@ -257,6 +277,7 @@ namespace ARKit {
 
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARAltitudeSource : long {
 		Unknown,
@@ -266,6 +287,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARConfidenceLevel : long {
 		Low,
@@ -274,6 +296,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARGeoTrackingAccuracy : long {
 		Undetermined,
@@ -283,6 +306,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARGeoTrackingState : long {
 		NotAvailable,
@@ -292,6 +316,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum ARGeoTrackingStateReason : long {
 		None,
@@ -305,6 +330,7 @@ namespace ARKit {
 		VisualLocalizationFailed,
 	}
 
+	[MacCatalyst(14,3)]
 	[iOS (14,3)]
 	[Native]
 	public enum ARAppClipCodeUrlDecodingState : long {
@@ -314,6 +340,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
 	[Advice ("To conform to 'ARAnchorCopying' you need to implement:\n'[Export (\"initWithAnchor:\")]'\n'public YourConstructor (ARAnchor anchor)'")]
@@ -323,6 +350,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -361,6 +389,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -432,6 +461,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -511,6 +541,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use Raycasting methods over HitTestResult ones.")]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
@@ -540,6 +571,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -553,6 +585,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
@@ -598,6 +631,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,3)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARPlaneGeometry : NSSecureCoding {
@@ -631,6 +665,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,3)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(SCNGeometry))]
 	[DisableDefaultCtor]
 	interface ARSCNPlaneGeometry {
@@ -644,6 +679,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -662,6 +698,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,3)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -694,6 +731,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,3)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARVideoFormat : NSCopying {
@@ -708,6 +746,7 @@ namespace ARKit {
 		[Export ("framesPerSecond")]
 		nint FramesPerSecond { get; }
 
+		[MacCatalyst(14,5)]
 		[iOS (14,5)]
 		[Export ("captureDeviceType")]
 #if NET
@@ -717,6 +756,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (SCNView))]
 	interface ARSCNView : ARSessionProviding {
@@ -768,6 +808,7 @@ namespace ARKit {
 	interface IARSCNViewDelegate {}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -791,6 +832,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (SKView))]
 	interface ARSKView : ARSessionProviding {
@@ -818,6 +860,7 @@ namespace ARKit {
 	interface IARSKViewDelegate {}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -843,6 +886,7 @@ namespace ARKit {
 	delegate void GetGeolocationCallback (CLLocationCoordinate2D coordinate, double altitude, NSError error);
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	interface ARSession {
@@ -916,6 +960,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
 	interface ARSessionObserver {
@@ -951,6 +996,7 @@ namespace ARKit {
 	interface IARSessionDelegate {}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -970,6 +1016,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
@@ -1016,6 +1063,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARWorldTrackingConfiguration {
@@ -1074,10 +1122,12 @@ namespace ARKit {
 		[Export ("userFaceTrackingEnabled")]
 		bool UserFaceTrackingEnabled { [Bind ("userFaceTrackingEnabled")] get; set; }
 
+		[MacCatalyst(14,3)]
 		[iOS (14,3)]
 		[Export ("appClipCodeTrackingEnabled")]
 		bool AppClipCodeTrackingEnabled { get; set; }
 
+		[MacCatalyst(14,3)]
 		[iOS (14,3)]
 		[Static]
 		[Export ("supportsAppClipCodeTracking")]
@@ -1099,6 +1149,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
 	interface AROrientationTrackingConfiguration {
@@ -1119,6 +1170,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Static]
 	interface ARSCNDebugOptions {
@@ -1131,6 +1183,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
 	interface ARTrackable {
@@ -1140,6 +1193,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARFaceTrackingConfiguration {
@@ -1173,6 +1227,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[StrongDictionary ("ARBlendShapeLocationKeys")]
 	interface ARBlendShapeLocationOptions {
@@ -1284,6 +1339,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[Static]
 	[Internal]
@@ -1448,6 +1504,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
@@ -1496,6 +1553,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -1530,6 +1588,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(SCNGeometry))]
 	[DisableDefaultCtor]
@@ -1565,6 +1624,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,3)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
@@ -1583,6 +1643,7 @@ namespace ARKit {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARLightEstimate))]
 	[DisableDefaultCtor]
@@ -1601,6 +1662,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARImageTrackingConfiguration {
@@ -1624,6 +1686,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARObjectScanningConfiguration {
@@ -1644,6 +1707,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
@@ -1671,6 +1735,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -1727,6 +1792,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
@@ -1740,6 +1806,7 @@ namespace ARKit {
 	}
 
 	[iOS (12,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -1764,6 +1831,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARBody2D {
@@ -1773,6 +1841,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARBodyAnchor : ARTrackable {
@@ -1791,6 +1860,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(UIView))]
 	interface ARCoachingOverlayView {
 
@@ -1828,6 +1898,7 @@ namespace ARKit {
 	interface IARCoachingOverlayViewDelegate {}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -1847,6 +1918,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARCollaborationData : NSSecureCoding {
@@ -1856,6 +1928,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARBodyTrackingConfiguration {
 
@@ -1895,10 +1968,12 @@ namespace ARKit {
 		[Export ("supportsFrameSemantics:")]
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 
+		[MacCatalyst(14,3)]
 		[iOS (14,3)]
 		[Export ("appClipCodeTrackingEnabled")]
 		bool AppClipCodeTrackingEnabled { get; set; }
 
+		[MacCatalyst(14,3)]
 		[iOS (14,3)]
 		[Static]
 		[Export ("supportsAppClipCodeTracking")]
@@ -1906,6 +1981,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARPositionalTrackingConfiguration {
 
@@ -1926,6 +2002,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARMatteGenerator {
@@ -1942,6 +2019,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARQuickLookPreviewItem : QLPreviewItem {
@@ -1958,6 +2036,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARRaycastQuery {
@@ -1986,6 +2065,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARRaycastResult {
@@ -2009,6 +2089,7 @@ namespace ARKit {
 	interface IARSessionProviding {}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface ARSessionProviding {
 
@@ -2018,6 +2099,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARSkeleton {
@@ -2033,6 +2115,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(ARSkeleton))]
 	[DisableDefaultCtor]
 	interface ARSkeleton3D {
@@ -2063,6 +2146,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(ARSkeleton))]
 	[DisableDefaultCtor]
 	interface ARSkeleton2D {
@@ -2081,6 +2165,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARSkeletonDefinition {
@@ -2114,6 +2199,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	enum ARSkeletonJointName {
 
 		[Field ("ARSkeletonJointNameRoot")]
@@ -2142,6 +2228,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARTrackedRaycast {
@@ -2151,6 +2238,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARParticipantAnchor {
@@ -2164,6 +2252,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,4)]
+	[MacCatalyst (14,0)]
 	[Native]
 	[Flags]
 	enum ARSceneReconstruction : ulong {
@@ -2173,6 +2262,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,4)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARMeshAnchor {
@@ -2189,6 +2279,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,4)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARGeometrySource : NSSecureCoding {
@@ -2213,6 +2304,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,4)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum ARGeometryPrimitiveType : long {
 		Line,
@@ -2220,6 +2312,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,4)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARGeometryElement : NSSecureCoding {
@@ -2241,6 +2334,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,4)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum ARMeshClassification : long {
 		None,
@@ -2254,6 +2348,7 @@ namespace ARKit {
 	}
 
 	[iOS (13,4)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARMeshGeometry : NSSecureCoding {
@@ -2273,6 +2368,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARDepthData {
@@ -2284,6 +2380,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (ARAnchor))]
 	interface ARGeoAnchor : ARTrackable {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
@@ -2313,6 +2410,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARGeoTrackingConfiguration {
 		[Static]
@@ -2337,10 +2435,12 @@ namespace ARKit {
 		[Export ("maximumNumberOfTrackedImages")]
 		nint MaximumNumberOfTrackedImages { get; set; }
 
+		[MacCatalyst(14,3)]
 		[iOS (14,3)]
 		[Export ("appClipCodeTrackingEnabled")]
 		bool AppClipCodeTrackingEnabled { get; set; }
 
+		[MacCatalyst(14,3)]
 		[iOS (14,3)]
 		[Static]
 		[Export ("supportsAppClipCodeTracking")]
@@ -2370,6 +2470,7 @@ namespace ARKit {
 	}
 
 	[iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARGeoTrackingStatus : NSCopying, NSSecureCoding {
@@ -2383,6 +2484,7 @@ namespace ARKit {
 		ARGeoTrackingStateReason StateReason { get; }
 	}
 
+	[MacCatalyst(14,3)]
 	[iOS (14,3)]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
