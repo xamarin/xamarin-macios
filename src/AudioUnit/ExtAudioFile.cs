@@ -189,7 +189,7 @@ namespace AudioUnit
 		// also we can share the underliying implementation so we so not break api and reduce code suplication
 		public static ExtAudioFile? OpenUrl (NSUrl url, out ExtAudioFileError error)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return OpenUrl (url.Handle, out error);
@@ -197,7 +197,7 @@ namespace AudioUnit
 
 		public static ExtAudioFile? OpenUrl (CFUrl url, out ExtAudioFileError error)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return OpenUrl (url.Handle, out error);
@@ -205,7 +205,7 @@ namespace AudioUnit
 
         public static ExtAudioFile OpenUrl (CFUrl url)
         {
-            if (url == null)
+            if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			ExtAudioFileError err;
@@ -213,7 +213,7 @@ namespace AudioUnit
 
 			if (err != ExtAudioFileError.OK) // if (err != 0)  <- to keep old implementation
 				throw new ArgumentException (String.Format ("Error code:{0}", err));
-			if (audioFile == null) // if (ptr == IntPtr.Zero)  <- to keep old implementation
+			if (audioFile is null) // if (ptr == IntPtr.Zero)  <- to keep old implementation
 				throw new InvalidOperationException ("Can not get object instance");
 
 			return audioFile;
@@ -236,7 +236,7 @@ namespace AudioUnit
 		// also we can share the underliying implementation so we so not break api and reduce code suplication
 		public static ExtAudioFile? CreateWithUrl (NSUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags fileFlags, out ExtAudioFileError error)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return CreateWithUrl (url.Handle, fileType, inStreamDesc, fileFlags, out error);
@@ -244,7 +244,7 @@ namespace AudioUnit
 
 		public static ExtAudioFile? CreateWithUrl (CFUrl url, AudioFileType fileType, AudioStreamBasicDescription inStreamDesc, AudioFileFlags flag,	out ExtAudioFileError error)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return CreateWithUrl (url.Handle, fileType, inStreamDesc, flag, out error);
@@ -256,7 +256,7 @@ namespace AudioUnit
             //AudioChannelLayout channelLayout, 
             AudioFileFlags flag)
         {             
-            if (url == null)
+            if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
             ExtAudioFileError err;
@@ -264,7 +264,7 @@ namespace AudioUnit
 
 			if (err != ExtAudioFileError.OK) // if (err != 0)  <- to keep old implementation
 				throw new ArgumentException (String.Format ("Error code:{0}", err));
-			if (audioFile == null) // if (ptr == IntPtr.Zero)  <- to keep old implementation
+			if (audioFile is null) // if (ptr == IntPtr.Zero)  <- to keep old implementation
 				throw new InvalidOperationException ("Can not get object instance");
 
 			return audioFile;
@@ -320,7 +320,7 @@ namespace AudioUnit
 
         public uint Read (uint numberFrames, AudioBuffers audioBufferList, out ExtAudioFileError status)
         {
-            if (audioBufferList == null)
+            if (audioBufferList is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioBufferList));
 
             status = ExtAudioFileRead (_extAudioFile, ref numberFrames, (IntPtr) audioBufferList);
@@ -329,7 +329,7 @@ namespace AudioUnit
 
         public ExtAudioFileError WriteAsync (uint numberFrames, AudioBuffers audioBufferList)
         {
-            if (audioBufferList == null)
+            if (audioBufferList is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioBufferList));
 
             return ExtAudioFileWriteAsync (_extAudioFile, numberFrames, (IntPtr) audioBufferList);
@@ -337,7 +337,7 @@ namespace AudioUnit
 
         public ExtAudioFileError Write (uint numberFrames, AudioBuffers audioBufferList)
         {
-            if (audioBufferList == null)
+            if (audioBufferList is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioBufferList));
 
             return ExtAudioFileWrite (_extAudioFile, numberFrames, (IntPtr) audioBufferList);

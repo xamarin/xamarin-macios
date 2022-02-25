@@ -54,7 +54,7 @@ namespace AudioUnit
 		{
 		}
 
-		public ClassInfoDictionary (NSDictionary dictionary)
+		public ClassInfoDictionary (NSDictionary? dictionary)
 			: base (dictionary)
 		{
 		}

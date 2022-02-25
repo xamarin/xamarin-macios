@@ -30,6 +30,10 @@
 
 #nullable enable
 
+#if !XAMCORE_3_0
+#pragma warning disable CS0618
+#endif
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1252,7 +1256,7 @@ namespace AudioUnit
 //
 //		public AURenderEvent? Next {
 //			get {
-//				if (UnsafeNext != null)
+//				if (UnsafeNext is not null)
 //					return (AURenderEvent?) Marshal.PtrToStructure ((IntPtr)UnsafeNext, typeof (AURenderEvent));
 //				return null;
 //			}

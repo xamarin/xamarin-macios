@@ -50,7 +50,7 @@ namespace AudioUnit {
 
 		public AUScheduledAudioFileRegion (AudioFile audioFile, AUScheduledAudioFileRegionCompletionHandler? completionHandler = null)
 		{
-			if (audioFile == null)
+			if (audioFile is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioFile));
 
 			AudioFile = audioFile;
@@ -77,8 +77,9 @@ namespace AudioUnit {
 				return;
 			
 			var handle = GCHandle.FromIntPtr (userData);
-			var inst = (AUScheduledAudioFileRegion) handle.Target;
-			inst?.completionHandler !(inst, status);
+			var inst = (AUScheduledAudioFileRegion?) handle.Target;
+			if (inst is not null && inst.completionHandler is not null)
+				inst.completionHandler (inst, status);
 		}
 
 		internal ScheduledAudioFileRegion GetAudioFileRegion ()
@@ -87,7 +88,7 @@ namespace AudioUnit {
 				throw new InvalidOperationException ("You should not call SetScheduledFileRegion with a previously set region instance");
 
 			IntPtr ptr = IntPtr.Zero;
-			if (completionHandler != null) {
+			if (completionHandler is not null) {
 				handle = GCHandle.Alloc (this);
 				ptr = GCHandle.ToIntPtr (handle);
 			}
