@@ -197,3 +197,13 @@ API and behavior on all platforms.
 The type 'CFNetwork.MessageHandler' has been removed. Please use
 'System.Net.Http.CFNetworkHandler' or the more recent
 'Foundation.NSUrlSessionHandler' instead.
+
+## Changed name of the Info.plist entry with our version number.
+
+We add an entry to the app's Info.plist with the version number used to build
+the app. In .NET, we've changed the name of this entry from `com.xamarin.ios`
+to `com.microsoft.<platform in lower case>` (for instance `com.microsoft.tvos`
+for tvOS apps).
+
+The version format has also changed, from "X.Y.Z.W (`branch`: `hash`)" to the
+semantic versioning we use for .NET: "X.Y.Z-`branch`.Z+sha.`hash`".

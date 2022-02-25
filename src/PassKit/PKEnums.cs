@@ -6,8 +6,10 @@ using ObjCRuntime;
 
 namespace PassKit {
 
+#if !NET
 	// untyped enum -> PKError.h
 	// This never seemed to be deprecatd, yet in iOS8 it's obsoleted
+	// this enum does not show up in the headers anymore
 	[Obsoleted (PlatformName.iOS, 8, 0)]
 	[NoMac]
 	public enum PKErrorCode {
@@ -16,6 +18,7 @@ namespace PassKit {
 		NotEntitled,
 		PermissionDenied, // new in iOS7
 	}
+#endif
 
 	// NSInteger -> PKPass.h
 	[Mac (11,0)]

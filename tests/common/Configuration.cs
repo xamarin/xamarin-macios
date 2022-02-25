@@ -276,7 +276,7 @@ namespace Xamarin.Tests
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
 			DotNet6BclDir = GetVariable ("DOTNET6_BCL_DIR", null);
-			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null);
+			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
 			DotNetExecutable = GetVariable ("DOTNET6", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
