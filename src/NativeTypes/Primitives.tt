@@ -150,7 +150,15 @@ namespace System
 				break;
 			}
 
-			if (fromType == "IntPtr" || fromType == "UIntPtr") {
+			if (toType == "nfloat" && fromType == "IntPtr") {
+				Write ("({0}) v", arch == 32 ? "int" : "long");
+			} else if (toType == "nfloat" && fromType == "UIntPtr") {
+				Write ("({0}) v", arch == 32 ? "uint" : "ulong");
+			} else if (fromType == "nfloat" && toType == "IntPtr") {
+				Write ("(IntPtr) ({0}) v.v", arch == 32 ? "int" : "long");
+			} else if (fromType == "nfloat" && toType == "UIntPtr") {
+				Write ("(IntPtr) ({0}) v.v", arch == 32 ? "uint" : "ulong");
+			} else if (fromType == "IntPtr" || fromType == "UIntPtr") {
 				Write ("*(({0} *)&v)", Cast (arch));
 			} else if (toType == "IntPtr" || toType == "UIntPtr") {
 				Write ("*(({0} *)&v.v)", toType);
