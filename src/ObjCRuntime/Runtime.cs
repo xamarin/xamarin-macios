@@ -1815,9 +1815,7 @@ namespace ObjCRuntime {
 		}
 #endif // !COREBUILD
 
-		static int MajorVersion = -1;
-		static int MinorVersion = -1;
-		static int BuildVersion = -1;
+		static Version? SystemVersion;
 
 		internal static bool CheckSystemVersion (int major, int minor, string systemVersion)
 		{
@@ -1826,33 +1824,22 @@ namespace ObjCRuntime {
 
 		internal static bool CheckSystemVersion (int major, int minor, int build, string systemVersion)
 		{
-			if (MajorVersion == -1) {
-				string[] version = systemVersion.Split (new char[] { '.' });
-				
-				if (version.Length < 1 || !int.TryParse (version[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out MajorVersion))
-					MajorVersion = 2;
-				
-				if (version.Length < 2 || !int.TryParse (version[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out MinorVersion))
-					MinorVersion = 0;
-
-				if (version.Length < 3 || !int.TryParse (version[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out BuildVersion))
-					BuildVersion = 0;
+			if (SystemVersion is null) {
+				if (!Version.TryParse (systemVersion, out SystemVersion))
+					SystemVersion = new Version (2, 0, 0);
 			}
 			
-			if (MajorVersion > major)
+			if (SystemVersion.Major > major)
 				return true;
-			else if (MajorVersion < major)
+			else if (SystemVersion.Major < major)
 				return false;
 
-			if (MinorVersion > minor)
+			if (SystemVersion.Minor > minor)
 				return true;
-			else if (MinorVersion < minor)
+			else if (SystemVersion.Minor < minor)
 				return false;
 
-			if (BuildVersion < build)
-				return false;
-
-			return true;
+			return (SystemVersion.Build >= build);
 		}
 
 		internal unsafe static IntPtr CloneMemory (IntPtr source, long length)
