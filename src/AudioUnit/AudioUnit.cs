@@ -30,6 +30,7 @@
 
 #nullable enable
 
+// Adding this warning disable since AudioUnitPropertyIDType is removed from public API but used internally
 #if !XAMCORE_3_0
 #pragma warning disable CS0618
 #endif
