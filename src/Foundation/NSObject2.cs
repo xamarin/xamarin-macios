@@ -233,9 +233,9 @@ namespace Foundation {
 			}
 		}
 
-		IntPtr GetSuper ()
+		NativeHandle GetSuper ()
 		{
-			if (super == IntPtr.Zero) {
+			if (super == NativeHandle.Zero) {
 				IntPtr ptr;
 
 				unsafe {
@@ -253,7 +253,7 @@ namespace Foundation {
 
 			unsafe {
 				objc_super* sup = (objc_super*) super;
-				if (sup->ClassHandle == IntPtr.Zero)
+				if (sup->ClassHandle == NativeHandle.Zero)
 					sup->ClassHandle = ClassHandle;
 				sup->Handle = handle;
 			}
@@ -553,10 +553,10 @@ namespace Foundation {
 			return this;
 		}
 
-		public IntPtr SuperHandle {
+		public NativeHandle SuperHandle {
 			get {
 				if (handle == IntPtr.Zero)
-					throw new ObjectDisposedException (GetType ().Name);
+					ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
 
 				return GetSuper ();
 			}
