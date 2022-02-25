@@ -5,7 +5,7 @@ parameters:
   type: string 
   default: 'pr' # default reason is a pr build 
 
-- name: devicePrefix
+- name: testPrefix
   type: string 
   default: 'sim' # always sim, but use a param to move in the future if needed
 

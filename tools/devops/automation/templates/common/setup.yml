@@ -84,3 +84,8 @@ steps:
       xcode-select -s "/Applications/Xcode.app/Contents/Developer"
     fi
   displayName: 'Ensure Xcode is selected.'
+
+- pwsh: |
+    # some steps expect this to be set to be able to get the correct nuget name
+    Write-Host "##vso[task.setvariable variable=BRANCH_NAME]$(Build.SourceBranchName)"
+  displayName: 'Set Jenkins variables'
