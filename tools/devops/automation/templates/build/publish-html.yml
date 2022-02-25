@@ -82,6 +82,7 @@ steps:
           Write-Host "Could not create gist for $obj"
         }
       }
+    }
 
 
     if ($gistsObj.Length -gt 0) {
