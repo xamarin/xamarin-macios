@@ -1128,6 +1128,8 @@ public partial class Generator : IMemberGatherer {
 			return "bool";
 		if (t == TypeManager.System_Char)
 			return "char";
+		if (t == TypeManager.System_nfloat)
+			return "nfloat";
 
 		return formatted ? FormatType (null, t) : t.Name;
 	}
@@ -3628,6 +3630,8 @@ public partial class Generator : IMemberGatherer {
 			return "nuint";
 		if (type == TypeManager.System_Char)
 			return "char";
+		if (type == TypeManager.System_nfloat)
+			return "nfloat";
 
 		if (type.IsArray)
 			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";

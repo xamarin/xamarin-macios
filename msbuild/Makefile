@@ -26,6 +26,7 @@ ALL_SOURCES:= \
 	$(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj) \
 	Versions.ios.g.cs \
 	Versions.mac.g.cs \
+	Versions.dotnet.g.cs \
 
 CONFIG      = Debug
 TARGETFRAMEWORK = netstandard2.0
@@ -566,6 +567,14 @@ Versions.mac.g.cs: Makefile $(TOP)/Make.config.inc
 Versions.ios.g.cs: Makefile $(TOP)/Make.config.inc
 	$(Q) printf "static class VersionConstants {\\n" > $@.tmp
 	$(Q) printf "\\tpublic const string XamarinIOSVersion = \"$(IOS_PACKAGE_VERSION)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string NuGetPrereleaseIdentifier = \"$(NUGET_PRERELEASE_IDENTIFIER)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string NuGetBuildMetadata = \"$(NUGET_BUILD_METADATA)\";\\n" >> $@.tmp
+	$(Q) printf "}\\n" >> $@.tmp
+	$(Q) mv $@.tmp $@
+
+Versions.dotnet.g.cs: Makefile $(TOP)/Make.config.inc
+	$(Q) printf "static class DotNetVersionConstants {\\n" > $@.tmp
+	$(Q) echo $(foreach platform,$(ALL_DOTNET_PLATFORMS),"\\tpublic const string Microsoft_$(platform)_Version = \"$($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_FULL)\";\\n") >> $@.tmp
 	$(Q) printf "\\tpublic const string NuGetPrereleaseIdentifier = \"$(NUGET_PRERELEASE_IDENTIFIER)\";\\n" >> $@.tmp
 	$(Q) printf "\\tpublic const string NuGetBuildMetadata = \"$(NUGET_BUILD_METADATA)\";\\n" >> $@.tmp
 	$(Q) printf "}\\n" >> $@.tmp

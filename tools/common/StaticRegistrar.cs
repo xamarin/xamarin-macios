@@ -213,7 +213,7 @@ namespace Registrar {
 
 	class StaticRegistrar : Registrar
 	{
-		static string NFloatTypeName { get => Driver.IsDotNet ? "ObjCRuntime.nfloat" : "System.nfloat"; }
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
 
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
