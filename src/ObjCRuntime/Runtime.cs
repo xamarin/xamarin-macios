@@ -1139,31 +1139,34 @@ namespace ObjCRuntime {
 			if (klass == IntPtr.Zero)
 				klass = Class.GetClassForObject (ptr);
 
-			string arg;
+			var msg = new StringBuilder ();
+			msg.Append ("Failed to marshal the Objective-C object 0x");
+			msg.Append (ptr.ToString ("x"));
+			msg.Append (" (type: ");
+			msg.Append (new Class (klass).Name);
+			msg.Append ("). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type '");
+			msg.Append (type.FullName);
+			msg.Append ("' does not have a constructor that takes ");
 
 			switch (resolution) {
 			case MissingCtorResolution.ThrowConstructor1NotFound:
 #if NET
-				arg = "one NativeHandle argument";
+				msg.Append ("one NativeHandle argument");
 #else
-				arg = "one IntPtr argument";
+				msg.Append ("one IntPtr argument");
 #endif
 				break;
 			case MissingCtorResolution.ThrowConstructor2NotFound:
 #if NET
-				arg = "two (NativeHandle, bool) arguments";
+				msg.Append ("two (NativeHandle, bool) arguments");
 #else
-				arg = "two (IntPtr, bool) arguments";
+				msg.Append ("two (IntPtr, bool) arguments");
 #endif
 				break;
-			default:
-				return;
 			}
 
-			var	msg = $"Failed to marshal the Objective-C object 0x{ptr:x} (type: {new Class (klass).Name}). " +
-					"Could not find an existing managed instance for this object, nor was it possible to create a new managed instance" +
-					$" (because the type '{type.FullName}' does not have a constructor that takes {arg}).";
-			throw ErrorHelper.CreateError (8027, msg);
+			msg.Append (").");
+			throw ErrorHelper.CreateError (8027, msg.ToString ());
 		}
 
 		static NSObject? ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution)
