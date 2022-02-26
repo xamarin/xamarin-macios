@@ -36,7 +36,7 @@ namespace Xamarin.Linker {
 		}
 
 		// cache `Dispose` body of optimization NSObject subclasses
-		static Dictionary<MethodDefinition, MethodBody> dispose = new ();
+		internal static Dictionary<MethodDefinition, MethodBody> disposeMethods = new ();
 		
 		protected override void Process (MethodDefinition method)
 		{
@@ -52,7 +52,7 @@ namespace Xamarin.Linker {
 				return;
 
 			// keep original for later (if needed)
-			dispose.Add (method, method.Body);
+			disposeMethods.Add (method, method.Body);
 
 			// setting body to null will only cause it to be reloaded again
 			// same if we don't get a new IL processor
@@ -61,33 +61,6 @@ namespace Xamarin.Linker {
 			var il = body.GetILProcessor ();
 			il.Emit (OpCodes.Ret);
 			method.Body = body;
-		}
-
-		public static void ReapplyDisposedFields (DerivedLinkContext context, string operation)
-		{
-			// note: all methods in the dictionary are marked (since they were added from an IMarkHandler)
-			foreach ((var method, var body) in dispose) {
-				foreach (var ins in body.Instructions) {
-					switch (ins.OpCode.OperandType) {
-					case OperandType.InlineField:
-						var field = (ins.Operand as FieldReference)?.Resolve ();
-						if (!context.Annotations.IsMarked (field)) {
-							var store_field = ins;
-							var load_null = ins.Previous;
-							var load_this = ins.Previous.Previous;
-							if (OptimizeGeneratedCodeHandler.ValidateInstruction (method, store_field, operation, Code.Stfld) &&
-								OptimizeGeneratedCodeHandler.ValidateInstruction (method, load_null, operation, Code.Ldnull) &&
-								OptimizeGeneratedCodeHandler.ValidateInstruction (method, load_this, operation, Code.Ldarg_0)) {
-								store_field.OpCode = OpCodes.Nop;
-								load_null.OpCode = OpCodes.Nop;
-								load_this.OpCode = OpCodes.Nop;
-							}
-						}
-						break;
-					}
-				}
-				method.Body = body;
-			}
 		}
 	}
 
@@ -99,7 +72,67 @@ namespace Xamarin.Linker {
 		public override void Initialize (LinkContext context)
 		{
 			base.Initialize (context);
-			BackingFieldDelayHandler.ReapplyDisposedFields (LinkContext, Name);
+
+			// note: all methods in the dictionary are marked (since they were added from an IMarkHandler)
+			foreach ((var method, var body) in BackingFieldDelayHandler.disposeMethods) {
+				bool its_a_keeper = false;
+				foreach (var ins in body.Instructions) {
+					switch (ins.OpCode.OperandType) {
+					case OperandType.InlineField:
+						var field = (ins.Operand as FieldReference)?.Resolve ();
+						if (!context.Annotations.IsMarked (field)) {
+							var store_field = ins;
+							var load_null = ins.Previous;
+							var load_this = ins.Previous.Previous;
+							if (OptimizeGeneratedCodeHandler.ValidateInstruction (method, store_field, Name, Code.Stfld) &&
+								OptimizeGeneratedCodeHandler.ValidateInstruction (method, load_null, Name, Code.Ldnull) &&
+								OptimizeGeneratedCodeHandler.ValidateInstruction (method, load_this, Name, Code.Ldarg_0)) {
+								store_field.OpCode = OpCodes.Nop;
+								load_null.OpCode = OpCodes.Nop;
+								load_this.OpCode = OpCodes.Nop;
+							}
+						} else if (field.DeclaringType.FullName != "System.IntPtr") {
+							its_a_keeper = true;
+						}
+						break;
+					}
+				}
+				if (its_a_keeper) {
+					method.Body = body;
+				} else {
+					var t = method.DeclaringType;
+					if (IsSubclassed (t))
+						method.Body = body;
+					else
+						t.Methods.Remove (method);
+				}
+			}
+			BackingFieldDelayHandler.disposeMethods.Clear ();
+		}
+
+		bool IsSubclassed (TypeDefinition type)
+		{
+			var fullname = type.FullName;
+			foreach (var a in Context.GetAssemblies ()) {
+				foreach (var s in a.MainModule.Types) {
+					if (IsSubclass (s, fullname))
+						return true;
+				}
+			}
+			return false;
+		}
+
+		bool IsSubclass (TypeDefinition type, string fullname)
+		{
+			if (type.BaseType?.FullName == fullname)
+				return true;
+			if (type.HasNestedTypes) {
+				foreach (var ns in type.NestedTypes) {
+					if (IsSubclass (ns, fullname))
+						return true;
+				}
+			}
+			return false;
 		}
 	}
 }
