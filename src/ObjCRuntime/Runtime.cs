@@ -1839,7 +1839,7 @@ namespace ObjCRuntime {
 			else if (SystemVersion.Minor < minor)
 				return false;
 
-			return (SystemVersion.Build >= build);
+			return (SystemVersion.Build == -1) || (SystemVersion.Build >= build);
 		}
 
 		internal unsafe static IntPtr CloneMemory (IntPtr source, long length)
