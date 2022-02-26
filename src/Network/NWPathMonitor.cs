@@ -126,11 +126,13 @@ namespace Network {
 			set => userSnapshotHandler = value;
 		}
 
+#if !NET
 		[Obsolete ("Use the 'SnapshotHandler' property instead.")]
 		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
 		{
 			userSnapshotHandler = callback;
 		}
+#endif
 
 		void SetUpdatedSnapshotHandlerWrapper (NWPath path)
 		{

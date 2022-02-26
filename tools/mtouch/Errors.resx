@@ -2114,6 +2114,13 @@
 		</value>
 	</data>
 
+	<!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+	<data name="MX7000" xml:space="preserve">
+		<value>An error occured while executing the custom linker steps. Please review the build log for more information.</value>
+	</data>
+
+	<!-- 8XXX are for errors that occur at runtime -->
+
 	<data name="MT8018" xml:space="preserve">
 		<value>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>

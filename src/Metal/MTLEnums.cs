@@ -772,21 +772,29 @@ namespace Metal {
 		[Mac (10,11), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v1 = 10000,
 		
+#if !NET
 		[Mac (10, 11)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v1' instead.")]
+		[Obsolete ("Use 'macOS_GPUFamily1_v1' instead.")]
 		OSX_GPUFamily1_v1 = macOS_GPUFamily1_v1,
+#endif
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v2 = 10001,
+
+#if !NET
 		[Mac (10, 12)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v2' instead.")]
+		[Obsolete ("Use 'macOS_GPUFamily1_v2' instead.")]
 		OSX_GPUFamily1_v2 = macOS_GPUFamily1_v2,
+#endif
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_ReadWriteTextureTier2 = 10002,
+
+#if !NET
 		[Mac (10, 12)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, ReadWriteTextureTier2' instead.")]
+		[Obsolete ("Use 'macOS_ReadWriteTextureTier2' instead.")]
 		OSX_ReadWriteTextureTier2 = macOS_ReadWriteTextureTier2,
+#endif
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v3 = 10003,
@@ -797,8 +805,14 @@ namespace Metal {
 		[Mac (10,14), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily2_v1 = 10005,
 
+#if !NET
 		[TV (9,0)]
+		[Obsolete ("Use 'tvOS_GPUFamily1_v1' instead.")]
 		TVOS_GPUFamily1_v1 = 30000,
+#endif
+
+		[TV (9,0)]
+		tvOS_GPUFamily1_v1 = 30000,
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		tvOS_GPUFamily1_v2 = 30001,

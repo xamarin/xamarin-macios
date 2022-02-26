@@ -154,9 +154,6 @@ namespace LinkSdk.Serialization {
 		// note: this also test the linker (5.1+) ability not to remove 'unused' XML setters and .ctors used for serialization
 		public void Bug1820_GenericList ()
 		{
-#if NET && (__IOS__ || __TVOS__)
-			TestRuntime.AssertNotDevice ("https://github.com/mono/linker/issues/2266");
-#endif
 			string input = @"
 				<?xml version=""1.0"" encoding=""UTF-8""?>
 				<Response>

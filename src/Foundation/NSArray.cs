@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -259,6 +260,7 @@ namespace Foundation {
 		}
 			
 		[Obsolete ("Use of 'CFArray.StringArrayFromHandle' offers better performance.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		static public string [] StringArrayFromHandle (NativeHandle handle)
 		{
 			if (handle == NativeHandle.Zero)
