@@ -430,7 +430,11 @@ namespace MonoTests.System.Net.Http
 #endif // NET
 			} else if (handler is NSUrlSessionHandler ns) {
 				expectedExceptionType = typeof (WebException);
+#if NET
+				ns.TrustOverrideForUrl += (a,b,c) => {
+#else
 				ns.TrustOverride += (a,b) => {
+#endif
 					validationCbWasExecuted = true;
 					// return false, since we want to test that the exception is raised
 					return false;
@@ -484,7 +488,11 @@ namespace MonoTests.System.Net.Http
 
 			var handler = GetHandler (handlerType);
 			if (handler is NSUrlSessionHandler ns) {
+#if NET
+				ns.TrustOverrideForUrl += (a,b,c) => {
+#else
 				ns.TrustOverride += (a,b) => {
+#endif
 					servicePointManagerCbWasExcuted = true;
 					return true;
 				};

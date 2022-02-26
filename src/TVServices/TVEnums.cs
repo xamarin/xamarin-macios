@@ -12,11 +12,7 @@ using ObjCRuntime;
 
 namespace TVServices {
 
-#if NET
-	[SupportedOSPlatform ("tvos9.0")]
-#else
 	[TV (9,0)]
-#endif
 	[Native]
 	public enum TVContentItemImageShape : long {
 		None = 0,
@@ -28,22 +24,14 @@ namespace TVServices {
 		ExtraWide
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos9.0")]
-#else
 	[TV (9,0)]
-#endif
 	[Native]
 	public enum TVTopShelfContentStyle : long {
 		Inset = 1,
 		Sectioned = 2
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-#else
 	[TV (11,0)]
-#endif
 	[Native]
 	[Flags]
 	public enum TVContentItemImageTrait : ulong {

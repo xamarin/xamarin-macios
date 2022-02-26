@@ -54,7 +54,9 @@ namespace System.Net.Http {
 namespace Foundation {
 #endif
 
+#if !NET
 	public delegate bool NSUrlSessionHandlerTrustOverrideCallback (NSUrlSessionHandler sender, SecTrust trust);
+#endif
 	public delegate bool NSUrlSessionHandlerTrustOverrideForUrlCallback (NSUrlSessionHandler sender, string url, SecTrust trust);
 
 	// useful extensions for the class in order to set it in a header
@@ -299,6 +301,7 @@ namespace Foundation {
 			}
 		}
 
+#if !NET
 		NSUrlSessionHandlerTrustOverrideCallback trustOverride;
 
 		[Obsolete ("Use the 'TrustOverrideForUrl' property instead.")]
@@ -311,6 +314,7 @@ namespace Foundation {
 				trustOverride = value;
 			}
 		}
+#endif
 
 		NSUrlSessionHandlerTrustOverrideForUrlCallback trustOverrideForUrl;
 
@@ -814,14 +818,25 @@ namespace Foundation {
 					return;
 
 				// ToCToU for the callback
+#if !NET
 				var trustCallback = sessionHandler.TrustOverride;
+#endif
 				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
+#if NET
+				var hasCallBack = trustCallbackForUrl is not null;
+#else
 				var hasCallBack = trustCallback != null || trustCallbackForUrl != null; 
+#endif
 				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
+#if NET
+					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
+					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+#else
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
 					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
 						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+#endif
 
 					if (trustSec) {
 						var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
