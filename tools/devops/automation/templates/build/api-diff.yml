@@ -11,6 +11,7 @@ steps:
   displayName: 'API & Generator comparison'
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   name: apiGeneratorDiff
+  continueOnError: true
   env:
     BUILD_REVISION: 'jenkins'
     PR_ID:  ${{ parameters.prID }} # reusing jenkins vars, to be fixed
