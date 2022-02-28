@@ -1808,7 +1808,7 @@ WATCHKIT_SOURCES = \
 
 # WebKit (Mac version)
 
-WEBKIT_CORE_SOURCES = \
+WEBKIT_API_SOURCES = \
 	WebKit/Enums.cs \
 
 WEBKIT_SOURCES = \

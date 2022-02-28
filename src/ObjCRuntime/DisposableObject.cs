@@ -78,8 +78,7 @@ namespace ObjCRuntime {
 		{
 #if !COREBUILD
 			if (verify && handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
-				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
-				    "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
+				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 #endif
 			this.handle = handle;
