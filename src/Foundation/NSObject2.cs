@@ -331,8 +331,8 @@ namespace Foundation {
 		private void InitializeObject (bool alloced) {
 			if (alloced && handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
 				if (ClassHandle == NativeHandle.Zero)
-					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}");
-				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}");
+					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}.");
+				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
 			// The authorative value for the IsDirectBinding value is the register attribute:
@@ -596,13 +596,13 @@ namespace Foundation {
 		{
 			if (this.handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
 				if (ClassHandle == NativeHandle.Zero)
-					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}");
-				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}");
+					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}.");
+				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
 			if (handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
 				Handle = NativeHandle.Zero; // We'll crash if we don't do this.
-				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': the native '{initSelector}' method returned nil.\n{Constants.SetThrowOnInitFailureToFalse}");
+				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': the native '{initSelector}' method returned nil.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
 			this.Handle = handle;
