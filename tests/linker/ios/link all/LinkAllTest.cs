@@ -68,19 +68,39 @@ namespace LinkAll {
 	public class LinkAllRegressionTest {
 #if __MACCATALYST__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.MacCatalyst";
+#else
 		public const string AssemblyName = "Xamarin.MacCatalyst";
+#endif
 #elif __IOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.iOS";
+#else
 		public const string AssemblyName = "Xamarin.iOS";
+#endif
 #elif __TVOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.tvOS";
+#else
 		public const string AssemblyName = "Xamarin.TVOS";
+#endif
 #elif __WATCHOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.watchOS";
+#else
 		public const string AssemblyName = "Xamarin.WatchOS";
+#endif
 #elif __MACOS__
 		public const string NamespacePrefix = "";
+#if NET
+		public const string AssemblyName = "Microsoft.macOS";
+#else
 		public const string AssemblyName = "Xamarin.Mac";
+#endif
 #else
 	#error Unknown platform
 #endif

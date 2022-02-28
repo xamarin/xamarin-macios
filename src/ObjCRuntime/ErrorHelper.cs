@@ -7,13 +7,13 @@
 using System;
 using System.Collections.Generic;
 
-#if !BUNDLER
+#if !BUNDLER && !TESTS
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 
 #nullable enable
 
-#if BUNDLER || MSBUILD_TASKS
+#if BUNDLER || MSBUILD_TASKS || TESTS
 namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {
@@ -47,11 +47,9 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
-		internal static void CollectExceptions (Exception ex, List<Exception> exceptions)
+		static void CollectExceptions (Exception ex, List<Exception> exceptions)
 		{
-			var ae = ex as AggregateException;
-
-			if (ae is not null && ae.InnerExceptions.Count > 0) {
+			if ((ex is AggregateException ae) && (ae.InnerExceptions.Count > 0)) {
 				foreach (var ie in ae.InnerExceptions)
 					CollectExceptions (ie, exceptions);
 			} else {

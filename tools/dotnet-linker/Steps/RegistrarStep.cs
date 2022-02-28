@@ -22,27 +22,8 @@ namespace Xamarin.Linker {
 				// Nothing to do here
 				break;
 			case RegistrarMode.PartialStatic:
-				string method = null;
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					method = "xamarin_create_classes_Xamarin_iOS";
-					break;
-				case ApplePlatform.WatchOS:
-					method = "xamarin_create_classes_Xamarin_WatchOS";
-					break;
-				case ApplePlatform.TVOS:
-					method = "xamarin_create_classes_Xamarin_TVOS";
-					break;
-				case ApplePlatform.MacOSX:
-					method = "xamarin_create_classes_Xamarin_Mac";
-					break;
-				case ApplePlatform.MacCatalyst:
-					method = "xamarin_create_classes_Xamarin_MacCatalyst";
-					break;
-				default:
-					Report (ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName));
-					break;
-				}
+				// The method name is created in StaticRegistrar.Specialize.
+				var method = "xamarin_create_classes_" + Path.GetFileNameWithoutExtension (Configuration.PlatformAssembly.Replace ('.', '_').Replace ('-', '_'));
 				Configuration.RegistrationMethods.Add (method);
 				Configuration.CompilerFlags.AddLinkWith (Configuration.PartialStaticRegistrarLibrary);
 				break;

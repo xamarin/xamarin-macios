@@ -65,8 +65,8 @@ namespace ObjCRuntime {
 		{
 			this.handle = objc_getClass (name);
 
-			if (this.handle == IntPtr.Zero)
-				throw new ArgumentException (String.Format ("'{0}' is an unknown class", name));
+			if (handle == NativeHandle.Zero)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (name), $"Unknown class {name}");
 		}
 
 		public Class (Type type)
@@ -94,7 +94,7 @@ namespace ObjCRuntime {
 			get { return this.handle; }
 		}
 
-		public IntPtr SuperClass {
+		public NativeHandle SuperClass {
 			get { return class_getSuperclass (Handle); }
 		}
 
@@ -186,12 +186,6 @@ namespace ObjCRuntime {
 		internal static IntPtr GetClassForObject (IntPtr obj)
 		{
 			return Messaging.IntPtr_objc_msgSend (obj, Selector.GetHandle (Selector.Class));
-		}
-
-		internal static string? LookupFullName (IntPtr klass)
-		{
-			var type = Lookup (klass);
-			return type?.FullName;
 		}
 
 		public static Type? Lookup (Class? @class)
@@ -407,7 +401,7 @@ namespace ObjCRuntime {
 			if (member is Type type)
 				return type;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
 		internal static MethodBase? ResolveMethodTokenReference (uint token_reference)
@@ -418,7 +412,7 @@ namespace ObjCRuntime {
 			if (member is MethodBase method)
 				return method;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
 		unsafe static MemberInfo? ResolveTokenReference (uint token_reference, uint implicit_token_type)

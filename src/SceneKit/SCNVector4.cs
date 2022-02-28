@@ -43,7 +43,7 @@ using MathHelper = global::OpenTK.MathHelper;
 
 #if MONOMAC
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif

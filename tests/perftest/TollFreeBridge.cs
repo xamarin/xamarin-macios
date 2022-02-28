@@ -18,17 +18,22 @@ namespace PerfTest {
 		static readonly NSString short_accent = new NSString ("Sébastien");
 		static readonly NSString short_unicode = new NSString ("ЉЩщӃ");
 		static readonly NSString short_emoji = new NSString ("I'm 😃 it works!");
+		static readonly NSString stackalloc_limit = new NSString (new string ('@', 128));
+		static readonly NSString allochglobal = new NSString (new string ('#', 129));
 		static readonly NSString long_string = new NSString (new string ('!', 4096));
 
 		string s;
 
 		public IEnumerable<object[]> Handles ()
 		{
+			yield return new object [] { "nil", IntPtr.Zero };
 			yield return new object [] { "empty", empty.Handle };
 			yield return new object [] { "short_7bits", short_7bits.Handle };
 			yield return new object [] { "short_accent", short_accent.Handle };
 			yield return new object [] { "short_unicode", short_unicode.Handle };
 			yield return new object [] { "short_emoji", short_emoji.Handle };
+			yield return new object [] { "stackalloc_limit", stackalloc_limit.Handle };
+			yield return new object [] { "allochglobal", allochglobal.Handle };
 			yield return new object [] { "long_string", long_string.Handle };
 		}
 
