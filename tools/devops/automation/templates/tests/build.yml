@@ -161,6 +161,7 @@ steps:
     DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
     mkdir -p $DEST_DIR
     ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$DEST_DIR/git" 
+    ls -R $DEST_DIR
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
   displayName: Create Xamarin.iOS SDK symlinks
 
@@ -182,6 +183,7 @@ steps:
     DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
     mkdir -p $DEST_DIR
     ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$DEST_DIR/git" 
+    ls -R $DEST_DIR
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
   displayName: Create Xamarin.Mac SDK symlinks
 
