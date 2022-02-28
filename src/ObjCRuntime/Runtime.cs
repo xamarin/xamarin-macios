@@ -322,6 +322,9 @@ namespace ObjCRuntime {
 			}
 		}
 
+		// This is used to control whether non-UI or [ThreadSafe] objects are disposed on the UI thread.
+		internal static bool DisposeThreadSafeObjectsOnFinalizerThread { get; set; }
+
 		static bool ThreadPoolDispatcher (Func<bool> callback)
 		{
 			using (var pool = new NSAutoreleasePool ())

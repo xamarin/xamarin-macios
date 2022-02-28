@@ -116,7 +116,7 @@ namespace Foundation {
 
 		// This enum has a native counterpart in runtime.h
 		[Flags]
-		internal enum Flags : byte {
+		internal enum Flags : ushort {
 			Disposed = 1,
 			NativeRef = 2,
 			IsDirectBinding = 4,
@@ -125,6 +125,7 @@ namespace Foundation {
 			HasManagedRef = 32,
 			// 64, // Used by SoM
 			IsCustomType = 128,
+			RequiresUIThread = 256,
 		}
 
 		// Must be kept in sync with the same enum in trampolines.h
@@ -175,6 +176,11 @@ namespace Foundation {
 				}
 				return value;
 			}
+		}
+
+		internal bool RequiresUIThread {
+			get { return ((flags & Flags.RequiresUIThread) == Flags.RequiresUIThread); }
+			set { flags = value ? (flags | Flags.RequiresUIThread) : (flags & ~Flags.RequiresUIThread); }
 		}
 
 		[Export ("init")]
@@ -924,7 +930,7 @@ namespace Foundation {
 			disposed = true;
 			
 			if (handle != NativeHandle.Zero) {
-				if (disposing) {
+				if (disposing || (Runtime.DisposeThreadSafeObjectsOnFinalizerThread && !RequiresUIThread)) {
 					ReleaseManagedRef ();
 				} else {
 #if NET

@@ -45,7 +45,7 @@ enum XamarinLaunchMode {
 };
 
 // This has a managed equivalent in NSObject2.cs
-enum NSObjectFlags {
+enum NSObjectFlags : short {
 	NSObjectFlagsDisposed = 1,
 	NSObjectFlagsNativeRef = 2,
 	NSObjectFlagsIsDirectBinding = 4,
@@ -54,6 +54,8 @@ enum NSObjectFlags {
 	NSObjectFlagsHasManagedRef = 32,
 	// 64, // Used by SoM
 	NSObjectFlagsIsCustomType = 128,
+	// Used to signal whether an object requires the UI thread for dispose checks.
+	NSObjectFlagsRequiresUIThread = 256,
 };
 
 enum XamarinGCHandleType : int {

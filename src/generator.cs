@@ -4755,8 +4755,12 @@ public partial class Generator : IMemberGatherer {
 				print ("return ret!;");
 			}
 		}
-		if (minfo.is_ctor)
+		if (minfo.is_ctor) {
 			WriteMarkDirtyIfDerived (sw, mi.DeclaringType);
+			if (type_needs_thread_checks) {
+				print ("RequiresUIThread = true;");
+			}
+		}
 		if (stringParameters != null){
 			indent--;
 			print ("}");
