@@ -31,7 +31,7 @@ class APIDiff {
         # the content object has the following format:
         # 
         #     gist: Hastable with platform as a key and the gist as content
-        #     html: Hastable with platform as a jey and the html url as content
+        #     html: Hastable with platform as a key and the html url as content
         #     result: string with the result
         #     message: string with the message
         $this.Header = $header

@@ -75,7 +75,7 @@ Describe "API diff tests" {
 
         $diff.Header | Should -Be $header 
 
-        # assert that the linsk are correct
+        # assert that the links are correct
         foreach($platform in $gists.Keys) {
             $diff.Platforms.ContainsKey($platform) | Should -Be $true
             $diff.Platforms[$platform].Gist | Should -Be $gists[$platform]
@@ -130,7 +130,7 @@ Describe "API diff tests" {
 
         $diff = [APIDiff]::new($header, $apiDiffData)
 
-        # assert that the linsk are correct
+        # assert that the links are correct
         foreach($platform in $gists.Keys) {
             $diff.Platforms.ContainsKey($platform) | Should -Be $true
             $diff.Platforms[$platform].Gist | Should -Be $gists[$platform]
@@ -146,7 +146,7 @@ Describe "API diff tests" {
 
         $diff = [APIDiff]::new($header, $apiDiffData)
 
-        # assert that the linsk are correct
+        # assert that the links are correct
         foreach($platform in $gists.Keys) {
             $diff.Platforms.ContainsKey($platform) | Should -Be $true
             $diff.Platforms[$platform].Gist | Should -Be $gists[$platform]
@@ -155,7 +155,7 @@ Describe "API diff tests" {
     }
 }
 
-Describe "API difff comment tests" {
+Describe "API diff comment tests" {
     BeforeAll {
         # this headers help to check the content is there
         $prHeader = "API Current PR diff"
