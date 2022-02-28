@@ -78,7 +78,7 @@ namespace AudioUnit {
 			
 			var handle = GCHandle.FromIntPtr (userData);
 			var inst = (AUScheduledAudioFileRegion?) handle.Target;
-			if (inst is not null && inst.completionHandler is not null)
+			if (inst?.completionHandler is not null)
 				inst.completionHandler (inst, status);
 		}
 
