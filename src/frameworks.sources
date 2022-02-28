@@ -2299,6 +2299,8 @@ MACCATALYST_FRAMEWORKS = \
 	MediaAccessibility \
 	MediaPlayer \
 	MediaToolbox \
+	Messages \
+	MessageUI \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
