@@ -620,6 +620,7 @@ public class Frameworks : Dictionary <string, Framework>
 			foreach (var f in catalyst_frameworks.Values) {
 				switch (f.Name) {
 				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
+				case "CoreTelephony":
 				case "HomeKit":
 					f.Version = v14_0;
 					f.VersionAvailableInSimulator = v14_0;
@@ -647,7 +648,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
-				case "CoreTelephony":
 				case "EventKitUI":
 				case "HealthKit":
 				case "HealthKitUI":
