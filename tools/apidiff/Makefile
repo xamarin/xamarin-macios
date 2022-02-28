@@ -134,14 +134,14 @@ $(APIDIFF_DIR)/tvos-api-diff.html:    $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIF
 
 # Compare new dotnet vs. stable dotnet
 $(APIDIFF_DIR)/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html:                 $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.html
-$(APIDIFF_DIR)/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.OBVIOUS_BUG-api-diff.html:               $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.html
+$(APIDIFF_DIR)/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html:               $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.html
 $(APIDIFF_DIR)/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html:               $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.html
 $(APIDIFF_DIR)/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.html
 
 # Compare new dotnet vs. stable legacy
 $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html:     $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.html
 $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.html
-$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.OBVIOUS_BUG-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.html
+$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.html
 
 # Compare Dotnet iOS vs. Dotnet MacCatalyst
 $(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst.html
@@ -385,7 +385,7 @@ $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURREN
 	$(QF_GEN) mono --debug $(MONO_API_INFO) -d $(dir $<) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
 # The dotnet references xmls may come from different hashes, so we need to have separate rules for all of them
-$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/OBVIOUS_BUG.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
@@ -401,7 +401,7 @@ $(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.xm
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/updated-references/dotnet/%.OBVIOUS_BUG.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/updated-references/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/dotnet/$*.xml
 
@@ -492,9 +492,9 @@ endif
 ifdef INCLUDE_MAC
 macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(APIDIFF_DIR)/diff/xm/Xamarin.Mac/ macos $(APIDIFF_DIR)
-dotnet-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/OBVIOUS_BUG.macOS.md
+dotnet-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.md
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.macOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/ dotnet-macos $(APIDIFF_DIR)
-dotnet-legacy-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/OBVIOUS_BUG.macOS.md
+dotnet-legacy-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.md
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.macOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/ dotnet-legacy-macos $(APIDIFF_DIR)
 else
 macos-markdown: ; @true
