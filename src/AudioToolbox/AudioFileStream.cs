@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -102,7 +104,7 @@ namespace AudioToolbox {
 	}
 
 	public class PacketReceivedEventArgs : EventArgs {
-		public PacketReceivedEventArgs (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription [] packetDescriptions)
+		public PacketReceivedEventArgs (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription []? packetDescriptions)
 		{
 			this.Bytes = numberOfBytes;
 			this.InputData = inputData;
@@ -110,11 +112,11 @@ namespace AudioToolbox {
 		}
 		public int Bytes { get; private set; }
 		public IntPtr InputData { get; private set; }
-		public AudioStreamPacketDescription [] PacketDescriptions { get; private set;}
+		public AudioStreamPacketDescription []? PacketDescriptions { get; private set;}
 
 		public override string ToString ()
 		{
-			return String.Format ("Packet (Bytes={0} InputData={1} PacketDescriptions={2}", Bytes, InputData, PacketDescriptions.Length);
+			return String.Format ("Packet (Bytes={0} InputData={1} PacketDescriptions={2}", Bytes, InputData, PacketDescriptions?.Length ?? -1);
 		}
 	}
 	
@@ -179,22 +181,22 @@ namespace AudioToolbox {
 			var afs = handle.Target as AudioFileStream;
 
 			var desc = AudioFile.PacketDescriptionFrom (numberPackets, packetDescriptions);
-			afs.OnPacketDecoded (numberBytes, inputData, desc);
+			afs!.OnPacketDecoded (numberBytes, inputData, desc);
 		}
 
-		public EventHandler<PacketReceivedEventArgs> PacketDecoded;
-		protected virtual void OnPacketDecoded (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription [] packetDescriptions)
+		public EventHandler<PacketReceivedEventArgs>? PacketDecoded;
+		protected virtual void OnPacketDecoded (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription []? packetDescriptions)
 		{
 			var p = PacketDecoded;
-			if (p != null)
+			if (p is not null)
 				p (this, new PacketReceivedEventArgs (numberOfBytes, inputData, packetDescriptions));
 		}
 
-		public EventHandler<PropertyFoundEventArgs> PropertyFound;
+		public EventHandler<PropertyFoundEventArgs>? PropertyFound;
 		protected virtual void OnPropertyFound (AudioFileStreamProperty propertyID, ref AudioFileStreamPropertyFlag ioFlags)
 		{
 			var p = PropertyFound;
-			if (p != null){
+			if (p is not null){
 				var pf = new PropertyFoundEventArgs (propertyID, ioFlags);
 				p (this, pf);
 				ioFlags = pf.Flags; 
@@ -207,7 +209,7 @@ namespace AudioToolbox {
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var afs = handle.Target as AudioFileStream;
 
-			afs.OnPropertyFound (propertyID, ref ioFlags);
+			afs!.OnPropertyFound (propertyID, ref ioFlags);
 		}
 		
 		public AudioFileStream (AudioFileType fileTypeHint)
@@ -232,14 +234,14 @@ namespace AudioToolbox {
 		public AudioFileStreamStatus ParseBytes (int size, IntPtr data, bool discontinuity)
 		{
 			if (data == IntPtr.Zero)
-				throw new ArgumentNullException ("data");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			return LastError = AudioFileStreamParseBytes (handle, size, data, discontinuity ? (uint) 1 : (uint) 0);
 		}
 
 		public AudioFileStreamStatus ParseBytes (byte [] bytes, bool discontinuity)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+			if (bytes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			unsafe {
 				fixed (byte *bp = &bytes[0]){
 					return LastError = AudioFileStreamParseBytes (handle, bytes.Length, (IntPtr) bp, discontinuity ? (uint) 1 : (uint) 0);
@@ -249,8 +251,8 @@ namespace AudioToolbox {
 		
 		public AudioFileStreamStatus ParseBytes (byte [] bytes, int offset, int count, bool discontinuity)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+			if (bytes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			if (offset < 0)
 				throw new ArgumentException ("offset");
 			if (count < 0)
@@ -301,7 +303,7 @@ namespace AudioToolbox {
 		public bool GetProperty (AudioFileStreamProperty property, ref int dataSize, IntPtr outPropertyData)
 		{
 			if (outPropertyData == IntPtr.Zero)
-				throw new ArgumentNullException ("outPropertyData");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outPropertyData));
 			return AudioFileStreamGetProperty (handle, property, ref dataSize, outPropertyData) == 0;
 		}
 
@@ -374,7 +376,7 @@ namespace AudioToolbox {
 			try {
 				LastError = AudioFileStreamGetProperty (handle, property, ref size, buffer);
 				if (LastError == 0){
-					return (T) Marshal.PtrToStructure (buffer, typeof (T));
+					return (T) Marshal.PtrToStructure (buffer, typeof (T))!;
 				}
 
 				return null;
@@ -393,7 +395,7 @@ namespace AudioToolbox {
 		public bool SetProperty (AudioFileStreamProperty property, int dataSize, IntPtr propertyData)
 		{
 			if (propertyData == IntPtr.Zero)
-				throw new ArgumentNullException ("propertyData");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyData));
 			LastError = AudioFileStreamSetProperty (handle, property, dataSize, propertyData);
 			return LastError == 0;
 		}
@@ -426,7 +428,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe AudioFormat [] FormatList {
+		public unsafe AudioFormat []? FormatList {
 			get {
 				int size;
 				var r = GetProperty (AudioFileStreamProperty.FormatList, out size);
@@ -491,7 +493,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public AudioChannelLayout ChannelLayout {
+		public AudioChannelLayout? ChannelLayout {
 			get {
 				int size;
 				var h = GetProperty (AudioFileStreamProperty.ChannelLayout, out size);

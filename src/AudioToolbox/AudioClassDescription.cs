@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -60,8 +62,8 @@ namespace AudioToolbox {
 		// The documentation is wrong too
 		public unsafe static uint? HardwareCodecCapabilities (AudioClassDescription[] descriptions)
 		{
-			if (descriptions == null)
-				throw new ArgumentNullException ("descriptions");
+			if (descriptions is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptions));
 
 			fixed (AudioClassDescription* item = &descriptions[0]) {
 				uint successfulCodecs;
