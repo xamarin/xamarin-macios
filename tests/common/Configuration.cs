@@ -394,12 +394,16 @@ namespace Xamarin.Tests
 
 		public static string TargetDirectoryXI {
 			get {
+				if (UseSystem) 
+					return "/";
 				return make_config ["IOS_DESTDIR"];
 			}
 		}
 
 		public static string TargetDirectoryXM {
 			get {
+				if (UseSystem) 
+					return "/";
 				return make_config ["MAC_DESTDIR"];
 			}
 		}
