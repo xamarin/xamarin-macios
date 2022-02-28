@@ -26,9 +26,11 @@ using NativeHandle = System.IntPtr;
 namespace VideoToolbox {
 
 #if NET
+	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("tvos10.2")]
 #else
-	[iOS (8,0), TV (10,2)]
+	[iOS (8,0)]
+	[TV (10,2)]
 #endif
 	public class VTDecompressionSession : VTSession {
 
@@ -56,7 +58,7 @@ namespace VideoToolbox {
 			base.Dispose (disposing);
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout (LayoutKind.Sequential)]
 		struct VTDecompressionOutputCallbackRecord
 		{
 #if NET
@@ -184,26 +186,27 @@ namespace VideoToolbox {
 				: null;
 		}
 #endif
-		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(VTDecompressionOutputCallback,CMVideoFormatDescription,VTVideoDecoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
 
+#if !NET
+		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(VTDecompressionOutputCallback,CMVideoFormatDescription,VTVideoDecoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
 		public static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
 							     CMVideoFormatDescription formatDescription,
 							     VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 							     NSDictionary? destinationImageBufferAttributes = null)
 		{
-#if NET
-			unsafe {
-				return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes, &DecompressionCallback);
-			}
-#else
 			return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes, static_DecompressionOutputCallback);
-#endif
 		}
+#endif // !NET
 	
 		public static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
 							     CMVideoFormatDescription formatDescription,
+#if NET
+							     VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
+							     CVPixelBufferAttributes? destinationImageBufferAttributes = null)
+#else
 							     VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
 							     CVPixelBufferAttributes? destinationImageBufferAttributes)
+#endif
 		{
 #if NET
 			unsafe {
@@ -363,20 +366,26 @@ namespace VideoToolbox {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 #else
-		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool VTIsHardwareDecodeSupported (CMVideoCodecType codecType);
 
 #if NET
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 #else
-		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
 #endif
 		public static bool IsHardwareDecodeSupported (CMVideoCodecType codecType)
 		{

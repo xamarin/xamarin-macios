@@ -199,40 +199,56 @@ namespace CoreGraphics {
 			return new CGPDFDictionary (CGPDFDocumentGetInfo (Handle));
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
-#if !NET
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[Watch (4,0)]
 #endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFContextSetOutline (/* CGPDFDocumentRef */ IntPtr document, IntPtr /* dictionary */ outline);
 
-#if !NET
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[Watch (4,0)]
 #endif
 		public void SetOutline (CGPDFOutlineOptions? options)
 		{
 			CGPDFContextSetOutline (Handle, options.GetHandle ());
 		}
 					
-		[DllImport (Constants.CoreGraphicsLibrary)]
-#if !NET
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[Watch (4,0)]
 #endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFDictionaryPtry */ IntPtr CGPDFDocumentGetOutline (/* CGPDFDocumentRef */ IntPtr document);
 
-#if !NET
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[Watch (4,0)]
 #endif
 		public CGPDFOutlineOptions GetOutline ()
 		{
@@ -240,20 +256,28 @@ namespace CoreGraphics {
 			return new CGPDFOutlineOptions (Runtime.GetNSObject<NSDictionary> (ptr));
 		}
 
-#if !NET
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[Watch (4,0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGPDFAccessPermissions CGPDFDocumentGetAccessPermissions (IntPtr document);
 
-#if !NET
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
+		[Watch (4,0)]
 #endif
 		public CGPDFAccessPermissions GetAccessPermissions ()
 		{

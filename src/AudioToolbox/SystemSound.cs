@@ -211,14 +211,18 @@ namespace AudioToolbox {
 				del ();
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlayAlertSound (Action onCompletion)
 		{
 			if (onCompletion is null)
-				throw new ArgumentNullException (nameof (onCompletion));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
 			
 			AssertNotDisposed ();
 
@@ -231,8 +235,12 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		public Task PlayAlertSoundAsync ()
 		{
@@ -243,14 +251,18 @@ namespace AudioToolbox {
 			return tcs.Task;
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlaySystemSound (Action onCompletion)
 		{
 			if (onCompletion is null)
-				throw new ArgumentNullException (nameof (onCompletion));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
 			
 			AssertNotDisposed ();
 
@@ -263,8 +275,12 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		public Task PlaySystemSoundAsync ()
 		{
@@ -275,14 +291,22 @@ namespace AudioToolbox {
 			return tcs.Task;
 		}
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
@@ -293,7 +317,7 @@ namespace AudioToolbox {
 		static uint Create (NSUrl fileUrl)
 		{
 			if (fileUrl is null)
-				throw new ArgumentNullException (nameof (fileUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 
 			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
 			if (error != AudioServicesError.None)
@@ -310,7 +334,7 @@ namespace AudioToolbox {
 		public static SystemSound? FromFile (NSUrl fileUrl)
 		{
 			if (fileUrl is null)
-				throw new ArgumentNullException (nameof (fileUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 
 			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
 			if (error != AudioServicesError.None)
@@ -321,7 +345,7 @@ namespace AudioToolbox {
 		public static SystemSound? FromFile (string filename)
 		{
 			if (filename is null)
-				throw new ArgumentNullException (nameof (filename));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (filename));
 
 			using (var url = new NSUrl (filename)){
 				var error = AudioServicesCreateSystemSoundID (url.Handle, out var soundId);
@@ -367,7 +391,7 @@ namespace AudioToolbox {
 			unsafe {
 				return AudioServicesAddSystemSoundCompletion (soundId,
 			                                              runLoop.GetHandle (),
-			                                              IntPtr.Zero, // runLoopMode should be enum runLoopMode == null ? IntPtr.Zero : runLoopMode.Handle,
+			                                              IntPtr.Zero, // runLoopMode should be enum runLoopMode.GetHandle (),
 #if NET
 			                                              &SoundCompletionShared,
 #else

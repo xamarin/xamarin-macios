@@ -18,11 +18,19 @@ using ObjCRuntime;
 using Security;
 #if MONOMAC
 using AppKit;
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#else
 using PlatformException = Foundation.ObjCException;
+#endif
 using UIView = AppKit.NSView;
 #else
 using UIKit;
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#else
 using PlatformException=Foundation.MonoTouchException;
+#endif
 #endif
 using NUnit.Framework;
 using Xamarin.Utils;
@@ -31,6 +39,9 @@ using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 namespace MonoTouchFixtures.Foundation {
 	
 	[TestFixture]
@@ -68,7 +79,7 @@ namespace MonoTouchFixtures.Foundation {
 			Class c = new Class ("NSObject");
 			Assert.That (c.Name, Is.EqualTo ("NSObject"), "Name");
 			Assert.That (c.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-			Assert.That (c.SuperClass, Is.EqualTo (IntPtr.Zero), "SuperClass");
+			Assert.That (c.SuperClass, Is.EqualTo (NativeHandle.Zero), "SuperClass");
 		}
 
 		[Test]

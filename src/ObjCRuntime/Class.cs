@@ -65,26 +65,19 @@ namespace ObjCRuntime {
 		{
 			this.handle = objc_getClass (name);
 
-			if (this.handle == IntPtr.Zero)
-				throw new ArgumentException (String.Format ("'{0}' is an unknown class", name));
+			if (handle == NativeHandle.Zero)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (name), $"Unknown class {name}");
 		}
 
 		public Class (Type type)
 		{
-			this.handle = GetClassHandle (type);
+			this.handle = GetHandle (type);
 		}
 
-		public Class (IntPtr handle)
-		{
-			this.handle = handle;
-		}
-
-#if NET
 		public Class (NativeHandle handle)
 		{
 			this.handle = handle;
 		}
-#endif
 
 		[Preserve (Conditional = true)]
 #if NET
@@ -101,7 +94,7 @@ namespace ObjCRuntime {
 			get { return this.handle; }
 		}
 
-		public IntPtr SuperClass {
+		public NativeHandle SuperClass {
 			get { return class_getSuperclass (Handle); }
 		}
 
@@ -145,7 +138,7 @@ namespace ObjCRuntime {
 		}
 
 		public static NativeHandle GetHandle (Type type) {
-			return GetClassHandle (type);
+			return GetClassHandle (type, true, out _);
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
@@ -190,20 +183,9 @@ namespace ObjCRuntime {
 			return @class;
 		}
 
-		static IntPtr GetClassHandle (Type type)
-		{
-			return GetClassHandle (type, true, out var is_custom_type);
-		}
-
 		internal static IntPtr GetClassForObject (IntPtr obj)
 		{
 			return Messaging.IntPtr_objc_msgSend (obj, Selector.GetHandle (Selector.Class));
-		}
-
-		internal static string? LookupFullName (IntPtr klass)
-		{
-			var type = Lookup (klass);
-			return type?.FullName;
 		}
 
 		public static Type? Lookup (Class? @class)
@@ -216,16 +198,11 @@ namespace ObjCRuntime {
 
 		internal static Type Lookup (IntPtr klass)
 		{
-			return LookupClass (klass, true)!;
-		}
-
-		internal static Type? Lookup (IntPtr klass, bool throw_on_error)
-		{
-			return LookupClass (klass, throw_on_error);
+			return Lookup (klass, true)!;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		static Type? LookupClass (IntPtr klass, bool throw_on_error)
+		internal static Type? Lookup (IntPtr klass, bool throw_on_error)
 		{
 			bool is_custom_type;
 			var find_class = klass;
@@ -424,7 +401,7 @@ namespace ObjCRuntime {
 			if (member is Type type)
 				return type;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
 		internal static MethodBase? ResolveMethodTokenReference (uint token_reference)
@@ -435,7 +412,7 @@ namespace ObjCRuntime {
 			if (member is MethodBase method)
 				return method;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
 		unsafe static MemberInfo? ResolveTokenReference (uint token_reference, uint implicit_token_type)

@@ -155,7 +155,11 @@ namespace MonoTouchFixtures.UIKit {
 			// interesting limitation
 			using (MyUrl url2 = new MyUrl (file, "my document")) {
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: must pass a valid file URL to -[UIDocument initWithFileURL:]
+#if NET
+				Assert.Throws<ObjCException> (delegate { 
+#else
 				Assert.Throws<MonoTouchException> (delegate { 
+#endif
 					new DocumentPoker (url2);
 				});
 			}

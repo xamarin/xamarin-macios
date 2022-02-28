@@ -28,6 +28,7 @@
 #if !MONOMAC
 
 using System;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -37,9 +38,13 @@ namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	[Native]
 	[ErrorDomain ("ABAddressBookErrorDomain")]
+#if NET
+	public enum ABAddressBookError {
+#else
+	[Native]
 	public enum ABAddressBookError : long {
+#endif
 		OperationNotPermittedByStore = 0,
 		OperationNotPermittedByUserError
 	}
@@ -97,8 +102,12 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#if NET
+	public enum ABPersonImageFormat {
+#else
 	[Native]
 	public enum ABPersonImageFormat : long {
+#endif
 		Thumbnail = 0,
 		OriginalSize = 2,
 	}

@@ -78,9 +78,9 @@ namespace CoreMedia {
 			CMTime sampleTimestamp, AudioStreamPacketDescription[] packetDescriptions, out CMSampleBufferError error)
 		{
 			if (formatDescription is null)
-				throw new ArgumentNullException (nameof (formatDescription));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 			if (samplesCount <= 0)
-				throw new ArgumentOutOfRangeException (nameof (samplesCount));
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (samplesCount), "Negative");
 
 			IntPtr buffer;
 			error = CMAudioSampleBufferCreateWithPacketDescriptions (IntPtr.Zero,
@@ -115,7 +115,7 @@ namespace CoreMedia {
 		public unsafe static CMSampleBuffer? CreateWithNewTiming (CMSampleBuffer original, CMSampleTimingInfo []? timing, out OSStatus status)
 		{
 			if (original is null)
-				throw new ArgumentNullException (nameof (original));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (original));
 
 			nint count = timing is null ? 0 : timing.Length;
 			IntPtr handle;
@@ -157,7 +157,7 @@ namespace CoreMedia {
 		{
 			// it makes no sense not to provide a callback - and it also crash the app
 			if (callback is null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			GCHandle h = GCHandle.Alloc (Tuple.Create (callback, this));
 			try {
@@ -215,9 +215,9 @@ namespace CoreMedia {
 		public static CMSampleBuffer? CreateForImageBuffer (CVImageBuffer imageBuffer, bool dataReady, CMVideoFormatDescription formatDescription, CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			if (formatDescription is null)
-				throw new ArgumentNullException (nameof (formatDescription));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 
 			IntPtr buffer;
 			error = CMSampleBufferCreateForImageBuffer (IntPtr.Zero,
@@ -411,7 +411,7 @@ namespace CoreMedia {
 			set {
 				var result = CMSampleBufferSetOutputPresentationTimeStamp (Handle, value);
 				if (result != 0)
-					throw new ArgumentException (result.ToString ());
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (result.ToString ());
 			}
 		}
 
@@ -630,27 +630,39 @@ namespace CoreMedia {
 			return CMSampleBufferTrackDataReadiness (Handle, bufferToTrack.GetHandle ());
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCopyPCMDataIntoAudioBufferList (/* CMSampleBufferRef */ IntPtr sbuf, /* int32_t */ int frameOffset, /* int32_t */ int numFrames, /* AudioBufferList* */ IntPtr bufferList);
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public CMSampleBufferError CopyPCMDataIntoAudioBufferList (int frameOffset, int numFrames, AudioBuffers bufferList)
 		{
 			if (bufferList is null)
-				throw new ArgumentNullException (nameof (bufferList));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bufferList));
 
 			return CMSampleBufferCopyPCMDataIntoAudioBufferList (Handle, frameOffset, numFrames, (IntPtr) bufferList);
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMAudioSampleBufferCreateReadyWithPacketDescriptions (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CMBlockBufferRef */ IntPtr dataBuffer,
@@ -660,18 +672,22 @@ namespace CoreMedia {
 			/* AudioStreamPacketDescription* */ AudioStreamPacketDescription[]? packetDescriptions,
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
 		public static CMSampleBuffer? CreateReadyWithPacketDescriptions (CMBlockBuffer dataBuffer, CMFormatDescription formatDescription, int samplesCount,
 			CMTime sampleTimestamp, AudioStreamPacketDescription[]? packetDescriptions, out CMSampleBufferError error)
 		{
 			if (dataBuffer is null)
-				throw new ArgumentNullException (nameof (dataBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dataBuffer));
 			if (formatDescription is null)
-				throw new ArgumentNullException (nameof (formatDescription));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 			if (samplesCount <= 0)
-				throw new ArgumentOutOfRangeException (nameof (samplesCount));
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (samplesCount), "smaller than 0");
 
 			error = CMAudioSampleBufferCreateReadyWithPacketDescriptions (IntPtr.Zero, dataBuffer.Handle,
 				formatDescription.Handle, samplesCount, sampleTimestamp, packetDescriptions, out var buffer);
@@ -682,8 +698,12 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReady (
@@ -697,17 +717,21 @@ namespace CoreMedia {
 			/* size_t* */ nuint[]? sampleSizeArray,					// can be null
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
 		public static CMSampleBuffer? CreateReady (CMBlockBuffer dataBuffer, CMFormatDescription? formatDescription, 
 			int samplesCount, CMSampleTimingInfo[]? sampleTimingArray, nuint[]? sampleSizeArray, 
 			out CMSampleBufferError error)
 		{
 			if (dataBuffer is null)
-				throw new ArgumentNullException (nameof (dataBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dataBuffer));
 			if (samplesCount < 0)
-				throw new ArgumentOutOfRangeException (nameof (samplesCount));
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (samplesCount), "Negative");
 
 			IntPtr buffer;
 			var fdh = formatDescription.GetHandle ();
@@ -722,8 +746,12 @@ namespace CoreMedia {
 			return new CMSampleBuffer (buffer, true);
 		}
 
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReadyWithImageBuffer (
@@ -733,35 +761,35 @@ namespace CoreMedia {
 			/* const CMSampleTimingInfo * CM_NONNULL */ ref CMSampleTimingInfo sampleTiming,
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
-#if !XAMCORE_4_0
-#if !WATCH
 #if !NET
+#if !WATCH
 		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		[iOS (8,0)][Mac (10,10)]
-#else
-		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
 			CMFormatDescription formatDescription, CMSampleTimingInfo[] sampleTiming, out CMSampleBufferError error)
 		{
 			if (sampleTiming is null)
-				throw new ArgumentNullException (nameof (sampleTiming));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleTiming));
 			if (sampleTiming.Length != 1)
-				throw new ArgumentException ("Only a single sample is allowed.", nameof (sampleTiming));
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sampleTiming), "Only a single sample is allowed.");
 			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
 		}
 #endif // !WATCH
-#endif // !XAMCORE_4_0
-#if !NET
-		[iOS (8,0)][Mac (10,10)]
+#endif // !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (8,0)]
+		[Mac (10,10)]
 #endif
 		public static CMSampleBuffer? CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
 			CMFormatDescription formatDescription, ref CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			if (formatDescription is null)
-				throw new ArgumentNullException (nameof (formatDescription));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 
 			IntPtr buffer;
 			error = CMSampleBufferCreateReadyWithImageBuffer (IntPtr.Zero, imageBuffer.Handle,
@@ -935,7 +963,9 @@ namespace CoreMedia {
 		}
 
 #if !WATCH
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public LensStabilizationStatus StillImageLensStabilizationStatus {

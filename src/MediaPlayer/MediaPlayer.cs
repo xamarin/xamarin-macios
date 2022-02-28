@@ -11,16 +11,17 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
-	[Native]
 	[NoMac]
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
+	[Native]
 	public enum MPMoviePlaybackState : long {
 		Stopped,
 		Playing,
@@ -31,11 +32,11 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
-	[Native]
 	[NoMac]
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
+	[Native]
 	public enum MPMovieLoadState : long {
 		Unknown        = 0,
 		Playable       = 1 << 0,
@@ -54,11 +55,11 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
-	[Native]
 	[NoMac]
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
+	[Native]
 	public enum MPMovieControlStyle : long {
 		None, Embedded, Fullscreen, Default = Embedded
 	}
@@ -108,8 +109,8 @@ namespace MediaPlayer {
 	}
 
 	// NSUInteger -> MPMediaItem.h
-	[Native]
 	[Watch (7,0)]
+	[Native]
 	[Flags]
 	public enum MPMediaType : ulong {
 		Music        = 1 << 0,
@@ -138,10 +139,10 @@ namespace MediaPlayer {
 
 	// NSInteger -> MPMediaPlaylist.h
 	[NoMac]
-	[Native]
-	[Flags]
 	[NoTV]
 	[NoWatch]
+	[Native]
+	[Flags]
 	public enum MPMediaPlaylistAttribute : long {
 		None    = 0,
 		OnTheGo = (1 << 0), // if set, the playlist was created on a device rather than synced from iTunes
@@ -150,10 +151,10 @@ namespace MediaPlayer {
 	};
 			
 	// NSInteger -> MPMediaQuery.h
-	[Native]
 	[NoMac]
 	[NoTV]
 	[NoWatch]
+	[Native]
 	public enum MPMediaGrouping : long {
 		Title,
 		Album,
@@ -166,10 +167,10 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPMediaQuery.h
-	[Native]
 	[NoMac]
 	[NoTV]
 	[NoWatch]
+	[Native]
 	public enum MPMediaPredicateComparison : long {
 		EqualsTo,
 		Contains
@@ -211,10 +212,10 @@ namespace MediaPlayer {
 	}
 	
 	// NSInteger -> /MPMusicPlayerController.h
-	[Native]
 	[NoMac]
 	[NoWatch]
 	[TV (14,0)]
+	[Native]
 	public enum MPMusicRepeatMode : long {
 		Default,
 		None,
@@ -223,10 +224,10 @@ namespace MediaPlayer {
 	}
 	
 	// NSInteger -> /MPMusicPlayerController.h
-	[Native]
 	[NoMac]
 	[NoWatch]
 	[TV (14,0)]
+	[Native]
 	public enum MPMusicShuffleMode : long {
 		Default,
 		Off,
@@ -268,25 +269,27 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPRemoteCommand.h
-	[Native]
 	[Mac (10,12,2)]
 	[iOS (7,1)]
 	[Watch (5,0)]
+	[Native]
 	public enum MPRemoteCommandHandlerStatus : long {
 		Success = 0,
 		NoSuchContent = 100,
 		[iOS (9,1)]
 		NoActionableNowPlayingItem = 110,
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
 		DeviceNotFound = 120,
 		CommandFailed = 200
 	}
 
 	// NSUInteger -> MPRemoteCommandEvent.h
-	[Native]
 	[Mac (10,12,2)]
 	[iOS (7,1)]
 	[Watch (5,0)]
+	[Native]
 	public enum MPSeekCommandEventType : ulong {
 		BeginSeeking,
 		EndSeeking

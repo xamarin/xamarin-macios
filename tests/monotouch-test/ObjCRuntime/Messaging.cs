@@ -10,7 +10,12 @@ using MapKit;
 #endif
 using CoreGraphics;
 using Foundation;
+
+#if NET
+using System.Numerics;
+#else
 using OpenTK;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -177,8 +182,10 @@ namespace ObjCRuntime
 		public extern static CGRect CGRect_objc_msgSend_CGRect_CGRect_CGRect (IntPtr receiver, IntPtr selector, CGRect p1, CGRect p2, CGRect p3);
 
 #if !__WATCHOS__
+#if !NET
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static Matrix3 Matrix3_objc_msgSend (IntPtr receiver, IntPtr selector);
+#endif // !NET
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static CATransform3D CATransform3D_objc_msgSend (IntPtr receiver, IntPtr selector);
@@ -198,10 +205,10 @@ namespace ObjCRuntime
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		public extern static void CGSize_objc_msgSend_stret (out CGSize buf, IntPtr receiver, IntPtr selector);
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !NET
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		public extern static void Matrix3_objc_msgSend_stret (out Matrix3 buf, IntPtr receiver, IntPtr selector);
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !NET
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		public extern static void CGRect_objc_msgSend_stret_int (out CGRect buf, IntPtr receiver, IntPtr selector, int p1);

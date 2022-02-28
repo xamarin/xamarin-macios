@@ -527,7 +527,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if !MONOMAC // Failing with 10 broken
+#if !MONOMAC || NET // Failing with 10 broken in legacy Xamarin.Mac
 		[TestCase (typeof (NSObject))]
 #endif
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
@@ -870,5 +870,62 @@ Additional information:
 		{
 			Assert.That (Runtime.OriginalWorkingDirectory, Is.Not.Null.And.Not.Empty, "OriginalWorkingDirectory");
 		}
+
+#if NET
+		[Test]
+		public void IntPtrCtor_1 ()
+		{
+			using var obj = Runtime.GetNSObject (IntPtrConstructor.New ());
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		[Test]
+		public void IntPtrCtor_2 ()
+		{
+			using var obj = Runtime.GetNSObject<IntPtrConstructor> (IntPtrConstructor.New ());
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		[Test]
+		public void IntPtrCtor_3 ()
+		{
+			using var obj = Runtime.GetINativeObject<IntPtrConstructor> (IntPtrConstructor.New (), false);
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		class IntPtrConstructor : NSObject {
+			IntPtrConstructor (IntPtr handle) : base (handle) {}
+
+			internal static IntPtr New ()
+			{
+				var class_handle = Class.GetHandle (typeof (IntPtrConstructor));
+				var handle = Messaging.IntPtr_objc_msgSend (Messaging.IntPtr_objc_msgSend (class_handle, Selector.GetHandle ("alloc")), Selector.GetHandle ("init"));
+				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("autorelease"));
+				return handle;
+			}
+		}
+
+		[Test]
+		public void IntPtrBoolCtor_1 ()
+		{
+			using var obj = Runtime.GetINativeObject<IntPtrBoolConstructor> ((IntPtr) 1234, false);
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrBoolConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		class IntPtrBoolConstructor : DisposableObject {
+			IntPtrBoolConstructor (IntPtr handle, bool owns)
+				: base (handle, owns)
+			{
+			}
+		}
+#endif
 	}
 }

@@ -182,16 +182,18 @@ namespace CoreMedia {
 		
 		public override bool Equals (object obj)
 		{
-			if (!(obj is CMTime))
-				return false;
-			
-			CMTime other = (CMTime) obj;
-			return other == this;
+			if (obj is CMTime time)
+				return CMTimeCompare (this, time) == 0;
+			return false;
 		}
 		
 		public override int GetHashCode ()
 		{
+#if NET
+			return HashCode.Combine (Value, TimeScale, TimeFlags, TimeEpoch);
+#else
 			return Value.GetHashCode () ^ TimeScale.GetHashCode () ^ TimeFlags.GetHashCode () ^ TimeEpoch.GetHashCode ();
+#endif
 		}
 		
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -226,13 +228,20 @@ namespace CoreMedia {
 			return CMTimeMultiplyByFloat64 (time, multiplier);
 		}
 
-#if !NET
-		[iOS (7,1)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (7,1)]
+		[Mac (10,10)]
 #endif
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeMultiplyByRatio (CMTime time, /* int32_t */ int multiplier, /* int32_t */ int divisor);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (7,1)]
 		[Mac (10, 10)]
 #endif
@@ -302,20 +311,26 @@ namespace CoreMedia {
 			return CMTimeMinimum (time1, time2);
 		}
 
-#if !NET
-		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
+#if NET
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+#else
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeFoldIntoRange (CMTime time, CMTimeRange foldRange);
 
-#if !NET
-		[TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
+#if NET
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+#else
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
 #endif
 		public static CMTime Fold (CMTime time, CMTimeRange foldRange)
 		{
@@ -364,8 +379,8 @@ namespace CoreMedia {
 
 		public static CMTime FromDictionary (NSDictionary dict)
 		{
-			if (dict == null)
-				throw new ArgumentNullException ("dict");
+			if (dict is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dict));
 			return CMTimeMakeFromDictionary (dict.Handle);
 		}
 #endif // !COREBUILD

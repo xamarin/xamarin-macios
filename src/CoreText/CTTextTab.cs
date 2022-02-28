@@ -41,6 +41,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreText {
 
 #region Text Tab Constants
+#if !NET
 	public static class CTTextTabOptionKey {
 
 		public static readonly NSString ColumnTerminators;
@@ -50,6 +51,7 @@ namespace CoreText {
 			ColumnTerminators = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTTabColumnTerminatorsAttributeName")!;
 		}
 	}
+#endif
 
 	public class CTTextTabOptions {
 

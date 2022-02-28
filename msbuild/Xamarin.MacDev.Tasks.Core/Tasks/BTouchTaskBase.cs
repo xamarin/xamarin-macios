@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using Microsoft.Build.Framework;
@@ -21,6 +22,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public string BTouchToolExe { get; set; }
+
+		public string DotNetCscCompiler { get; set; }
 
 		public ITaskItem[] ObjectiveCLibraries { get; set; }
 
@@ -51,6 +54,8 @@ namespace Xamarin.MacDev.Tasks {
 		public string GeneratedSourcesFileList { get; set; }
 
 		public string Namespace { get; set; }
+
+		public bool NoNFloatUsing { get; set; }
 
 		public ITaskItem[] NativeLibraries { get; set; }
 
@@ -143,7 +148,18 @@ namespace Xamarin.MacDev.Tasks {
 			if (AllowUnsafeBlocks)
 				cmd.Add ("/unsafe");
 
+			if (!string.IsNullOrEmpty (DotNetCscCompiler)) {
+				var compileCommand = new string [] {
+					DotNetPath,
+					DotNetCscCompiler,
+				};
+				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (compileCommand)));
+			}
+
 			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
+
+			if (NoNFloatUsing)
+				cmd.Add ("/no-nfloat-using:true");
 
 			if (!string.IsNullOrEmpty (DefineConstants)) {
 				var strv = DefineConstants.Split (new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);

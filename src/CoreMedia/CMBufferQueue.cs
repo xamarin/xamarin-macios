@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -25,8 +26,11 @@ namespace CoreMedia {
 	public delegate bool   CMBufferGetBool (INativeObject buffer);
 	public delegate int    CMBufferCompare (INativeObject first, INativeObject second);
 
-#if !NET
-	[iOS (7,1), Watch (6,0)]
+#if NET
+	// [SupportedOSPlatform ("ios7.1")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
+#else
+	[iOS (7,1)]
+	[Watch (6,0)]
 #endif
 	public delegate nint   CMBufferGetSize (INativeObject buffer);
 
@@ -116,15 +120,15 @@ namespace CoreMedia {
 		{
 			var bq = new CMBufferQueue (count);
 			var cbacks = new CMBufferCallbacks () {
-				version = (uint) (getTotalSize == null ? 0 : 1),
+				version = (uint) (getTotalSize is null ? 0 : 1),
 				refcon = GCHandle.ToIntPtr (bq.gch),
-				XgetDecodeTimeStamp = getDecodeTimeStamp == null ? (BufferGetTimeCallback?) null : GetDecodeTimeStamp,
-				XgetPresentationTimeStamp = getPresentationTimeStamp == null ? (BufferGetTimeCallback?) null : GetPresentationTimeStamp,
-				XgetDuration = getDuration == null ? (BufferGetTimeCallback?) null : GetDuration,
-				XisDataReady = isDataReady == null ? (BufferGetBooleanCallback?) null : GetDataReady,
-				Xcompare = compare == null ? (BufferCompareCallback?) null : Compare,
-				cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification == null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
-				XgetSize = getTotalSize == null ? (BufferGetSizeCallback?) null : GetTotalSize
+				XgetDecodeTimeStamp = getDecodeTimeStamp is null ? (BufferGetTimeCallback?) null : GetDecodeTimeStamp,
+				XgetPresentationTimeStamp = getPresentationTimeStamp is null ? (BufferGetTimeCallback?) null : GetPresentationTimeStamp,
+				XgetDuration = getDuration is null ? (BufferGetTimeCallback?) null : GetDuration,
+				XisDataReady = isDataReady is null ? (BufferGetBooleanCallback?) null : GetDataReady,
+				Xcompare = compare is null ? (BufferCompareCallback?) null : Compare,
+				cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification is null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
+				XgetSize = getTotalSize is null ? (BufferGetSizeCallback?) null : GetTotalSize
 			};
 
 			bq.getDecodeTimeStamp = getDecodeTimeStamp;
@@ -170,7 +174,7 @@ namespace CoreMedia {
 		public void Enqueue (INativeObject cftypeBuffer)
 		{
 			if (cftypeBuffer is null)
-				throw new ArgumentNullException (nameof (cftypeBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (cftypeBuffer));
 			lock (queueObjects){
 				var cfh = cftypeBuffer.Handle;
 				CMBufferQueueEnqueue (Handle, cfh);
@@ -280,13 +284,20 @@ namespace CoreMedia {
 			}
 		}
 		
-#if !NET
-		[iOS (7,1)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[iOS (7,1)]
+		[Mac (10,10)]
 #endif
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* size_t */ nint CMBufferQueueGetTotalSize (/* CMBufferQueueRef */ IntPtr queue);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("macos10.10")]
+#else
 		[iOS (7,1)]
 		[Mac (10, 10)]
 #endif

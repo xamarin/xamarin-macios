@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -44,7 +47,7 @@ namespace AudioToolbox {
 #if !NET
 	[Watch (6,0)]
 #endif
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFormat
 	{
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
@@ -53,10 +56,10 @@ namespace AudioToolbox {
 #if !WATCH
 		public unsafe static AudioFormat? GetFirstPlayableFormat (AudioFormat[] formatList)
 		{
-			if (formatList == null)
-				throw new ArgumentNullException ("formatList");
+			if (formatList is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatList));
 			if (formatList.Length < 2)
-				throw new ArgumentException ("formatList");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatList));
 
  			fixed (AudioFormat* item = &formatList[0]) {
 				uint index;
@@ -118,8 +121,8 @@ namespace AudioToolbox {
 
 		public AudioBalanceFade (AudioChannelLayout channelLayout)
 		{
-			if (channelLayout == null)
-				throw new ArgumentNullException ("channelLayout");
+			if (channelLayout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (channelLayout));
 
 			this.ChannelLayout = channelLayout;
 		}
@@ -129,7 +132,7 @@ namespace AudioToolbox {
 		public AudioBalanceFadeType Type { get; set; }
 		public AudioChannelLayout ChannelLayout { get; private set; }
 
-		public unsafe float[] GetBalanceFade ()
+		public unsafe float[]? GetBalanceFade ()
 		{
 			var type_size = sizeof (Layout);
 
@@ -162,7 +165,7 @@ namespace AudioToolbox {
 				Type = Type,
 			};
 
-			if (ChannelLayout != null) {
+			if (ChannelLayout is not null) {
 				int temp;
 				l.ChannelLayoutWeak = ChannelLayout.ToBlock (out temp);
 			}
@@ -193,19 +196,19 @@ namespace AudioToolbox {
 
 		public AudioPanningInfo (AudioChannelLayout outputChannelMap)
 		{
-			if (outputChannelMap == null)
-				throw new ArgumentNullException ("outputChannelMap");
+			if (outputChannelMap is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputChannelMap));
 
 			this.OutputChannelMap = outputChannelMap;
 		}
 
 		public PanningMode PanningMode { get; set; }
 		public AudioChannelFlags CoordinateFlags { get; set; }
-		public float[] Coordinates { get; private set; }
+		public float[] Coordinates { get; private set; } = Array.Empty<float> ();
 		public float GainScale { get; set; }
 		public AudioChannelLayout OutputChannelMap { get; private set; }
 
-		public unsafe float[] GetPanningMatrix ()
+		public unsafe float[]? GetPanningMatrix ()
 		{
 			var type_size = sizeof (Layout);
 
@@ -241,7 +244,7 @@ namespace AudioToolbox {
 				GainScale = GainScale
 			};
 
-			if (OutputChannelMap != null) {
+			if (OutputChannelMap is not null) {
 				int temp;
 				l.OutputChannelMapWeak = OutputChannelMap.ToBlock (out temp);
 			}
@@ -388,11 +391,14 @@ namespace AudioToolbox {
 		ID3TagToDictionary			= 0x69643364,	// 'id3d' // TODO:
 
 #if !MONOMAC
-#if !NET
-		[Deprecated (PlatformName.iOS, 8, 0)]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios8.0")]
-#endif // !NET
+#if IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 8, 0)]
+#endif
 		HardwareCodecCapabilities	= 0x68776363,	// 'hwcc'
 #endif
 	}

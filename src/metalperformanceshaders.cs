@@ -3,7 +3,12 @@ using CoreGraphics;
 using Foundation;
 using Metal;
 using ObjCRuntime;
+
+#if NET
+using Vector4 = global::System.Numerics.Vector4;
+#else
 using Vector4 = global::OpenTK.Vector4;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -2829,7 +2834,7 @@ namespace MetalPerformanceShaders {
 		[Export ("secondaryKernelHeight")]
 		nuint SecondaryKernelHeight { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		// Apple answered to radar://38054031 and said that these were exposed by mistake in an older release
 		// and got removed because they are useless and no developers could have used it before.
 		// Keeping stubs for binary compat.
@@ -5541,7 +5546,11 @@ namespace MetalPerformanceShaders {
 
 		[Abstract]
 		[Export ("load")]
+#if NET
+		bool Load ();
+#else
 		bool Load { get; }
+#endif
 
 		[Abstract]
 		[Export ("purge")]

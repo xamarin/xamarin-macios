@@ -13,13 +13,22 @@ using ObjCRuntime;
 using Foundation;
 using SpriteKit;
 using SceneKit;
-using Vector2 = global::OpenTK.Vector2;
-using Vector2d = global::OpenTK.Vector2d;
-using Vector2i = global::OpenTK.Vector2i;
-using Vector3 = global::OpenTK.Vector3;
-using Vector3d = global::OpenTK.Vector3d;
+#if NET
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector2i = global::CoreGraphics.NVector2i;
+using Vector3d = global::CoreGraphics.NVector3d;
+#else
 using Matrix3 = global::OpenTK.Matrix3;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+using Vector2 = global::OpenTK.Vector2;
+using Vector3 = global::OpenTK.Vector3;
+using Vector2d = global::OpenTK.Vector2d;
+using Vector2i = global::OpenTK.Vector2i;
+using Vector3d = global::OpenTK.Vector3d;
+#endif
 
 #if MONOMAC
 using SKColor = AppKit.NSColor;
@@ -138,7 +147,7 @@ namespace GameplayKit {
 		[Export ("rightHanded")]
 		bool RightHanded { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Rotation3x3' instead.")]
 		[Export ("rotation", ArgumentSemantic.Assign)]
 		Matrix3 Rotation { 
@@ -150,7 +159,7 @@ namespace GameplayKit {
 #endif
 
 		[Export ("rotation", ArgumentSemantic.Assign)]
-#if XAMCORE_4_0
+#if NET
 		MatrixFloat3x3 Rotation {
 #else
 		[Sealed]
@@ -853,7 +862,7 @@ namespace GameplayKit {
 		Vector2i GridPosition { 
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set; 
 #endif
@@ -1478,7 +1487,7 @@ namespace GameplayKit {
 		[Export ("displaceXWithNoise:yWithNoise:zWithNoise:")]
 		void Displace (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GKNoise.Displace' instead.")]
 		[Wrap ("Displace (xDisplacementNoise, yDisplacementNoise, zDisplacementNoise)", isVirtual: true)]
 		void DisplaceX (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
@@ -1950,7 +1959,7 @@ namespace GameplayKit {
 		[Export ("removeElement:withNode:")]
 		bool RemoveElement (NSObject data, GKQuadTreeNode node);
 
-#if !XAMCORE_4_0 && !MONOMAC // This API is removed in Xcode 8
+#if !NET && !MONOMAC // This API is removed in Xcode 8
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]

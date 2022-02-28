@@ -9,12 +9,16 @@
 
 using System;
 using ObjCRuntime;
+#if NET
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
 using Vector2i = global::OpenTK.Vector2i;
+#endif // NET
 
 namespace GameplayKit {
 	public partial class GKGridGraph {
 		
-#if !XAMCORE_4_0
+#if !NET
 		public virtual GKGridGraphNode GetNodeAt (Vector2i position)
 		{
 			return GetNodeAt<GKGridGraphNode> (position);

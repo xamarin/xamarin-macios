@@ -30,6 +30,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -81,12 +83,15 @@ namespace AudioToolbox {
 		AES3                    = 0x61657333, // 'aes3'
 		EnhancedAES3            = 0x65632d33, // 'ec-3'
 		Flac                    = 0x666c6163, // 'flac'
-#if !NET
-		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[NoWatch]
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[TV (13,0)]
 #endif
 		LatmInLoas              = 0x6c6f6173, // 'loas'
 		Opus                    = 0x6f707573, // 'opus'
@@ -136,7 +141,7 @@ namespace AudioToolbox {
 #endif
 
 	[DebuggerDisplay ("{FormatName}")]
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioStreamBasicDescription {
 		public double SampleRate;
 		public AudioFormatType Format;
@@ -154,17 +159,17 @@ namespace AudioToolbox {
 		const int AudioUnitSampleFractionBits = 24;
 		const AudioFormatFlags AudioFormatFlagIsBigEndian = 0;
 
-#if !NET
+#if NET
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.10 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
-#else
-		[UnsupportedOSPlatform ("ios8.0")]
-		[UnsupportedOSPlatform ("macos10.10")]
-#if IOS
-		[Obsolete ("Starting with ios8.0 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.10 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 		public static readonly AudioFormatFlags AudioFormatFlagsAudioUnitCanonical = AudioFormatFlags.IsSignedInteger | (BitConverter.IsLittleEndian ? 0 : AudioFormatFlags.IsBigEndian) |
 			AudioFormatFlags.IsPacked | AudioFormatFlags.IsNonInterleaved | (AudioFormatFlags) (AudioUnitSampleFractionBits << (int)AudioFormatFlags.LinearPCMSampleFractionShift);
@@ -196,7 +201,7 @@ namespace AudioToolbox {
 		}
 
 #if !WATCH
-		public unsafe static AudioChannelLayoutTag[] GetAvailableEncodeChannelLayoutTags (AudioStreamBasicDescription format)
+		public unsafe static AudioChannelLayoutTag[]? GetAvailableEncodeChannelLayoutTags (AudioStreamBasicDescription format)
 		{
 			var type_size = sizeof (AudioStreamBasicDescription);
 			uint size;
@@ -213,7 +218,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe static int[] GetAvailableEncodeNumberChannels (AudioStreamBasicDescription format)
+		public unsafe static int[]? GetAvailableEncodeNumberChannels (AudioStreamBasicDescription format)
 		{
 			uint size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.AvailableEncodeNumberChannels, sizeof (AudioStreamBasicDescription), ref format, out size) != 0)
@@ -229,7 +234,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe AudioFormat[] GetOutputFormatList (byte[] magicCookie = null)
+		public unsafe AudioFormat[]? GetOutputFormatList (byte[]? magicCookie = null)
 		{
 			var afi = new AudioFormatInfo ();
 			afi.AudioStreamBasicDescription = this;
@@ -252,10 +257,10 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe AudioFormat[] GetFormatList (byte[] magicCookie)
+		public unsafe AudioFormat[]? GetFormatList (byte[] magicCookie)
 		{
-			if (magicCookie == null)
-				throw new ArgumentNullException ("magicCookie");
+			if (magicCookie is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (magicCookie));
 
 			var afi = new AudioFormatInfo ();
 			afi.AudioStreamBasicDescription = this;
@@ -292,7 +297,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe string FormatName {
+		public unsafe string? FormatName {
 			get {
 				IntPtr ptr;
 				var size = sizeof (IntPtr);
@@ -349,7 +354,7 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioStreamPacketDescription {
 		public long  StartOffset;
 		public int  VariableFramesInPacket;
@@ -559,7 +564,7 @@ namespace AudioToolbox {
 		}
 
 #if !WATCH
-		public unsafe string Name {
+		public unsafe string? Name {
 			get {
 				IntPtr sptr;
 				int size = sizeof (IntPtr);
@@ -575,7 +580,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe string ShortName {
+		public unsafe string? ShortName {
 			get {
 				IntPtr sptr;
 				int size = sizeof (IntPtr);
@@ -883,10 +888,10 @@ namespace AudioToolbox {
 
 		public AudioChannelLayoutTag AudioTag;
 		public AudioChannelBit ChannelUsage;
-		public AudioChannelDescription[] Channels;
+		public AudioChannelDescription[]? Channels;
 
 #if !WATCH
-		public unsafe string Name {
+		public unsafe string? Name {
 			get {
 				IntPtr sptr;
 				int size = sizeof (IntPtr);
@@ -902,7 +907,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public unsafe string SimpleName {
+		public unsafe string? SimpleName {
 			get {
 				IntPtr sptr;
 				int size = sizeof (IntPtr);
@@ -918,22 +923,22 @@ namespace AudioToolbox {
 			}
 		}
 
-		public static AudioChannelLayout FromAudioChannelBitmap (AudioChannelBit channelBitmap)
+		public static AudioChannelLayout? FromAudioChannelBitmap (AudioChannelBit channelBitmap)
 		{
 			return GetChannelLayout (AudioFormatProperty.ChannelLayoutForBitmap, (int) channelBitmap);
 		}
 
-		public static AudioChannelLayout FromAudioChannelLayoutTag (AudioChannelLayoutTag channelLayoutTag)
+		public static AudioChannelLayout? FromAudioChannelLayoutTag (AudioChannelLayoutTag channelLayoutTag)
 		{
 			return GetChannelLayout (AudioFormatProperty.ChannelLayoutForTag, (int) channelLayoutTag);
 		}
 
-		static AudioChannelLayout GetChannelLayout (AudioFormatProperty property, int value)
+		static AudioChannelLayout? GetChannelLayout (AudioFormatProperty property, int value)
 		{
 			int size;
 			AudioFormatPropertyNative.AudioFormatGetPropertyInfo (property, sizeof (AudioFormatProperty), ref value, out size);
 
-			AudioChannelLayout layout;
+			AudioChannelLayout? layout;
 			IntPtr ptr = Marshal.AllocHGlobal (size);
 			if (AudioFormatPropertyNative.AudioFormatGetProperty (property, sizeof (AudioFormatProperty), ref value, ref size, ptr) == 0)
 				layout = new AudioChannelLayout (ptr);
@@ -945,7 +950,7 @@ namespace AudioToolbox {
 		}
 #endif // !WATCH
 
-		internal static AudioChannelLayout FromHandle (IntPtr handle)
+		internal static AudioChannelLayout? FromHandle (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
@@ -955,14 +960,14 @@ namespace AudioToolbox {
 
 		public override string ToString ()
 		{
-			return String.Format ("AudioChannelLayout: Tag={0} Bitmap={1} Channels={2}", AudioTag, ChannelUsage, Channels.Length);
+			return String.Format ("AudioChannelLayout: Tag={0} Bitmap={1} Channels={2}", AudioTag, ChannelUsage, Channels!.Length);
 		}
 
 		// The returned block must be released with FreeHGlobal
 		internal unsafe IntPtr ToBlock (out int size)
 		{
-			if (Channels == null)
-				throw new ArgumentNullException ("Channels");
+			if (Channels is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (Channels));
 			
 			var desc_size = sizeof (AudioChannelDescription);
 
@@ -984,8 +989,8 @@ namespace AudioToolbox {
 #if !WATCH
 		public static AudioFormatError Validate (AudioChannelLayout layout)
 		{
-			if (layout == null)
-				throw new ArgumentNullException ("layout");
+			if (layout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (layout));
 
 			int ptr_size;
 			var ptr = layout.ToBlock (out ptr_size);
@@ -995,15 +1000,15 @@ namespace AudioToolbox {
 			return res;
 		}
 
-		public unsafe static int[] GetChannelMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
+		public unsafe static int[]? GetChannelMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
 		{
-			if (inputLayout == null)
-				throw new ArgumentNullException ("inputLayout");
-			if (outputLayout == null)
-				throw new ArgumentNullException ("outputLayout");
+			if (inputLayout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputLayout));
+			if (outputLayout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputLayout));
 
 			var channels_count = GetNumberOfChannels (outputLayout);
-			if (channels_count == null)
+			if (channels_count is null)
 				throw new ArgumentException ("outputLayout");
 
 			int ptr_size;
@@ -1029,19 +1034,19 @@ namespace AudioToolbox {
 			return res == 0 ? value : null;
 		}
 
-		public unsafe static float[,] GetMatrixMixMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
+		public unsafe static float[,]? GetMatrixMixMap (AudioChannelLayout inputLayout, AudioChannelLayout outputLayout)
 		{
-			if (inputLayout == null)
-				throw new ArgumentNullException ("inputLayout");
-			if (outputLayout == null)
-				throw new ArgumentNullException ("outputLayout");
+			if (inputLayout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputLayout));
+			if (outputLayout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputLayout));
 
 			var channels_count_output = GetNumberOfChannels (outputLayout);
-			if (channels_count_output == null)
+			if (channels_count_output is null)
 				throw new ArgumentException ("outputLayout");
 
 			var channels_count_input = GetNumberOfChannels (inputLayout);
-			if (channels_count_input == null)
+			if (channels_count_input is null)
 				throw new ArgumentException ("inputLayout");
 
 			int ptr_size;
@@ -1069,8 +1074,8 @@ namespace AudioToolbox {
 
 		public static int? GetNumberOfChannels (AudioChannelLayout layout)
 		{
-			if (layout == null)
-				throw new ArgumentNullException ("layout");
+			if (layout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (layout));
 
 			int ptr_size;
 			var ptr = layout.ToBlock (out ptr_size);
@@ -1084,8 +1089,8 @@ namespace AudioToolbox {
 
 		public static AudioChannelLayoutTag? GetTagForChannelLayout (AudioChannelLayout layout)
 		{
-			if (layout == null)
-				throw new ArgumentNullException ("layout");
+			if (layout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (layout));
 
 			int ptr_size;
 			var ptr = layout.ToBlock (out ptr_size);
@@ -1097,7 +1102,7 @@ namespace AudioToolbox {
 			return res != 0 ? null : (AudioChannelLayoutTag?) value;
 		}
 
-		public unsafe static AudioChannelLayoutTag[] GetTagsForNumberOfChannels (int count)
+		public unsafe static AudioChannelLayoutTag[]? GetTagsForNumberOfChannels (int count)
 		{
 			const int type_size = sizeof (uint);
 			int size;
@@ -1127,7 +1132,7 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
-	[Flags]      
+	[Flags]
 	public enum SmpteTimeFlags : uint { // UInt32
 		Unknown = 0,
 		TimeValid = 1 << 0,
@@ -1149,7 +1154,7 @@ namespace AudioToolbox {
 		Hvxc = 9
 	}
 	
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct SmpteTime { // CoreAudio.framework - CoreAudioTypes.h
 		public short Subframes;
 		public short SubframeDivisor;
@@ -1187,7 +1192,7 @@ namespace AudioToolbox {
 
 	public enum SmpteTimeType : uint // UInt32 in AudioFileRegionList
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Value is not to be used with any API.")]
 		None          = uint.MaxValue,
 #endif
@@ -1205,7 +1210,7 @@ namespace AudioToolbox {
 		Type2398      = 11,
 	}
 	
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioTimeStamp {
 
 		[Flags]
@@ -1263,7 +1268,7 @@ namespace AudioToolbox {
 		}
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioBuffer {
 		public int NumberChannels;
 		public int DataByteSize;

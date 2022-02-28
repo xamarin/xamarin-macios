@@ -65,20 +65,20 @@ namespace ObjCRuntime {
 
 		protected virtual void Dispose (bool disposing)
 		{
-			ClearHandle ();
+			handle = NativeHandle.Zero;
 		}
 
+#if !NET
 		protected void ClearHandle ()
 		{
 			handle = NativeHandle.Zero;
 		}
-
+#endif
 		void InitializeHandle (NativeHandle handle, bool verify)
 		{
 #if !COREBUILD
 			if (verify && handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
-				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
-				    "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
+				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 #endif
 			this.handle = handle;
@@ -91,9 +91,10 @@ namespace ObjCRuntime {
 
 		public NativeHandle GetCheckedHandle ()
 		{
-			if (handle == NativeHandle.Zero)
+			var h = handle;
+			if (h == NativeHandle.Zero)
 				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
-			return handle;
+			return h;
 		}
 
 #if NET

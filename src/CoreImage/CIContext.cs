@@ -24,7 +24,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
+using System;
 using System.Runtime.Versioning;
 
 using Foundation;
@@ -89,7 +89,9 @@ namespace CoreImage {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+#else
 		[Mac (10,12)]
 #endif
 		public bool? PriorityRequestLow {
@@ -110,7 +112,9 @@ namespace CoreImage {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public bool? OutputPremultiplied {
@@ -122,8 +126,12 @@ namespace CoreImage {
 			}
 		}
 
-#if !NET
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
 #endif
 		public bool? CacheIntermediates {
 			get {
@@ -139,7 +147,9 @@ namespace CoreImage {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 #else
-		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
 #endif
 		public bool? AllowLowPower {
 			get {
@@ -155,7 +165,9 @@ namespace CoreImage {
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
 #else
-		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
 #endif
 		public string? Name {
 			get {
@@ -169,7 +181,9 @@ namespace CoreImage {
 	
 	public partial class CIContext {
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public CIContext (CIContextOptions options) :
@@ -208,6 +222,9 @@ namespace CoreImage {
 #if MONOMAC
 #if NET
 		[UnsupportedOSPlatform ("macos10.11")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 #endif

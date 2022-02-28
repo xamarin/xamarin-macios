@@ -1120,7 +1120,7 @@ namespace GameKit {
 		void StateChanged (GKMatch match, string playerId, GKPlayerConnectionState state);
 
 #if MONOMAC
-#if !XAMCORE_4_0
+#if !NET
 		// This API was removed or never existed. Can't cleanly remove due to EventsArgs/Delegate
 		[Obsolete ("It will never be called.")]
 		[Export ("xamarin:selector:removed:"), EventArgs ("GKPlayerError")]
@@ -1661,6 +1661,7 @@ namespace GameKit {
 		[Async]
 		void LoadAchievementDescriptions ([NullAllowed] GKAchievementDescriptionHandler handler);
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
@@ -1693,11 +1694,13 @@ namespace GameKit {
 		[NullAllowed]
 		UIImage Image { get; }
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Static]
 		[Export ("incompleteAchievementImage")]
 		UIImage IncompleteAchievementImage { get; }
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Static]
 		[Export ("placeholderCompletedAchievementImage")]
@@ -2221,7 +2224,7 @@ namespace GameKit {
 		GKAchievement Achievement { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[DisableDefaultCtor] // the native 'init' method returned nil.
 #endif
 	[NoWatch]
@@ -2500,7 +2503,7 @@ namespace GameKit {
 	[Model, Protocol, BaseType (typeof (NSObject))]
 	interface GKTurnBasedEventListener
 	{
-#if XAMCORE_4_0		
+#if NET
 		[NoMac]
 #endif
 		[NoWatch]

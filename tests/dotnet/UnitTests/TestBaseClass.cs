@@ -51,6 +51,12 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
+		protected string GetAppPath (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			return Path.Combine (Path.GetDirectoryName (projectPath)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, Path.GetFileNameWithoutExtension (projectPath) + ".app");
+		}
+
 		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
 		{
 			switch (platform) {
@@ -268,6 +274,22 @@ namespace Xamarin.Tests {
 			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+		}
+
+		public static StringBuilder AssertExecute (string executable, params string[] arguments)
+		{
+			return AssertExecute (executable, arguments, out _);
+		}
+
+		public static StringBuilder AssertExecute (string executable, string[] arguments, out StringBuilder output)
+		{
+			var rv = ExecutionHelper.Execute (executable, arguments, out output);
+			if (rv != 0) {
+				Console.WriteLine ($"'{executable} {StringUtils.FormatArguments (arguments)}' exited with exit code {rv}:");
+				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' }));
+			}
+			Assert.AreEqual (0, rv, $"Unable to execute '{executable} {StringUtils.FormatArguments (arguments)}': exit code {rv}");
+			return output;
 		}
 	}
 }

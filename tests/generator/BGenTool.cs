@@ -27,6 +27,9 @@ namespace Xamarin.Tests
 		public List<string> ApiDefinitions = new List<string> ();
 		public List<string> Sources = new List<string> ();
 		public List<string> References = new List<string> ();
+#if NET
+		public List<string> CompileCommand = null;
+#endif
 
 		// If BaseLibrary and AttributeLibrary are null, we calculate a default value
 #if NET
@@ -124,6 +127,20 @@ namespace Xamarin.Tests
 				break;
 			default:
 				throw new NotImplementedException ($"Profile: {Profile}");
+			}
+#endif
+
+#if NET
+			if (CompileCommand is null) {
+				if (!StringUtils.TryParseArguments (Configuration.DotNetCscCommand, out var args, out var ex))
+					throw new InvalidOperationException ($"Unable to parse the .NET csc command '{Configuration.DotNetCscCommand}': {ex.Message}");
+
+				CompileCommand = new List<string> (args);
+			}
+
+			if (CompileCommand.Count > 0) {
+				sb.Add ($"--compile-command");
+				sb.Add (string.Join (" ", StringUtils.QuoteForProcess (CompileCommand.ToArray ())));
 			}
 #endif
 

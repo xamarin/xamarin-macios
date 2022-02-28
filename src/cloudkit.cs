@@ -405,7 +405,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKDatabaseOperation {
@@ -414,6 +414,8 @@ namespace CloudKit {
 		CKDatabase Database { get; set; }
 	}
 
+#if !NET
+	// This type is no longer in the headers.
 	[NoWatch]
 	[NoTV]
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
@@ -431,6 +433,7 @@ namespace CloudKit {
 
 	}
 
+	// This type is no longer in the headers.
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKUserIdentity' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKUserIdentity' instead.")]
 	[Obsoleted (PlatformName.MacOSX, 10, 16, message : "Use 'CKUserIdentity' instead.")]
@@ -449,6 +452,7 @@ namespace CloudKit {
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
 	}
+#endif // !NET
 
 	// CKError.h Fields
 	[Watch (3,0)]
@@ -827,7 +831,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSSortDescriptor))]
@@ -1079,7 +1083,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKNotification is not meant for direct instantiation
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per doc
 #endif
 	interface CKNotification : NSSecureCoding {
@@ -1178,7 +1182,7 @@ namespace CloudKit {
 		CKQueryNotificationReason QueryNotificationReason { get; }
 
 		[NullAllowed, Export ("recordFields", ArgumentSemantic.Copy)]
-#if XAMCORE_4_0
+#if XAMCORE_5_0 // delayed until next time due to #13704.
 		NSDictionary<NSString, NSObject> RecordFields { get; }
 #else
 		NSDictionary RecordFields { get; }
@@ -1242,7 +1246,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSOperation))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKOperation {
@@ -1557,7 +1561,7 @@ namespace CloudKit {
 
 	[iOS (8,0), Mac (10,10)]
 	[Watch (3,0)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSObject))]
@@ -1690,17 +1694,21 @@ namespace CloudKit {
 	[BaseType (typeof (NSObject))]
 	interface CKSubscription : NSSecureCoding, NSCopying {
 
+#if !NET
+		// This constructor does not exist in the headers (anymore?)
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:options:")]
 		NativeHandle Constructor (string recordType, NSPredicate predicate, CKSubscriptionOptions subscriptionOptions);
 
+		// This constructor does not exist in the headers (anymore?)
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
 		NativeHandle Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
+#endif
 
 		[Export ("subscriptionID")]
 		string SubscriptionId { get; }

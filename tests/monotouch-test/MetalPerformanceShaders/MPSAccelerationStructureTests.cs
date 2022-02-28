@@ -18,7 +18,12 @@ using Metal;
 using MetalPerformanceShaders;
 
 using NUnit.Framework;
+
+#if NET
+using CoreGraphics;
+#else
 using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
@@ -26,7 +31,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 	public class MPSAccelerationStructureTests {
 
 		IMTLDevice device;
-		nuint vector3Size = (nuint) Marshal.SizeOf<OpenTK.NVector3> ();
+		nuint vector3Size = (nuint) Marshal.SizeOf<NVector3> ();
 
 		[OneTimeSetUp]
 		public void Metal ()

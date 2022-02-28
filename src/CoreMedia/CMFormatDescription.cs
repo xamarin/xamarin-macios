@@ -247,7 +247,7 @@ namespace CoreMedia {
 			get {
 				unsafe {
 					var ret = (AudioFormat *) CMAudioFormatDescriptionGetMostCompatibleFormat (Handle);
-					if (ret == null)
+					if (ret is null)
 						return new AudioFormat ();
 					return *ret;
 				}
@@ -261,7 +261,7 @@ namespace CoreMedia {
 			get {
 				unsafe {
 					var ret = (AudioFormat *) CMAudioFormatDescriptionGetRichestDecodableFormat (Handle);
-					if (ret == null)
+					if (ret is null)
 						return new AudioFormat ();
 					return *ret;
 				}
@@ -327,7 +327,7 @@ namespace CoreMedia {
 			IntPtr handle;
 			var error = CMVideoFormatDescriptionCreate (IntPtr.Zero, codecType, size.Width, size.Height, IntPtr.Zero, out handle);
 			if (error != CMFormatDescriptionError.None)
-				throw new ArgumentException (error.ToString ());
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			return handle;
 		}
 
@@ -351,7 +351,7 @@ namespace CoreMedia {
 		public static CMVideoFormatDescription? CreateForImageBuffer (CVImageBuffer imageBuffer, out CMFormatDescriptionError error)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 
 			IntPtr desc;
 			error = CMVideoFormatDescriptionCreateForImageBuffer (IntPtr.Zero, imageBuffer.Handle, out desc);
@@ -361,8 +361,12 @@ namespace CoreMedia {
 			return new CMVideoFormatDescription (desc, true);
 		}
 
-#if !NET
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromH264ParameterSets (
@@ -373,19 +377,23 @@ namespace CoreMedia {
 			/* int */ int NALUnitHeaderLength,
 			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
 
-#if !NET
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public static CMVideoFormatDescription? FromH264ParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
 			if (parameterSets is null)
-				throw new ArgumentNullException (nameof (parameterSets));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterSets));
 
 			if (parameterSets.Count < 2)
-				throw new ArgumentException ("parameterSets must contain at least two elements");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException ("parameterSets must contain at least two elements");
 
 			if (nalUnitHeaderLength != 1 && nalUnitHeaderLength != 2 && nalUnitHeaderLength != 4)
-				throw new ArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
 
 			var handles = new GCHandle [parameterSets.Count];
 			try {
@@ -412,8 +420,12 @@ namespace CoreMedia {
 			}
 		}
 
-#if !NET
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetH264ParameterSetAtIndex (
@@ -424,8 +436,12 @@ namespace CoreMedia {
 			/* size_t* */ out nuint parameterSetCountOut,
 			/* int* */ out int nalUnitHeaderLengthOut);
 
-#if !NET
-		[iOS (7,0), Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public byte[]? GetH264ParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{
@@ -454,21 +470,24 @@ namespace CoreMedia {
 		public static NSObject? []? GetExtensionKeysCommonWithImageBuffers ()
 		{
 			var arr = CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers ();
-			return NSArray.ArrayFromHandle<NSString> (arr);
+			return CFArray.ArrayFromHandle<NSString> (arr);
 		}
 
 		public bool VideoMatchesImageBuffer (CVImageBuffer imageBuffer)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			return CMVideoFormatDescriptionMatchesImageBuffer (Handle, imageBuffer.Handle);
 		}
 
-#if !NET
-		[iOS (11,0), Mac (10,13), TV (11,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromHEVCParameterSets (
@@ -480,22 +499,25 @@ namespace CoreMedia {
 			/* CFDictionaryRef */ IntPtr extensions,
 			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
 
-#if !NET
-		[iOS (11,0), Mac (10,13), TV (11,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
 #endif
 		public static CMVideoFormatDescription? FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions, out CMFormatDescriptionError error)
 		{
 			if (parameterSets is null)
-				throw new ArgumentNullException (nameof (parameterSets));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterSets));
 
 			if (parameterSets.Count < 3)
-				throw new ArgumentException ($"{nameof (parameterSets)} must contain at least three elements");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (parameterSets), "must contain at least three elements");
 
 			if (nalUnitHeaderLength != 1 && nalUnitHeaderLength != 2 && nalUnitHeaderLength != 4)
-				throw new ArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
 
 			var handles = new GCHandle [parameterSets.Count];
 			try {
@@ -522,11 +544,14 @@ namespace CoreMedia {
 			}
 		}
 
-#if !NET
-		[iOS (11,0), Mac (10,13), TV (11,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (
@@ -537,11 +562,14 @@ namespace CoreMedia {
 			/* size_t* */ out nuint parameterSetCountOut,
 			/* int* */ out int nalUnitHeaderLengthOut);
 
-#if !NET
-		[iOS (11,0), Mac (10,13), TV (11,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11,0)]
+		[Mac (10,13)]
+		[TV (11,0)]
 #endif
 		public byte []? GetHevcParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
 		{

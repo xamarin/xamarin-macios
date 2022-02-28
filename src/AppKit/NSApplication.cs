@@ -38,11 +38,7 @@ namespace AppKit {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
 
-#if !(XAMCORE_4_0 && NET)
-#if NET
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("This field is ignored (treated as if always true).")]
-#endif
+#if !NET
 		public static bool IgnoreMissingAssembliesDuringRegistration = false;
 #endif
 
@@ -145,10 +141,12 @@ namespace AppKit {
 			DiscardEvents ((nuint)(ulong) mask, lastEvent);
 		}
 
+#if !NET
 		[Obsolete ("This method does nothing.")]
 		public static void RestoreWindow (string identifier, Foundation.NSCoder state, NSWindowCompletionHandler onCompletion)
 		{
 		}
+#endif
 
 		// note: if needed override the protected Get|Set methods
 		public NSApplicationActivationPolicy ActivationPolicy { 

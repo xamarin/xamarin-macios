@@ -308,7 +308,7 @@
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
 
-## Fixed in XAMCORE_4_0
+## Fixed in .NET
 !missing-protocol-conformance! NSController should conform to NSEditor
 !missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
@@ -320,10 +320,6 @@
 
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
-
-## 42781537 Classes fail to conformsToProtocol despite header declaration
-!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
-!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
 
 ## Added in Xcode 10.2 Final but deprecated
 
@@ -397,7 +393,6 @@
 !missing-null-allowed! 'AppKit.NSCell AppKit.NSTableViewDelegate::GetDataCell(AppKit.NSTableView,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'AppKit.NSCell AppKit.NSTableViewDelegate::GetDataCell(AppKit.NSTableView,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSCell[] AppKit.NSBrowser::SelectedCells()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSCollectionViewItem AppKit.NSCollectionView::ItemAtIndex(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSColor AppKit.NSBitmapImageRep::ColorAt(System.nint,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSColor AppKit.NSBrowserCell::HighlightColorInView(AppKit.NSView)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSColor AppKit.NSColor::BlendedColor(System.nfloat,AppKit.NSColor)' is missing an [NullAllowed] on return type
@@ -609,7 +604,6 @@
 !missing-null-allowed! 'Foundation.NSArray AppKit.NSWindow::WindowNumbersWithOptions(AppKit.NSWindowNumberListOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray[] AppKit.NSFontManager::AvailableMembersOfFontFamily(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString AppKit.NSHelpManager::Context(Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAttributedString AppKit.NSTextInputClient::GetAttributedSubstring(Foundation.NSRange,Foundation.NSRange&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString Foundation.NSBundle::GetContextHelp(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSBundle AppKit.NSViewController::get_NibBundle()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSBitmapImageRep::get_TiffRepresentation()' is missing an [NullAllowed] on return type

@@ -48,16 +48,11 @@ included by default (as `CoreMLModel` items).
 All \*.metal files anywhere in the project directory or any subdirectory are
 included by default (as `Metal` items).
 
-## Binding projects
+## All other files in the Resources/ subdirectory
 
-Default compilation includes is turned off for binding projects, because
-typically there are C# source files (ApiDefinition.cs, StructsAndEnums.cs,
-etc.) in the binding project directory which should be compiled as binding
-source code, and not as normal C# source code.
+All files in the Resources/ subdirectory except the ones mentioned above
+(\*.scnassets, \*.storyboard, \*.xib, \*.xcassets, \*.atlas, \*.mlmodel,
+\*.metal) are included by default (as `BundleResource` items).
 
 [1]: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#default-compilation-includes-in-net-core-projects
 
-## Font files
-
-All \*.ttf, \*.ttc and \*.otf files anywhere inside the Resources/
-subdirectory are included by default (as `BundleResource` items).

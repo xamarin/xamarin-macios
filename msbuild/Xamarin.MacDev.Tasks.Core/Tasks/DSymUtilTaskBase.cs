@@ -12,11 +12,6 @@ namespace Xamarin.MacDev.Tasks
 		#region Inputs
 
 		[Required]
-		public string AppBundleDir { get; set; }
-
-		public string Architectures { get; set; }
-
-		[Required]
 		public string DSymDir { get; set; }
 
 		[Output]
@@ -27,6 +22,7 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Outputs
 
+		// This property is required for XVS to work properly, even though it's not used for anything in the targets.
 		[Output]
 		public ITaskItem[] DsymContentFiles { get; set; }
 
@@ -73,7 +69,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
 		{
-			if (singleLine.StartsWith ("warning:", StringComparison.Ordinal))
+			if (singleLine.StartsWith ("warning:", StringComparison.Ordinal) && !singleLine.Contains ("unable to open object file: No such file or directory"))
 				Log.LogWarning (singleLine);
 			else
 				Log.LogMessage (messageImportance, singleLine);

@@ -32,12 +32,10 @@
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-#if NET
-#define SKIP_nint
-#define SKIP_nuint
-#endif
+#if !NET
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -408,6 +406,8 @@ namespace System
 			return ((IConvertible)v).ToType (targetType, provider);
 		}
 
+		[Obsolete ("This API is not available in .NET, use Buffer.MemoryCopy instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void CopyArray (IntPtr source, <#= type.NSName #> [] destination, int startIndex, int length)
 		{
 			if (source == IntPtr.Zero)
@@ -427,6 +427,8 @@ namespace System
 				destination [i + startIndex] = (<#= type.NSName #>)Marshal.ReadIntPtr (source, i * <#= type.NSName #>.Size);
 		}
 
+		[Obsolete ("This API is not available in .NET, use Buffer.MemoryCopy instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void CopyArray (<#= type.NSName #> [] source, int startIndex, IntPtr destination, int length)
 		{
 			if (source is null)
@@ -449,3 +451,5 @@ namespace System
 #endif // !SKIP_<#= type.NSName #>
 }
 <# } #>
+
+#endif // !NET
