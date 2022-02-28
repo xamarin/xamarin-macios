@@ -180,7 +180,7 @@ steps:
   condition: and(succeeded(), in(variables['build.reason'], 'Schedule'), eq(variables.isMain, 'True'))
 
 - task: OneLocBuild@2
-#  condition: and(succeeded(), eq(variables.isMain, 'True'))
+  condition: and(succeeded(), eq(variables.isMain, 'True'))
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -199,7 +199,7 @@ steps:
     gitHubPatVariable: '$(GitHub.Token)'
 
 - task: PublishBuildArtifacts@1
-#  condition: and(succeeded(), eq(variables.isMain, 'True'))
+  condition: and(succeeded(), eq(variables.isMain, 'True'))
   continueOnError: true
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
