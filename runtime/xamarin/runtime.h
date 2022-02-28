@@ -180,8 +180,8 @@ MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns,
 MonoObject *	xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, GCHandle *exception_gchandle);
 id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, GCHandle *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
-uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
-void			xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags);
+uint16_t         xamarin_get_nsobject_flags (MonoObject *obj);
+void			xamarin_set_nsobject_flags (MonoObject *obj, uint16_t flags);
 void			xamarin_throw_nsexception (MonoException *exc);
 void			xamarin_rethrow_managed_exception (GCHandle original_gchandle, GCHandle *exception_gchandle);
 MonoException *	xamarin_create_exception (const char *msg);
@@ -301,7 +301,7 @@ void			xamarin_gchandle_free (GCHandle handle);
 MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
 
 typedef id (*xamarin_get_handle_func) (MonoObject *info);
-MonoToggleRefStatus	xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info);
+MonoToggleRefStatus	xamarin_gc_toggleref_callback (uint16_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info);
 void				xamarin_gc_event (MonoGCEvent event);
 
 void			xamarin_bridge_log_monoobject (MonoObject *obj, const char *stacktrace);

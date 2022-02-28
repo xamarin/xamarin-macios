@@ -45,7 +45,7 @@ enum XamarinLaunchMode {
 };
 
 // This has a managed equivalent in NSObject2.cs
-enum NSObjectFlags : short {
+enum NSObjectFlags : uint16_t {
 	NSObjectFlagsDisposed = 1,
 	NSObjectFlagsNativeRef = 2,
 	NSObjectFlagsIsDirectBinding = 4,

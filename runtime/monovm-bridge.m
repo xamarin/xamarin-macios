@@ -535,7 +535,7 @@ gc_toggleref_callback (MonoObject *object)
 {
 	// COOP: this is a callback called by the GC, so I assume the mode here doesn't matter
 	MonoToggleRefStatus res;
-	uint8_t flags = xamarin_get_nsobject_flags (object);
+	uint16_t flags = xamarin_get_nsobject_flags (object);
 
 	res = xamarin_gc_toggleref_callback (flags, NULL, xamarin_get_nsobject_handle, object);
 

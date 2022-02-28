@@ -243,7 +243,7 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 #endif
 }
 
-uint8_t
+uint16_t
 xamarin_get_nsobject_flags (MonoObject *obj)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
@@ -258,7 +258,7 @@ xamarin_get_nsobject_flags (MonoObject *obj)
 }
 
 void
-xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags)
+xamarin_set_nsobject_flags (MonoObject *obj, uint16_t flags)
 {
 	// COOP: Writing managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -831,7 +831,7 @@ xamarin_type_get_full_name (MonoType *type, GCHandle *exception_gchandle)
 // #define DEBUG_TOGGLEREF 1
 
 MonoToggleRefStatus
-xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info)
+xamarin_gc_toggleref_callback (uint16_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info)
 {
 	// COOP: this is a callback called by the GC, so I assume the mode here doesn't matter
 	MonoToggleRefStatus res;

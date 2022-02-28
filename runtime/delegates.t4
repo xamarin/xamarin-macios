@@ -314,14 +314,14 @@
 
 		new XDelegate ("void", "void", "xamarin_set_flags_for_nsobject",
 			"GCHandle", "IntPtr", "gchandle",
-			"uint8_t", "byte", "flags"
+			"uint16_t", "ushort", "flags"
 		) {
 			WrappedManagedFunction = "SetFlagsForNSObject",
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
 
-		new XDelegate ("uint8_t", "byte", "xamarin_get_flags_for_nsobject",
+		new XDelegate ("uint16_t", "ushort", "xamarin_get_flags_for_nsobject",
 			"GCHandle", "IntPtr", "gchandle"
 		) {
 			WrappedManagedFunction = "GetFlagsForNSObject",
