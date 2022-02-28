@@ -41,6 +41,7 @@ steps:
       MESSAGE=$(printf ":fire: Failed to create API Diff from stable (%s/console) :fire:")
       echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
       echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]False"
+      exit 1
     }
     trap report_error ERR
 
