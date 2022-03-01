@@ -309,8 +309,7 @@ namespace AVFoundation {
 
 		public AVVideoScalingMode? ScalingMode {
 			get {
-				var val = GetNSStringValue (AVVideo.ScalingModeKey);
-				return val is not null ? AVVideoSettingsUncompressed.ScalingModeFromNSString (val) : null;
+				return AVVideoSettingsUncompressed.ScalingModeFromNSString (GetNSStringValue (AVVideo.ScalingModeKey));
 			}
 
 			set {
