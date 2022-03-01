@@ -11,6 +11,7 @@ steps:
   displayName: 'API & Generator comparison'
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   name: apiGeneratorDiff
+  continueOnError: true
   env:
     BUILD_REVISION: 'jenkins'
     PR_ID:  ${{ parameters.prID }} # reusing jenkins vars, to be fixed
@@ -40,6 +41,7 @@ steps:
       MESSAGE=$(printf ":fire: Failed to create API Diff from stable (%s/console) :fire:")
       echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
       echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]False"
+      exit 1
     }
     trap report_error ERR
 
