@@ -59,7 +59,7 @@ namespace AVFoundation {
 			return (AVLayerVideoGravity) (-1);
 		}
 
-		static internal NSString? EnumToKey (AVLayerVideoGravity vg)
+		static internal NSString EnumToKey (AVLayerVideoGravity? vg)
 		{
 			switch (vg) {
 			case AVLayerVideoGravity.ResizeAspect:
@@ -69,7 +69,9 @@ namespace AVFoundation {
 			case AVLayerVideoGravity.Resize:
 				return AVPlayerLayer.GravityResize;
 			default:
-				return null;
+				// The default value according to docs is AVLayerVideoGravity.ResizeAspect so return AVPlayerLayer.GravityResizeAspect;
+				// https://developer.apple.com/documentation/avfoundation/avplayerlayer/1388915-videogravity?language=objc
+				return AVPlayerLayer.GravityResizeAspect;
 			}
 		}
 		
@@ -78,7 +80,7 @@ namespace AVFoundation {
 		public AVLayerVideoGravity VideoGravity
 		{
 			set {
-				WeakVideoGravity = EnumToKey (value)!;
+				WeakVideoGravity = EnumToKey (value);
 			}
 			get {
 				return KeyToEnum (WeakVideoGravity);
@@ -93,7 +95,7 @@ namespace AVFoundation {
 		public AVLayerVideoGravity VideoGravity
 		{
 			set {
-				WeakVideoGravity = AVPlayerLayer.EnumToKey (value)!;
+				WeakVideoGravity = AVPlayerLayer.EnumToKey (value);
 			}
 			get {
 				return AVPlayerLayer.KeyToEnum (WeakVideoGravity);
@@ -106,7 +108,7 @@ namespace AVFoundation {
 	{
 		public AVLayerVideoGravity? ExternalPlaybackVideoGravity {
 			set {
-				WeakExternalPlaybackVideoGravity = value.HasValue ? AVPlayerLayer.EnumToKey (value.Value)! : null!;
+				WeakExternalPlaybackVideoGravity = AVPlayerLayer.EnumToKey (value);
 			}
 			get {
 				var r = AVPlayerLayer.KeyToEnum (WeakExternalPlaybackVideoGravity, false);
