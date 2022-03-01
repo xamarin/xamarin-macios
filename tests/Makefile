@@ -395,3 +395,10 @@ verify-system-vsmac-xcode-match:
 	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \
 	VSMAC_XCODE=$$(/usr/libexec/PlistBuddy -c 'print :AppleSdkRoot' ~/Library/Preferences/Xamarin/Settings.plist); \
 	if [[ "$$SYSTEM_XCODE" != "$$VSMAC_XCODE" ]]; then echo "Error: the system's Xcode ($$SYSTEM_XCODE) does not match the Xcode selected in Visual Studio for Mac ($$VSMAC_XCODE). This will make tests fail in non-trivial ways, so please make sure both match the expected Xcode ($(shell dirname $(shell dirname $(XCODE_DEVELOPER_ROOT))))."; exit 1; fi
+
+package-test-libraries.zip:
+	$(Q) @$(MAKE) all -C test-libraries
+	$(Q) mkdir -p $@.tmpdir
+	$(Q) $(CP) -a test-libraries/*  $@.tmpdir
+	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
+	$(Q) rm -rf $@.tmpdir

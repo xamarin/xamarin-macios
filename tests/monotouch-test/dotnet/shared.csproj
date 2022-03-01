@@ -190,7 +190,8 @@
     <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)/$(MetalBundleSubDirectory)fragmentShader.air -o $(AppBundleDir)/$(MetalBundleSubDirectory)fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
 
-  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild" >
+  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild"
+      Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" />
   </Target>

@@ -437,7 +437,7 @@ steps:
       set -e
 
       make -C $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch package-introspection-dependencies
-    name: introPkg
+    name: testLibPkg
     displayName: 'Package introspection test dependencies'
     continueOnError: true # not a terrible blocking issue
     timeoutInMinutes: 60
@@ -447,6 +447,23 @@ steps:
     inputs:
       targetPath: $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch/package-introspection-dependencies.zip
       artifactName: package-introspection-dependencies
+    continueOnError: true
+
+  - bash: |
+      set -x
+      set -e
+
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip 
+    name: introPkg
+    displayName: 'Package test libraries dependencies'
+    continueOnError: true # not a terrible blocking issue
+    timeoutInMinutes: 60
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish test libraries dependencies'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/package-test-libraries.zip 
+      artifactName: package-test-libraries
     continueOnError: true
 
 - ${{ if eq(parameters.runTests, true) }}:
