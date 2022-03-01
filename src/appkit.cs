@@ -10409,22 +10409,22 @@ namespace AppKit {
 	[Category, BaseType (typeof (NSString))]
 	interface NSStringDrawing_NSString {
 		[Export ("sizeWithAttributes:")]
-		CGSize StringSize (NSDictionary attributes);
+		CGSize StringSize ([NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.StringSize (attributes.GetDictionary ()!)")]
-		CGSize StringSize (AppKit.NSStringAttributes attributes);
+		CGSize StringSize ([NullAllowed] AppKit.NSStringAttributes attributes);
 
 		[Export ("drawAtPoint:withAttributes:")]
-		void DrawAtPoint (CGPoint point, NSDictionary attributes);
+		void DrawAtPoint (CGPoint point, [NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.DrawAtPoint (point, attributes.GetDictionary ()!)")]
-		void DrawAtPoint (CGPoint point, AppKit.NSStringAttributes attributes);
+		void DrawAtPoint (CGPoint point, [NullAllowed] AppKit.NSStringAttributes attributes);
 
 		[Export ("drawInRect:withAttributes:")]
-		void DrawInRect (CGRect rect, NSDictionary attributes);
+		void DrawInRect (CGRect rect, [NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.DrawInRect (rect, attributes.GetDictionary ()!)")]
-		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
+		void DrawInRect (CGRect rect, [NullAllowed] AppKit.NSStringAttributes attributes);
 	}
 
 	[ThreadSafe]
@@ -10586,7 +10586,7 @@ namespace AppKit {
 		bool DrawInRect (CGRect rect);
 
 		[Export ("drawInRect:fromRect:operation:fraction:respectFlipped:hints:")]
-		bool DrawInRect (CGRect dstSpacePortionRect, CGRect srcSpacePortionRect, NSCompositingOperation op, nfloat requestedAlpha, bool respectContextIsFlipped, NSDictionary hints);
+		bool DrawInRect (CGRect dstSpacePortionRect, CGRect srcSpacePortionRect, NSCompositingOperation op, nfloat requestedAlpha, bool respectContextIsFlipped, [NullAllowed] NSDictionary hints);
 
 		[Export ("setAlpha:")]
 		void SetAlpha (bool alpha);
