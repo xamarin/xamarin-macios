@@ -40,7 +40,6 @@ namespace AppKit {
 			// ignore return value (bool)
 			set { SetVoice (value); }
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

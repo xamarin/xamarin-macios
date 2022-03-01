@@ -120,11 +120,6 @@ namespace CoreMidi {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct MidiThruConnectionParamsStruct {
 		public uint Version;

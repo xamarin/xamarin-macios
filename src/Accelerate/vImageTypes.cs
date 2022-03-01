@@ -186,7 +186,6 @@ namespace Accelerate {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PixelFFFF {
 		// all defined as 'float'

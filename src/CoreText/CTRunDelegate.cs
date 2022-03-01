@@ -43,12 +43,6 @@ namespace CoreText {
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
 	delegate nfloat CTRunDelegateGetCallback (IntPtr refCon);
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct CTRunDelegateCallbacks {
 		public /* CFIndex */ nint version;

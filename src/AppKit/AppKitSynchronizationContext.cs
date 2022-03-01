@@ -25,6 +25,5 @@ namespace AppKit {
 		{
 			NSRunLoop.Main.InvokeOnMainThread (d, state);
 		}
-
 	}
 }

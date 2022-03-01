@@ -42,12 +42,6 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	class CFDictionary : NativeObject {
 		public static IntPtr KeyCallbacks;
 		public static IntPtr ValueCallbacks;
@@ -210,12 +204,6 @@ namespace CoreFoundation {
 		extern static bool CFDictionaryContainsKey (IntPtr theDict, IntPtr key);
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	static class CFMutableDictionary {
 
 		[DllImport (Constants.CoreFoundationLibrary)]

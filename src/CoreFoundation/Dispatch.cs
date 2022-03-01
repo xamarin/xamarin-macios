@@ -827,13 +827,14 @@ namespace CoreFoundation {
 #endif // !COREBUILD
 	}
 
+	// Some insights from: https://opensource.apple.com/source/libdispatch/libdispatch-442.1.4/src/time.c
+
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	// Some insights from: https://opensource.apple.com/source/libdispatch/libdispatch-442.1.4/src/time.c
 	public struct DispatchTime
 	{
 #if !COREBUILD

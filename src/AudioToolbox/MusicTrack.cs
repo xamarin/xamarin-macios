@@ -77,18 +77,16 @@ namespace AudioToolbox {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	//
 	// Since we can not express this in the way that C does, we expose a
 	// high level API, and we provide a ToUnmanaged that returns an allocated
 	// IntPtr buffer with the data
 	//
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	public abstract class MidiData {
 #else
 	public abstract class _MidiData {
@@ -131,14 +129,12 @@ namespace AudioToolbox {
 		internal abstract IntPtr ToUnmanaged ();
 	}
 
+#if !COREBUILD
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
-#if !COREBUILD
-#if NET
 	public class MidiRawData : MidiData {
 #else
 	public class MidiRawData : _MidiData {
@@ -186,18 +182,16 @@ namespace AudioToolbox {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	//
 	// Since we can not express this in the way that C does, we expose a
 	// high level API, and we provide a ToUnmanaged that returns an allocated
 	// IntPtr buffer with the data
 	//
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	public class MidiMetaEvent : MidiData {
 #else
 	public class MidiMetaEvent : _MidiData {
@@ -245,7 +239,6 @@ namespace AudioToolbox {
 		public float Pitch;
 		public float Velocity;
 	}
-
 #endif
 
 #if NET

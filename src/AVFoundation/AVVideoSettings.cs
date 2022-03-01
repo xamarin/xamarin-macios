@@ -68,13 +68,13 @@ namespace AVFoundation {
 		HighAutoLevel,
 	}
 
+#if !WATCH
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-#if !WATCH
 	public class AVVideoSettingsUncompressed : CVPixelBufferAttributes
 	{
 #if !COREBUILD

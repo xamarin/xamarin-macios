@@ -142,9 +142,6 @@ namespace CoreServices
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-#endif
 	struct FSEventStreamContext {
 		nint version; /* CFIndex: only valid value is zero */
 		internal IntPtr Info; /* void * __nullable */

@@ -102,7 +102,6 @@ namespace AppKit {
 			DiscardEventsMatchingMask ((uint) mask, beforeLastEvent);
 		}
 
-
 // NSString NSWindowDidBecomeKeyNotification;
 // NSString NSWindowDidBecomeMainNotification;
 // NSString NSWindowDidChangeScreenNotification;

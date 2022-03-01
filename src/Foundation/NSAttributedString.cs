@@ -192,7 +192,6 @@ namespace Foundation {
 		{
 			return (null as NSAttributedString).FromTextAttachment (attachment);
 		}
-
 #endif
 #endif						      
 	}

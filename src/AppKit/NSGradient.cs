@@ -93,7 +93,6 @@ namespace AppKit {
 #endif
 			nsa_colorArray.Dispose ();
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

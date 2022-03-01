@@ -117,12 +117,6 @@ namespace CoreText {
 		Count = 18,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal struct CTParagraphStyleSetting {
 		public CTParagraphStyleSpecifier spec;
 		public nuint /* size_t */ valueSize;
@@ -130,12 +124,6 @@ namespace CoreText {
 	}
 #endregion
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Explicit)]
 	internal struct CTParagraphStyleSettingValue {
 		[FieldOffset (0)] public byte int8;
@@ -144,12 +132,6 @@ namespace CoreText {
 		[FieldOffset (0)] public IntPtr pointer;
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal abstract class CTParagraphStyleSpecifierValue {
 
 		protected CTParagraphStyleSpecifierValue (CTParagraphStyleSpecifier spec)
@@ -167,12 +149,6 @@ namespace CoreText {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal class CTParagraphStyleSpecifierByteValue : CTParagraphStyleSpecifierValue {
 		byte value;
 
@@ -192,12 +168,6 @@ namespace CoreText {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal class CTParagraphStyleSpecifierNativeIntValue : CTParagraphStyleSpecifierValue {
 		nuint value;
 
@@ -217,12 +187,6 @@ namespace CoreText {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal class CTParagraphStyleSpecifierSingleValue : CTParagraphStyleSpecifierValue {
 		nfloat value;
 
@@ -242,12 +206,6 @@ namespace CoreText {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal class CTParagraphStyleSpecifierIntPtrsValue : CTParagraphStyleSpecifierValue {
 		CFArray value;
 

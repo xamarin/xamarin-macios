@@ -56,7 +56,6 @@ namespace AppKit {
 			// ignore return value (bool)
 			set { SetSelectedObjects (value); }
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

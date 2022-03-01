@@ -132,12 +132,6 @@ namespace AudioToolbox {
 	}
 
 #if !WATCH
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	unsafe struct AudioFormatInfo
 	{
@@ -521,13 +515,13 @@ namespace AudioToolbox {
 		HoaN3d                 = (3 << 16),
 	}
 
+#if !COREBUILD
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-#if !COREBUILD
 	public static class AudioChannelLabelExtensions
 	{
 		public static bool IsReserved (this AudioChannelLabel value)
@@ -851,13 +845,13 @@ namespace AudioToolbox {
 		Unknown                  = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
+#if !COREBUILD && !WATCH
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-#if !COREBUILD && !WATCH
 	public static class AudioChannelLayoutTagExtensions
 	{
 		public static AudioChannelBit? ToAudioChannel (this AudioChannelLayoutTag layoutTag)

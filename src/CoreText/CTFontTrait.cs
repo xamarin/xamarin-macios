@@ -36,12 +36,6 @@ using System.Runtime.Versioning;
 
 namespace CoreText {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 #if !NET
 	public static class CTFontTraitKey {
 		public static readonly NSString Symbolic;

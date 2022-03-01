@@ -517,6 +517,7 @@ namespace Metal {
 #endif
 	}
 
+#if IOS || MONOMAC || COREBUILD
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
@@ -549,7 +550,9 @@ namespace Metal {
 
 		public float Y;
 	}
+#endif
 
+#if !TVOS || !NET
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
@@ -561,8 +564,10 @@ namespace Metal {
 	[Mac (11,0)]
 	[iOS (14,0)]
 	[NoTV]
-#endif
+#if TVOS
 	[Obsolete ("This API is not available on this platform.")]
+#endif
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLAccelerationStructureSizes
 	{
@@ -572,4 +577,5 @@ namespace Metal {
 
 		public nuint RefitScratchBufferSize;
 	}
+#endif
 }

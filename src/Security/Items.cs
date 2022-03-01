@@ -1534,12 +1534,6 @@ namespace Security {
 
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal partial class SecItem {
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -1555,12 +1549,6 @@ namespace Security {
 		internal extern static SecStatusCode SecItemUpdate (/* CFDictionaryRef */ IntPtr query, /* CFDictionaryRef */ IntPtr attributesToUpdate);
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal static partial class SecClass {
 	
 		public static IntPtr FromSecKind (SecKind secKind)
@@ -1582,12 +1570,6 @@ namespace Security {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal static partial class KeysAccessible {
 		public static IntPtr FromSecAccessible (SecAccessible accessible)
 		{
@@ -1635,12 +1617,6 @@ namespace Security {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal static partial class SecProtocolKeys {
 		public static IntPtr FromSecProtocol (SecProtocol protocol)
 		{
@@ -1750,12 +1726,6 @@ namespace Security {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal static partial class KeysAuthenticationType {
 		public static SecAuthenticationType ToSecAuthenticationType (IntPtr handle)
 		{

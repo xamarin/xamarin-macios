@@ -5,7 +5,6 @@ using System;
 #nullable enable
 
 namespace CoreData {
-
 #if !XAMCORE_3_0
 	public partial class NSMergeConflict {
 

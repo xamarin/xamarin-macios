@@ -44,6 +44,5 @@ namespace ScriptingBridge {
 		[Obsolete ("Use 'GetApplication' instead.")]
 		public static T? FromProcessIdentifier<T> (int pid) where T : SBApplication => Runtime.GetINativeObject<T> (_FromProcessIdentifier (pid), forced_type: true, owns: false);
 #endif
-
 	}
 }

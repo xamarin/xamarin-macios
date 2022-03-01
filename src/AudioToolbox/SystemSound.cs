@@ -48,8 +48,6 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
-#if NET
 	public class SystemSound : IDisposable {
 #else
 	public class SystemSound : INativeObject, IDisposable {

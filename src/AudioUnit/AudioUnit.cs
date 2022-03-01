@@ -136,12 +136,6 @@ namespace AudioUnit
 	delegate AudioUnitStatus CallbackShared (IntPtr /* void* */ clientData, ref AudioUnitRenderActionFlags /* AudioUnitRenderActionFlags* */ actionFlags, ref AudioTimeStamp /* AudioTimeStamp* */ timeStamp, uint /* UInt32 */ busNumber, uint /* UInt32 */ numberFrames, IntPtr /* AudioBufferList* */ data);
 #endif // !COREBUILD
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct AURenderCallbackStruct
 	{
@@ -149,12 +143,6 @@ namespace AudioUnit
 		public IntPtr ProcRefCon; 
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct AudioUnitConnection
 	{
@@ -204,12 +192,6 @@ namespace AudioUnit
 #endif // !COREBUILD
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct AUSamplerInstrumentData
 	{
@@ -225,12 +207,6 @@ namespace AudioUnit
 		public byte PresetID;
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	unsafe struct AudioUnitParameterInfoNative // AudioUnitParameterInfo in Obj-C
 	{
@@ -1135,11 +1111,6 @@ namespace AudioUnit
 	}
 
 #if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct AudioObjectPropertyAddress
 	{
@@ -1436,7 +1407,6 @@ namespace AudioUnit
 #endif
 		ulong Reserved;
 	}
-
 
 #if !COREBUILD
 #if NET

@@ -47,7 +47,6 @@ namespace AppKit {
 		{
 			return This.StringSize (attributes == null ? null : attributes.Dictionary);
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

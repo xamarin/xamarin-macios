@@ -127,12 +127,6 @@ namespace AudioToolbox {
 	public class AudioBalanceFade
 	{
 #if !COREBUILD
-#if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-#endif
 		[StructLayout (LayoutKind.Sequential)]
 		struct Layout
 		{
@@ -213,12 +207,6 @@ namespace AudioToolbox {
 	public class AudioPanningInfo
 	{
 #if !COREBUILD
-#if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-#endif
 		[StructLayout (LayoutKind.Sequential)]
 		struct Layout
 		{

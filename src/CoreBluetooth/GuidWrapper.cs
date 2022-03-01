@@ -18,12 +18,6 @@ using System.Runtime.Versioning;
 
 namespace CoreBluetooth {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal static class CFUUID {
 
 		// CFUUID.h

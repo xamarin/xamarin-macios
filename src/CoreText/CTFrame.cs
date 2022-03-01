@@ -55,12 +55,6 @@ namespace CoreText {
 		WindingNumber
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 #if !NET
 	public static class CTFrameAttributeKey {
 
@@ -117,12 +111,6 @@ namespace CoreText {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	internal static class CTFrameAttributesExtensions {
 		public static IntPtr GetHandle (this CTFrameAttributes? self)
 		{

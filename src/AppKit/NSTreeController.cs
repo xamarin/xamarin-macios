@@ -48,7 +48,6 @@ namespace AppKit {
 			// ignore return value (bool)
 			set { SetSelectionIndexPaths (value); }
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

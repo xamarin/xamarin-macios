@@ -232,12 +232,6 @@ namespace CoreServices {
 		#region Authentication
 
 		// CFStream.h
-#if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-#endif
 		struct CFStreamError {
 			public /* CFIndex (CFStreamErrorDomain) */ nint domain;
 			public /* SInt32 */ int code;

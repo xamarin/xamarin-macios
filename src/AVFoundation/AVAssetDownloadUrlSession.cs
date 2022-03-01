@@ -19,7 +19,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("ios9.0")]
 	[SupportedOSPlatform ("macos12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("tvos")]
 #endif
 	public partial class AVAssetDownloadUrlSession : NSUrlSession {

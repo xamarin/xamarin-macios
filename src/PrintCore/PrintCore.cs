@@ -790,7 +790,6 @@ namespace PrintCore {
 			}
 			printerList = CFArray.ArrayFromHandleFunc<PMPrinter> (arr, (handle) => new PMPrinter (handle, false), true);
 			return PMStatusCode.Ok;
-
 		}
 	}
 }

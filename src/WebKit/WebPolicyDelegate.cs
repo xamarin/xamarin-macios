@@ -62,7 +62,6 @@ namespace WebKit {
 			
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selIgnore);
 		}
-
 		
 	}
 }

@@ -36,7 +36,6 @@ namespace AppKit {
 			get {
 				return CellAtRowColumn (row, col);
 			}
-
 		}
 	}
 	

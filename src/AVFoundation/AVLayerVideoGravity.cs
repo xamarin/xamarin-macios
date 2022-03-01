@@ -91,13 +91,13 @@ namespace AVFoundation {
 		}
 	}
 
+#if !TVOS
 #if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
 #endif
-#if !TVOS
 	partial class AVCaptureVideoPreviewLayer
 	{
 		// Should be VideoGravity only but previous binding was wrong

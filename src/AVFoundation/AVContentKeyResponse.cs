@@ -14,13 +14,13 @@ using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
+#if !WATCH
 #if NET
 	[SupportedOSPlatform ("tvos10.2")]
 	[SupportedOSPlatform ("macos10.12.4")]
 	[SupportedOSPlatform ("ios10.3")]
 	[SupportedOSPlatform ("maccatalyst")]
 #endif
-#if !WATCH
 	public partial class AVContentKeyResponse {
 
 		public static AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData) => Create (fairPlayStreamingKeyResponseData, AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData);

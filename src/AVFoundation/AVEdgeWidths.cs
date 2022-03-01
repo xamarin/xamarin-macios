@@ -36,7 +36,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVEdgeWidths  {
 		public nfloat /* CGFloat */ Left, Top, Right, Bottom;

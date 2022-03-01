@@ -29,12 +29,6 @@ namespace AudioUnit {
 #endif
 	public class AUScheduledAudioFileRegion : IDisposable {
 
-#if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-#endif
 		[StructLayout (LayoutKind.Sequential)]
 		internal struct ScheduledAudioFileRegion
 		{

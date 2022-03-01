@@ -39,9 +39,6 @@ using Foundation;
 
 namespace CFNetwork {
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-#endif
 	class Content : StreamContent {
 		WebResponseStream responseStream;
 		long? contentLength;

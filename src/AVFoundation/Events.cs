@@ -116,13 +116,13 @@ namespace AVFoundation {
 #endif
 	}
 
+	#pragma warning restore 672
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	#pragma warning restore 672
 	public partial class AVAudioPlayer {
 		InternalAVAudioPlayerDelegate EnsureEventDelegate ()
 		{

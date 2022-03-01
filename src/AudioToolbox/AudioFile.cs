@@ -459,7 +459,6 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFilePacketTableInfo
 	{

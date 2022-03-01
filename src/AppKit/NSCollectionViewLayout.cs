@@ -15,7 +15,6 @@ namespace AppKit {
 		{
 			_RegisterClassForDecorationView (itemClass == null ? IntPtr.Zero : Class.GetHandle (itemClass), elementKind);
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

@@ -614,7 +614,6 @@ namespace AudioUnit
 #endif // !COREBUILD
     }
 
-
 #if !COREBUILD
 #if NET
 	[SupportedOSPlatform ("ios")]

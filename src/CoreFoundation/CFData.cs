@@ -40,12 +40,6 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	class CFData : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CFData (NativeHandle handle, bool owns)

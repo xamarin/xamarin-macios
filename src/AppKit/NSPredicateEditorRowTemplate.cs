@@ -126,8 +126,8 @@ namespace AppKit
 			IEnumerable<NSPredicateOperatorType> operators,
 			NSComparisonPredicateModifier modifier = NSComparisonPredicateModifier.Direct,
 			NSComparisonPredicateOptions options = NSComparisonPredicateOptions.None)
-			: this (			
-			new [] { leftExpressionFromKeyPath },
+			: this (
+				new [] { leftExpressionFromKeyPath },
 				attributeType,
 				operators,
 				modifier,

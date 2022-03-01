@@ -15,11 +15,6 @@ namespace AppKit {
 	public partial class NSDocument {
 		public delegate void DuplicateCallback (NSDocument document, bool didDuplicate);
 
-#if NET
-		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#endif
-
 		[Register ("__NSDocumentDuplicateCallback")]
 		internal class Callback : NSObject {
 			DuplicateCallback callback;

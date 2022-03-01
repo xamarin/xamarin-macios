@@ -181,7 +181,6 @@ namespace Network {
 		internal static extern void nw_ip_options_set_local_address_preference (IntPtr options, NWIPLocalAddressPreference preference);
 
 #if !NET
-
 		[TV (13,0)]
 		[Mac (10,15)]
 		[iOS (13,0)]

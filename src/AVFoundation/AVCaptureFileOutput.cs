@@ -22,12 +22,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("tvos")]
 #endif
 	public partial class AVCaptureFileOutput {
-#if NET
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("tvos")]
-#endif
 		class recordingProxy : AVCaptureFileOutputRecordingDelegate  {
 			Action<NSObject []> startRecordingFromConnections;
 			Action<NSObject[],NSError> finishedRecording;

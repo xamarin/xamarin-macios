@@ -51,7 +51,6 @@ namespace AppKit {
 				}
 				return list.ToArray ();
 			}
-
 		}
 	}
 }

@@ -33,12 +33,6 @@ using System.Runtime.Versioning;
 
 namespace CoreFoundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	class CFDataBuffer : IDisposable {
 		byte[] buffer;
 		CFData data;

@@ -7,7 +7,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AppKit {
-
 #if !NET
 	public partial class NSDraggingItem {
 		public NSDraggingItem (NSPasteboardWriting pasteboardWriter) : this ((INSPasteboardWriting)pasteboardWriter) {

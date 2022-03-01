@@ -83,7 +83,6 @@ namespace AppKit {
 			var obj = new NSAsyncActionDispatcher (onEnded);
 			BeginSheet (printInfo, docWindow, obj, NSActionDispatcher.Selector, IntPtr.Zero);
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

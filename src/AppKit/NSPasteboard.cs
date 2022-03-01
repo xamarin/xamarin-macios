@@ -28,7 +28,6 @@ namespace AppKit {
 			bool result = WriteObjects (nsa_pasteboardReading.Handle);
 			nsa_pasteboardReading.Dispose ();
 			return result;
-
 		}
 #endif
 	}

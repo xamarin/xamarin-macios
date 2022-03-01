@@ -30,7 +30,6 @@ namespace AppKit
 		{
 			return CreateStatusItem ((float)length);
 		}
-
 	}
 }
 #endif // !__MACCATALYST__

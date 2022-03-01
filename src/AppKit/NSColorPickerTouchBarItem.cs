@@ -29,7 +29,6 @@ namespace AppKit {
 				action = null;
 				MarkDirty ();
 			}
-
 		}
 
 	}

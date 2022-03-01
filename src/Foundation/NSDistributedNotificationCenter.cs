@@ -14,13 +14,6 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst15.0")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	[Obsolete ("This is not available in iOS.")]
 	public partial class NSDistributedNotificationCenter {
 

@@ -82,12 +82,6 @@ namespace CoreText {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	static class CTTextTabOptionsExtensions {
 		public static IntPtr GetHandle (this CTTextTabOptions? self)
 		{

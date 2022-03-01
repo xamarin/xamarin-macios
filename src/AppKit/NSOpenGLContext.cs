@@ -105,7 +105,6 @@ namespace AppKit {
 			set {
 				SetValue (value ? 1 : 0, NSOpenGLContextParameter.StateValidation);
 			}
-
 		}
 	}
 }
