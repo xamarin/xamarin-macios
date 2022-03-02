@@ -35,15 +35,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Versioning;
 
 namespace Foundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSData : IEnumerable, IEnumerable<byte> {
 		public byte[] ToArray ()
 		{

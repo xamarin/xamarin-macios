@@ -10,17 +10,9 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
-
 #if !MONOMAC
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAssetDownloadUrlSession : NSUrlSession {
 
 		public new static NSUrlSession SharedSession {

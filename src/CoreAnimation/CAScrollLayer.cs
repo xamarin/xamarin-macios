@@ -9,12 +9,6 @@ using CoreGraphics;
 
 namespace CoreAnimation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	partial class CAScrollLayer {
 
 		public CAScroll Scroll {

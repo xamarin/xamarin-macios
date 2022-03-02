@@ -27,15 +27,8 @@ using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace IOSurface {
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.12")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class IOSurface {
 
 		// kern_return_t

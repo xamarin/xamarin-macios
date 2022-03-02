@@ -14,15 +14,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreMedia;
 using CoreVideo;
-using System.Runtime.Versioning;
 
 namespace VideoToolbox {
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-#endif
 	public partial class VTDecompressionProperties {
 		public CVPixelBufferPool PixelBufferPool {
 			get {

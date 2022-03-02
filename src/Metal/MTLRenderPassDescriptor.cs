@@ -1,16 +1,9 @@
 #if !COREBUILD
 using System;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace Metal {
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MTLRenderPassDescriptor {
 		public unsafe void SetSamplePositions (MTLSamplePosition [] positions)
 		{

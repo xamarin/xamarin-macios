@@ -6,7 +6,6 @@
 //
 // Copyright 2013 Xamarin Inc.
 //
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -18,12 +17,6 @@ using UIKit;
 using System;
 
 namespace StoreKit {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SKReceiptProperties : DictionaryContainer {
 #if !COREBUILD
 		public SKReceiptProperties ()

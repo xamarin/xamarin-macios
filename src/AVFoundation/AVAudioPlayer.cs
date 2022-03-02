@@ -25,17 +25,9 @@ using Foundation;
 using ObjCRuntime;
 using AudioToolbox;
 using System;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
-
 #if !WATCH
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAudioPlayer {
 
 		public static AVAudioPlayer FromUrl (NSUrl url, out NSError error)

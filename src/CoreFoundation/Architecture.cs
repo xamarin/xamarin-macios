@@ -3,15 +3,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 namespace CoreFoundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CFBundle {
 
 		// from machine.h

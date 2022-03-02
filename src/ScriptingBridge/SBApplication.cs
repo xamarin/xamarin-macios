@@ -2,15 +2,11 @@
 
 using System;
 using System.Reflection;
-using System.Runtime.Versioning;
 using AppKit;
 using Foundation;
 using ObjCRuntime;
 
 namespace ScriptingBridge {
-#if NET
-	[SupportedOSPlatform ("macos")]
-#endif
 	public partial class SBApplication
 	{
 		public static SBApplication? GetApplication (string ident)  => Runtime.GetNSObject<SBApplication> (_FromBundleIdentifier (ident));

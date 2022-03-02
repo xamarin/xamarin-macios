@@ -12,15 +12,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using Metal;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace MetalPerformanceShaders {
-#if NET
-	[SupportedOSPlatform ("tvos11.3")]
-	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("macos10.13.4")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSStateResourceList {
 		public static MPSStateResourceList Create (params MTLTextureDescriptor [] descriptors)
 		{

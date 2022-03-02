@@ -1,15 +1,8 @@
 using System;
 using Metal;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace MetalPerformanceShaders {
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSCnnBinaryConvolution {
 		public unsafe MPSCnnBinaryConvolution (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
@@ -22,12 +15,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSCnnBinaryFullyConnected {
 		public unsafe MPSCnnBinaryFullyConnected (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)

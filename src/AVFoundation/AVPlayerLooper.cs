@@ -25,16 +25,9 @@ using CoreFoundation;
 using AudioToolbox;
 using ObjCRuntime;
 using System;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.12")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class AVPlayerLooper {
 
 #if !NET // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research

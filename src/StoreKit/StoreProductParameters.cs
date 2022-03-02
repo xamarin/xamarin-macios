@@ -28,7 +28,6 @@
 #if !WATCH
 
 using System;
-using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -36,12 +35,6 @@ using ObjCRuntime;
 
 namespace StoreKit {
 
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class StoreProductParameters : DictionaryContainer
 	{
 #if !COREBUILD

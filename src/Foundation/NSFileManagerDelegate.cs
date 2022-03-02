@@ -9,16 +9,9 @@
 
 using System;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace Foundation
 {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSFileManagerDelegate {
 		public virtual bool ShouldCopyItemAtPath (NSFileManager fileManager, string srcPath, string dstPath)
 		{
@@ -33,12 +26,6 @@ namespace Foundation
 		}
 #endif
 	}	
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public static partial class NSFileManagerDelegate_Extensions  {
 		// This was a duplicate [Export] so in order to avoid breaking the API we expose it this way.
 		// NOTE: this is an Extension method, (NSFileManagerDelegate is a [Protocol]) so the exported methods are, by default, extensions. 

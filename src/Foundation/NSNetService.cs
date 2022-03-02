@@ -24,16 +24,9 @@
 #if !WATCH // __WATCHOS_PROHIBITED
 
 using System;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public unsafe partial class NSNetService {
 
 		public virtual NSData TxtRecordData {

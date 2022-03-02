@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #if !NET
@@ -36,12 +35,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public abstract partial class NSUrlProtocol : NSObject {
 #if MONOMAC && !NET
 		[BindingImpl (BindingImplOptions.Optimizable)]

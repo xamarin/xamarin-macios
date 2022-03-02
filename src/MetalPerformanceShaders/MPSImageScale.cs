@@ -5,16 +5,9 @@ using System.Runtime.InteropServices;
 using Foundation;
 using Metal;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace MetalPerformanceShaders {
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImageScale {
 		static int size_of_scale_transform = Marshal.SizeOf (typeof(MPSScaleTransform));
 

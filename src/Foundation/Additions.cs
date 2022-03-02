@@ -3,18 +3,11 @@
 #if !MONOMAC && !WATCH
 
 using System;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 
 	// NSIndexPath UIKit Additions Reference
 	// https://developer.apple.com/library/ios/#documentation/UIKit/Reference/NSIndexPath_UIKitAdditions/Reference/Reference.html
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSIndexPath {
 
 		// to avoid a lot of casting inside user source code we decided to expose `int` returning properties

@@ -10,17 +10,10 @@
 using System;
 using Foundation;
 using Metal;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreVideo {
-#if NET
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class CVMetalTextureAttributes : DictionaryContainer {
 
 		public MTLTextureUsage? Usage {

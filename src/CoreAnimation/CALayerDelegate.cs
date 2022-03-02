@@ -30,18 +30,11 @@ using System;
 using Foundation; 
 using ObjCRuntime;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreAnimation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public unsafe partial class CALayerDelegate {
 		IntPtr calayer;
 

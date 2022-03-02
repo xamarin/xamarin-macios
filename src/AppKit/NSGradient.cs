@@ -8,16 +8,11 @@
 #if !__MACCATALYST__
 
 using System;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 
 namespace AppKit {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSGradient : NSObject
 	{
 		static IntPtr selInitWithColorsAtLocationsColorSpace = Selector.GetHandle ("initWithColors:atLocations:colorSpace:");

@@ -9,7 +9,6 @@
 
 using System;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace Contacts {
 	// Strong typed Keys to enum
@@ -32,11 +31,6 @@ namespace Contacts {
 		Yahoo
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class CNInstantMessageAddress {
 
 		public static string LocalizeProperty (CNInstantMessageAddressOption property)

@@ -22,15 +22,8 @@
 using ObjCRuntime;
 using System;
 using System.Net;
-using System.Runtime.Versioning;
 
 namespace Foundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSHttpCookie {
 		// same order as System.Net.Cookie
 		// http://msdn.microsoft.com/en-us/library/a18ka3h2.aspx

@@ -32,16 +32,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSOrderedSet : IEnumerable<NSObject> {
 		internal const string selSetWithArray = "orderedSetWithArray:";
 
@@ -178,12 +171,6 @@ namespace Foundation {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSMutableOrderedSet {
 		public NSMutableOrderedSet (params NSObject [] objs) : this (NSArray.FromNSObjects (objs))
 		{

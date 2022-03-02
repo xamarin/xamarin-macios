@@ -10,15 +10,8 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Intents {
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.12")]
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class INSpeakableString {
 		public INSpeakableString (string identifier, string spokenPhrase, string pronunciationHint)
 			: base (NSObjectFlag.Empty)

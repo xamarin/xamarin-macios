@@ -13,18 +13,11 @@ using CoreGraphics;
 using Foundation;
 #if !WATCH
 using Metal;
-using System.Runtime.Versioning;
 #endif
 
 #nullable enable
 
 namespace SceneKit {
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SCNGeometrySource {
 
 		public static unsafe SCNGeometrySource FromVertices (SCNVector3 [] vertices)

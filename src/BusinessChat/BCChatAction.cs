@@ -3,14 +3,8 @@
 using System;
 using System.Collections.Generic;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace BusinessChat {
-#if NET
-	[SupportedOSPlatform ("macos10.13.4")]
-	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class BCChatAction {
 		public static void OpenTranscript (string businessIdentifier, Dictionary<BCParameterName, string> intentParameters) {
 			var keys = new NSString [intentParameters.Keys.Count];

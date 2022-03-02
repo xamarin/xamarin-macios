@@ -27,14 +27,9 @@
 
 using System;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSBrowser {
 		public event EventHandler DoubleClick {
 			add {
@@ -47,10 +42,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSMatrix {
 		public event EventHandler DoubleClick {
 			add {
@@ -63,10 +54,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSPathCell {
 		public event EventHandler DoubleClick {
 			add {
@@ -79,10 +66,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSPathControl {
 		public event EventHandler DoubleClick {
 			add {
@@ -95,10 +78,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSStatusItem {
 		public event EventHandler DoubleClick {
 			add {
@@ -110,11 +89,7 @@ namespace AppKit {
 			}
 		}
 	}
-
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
+	
 	public partial class NSTableView {
 		public event EventHandler DoubleClick {
 			add {

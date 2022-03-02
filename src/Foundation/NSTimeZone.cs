@@ -1,15 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSTimeZone {
 		
 		static ReadOnlyCollection<string> known_time_zone_names;

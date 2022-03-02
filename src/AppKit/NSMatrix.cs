@@ -24,13 +24,8 @@
 #if !__MACCATALYST__
 
 using System;
-using System.Runtime.Versioning;
 
 namespace AppKit {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSMatrix {
 		public NSCell this [nint col, nint row] {
 			get {

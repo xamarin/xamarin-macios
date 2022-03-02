@@ -9,15 +9,8 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Foundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	partial class NSUuid {
 
 		public NSUuid (byte [] bytes) : base (NSObjectFlag.Empty)

@@ -16,15 +16,8 @@ using Vector2 = global::System.Numerics.Vector2;
 using Vector2 = global::OpenTK.Vector2;
 #endif
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace GameplayKit {
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKPolygonObstacle {
 
 		public static GKPolygonObstacle FromPoints (Vector2 [] points)

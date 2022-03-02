@@ -32,13 +32,8 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 namespace AppKit {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSCell {
 
 		[DllImport (Constants.AppKitLibrary)]

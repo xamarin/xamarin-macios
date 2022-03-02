@@ -26,7 +26,6 @@ using ObjCRuntime;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
 
@@ -42,12 +41,6 @@ namespace AVFoundation {
 		MultiRoute
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAudioSession : NSObject {
 		public NSError SetActive (bool beActive)
 		{

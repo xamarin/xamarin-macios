@@ -7,16 +7,9 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using Security;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSUrlCredential {
 		public NSUrlCredential (SecIdentity identity, SecCertificate [] certificates, NSUrlCredentialPersistence persistence)
 			: this (identity.Handle, NSArray.FromNativeObjects (certificates).Handle, persistence)

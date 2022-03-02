@@ -9,16 +9,9 @@
 
 using System;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
 #if !MONOMAC && !WATCH && !TVOS
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos12.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAssetDownloadTask : NSUrlSessionTask {
 
 		// NSURLRequest and NSURLResponse objects are not available for AVAssetDownloadTask

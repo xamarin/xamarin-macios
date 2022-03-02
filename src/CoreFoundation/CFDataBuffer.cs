@@ -29,7 +29,6 @@
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 namespace CoreFoundation {
 

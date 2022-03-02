@@ -10,15 +10,8 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Vision {
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#endif
 	public partial class VNCircle {
 
 		public static VNCircle CreateUsingRadius (VNPoint center, double radius)

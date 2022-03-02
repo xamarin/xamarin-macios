@@ -10,15 +10,8 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Vision {
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class VNRequest {
 
 		internal static T [] GetSupportedVersions<T> (NSIndexSet indexSet) where T : Enum

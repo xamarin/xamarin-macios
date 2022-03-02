@@ -9,7 +9,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #if NET
@@ -22,12 +21,6 @@ using Vector2 = global::OpenTK.Vector2;
 
 namespace SpriteKit
 {
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.12")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class SKWarpGeometryGrid
 	{
 		public unsafe static SKWarpGeometryGrid Create (nint cols, nint rows, Vector2 [] sourcePositions, Vector2 [] destPositions)

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Versioning;
 #if NET
 using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
 #else
@@ -9,12 +8,6 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #nullable enable
 
 namespace ModelIO {
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MDLTransform {
 #if !NET
 		// Inlined from the MDLTransformComponent protocol.

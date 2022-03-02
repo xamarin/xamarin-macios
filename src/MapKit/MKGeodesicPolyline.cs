@@ -32,17 +32,10 @@ using System.Threading;
 using Foundation;
 using ObjCRuntime;
 using CoreLocation;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace MapKit {
-#if NET
-	[SupportedOSPlatform ("tvos9.2")]
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.9")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MKGeodesicPolyline {
 		public static unsafe MKGeodesicPolyline FromPoints (MKMapPoint [] points)
 		{

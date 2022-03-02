@@ -7,14 +7,8 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Contacts {
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class CNContactStore {
 
 		public CNContact GetUnifiedContact<T> (string identifier, T [] keys, out NSError error)

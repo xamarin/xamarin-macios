@@ -1,16 +1,9 @@
 using System;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SceneKit
 {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SCNSceneLoadingOptions {
 		public SCNAnimationImportPolicy AnimationImportPolicy {
 			get {

@@ -12,7 +12,6 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -196,12 +195,6 @@ namespace GameKit {
 	}
 #endif
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKVoiceChat {
 
 #if !XAMCORE_3_0
@@ -216,12 +209,6 @@ namespace GameKit {
 #endif
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKTurnBasedExchange {
 
 		public override string ToString ()
@@ -230,12 +217,6 @@ namespace GameKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKTurnBasedExchangeReply {
 
 		public override string ToString ()
@@ -244,12 +225,6 @@ namespace GameKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.9")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKChallenge {
 
 		public override string ToString ()
@@ -258,12 +233,6 @@ namespace GameKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKMatch {
 #if !XAMCORE_3_0
 		// Compatbility with the broken API, it is deprecated, so that is good.

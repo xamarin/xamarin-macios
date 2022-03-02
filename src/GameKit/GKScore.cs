@@ -38,27 +38,10 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace GameKit {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("tvos14.0")]
-	[UnsupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-	[Obsolete ("Starting with tvos14.0 use 'GKLeaderboardEntry' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-	[Obsolete ("Starting with macos11.0 use 'GKLeaderboardEntry' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios14.0 use 'GKLeaderboardEntry' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	public partial class GKScore {
 
 		// Before iOS7 `initWithCategory:` must be used (it's the only way to create GKScore)

@@ -31,16 +31,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSDate {
 		const long NSDATE_TICKS = 631139040000000000;
 

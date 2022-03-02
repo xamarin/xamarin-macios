@@ -28,17 +28,10 @@ using System;
 using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreGraphics;
 
 namespace Foundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSValue : NSObject {
 #if !COREBUILD
 		public string ObjCType {

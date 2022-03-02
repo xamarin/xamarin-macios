@@ -3,16 +3,9 @@
 using System;
 
 using StoreKit;
-using System.Runtime.Versioning;
 
 namespace StoreKit {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SKPayment {
 
 #if !XAMCORE_3_0

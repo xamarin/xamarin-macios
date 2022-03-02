@@ -26,16 +26,9 @@ using System.Collections;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSTimer {
 
 		// The right selector signature is:

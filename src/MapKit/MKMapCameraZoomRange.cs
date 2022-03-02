@@ -2,7 +2,6 @@
 #if !MONOMAC
 using System;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -13,12 +12,6 @@ namespace MapKit {
 		Max,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MKMapCameraZoomRange {
 		public MKMapCameraZoomRange (double distance) : this (distance, MKMapCameraZoomRangeType.Min)
 		{

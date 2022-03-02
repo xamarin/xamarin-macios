@@ -30,17 +30,10 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreAnimation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public unsafe partial class CAMediaTimingFunction {
 		public CGPoint GetControlPoint (nint index)
 		{

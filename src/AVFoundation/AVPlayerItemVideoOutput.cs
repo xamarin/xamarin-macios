@@ -6,15 +6,8 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVPlayerItemVideoOutput {
 
 		enum InitMode {

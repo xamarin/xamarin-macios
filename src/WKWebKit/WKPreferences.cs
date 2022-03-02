@@ -9,11 +9,6 @@ using ObjCRuntime;
 
 namespace WebKit {
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class WKPreferences {
 
 #if !COREBUILD

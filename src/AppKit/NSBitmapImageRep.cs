@@ -26,14 +26,9 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSBitmapImageRep {
 		static IntPtr selInitForIncrementalLoad = Selector.GetHandle ("initForIncrementalLoad");
 

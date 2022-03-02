@@ -24,17 +24,12 @@
 #if !__MACCATALYST__
 
 using System;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSWindow {
 
 		public static bool DisableReleasedWhenClosedInConstructor;

@@ -10,15 +10,8 @@ using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using UIKit;
-using System.Runtime.Versioning;
 
 namespace Foundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public unsafe partial class NSFileManager {
 		
 		public static NSError SetSkipBackupAttribute (string filename, bool skipBackup)

@@ -24,16 +24,11 @@
 #if !__MACCATALYST__
 
 using System;
-using System.Runtime.Versioning;
 
 using Foundation;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSArrayController {
 
 		// note: if needed override the protected Get|Set methods

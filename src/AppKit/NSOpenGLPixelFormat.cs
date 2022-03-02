@@ -31,17 +31,8 @@ using ObjCRuntime;
 using CoreGraphics;
 using CoreImage;
 using CoreAnimation;
-using System.Runtime.Versioning;
 
 namespace AppKit {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSOpenGLPixelFormat {
 		static IntPtr selInitWithAttributes = Selector.GetHandle ("initWithAttributes:");
 

@@ -5,12 +5,6 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #nullable enable
 
 namespace ModelIO {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MDLTransformComponent_Extensions {
 		public static MatrixFloat4x4 GetMatrix4x4 (this IMDLTransformComponent self)
 		{

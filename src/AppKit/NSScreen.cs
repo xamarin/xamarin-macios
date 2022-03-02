@@ -26,14 +26,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace AppKit {
-
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
+	
 	public partial class NSScreen {
 		
 		public NSWindowDepth[] SupportedWindowDepths {

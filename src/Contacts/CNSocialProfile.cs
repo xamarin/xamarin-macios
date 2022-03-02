@@ -9,7 +9,6 @@
 
 using System;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace Contacts {
 	// Strong typed Keys to enum
@@ -35,11 +34,6 @@ namespace Contacts {
 		GameCenter
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class CNSocialProfile {
 
 		public static string LocalizeProperty (CNSocialProfileOption option)

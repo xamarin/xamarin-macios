@@ -12,17 +12,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Runtime.Versioning;
 
 using Foundation;
 using CoreData;
 
 namespace AppKit
 {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSPredicateEditorRowTemplate
 	{
 		public NSPredicateEditorRowTemplate (params NSCompoundPredicateType [] compoundTypes)

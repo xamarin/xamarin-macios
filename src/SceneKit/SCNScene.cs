@@ -10,18 +10,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SceneKit
 {
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SCNScene : IEnumerable<SCNNode>
 	{
 		public void Add (SCNNode node)

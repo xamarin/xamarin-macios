@@ -31,17 +31,10 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using Foundation;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace MapKit {
-#if NET
-	[SupportedOSPlatform ("tvos9.2")]
-	[SupportedOSPlatform ("macos10.9")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MKLocalSearch {
 
 		public virtual Task<MKLocalSearchResponse> StartAsync (CancellationToken token)

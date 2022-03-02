@@ -5,16 +5,11 @@
 //   Johan Hammar
 //
 using System;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.0")]
-	[SupportedOSPlatform ("macos")]
-#endif
 	public partial class NSToolbarItem {
 		NSObject target;
 		Selector action;

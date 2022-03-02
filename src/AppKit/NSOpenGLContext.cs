@@ -1,6 +1,5 @@
 #if !__MACCATALYST__
 using System;
-using System.Runtime.Versioning;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
@@ -9,15 +8,7 @@ using ObjCRuntime;
 using Foundation;
 
 namespace AppKit {
-
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
+	
 	public partial class NSOpenGLContext {
 
 		unsafe void SetValue (int /* GLint */ val, NSOpenGLContextParameter par)

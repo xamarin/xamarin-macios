@@ -1,15 +1,8 @@
 using System;
 using Metal;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace MetalPerformanceShaders {
-#if NET
-	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSNDArray {
 
 		public void ExportData (IMTLCommandBuffer cmdBuf, IMTLBuffer buffer, MPSDataType sourceDataType, nuint offset)

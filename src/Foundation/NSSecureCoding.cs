@@ -2,17 +2,12 @@
 
 using System;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace Foundation {
 
 #if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
 	public static partial class NSSecureCoding {
 #else
 	public partial class NSSecureCoding {

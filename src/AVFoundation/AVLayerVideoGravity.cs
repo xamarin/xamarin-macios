@@ -32,7 +32,6 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
 	// Convenience enum for native strings - AVAnimation.h
@@ -43,12 +42,6 @@ namespace AVFoundation {
 		Resize
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	partial class AVPlayerLayer
 	{
 		static internal AVLayerVideoGravity KeyToEnum (NSString key, bool clamp = true)
@@ -92,12 +85,6 @@ namespace AVFoundation {
 	}
 
 #if !TVOS
-#if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	partial class AVCaptureVideoPreviewLayer
 	{
 		// Should be VideoGravity only but previous binding was wrong
@@ -113,12 +100,6 @@ namespace AVFoundation {
 	}
 #endif
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	partial class AVPlayer
 	{
 		public AVLayerVideoGravity? ExternalPlaybackVideoGravity {

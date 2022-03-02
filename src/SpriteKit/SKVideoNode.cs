@@ -10,18 +10,11 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 #if !WATCH
 namespace SpriteKit {
-#if NET
-	[SupportedOSPlatform ("macos10.9")]
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SKVideoNode : SKNode {
 
 		static bool CheckSystemVersion ()

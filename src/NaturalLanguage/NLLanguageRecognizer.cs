@@ -23,16 +23,9 @@ using System;
 using System.Collections.Generic;
 
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace NaturalLanguage {
 
-#if NET
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NLLanguageRecognizer {
 
 		public static NLLanguage GetDominantLanguage (string @string)

@@ -6,12 +6,6 @@ using System;
 
 namespace MapKit {
 
-#if NET
-	[SupportedOSPlatform ("tvos9.2")]
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.9")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MKDirections {
 		[Obsolete ("iOS9 does not allow creating an empty instance")]
 		public MKDirections ()

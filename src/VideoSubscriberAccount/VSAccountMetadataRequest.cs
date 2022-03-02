@@ -6,12 +6,6 @@ using ObjCRuntime;
 
 namespace VideoSubscriberAccount {
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.14")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class VSAccountMetadataRequest {
 
 #if NET
