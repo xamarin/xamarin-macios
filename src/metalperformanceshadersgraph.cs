@@ -641,14 +641,17 @@ namespace MetalPerformanceShadersGraph
 	interface MPSGraphDepthwiseConvolution3DOpDescriptor : NSCopying
 	{
 		// @property (readwrite, copy, nonatomic) NSArray<NSNumber *> * _Nonnull strides;
+		[BindAs (typeof (int[]))]
 		[Export ("strides", ArgumentSemantic.Copy)]
 		NSNumber[] Strides { get; set; }
 
 		// @property (readwrite, copy, nonatomic) NSArray<NSNumber *> * _Nonnull dilationRates;
+		[BindAs (typeof (int[]))]
 		[Export ("dilationRates", ArgumentSemantic.Copy)]
 		NSNumber[] DilationRates { get; set; }
 
 		// @property (readwrite, copy, nonatomic) NSArray<NSNumber *> * _Nonnull paddingValues;
+		[BindAs (typeof (int[]))]
 		[Export ("paddingValues", ArgumentSemantic.Copy)]
 		NSNumber[] PaddingValues { get; set; }
 
@@ -796,6 +799,7 @@ namespace MetalPerformanceShadersGraph
 	interface MPSGraphVariableOp
 	{
 		// @property (readonly, nonatomic) MPSShape * _Nonnull shape;
+		[BindAs (typeof (int[]))]
 		[Export ("shape")]
 		NSNumber[] Shape { get; }
 
@@ -1010,18 +1014,22 @@ namespace MetalPerformanceShadersGraph
 	interface MPSGraphPooling4DOpDescriptor : NSCopying
 	{
 		// @property (readwrite, copy, nonatomic) NSArray<NSNumber *> * _Nonnull kernelSizes;
+		[BindAs (typeof (int[]))]
 		[Export ("kernelSizes", ArgumentSemantic.Copy)]
 		NSNumber[] KernelSizes { get; set; }
 
 		// @property (readwrite, copy, nonatomic) NSArray<NSNumber *> * _Nonnull strides;
+		[BindAs (typeof (int[]))]
 		[Export ("strides", ArgumentSemantic.Copy)]
 		NSNumber[] Strides { get; set; }
 
 		// @property (readwrite, copy, nonatomic) NSArray<NSNumber *> * _Nonnull dilationRates;
+		[BindAs (typeof (int[]))]
 		[Export ("dilationRates", ArgumentSemantic.Copy)]
 		NSNumber[] DilationRates { get; set; }
 
 		// @property (readwrite, copy, nonatomic) NSArray<NSNumber *> * _Nonnull paddingValues;
+		[BindAs (typeof (int[]))]
 		[Export ("paddingValues", ArgumentSemantic.Copy)]
 		NSNumber[] PaddingValues { get; set; }
 
@@ -1371,18 +1379,22 @@ namespace MetalPerformanceShadersGraph
 		MPSGraphReductionMode ReductionMode { get; set; }
 
 		// @property (readwrite, copy, nonatomic) MPSShape * _Nonnull offsets;
+		[BindAs (typeof (int[]))]
 		[Export ("offsets", ArgumentSemantic.Copy)]
 		NSNumber[] Offsets { get; set; }
 
 		// @property (readwrite, copy, nonatomic) MPSShape * _Nonnull strides;
+		[BindAs (typeof (int[]))]
 		[Export ("strides", ArgumentSemantic.Copy)]
 		NSNumber[] Strides { get; set; }
 
 		// @property (readwrite, copy, nonatomic) MPSShape * _Nonnull dilationRates;
+		[BindAs (typeof (int[]))]
 		[Export ("dilationRates", ArgumentSemantic.Copy)]
 		NSNumber[] DilationRates { get; set; }
 
 		// @property (readwrite, copy, nonatomic) MPSShape * _Nonnull explicitPadding;
+		[BindAs (typeof (int[]))]
 		[Export ("explicitPadding", ArgumentSemantic.Copy)]
 		NSNumber[] ExplicitPadding { get; set; }
 
@@ -1789,6 +1801,7 @@ namespace MetalPerformanceShadersGraph
 	interface MPSGraphTensorData
 	{
 		// @property (readonly, copy, nonatomic) MPSShape * _Nonnull shape;
+		[BindAs (typeof (int[]))]
 		[Export ("shape", ArgumentSemantic.Copy)]
 		NSNumber[] Shape { get; }
 
