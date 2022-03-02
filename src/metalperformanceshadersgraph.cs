@@ -476,7 +476,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)convolution2DDataGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShape:(MPSShape * _Nonnull)outputShape forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((swift_name("convolution2DDataGradient(_:weights:outputShape:forwardConvolutionDescriptor:name:)")));
 		[Export ("convolution2DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:forwardConvolutionDescriptor:name:")]
-		MPSGraphTensor Convolution2DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
+		MPSGraphTensor Convolution2DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)convolution2DDataGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)gradient weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShapeTensor:(MPSGraphTensor * _Nonnull)outputShapeTensor forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("convolution2DDataGradient(_:weights:outputShapeTensor:forwardConvolutionDescriptor:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -485,7 +485,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)convolution2DWeightsGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient sourceTensor:(MPSGraphTensor * _Nonnull)source outputShape:(MPSShape * _Nonnull)outputShape forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((swift_name("convolution2DWeightsGradient(_:source:outputShape:forwardConvolutionDescriptor:name:)")));
 		[Export ("convolution2DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:forwardConvolutionDescriptor:name:")]
-		MPSGraphTensor Convolution2DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
+		MPSGraphTensor Convolution2DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)convolution2DWeightsGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)gradient sourceTensor:(MPSGraphTensor * _Nonnull)source outputShapeTensor:(MPSGraphTensor * _Nonnull)outputShapeTensor forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("convolution2DWeightsGradient(_:source:outputShapeTensor:forwardConvolutionDescriptor:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -501,7 +501,7 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)convolutionTranspose2DWithSourceTensor:(MPSGraphTensor * _Nonnull)source weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShape:(MPSShape * _Nonnull)outputShape descriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((swift_name("convolutionTranspose2D(_:weights:outputShape:descriptor:name:)")));
 		[Export ("convolutionTranspose2DWithSourceTensor:weightsTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor ConvolutionTranspose2D (MPSGraphTensor source, MPSGraphTensor weights, NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor ConvolutionTranspose2D (MPSGraphTensor source, MPSGraphTensor weights, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor descriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)convolutionTranspose2DWithSourceTensor:(MPSGraphTensor * _Nonnull)source weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShapeTensor:(MPSGraphTensor * _Nonnull)outputShape descriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("convolutionTranspose2D(_:weights:outputShapeTensor:descriptor:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -510,7 +510,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)convolutionTranspose2DDataGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShape:(MPSShape * _Nonnull)outputShape forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((swift_name("convolutionTranspose2DDataGradient(_:weights:outputShape:forwardConvolutionDescriptor:name:)")));
 		[Export ("convolutionTranspose2DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:forwardConvolutionDescriptor:name:")]
-		MPSGraphTensor ConvolutionTranspose2DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
+		MPSGraphTensor ConvolutionTranspose2DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)convolutionTranspose2DDataGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShapeTensor:(MPSGraphTensor * _Nonnull)outputShape forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("convolutionTranspose2DDataGradient(_:weights:outputShapeTensor:forwardConvolutionDescriptor:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -519,7 +519,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)convolutionTranspose2DWeightsGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)source outputShape:(MPSShape * _Nonnull)outputShape forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((swift_name("convolutionTranspose2DWeightsGradient(_:weights:outputShape:forwardConvolutionDescriptor:name:)")));
 		[Export ("convolutionTranspose2DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:forwardConvolutionDescriptor:name:")]
-		MPSGraphTensor ConvolutionTranspose2DWeightsGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor source, NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
+		MPSGraphTensor ConvolutionTranspose2DWeightsGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor source, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphConvolution2DOpDescriptor forwardConvolutionDescriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)convolutionTranspose2DWeightsGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)source outputShapeTensor:(MPSGraphTensor * _Nonnull)outputShape forwardConvolutionDescriptor:(MPSGraphConvolution2DOpDescriptor * _Nonnull)forwardConvolutionDescriptor name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("convolutionTranspose2DWeightsGradient(_:weights:outputShapeTensor:forwardConvolutionDescriptor:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -667,7 +667,7 @@ namespace MetalPerformanceShadersGraph
 		[Static]
 		[Export ("descriptorWithStrides:dilationRates:paddingValues:paddingStyle:")]
 		[return: NullAllowed]
-		MPSGraphDepthwiseConvolution3DOpDescriptor Create (NSNumber[] strides, NSNumber[] dilationRates, NSNumber[] paddingValues, MPSGraphPaddingStyle paddingStyle);
+		MPSGraphDepthwiseConvolution3DOpDescriptor Create ([BindAs (typeof (int[]))] NSNumber[] strides, [BindAs (typeof (int[]))] NSNumber[] dilationRates, [BindAs (typeof (int[]))] NSNumber[] paddingValues, MPSGraphPaddingStyle paddingStyle);
 
 		// +(instancetype _Nullable)descriptorWithPaddingStyle:(MPSGraphPaddingStyle)paddingStyle;
 		[Static]
@@ -688,11 +688,11 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)depthwiseConvolution2DDataGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShape:(MPSShape * _Nonnull)outputShape descriptor:(MPSGraphDepthwiseConvolution2DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((swift_name("depthwiseConvolution2DDataGradient(_:weights:outputShape:descriptor:name:)")));
 		[Export ("depthwiseConvolution2DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor DepthwiseConvolution2DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, NSNumber[] outputShape, MPSGraphDepthwiseConvolution2DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor DepthwiseConvolution2DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphDepthwiseConvolution2DOpDescriptor descriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)depthwiseConvolution2DWeightsGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient sourceTensor:(MPSGraphTensor * _Nonnull)source outputShape:(MPSShape * _Nonnull)outputShape descriptor:(MPSGraphDepthwiseConvolution2DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((swift_name("depthwiseConvolution2DWeightsGradient(_:source:outputShape:descriptor:name:)")));
 		[Export ("depthwiseConvolution2DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor DepthwiseConvolution2DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, NSNumber[] outputShape, MPSGraphDepthwiseConvolution2DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor DepthwiseConvolution2DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphDepthwiseConvolution2DOpDescriptor descriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)depthwiseConvolution3DWithSourceTensor:(MPSGraphTensor * _Nonnull)source weightsTensor:(MPSGraphTensor * _Nonnull)weights descriptor:(MPSGraphDepthwiseConvolution3DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((swift_name("depthwiseConvolution3D(_:weights:descriptor:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -702,11 +702,11 @@ namespace MetalPerformanceShadersGraph
 		// -(MPSGraphTensor * _Nonnull)depthwiseConvolution3DDataGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient weightsTensor:(MPSGraphTensor * _Nonnull)weights outputShape:(MPSShape * _Nullable)outputShape descriptor:(MPSGraphDepthwiseConvolution3DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((swift_name("depthwiseConvolution3DDataGradient(_:weights:outputShape:descriptor:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("depthwiseConvolution3DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor DepthwiseConvolution3DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, [NullAllowed] NSNumber[] outputShape, MPSGraphDepthwiseConvolution3DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor DepthwiseConvolution3DDataGradient (MPSGraphTensor incomingGradient, MPSGraphTensor weights, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphDepthwiseConvolution3DOpDescriptor descriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)depthwiseConvolution3DWeightsGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradient sourceTensor:(MPSGraphTensor * _Nonnull)source outputShape:(MPSShape * _Nonnull)outputShape descriptor:(MPSGraphDepthwiseConvolution3DOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name __attribute__((swift_name("depthwiseConvolution3DWeightsGradient(_:source:outputShape:descriptor:name:)")));
 		[Export ("depthwiseConvolution3DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:descriptor:name:")]
-		MPSGraphTensor DepthwiseConvolution3DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, NSNumber[] outputShape, MPSGraphDepthwiseConvolution3DOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor DepthwiseConvolution3DWeightsGradient (MPSGraphTensor incomingGradient, MPSGraphTensor source, [BindAs (typeof (int[]))] NSNumber[] outputShape, MPSGraphDepthwiseConvolution3DOpDescriptor descriptor, [NullAllowed] string name);
 	}
 
 	// @interface GatherNDOps (MPSGraph)
@@ -785,12 +785,12 @@ namespace MetalPerformanceShadersGraph
 		// -(MPSGraphTensor * _Nonnull)sparseTensorWithType:(MPSGraphSparseStorageType)sparseStorageType tensors:(NSArray<MPSGraphTensor *> * _Nonnull)inputTensorArray shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("sparseTensor(sparseTensorWithType:tensors:shape:dataType:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("sparseTensorWithType:tensors:shape:dataType:name:")]
-		MPSGraphTensor Sparse (MPSGraphSparseStorageType sparseStorageType, MPSGraphTensor[] inputTensorArray, NSNumber[] shape, MPSDataType dataType, [NullAllowed] string name);
+		MPSGraphTensor Sparse (MPSGraphSparseStorageType sparseStorageType, MPSGraphTensor[] inputTensorArray, [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)sparseTensorWithDescriptor:(MPSGraphCreateSparseOpDescriptor * _Nonnull)sparseDescriptor tensors:(NSArray<MPSGraphTensor *> * _Nonnull)inputTensorArray shape:(MPSShape * _Nonnull)shape name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("sparseTensor(sparseTensorWithDescriptor:tensors:shape:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("sparseTensorWithDescriptor:tensors:shape:name:")]
-		MPSGraphTensor Sparse (MPSGraphCreateSparseOpDescriptor sparseDescriptor, MPSGraphTensor[] inputTensorArray, NSNumber[] shape, [NullAllowed] string name);
+		MPSGraphTensor Sparse (MPSGraphCreateSparseOpDescriptor sparseDescriptor, MPSGraphTensor[] inputTensorArray, [BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphVariableOp : MPSGraphOperation
@@ -816,15 +816,15 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)placeholderWithShape:(MPSShape * _Nullable)shape dataType:(MPSDataType)dataType name:(NSString * _Nullable)name __attribute__((swift_name("placeholder(shape:dataType:name:)")));
 		[Export ("placeholderWithShape:dataType:name:")]
-		MPSGraphTensor Placeholder ([NullAllowed] NSNumber[] shape, MPSDataType dataType, [NullAllowed] string name);
+		MPSGraphTensor Placeholder ([NullAllowed] [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)placeholderWithShape:(MPSShape * _Nullable)shape name:(NSString * _Nullable)name __attribute__((swift_name("placeholder(shape:name:)")));
 		[Export ("placeholderWithShape:name:")]
-		MPSGraphTensor Placeholder ([NullAllowed] NSNumber[] shape, [NullAllowed] string name);
+		MPSGraphTensor Placeholder ([NullAllowed] [BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)constantWithData:(NSData * _Nonnull)data shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType __attribute__((swift_name("constant(_:shape:dataType:)")));
 		[Export ("constantWithData:shape:dataType:")]
-		MPSGraphTensor Constant (NSData data, NSNumber[] shape, MPSDataType dataType);
+		MPSGraphTensor Constant (NSData data, [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType);
 
 		// -(MPSGraphTensor * _Nonnull)constantWithScalar:(double)scalar dataType:(MPSDataType)dataType __attribute__((swift_name("constant(_:dataType:)")));
 		[Export ("constantWithScalar:dataType:")]
@@ -832,11 +832,11 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)constantWithScalar:(double)scalar shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType __attribute__((swift_name("constant(_:shape:dataType:)")));
 		[Export ("constantWithScalar:shape:dataType:")]
-		MPSGraphTensor Constant (double scalar, NSNumber[] shape, MPSDataType dataType);
+		MPSGraphTensor Constant (double scalar, [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType);
 
 		// -(MPSGraphTensor * _Nonnull)variableWithData:(NSData * _Nonnull)data shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType name:(NSString * _Nullable)name;
 		[Export ("variableWithData:shape:dataType:name:")]
-		MPSGraphTensor Variable (NSData data, NSNumber[] shape, MPSDataType dataType, [NullAllowed] string name);
+		MPSGraphTensor Variable (NSData data, [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)readVariable:(MPSGraphTensor * _Nonnull)variable name:(NSString * _Nullable)name __attribute__((swift_name("read(_:name:)")));
 		[Export ("readVariable:name:")]
@@ -855,15 +855,15 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)meanOfTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nonnull)axes name:(NSString * _Nullable)name;
 		[Export ("meanOfTensor:axes:name:")]
-		MPSGraphTensor Mean (MPSGraphTensor tensor, NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor Mean (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)varianceOfTensor:(MPSGraphTensor * _Nonnull)tensor meanTensor:(MPSGraphTensor * _Nonnull)meanTensor axes:(NSArray<NSNumber *> * _Nonnull)axes name:(NSString * _Nullable)name;
 		[Export ("varianceOfTensor:meanTensor:axes:name:")]
-		MPSGraphTensor Variance (MPSGraphTensor tensor, MPSGraphTensor meanTensor, NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor Variance (MPSGraphTensor tensor, MPSGraphTensor meanTensor, [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)varianceOfTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nonnull)axes name:(NSString * _Nullable)name;
 		[Export ("varianceOfTensor:axes:name:")]
-		MPSGraphTensor Variance (MPSGraphTensor tensor, NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor Variance (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)normalizationWithTensor:(MPSGraphTensor * _Nonnull)tensor meanTensor:(MPSGraphTensor * _Nonnull)mean varianceTensor:(MPSGraphTensor * _Nonnull)variance gammaTensor:(MPSGraphTensor * _Nullable)gamma betaTensor:(MPSGraphTensor * _Nullable)beta epsilon:(float)epsilon name:(NSString * _Nullable)name __attribute__((swift_name("normalize(_:mean:variance:gamma:beta:epsilon:name:)")));
 		[Export ("normalizationWithTensor:meanTensor:varianceTensor:gammaTensor:betaTensor:epsilon:name:")]
@@ -871,15 +871,15 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)normalizationGammaGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)sourceTensor meanTensor:(MPSGraphTensor * _Nonnull)meanTensor varianceTensor:(MPSGraphTensor * _Nonnull)varianceTensor reductionAxes:(NSArray<NSNumber *> * _Nonnull)axes epsilon:(float)epsilon name:(NSString * _Nullable)name;
 		[Export ("normalizationGammaGradientWithIncomingGradientTensor:sourceTensor:meanTensor:varianceTensor:reductionAxes:epsilon:name:")]
-		MPSGraphTensor NormalizationGammaGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, MPSGraphTensor meanTensor, MPSGraphTensor varianceTensor, NSNumber[] axes, float epsilon, [NullAllowed] string name);
+		MPSGraphTensor NormalizationGammaGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, MPSGraphTensor meanTensor, MPSGraphTensor varianceTensor, [BindAs (typeof (int[]))] NSNumber[] axes, float epsilon, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)normalizationBetaGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)sourceTensor reductionAxes:(NSArray<NSNumber *> * _Nonnull)axes name:(NSString * _Nullable)name;
 		[Export ("normalizationBetaGradientWithIncomingGradientTensor:sourceTensor:reductionAxes:name:")]
-		MPSGraphTensor NormalizationBetaGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor NormalizationBetaGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)normalizationGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)sourceTensor meanTensor:(MPSGraphTensor * _Nonnull)meanTensor varianceTensor:(MPSGraphTensor * _Nonnull)varianceTensor gammaTensor:(MPSGraphTensor * _Nullable)gamma gammaGradientTensor:(MPSGraphTensor * _Nullable)gammaGradient betaGradientTensor:(MPSGraphTensor * _Nullable)betaGradient reductionAxes:(NSArray<NSNumber *> * _Nonnull)axes epsilon:(float)epsilon name:(NSString * _Nullable)name;
 		[Export ("normalizationGradientWithIncomingGradientTensor:sourceTensor:meanTensor:varianceTensor:gammaTensor:gammaGradientTensor:betaGradientTensor:reductionAxes:epsilon:name:")]
-		MPSGraphTensor NormalizationGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, MPSGraphTensor meanTensor, MPSGraphTensor varianceTensor, [NullAllowed] MPSGraphTensor gamma, [NullAllowed] MPSGraphTensor gammaGradient, [NullAllowed] MPSGraphTensor betaGradient, NSNumber[] axes, float epsilon, [NullAllowed] string name);
+		MPSGraphTensor NormalizationGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, MPSGraphTensor meanTensor, MPSGraphTensor varianceTensor, [NullAllowed] MPSGraphTensor gamma, [NullAllowed] MPSGraphTensor gammaGradient, [NullAllowed] MPSGraphTensor betaGradient, [BindAs (typeof (int[]))] NSNumber[] axes, float epsilon, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphOneHotOps (MPSGraph)
@@ -1049,13 +1049,13 @@ namespace MetalPerformanceShadersGraph
 		[Static]
 		[Export ("descriptorWithKernelSizes:strides:dilationRates:paddingValues:paddingStyle:")]
 		[return: NullAllowed]
-		MPSGraphPooling4DOpDescriptor Create (NSNumber[] kernelSizes, NSNumber[] strides, NSNumber[] dilationRates, NSNumber[] paddingValues, MPSGraphPaddingStyle paddingStyle);
+		MPSGraphPooling4DOpDescriptor Create ([BindAs (typeof (int[]))] NSNumber[] kernelSizes, [BindAs (typeof (int[]))] NSNumber[] strides, [BindAs (typeof (int[]))] NSNumber[] dilationRates, [BindAs (typeof (int[]))] NSNumber[] paddingValues, MPSGraphPaddingStyle paddingStyle);
 
 		// +(instancetype _Nullable)descriptorWithKernelSizes:(NSArray<NSNumber *> * _Nonnull)kernelSizes paddingStyle:(MPSGraphPaddingStyle)paddingStyle;
 		[Static]
 		[Export ("descriptorWithKernelSizes:paddingStyle:")]
 		[return: NullAllowed]
-		MPSGraphPooling4DOpDescriptor Create (NSNumber[] kernelSizes, MPSGraphPaddingStyle paddingStyle);
+		MPSGraphPooling4DOpDescriptor Create ([BindAs (typeof (int[]))] NSNumber[] kernelSizes, MPSGraphPaddingStyle paddingStyle);
 	}
 
 	// @interface MPSGraphPoolingOps (MPSGraph)
@@ -1174,7 +1174,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)randomTensorWithShape:(MPSShape * _Nonnull)shape descriptor:(MPSGraphRandomOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name;
 		[Export ("randomTensorWithShape:descriptor:name:")]
-		MPSGraphTensor Random (NSNumber[] shape, MPSGraphRandomOpDescriptor descriptor, [NullAllowed] string name);
+		MPSGraphTensor Random ([BindAs (typeof (int[]))] NSNumber[] shape, MPSGraphRandomOpDescriptor descriptor, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)randomTensorWithShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor descriptor:(MPSGraphRandomOpDescriptor * _Nonnull)descriptor name:(NSString * _Nullable)name;
 		[Export ("randomTensorWithShapeTensor:descriptor:name:")]
@@ -1182,7 +1182,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)randomTensorWithShape:(MPSShape * _Nonnull)shape descriptor:(MPSGraphRandomOpDescriptor * _Nonnull)descriptor seed:(NSUInteger)seed name:(NSString * _Nullable)name;
 		[Export ("randomTensorWithShape:descriptor:seed:name:")]
-		MPSGraphTensor Random (NSNumber[] shape, MPSGraphRandomOpDescriptor descriptor, nuint seed, [NullAllowed] string name);
+		MPSGraphTensor Random ([BindAs (typeof (int[]))] NSNumber[] shape, MPSGraphRandomOpDescriptor descriptor, nuint seed, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)randomTensorWithShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor descriptor:(MPSGraphRandomOpDescriptor * _Nonnull)descriptor seed:(NSUInteger)seed name:(NSString * _Nullable)name;
 		[Export ("randomTensorWithShapeTensor:descriptor:seed:name:")]
@@ -1190,7 +1190,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(NSArray<MPSGraphTensor *> * _Nonnull)randomTensorWithShape:(MPSShape * _Nonnull)shape descriptor:(MPSGraphRandomOpDescriptor * _Nonnull)descriptor stateTensor:(MPSGraphTensor * _Nonnull)state name:(NSString * _Nullable)name;
 		[Export ("randomTensorWithShape:descriptor:stateTensor:name:")]
-		MPSGraphTensor[] Random (NSNumber[] shape, MPSGraphRandomOpDescriptor descriptor, MPSGraphTensor state, [NullAllowed] string name);
+		MPSGraphTensor[] Random ([BindAs (typeof (int[]))] NSNumber[] shape, MPSGraphRandomOpDescriptor descriptor, MPSGraphTensor state, [NullAllowed] string name);
 
 		// -(NSArray<MPSGraphTensor *> * _Nonnull)randomTensorWithShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor descriptor:(MPSGraphRandomOpDescriptor * _Nonnull)descriptor stateTensor:(MPSGraphTensor * _Nonnull)state name:(NSString * _Nullable)name;
 		[Export ("randomTensorWithShapeTensor:descriptor:stateTensor:name:")]
@@ -1198,7 +1198,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)randomUniformTensorWithShape:(MPSShape * _Nonnull)shape name:(NSString * _Nullable)name;
 		[Export ("randomUniformTensorWithShape:name:")]
-		MPSGraphTensor RandomUniform (NSNumber[] shape, [NullAllowed] string name);
+		MPSGraphTensor RandomUniform ([BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)randomUniformTensorWithShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor name:(NSString * _Nullable)name;
 		[Export ("randomUniformTensorWithShapeTensor:name:")]
@@ -1206,7 +1206,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)randomUniformTensorWithShape:(MPSShape * _Nonnull)shape seed:(NSUInteger)seed name:(NSString * _Nullable)name;
 		[Export ("randomUniformTensorWithShape:seed:name:")]
-		MPSGraphTensor RandomUniform (NSNumber[] shape, nuint seed, [NullAllowed] string name);
+		MPSGraphTensor RandomUniform ([BindAs (typeof (int[]))] NSNumber[] shape, nuint seed, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)randomUniformTensorWithShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor seed:(NSUInteger)seed name:(NSString * _Nullable)name;
 		[Export ("randomUniformTensorWithShapeTensor:seed:name:")]
@@ -1214,7 +1214,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(NSArray<MPSGraphTensor *> * _Nonnull)randomUniformTensorWithShape:(MPSShape * _Nonnull)shape stateTensor:(MPSGraphTensor * _Nonnull)state name:(NSString * _Nullable)name;
 		[Export ("randomUniformTensorWithShape:stateTensor:name:")]
-		MPSGraphTensor[] RandomUniform (NSNumber[] shape, MPSGraphTensor state, [NullAllowed] string name);
+		MPSGraphTensor[] RandomUniform ([BindAs (typeof (int[]))] NSNumber[] shape, MPSGraphTensor state, [NullAllowed] string name);
 
 		// -(NSArray<MPSGraphTensor *> * _Nonnull)randomUniformTensorWithShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor stateTensor:(MPSGraphTensor * _Nonnull)state name:(NSString * _Nullable)name;
 		[Export ("randomUniformTensorWithShapeTensor:stateTensor:name:")]
@@ -1241,7 +1241,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)reductionSumWithTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nullable)axes name:(NSString * _Nullable)name;
 		[Export ("reductionSumWithTensor:axes:name:")]
-		MPSGraphTensor ReductionSum (MPSGraphTensor tensor, [NullAllowed] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionSum (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reductionMaximumWithTensor:(MPSGraphTensor * _Nonnull)tensor axis:(NSInteger)axis name:(NSString * _Nullable)name;
 		[Export ("reductionMaximumWithTensor:axis:name:")]
@@ -1249,7 +1249,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)reductionMaximumWithTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nullable)axes name:(NSString * _Nullable)name;
 		[Export ("reductionMaximumWithTensor:axes:name:")]
-		MPSGraphTensor ReductionMaximum (MPSGraphTensor tensor, [NullAllowed] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionMaximum (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reductionMinimumWithTensor:(MPSGraphTensor * _Nonnull)tensor axis:(NSInteger)axis name:(NSString * _Nullable)name;
 		[Export ("reductionMinimumWithTensor:axis:name:")]
@@ -1257,7 +1257,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)reductionMinimumWithTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nullable)axes name:(NSString * _Nullable)name;
 		[Export ("reductionMinimumWithTensor:axes:name:")]
-		MPSGraphTensor ReductionMinimum (MPSGraphTensor tensor, [NullAllowed] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionMinimum (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reductionMaximumPropagateNaNWithTensor:(MPSGraphTensor * _Nonnull)tensor axis:(NSInteger)axis name:(NSString * _Nullable)name;
 		[Export ("reductionMaximumPropagateNaNWithTensor:axis:name:")]
@@ -1265,7 +1265,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)reductionMaximumPropagateNaNWithTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nullable)axes name:(NSString * _Nullable)name;
 		[Export ("reductionMaximumPropagateNaNWithTensor:axes:name:")]
-		MPSGraphTensor ReductionMaximumPropagateNaN (MPSGraphTensor tensor, [NullAllowed] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionMaximumPropagateNaN (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reductionMinimumPropagateNaNWithTensor:(MPSGraphTensor * _Nonnull)tensor axis:(NSInteger)axis name:(NSString * _Nullable)name;
 		[Export ("reductionMinimumPropagateNaNWithTensor:axis:name:")]
@@ -1273,7 +1273,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)reductionMinimumPropagateNaNWithTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nullable)axes name:(NSString * _Nullable)name;
 		[Export ("reductionMinimumPropagateNaNWithTensor:axes:name:")]
-		MPSGraphTensor ReductionMinimumPropagateNaN (MPSGraphTensor tensor, [NullAllowed] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionMinimumPropagateNaN (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reductionProductWithTensor:(MPSGraphTensor * _Nonnull)tensor axis:(NSInteger)axis name:(NSString * _Nullable)name;
 		[Export ("reductionProductWithTensor:axis:name:")]
@@ -1281,7 +1281,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)reductionProductWithTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nullable)axes name:(NSString * _Nullable)name;
 		[Export ("reductionProductWithTensor:axes:name:")]
-		MPSGraphTensor ReductionProduct (MPSGraphTensor tensor, [NullAllowed] NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor ReductionProduct (MPSGraphTensor tensor, [NullAllowed] [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reductionArgMaximumWithTensor:(MPSGraphTensor * _Nonnull)tensor axis:(NSInteger)axis name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(macCatalyst, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), MacCatalyst (15,0), Mac (12,0), iOS (15,0)]
@@ -1309,7 +1309,7 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)resizeTensor:(MPSGraphTensor * _Nonnull)imagesTensor size:(MPSShape * _Nonnull)size mode:(MPSGraphResizeMode)mode centerResult:(BOOL)centerResult alignCorners:(BOOL)alignCorners layout:(MPSGraphTensorNamedDataLayout)layout name:(NSString * _Nullable)name __attribute__((swift_name("resize(_:size:mode:centerResult:alignCorners:layout:name:)")));
 		[Export ("resizeTensor:size:mode:centerResult:alignCorners:layout:name:")]
-		MPSGraphTensor Resize (MPSGraphTensor imagesTensor, NSNumber[] size, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
+		MPSGraphTensor Resize (MPSGraphTensor imagesTensor, [BindAs (typeof (int[]))] NSNumber[] size, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)resizeTensor:(MPSGraphTensor * _Nonnull)imagesTensor sizeTensor:(MPSGraphTensor * _Nonnull)size mode:(MPSGraphResizeMode)mode centerResult:(BOOL)centerResult alignCorners:(BOOL)alignCorners layout:(MPSGraphTensorNamedDataLayout)layout name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("resize(_:sizeTensor:mode:centerResult:alignCorners:layout:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -1341,11 +1341,11 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)scatterNDWithUpdatesTensor:(MPSGraphTensor * _Nonnull)updatesTensor indicesTensor:(MPSGraphTensor * _Nonnull)indicesTensor shape:(MPSShape * _Nonnull)shape batchDimensions:(NSUInteger)batchDimensions mode:(MPSGraphScatterMode)mode name:(NSString * _Nullable)name;
 		[Export ("scatterNDWithUpdatesTensor:indicesTensor:shape:batchDimensions:mode:name:")]
-		MPSGraphTensor ScatterND (MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, NSNumber[] shape, nuint batchDimensions, MPSGraphScatterMode mode, [NullAllowed] string name);
+		MPSGraphTensor ScatterND (MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int[]))] NSNumber[] shape, nuint batchDimensions, MPSGraphScatterMode mode, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)scatterNDWithUpdatesTensor:(MPSGraphTensor * _Nonnull)updatesTensor indicesTensor:(MPSGraphTensor * _Nonnull)indicesTensor shape:(MPSShape * _Nonnull)shape batchDimensions:(NSUInteger)batchDimensions name:(NSString * _Nullable)name;
 		[Export ("scatterNDWithUpdatesTensor:indicesTensor:shape:batchDimensions:name:")]
-		MPSGraphTensor ScatterND (MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, NSNumber[] shape, nuint batchDimensions, [NullAllowed] string name);
+		MPSGraphTensor ScatterND (MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int[]))] NSNumber[] shape, nuint batchDimensions, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)scatterNDWithDataTensor:(MPSGraphTensor * _Nonnull)dataTensor updatesTensor:(MPSGraphTensor * _Nonnull)updatesTensor indicesTensor:(MPSGraphTensor * _Nonnull)indicesTensor batchDimensions:(NSUInteger)batchDimensions mode:(MPSGraphScatterMode)mode name:(NSString * _Nullable)name __attribute__((swift_name("scatterNDWithData(_:updates:indices:batchDimensions:mode:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -1361,7 +1361,7 @@ namespace MetalPerformanceShadersGraph
 		// -(MPSGraphTensor * _Nonnull)scatterWithUpdatesTensor:(MPSGraphTensor * _Nonnull)updatesTensor indicesTensor:(MPSGraphTensor * _Nonnull)indicesTensor shape:(MPSShape * _Nonnull)shape axis:(NSInteger)axis mode:(MPSGraphScatterMode)mode name:(NSString * _Nullable)name __attribute__((swift_name("scatter(_:indices:shape:axis:mode:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("scatterWithUpdatesTensor:indicesTensor:shape:axis:mode:name:")]
-		MPSGraphTensor Scatter (MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, NSNumber[] shape, nint axis, MPSGraphScatterMode mode, [NullAllowed] string name);
+		MPSGraphTensor Scatter (MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int[]))] NSNumber[] shape, nint axis, MPSGraphScatterMode mode, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)scatterWithDataTensor:(MPSGraphTensor * _Nonnull)dataTensor updatesTensor:(MPSGraphTensor * _Nonnull)updatesTensor indicesTensor:(MPSGraphTensor * _Nonnull)indicesTensor axis:(NSInteger)axis mode:(MPSGraphScatterMode)mode name:(NSString * _Nullable)name __attribute__((swift_name("scatterWithData(_:updates:indices:axis:mode:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -1414,19 +1414,19 @@ namespace MetalPerformanceShadersGraph
 		[Static]
 		[Export ("descriptorWithReductionMode:offsets:strides:dilationRates:explicitPadding:boundaryMode:paddingStyle:paddingConstant:")]
 		[return: NullAllowed]
-		MPSGraphStencilOpDescriptor Create (MPSGraphReductionMode reductionMode, NSNumber[] offsets, NSNumber[] strides, NSNumber[] dilationRates, NSNumber[] explicitPadding, MPSGraphPaddingMode boundaryMode, MPSGraphPaddingStyle paddingStyle, float paddingConstant);
+		MPSGraphStencilOpDescriptor Create (MPSGraphReductionMode reductionMode, [BindAs (typeof (int[]))] NSNumber[] offsets, [BindAs (typeof (int[]))] NSNumber[] strides, [BindAs (typeof (int[]))] NSNumber[] dilationRates, [BindAs (typeof (int[]))] NSNumber[] explicitPadding, MPSGraphPaddingMode boundaryMode, MPSGraphPaddingStyle paddingStyle, float paddingConstant);
 
 		// +(instancetype _Nullable)descriptorWithOffsets:(MPSShape * _Nonnull)offsets explicitPadding:(MPSShape * _Nonnull)explicitPadding;
 		[Static]
 		[Export ("descriptorWithOffsets:explicitPadding:")]
 		[return: NullAllowed]
-		MPSGraphStencilOpDescriptor Create (NSNumber[] offsets, NSNumber[] explicitPadding);
+		MPSGraphStencilOpDescriptor Create ([BindAs (typeof (int[]))] NSNumber[] offsets, [BindAs (typeof (int[]))] NSNumber[] explicitPadding);
 
 		// +(instancetype _Nullable)descriptorWithExplicitPadding:(MPSShape * _Nonnull)explicitPadding;
 		[Static]
 		[Export ("descriptorWithExplicitPadding:")]
 		[return: NullAllowed]
-		MPSGraphStencilOpDescriptor Create (NSNumber[] explicitPadding);
+		MPSGraphStencilOpDescriptor Create ([BindAs (typeof (int[]))] NSNumber[] explicitPadding);
 
 		// +(instancetype _Nullable)descriptorWithPaddingStyle:(MPSGraphPaddingStyle)paddingStyle;
 		[Static]
@@ -1454,7 +1454,7 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)reshapeTensor:(MPSGraphTensor * _Nonnull)tensor withShape:(MPSShape * _Nonnull)shape name:(NSString * _Nullable)name __attribute__((swift_name("reshape(_:shape:name:)")));
 		[Export ("reshapeTensor:withShape:name:")]
-		MPSGraphTensor Reshape (MPSGraphTensor tensor, NSNumber[] shape, [NullAllowed] string name);
+		MPSGraphTensor Reshape (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reshapeTensor:(MPSGraphTensor * _Nonnull)tensor withShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("reshape(_:shapeTensor:name:)")));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -1471,19 +1471,19 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)sliceTensor:(MPSGraphTensor * _Nonnull)tensor starts:(NSArray<NSNumber *> * _Nonnull)starts ends:(NSArray<NSNumber *> * _Nonnull)ends strides:(NSArray<NSNumber *> * _Nonnull)strides name:(NSString * _Nullable)name;
 		[Export ("sliceTensor:starts:ends:strides:name:")]
-		MPSGraphTensor Slice (MPSGraphTensor tensor, NSNumber[] starts, NSNumber[] ends, NSNumber[] strides, [NullAllowed] string name);
+		MPSGraphTensor Slice (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] starts, [BindAs (typeof (int[]))] NSNumber[] ends, [BindAs (typeof (int[]))] NSNumber[] strides, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)sliceTensor:(MPSGraphTensor * _Nonnull)tensor starts:(NSArray<NSNumber *> * _Nonnull)starts ends:(NSArray<NSNumber *> * _Nonnull)ends strides:(NSArray<NSNumber *> * _Nonnull)strides startMask:(uint32_t)startMask endMask:(uint32_t)endMask squeezeMask:(uint32_t)squeezeMask name:(NSString * _Nullable)name;
 		[Export ("sliceTensor:starts:ends:strides:startMask:endMask:squeezeMask:name:")]
-		MPSGraphTensor Slice (MPSGraphTensor tensor, NSNumber[] starts, NSNumber[] ends, NSNumber[] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
+		MPSGraphTensor Slice (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] starts, [BindAs (typeof (int[]))] NSNumber[] ends, [BindAs (typeof (int[]))] NSNumber[] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)sliceGradientTensor:(MPSGraphTensor * _Nonnull)inputGradientTensor fwdInShapeTensor:(MPSGraphTensor * _Nonnull)fwdInShapeTensor starts:(NSArray<NSNumber *> * _Nonnull)starts ends:(NSArray<NSNumber *> * _Nonnull)ends strides:(NSArray<NSNumber *> * _Nonnull)strides name:(NSString * _Nullable)name;
 		[Export ("sliceGradientTensor:fwdInShapeTensor:starts:ends:strides:name:")]
-		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, NSNumber[] starts, NSNumber[] ends, NSNumber[] strides, [NullAllowed] string name);
+		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, [BindAs (typeof (int[]))] NSNumber[] starts, [BindAs (typeof (int[]))] NSNumber[] ends, [BindAs (typeof (int[]))] NSNumber[] strides, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)sliceGradientTensor:(MPSGraphTensor * _Nonnull)inputGradientTensor fwdInShapeTensor:(MPSGraphTensor * _Nonnull)fwdInShapeTensor starts:(NSArray<NSNumber *> * _Nonnull)starts ends:(NSArray<NSNumber *> * _Nonnull)ends strides:(NSArray<NSNumber *> * _Nonnull)strides startMask:(uint32_t)startMask endMask:(uint32_t)endMask squeezeMask:(uint32_t)squeezeMask name:(NSString * _Nullable)name;
 		[Export ("sliceGradientTensor:fwdInShapeTensor:starts:ends:strides:startMask:endMask:squeezeMask:name:")]
-		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, NSNumber[] starts, NSNumber[] ends, NSNumber[] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
+		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, [BindAs (typeof (int[]))] NSNumber[] starts, [BindAs (typeof (int[]))] NSNumber[] ends, [BindAs (typeof (int[]))] NSNumber[] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)concatTensor:(MPSGraphTensor * _Nonnull)tensor withTensor:(MPSGraphTensor * _Nonnull)tensor2 dimension:(NSInteger)dimensionIndex name:(NSString * _Nullable)name;
 		[Export ("concatTensor:withTensor:dimension:name:")]
@@ -1499,19 +1499,19 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)tileTensor:(MPSGraphTensor * _Nonnull)tensor withMultiplier:(MPSShape * _Nonnull)multiplier name:(NSString * _Nullable)name;
 		[Export ("tileTensor:withMultiplier:name:")]
-		MPSGraphTensor Tile (MPSGraphTensor tensor, NSNumber[] multiplier, [NullAllowed] string name);
+		MPSGraphTensor Tile (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] multiplier, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)tileGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)sourceTensor withMultiplier:(MPSShape * _Nonnull)multiplier name:(NSString * _Nullable)name;
 		[Export ("tileGradientWithIncomingGradientTensor:sourceTensor:withMultiplier:name:")]
-		MPSGraphTensor TileGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, NSNumber[] multiplier, [NullAllowed] string name);
+		MPSGraphTensor TileGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, [BindAs (typeof (int[]))] NSNumber[] multiplier, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)padTensor:(MPSGraphTensor * _Nonnull)tensor withPaddingMode:(MPSGraphPaddingMode)paddingMode leftPadding:(MPSShape * _Nonnull)leftPadding rightPadding:(MPSShape * _Nonnull)rightPadding constantValue:(double)constantValue name:(NSString * _Nullable)name;
 		[Export ("padTensor:withPaddingMode:leftPadding:rightPadding:constantValue:name:")]
-		MPSGraphTensor Pad (MPSGraphTensor tensor, MPSGraphPaddingMode paddingMode, NSNumber[] leftPadding, NSNumber[] rightPadding, double constantValue, [NullAllowed] string name);
+		MPSGraphTensor Pad (MPSGraphTensor tensor, MPSGraphPaddingMode paddingMode, [BindAs (typeof (int[]))] NSNumber[] leftPadding, [BindAs (typeof (int[]))] NSNumber[] rightPadding, double constantValue, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)padGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)incomingGradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)sourceTensor paddingMode:(MPSGraphPaddingMode)paddingMode leftPadding:(MPSShape * _Nonnull)leftPadding rightPadding:(MPSShape * _Nonnull)rightPadding name:(NSString * _Nullable)name;
 		[Export ("padGradientWithIncomingGradientTensor:sourceTensor:paddingMode:leftPadding:rightPadding:name:")]
-		MPSGraphTensor PadGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, MPSGraphPaddingMode paddingMode, NSNumber[] leftPadding, NSNumber[] rightPadding, [NullAllowed] string name);
+		MPSGraphTensor PadGradient (MPSGraphTensor incomingGradientTensor, MPSGraphTensor sourceTensor, MPSGraphPaddingMode paddingMode, [BindAs (typeof (int[]))] NSNumber[] leftPadding, [BindAs (typeof (int[]))] NSNumber[] rightPadding, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)spaceToDepth2DTensor:(MPSGraphTensor * _Nonnull)tensor widthAxisTensor:(MPSGraphTensor * _Nonnull)widthAxisTensor heightAxisTensor:(MPSGraphTensor * _Nonnull)heightAxisTensor depthAxisTensor:(MPSGraphTensor * _Nonnull)depthAxisTensor blockSize:(NSUInteger)blockSize usePixelShuffleOrder:(BOOL)usePixelShuffleOrder name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -1541,7 +1541,7 @@ namespace MetalPerformanceShadersGraph
 		// -(MPSGraphTensor * _Nonnull)reverseTensor:(MPSGraphTensor * _Nonnull)tensor axes:(NSArray<NSNumber *> * _Nonnull)axes name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("reverseTensor:axes:name:")]
-		MPSGraphTensor Reverse (MPSGraphTensor tensor, NSNumber[] axes, [NullAllowed] string name);
+		MPSGraphTensor Reverse (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] axes, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)reverseTensor:(MPSGraphTensor * _Nonnull)tensor name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -1561,7 +1561,7 @@ namespace MetalPerformanceShadersGraph
 		// -(MPSGraphTensor * _Nonnull)broadcastTensor:(MPSGraphTensor * _Nonnull)tensor toShape:(MPSShape * _Nonnull)shape name:(NSString * _Nullable)name __attribute__((swift_name("broadcast(_:shape:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("broadcastTensor:toShape:name:")]
-		MPSGraphTensor Broadcast (MPSGraphTensor tensor, NSNumber[] shape, [NullAllowed] string name);
+		MPSGraphTensor Broadcast (MPSGraphTensor tensor, [BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)broadcastTensor:(MPSGraphTensor * _Nonnull)tensor toShapeTensor:(MPSGraphTensor * _Nonnull)shapeTensor name:(NSString * _Nullable)name __attribute__((swift_name("broadcast(_:shapeTensor:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15,0), Mac (12,0), iOS (15,0)]
@@ -1728,7 +1728,9 @@ namespace MetalPerformanceShadersGraph
 	interface MPSGraphShapedType : NSCopying
 	{
 		// @property (readwrite, copy, atomic) MPSShape * _Nullable shape;
-		[NullAllowed, Export ("shape", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		[BindAs (typeof (int[]))]
+		[Export ("shape", ArgumentSemantic.Copy)]
 		NSNumber[] Shape { get; set; }
 
 		// @property (readwrite, atomic) MPSDataType dataType;
@@ -1737,7 +1739,7 @@ namespace MetalPerformanceShadersGraph
 
 		// -(instancetype _Nonnull)initWithShape:(MPSShape * _Nullable)shape dataType:(MPSDataType)dataType;
 		[Export ("initWithShape:dataType:")]
-		IntPtr Constructor ([NullAllowed] NSNumber[] shape, MPSDataType dataType);
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType);
 
 		// -(BOOL)isEqualTo:(MPSGraphShapedType * _Nullable)object;
 		[Export ("isEqualTo:")]
@@ -1783,7 +1785,9 @@ namespace MetalPerformanceShadersGraph
 	interface MPSGraphTensor : NSCopying
 	{
 		// @property (readonly, copy, nonatomic) MPSShape * _Nullable shape;
-		[NullAllowed, Export ("shape", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		[BindAs (typeof (int[]))]
+		[Export ("shape", ArgumentSemantic.Copy)]
 		NSNumber[] Shape { get; }
 
 		// @property (readonly, nonatomic) MPSDataType dataType;
@@ -1815,11 +1819,11 @@ namespace MetalPerformanceShadersGraph
 
 		// -(instancetype _Nonnull)initWithDevice:(MPSGraphDevice * _Nonnull)device data:(NSData * _Nonnull)data shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType;
 		[Export ("initWithDevice:data:shape:dataType:")]
-		IntPtr Constructor (MPSGraphDevice device, NSData data, NSNumber[] shape, MPSDataType dataType);
+		IntPtr Constructor (MPSGraphDevice device, NSData data, [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType);
 
 		// -(instancetype _Nonnull)initWithMTLBuffer:(id<IMTLBuffer> _Nonnull)buffer shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType __attribute__((swift_name("init(_:shape:dataType:)")));
 		[Export ("initWithMTLBuffer:shape:dataType:")]
-		IntPtr Constructor (IMTLBuffer buffer, NSNumber[] shape, MPSDataType dataType);
+		IntPtr Constructor (IMTLBuffer buffer, [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType);
 
 		// -(instancetype _Nonnull)initWithMPSMatrix:(MPSMatrix * _Nonnull)matrix __attribute__((swift_name("init(_:)")));
 		[Export ("initWithMPSMatrix:")]
