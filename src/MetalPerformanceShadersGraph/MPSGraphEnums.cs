@@ -31,8 +31,8 @@ namespace MetalPerformanceShadersGraph
 	public enum MPSGraphPaddingStyle : ulong
 	{
 		Explicit = 0,
-		TfValid = 1,
-		TfSame = 2,
+		Valid = 1,
+		Same = 2,
 		ExplicitOffset = 3
 	}
 
@@ -63,4 +63,35 @@ namespace MetalPerformanceShadersGraph
 	{
 		MPSGraphDeviceTypeMetal = 0
 	}
+
+	public enum MPSGraphLossReductionType : ulong
+	{
+		Axis = 0,
+		Sum = 1,
+		Mean = 2
+	}
+
+	// For COO, indexTensor0 is x index and indexTensor1 is y index
+	// For CSC, indexTensor0 and indexTensor1 correspond to rowIndex and colStarts respectively.
+	// For CSR, indexTensor0 and indexTensor1 correspond to colIndex and rowStarts respectively.
+	public enum MPSGraphSparseStorageType : ulong
+	{
+		Coo = 0,
+		Csc = 1,
+		Csr = 2
+	}
+
+	public enum MPSGraphRandomDistribution : ulong
+	{
+		Uniform = 0,
+		Normal = 1,
+		TruncatedNormal = 2
+	}
+
+	public enum MPSGraphRandomNormalSamplingMethod : ulong
+	{
+		InvCdf = 0,
+		BoxMuller = 1
+	}
+
 }
