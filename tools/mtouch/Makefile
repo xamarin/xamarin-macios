@@ -121,6 +121,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework Metal						\
 	-weak_framework MetalKit					\
 	-weak_framework MetalPerformanceShaders		\
+	-weak_framework MetalPerformanceShadersGraph\
 						\
 	-weak_framework HealthKitUI					\
 						\

@@ -126,6 +126,8 @@
 /src/metalkit.cs
 /src/MetalPerformanceShaders
 /src/metalperformanceshaders.cs
+/src/MetalPerformanceShadersGraph
+/src/metalperformanceshadersgraph.cs
 /src/MobileCoreServices
 /src/mobilecoreservices.cs
 /src/ModelIO

@@ -1187,6 +1187,11 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSStateBatch.cs \
 	MetalPerformanceShaders/MPSStateResourceList.cs \
 
+# MetalPerformanceShadersGraph
+
+METALPERFORMANCESHADERSGRAPH_API_SOURCES = \
+	MetalPerformanceShadersGraph/MPSGraphEnums.cs \
+
 # MetricKit
 
 METRICKIT_SOURCES = \
@@ -2017,6 +2022,7 @@ MACOS_FRAMEWORKS =          \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MetricKit               \
 	MLCompute               \
 	MobileCoreServices      \
@@ -2125,6 +2131,7 @@ IOS_FRAMEWORKS =         \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MetricKit \
 	MLCompute \
 	MobileCoreServices \
@@ -2229,6 +2236,7 @@ TVOS_FRAMEWORKS =           \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
@@ -2304,6 +2312,7 @@ MACCATALYST_FRAMEWORKS = \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MetricKit \
 	MLCompute \
 	MobileCoreServices \

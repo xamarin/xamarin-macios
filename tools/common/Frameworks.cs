@@ -221,6 +221,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreSpotlight", "CoreSpotlight", 10,13 },
 					{ "ExternalAccessory", "ExternalAccessory", 10, 13 },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 10, 13 },
+					{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", 11, 0 },
 					{ "Vision", "Vision", 10, 13 },
 
 					{ "BusinessChat", "BusinessChat", 10, 13, 4 },
@@ -372,6 +373,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ModelIO", "ModelIO", 9 },
 				{ "MetalKit", "MetalKit", 9 },
 				{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), new Version (11, 0) /* MPS got simulator headers in Xcode 9 */ },
+				{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", 14,0 },
 				{ "GameplayKit", "GameplayKit", 9 },
 				{ "HealthKitUI", "HealthKitUI", 9,3 },
 
@@ -551,6 +553,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", new Version (9, 0), new Version (10, 0) },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), NotAvailableInSimulator /* not available in the simulator */ },
+					{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", new Version (14, 0), NotAvailableInSimulator /* not available in the simulator */ },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
 					{ "ModelIO", "ModelIO", 9 },
 					{ "OpenGLES", "OpenGLES", 9 },
