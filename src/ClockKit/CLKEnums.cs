@@ -7,6 +7,8 @@
 // Copyright 2015-2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using ObjCRuntime;
 
