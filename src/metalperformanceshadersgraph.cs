@@ -11,6 +11,7 @@ using NativeHandle = System.IntPtr;
 
 using MPSGraphTensorDataDictionary = Foundation.NSDictionary<MetalPerformanceShadersGraph.MPSGraphTensor, MetalPerformanceShadersGraph.MPSGraphTensorData>;
 using MPSGraphTensorShapedTypeDictionary = Foundation.NSDictionary<MetalPerformanceShadersGraph.MPSGraphTensor, MetalPerformanceShadersGraph.MPSGraphShapedType>;
+using MPSShape = Foundation.NSArray<Foundation.NSNumber>;
 
 namespace MetalPerformanceShadersGraph
 {
@@ -22,11 +23,18 @@ namespace MetalPerformanceShadersGraph
 		[Static, Export ("new")]
 		MPSGraph Create ();
 
-		[Export ("options")]
+		// @property (readwrite, atomic) MPSGraphOptions options;
+		[Export ("options", ArgumentSemantic.Assign)]
 		MPSGraphOptions Options { get; set; }
 
+		// @property (readonly, nonatomic) NSArray<MPSGraphTensor *> * _Nonnull placeholderTensors;
 		[Export ("placeholderTensors")]
 		MPSGraphTensor[] PlaceholderTensors { get; }
+
+		// -(MPSGraphExecutable * _Nonnull)compileWithDevice:(MPSGraphDevice * _Nullable)device feeds:(MPSGraphTensorShapedTypeDictionary * _Nonnull)feeds targetTensors:(NSArray<MPSGraphTensor *> * _Nonnull)targetTensors targetOperations:(NSArray<MPSGraphOperation *> * _Nullable)targetOperations compilationDescriptor:(MPSGraphCompilationDescriptor * _Nullable)compilationDescriptor __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("compileWithDevice:feeds:targetTensors:targetOperations:compilationDescriptor:")]
+		MPSGraphExecutable CompileWithDevice ([NullAllowed] MPSGraphDevice device, NSDictionary<MPSGraphTensor, MPSGraphShapedType> feeds, MPSGraphTensor[] targetTensors, [NullAllowed] MPSGraphOperation[] targetOperations, [NullAllowed] MPSGraphCompilationDescriptor compilationDescriptor);
 
 		[Export ("runWithFeeds:targetTensors:targetOperations:")]
 		MPSGraphTensorDataDictionary Run (MPSGraphTensorDataDictionary feeds, MPSGraphTensor[] targetTensors, [NullAllowed] MPSGraphOperation[] targetOperations);
@@ -52,6 +60,7 @@ namespace MetalPerformanceShadersGraph
 		[Export ("encodeToCommandBuffer:feeds:targetOperations:resultsDictionary:executionDescriptor:")]
 		void Encode (MPSCommandBuffer commandBuffer, MPSGraphTensorDataDictionary feeds, [NullAllowed] MPSGraphOperation[] targetOperations, MPSGraphTensorDataDictionary resultsDictionary, [NullAllowed] MPSGraphExecutionDescriptor executionDescriptor);
 
+/*
 		[Export("L2NormPooling4DGradientWithGradientTensor:sourceTensor:descriptor:name:")]
 		MPSGraphTensor L2NormPooling4DGradient(MPSGraphTensor gradientTensor, MPSGraphTensor sourceTensor, MPSGraphPooling4DOpDescriptor descriptor, [NullAllowed] string name);
 		[Export("L2NormPooling4DWithSourceTensor:descriptor:name:")]
@@ -464,55 +473,257 @@ namespace MetalPerformanceShadersGraph
 		MPSGraphTensor Variance(MPSGraphTensor tensor, MPSGraphTensor meanTensor, NSNumber[] axes, [NullAllowed] string name);
 		[Export("whileWithInitialInputs:before:after:name:")]
 		MPSGraphTensor[] While(MPSGraphTensor[] initialInputs, MPSGraphWhileBeforeBlock before, MPSGraphWhileAfterBlock after, [NullAllowed] string name);
+*/
 	}
 
+	// @interface MPSGraphCompilationDescriptor : NSObject
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphCompilationDescriptor
+	{
+		// -(void)disableTypeInference;
+		[Export ("disableTypeInference")]
+		void DisableTypeInference ();
+	}
+
+	// @interface MPSGraphDevice : NSObject
+	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphDevice
+	{
+		// @property (readonly, nonatomic) MPSGraphDeviceType type;
+		[Export ("type")]
+		MPSGraphDeviceType Type { get; }
+
+		// @property (readonly, nonatomic) id<MTLDevice> _Nullable metalDevice;
+		[NullAllowed, Export ("metalDevice")]
+		IMTLDevice MetalDevice { get; }
+
+		// +(instancetype _Nonnull)deviceWithMTLDevice:(id<MTLDevice> _Nonnull)metalDevice;
+		[Static]
+		[Export ("deviceWithMTLDevice:")]
+		MPSGraphDevice FromMTLDevice (IMTLDevice metalDevice);
+	}
+
+	// typedef void (^MPSGraphExecutableCompletionHandler)(NSArray<MPSGraphTensorData *> * _Nonnull, NSError * _Nullable);
+	delegate void MPSGraphExecutableCompletionHandler (MPSGraphTensorData[] arg0, [NullAllowed] NSError arg1);
+
+	// typedef void (^MPSGraphExecutableScheduledHandler)(NSArray<MPSGraphTensorData *> * _Nonnull, NSError * _Nullable);
+	delegate void MPSGraphExecutableScheduledHandler (MPSGraphTensorData[] arg0, [NullAllowed] NSError arg1);
+
+	// @interface MPSGraphExecutableExecutionDescriptor : NSObject
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphExecutableExecutionDescriptor
+	{
+		// @property (readwrite, atomic) MPSGraphExecutableScheduledHandler _Nonnull scheduledHandler;
+		[Export ("scheduledHandler", ArgumentSemantic.Assign)]
+		MPSGraphExecutableScheduledHandler ScheduledHandler { get; set; }
+
+		// @property (readwrite, atomic) MPSGraphExecutableCompletionHandler _Nonnull completionHandler;
+		[Export ("completionHandler", ArgumentSemantic.Assign)]
+		MPSGraphExecutableCompletionHandler CompletionHandler { get; set; }
+
+		// @property (readwrite, atomic) BOOL waitUntilCompleted;
+		[Export ("waitUntilCompleted")]
+		bool WaitUntilCompleted { get; set; }
+	}
+
+	// @interface MPSGraphExecutable : NSObject
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphExecutable
+	{
+		// @property (readwrite, atomic) MPSGraphOptions options;
+		[Export ("options", ArgumentSemantic.Assign)]
+		MPSGraphOptions Options { get; set; }
+
+		// @property (readonly, atomic) NSArray<MPSGraphTensor *> * _Nullable feedTensors;
+		[NullAllowed, Export ("feedTensors")]
+		MPSGraphTensor[] FeedTensors { get; }
+
+		// @property (readonly, atomic) NSArray<MPSGraphTensor *> * _Nullable targetTensors;
+		[NullAllowed, Export ("targetTensors")]
+		MPSGraphTensor[] TargetTensors { get; }
+
+		// -(void)specializeWithDevice:(MPSGraphDevice * _Nullable)device inputTypes:(NSArray<MPSGraphType *> * _Nonnull)inputTypes compilationDescriptor:(MPSGraphCompilationDescriptor * _Nullable)compilationDescriptor;
+		[Export ("specializeWithDevice:inputTypes:compilationDescriptor:")]
+		void Specialize ([NullAllowed] MPSGraphDevice device, MPSGraphType[] inputTypes, [NullAllowed] MPSGraphCompilationDescriptor compilationDescriptor);
+
+		// -(NSArray<MPSGraphTensorData *> * _Nonnull)runWithMTLCommandQueue:(id<IMTLCommandQueue> _Nonnull)commandQueue inputsArray:(NSArray<MPSGraphTensorData *> * _Nonnull)inputsArray resultsArray:(NSArray<MPSGraphTensorData *> * _Nullable)resultsArray executionDescriptor:(MPSGraphExecutableExecutionDescriptor * _Nullable)executionDescriptor __attribute__((swift_name("run(with:inputs:results:executionDescriptor:)")));
+		[Export ("runWithMTLCommandQueue:inputsArray:resultsArray:executionDescriptor:")]
+		MPSGraphTensorData[] Run (IMTLCommandQueue commandQueue, MPSGraphTensorData[] inputsArray, [NullAllowed] MPSGraphTensorData[] resultsArray, [NullAllowed] MPSGraphExecutableExecutionDescriptor executionDescriptor);
+
+		// -(NSArray<MPSGraphTensorData *> * _Nonnull)runAsyncWithMTLCommandQueue:(id<IMTLCommandQueue> _Nonnull)commandQueue inputsArray:(NSArray<MPSGraphTensorData *> * _Nonnull)inputsArray resultsArray:(NSArray<MPSGraphTensorData *> * _Nullable)resultsArray executionDescriptor:(MPSGraphExecutableExecutionDescriptor * _Nullable)executionDescriptor __attribute__((swift_name("runAsync(with:inputs:results:executionDescriptor:)")));
+		[Export ("runAsyncWithMTLCommandQueue:inputsArray:resultsArray:executionDescriptor:")]
+		MPSGraphTensorData[] RunAsync (IMTLCommandQueue commandQueue, MPSGraphTensorData[] inputsArray, [NullAllowed] MPSGraphTensorData[] resultsArray, [NullAllowed] MPSGraphExecutableExecutionDescriptor executionDescriptor);
+
+		// -(NSArray<MPSGraphTensorData *> * _Nonnull)encodeToCommandBuffer:(MPSCommandBuffer * _Nonnull)commandBuffer inputsArray:(NSArray<MPSGraphTensorData *> * _Nonnull)inputsArray resultsArray:(NSArray<MPSGraphTensorData *> * _Nullable)resultsArray executionDescriptor:(MPSGraphExecutableExecutionDescriptor * _Nullable)executionDescriptor __attribute__((swift_name("encode(to:inputs:results:executionDescriptor:)")));
+		[Export ("encodeToCommandBuffer:inputsArray:resultsArray:executionDescriptor:")]
+		MPSGraphTensorData[] Encode (MPSCommandBuffer commandBuffer, MPSGraphTensorData[] inputsArray, [NullAllowed] MPSGraphTensorData[] resultsArray, [NullAllowed] MPSGraphExecutableExecutionDescriptor executionDescriptor);
+	}
+
+	// typedef void (^MPSGraphCompletionHandler)(MPSGraphTensorDataDictionary * _Nonnull, NSError * _Nullable);
 	delegate void MPSGraphCompletionHandler (MPSGraphTensorDataDictionary resultsDictionary, [NullAllowed] NSError error);
+
+	// typedef void (^MPSGraphScheduledHandler)(MPSGraphTensorDataDictionary * _Nonnull, NSError * _Nullable);
 	delegate void MPSGraphScheduledHandler (MPSGraphTensorDataDictionary resultsDictionary, [NullAllowed] NSError error);
 
+	// @interface MPSGraphExecutionDescriptor : NSObject
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
-	interface MPSGraphExecutionDescriptor {
-		[NullAllowed, Export ("scheduledHandler")]
+	
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphExecutionDescriptor
+	{
+		// @property (readwrite, atomic) MPSGraphScheduledHandler _Nonnull scheduledHandler;
+		[Export ("scheduledHandler", ArgumentSemantic.Assign)]
 		MPSGraphScheduledHandler ScheduledHandler { get; set; }
 
-		[NullAllowed, Export ("completionHandler")]
+		// @property (readwrite, atomic) MPSGraphCompletionHandler _Nonnull completionHandler;
+		[Export ("completionHandler", ArgumentSemantic.Assign)]
 		MPSGraphCompletionHandler CompletionHandler { get; set; }
 
+		// @property (readwrite, atomic) BOOL waitUntilCompleted;
 		[Export ("waitUntilCompleted")]
 		bool WaitUntilCompleted { get; set; }
 	}
 
 	// MPSGraphCore.h
-
+	
+	// @interface MPSGraphShapedType : MPSGraphType
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface MPSGraphShapedType : NSCopying {
-		// TODO: fak: MPSGraphShapedType
+	[BaseType (typeof(MPSGraphType))]
+	interface MPSGraphShapedType
+	{
+		// @property (readwrite, copy, atomic) MPSShape * _Nullable shape;
+		[NullAllowed, Export ("shape", ArgumentSemantic.Copy)]
+		NSNumber[] Shape { get; set; }
+
+		// @property (readwrite, atomic) MPSDataType dataType;
+		[Export ("dataType", ArgumentSemantic.Assign)]
+		MPSDataType DataType { get; set; }
+
+		// -(instancetype _Nonnull)initWithShape:(MPSShape * _Nullable)shape dataType:(MPSDataType)dataType;
+		[Export ("initWithShape:dataType:")]
+		IntPtr Constructor ([NullAllowed] NSNumber[] shape, MPSDataType dataType);
+
+		// -(BOOL)isEqualTo:(MPSGraphShapedType * _Nullable)object;
+		[Export ("isEqualTo:")]
+		bool IsEqualTo ([NullAllowed] MPSGraphShapedType @object);
+	}
+
+	// MPSGraphType was introduced in iOS 15 (macOS 12) and became the base class for MPSGraphShapedType.
+	// Prior to that, MPSGraphShapedType inherited from NSObject directly.
+	// @interface MPSGraphType : NSObject
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphType : NSCopying
+	{
 	}
 
 	// MPSGraphOperation.h
 
+	// @interface MPSGraphOperation : NSObject <NSCopying>
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MPSGraphOperation : NSCopying {
-		// TODO: fak: MPSGraphOperation
+	interface MPSGraphOperation : NSCopying
+	{
+		// @property (readonly, nonatomic) NSArray<MPSGraphTensor *> * _Nonnull inputTensors;
+		[Export ("inputTensors")]
+		MPSGraphTensor[] InputTensors { get; }
+
+		// @property (readonly, nonatomic) NSArray<MPSGraphTensor *> * _Nonnull outputTensors;
+		[Export ("outputTensors")]
+		MPSGraphTensor[] OutputTensors { get; }
+
+		// @property (readonly, nonatomic) NSArray<MPSGraphOperation *> * _Nonnull controlDependencies;
+		[Export ("controlDependencies")]
+		MPSGraphOperation[] ControlDependencies { get; }
+
+		// @property (readonly, nonatomic) MPSGraph * _Nonnull graph;
+		[Export ("graph")]
+		MPSGraph Graph { get; }
+
+		// @property (readonly, nonatomic) NSString * _Nonnull name;
+		[Export ("name")]
+		string Name { get; }
 	}
 
 	// MPSGraphTensor.h
 
+	// @interface MPSGraphTensor : NSObject <NSCopying>
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MPSGraphTensor : NSCopying {
-		// TODO: fak: MPSGraphTensor
+	interface MPSGraphTensor : NSCopying
+	{
+		// @property (readonly, copy, nonatomic) MPSShape * _Nullable shape;
+		[NullAllowed, Export ("shape", ArgumentSemantic.Copy)]
+		NSNumber[] Shape { get; }
+
+		// @property (readonly, nonatomic) MPSDataType dataType;
+		[Export ("dataType")]
+		MPSDataType DataType { get; }
+
+		// @property (readonly, nonatomic) MPSGraphOperation * _Nonnull operation;
+		[Export ("operation")]
+		MPSGraphOperation Operation { get; }
 	}
 
+	// @interface MPSGraphTensorData : NSObject
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface MPSGraphTensorData {
-		// TODO: fak: MPSGraphTensorData
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphTensorData
+	{
+		// @property (readonly, copy, nonatomic) MPSShape * _Nonnull shape;
+		[Export ("shape", ArgumentSemantic.Copy)]
+		NSNumber[] Shape { get; }
+
+		// @property (readonly, nonatomic) MPSDataType dataType;
+		[Export ("dataType")]
+		MPSDataType DataType { get; }
+
+		// @property (readonly, nonatomic) MPSGraphDevice * _Nonnull device;
+		[Export ("device")]
+		MPSGraphDevice Device { get; }
+
+		// -(instancetype _Nonnull)initWithDevice:(MPSGraphDevice * _Nonnull)device data:(NSData * _Nonnull)data shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType;
+		[Export ("initWithDevice:data:shape:dataType:")]
+		IntPtr Constructor (MPSGraphDevice device, NSData data, NSNumber[] shape, MPSDataType dataType);
+
+		// -(instancetype _Nonnull)initWithMTLBuffer:(id<IMTLBuffer> _Nonnull)buffer shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType __attribute__((swift_name("init(_:shape:dataType:)")));
+		[Export ("initWithMTLBuffer:shape:dataType:")]
+		IntPtr Constructor (IMTLBuffer buffer, NSNumber[] shape, MPSDataType dataType);
+
+		// -(instancetype _Nonnull)initWithMPSMatrix:(MPSMatrix * _Nonnull)matrix __attribute__((swift_name("init(_:)")));
+		[Export ("initWithMPSMatrix:")]
+		IntPtr Constructor (MPSMatrix matrix);
+
+		// -(instancetype _Nonnull)initWithMPSMatrix:(MPSMatrix * _Nonnull)matrix rank:(NSUInteger)rank __attribute__((swift_name("init(_:rank:)")));
+		[Export ("initWithMPSMatrix:rank:")]
+		IntPtr Constructor (MPSMatrix matrix, nuint rank);
+
+		// -(instancetype _Nonnull)initWithMPSVector:(MPSVector * _Nonnull)vector __attribute__((swift_name("init(_:)")));
+		[Export ("initWithMPSVector:")]
+		IntPtr Constructor (MPSVector vector);
+
+		// -(instancetype _Nonnull)initWithMPSVector:(MPSVector * _Nonnull)vector rank:(NSUInteger)rank __attribute__((swift_name("init(_:rank:)")));
+		[Export ("initWithMPSVector:rank:")]
+		IntPtr Constructor (MPSVector vector, nuint rank);
+
+		// -(instancetype _Nonnull)initWithMPSNDArray:(MPSNDArray * _Nonnull)ndarray __attribute__((swift_name("init(_:)")));
+		[Export ("initWithMPSNDArray:")]
+		IntPtr Constructor (MPSNDArray ndarray);
+
+		// -(instancetype _Nonnull)initWithMPSImageBatch:(MPSImageBatch * _Nonnull)imageBatch __attribute__((swift_name("init(_:)")));
+		[Export ("initWithMPSImageBatch:")]
+		IntPtr Constructor (MPSImage[] imageBatch);
+
+		// -(MPSNDArray * _Nonnull)mpsndarray;
+		[Export ("mpsndarray")]
+		MPSNDArray MPSNDArray { get; }
 	}
+
+
 }
