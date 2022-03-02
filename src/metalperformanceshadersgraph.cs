@@ -99,7 +99,7 @@ namespace MetalPerformanceShadersGraph
 		[Export("concatTensor:withTensor:dimension:name:")]
 		MPSGraphTensor Concat(MPSGraphTensor tensor, MPSGraphTensor withTensor, nint dimension, [NullAllowed] string name);
 		[Export("concatTensors:dimension:interleave:name:")]
-		MPSGraphTensor Concat(MPSGraphTensor[] tensors, nint dimension, BOOL interleave, [NullAllowed] string name);
+		MPSGraphTensor Concat(MPSGraphTensor[] tensors, nint dimension, bool interleave, [NullAllowed] string name);
 		[Export("concatTensors:dimension:name:")]
 		MPSGraphTensor Concat(MPSGraphTensor[] tensors, nint dimension, [NullAllowed] string name);
 		[Export("constantWithData:shape:dataType:")]
@@ -137,9 +137,9 @@ namespace MetalPerformanceShadersGraph
 		[Export("coshWithTensor:name:")]
 		MPSGraphTensor Cosh(MPSGraphTensor tensor, [NullAllowed] string name);
 		[Export("depthToSpace2DTensor:widthAxis:heightAxis:depthAxis:blockSize:usePixelShuffleOrder:name:")]
-		MPSGraphTensor DepthToSpace2D(MPSGraphTensor tensor, nuint widthAxis, nuint heightAxis, nuint depthAxis, nuint blockSize, BOOL usePixelShuffleOrder, [NullAllowed] string name);
+		MPSGraphTensor DepthToSpace2D(MPSGraphTensor tensor, nuint widthAxis, nuint heightAxis, nuint depthAxis, nuint blockSize, bool usePixelShuffleOrder, [NullAllowed] string name);
 		[Export("depthToSpace2DTensor:widthAxisTensor:heightAxisTensor:depthAxisTensor:blockSize:usePixelShuffleOrder:name:")]
-		MPSGraphTensor DepthToSpace2D(MPSGraphTensor tensor, MPSGraphTensor widthAxisTensor, MPSGraphTensor heightAxisTensor, MPSGraphTensor depthAxisTensor, nuint blockSize, BOOL usePixelShuffleOrder, [NullAllowed] string name);
+		MPSGraphTensor DepthToSpace2D(MPSGraphTensor tensor, MPSGraphTensor widthAxisTensor, MPSGraphTensor heightAxisTensor, MPSGraphTensor depthAxisTensor, nuint blockSize, bool usePixelShuffleOrder, [NullAllowed] string name);
 		[Export("depthwiseConvolution2DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:descriptor:name:")]
 		MPSGraphTensor DepthwiseConvolution2DDataGradient(MPSGraphTensor incomingGradientTensor, MPSGraphTensor weightsTensor, MPSShape outputShape, MPSGraphDepthwiseConvolution2DOpDescriptor descriptor, [NullAllowed] string name);
 		[Export("depthwiseConvolution2DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:descriptor:name:")]
@@ -357,11 +357,11 @@ namespace MetalPerformanceShadersGraph
 		[Export("reshapeTensor:withShapeTensor:name:")]
 		MPSGraphTensor Reshape(MPSGraphTensor tensor, MPSGraphTensor withShapeTensor, [NullAllowed] string name);
 		[Export("resizeTensor:size:mode:centerResult:alignCorners:layout:name:")]
-		MPSGraphTensor Resize(MPSGraphTensor tensor, MPSShape size, MPSGraphResizeMode mode, BOOL centerResult, BOOL alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
+		MPSGraphTensor Resize(MPSGraphTensor tensor, MPSShape size, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 		[Export("resizeTensor:sizeTensor:mode:centerResult:alignCorners:layout:name:")]
-		MPSGraphTensor Resize(MPSGraphTensor tensor, MPSGraphTensor sizeTensor, MPSGraphResizeMode mode, BOOL centerResult, BOOL alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
+		MPSGraphTensor Resize(MPSGraphTensor tensor, MPSGraphTensor sizeTensor, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 		[Export("resizeWithGradientTensor:input:mode:centerResult:alignCorners:layout:name:")]
-		MPSGraphTensor Resize(MPSGraphTensor gradientTensor, MPSGraphTensor input, MPSGraphResizeMode mode, BOOL centerResult, BOOL alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
+		MPSGraphTensor Resize(MPSGraphTensor gradientTensor, MPSGraphTensor input, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
 		[Export("reverseSquareRootWithTensor:name:")]
 		MPSGraphTensor ReverseSquareRoot(MPSGraphTensor tensor, [NullAllowed] string name);
 		[Export("reverseTensor:axes:name:")]
@@ -425,9 +425,9 @@ namespace MetalPerformanceShadersGraph
 		[Export("softMaxWithTensor:axis:name:")]
 		MPSGraphTensor SoftMax(MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 		[Export("spaceToDepth2DTensor:widthAxis:heightAxis:depthAxis:blockSize:usePixelShuffleOrder:name:")]
-		MPSGraphTensor SpaceToDepth2D(MPSGraphTensor tensor, nuint widthAxis, nuint heightAxis, nuint depthAxis, nuint blockSize, BOOL usePixelShuffleOrder, [NullAllowed] string name);
+		MPSGraphTensor SpaceToDepth2D(MPSGraphTensor tensor, nuint widthAxis, nuint heightAxis, nuint depthAxis, nuint blockSize, bool usePixelShuffleOrder, [NullAllowed] string name);
 		[Export("spaceToDepth2DTensor:widthAxisTensor:heightAxisTensor:depthAxisTensor:blockSize:usePixelShuffleOrder:name:")]
-		MPSGraphTensor SpaceToDepth2D(MPSGraphTensor tensor, MPSGraphTensor widthAxisTensor, MPSGraphTensor heightAxisTensor, MPSGraphTensor depthAxisTensor, nuint blockSize, BOOL usePixelShuffleOrder, [NullAllowed] string name);
+		MPSGraphTensor SpaceToDepth2D(MPSGraphTensor tensor, MPSGraphTensor widthAxisTensor, MPSGraphTensor heightAxisTensor, MPSGraphTensor depthAxisTensor, nuint blockSize, bool usePixelShuffleOrder, [NullAllowed] string name);
 		[Export("squareRootWithTensor:name:")]
 		MPSGraphTensor SquareRoot(MPSGraphTensor tensor, [NullAllowed] string name);
 		[Export("squareWithTensor:name:")]
