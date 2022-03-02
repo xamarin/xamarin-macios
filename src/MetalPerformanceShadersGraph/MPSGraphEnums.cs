@@ -59,6 +59,25 @@ namespace MetalPerformanceShadersGraph
 		ArgumentMax = 5
 	}
 
+	[Native]
+	public enum MPSGraphResizeMode : ulong
+	{
+		Nearest = 0,
+		Bilinear = 1
+	}
+
+	[Native]
+	public enum MPSGraphScatterMode : long
+	{
+		Add = 0,
+		Sub = 1,
+		Mul = 2,
+		Div = 3,
+		Min = 4,
+		Max = 5,
+		Set = 6
+	}
+
 	public enum MPSGraphDeviceType : uint
 	{
 		MPSGraphDeviceTypeMetal = 0

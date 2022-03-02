@@ -1294,13 +1294,6 @@ namespace MetalPerformanceShadersGraph
 		MPSGraphTensor ReductionArgMinimum (MPSGraphTensor tensor, nint axis, [NullAllowed] string name);
 	}
 
-	[Native]
-	public enum MPSGraphResizeMode : ulong
-	{
-		Nearest = 0,
-		Bilinear = 1
-	}
-
 	// @interface MPSGraphResizeOps (MPSGraph)
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
 	[Category]
@@ -1319,18 +1312,6 @@ namespace MetalPerformanceShadersGraph
 		// -(MPSGraphTensor * _Nonnull)resizeWithGradientTensor:(MPSGraphTensor * _Nonnull)gradient input:(MPSGraphTensor * _Nonnull)input mode:(MPSGraphResizeMode)mode centerResult:(BOOL)centerResult alignCorners:(BOOL)alignCorners layout:(MPSGraphTensorNamedDataLayout)layout name:(NSString * _Nullable)name;
 		[Export ("resizeWithGradientTensor:input:mode:centerResult:alignCorners:layout:name:")]
 		MPSGraphTensor ResizeGradient (MPSGraphTensor gradient, MPSGraphTensor input, MPSGraphResizeMode mode, bool centerResult, bool alignCorners, MPSGraphTensorNamedDataLayout layout, [NullAllowed] string name);
-	}
-
-	[Native]
-	public enum MPSGraphScatterMode : long
-	{
-		Add = 0,
-		Sub = 1,
-		Mul = 2,
-		Div = 3,
-		Min = 4,
-		Max = 5,
-		Set = 6
 	}
 
 	// @interface ScatterNDOps (MPSGraph)
