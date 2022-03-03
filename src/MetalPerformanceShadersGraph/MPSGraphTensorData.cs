@@ -19,6 +19,11 @@ namespace MetalPerformanceShadersGraph
 			return new MPSGraphTensorData (ndarray);
 		}
 
+		public static MPSGraphTensorData Create (params MPSImage[] imageBatch)
+		{
+			return new MPSGraphTensorData (NSArray<MPSImage>.FromNSObjects (imageBatch));
+		}
+
 		public void Read (Span<float> values)
 		{
 			using var ndarray = this.MPSNDArray;
