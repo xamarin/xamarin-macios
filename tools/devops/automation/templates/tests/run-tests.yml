@@ -201,7 +201,7 @@ steps:
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
     mv $(Build.SourcesDirectory)/artifacts/tmp/package-introspection-dependencies/package-introspection-dependencies.zip .
-    unzip package-introspection-dependencies.zip
+    unzip -o package-introspection-dependencies.zip
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch
   displayName: Expand introspection dependencies.
   timeoutInMinutes: 10
@@ -217,9 +217,9 @@ steps:
 # this step replaces the test-libraries dir
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
-    rm -Rf test-libraries
+    rm -Rf test-libraries/*
     mv $(Build.SourcesDirectory)/artifacts/tmp//package-test-libraries/package-test-libraries.zip .
-    unzip  package-test-libraries.zip
+    unzip -o package-test-libraries.zip -d test-libraries
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
   displayName: Expand test libraries.
   timeoutInMinutes: 10
