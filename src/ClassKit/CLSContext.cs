@@ -17,7 +17,7 @@ namespace ClassKit {
 	public partial class CLSContext {
 
 		public CLSContextTopic Topic {
-			get => CLSContextTopicExtensions.GetValue (WeakTopic!);
+			get => CLSContextTopicExtensions.GetValue (WeakTopic);
 			set => WeakTopic = value.GetConstant ();
 		}
 	}
