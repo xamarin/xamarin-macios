@@ -1218,7 +1218,7 @@
 
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
 			Executable="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 			IsFramework="false"
 			SymbolFile="$(_MtouchSymbolsList)"

@@ -124,7 +124,7 @@ namespace AudioToolbox {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				MusicSequenceSetAUGraph (Handle, value.Handle);
 			}
@@ -209,7 +209,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus GetTrackIndex (MusicTrack track, out int index)
 		{
 			if (track is null)
-				throw new ArgumentNullException (nameof (track));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (track));
 
 			return MusicSequenceGetTrackIndex (Handle, track.Handle, out index);
 		}
@@ -232,7 +232,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus SetMidiEndpoint (MidiEndpoint endpoint)
 		{
 			if (endpoint is null)
-				throw new ArgumentNullException (nameof (endpoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return MusicSequenceSetMIDIEndpoint (Handle, endpoint.handle);
 		}
 #endif // IOS
@@ -315,7 +315,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus LoadFile (NSUrl url, MusicSequenceFileTypeID fileTypeId, MusicSequenceLoadFlags loadFlags = 0)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			
 			return MusicSequenceFileLoad (Handle, url.Handle, fileTypeId, loadFlags);
 		}
@@ -326,7 +326,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus LoadData (NSData data, MusicSequenceFileTypeID fileTypeId, MusicSequenceLoadFlags loadFlags = 0)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			
 			return MusicSequenceFileLoadData (Handle, data.Handle, fileTypeId, loadFlags);
 		}
@@ -339,7 +339,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus CreateFile (NSUrl url, MusicSequenceFileTypeID fileType, MusicSequenceFileFlags flags = 0, ushort resolution = 0)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			
 			return MusicSequenceFileCreate (Handle, url.Handle, fileType, flags, resolution);
 		}

@@ -760,6 +760,13 @@ namespace Xamarin.Tests
 			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
+		public static IEnumerable<string> GetBaseLibraryImplementations ()
+		{
+			foreach (var platform in GetIncludedPlatforms (true))
+				foreach (var lib in GetBaseLibraryImplementations (platform))
+					yield return lib;
+		}
+
 		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
 		{
 			var runtimeIdentifiers = GetRuntimeIdentifiers (platform);
