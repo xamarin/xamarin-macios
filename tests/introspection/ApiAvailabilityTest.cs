@@ -578,6 +578,40 @@ namespace Introspection {
 					break;
 				}
 			}
+#if NET
+			// These are temporary ignores until the generator changes are in for NET6 attributes
+			switch (type.FullName) {
+
+				case "GLKit.GLKTextureOperations": {
+					switch (memberName) {
+						case "SRGB":
+							return true;
+					}
+					break;
+				}
+				case "MobileCoreServices.UTType": {
+					switch (memberName) {
+						case "Equals":
+							return true;
+					}
+					break;
+				}
+				case "Security.SecSharedCredential": {
+					switch (memberName) {
+						case "RequestSharedWebCredential":
+							return true;
+					}
+					break;
+				}
+				case "Security.SslContext": {
+					switch (memberName) {
+						case "SetEncryptionCertificate":
+							return true;
+					}
+					break;			
+				}
+			}
+#endif
 			return false;
 		}
 
