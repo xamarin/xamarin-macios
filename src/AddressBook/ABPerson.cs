@@ -651,7 +651,7 @@ namespace AddressBook {
 		public int CompareTo (ABPerson other, ABPersonSortBy ordering)
 		{
 			if (other is null)
-				throw new ArgumentNullException (nameof (other));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (other));
 			if (ordering != ABPersonSortBy.FirstName && ordering != ABPersonSortBy.LastName)
 				throw new ArgumentException ("Invalid ordering value: " + ordering, "ordering");
 			return ABPersonComparePeopleByName (Handle, other.Handle, ordering);
@@ -1110,7 +1110,7 @@ namespace AddressBook {
 		public static NSData? GetVCards (params ABPerson[] people)
 		{
 			if (people is null)
-				throw new ArgumentNullException (nameof (people));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (people));
 
 			var ptrs = new NativeHandle [people.Length];
 			for (int i = 0; i < people.Length; ++i) {
@@ -1127,7 +1127,7 @@ namespace AddressBook {
 		public static ABPerson?[]? CreateFromVCard (ABRecord? source, NSData vCardData)
 		{
 			if (vCardData is null)
-				throw new ArgumentNullException (nameof (vCardData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vCardData));
 
 			// TODO: SIGSEGV when source is not null
 			var res = ABPersonCreatePeopleInSourceWithVCardRepresentation (source.GetHandle (), vCardData.Handle);
