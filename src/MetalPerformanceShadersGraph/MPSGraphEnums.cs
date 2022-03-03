@@ -7,6 +7,7 @@ using Metal;
 
 namespace MetalPerformanceShadersGraph
 {
+	[Flags]
 	public enum MPSGraphOptions : ulong
 	{
 		None = 0,
