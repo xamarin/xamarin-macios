@@ -84,7 +84,7 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(NSDictionary<MPSGraphTensor *,MPSGraphTensor *> * _Nonnull)gradientForPrimaryTensor:(MPSGraphTensor * _Nonnull)primaryTensor withTensors:(NSArray<MPSGraphTensor *> * _Nonnull)tensors name:(NSString * _Nullable)name __attribute__((swift_name("gradients(of:with:name:)")));
 		[Export ("gradientForPrimaryTensor:withTensors:name:")]
-		NSDictionary<MPSGraphTensor, MPSGraphTensor> Gradient (MPSGraphTensor primaryTensor, MPSGraphTensor[] tensors, [NullAllowed] string name);
+		NSDictionary<MPSGraphTensor, MPSGraphTensor> Gradients (MPSGraphTensor of, MPSGraphTensor[] with, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphActivationOps (MPSGraph)
@@ -739,7 +739,7 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)softMaxCrossEntropyWithSourceTensor:(MPSGraphTensor * _Nonnull)sourceTensor labelsTensor:(MPSGraphTensor * _Nonnull)labelsTensor axis:(NSInteger)axis reductionType:(MPSGraphLossReductionType)reductionType name:(NSString * _Nullable)name __attribute__((swift_name("softMaxCrossEntropy(_:labels:axis:reuctionType:name:)")));
 		[Export ("softMaxCrossEntropyWithSourceTensor:labelsTensor:axis:reductionType:name:")]
-		MPSGraphTensor SoftMaxCrossEntropy (MPSGraphTensor sourceTensor, MPSGraphTensor labelsTensor, nint axis, MPSGraphLossReductionType reductionType, [NullAllowed] string name);
+		MPSGraphTensor SoftMaxCrossEntropy (MPSGraphTensor source, MPSGraphTensor labels, nint axis, MPSGraphLossReductionType reductionType, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)softMaxCrossEntropyGradientWithIncomingGradientTensor:(MPSGraphTensor * _Nonnull)gradientTensor sourceTensor:(MPSGraphTensor * _Nonnull)sourceTensor labelsTensor:(MPSGraphTensor * _Nonnull)labelsTensor axis:(NSInteger)axis reductionType:(MPSGraphLossReductionType)reductionType name:(NSString * _Nullable)name __attribute__((swift_name("softMaxCrossEntropyGradient(_:source:labels:axis:reuctionType:name:)")));
 		[Export ("softMaxCrossEntropyGradientWithIncomingGradientTensor:sourceTensor:labelsTensor:axis:reductionType:name:")]
@@ -840,11 +840,11 @@ namespace MetalPerformanceShadersGraph
 
 		// -(MPSGraphTensor * _Nonnull)readVariable:(MPSGraphTensor * _Nonnull)variable name:(NSString * _Nullable)name __attribute__((swift_name("read(_:name:)")));
 		[Export ("readVariable:name:")]
-		MPSGraphTensor ReadVariable (MPSGraphTensor variable, [NullAllowed] string name);
+		MPSGraphTensor Read (MPSGraphTensor variable, [NullAllowed] string name);
 
 		// -(MPSGraphOperation * _Nonnull)assignVariable:(MPSGraphTensor * _Nonnull)variable withValueOfTensor:(MPSGraphTensor * _Nonnull)tensor name:(NSString * _Nullable)name __attribute__((swift_name("assign(_:tensor:name:)")));
 		[Export ("assignVariable:withValueOfTensor:name:")]
-		MPSGraphOperation AssignVariable (MPSGraphTensor variable, MPSGraphTensor tensor, [NullAllowed] string name);
+		MPSGraphOperation Assign (MPSGraphTensor variable, MPSGraphTensor tensor, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphNormalizationOps (MPSGraph)
@@ -921,11 +921,11 @@ namespace MetalPerformanceShadersGraph
 	{
 		// -(MPSGraphTensor * _Nonnull)stochasticGradientDescentWithLearningRateTensor:(MPSGraphTensor * _Nonnull)learningRateTensor valuesTensor:(MPSGraphTensor * _Nonnull)valuesTensor gradientTensor:(MPSGraphTensor * _Nonnull)gradientTensor name:(NSString * _Nullable)name __attribute__((swift_name("stochasticGradientDescent(learningRate:values:gradient:name:)")));
 		[Export ("stochasticGradientDescentWithLearningRateTensor:valuesTensor:gradientTensor:name:")]
-		MPSGraphTensor StochasticGradientDescent (MPSGraphTensor learningRateTensor, MPSGraphTensor valuesTensor, MPSGraphTensor gradientTensor, [NullAllowed] string name);
+		MPSGraphTensor StochasticGradientDescent (MPSGraphTensor learningRate, MPSGraphTensor values, MPSGraphTensor gradient, [NullAllowed] string name);
 
 		// -(MPSGraphOperation * _Nonnull)applyStochasticGradientDescentWithLearningRateTensor:(MPSGraphTensor * _Nonnull)learningRateTensor variable:(MPSGraphVariableOp * _Nonnull)variable gradientTensor:(MPSGraphTensor * _Nonnull)gradientTensor name:(NSString * _Nullable)name __attribute__((swift_name("applyStochasticGradientDescent(learningRate:variable:gradient:name:)")));
 		[Export ("applyStochasticGradientDescentWithLearningRateTensor:variable:gradientTensor:name:")]
-		MPSGraphOperation ApplyStochasticGradientDescent (MPSGraphTensor learningRateTensor, MPSGraphVariableOp variable, MPSGraphTensor gradientTensor, [NullAllowed] string name);
+		MPSGraphOperation ApplyStochasticGradientDescent (MPSGraphTensor learningRate, MPSGraphVariableOp variable, MPSGraphTensor gradient, [NullAllowed] string name);
 	}
 
 	// @interface MPSGraphPooling2DOpDescriptor : NSObject <NSCopying>
