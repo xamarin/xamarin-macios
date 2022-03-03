@@ -32,12 +32,6 @@ using System.Runtime.Versioning;
 
 namespace CoreFoundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	sealed class DispatchQueueSynchronizationContext : SynchronizationContext
 	{
 #if !COREBUILD

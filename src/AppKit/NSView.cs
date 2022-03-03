@@ -24,10 +24,6 @@ namespace AppKit {
 		static view_compare_func view_comparer = view_compare;
 #endif
 
-#if NET
-		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 		sealed class SortData
 		{
 			public Exception Exception;

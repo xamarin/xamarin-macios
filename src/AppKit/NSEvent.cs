@@ -15,10 +15,6 @@ namespace AppKit {
 #endif
 	[DebuggerTypeProxy (typeof(NSEvent.NSEventDebuggerProxy))]
 	public partial class NSEvent {
-#if NET
-		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 		class NSEventDebuggerProxy {
 			NSEvent target;
 			
