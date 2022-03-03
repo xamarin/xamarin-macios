@@ -1826,9 +1826,10 @@ namespace MetalPerformanceShadersGraph
 		[Export ("initWithMPSNDArray:")]
 		IntPtr Constructor (MPSNDArray ndarray);
 
+		// Use NSArray here instead of [] to match the MetalPerformanceShaders API
 		// -(instancetype _Nonnull)initWithMPSImageBatch:(MPSImageBatch * _Nonnull)imageBatch __attribute__((swift_name("init(_:)")));
 		[Export ("initWithMPSImageBatch:")]
-		IntPtr Constructor (MPSImage[] imageBatch);
+		IntPtr Constructor (NSArray<MPSImage> imageBatch);
 
 		// -(MPSNDArray * _Nonnull)mpsndarray;
 		[Export ("mpsndarray")]
