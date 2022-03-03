@@ -189,13 +189,13 @@ variables:
 - name: PROVISIONATOR_CHANNEL
   value: ${{ parameters.provisionatorChannel }}
 - name: PRBuildPool
-  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
+  value: 'VSEng-Mac-BotDeploy-Image-Test'
 - name: PRBuildPoolUrl
-  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=391&view=agents'
 - name: CIBuildPool
-  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
+  value: 'VSEng-Mac-BotDeploy-Image-Test'
 - name: CIBuildPoolUrl
-  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=391&view=agents'
 - name: IsPRBuild
   value: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
 
