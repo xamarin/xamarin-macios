@@ -392,7 +392,16 @@ namespace Introspection {
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 					}
 				} else {
+					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+					// Example:
+					// 		[SupportedOSPlatform ("macos")]
+					// 		[UnsupportedOSPlatform ("macos10.13")]
+					// This API was introduced on macOS but became unavailable on 10.13
+					// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked both [Unavailable ({Platform})] and {ma}.");
+#endif
 				}
 			}
 		}
@@ -423,7 +432,16 @@ namespace Introspection {
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 						}
 					} else {
+					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+					// Example:
+					// 		[SupportedOSPlatform ("macos")]
+					// 		[UnsupportedOSPlatform ("macos10.13")]
+					// This API was introduced on macOS but became unavailable on 10.13
+					// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 						AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}. Available: {availableVersion} Unavailable: {unavailableVersion}");
+#endif
 					}
 				}
 
