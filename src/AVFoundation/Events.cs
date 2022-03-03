@@ -67,12 +67,6 @@ namespace AVFoundation {
 		public bool Status { get; private set; }
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	#pragma warning disable 672
 	sealed class InternalAVAudioPlayerDelegate : AVAudioPlayerDelegate {
 		internal EventHandler cbEndInterruption, cbBeginInterruption;
@@ -176,11 +170,6 @@ namespace AVFoundation {
 	}
 
 #if !TVOS
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-#endif
 	internal class InternalAVAudioRecorderDelegate : AVAudioRecorderDelegate {
 		internal EventHandler cbEndInterruption, cbBeginInterruption;
 		internal EventHandler<AVStatusEventArgs> cbFinishedRecording;

@@ -28,13 +28,9 @@
 using System;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace AppKit
 {
-#if NET
-	[SupportedOSPlatform ("macos")]
-#endif
 	[Register ("__monomac_internal_ActionDispatcher")]
 	internal class ActionDispatcher : NSObject
 #if !__MACCATALYST__

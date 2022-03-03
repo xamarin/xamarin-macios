@@ -37,9 +37,6 @@ using ObjCRuntime;
 
 namespace AppKit
 {
-#if NET
-	[SupportedOSPlatform ("macos")]
-#endif
 	[Register ("__MonoMac_NSAlertDidEndDispatcher")]
 	internal class NSAlertDidEndDispatcher : NSObject
 	{

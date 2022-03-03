@@ -15,18 +15,8 @@ using ObjCRuntime;
 namespace iAd {
 
 	// NSInteger -> ADBannerView.h
-#if NET
-	[UnsupportedOSPlatform ("ios10.0")]
-#if IOS
-	[Obsolete ("Starting with ios10.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#if IOS
-	[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	[Native]
 	public enum ADError : long {
 		Unknown,
@@ -43,36 +33,16 @@ namespace iAd {
 	}
 
 	// NSInteger -> ADBannerView.h
-#if NET
-	[UnsupportedOSPlatform ("ios10.0")]
-#if IOS
-	[Obsolete ("Starting with ios10.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#if IOS
-	[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	[Native]
 	public enum ADAdType : long {
 		Banner, MediumRectangle
 	}
 
 	// NSInteger -> UIViewControlleriAdAdditions.h
-#if NET
-	[UnsupportedOSPlatform ("ios10.0")]
-#if IOS
-	[Obsolete ("Starting with ios10.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#if IOS
-	[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	[Native]
 	public enum ADInterstitialPresentationPolicy : long {
 		None = 0,
@@ -80,15 +50,8 @@ namespace iAd {
 		Manual,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-#if IOS
-	[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[iOS (9,0)]
 	[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
-#endif
 	[Native]
 	[ErrorDomain ("ADClientErrorDomain")]
 	public enum ADClientError : long {
