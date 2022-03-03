@@ -1194,6 +1194,7 @@ METALPERFORMANCESHADERSGRAPH_API_SOURCES = \
 
 METALPERFORMANCESHADERSGRAPH_SOURCES = \
 	MetalPerformanceShadersGraph/MPSGraphExtensions.cs \
+	MetalPerformanceShadersGraph/MPSGraphTensorData.cs \
 
 # MetricKit
 
