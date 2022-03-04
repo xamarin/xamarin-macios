@@ -13,7 +13,7 @@ namespace MetalPerformanceShadersGraph
 		None = 0,
 		SynchronizeResults = 1,
 		Verbose = 2,
-		Default = SynchronizeResults
+		Default = SynchronizeResults,
 	}
 
 	[Native]
@@ -25,7 +25,7 @@ namespace MetalPerformanceShadersGraph
 		Hwio = 3,
 		Chw = 4,
 		Hwc = 5,
-		Hw = 6
+		Hw = 6,
 	}
 
 	[Native]
@@ -34,7 +34,7 @@ namespace MetalPerformanceShadersGraph
 		Explicit = 0,
 		Valid = 1,
 		Same = 2,
-		ExplicitOffset = 3
+		ExplicitOffset = 3,
 	}
 
 	[Native]
@@ -46,7 +46,7 @@ namespace MetalPerformanceShadersGraph
 		ClampToEdge = 3,
 		Zero = 4,
 		Periodic = 5,
-		AntiPeriodic = 6
+		AntiPeriodic = 6,
 	}
 
 	[Native]
@@ -57,14 +57,14 @@ namespace MetalPerformanceShadersGraph
 		Sum = 2,
 		Product = 3,
 		ArgumentMin = 4,
-		ArgumentMax = 5
+		ArgumentMax = 5,
 	}
 
 	[Native]
 	public enum MPSGraphResizeMode : ulong
 	{
 		Nearest = 0,
-		Bilinear = 1
+		Bilinear = 1,
 	}
 
 	[Native]
@@ -76,19 +76,19 @@ namespace MetalPerformanceShadersGraph
 		Div = 3,
 		Min = 4,
 		Max = 5,
-		Set = 6
+		Set = 6,
 	}
 
 	public enum MPSGraphDeviceType : uint
 	{
-		MPSGraphDeviceTypeMetal = 0
+		Metal = 0,
 	}
 
 	public enum MPSGraphLossReductionType : ulong
 	{
 		Axis = 0,
 		Sum = 1,
-		Mean = 2
+		Mean = 2,
 	}
 
 	// For COO, indexTensor0 is x index and indexTensor1 is y index
@@ -98,20 +98,20 @@ namespace MetalPerformanceShadersGraph
 	{
 		Coo = 0,
 		Csc = 1,
-		Csr = 2
+		Csr = 2,
 	}
 
 	public enum MPSGraphRandomDistribution : ulong
 	{
 		Uniform = 0,
 		Normal = 1,
-		TruncatedNormal = 2
+		TruncatedNormal = 2,
 	}
 
 	public enum MPSGraphRandomNormalSamplingMethod : ulong
 	{
 		InvCdf = 0,
-		BoxMuller = 1
+		BoxMuller = 1,
 	}
 
 }

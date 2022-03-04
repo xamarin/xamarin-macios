@@ -59,7 +59,7 @@ namespace MetalPerformanceShaders {
 				length *= GetLength(i);
 			}
 			if (length != (nuint)values.Length)
-				throw new ArgumentException($"The number of values ({values.Length}) does not match the shape length ({length})");
+				throw new ArgumentException($"The number of values ({values.Length}) does not match the shape length ({length}).");
 			fixed (float* p = values) {
 				WriteBytes ((IntPtr)p, strideBytesPerDimension: IntPtr.Zero);
 			}
@@ -85,7 +85,7 @@ namespace MetalPerformanceShaders {
 				length *= GetLength(i);
 			}
 			if (length != (nuint)values.Length)
-				throw new ArgumentException($"The number of values ({values.Length}) does not match the shape length ({length})");
+				throw new ArgumentException($"The number of values ({values.Length}) does not match the shape length ({length}).");
 			fixed (float* p = values) {
 				ReadBytes ((IntPtr)p, strideBytesPerDimension: IntPtr.Zero);
 			}

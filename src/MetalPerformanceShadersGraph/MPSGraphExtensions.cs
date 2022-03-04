@@ -24,7 +24,7 @@ namespace MetalPerformanceShadersGraph
 			for (var i = 0; i < shape.Length; i++)
 				length *= shape[i];
 			if (length != values.Length)
-				throw new ArgumentException ($"The number of values ({values.Length}) does not match the shape length ({length})");
+				throw new ArgumentException ($"The number of values ({values.Length}) does not match the shape length ({length}).");
 			fixed (float* p = values) {
 				using var data = NSData.FromBytesNoCopy ((IntPtr)p, (nuint)(values.Length * 4), freeWhenDone: false);
 				return graph.Constant (data, shape, MPSDataType.Float32);
@@ -50,7 +50,7 @@ namespace MetalPerformanceShadersGraph
 			for (var i = 0; i < shape.Length; i++)
 				length *= shape[i];
 			if (length != initialValues.Length)
-				throw new ArgumentException ($"The number of initial values ({initialValues.Length}) does not match the shape length ({length})");
+				throw new ArgumentException ($"The number of initial values ({initialValues.Length}) does not match the shape length ({length}).");
 			fixed (float* p = initialValues) {
 				using var data = NSData.FromBytesNoCopy ((IntPtr)p, (nuint)(initialValues.Length * 4), freeWhenDone: false);
 				return graph.Variable (data, shape, MPSDataType.Float32, name);
