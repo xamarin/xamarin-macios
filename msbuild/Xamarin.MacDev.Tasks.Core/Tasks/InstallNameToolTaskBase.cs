@@ -26,7 +26,9 @@ namespace Xamarin.MacDev.Tasks {
 			for (var i = 0; i < DynamicLibrary.Length; i++) {
 				var input = DynamicLibrary [i];
 				var src = Path.GetFullPath (input.ItemSpec);
-				var target = input.GetMetadata ("ReidentifiedPath");
+				// Make sure we use the correct path separator, these are relative paths, so it doesn't look
+				// like MSBuild does the conversion automatically.
+				var target = input.GetMetadata ("ReidentifiedPath").Replace ('\\', Path.DirectorySeparatorChar);
 				var temporaryTarget = target + ".tmp";
 
 				// install_name_tool modifies the file in-place, so copy it first to a temporary file first.
