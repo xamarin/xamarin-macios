@@ -11,7 +11,7 @@ using MetalPerformanceShaders;
 
 namespace MetalPerformanceShadersGraph
 {
-	public static partial class MPSGraph_MemoryOps
+	public static partial class MPSGraphMemoryOps_Extensions
 	{
 		public static unsafe MPSGraphTensor Constant (this MPSGraph graph, float scalar)
 		{
