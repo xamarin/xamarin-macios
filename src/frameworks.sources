@@ -2333,6 +2333,7 @@ MACCATALYST_FRAMEWORKS = \
 	UserNotificationsUI \
 	VideoToolbox \
 	Vision \
+	VisionKit \
 	WKWebKit \
 
 # List frameworks that have been removed in .NET
