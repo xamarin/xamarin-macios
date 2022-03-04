@@ -12,21 +12,6 @@ using NativeHandle = System.IntPtr;
 using MPSGraphTensorDataDictionary = Foundation.NSDictionary<MetalPerformanceShadersGraph.MPSGraphTensor, MetalPerformanceShadersGraph.MPSGraphTensorData>;
 using MPSGraphTensorShapedTypeDictionary = Foundation.NSDictionary<MetalPerformanceShadersGraph.MPSGraphTensor, MetalPerformanceShadersGraph.MPSGraphShapedType>;
 
-
-// MPSGraphType was introduced in iOS 15 (macOS 12) and became the base class for
-// MPSGraphShapedType which exists in iOS 14.
-// In iOS 14, MPSGraphShapedType inherits directly from NSObject.
-// To keep compatibility, MPSGraphType is type-erased to just NSObject
-// and implementers have to add NSCopying.
-// @interface MPSGraphType : NSObject
-// [TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-// [BaseType (typeof(NSObject))]
-// interface MPSGraphType : NSCopying
-// {
-// }
-using MPSGraphType = Foundation.NSObject;
-
-
 namespace MetalPerformanceShadersGraph
 {
 	// MPSGraph.h
@@ -1701,12 +1686,19 @@ namespace MetalPerformanceShadersGraph
 		bool WaitUntilCompleted { get; set; }
 	}
 
-	// MPSGraphCore.h
-	
+	// @interface MPSGraphType: NSObject<NSCopying>
+	[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface MPSGraphType : NSCopying
+	{
+	}
+
+	// MPSGraphType was introduced in iOS 15 (macOS 12) and became the base class for
+	// MPSGraphShapedType which existed in iOS 14.
 	// @interface MPSGraphShapedType : MPSGraphType
-	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
+	[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
 	[BaseType (typeof(MPSGraphType))]
-	interface MPSGraphShapedType : NSCopying
+	interface MPSGraphShapedType
 	{
 		// @property (readwrite, copy, atomic) MPSShape * _Nullable shape;
 		[NullAllowed]
@@ -1726,7 +1718,6 @@ namespace MetalPerformanceShadersGraph
 		[Export ("isEqualTo:")]
 		bool IsEqualTo ([NullAllowed] MPSGraphShapedType @object);
 	}
-
 
 	// MPSGraphOperation.h
 
