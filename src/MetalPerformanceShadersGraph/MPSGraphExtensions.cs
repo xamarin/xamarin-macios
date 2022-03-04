@@ -15,18 +15,18 @@ namespace MetalPerformanceShadersGraph
 	{
 		public static unsafe MPSGraphTensor Constant (this MPSGraph graph, float scalar)
 		{
-			return graph.Constant ((double)scalar, new[]{ 1 }, MPSDataType.Float32);
+			return graph.Constant ((double) scalar, new [] { 1 }, MPSDataType.Float32);
 		}
 
 		public static unsafe MPSGraphTensor Constant (this MPSGraph graph, ReadOnlySpan<float> values, int[] shape)
 		{
 			var length = 1;
 			for (var i = 0; i < shape.Length; i++)
-				length *= shape[i];
+				length *= shape [i];
 			if (length != values.Length)
 				throw new ArgumentException ($"The number of values ({values.Length}) does not match the shape length ({length}).");
 			fixed (float* p = values) {
-				using var data = NSData.FromBytesNoCopy ((IntPtr)p, (nuint)(values.Length * 4), freeWhenDone: false);
+				using var data = NSData.FromBytesNoCopy ((IntPtr) p, (nuint) (values.Length * 4), freeWhenDone: false);
 				return graph.Constant (data, shape, MPSDataType.Float32);
 			}
 		}
@@ -35,7 +35,7 @@ namespace MetalPerformanceShadersGraph
 		{
 			var length = 1;
 			for (var i = 0; i < shape.Length; i++)
-				length *= shape[i];
+				length *= shape [i];
 			var pool = ArrayPool<float>.Shared;
 			var a = pool.Rent (length);
 			Array.Fill (a, initialValue);
@@ -48,11 +48,11 @@ namespace MetalPerformanceShadersGraph
 		{
 			var length = 1;
 			for (var i = 0; i < shape.Length; i++)
-				length *= shape[i];
+				length *= shape [i];
 			if (length != initialValues.Length)
 				throw new ArgumentException ($"The number of initial values ({initialValues.Length}) does not match the shape length ({length}).");
 			fixed (float* p = initialValues) {
-				using var data = NSData.FromBytesNoCopy ((IntPtr)p, (nuint)(initialValues.Length * 4), freeWhenDone: false);
+				using var data = NSData.FromBytesNoCopy ((IntPtr) p, (nuint) (initialValues.Length * 4), freeWhenDone: false);
 				return graph.Variable (data, shape, MPSDataType.Float32, name);
 			}
 		}

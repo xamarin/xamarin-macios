@@ -7,9 +7,9 @@ namespace MetalPerformanceShaders {
 
 		public static MPSNDArray Create (IMTLDevice device, ReadOnlySpan<float> values, params int[] shape)
 		{
-			var ushape = new nuint[shape.Length];
+			var ushape = new nuint [shape.Length];
 			for (var i = 0; i < shape.Length; i++) {
-				ushape[i] = (nuint)shape[i];
+				ushape [i] = (nuint) shape [i];
 			}
 			var desc = MPSNDArrayDescriptor.Create (MPSDataType.Float32, ushape);
 			var ndarray = new MPSNDArray (device, desc);
@@ -56,12 +56,12 @@ namespace MetalPerformanceShaders {
 			nuint length = 1;
 			var ndims = NumberOfDimensions;
 			for (nuint i = 0; i < ndims; i++) {
-				length *= GetLength(i);
+				length *= GetLength (i);
 			}
-			if (length != (nuint)values.Length)
-				throw new ArgumentException($"The number of values ({values.Length}) does not match the shape length ({length}).");
+			if (length != (nuint) values.Length)
+				throw new ArgumentException ($"The number of values ({values.Length}) does not match the shape length ({length}).");
 			fixed (float* p = values) {
-				WriteBytes ((IntPtr)p, strideBytesPerDimension: IntPtr.Zero);
+				WriteBytes ((IntPtr) p, strideBytesPerDimension: IntPtr.Zero);
 			}
 		}
 
@@ -78,16 +78,16 @@ namespace MetalPerformanceShaders {
 		public unsafe void Read (Span<float> values)
 		{
 			if (DataType != MPSDataType.Float32)
-				throw new InvalidOperationException($"Attempted to read array data of type {DataType} to span of Float32s.");
+				throw new InvalidOperationException ($"Attempted to read array data of type {DataType} to span of Float32s.");
 			nuint length = 1;
 			var ndims = NumberOfDimensions;
 			for (nuint i = 0; i < ndims; i++) {
-				length *= GetLength(i);
+				length *= GetLength (i);
 			}
-			if (length != (nuint)values.Length)
-				throw new ArgumentException($"The number of values ({values.Length}) does not match the shape length ({length}).");
+			if (length != (nuint) values.Length)
+				throw new ArgumentException ($"The number of values ({values.Length}) does not match the shape length ({length}).");
 			fixed (float* p = values) {
-				ReadBytes ((IntPtr)p, strideBytesPerDimension: IntPtr.Zero);
+				ReadBytes ((IntPtr) p, strideBytesPerDimension: IntPtr.Zero);
 			}
 		}
 	}
