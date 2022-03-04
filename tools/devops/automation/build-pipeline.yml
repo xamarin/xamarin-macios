@@ -222,7 +222,7 @@ variables:
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 - name: IsPRBuild
   value: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
-- name: ContinuousIntegrationBuild
+- name: CIBuild
   value: true
 
 trigger:
