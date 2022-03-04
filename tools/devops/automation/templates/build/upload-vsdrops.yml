@@ -24,6 +24,7 @@ steps:
 - ${{ if eq(parameters.runTests, true) }}:
   - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
     displayName: 'Publish Html test report to Artifact Services Drop'
+    continueOnError: true
     inputs:
       dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
       dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
@@ -35,6 +36,7 @@ steps:
 # Upload the API diff to vsdrops to be able to locate it
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
   displayName: 'Publish API diff to Artifact Services Drop'
+  continueOnError: true
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: 'DropMetadata-APIDiff'
@@ -45,6 +47,7 @@ steps:
 
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
   displayName: 'Publish API & Generator comparisonn to Artifact Services Drop'
+  continueOnError: true
   condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
