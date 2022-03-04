@@ -265,7 +265,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AdServices", "AdServices", 11,1 },
 
+#if !NET
 					{ "Chip", "CHIP", 12, 0 },
+#endif
 					{ "LocalAuthenticationEmbeddedUI", "LocalAuthenticationEmbeddedUI", 12, 0 },
 					{ "MailKit", "MailKit", 12, 0 },
 					{ "MetricKit", 12, 0 },
@@ -433,7 +435,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
 
+#if !NET
 				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+#endif
 				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "OSLog", "OSLog", 15,0 },
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
@@ -506,7 +510,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Accessibility", "Accessibility", 7,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
+#if !NET
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+#endif
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
@@ -600,7 +606,9 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 					{ "Intents", "Intents", 14,0 },
 
+#if !NET
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+#endif
 					{ "OSLog", "OSLog", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 				};
@@ -657,6 +665,7 @@ public class Frameworks : Dictionary <string, Framework>
 				case "HealthKitUI":
 #if !NET
 				case "iAd":
+				case "CHIP":
 #endif
 				case "IdentityLookupUI":
 				case "VisionKit":
