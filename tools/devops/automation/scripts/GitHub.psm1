@@ -1,4 +1,4 @@
-Using module ./StaticPages.psm1
+Using module $PSScriptRoot/StaticPages.psm1
 
 <#
     .SYNOPSIS
