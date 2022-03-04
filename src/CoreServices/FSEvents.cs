@@ -354,6 +354,36 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
+			IntPtr runLoop, IntPtr runLoopMode);
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
+		{
+			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);
+		}
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop)
+		{
+			UnscheduleFromRunLoop (runLoop, CFRunLoop.ModeDefault);
+		}
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop, NSString runLoopMode)
+		{
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
+		}
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop)
+		{
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamSetDispatchQueue (IntPtr handle, IntPtr dispatchQueue);
+
+		public void SetDispatchQueue (DispatchQueue? dispatchQueue)
+			=> FSEventStreamSetDispatchQueue (GetCheckedHandle (), dispatchQueue.GetHandle ());
+
+		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyPathsBeingWatched (IntPtr handle);
 
 		public string? []? PathsBeingWatched {
