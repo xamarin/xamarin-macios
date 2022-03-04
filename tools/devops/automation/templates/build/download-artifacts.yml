@@ -20,10 +20,10 @@ steps:
     runTests: ${{ parameters.runTests }}
 
 - powershell: |
-      Write-Host "APIDIFF_BUILT is $Env:APIDIFF_BUILT"
-      Write-Host "API_GENERATOR_BUILT is $Env:API_GENERATOR_BUILT"
-    displayName: TJ Debug Show Vars
-    name: TJDebug
+    Write-Host "APIDIFF_BUILT is $Env:APIDIFF_BUILT"
+    Write-Host "API_GENERATOR_BUILT is $Env:API_GENERATOR_BUILT"
+  displayName: TJ Debug Show Vars
+  name: TJDebug
 
 - ${{ if and(eq(parameters.enableAPIDiff, true), contains(variables['APIDIFF_BUILT'], 'True')) }}:
   # Download the Html Report that was added by the tests job.
