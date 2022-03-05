@@ -340,11 +340,15 @@ namespace Accessibility {
 	[Protocol]
 	interface AXBrailleMapRenderer {
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("accessibilityBrailleMapRenderRegion", ArgumentSemantic.Assign)]
 		CGRect AccessibilityBrailleMapRenderRegion { get; set; }
 
+#if !NET
 		[Abstract]
+#endif
 		[Export ("accessibilityBrailleMapRenderer", ArgumentSemantic.Copy)]
 		Action<AXBrailleMap> AccessibilityBrailleMapRenderer { get; set; }
 	}

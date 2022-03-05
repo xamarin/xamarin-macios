@@ -1,0 +1,5 @@
+# Unfortunately this is a breaking change in legacy, fixed in dotnet.
+!incorrect-protocol-member! AXBrailleMapRenderer::accessibilityBrailleMapRenderer is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! AXBrailleMapRenderer::accessibilityBrailleMapRenderRegion is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! AXBrailleMapRenderer::setAccessibilityBrailleMapRenderer: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! AXBrailleMapRenderer::setAccessibilityBrailleMapRenderRegion: is OPTIONAL and should NOT be abstract
