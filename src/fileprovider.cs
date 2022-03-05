@@ -189,6 +189,7 @@ namespace FileProvider {
 		NonEvictableChildren = -2006,
 		UnsyncedEdits = -2007,
 		NonEvictable = -2008,
+		VersionNoLongerAvailable = -2009,
 	}
 
 	[NoiOS, Mac (12,0), NoMacCatalyst]
@@ -270,6 +271,18 @@ namespace FileProvider {
 		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting,
 	#endif
 #endif
+	}
+
+	[Flags, NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,3)]
+	[Native]
+	public enum NSFileProviderMaterializationFlags : ulong {
+		KnownSparseRanges = 1uL << 0,
+	}
+
+	[Flags, NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,3)]
+	[Native]
+	public enum NSFileProviderFetchContentsOptions : ulong {
+		StrictVersioning = 1uL << 0,
 	}
 
 	[iOS (11,0)]
@@ -1303,6 +1316,18 @@ namespace FileProvider {
 		[Abstract]
 		[Export ("isInteractionSuppressedForIdentifier:")]
 		bool IsInteractionSuppressed (string suppressionIdentifier);
+	}
+
+	interface INSFileProviderPartialContentFetching { }
+	delegate void NSFileProviderPartialContentFetchingCompletionHandler (NSUrl fileContents, INSFileProviderItem item, NSRange retrievedRange, NSFileProviderMaterializationFlags flags, NSError error);
+
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,3)]
+	[Protocol]
+	interface NSFileProviderPartialContentFetching {
+
+		[Abstract]
+		[Export ("fetchPartialContentsForItemWithIdentifier:version:request:minimalRange:aligningTo:options:completionHandler:")]
+		NSProgress FetchPartialContents (string itemIdentifier, NSFileProviderItemVersion requestedVersion, NSFileProviderRequest request, NSRange requestedRange, nuint alignment, NSFileProviderFetchContentsOptions options, NSFileProviderPartialContentFetchingCompletionHandler completionHandler);
 	}
 
 }
