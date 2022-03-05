@@ -695,7 +695,6 @@
 !missing-selector! HKVerifiableClinicalRecord::issuedDate not bound
 !missing-selector! HKVerifiableClinicalRecord::issuerIdentifier not bound
 !missing-selector! HKVerifiableClinicalRecord::itemNames not bound
-!missing-selector! HKVerifiableClinicalRecord::JWSRepresentation not bound
 !missing-selector! HKVerifiableClinicalRecord::recordTypes not bound
 !missing-selector! HKVerifiableClinicalRecord::relevantDate not bound
 !missing-selector! HKVerifiableClinicalRecord::subject not bound

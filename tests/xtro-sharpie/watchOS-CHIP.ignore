@@ -1,9 +1,3 @@
-# removed due to failures on macOS 12 beta 6
-
-# These APIs replace existing APIs that have NoMac availability
-!missing-type! CHIPContentLauncher not bound
-
-# Ignoring for now until a stable API is released
 !extra-enum-value! Managed value 10 for ChipErrorCode.UnsupportedAttribute not found in native headers
 !missing-enum-value! ChipErrorCode native value CHIPErrorCodeConstraintError = 135 not bound
 !missing-enum-value! ChipErrorCode native value CHIPErrorCodeInvalidCommand = 133 not bound
