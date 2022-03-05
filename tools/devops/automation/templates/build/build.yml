@@ -84,6 +84,12 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
+# the ddsign plugin needs this version or it will crash and will make the sign step fail
+- task: UseDotNet@2
+  inputs:
+    version: 3.x
+  displayName: 'Use .NET Core sdk 3.x needed for ESRP'
+
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
