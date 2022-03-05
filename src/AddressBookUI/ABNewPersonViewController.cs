@@ -92,7 +92,7 @@ namespace AddressBookUI {
 		public ABGroup? ParentGroup {
 			get {
 				MarkDirty ();
-				return BackingField.Get (ref parentGroup, _ParentGroup, h => new ABGroup (h, AddressBook));
+				return BackingField.Get (ref parentGroup, _ParentGroup, h => (AddressBook is null) ? null : new ABGroup (h, AddressBook));
 			}
 			set {
 				_AddressBook = BackingField.Save (ref parentGroup, value);
