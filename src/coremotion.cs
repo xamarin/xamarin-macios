@@ -833,4 +833,32 @@ namespace CoreMotion {
 		double Precision { get; }
 	}
 
+	// Just to please the generator that at this point does not know the hierarchy
+	interface NSUnitPressure : NSUnit { }
+	interface NSUnitTemperature : NSUnit { }
+
+	[Watch (8,5), NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (CMLogItem))]
+	[DisableDefaultCtor]
+	interface CMAmbientPressureData {
+
+		[Export ("pressure", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitPressure> Pressure { get; }
+
+		[Export ("temperature", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitTemperature> Temperature { get; }
+	}
+
+	[Watch (8,5), NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (CMAmbientPressureData))]
+	[DisableDefaultCtor]
+	interface CMRecordedPressureData {
+		
+		[Export ("identifier")]
+		ulong Identifier { get; }
+
+		[Export ("startDate")]
+		NSDate StartDate { get; }
+	}
+
 }
