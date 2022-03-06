@@ -230,6 +230,10 @@ namespace VideoToolbox {
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("kVTCompressionPropertyKey_SupportsBaseFrameQP")]
 		NSString SupportsBaseFrameQP { get; }
+
+		[Watch (8,5), TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Field ("kVTCompressionPropertyKey_OutputBitDepth")]
+		NSString OutputBitDepth { get; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (13,0)]
@@ -379,6 +383,10 @@ namespace VideoToolbox {
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[Field ("kVTProfileLevel_HEVC_Main10_AutoLevel")]
 		NSString Hevc_Main10_AutoLevel { get; }
+
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Field ("kVTProfileLevel_HEVC_Main42210_AutoLevel")]
+		NSString Hevc_Main42210_AutoLevel { get; }
 
 		// H264
 
