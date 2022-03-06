@@ -7,6 +7,8 @@
 // Copyright 2019 Microsoft Corporation.
 
 using System;
+using System.Runtime.Versioning;
+using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using Foundation;
@@ -56,5 +58,59 @@ namespace GameController {
 		public double Y;
 		public double Z;
 		public double W;
+	}
+
+#if NET
+	[SupportedOSPlatform ("ios15.4")]
+	[SupportedOSPlatform ("macos12.3")]
+	[SupportedOSPlatform ("tvos15.4")]
+#else
+	[Introduced (PlatformName.iOS, 15, 4)]
+	[Introduced (PlatformName.MacOSX, 12, 3)]
+	[Introduced (PlatformName.TvOS, 15, 4)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public struct GCDualSenseAdaptiveTriggerPositionalAmplitudes {
+
+		const int DiscretePositionCount = 10; // From GCDualSenseAdaptiveTrigger.h
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = DiscretePositionCount)]
+		public float [] Values;
+
+		public GCDualSenseAdaptiveTriggerPositionalAmplitudes (float [] values)
+		{
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (values.Length > DiscretePositionCount)
+				throw new ArgumentException ($"The '{nameof (values)}' array length can't be greater than {DiscretePositionCount}.");
+
+			Values = values;
+		}
+	}
+
+#if NET
+	[SupportedOSPlatform ("ios15.4")]
+	[SupportedOSPlatform ("macos12.3")]
+	[SupportedOSPlatform ("tvos15.4")]
+#else
+	[Introduced (PlatformName.iOS, 15, 4)]
+	[Introduced (PlatformName.MacOSX, 12, 3)]
+	[Introduced (PlatformName.TvOS, 15, 4)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public struct GCDualSenseAdaptiveTriggerPositionalResistiveStrengths {
+
+		const int DiscretePositionCount = 10; // From GCDualSenseAdaptiveTrigger.h
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = DiscretePositionCount)]
+		public float [] Values;
+
+		public GCDualSenseAdaptiveTriggerPositionalResistiveStrengths (float [] values)
+		{
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (values.Length > DiscretePositionCount)
+				throw new ArgumentException ($"The '{nameof (values)}' array length can't be greater than {DiscretePositionCount}.");
+
+			Values = values;
+		}
 	}
 }
