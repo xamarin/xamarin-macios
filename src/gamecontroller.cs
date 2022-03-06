@@ -1963,6 +1963,8 @@ namespace GameController {
 		Feedback = 1,
 		Weapon = 2,
 		Vibration = 3,
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		SlopeFeedback = 4,
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
@@ -1977,6 +1979,12 @@ namespace GameController {
 		WeaponFired,
 		VibrationNotVibrating,
 		VibrationIsVibrating,
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		SlopeFeedbackReady,
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		SlopeFeedbackApplyingLoad,
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		SlopeFeedbackFinished,
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
@@ -1994,14 +2002,26 @@ namespace GameController {
 		[Export ("armPosition")]
 		float ArmPosition { get; }
 
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("setModeSlopeFeedbackWithStartPosition:endPosition:startStrength:endStrength:")]
+		void SetModeSlopeFeedback (float startPosition, float endPosition, float startStrength, float endStrength);
+
 		[Export ("setModeFeedbackWithStartPosition:resistiveStrength:")]
 		void SetModeFeedback (float startPosition, float resistiveStrength);
+
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("setModeFeedbackWithResistiveStrengths:")]
+		void SetModeFeedback (GCDualSenseAdaptiveTriggerPositionalResistiveStrengths positionalResistiveStrengths);
 
 		[Export ("setModeWeaponWithStartPosition:endPosition:resistiveStrength:")]
 		void SetModeWeapon (float startPosition, float endPosition, float resistiveStrength);
 
 		[Export ("setModeVibrationWithStartPosition:amplitude:frequency:")]
 		void SetModeVibration (float startPosition, float amplitude, float frequency);
+
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("setModeVibrationWithAmplitudes:frequency:")]
+		void SetModeVibration (GCDualSenseAdaptiveTriggerPositionalAmplitudes positionalAmplitudes, float frequency);
 
 		[Export ("setModeOff")]
 		void SetModeOff ();
