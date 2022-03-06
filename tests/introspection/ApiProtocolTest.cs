@@ -280,6 +280,8 @@ namespace Introspection {
 				// Xcode 13.3
 				case "SRWristDetection": // Conformance not in headers
 				case "HMAccessorySetupPayload": // Conformance not in headers
+				case "HMAccessorySetupRequest": // Conformance not in headers
+				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -413,6 +415,8 @@ namespace Introspection {
 				// Xcode 13.3
 				case "SRWristDetection": // Conformance not in headers
 				case "HMAccessorySetupPayload": // Conformance not in headers
+				case "HMAccessorySetupRequest": // Conformance not in headers
+				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				}
 				break;
