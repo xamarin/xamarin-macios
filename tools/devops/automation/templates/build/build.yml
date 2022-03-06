@@ -89,6 +89,7 @@ steps:
   inputs:
     packageType: runtime
     version: 3.x
+    installationPath: '/usr/local/share/dotnet/'
   displayName: 'Install .NET Core runtime 3.x needed for ESRP'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
