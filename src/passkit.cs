@@ -962,6 +962,10 @@ namespace PassKit {
 		[Field ("PKPaymentNetworkChinaUnionPay")]
 		NSString ChinaUnionPay { get; }
 
+		[Watch (8,5), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Field ("PKPaymentNetworkDankort")]
+		NSString Dankort { get; }
+
 		[iOS (9,2)]
 		[Field ("PKPaymentNetworkInterac")]
 		NSString Interac { get; }
