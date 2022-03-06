@@ -634,11 +634,13 @@ namespace HomeKit {
 		[Export ("unblockAccessory:completionHandler:")]
 		void UnblockAccessory (HMAccessory accessory, Action<NSError> completion);
 
+		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[NoWatch, NoTV, iOS (10,0)]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithCompletionHandler:")]
 		void AddAndSetupAccessories (Action<NSError> completion);
 
+		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[NoWatch, NoTV, iOS (11,3), NoMacCatalyst]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithPayload:completionHandler:")]
@@ -1923,6 +1925,17 @@ namespace HomeKit {
 	interface HMAccessorySetupManager
 	{
 		[Async]
+		[iOS (15,4)]
+		[Export ("performAccessorySetupUsingRequest:completionHandler:")]
+		void PerformAccessorySetup (HMAccessorySetupRequest request, Action<HMAccessorySetupResult, NSError> completion);
+
+		[Async]
+		[iOS (15,4)]
+		[Export ("performMatterEcosystemAccessorySetupUsingRequest:topology:completionHandler:")]
+		void PerformMatterEcosystemAccessorySetup (HMAccessorySetupRequest request, HMMatterTopology topology, Action<NSError> completion);
+
+		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'PerformAccessorySetup' instead.")]
+		[Async]
 		[Export ("addAndSetUpAccessoriesForTopology:completionHandler:")]
 		void AddAndSetUpAccessories (HMMatterTopology topology, Action<NSError> completion);
 	}
@@ -1988,6 +2001,35 @@ namespace HomeKit {
 
 		[Export ("homes", ArgumentSemantic.Copy)]
 		HMMatterHome [] Homes { get; }
+	}
+
+	[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,4)]
+	[BaseType (typeof (NSObject))]
+	interface HMAccessorySetupRequest : NSCopying {
+
+		[NullAllowed, Export ("payload", ArgumentSemantic.Copy)]
+		HMAccessorySetupPayload Payload { get; set; }
+
+		[NullAllowed, Export ("homeUniqueIdentifier", ArgumentSemantic.Copy)]
+		NSUuid HomeUniqueIdentifier { get; set; }
+
+		[NullAllowed, Export ("suggestedRoomUniqueIdentifier", ArgumentSemantic.Copy)]
+		NSUuid SuggestedRoomUniqueIdentifier { get; set; }
+
+		[NullAllowed, Export ("suggestedAccessoryName")]
+		string SuggestedAccessoryName { get; set; }
+	}
+
+	[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HMAccessorySetupResult : NSCopying {
+
+		[Export ("homeUniqueIdentifier", ArgumentSemantic.Copy)]
+		NSUuid HomeUniqueIdentifier { get; }
+
+		[Export ("accessoryUniqueIdentifiers", ArgumentSemantic.Copy)]
+		NSUuid [] AccessoryUniqueIdentifiers { get; }
 	}
 
 }
