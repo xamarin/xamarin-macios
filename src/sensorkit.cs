@@ -792,6 +792,10 @@ namespace SensorKit {
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Field ("SRSensorTelephonySpeechMetrics")]
 		TelephonySpeechMetrics,
+
+		[iOS (15,4), MacCatalyst (15,4)]
+		[Field ("SRSensorAmbientPressure")]
+		AmbientPressure,
 	}
 
 	[NoWatch, NoTV, NoMac]
