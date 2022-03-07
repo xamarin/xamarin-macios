@@ -1,4 +1,9 @@
-using module "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
+# the following is a hacak around the fact that pwsh does not handle well the using 
+# forma relative path in vsts
+$moduleName = "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
+$scriptBody = "using module $ModuleName"
+$script = [ScriptBlock]::Create($scriptBody)
+. $script
 
 <#
     .SYNOPSIS
