@@ -21,11 +21,11 @@ steps:
 
 - powershell: |
     Write-Host "APIDIFF_BUILT is $Env:APIDIFF_BUILT"
-    Write-Host "API_GENERATOR_BUILT is $Env:API_GENERATOR_BUILT"
+    Write-Host "API_GENERATOR_BUILT is $Env:API_GENERATOR_DIFF_BUILT"
   displayName: TJ Debug Show Vars
   name: TJDebug
 
-- ${{ if and(eq(parameters.enableAPIDiff, true), contains(variables['APIDIFF_BUILT'], 'True')) }}:
+- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['APIDIFF_BUILT'], 'True')) }}:
   # Download the Html Report that was added by the tests job.
   - task: DownloadPipelineArtifact@2
     displayName: 'Download API diff (from stable)'
@@ -40,7 +40,7 @@ steps:
       archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apidiff-stable/apidiff-stable.zip'
       destinationFolder: '$(System.DefaultWorkingDirectory)/apidiff-stable'
 
-- ${{ if and(eq(parameters.enableAPIDiff, true), contains(variables['API_GENERATOR_DIFF_BUILT'], 'True')) }}:
+- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['API_GENERATOR_DIFF_BUILT'], 'True')) }}:
   - task: DownloadPipelineArtifact@2
     displayName: 'Download API & Generator comparison'
     condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
