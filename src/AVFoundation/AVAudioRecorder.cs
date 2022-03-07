@@ -33,12 +33,6 @@ using System.Runtime.Versioning;
 
 namespace AVFoundation {
 #if !TVOS
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAudioRecorder {
 		AVAudioRecorder (NSUrl url, AudioSettings settings, out NSError error) {
 			// We use this method because it allows us to out NSError but, as a side effect, it is possible for the handle to be null and we will need to check this manually (on the Create method).

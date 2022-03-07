@@ -5,6 +5,7 @@ namespace AppKit
 {
 #if NET
 	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
 #endif
 	public class AppKitThreadAccessException : Exception
 	{

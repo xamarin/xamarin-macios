@@ -111,12 +111,6 @@ namespace AVFoundation {
 	}
 
 	#pragma warning restore 672
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAudioPlayer {
 		InternalAVAudioPlayerDelegate EnsureEventDelegate ()
 		{
@@ -210,12 +204,6 @@ namespace AVFoundation {
 #endif
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAudioRecorder {
 		InternalAVAudioRecorderDelegate EnsureEventDelegate ()
 		{
@@ -352,12 +340,6 @@ namespace AVFoundation {
 	
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVAudioSession {
 		InternalAVAudioSessionDelegate EnsureEventDelegate ()
 		{
