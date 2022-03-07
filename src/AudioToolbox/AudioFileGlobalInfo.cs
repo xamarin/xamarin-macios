@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -39,7 +41,7 @@ namespace AudioToolbox {
 
 	public unsafe static class AudioFileGlobalInfo
 	{
-		public static AudioFileType[] ReadableTypes {
+		public static AudioFileType[]? ReadableTypes {
 			get {
 				uint size;
 				if (AudioFileGetGlobalInfoSize (AudioFileGlobalProperty.ReadableTypes, 0, IntPtr.Zero, out size) != 0)
@@ -56,7 +58,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public static AudioFileType[] WritableTypes {
+		public static AudioFileType[]? WritableTypes {
 			get {
 				uint size;
 				if (AudioFileGetGlobalInfoSize (AudioFileGlobalProperty.WritableTypes, 0, IntPtr.Zero, out size) != 0)
@@ -73,7 +75,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public static string GetFileTypeName (AudioFileType fileType)
+		public static string? GetFileTypeName (AudioFileType fileType)
 		{
 			IntPtr ptr;
 			var size = (uint) sizeof (IntPtr);
@@ -83,7 +85,7 @@ namespace AudioToolbox {
 			return CFString.FromHandle (ptr);
 		}
 
-		public static AudioFormatType[] GetAvailableFormats (AudioFileType fileType)
+		public static AudioFormatType[]? GetAvailableFormats (AudioFileType fileType)
 		{
 			uint size;
 			if (AudioFileGetGlobalInfoSize (AudioFileGlobalProperty.AvailableFormatIDs, sizeof (AudioFileType), ref fileType, out size) != 0)
@@ -99,7 +101,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public static AudioStreamBasicDescription[] GetAvailableStreamDescriptions (AudioFileType fileType, AudioFormatType formatType)
+		public static AudioStreamBasicDescription[]? GetAvailableStreamDescriptions (AudioFileType fileType, AudioFormatType formatType)
 		{
 			AudioFileTypeAndFormatID input;
 			input.FileType = fileType;
@@ -119,7 +121,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public static string[] AllExtensions {
+		public static string?[]? AllExtensions {
 			get {
 				IntPtr ptr;
 				var size = (uint) sizeof (IntPtr);
@@ -130,7 +132,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public static string[] AllUTIs {
+		public static string?[]? AllUTIs {
 			get {
 				IntPtr ptr;
 				var size = (uint) sizeof (IntPtr);
@@ -141,7 +143,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		public static string[] AllMIMETypes {
+		public static string?[]? AllMIMETypes {
 			get {
 				IntPtr ptr;
 				var size = (uint) sizeof (IntPtr);
@@ -172,7 +174,7 @@ namespace AudioToolbox {
 		}
 		*/
 
-		public static string[] GetExtensions (AudioFileType fileType)
+		public static string?[]? GetExtensions (AudioFileType fileType)
 		{
 			IntPtr ptr;
 			var size = (uint) sizeof (IntPtr);
@@ -182,7 +184,7 @@ namespace AudioToolbox {
 			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 		}
 
-		public static string[] GetUTIs (AudioFileType fileType)
+		public static string?[]? GetUTIs (AudioFileType fileType)
 		{
 			IntPtr ptr;
 			var size = (uint) sizeof (IntPtr);
@@ -192,7 +194,7 @@ namespace AudioToolbox {
 			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 		}
 
-		public static string[] GetMIMETypes (AudioFileType fileType)
+		public static string?[]? GetMIMETypes (AudioFileType fileType)
 		{
 			IntPtr ptr;
 			var size = (uint) sizeof (IntPtr);

@@ -28,6 +28,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -91,8 +93,8 @@ namespace AddressBook {
 		public ABGroup (ABRecord source)
 			: base (IntPtr.Zero, true)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
+			if (source is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 
 			Handle = ABGroupCreateInSource (source.Handle);
 		}
@@ -109,15 +111,15 @@ namespace AddressBook {
 			AddressBook = addressbook;
 		}
 
-		public string Name {
-			get {return PropertyToString (ABGroupProperty.Name);}
+		public string? Name {
+			get { return PropertyToString (ABGroupProperty.Name); }
 			set {SetValue (ABGroupProperty.Name, value);}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABGroupCopySource (IntPtr group);
 
-		public ABRecord Source {
+		public ABRecord? Source {
 			get {
 				var h = ABGroupCopySource (Handle);
 				if (h == IntPtr.Zero)
@@ -132,8 +134,8 @@ namespace AddressBook {
 		extern static bool ABGroupAddMember (IntPtr group, IntPtr person, out IntPtr error);
 		public void Add (ABRecord person)
 		{
-			if (person == null)
-				throw new ArgumentNullException ("person");
+			if (person is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (person));
 			IntPtr error;
 			if (!ABGroupAddMember (Handle, person.Handle, out error))
 				throw CFException.FromCFError (error);
@@ -150,7 +152,7 @@ namespace AddressBook {
 		public IEnumerator<ABRecord> GetEnumerator ()
 		{
 			var cfArrayRef = ABGroupCopyArrayOfAllMembers (Handle);
-			IEnumerable<ABRecord> e = null;
+			IEnumerable<ABRecord>? e = null;
 			if (cfArrayRef == IntPtr.Zero)
 				e = new ABRecord [0];
 			else
@@ -174,8 +176,8 @@ namespace AddressBook {
 		extern static bool ABGroupRemoveMember (IntPtr group, IntPtr member, out IntPtr error);
 		public void Remove (ABRecord member)
 		{
-			if (member == null)
-				throw new ArgumentNullException ("member");
+			if (member is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (member));
 			IntPtr error;
 			if (!ABGroupRemoveMember (Handle, member.Handle, out error))
 				throw CFException.FromCFError (error);

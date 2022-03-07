@@ -91,6 +91,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DSymUtil" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.EmbedProvisionProfile" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindCscCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
@@ -1556,6 +1557,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(GeneratedSourcesDir)" />
 
+		<FindCscCompiler
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(UsingAppleNETSdk)' == 'true' And !Exists('$(_DotNetCscCompiler)')"
+			CscCompiler="$(_DotNetCscCompiler)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="CscCompiler" PropertyName="_DotNetCscCompiler" />
+		</FindCscCompiler>
+
 		<BTouch
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -1568,11 +1578,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			BaseLibDll="$(BaseLibDllPath)"
 			CoreSources="@(ObjcBindingCoreSource)"
 			DefineConstants="$(DefineConstants)"
+			DotNetCscCompiler="$(_DotNetCscCompiler)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
 			ExtraArgs="$(BTouchExtraArgs)"
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
 			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
 			Namespace="$(Namespace)"
+			NoNFloatUsing="$(NoNFloatUsing)"
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
@@ -1703,8 +1715,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_ParseBundlerArguments">
 		<ParseBundlerArguments
 			ExtraArgs="$(_BundlerArguments)"
-			NoSymbolStrip="$(_NoSymbolStrip)"
-			NoDSymUtil="$(_NoDSymUtil)"
+			NoSymbolStrip="$(NoSymbolStrip)"
+			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
 			Verbosity="$(_BundlerVerbosity)"
 			>
@@ -1714,8 +1726,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
-			<Output TaskParameter="NoSymbolStrip" PropertyName="_NoSymbolStrip"/>
-			<Output TaskParameter="NoDSymUtil" PropertyName="_NoDSymUtil"/>
+			<Output TaskParameter="NoSymbolStrip" PropertyName="NoSymbolStrip"/>
+			<Output TaskParameter="NoDSymUtil" PropertyName="NoDSymUtil"/>
 			<Output TaskParameter="Optimize" PropertyName="_BundlerOptimize"/>
 			<Output TaskParameter="PackageDebugSymbols" PropertyName="PackageDebugSymbols" />
 			<Output TaskParameter="Registrar" PropertyName="_BundlerRegistrar" />
@@ -2283,8 +2295,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoDSymUtil)' == 'false'"
-			AppBundleDir="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)"
-			Architectures="%(_AppExtensionDebugSymbolProperties.CompiledArchitectures)"
 			DSymDir="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM"
 			Executable="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
 			ToolExe="$(DSymUtilExe)"
@@ -2354,9 +2364,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- run dsymutil on embedded frameworks -->
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
-			Condition="'$(_NoDSymUtil)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
-			AppBundleDir="$(AppBundleDir)"
-			Architectures=""
+			Condition="'$(NoDSymUtil)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
 			DSymDir="%(_Frameworks._Destination)"
 			Executable="%(_Frameworks.Identity)"
 			ToolExe="$(DSymUtilExe)"
@@ -2366,7 +2374,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- strip embedded frameworks -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(_NoSymbolStrip)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
+			Condition="'$(NoSymbolStrip)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
 			Executable="%(_Frameworks.Identity)"
 			IsFramework="true"
 			SymbolFile="">
@@ -2395,11 +2403,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppExtensionDebugSymbolProperties Remove="@(_AppExtensionDebugSymbolProperties)" />
 
 			<_AppExtensionDebugSymbolProperties Include="$(_AppBundleFileName)">
-				<CompiledArchitectures>$(_CompiledArchitectures)</CompiledArchitectures>
 				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
-				<NoSymbolStrip>$(_NoSymbolStrip)</NoSymbolStrip>
+				<NoSymbolStrip>$(NoSymbolStrip)</NoSymbolStrip>
 				<SymbolsList>$(_SymbolsListFullPath)</SymbolsList>
-				<NoDSymUtil>$(_NoDSymUtil)</NoDSymUtil>
+				<NoDSymUtil>$(NoDSymUtil)</NoDSymUtil>
 			</_AppExtensionDebugSymbolProperties>
 		</ItemGroup>
 
@@ -2433,9 +2440,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- run dsymutil on the main bundle -->
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures="$(_CompiledArchitectures)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
 			DSymDir="$(AppBundleDir).dSYM"
 			Executable="$(_NativeExecutable)"
 			ToolExe="$(DSymUtilExe)"
@@ -2446,7 +2451,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- strip the debug symbols from the $(_NativeExecutable) -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
 			Executable="$(_NativeExecutable)"
 			IsFramework="false"
 			SymbolFile="$(_MtouchSymbolsList)"
@@ -2456,7 +2461,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
 			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
 		>
 		</Touch>
@@ -2464,7 +2469,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- make sure spotlight indexes everything we've built -->
 		<SpotlightIndexer
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
 			Input="$(AppBundleDir)/../"
 		>
 		</SpotlightIndexer>

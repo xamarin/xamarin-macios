@@ -1396,7 +1396,7 @@ namespace AppKit {
 		[Export ("appendBezierPathWithArcFromPoint:toPoint:radius:")]
 		void AppendPathWithArc (CGPoint point1, CGPoint point2, nfloat radius);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 13, message: "Use 'AppendPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'AppendPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
 		[Export ("appendBezierPathWithGlyph:inFont:")]
 		void AppendPathWithGlyph (uint /* NSGlyph = unsigned int */ glyph, NSFont font);
 
@@ -1404,7 +1404,7 @@ namespace AppKit {
 		void _AppendPathWithGlyphs (IntPtr glyphs, nint count, NSFont font);
 
 		//IntPtr is exposed because the packedGlyphs should be treated as a "black box"
-		[Obsoleted (PlatformName.MacOSX, 10, 13, message: "Use 'Append (uint[], NSFont)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Append (uint[], NSFont)' instead.")]
 		[Export ("appendBezierPathWithPackedGlyphs:")]
 		void AppendPathWithPackedGlyphs (IntPtr packedGlyphs);
 
@@ -10409,22 +10409,22 @@ namespace AppKit {
 	[Category, BaseType (typeof (NSString))]
 	interface NSStringDrawing_NSString {
 		[Export ("sizeWithAttributes:")]
-		CGSize StringSize (NSDictionary attributes);
+		CGSize StringSize ([NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.StringSize (attributes.GetDictionary ()!)")]
-		CGSize StringSize (AppKit.NSStringAttributes attributes);
+		CGSize StringSize ([NullAllowed] AppKit.NSStringAttributes attributes);
 
 		[Export ("drawAtPoint:withAttributes:")]
-		void DrawAtPoint (CGPoint point, NSDictionary attributes);
+		void DrawAtPoint (CGPoint point, [NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.DrawAtPoint (point, attributes.GetDictionary ()!)")]
-		void DrawAtPoint (CGPoint point, AppKit.NSStringAttributes attributes);
+		void DrawAtPoint (CGPoint point, [NullAllowed] AppKit.NSStringAttributes attributes);
 
 		[Export ("drawInRect:withAttributes:")]
-		void DrawInRect (CGRect rect, NSDictionary attributes);
+		void DrawInRect (CGRect rect, [NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.DrawInRect (rect, attributes.GetDictionary ()!)")]
-		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
+		void DrawInRect (CGRect rect, [NullAllowed] AppKit.NSStringAttributes attributes);
 	}
 
 	[ThreadSafe]
@@ -10586,7 +10586,7 @@ namespace AppKit {
 		bool DrawInRect (CGRect rect);
 
 		[Export ("drawInRect:fromRect:operation:fraction:respectFlipped:hints:")]
-		bool DrawInRect (CGRect dstSpacePortionRect, CGRect srcSpacePortionRect, NSCompositingOperation op, nfloat requestedAlpha, bool respectContextIsFlipped, NSDictionary hints);
+		bool DrawInRect (CGRect dstSpacePortionRect, CGRect srcSpacePortionRect, NSCompositingOperation op, nfloat requestedAlpha, bool respectContextIsFlipped, [NullAllowed] NSDictionary hints);
 
 		[Export ("setAlpha:")]
 		void SetAlpha (bool alpha);
@@ -26374,43 +26374,43 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	interface NSObjectAccessibilityExtensions {
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeNames")]
 		NSArray AccessibilityAttributeNames { get; }
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeValue:")]
 		NSObject GetAccessibilityValue (NSString attribute);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityIsAttributeSettable:")]
 		bool IsAccessibilityAttributeSettable (NSString attribute);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilitySetValue:forAttribute:")]
 		void SetAccessibilityValue (NSString attribute, NSObject value);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityParameterizedAttributeNames")]
 		NSArray AccessibilityParameterizedAttributeNames { get; }
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeValue:forParameter:")]
 		NSObject GetAccessibilityValue (NSString attribute, NSObject parameter);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityActionNames")]
 		NSArray AccessibilityActionNames { get; }
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityActionDescription:")]
 		NSString GetAccessibilityActionDescription (NSString action);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityPerformAction:")]
 		void AccessibilityPerformAction (NSString action);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityIsIgnored")]
 		bool AccessibilityIsIgnored { get; }
 

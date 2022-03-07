@@ -22,6 +22,8 @@ namespace Xamarin.Tests
 		static string ios_destdir;
 		static string mac_destdir;
 		public static string DotNet6BclDir;
+		public static string DotNetCscCommand;
+		public static string DotNetExecutable;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -274,6 +276,8 @@ namespace Xamarin.Tests
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
 			DotNet6BclDir = GetVariable ("DOTNET6_BCL_DIR", null);
+			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
+			DotNetExecutable = GetVariable ("DOTNET6", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -754,6 +758,13 @@ namespace Xamarin.Tests
 			// variables with more than one value are wrapped in ', get the var remove the '' and split
 			var variable = GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Trim ('\'');
 			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		}
+
+		public static IEnumerable<string> GetBaseLibraryImplementations ()
+		{
+			foreach (var platform in GetIncludedPlatforms (true))
+				foreach (var lib in GetBaseLibraryImplementations (platform))
+					yield return lib;
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
