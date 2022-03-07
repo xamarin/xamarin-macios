@@ -33,6 +33,10 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
+- name: pool
+  type: string
+  default: automatic
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -46,28 +50,35 @@ jobs:
   steps:
   - template: configure.yml
 
-- job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
-  pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
-    vmImage: ubuntu-latest
-  steps:
-  - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+- ${{ if eq(parameters.pool, 'automatic') }}:
+  - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+    pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
-  # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-  - template: azure-devops-pools/agent-pool-selector.yml@templates
-    parameters:
-      agentPoolPR: $(PRBuildPool)
-      agentPoolPRUrl: $(PRBuildPoolUrl)
-      agentPoolCI: $(CIBuildPool)
-      agentPoolCIUrl: $(CIBuildPoolUrl)
+    # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+    - template: azure-devops-pools/agent-pool-selector.yml@templates
+      parameters:
+        agentPoolPR: $(PRBuildPool)
+        agentPoolPRUrl: $(PRBuildPoolUrl)
+        agentPoolCI: $(CIBuildPool)
+        agentPoolCIUrl: $(CIBuildPoolUrl)
 
 - job: build
   dependsOn:
-  - AgentPoolSelector
+  - ${{ if eq(parameters.pool, 'automatic') }}:
+    - AgentPoolSelector
   - configure
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
-    AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+    ${{ if eq(parameters.pool, 'automatic') }}:
+      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+    ${{ if eq(parameters.pool, 'ci') }}:
+      AgentPoolComputed: $(CIBuildPool)
+    ${{ if eq(parameters.pool, 'pr') }}:
+      AgentPoolComputed: $(PRBuildPool)
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
     #
     # build-package
@@ -119,12 +130,18 @@ jobs:
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - job: api_diff
     dependsOn:
-    - AgentPoolSelector
+    - ${{ if eq(parameters.pool, 'automatic') }}:
+      - AgentPoolSelector
     - configure
     displayName: 'Generate API diff'
     timeoutInMinutes: 1000
     variables:
-      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      ${{ if eq(parameters.pool, 'automatic') }}:
+        AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      ${{ if eq(parameters.pool, 'ci') }}:
+        AgentPoolComputed: $(CIBuildPool)
+      ${{ if eq(parameters.pool, 'pr') }}:
+        AgentPoolComputed: $(PRBuildPool)
       PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
       # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
