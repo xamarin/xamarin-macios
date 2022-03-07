@@ -71,7 +71,6 @@ stages:
   condition: ${{ parameters.condition }}
 
   jobs:
-
   - ${{ if eq(parameters.testPool, '') }}:
     - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
       pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
@@ -87,14 +86,28 @@ stages:
           agentPoolCI: $(CIBuildPool)
           agentPoolCIUrl: $(CIBuildPoolUrl)
 
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+
+    steps:
+    - template: ../common/configure.yml
+
   - job: tests
     dependsOn:
     - ${{ if eq(parameters.testPool, '') }}:
       - AgentPoolSelector
+    - configure
     displayName: 'Run ${{ parameters.testPrefix }} Device Tests'
     timeoutInMinutes: 1000
 
     variables:
+      XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
       ${{ if eq(parameters.testPool, '') }}:
         AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
       ${{ else }}:
