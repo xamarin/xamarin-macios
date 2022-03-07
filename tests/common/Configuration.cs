@@ -508,7 +508,11 @@ namespace Xamarin.Tests
 
 		public static string GetDotNetRoot ()
 		{
-			return Path.Combine (SourceRoot, "_build");
+			if (IsVsts) {
+				return EvaluateVariable ("DOTNET6_DIR");
+			} else {
+				return Path.Combine (SourceRoot, "_build");
+			}
 		}
 
 		public static string GetRefDirectory (ApplePlatform platform)
