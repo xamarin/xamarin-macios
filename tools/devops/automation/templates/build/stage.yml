@@ -111,6 +111,7 @@ jobs:
     demands:
     - Agent.OS -equals Darwin
     - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+    - Agent.OSVersion -equals 12.2
   workspace:
     clean: all
 
@@ -151,6 +152,7 @@ jobs:
       demands:
       - Agent.OS -equals Darwin
       - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+      - Agent.OSVersion -equals 12.2
     workspace:
       clean: all
 
