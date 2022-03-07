@@ -62,6 +62,10 @@ parameters:
   type: boolean
   default: true
 
+- name: parseLabels
+  type: boolean
+  default: true
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -86,23 +90,25 @@ stages:
           agentPoolCI: $(CIBuildPool)
           agentPoolCIUrl: $(CIBuildPoolUrl)
 
-  - job: configure
-    displayName: 'Configure build'
-    pool:
-      vmImage: windows-latest
+  - ${{ if eq(parameters.parseLabels, true) }}:
+    - job: configure
+      displayName: 'Configure build'
+      pool:
+        vmImage: windows-latest
 
-    variables:
-      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      variables:
+        isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+        isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
 
-    steps:
-    - template: ../common/configure.yml
+      steps:
+      - template: ../common/configure.yml
 
   - job: tests
     dependsOn:
     - ${{ if eq(parameters.testPool, '') }}:
       - AgentPoolSelector
-    - configure
+    - ${{ if eq(parameters.parseLabels, true) }}:
+      - configure
     displayName: 'Run ${{ parameters.testPrefix }} Device Tests'
     timeoutInMinutes: 1000
 

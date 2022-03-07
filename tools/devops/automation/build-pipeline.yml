@@ -356,6 +356,7 @@ stages:
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
           condition: ${{ parameters.runDeviceTests }}
+          parseLabels: false
 
 - ${{ if eq(parameters.runOldMacOSTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
