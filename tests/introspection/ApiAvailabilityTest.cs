@@ -535,6 +535,15 @@ namespace Introspection {
 						return true;
 					}
 					break;
+				case "CoreMedia.CMTimebase": {
+					switch (memberName) {
+						case "SetMasterTimebase":
+						case "SetMasterClock":
+							// These APIs were introduced and deprecated in the same version
+							return true;
+					}
+					break;
+				}
 				case "GameKit.GKScore": {
 					switch (memberName) {
 					case "ReportLeaderboardScores":
@@ -581,7 +590,6 @@ namespace Introspection {
 #if NET
 			// These are temporary ignores until the generator changes are in for NET6 attributes
 			switch (type.FullName) {
-
 				case "GLKit.GLKTextureOperations": {
 					switch (memberName) {
 						case "SRGB":
@@ -589,9 +597,19 @@ namespace Introspection {
 					}
 					break;
 				}
+				case "MapKit.MKOverlayView": {
+					switch (memberName) {
+						case "MKRoadWidthAtZoomScale":
+							return true;
+					}
+					break;
+				}
 				case "MobileCoreServices.UTType": {
 					switch (memberName) {
 						case "Equals":
+						case "IsDynamic":
+						case "IsDeclared":
+						case "CopyAllTags":
 							return true;
 					}
 					break;
@@ -606,6 +624,8 @@ namespace Introspection {
 				case "Security.SslContext": {
 					switch (memberName) {
 						case "SetEncryptionCertificate":
+						case "SetSessionStrengthPolicy":
+						case "GetRequestedPeerName":
 							return true;
 					}
 					break;			
