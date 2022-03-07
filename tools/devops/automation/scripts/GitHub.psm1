@@ -1,4 +1,4 @@
-Using module $PSScriptRoot/StaticPages.psm1
+using module "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
 
 <#
     .SYNOPSIS
