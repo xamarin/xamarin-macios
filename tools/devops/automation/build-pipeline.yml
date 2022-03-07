@@ -12,6 +12,15 @@ parameters:
   type: string
   default: 'latest'
 
+- name: pool
+  type: string
+  displayName: Bot pool to use
+  default: automatic
+  values:
+  - pr
+  - ci
+  - automatic
+
 - name: runTests
   displayName: Run Simulator Tests
   type: boolean
@@ -282,6 +291,7 @@ stages:
         enableDotnet: ${{ parameters.enableDotnet }}
         enableAPIDiff: ${{ parameters.enableAPIDiff }}
         skipESRP: ${{ parameters.skipESRP }}
+        pool: ${{ parameters.pool }}
 
 # .NET 6 Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(parameters.forceInsertion, true))) }}:
