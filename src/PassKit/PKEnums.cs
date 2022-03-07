@@ -155,10 +155,19 @@ namespace PassKit {
 		InStore,
 		[iOS (10,2)]
 		Donate,
-		[iOS (12,0)]
-		Book,
+#if NET
 		[iOS (12,0)]
 		Checkout,
+		[iOS (12,0)]
+		Book,
+#else
+		[iOS (12,0)]
+		[Obsolete ("Use 'Book2'.")]
+		Book,
+		[iOS (12,0)]
+		[Obsolete ("Use 'Checkout2'.")]
+		Checkout,
+#endif // !NET
 		[iOS (12,0)]
 		Subscribe,
 		[iOS (14,0)]
@@ -179,6 +188,12 @@ namespace PassKit {
 		Tip = 15,
 		[Mac (12,0), iOS (15,0), Watch (8,0)]
 		Continue = 16,
+#if !NET
+		[iOS (12,0)]
+		Book2 = Checkout,
+		[iOS (12,0)]
+		Checkout2 = Book,
+#endif // !NET
 	}
 
 	[Mac (11,0)]
