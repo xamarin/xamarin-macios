@@ -81,6 +81,39 @@ class APIDiffComment {
         $this.Generator = $null -ne $generatorContent ? $generatorContent : $null
     }
 
+    static [hashtable] ConvertToHashTable($obj) {
+        $result = @{}
+        $obj.psobject.properties | Foreach { $result[$_.Name] = $_.Value }
+        return $result
+    }
+
+    static [APIDiffComment] FromJsonFiles (
+        [object] $prContentPath,
+        [object] $stableContentPath,
+        [string] $generatorContent) {
+        $prContent = $null
+        $stableContent = $null
+
+        if ($null -eq $prContentPath -or (-not (Test-Path $prContentPath -PathType Leaf))) {
+            Write-Debug "Path $prContentPath was not found!"
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $prContent =  Get-Content $prContentPath | ConvertFrom-Json
+            # convert custom object to hashtable
+            $prContent = [APIDiffComment]::ConvertToHashTable($prContent)
+        }
+
+        if ($null -eq $stableContentPath -or (-not (Test-Path $stableContentPath -PathType Leaf))) {
+            Write-Debug "Path $stableContentPath was not found!"
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $stableContent =  Get-Content $stableContentPath | ConvertFrom-Json
+            $stableContent = [APIDiffComment]::ConvertToHashTable($stableContentPath)
+        }
+
+        return [APIDiffComment]::new($prContent, $stableContent, $generatorContent)
+    }
+
     [void] WriteDiff($diff, $stringBuilder) {
         # loop over the platforms and write the data
         $stringBuilder.AppendLine("# $($diff.Header)")

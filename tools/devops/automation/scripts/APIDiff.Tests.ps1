@@ -248,4 +248,44 @@ Describe "API diff comment tests" {
         $comment.FromStable.Header | Should -Be $stableHeader
         $comment.Generator | Should -Be ""
     }
+
+    Context "from paths" {
+
+      BeforeAll {
+        $prDiffPath = New-TemporaryFile
+        $stableDiffPath = New-TemporaryFile
+
+        $prDiff | ConvertTo-Json | Out-File $prDiffPath 
+        $stableDiff | ConvertTo-Json | Out-File $stableDiffPath 
+      }
+
+      AfterAll {
+        rm -Rf $prDiffPath 
+        rm -Rf $stableDiffPath 
+      }
+
+      It "creates comment with all the paths" {
+          $comment = [APIDiffComment]::FromJsonFiles($prDiffPath, $stableDiffPath, $generatorDiff)
+          $comment.FromPR.Header | Should -Be $prHeader
+          $comment.FromStable.Header | Should -Be $stableHeader
+          $comment.Generator | Should -Be $generatorDiff
+      }
+
+      It "creates comment with missing paths" {
+          $missinPath = New-TemporaryFile 
+          rm -Rf $missinPath 
+          $comment = [APIDiffComment]::FromJsonFiles($prDiffPath, $missinPath, $generatorDiff)
+          $comment.FromPR.Header | Should -Be $prHeader
+          $comment.FromStable.Header | Should -Be $null
+          $comment.Generator | Should -Be $generatorDiff
+      }
+
+      It "creates comment with null paths" {
+          $comment = [APIDiffComment]::FromJsonFiles($prDiffPath, $null, $generatorDiff)
+          $comment.FromPR.Header | Should -Be $prHeader
+          $comment.FromStable.Header | Should -Be $null
+          $comment.Generator | Should -Be $generatorDiff
+      }
+
+    }
 }
