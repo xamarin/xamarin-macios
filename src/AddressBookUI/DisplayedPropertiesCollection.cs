@@ -6,6 +6,8 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,17 +31,17 @@ namespace AddressBookUI {
 #endif
 	public class DisplayedPropertiesCollection : ICollection<ABPersonProperty> {
 
-		ABFunc<NSNumber[]> g;
-		Action<NSNumber[]> s;
+		ABFunc<NSNumber[]?> g;
+		Action<NSNumber[]?> s;
 
-		internal DisplayedPropertiesCollection (ABFunc<NSNumber[]> g, Action<NSNumber[]> s)
+		internal DisplayedPropertiesCollection (ABFunc<NSNumber[]?> g, Action<NSNumber[]?> s)
 		{
 			this.g = g;
 			this.s = s;
 		}
 
 		public int Count {
-			get {return g ().Length;}
+			get {return g ()!.Length;}
 		}
 
 		bool ICollection<ABPersonProperty>.IsReadOnly {
@@ -50,7 +52,7 @@ namespace AddressBookUI {
 		{
 			List<NSNumber> values;
 			var dp = g ();
-			if (dp != null)
+			if (dp is not null)
 				values = new List<NSNumber> (dp);
 			else
 				values = new List<NSNumber> ();
@@ -67,7 +69,7 @@ namespace AddressBookUI {
 		{
 			int id = ABPersonPropertyId.ToId (item);
 			var values = g ();
-			if (values == null)
+			if (values is null)
 				return false;
 
 			for (int i = 0; i < values.Length; ++i)
@@ -78,8 +80,8 @@ namespace AddressBookUI {
 
 		public void CopyTo (ABPersonProperty[] array, int arrayIndex)
 		{
-			if (array == null)
-				throw new ArgumentNullException ("array");
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			if (arrayIndex < 0)
 				throw new ArgumentOutOfRangeException ("arrayIndex");
 			if (arrayIndex > array.Length)
@@ -95,7 +97,7 @@ namespace AddressBookUI {
 		public bool Remove (ABPersonProperty item)
 		{
 			var dp = g ();
-			if (dp == null)
+			if (dp is null)
 				return false;
 			var id = ABPersonPropertyId.ToId (item);
 			var values = new List<NSNumber> (dp);
@@ -118,6 +120,9 @@ namespace AddressBookUI {
 		public IEnumerator<ABPersonProperty> GetEnumerator ()
 		{
 			var values = g ();
+			if (values is null) {
+				yield break;
+			}
 			for (int i = 0; i < values.Length; ++i)
 				yield return ABPersonPropertyId.ToPersonProperty (values [i].Int32Value);
 		}

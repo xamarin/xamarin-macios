@@ -164,7 +164,6 @@ namespace AddressBookUI {
 		// Obsolete for public use; we should "remove" this member by making
 		// it [Internal] in some future release, as it's needed internally.
 		[Internal]
-		[Obsolete ("Use SetHighlightedItemForProperty(ABPersonProperty,int?).")]
 		[Export ("setHighlightedItemForProperty:withIdentifier:")]
 		void SetHighlightedItemForProperty (int /* ABPropertyId = int32 */ property, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
