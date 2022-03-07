@@ -31,20 +31,13 @@ namespace MonoTouchFixtures.HealthKit {
 			NSError error;
 			using (var d = new NSData ()) {
 				TestDelegate action = () => {
-					// Objective-C exception thrown.  Name: _HKObjectValidationFailureException Reason: startDate (0001-01-01 00:00:00 +0000) and endDate (4001-01-01 00:00:00 +0000) exceed the maximum allowed duration for this sample type. Maximum duration for type HKDocumentTypeIdentifierCDA is 345600.000000
-					var startDate = NSDate.DistantPast;
-					var endDate = startDate.AddSeconds (345600);
-					using (var s = HKCdaDocumentSample.Create (d, startDate, endDate, (NSDictionary)null, out error)) {
+					using (var s = HKCdaDocumentSample.Create (d, NSDate.DistantPast, NSDate.DistantFuture, (NSDictionary)null, out error)) {
 						Assert.NotNull (error, "error");
 						var details = new HKDetailedCdaErrors (error.UserInfo);
 						Assert.That (details.ValidationError.Length, Is.EqualTo ((nint) 0), "Length");
 					}
 				};
-#if __MACCATALYST__
-				var throwsException = false;
-#else
 				var throwsException = TestRuntime.CheckXcodeVersion (11, 0);
-#endif
 
 				if (throwsException) {
 #if NET
