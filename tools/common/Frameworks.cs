@@ -665,7 +665,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "CHIP":
 #endif
 				case "IdentityLookupUI":
-				case "VisionKit":
 				case "WatchConnectivity":
 					f.Unavailable = true;
 					break;
