@@ -85,68 +85,12 @@ parameters:
   type: object
   default: [
     {
-      testPrefix: 'simulator_new_bcl',
-      stageName: 'simulator_new_bcl',
-      displayName: 'BCL Simulator Tests (XUnit)',
-      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
+      testPrefix: 'simulator',
+      stageName: 'simulator',
+      displayName: 'Simulator Tests',
       useXamarinStorage: False,
-      testsLabels: '--label=skip-all-tests,run-new-bcl-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
-      statusContext: 'VSTS: simulator bcl xunit tests iOS',
-      makeTarget: 'jenkins',
-      iOSDeviceDemand: [] # we do no need extra capabilities
-    },
-    {
-      testPrefix: 'simulator_old_bcl',
-      stageName: 'simulator_old_bcl',
-      displayName: 'BCL Simulator Tests (NUnit)',
-      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
-      useXamarinStorage: False,
-      testsLabels: '--label=skip-all-tests,run-old-bcl-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
-      statusContext: 'VSTS: simulator bcl nunit tests iOS',
-      makeTarget: 'jenkins',
-      iOSDeviceDemand: [] # we do no need extra capabilities
-    },
-    {
-      testPrefix: 'simulator_mscorlib',
-      stageName: 'simulator_mscorlib',
-      displayName: 'mscorlib Simulator Tests',
-      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
-      useXamarinStorage: False,
-      testsLabels: '--label=skip-all-tests,run-mscorlib-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
-      statusContext: 'VSTS: simulator mscorlib tests iOS',
-      makeTarget: 'jenkins',
-      iOSDeviceDemand: [] # we do no need extra capabilities
-    },
-    {
-      testPrefix: 'simulator_xamarin',
-      stageName: 'simulator_xamarin',
-      displayName: 'Xamarin Simulator Tests',
-      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
-      useXamarinStorage: False,
-      testsLabels: '--label=skip-all-tests,run-xamarin-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
-      statusContext: 'VSTS: simulator xamarin tests iOS',
-      makeTarget: 'jenkins',
-      iOSDeviceDemand: [] # we do no need extra capabilities
-    },
-    {
-      testPrefix: 'simulator_monotouch',
-      stageName: 'simulator_monotouch',
-      displayName: 'Monotouch Simulator Tests',
-      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
-      useXamarinStorage: False,
-      testsLabels: '--label=skip-all-tests,run-monotouch-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
-      statusContext: 'VSTS: simulator monotouch tests iOS',
-      makeTarget: 'jenkins',
-      iOSDeviceDemand: [] # we do no need extra capabilities
-    },
-    {
-      testPrefix: 'simulator_dotnet',
-      stageName: 'simulator_dotnet',
-      displayName: 'Dotnet Simulator Tests',
-      iOSDevicePool: '', # TODO empty because we want to use the one used by the agent pool selector
-      useXamarinStorage: False,
-      testsLabels: '--label=skip-all-tests,run-dotnet-tests', # TODO same as calling jenkins, we need to use diff one in ci an 
-      statusContext: 'VSTS: simulator dotnet tests iOS',
+      testsLabels: '--label=run-all-tests,skip-device-tests', # TODO same as calling jenkins, we need to use diff one in ci an
+      statusContext: 'VSTS: simulator tests iOS',
       makeTarget: 'jenkins',
       iOSDeviceDemand: [] # we do no need extra capabilities
     }
@@ -160,7 +104,7 @@ parameters:
       testPrefix: 'iOS64',
       stageName: 'ios64b_device',
       displayName: 'iOS64 Device Tests',
-      iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
       useXamarinStorage: False,
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
@@ -173,7 +117,7 @@ parameters:
       testPrefix: 'tvos',
       stageName: 'tvos_device',
       displayName: 'tvOS Device Tests',
-      iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
       useXamarinStorage: False,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
@@ -378,7 +322,6 @@ stages:
       testPrefix: ${{ config.testPrefix }} 
       stageName: ${{ config.stageName }} 
       displayName: ${{ config.displayName }} 
-      iOSDevicePool: $(CIBuildPool) # hardcoded has to be fixed
       useXamarinStorage: ${{ config.useXamarinStorage }} 
       testsLabels: ${{ config.testsLabels }}
       statusContext: ${{ config.statusContext }} 
@@ -391,6 +334,7 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
       xqaCertPass: $(xqa--certificates--password)
+      condition: ${{ parameters.runTests }}
 
 # devices are optional and will only be ran when we set them OR in CI
 - ${{ if eq(parameters.runDeviceTests, true) }}:
@@ -401,7 +345,7 @@ stages:
           testPrefix: ${{ config.testPrefix }} 
           stageName: ${{ config.stageName }} 
           displayName: ${{ config.displayName }} 
-          iOSDevicePool: ${{ config.iOSDevicePool }} 
+          testPool: ${{ config.testPool }} 
           useXamarinStorage: ${{ config.useXamarinStorage }} 
           testsLabels: ${{ config.testsLabels }} 
           statusContext: ${{ config.statusContext }} 
@@ -411,6 +355,7 @@ stages:
           keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
+          condition: ${{ parameters.runDeviceTests }}
 
 - ${{ if eq(parameters.runOldMacOSTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
@@ -441,7 +386,7 @@ stages:
       testPrefix: 'iOS32b'
       stageName: 'ios32b_device'
       displayName: 'iOS32b Device Tests'
-      iOSDevicePool: 'VSEng-Xamarin-QA'
+      testPool: 'VSEng-Xamarin-QA'
       useXamarinStorage: False
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
       statusContext: 'VSTS: device tests iOS32b'

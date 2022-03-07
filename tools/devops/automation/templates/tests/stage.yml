@@ -20,9 +20,9 @@ parameters:
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 # name of the pool that contains the iOS devices
-- name: iOSDevicePool
+- name: testPool
   type: string
-  default: 'VSEng-Xamarin-QA'
+  default: ''
 
 # demand that has to be matched by a bot to be able to run the tests.
 - name: iOSDeviceDemand
@@ -58,19 +58,50 @@ parameters:
   type: string
   default: 'vsts-device-tests' # target to be usde to run the tests
 
+- name: condition
+  type: boolean
+  default: true
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
+  condition: ${{ parameters.condition }}
+
   jobs:
+
+  - ${{ if eq(parameters.testPool, '') }}:
+    - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+      pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+        vmImage: ubuntu-latest
+      steps:
+      - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+      # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+      - template: azure-devops-pools/agent-pool-selector.yml@templates
+        parameters:
+          agentPoolPR: $(PRBuildPool)
+          agentPoolPRUrl: $(PRBuildPoolUrl)
+          agentPoolCI: $(CIBuildPool)
+          agentPoolCIUrl: $(CIBuildPoolUrl)
+
   - job: tests
+    dependsOn:
+    - ${{ if eq(parameters.testPool, '') }}:
+      - AgentPoolSelector
     displayName: 'Run ${{ parameters.testPrefix }} Device Tests'
     timeoutInMinutes: 1000
+
+    variables:
+      ${{ if eq(parameters.testPool, '') }}:
+        AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      ${{ else }}:
+        AgentPoolComputed: ${{ parameters.testPool }}
+
     pool:
-      name: ${{ parameters.iOSDevicePool }}
+      name: $(AgentPoolComputed)
       demands: ${{ parameters.iOSDeviceDemand }}
       workspace:
         clean: all
