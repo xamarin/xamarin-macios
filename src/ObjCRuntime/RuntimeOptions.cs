@@ -172,17 +172,19 @@ namespace ObjCRuntime {
 			}
 		}
 
+		// This is invoked by
+		// System.Net.Http.dll!System.Net.Http.HttpClient.cctor
 		internal static HttpMessageHandler GetHttpMessageHandler ()
 		{
 			var options = RuntimeOptions.Read ();
 			// all types will be present as this is executed only when the linker is not enabled
 			var handler_name = options?.http_message_handler;
 #if NET
+			// Note: no need to handle SocketsHandlerValue here because System.Net.Http handles
+			// creating a SocketsHttpHandler when configured to do so.
 			switch (handler_name) {
 			case CFNetworkHandlerValue:
 				return new CFNetworkHandler ();
-			case SocketsHandlerValue:
-				return new SocketsHttpHandler ();
 			default:
 				if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
 					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.NSUrlSessionHandlerValue");

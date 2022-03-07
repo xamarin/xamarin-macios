@@ -6,6 +6,7 @@
 //
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
+#if !NET
 
 using System;
 using Security;
@@ -25,3 +26,4 @@ namespace Chip {
 		}
     }
 }
+#endif // !NET
