@@ -258,7 +258,7 @@ namespace CoreServices {
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFString */ IntPtr username, /* CFString */ IntPtr password,
 			/* CFStreamError* */ out CFStreamError error);
 
-		public void ApplyCredentials (CFHTTPAuthentication auth, NetworkCredential credential)
+		public void ApplyCredentials (CFHTTPAuthentication? auth, NetworkCredential credential)
 		{
 			if (auth is null)
 				throw new ArgumentNullException (nameof (auth));
