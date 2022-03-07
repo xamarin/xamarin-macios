@@ -203,6 +203,15 @@ partial class TestRuntime
 #endif
 	}
 
+	public static bool IsVSTS =>
+		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_BUILDID"));  // Env var set by vsts
+																																									 //
+	public static void AssertNotVSTS ()
+	{
+		if (IsVSTS)
+			NUnit.Framework.Assert.Ignore ("This test only runs on developer desktops and not on VSTS.");
+	}
+
 	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
 	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
 	{
