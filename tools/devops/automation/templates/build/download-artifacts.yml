@@ -40,7 +40,7 @@ steps:
       archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apidiff-stable/apidiff-stable.zip'
       destinationFolder: '$(System.DefaultWorkingDirectory)/apidiff-stable'
 
-- ${{ if and(eq(parameters.enableAPIDiff, true), contains(variables['API_GENERATOR_BUILT'], 'True')) }}:
+- ${{ if and(eq(parameters.enableAPIDiff, true), contains(variables['API_GENERATOR_DIFF_BUILT'], 'True')) }}:
   - task: DownloadPipelineArtifact@2
     displayName: 'Download API & Generator comparison'
     condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
