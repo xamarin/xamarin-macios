@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !NET
 
 using System;
@@ -43,9 +45,9 @@ using CFRunLoopModeString = global::Foundation.NSString;
 namespace CFNetwork {
 
 	public class WorkerThread {
-		CFRunLoop loop;
-		Source source;
-		Context context;
+		CFRunLoop? loop;
+		Source? source;
+		Context? context;
 		CancellationTokenSource cts;
 		ManualResetEventSlim readyEvent;
 		ConcurrentQueue<Event> eventQueue = new ConcurrentQueue<Event> ();
@@ -88,8 +90,8 @@ namespace CFNetwork {
 		public void Stop ()
 		{
 			cts.Cancel ();
-			loop.RemoveSource (source, CFRunLoop.ModeDefault);
-			loop.Stop ();
+			loop?.RemoveSource (source, CFRunLoop.ModeDefault);
+			loop?.Stop ();
 		}
 
 		protected void PostNoResult (Action callback)
@@ -100,8 +102,8 @@ namespace CFNetwork {
 				return null;
 			};
 			eventQueue.Enqueue (ev);
-			source.Signal ();
-			loop.WakeUp ();
+			source?.Signal ();
+			loop?.WakeUp ();
 		}
 
 		public Task Post (Action callback)
@@ -116,11 +118,11 @@ namespace CFNetwork {
 				callback (c);
 				return null;
 			};
-			ev.Tcs = new TaskCompletionSource<object> ();
+			ev.Tcs = new TaskCompletionSource<object?> ();
 			ev.Cts = CancellationTokenSource.CreateLinkedTokenSource (cts.Token, cancellationToken);
 			eventQueue.Enqueue (ev);
-			source.Signal ();
-			loop.WakeUp ();
+			source?.Signal ();
+			loop?.WakeUp ();
 
 			try {
 				await ev.Tcs.Task;
@@ -129,21 +131,21 @@ namespace CFNetwork {
 			}
 		}
 
-		public Task<T> Post<T> (Func<T> callback)
+		public Task<T?> Post<T> (Func<T> callback)
 		{
 			return Post (c => callback (), CancellationToken.None);
 		}
 
-		public async Task<T> Post<T> (Func<CancellationToken, T> callback,
+		public async Task<T?> Post<T> (Func<CancellationToken, T> callback,
 		                              CancellationToken cancellationToken)
 		{
 			var ev = new Event ();
 			ev.Callback = c => callback (c);
-			ev.Tcs = new TaskCompletionSource<object> ();
+			ev.Tcs = new TaskCompletionSource<object?> ();
 			ev.Cts = CancellationTokenSource.CreateLinkedTokenSource (cts.Token, cancellationToken);
 			eventQueue.Enqueue (ev);
-			source.Signal ();
-			loop.WakeUp ();
+			source?.Signal ();
+			loop?.WakeUp ();
 
 			try {
 				var result = await ev.Tcs.Task;
@@ -183,8 +185,8 @@ namespace CFNetwork {
 		}
 
 		struct Event {
-			public Func<CancellationToken, object> Callback;
-			public TaskCompletionSource<object> Tcs;
+			public Func<CancellationToken, object?> Callback;
+			public TaskCompletionSource<object?> Tcs;
 			public CancellationTokenSource Cts;
 		}
 

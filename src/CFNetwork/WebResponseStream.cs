@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !NET
 
 using System;
@@ -51,31 +53,31 @@ namespace CFNetwork {
 	 */
 
 	class WebResponseStream : Stream, IDisposable {
-		CFHTTPStream stream;
-		WorkerThread worker;
-		WebRequestStream body;
-		CancellationTokenSource openCts;
-		TaskCompletionSource<CFHTTPMessage> openTcs;
-		IOperation currentOperation;
+		CFHTTPStream? stream;
+		WorkerThread? worker;
+		WebRequestStream? body;
+		CancellationTokenSource? openCts;
+		TaskCompletionSource<CFHTTPMessage?>? openTcs;
+		IOperation? currentOperation;
 		bool bytesAvailable;
 		bool busy;
-		Thread mainThread;
-		Thread workerThread;
+		Thread? mainThread;
+		Thread? workerThread;
 		volatile bool crossThreadAccess;
 		object syncRoot;
 		bool open;
 		bool canceled;
 		bool completed;
-		Exception lastError;
+		Exception? lastError;
 
-		WebResponseStream (CFHTTPStream stream, WebRequestStream body)
+		WebResponseStream (CFHTTPStream stream, WebRequestStream? body)
 		{
 			this.stream = stream;
 			this.body = body;
 			syncRoot = new object ();
 		}
 
-		public static WebResponseStream Create (CFHTTPMessage request)
+		public static WebResponseStream? Create (CFHTTPMessage request)
 		{
 			var stream = CFStream.CreateForHTTPRequest (request);
 			if (stream == null)
@@ -84,7 +86,7 @@ namespace CFNetwork {
 			return new WebResponseStream (stream, null);
 		}
 
-		public static WebResponseStream Create (CFHTTPMessage request, WebRequestStream body)
+		public static WebResponseStream? Create (CFHTTPMessage request, WebRequestStream body)
 		{
 			var stream = CFStream.CreateForStreamedHTTPRequest (request, body.ReadStream);
 			if (stream == null)
@@ -93,13 +95,13 @@ namespace CFNetwork {
 			return new WebResponseStream (stream, body);
 		}
 
-		public static WebResponseStream Create (Uri uri, HttpMethod method, Version version)
+		public static WebResponseStream? Create (Uri uri, HttpMethod method, Version version)
 		{
 			using (var req = CFHTTPMessage.CreateRequest (uri, method.Method, version))
 				return Create (req);
 		}
 
-		public CFHTTPStream Stream {
+		public CFHTTPStream? Stream {
 			get { return stream; }
 		}
 
@@ -124,7 +126,7 @@ namespace CFNetwork {
 			base.Dispose (disposing);
 		}
 
-		void OnError (Exception error)
+		void OnError (Exception? error)
 		{
 			if (error == null)
 				error = new InvalidOperationException ("Unknown error.");
@@ -134,10 +136,10 @@ namespace CFNetwork {
 			lastError = error;
 			completed = true;
 
-			stream.Close ();
+			stream?.Close ();
 
 			if (!open)
-				openTcs.SetException (error);
+				openTcs?.SetException (error);
 
 			var operation = Interlocked.Exchange (ref currentOperation, null);
 			if (operation != null)
@@ -150,10 +152,10 @@ namespace CFNetwork {
 				return;
 			completed = canceled = true;
 
-			stream.Close ();
+			stream?.Close ();
 
 			if (!open)
-				openTcs.SetCanceled ();
+				openTcs?.SetCanceled ();
 
 			var operation = Interlocked.Exchange (ref currentOperation, null);
 			if (operation != null)
@@ -166,10 +168,10 @@ namespace CFNetwork {
 				return;
 			completed = true;
 
-			stream.Close ();
+			stream?.Close ();
 
 			if (!open) {
-				openTcs.SetException (new InvalidOperationException ());
+				openTcs?.SetException (new InvalidOperationException ());
 				return;
 			}
 
@@ -190,7 +192,7 @@ namespace CFNetwork {
 		 * 
 		 */
 
-		void StartOperation (IOperation operation)
+		async Task StartOperation (IOperation operation)
 		{
 			bool isCrossThread;
 			lock (syncRoot) {
@@ -226,9 +228,9 @@ namespace CFNetwork {
 			 * 
 			 */
 			if ((worker != null) && !Thread.CurrentThread.Equals (workerThread)) {
-				worker.Post (() => {
+				await worker.Post (async () => {
 					if (bytesAvailable)
-						OnBytesAvailable (false);
+						await OnBytesAvailable (false);
 				}
 				);
 				return;
@@ -238,7 +240,7 @@ namespace CFNetwork {
 			 * We're on the main / worker thread, so we don't need any locking.
 			 */
 			if (!isCrossThread) {
-				OnBytesAvailable (false);
+				await OnBytesAvailable (false);
 				return;
 			}
 
@@ -253,7 +255,7 @@ namespace CFNetwork {
 				return;
 			}
 
-			OnBytesAvailable (true);
+			await OnBytesAvailable (true);
 		}
 
 		bool CheckCrossThreadAccess ()
@@ -268,7 +270,7 @@ namespace CFNetwork {
 			return true;
 		}
 
-		void HasBytesAvailable ()
+		async Task HasBytesAvailable ()
 		{
 			/*
 			 * We're always on the main / worker thread here.
@@ -284,7 +286,7 @@ namespace CFNetwork {
 				}
 
 				if (!crossThreadAccess) {
-					OnBytesAvailable (false);
+					await OnBytesAvailable (false);
 					return;
 				}
 			}
@@ -302,7 +304,7 @@ namespace CFNetwork {
 				return;
 			}
 
-			OnBytesAvailable (true);
+			await OnBytesAvailable (true);
 		}
 
 		async Task OnBytesAvailable (bool exitContext)
@@ -330,12 +332,13 @@ namespace CFNetwork {
 
 		async Task<bool> ReadFromServer (bool exitContext)
 		{
-			int index, count;
-			var buffer = currentOperation.GetBuffer (out index, out count);
+			int index = 0;
+			int count = 0;
+			var buffer = currentOperation?.GetBuffer (out index, out count);
 
-			nint ret;
+			nint? ret;
 			try {
-				ret = stream.Read (buffer, index, count);
+				ret = stream?.Read (buffer, index, count);
 			} catch (Exception ex) {
 				OnError (ex);
 				return false;
@@ -348,7 +351,7 @@ namespace CFNetwork {
 			 */
 
 			if (ret < 0) {
-				OnError (stream.GetError ());
+				OnError (stream?.GetError ());
 				return false;
 			} else if (ret == 0) {
 				OnCompleted ();
@@ -369,9 +372,10 @@ namespace CFNetwork {
 			if (exitContext)
 				Monitor.Exit (syncRoot);
 
-			bool keepGoing;
+			bool keepGoing = false;
 			try {
-				keepGoing = await currentOperation.Write ((int) ret);
+				if (currentOperation is not null && ret is not null)
+					keepGoing = await currentOperation!.Write ((int) ret);
 			} finally {
 				if (exitContext)
 					Monitor.Enter (syncRoot);
@@ -386,7 +390,7 @@ namespace CFNetwork {
 				return true;
 
 			var operation = Interlocked.Exchange (ref currentOperation, null);
-			operation.SetCompleted ();
+			operation?.SetCompleted ();
 			return false;
 		}
 
@@ -407,8 +411,8 @@ namespace CFNetwork {
 		}
 
 		abstract class Operation<T> : IOperation, IDisposable {
-			CancellationTokenSource cts;
-			TaskCompletionSource<T> tcs;
+			CancellationTokenSource? cts;
+			TaskCompletionSource<T?> tcs;
 			bool completed;
 
 			protected Operation (WebResponseStream parent,
@@ -417,10 +421,10 @@ namespace CFNetwork {
 				cts = CancellationTokenSource.CreateLinkedTokenSource (
 					cancellationToken);
 				cts.Token.Register (() => parent.OnCanceled ());
-				tcs = new TaskCompletionSource<T> ();
+				tcs = new TaskCompletionSource<T?> ();
 			}
 
-			public Task<T> Task {
+			public Task<T?> Task {
 				get { return tcs.Task; }
 			}
 
@@ -428,12 +432,12 @@ namespace CFNetwork {
 				get { return completed; }
 			}
 
-			protected TaskCompletionSource<T> TaskCompletionSource {
+			protected TaskCompletionSource<T?> TaskCompletionSource {
 				get { return tcs; }
 			}
 
-			protected CancellationToken CancellationToken {
-				get { return cts.Token; }
+			protected CancellationToken? CancellationToken {
+				get { return cts?.Token; }
 			}
 
 			public void SetCanceled ()
@@ -511,7 +515,8 @@ namespace CFNetwork {
 
 			public override async Task<bool> Write (int count)
 			{
-				await destination.WriteAsync (buffer, 0, count, CancellationToken);
+				// if CancellationToken is null, use the default value
+				await destination.WriteAsync (buffer, 0, count, CancellationToken ?? System.Threading.CancellationToken.None);
 				return true;
 			}
 
@@ -558,11 +563,11 @@ namespace CFNetwork {
 			}
 		}
 
-		public async Task<CFHTTPMessage> Open (WorkerThread worker,
+		public async Task<CFHTTPMessage?> Open (WorkerThread? worker,
 		                                       CancellationToken cancellationToken)
 		{
 			this.worker = worker;
-			openTcs = new TaskCompletionSource<CFHTTPMessage> ();
+			openTcs = new TaskCompletionSource<CFHTTPMessage?> ();
 			openCts = CancellationTokenSource.CreateLinkedTokenSource (cancellationToken);
 
 			openCts.Token.Register (() => OnCanceled ());
@@ -585,7 +590,7 @@ namespace CFNetwork {
 		void DoOpen ()
 		{
 			if (lastError != null) {
-				openTcs.SetException (lastError);
+				openTcs?.SetException (lastError);
 				return;
 			}
 
@@ -595,28 +600,33 @@ namespace CFNetwork {
 			 *
 			 */
 
+			if (stream is null) {
+				workerThread = Thread.CurrentThread;
+				return;
+			}
+
 			stream.ErrorEvent += (sender, e) => {
 				OnError (stream.GetError ());
 			};
 			stream.ClosedEvent += (sender, e) => {
 				if (!open) {
 					open = true;
-					openTcs.SetResult (stream.GetResponseHeader ());
+					openTcs?.SetResult (stream.GetResponseHeader ());
 				}
 				OnCompleted ();
 			};
-			stream.HasBytesAvailableEvent += (sender, e) => {
+			stream.HasBytesAvailableEvent += async (sender, e) => {
 				if (!open) {
 					open = true;
-					openTcs.SetResult (stream.GetResponseHeader ());
+					openTcs?.SetResult (stream.GetResponseHeader ());
 				}
 
-				HasBytesAvailable ();
+				await HasBytesAvailable ();
 			};
-			stream.OpenCompletedEvent += (sender, e) => {
+			stream.OpenCompletedEvent += async (sender, e) => {
 				if (body == null)
 					return;
-				body.Open ();
+				await body.Open ();
 			};
 
 			workerThread = Thread.CurrentThread;
@@ -626,6 +636,8 @@ namespace CFNetwork {
 		}
 
 		#region implemented abstract members of System.IO.Stream
+#pragma warning disable CS4014 // The StartOperation method calls in CopyToAsync and ReadAsync methods
+		// are awaitable, but the methods are not async
 
 		public override Task CopyToAsync (Stream destination, int bufferSize,
 		                                  CancellationToken cancellationToken)
@@ -636,11 +648,6 @@ namespace CFNetwork {
 			return operation.Task;
 		}
 
-		public override void Flush ()
-		{
-			;
-		}
-
 		public override Task<int> ReadAsync (byte[] buffer, int offset, int count,
 		                                     CancellationToken cancellationToken)
 		{
@@ -648,6 +655,12 @@ namespace CFNetwork {
 				this, buffer, offset, count, cancellationToken);
 			StartOperation (operation);
 			return operation.Task;
+		}
+#pragma warning restore CS4014
+
+		public override void Flush ()
+		{
+			;
 		}
 
 		public override int Read (byte[] buffer, int offset, int count)
