@@ -1,5 +1,6 @@
-using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
+
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -11,14 +12,6 @@ namespace Xamarin.MacDev.Tasks
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			return base.Execute ();
-		}
-
-		public override void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
-
-			base.Execute ();
 		}
 	}
 }
