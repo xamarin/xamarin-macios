@@ -149,7 +149,7 @@ namespace CFNetwork {
 
 			try {
 				var result = await ev.Tcs.Task;
-				if (result != null)
+				if (result is not null)
 					return (T)result;
 				else
 					return default(T);
@@ -164,7 +164,7 @@ namespace CFNetwork {
 			if (!eventQueue.TryDequeue (out ev))
 				return;
 
-			if ((ev.Cts != null) && ev.Cts.IsCancellationRequested) {
+			if ((ev.Cts is not null) && ev.Cts.IsCancellationRequested) {
 				ev.Tcs.SetCanceled ();
 				return;
 			}
@@ -173,13 +173,13 @@ namespace CFNetwork {
 
 			try {
 				var result = ev.Callback (effectiveCts.Token);
-				if (ev.Tcs != null)
+				if (ev.Tcs is not null)
 					ev.Tcs.SetResult (result);
 			} catch (TaskCanceledException) {
-				if (ev.Tcs != null)
+				if (ev.Tcs is not null)
 					ev.Tcs.SetCanceled ();
 			} catch (Exception ex) {
-				if (ev.Tcs != null)
+				if (ev.Tcs is not null)
 					ev.Tcs.SetException (ex);
 			}
 		}

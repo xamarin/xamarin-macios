@@ -80,7 +80,7 @@ namespace CFNetwork {
 		public static WebResponseStream? Create (CFHTTPMessage request)
 		{
 			var stream = CFStream.CreateForHTTPRequest (request);
-			if (stream == null)
+			if (stream is null)
 				return null;
 
 			return new WebResponseStream (stream, null);
@@ -89,7 +89,7 @@ namespace CFNetwork {
 		public static WebResponseStream? Create (CFHTTPMessage request, WebRequestStream body)
 		{
 			var stream = CFStream.CreateForStreamedHTTPRequest (request, body.ReadStream);
-			if (stream == null)
+			if (stream is null)
 				return null;
 
 			return new WebResponseStream (stream, body);
@@ -114,11 +114,11 @@ namespace CFNetwork {
 		{
 			if (disposing) {
 				OnCanceled ();
-				if (stream != null) {
+				if (stream is not null) {
 					stream.Dispose ();
 					stream = null;
 				}
-				if (openCts != null) {
+				if (openCts is not null) {
 					openCts.Dispose ();
 					openCts = null;
 				}
@@ -128,7 +128,7 @@ namespace CFNetwork {
 
 		void OnError (Exception? error)
 		{
-			if (error == null)
+			if (error is null)
 				error = new InvalidOperationException ("Unknown error.");
 
 			if (completed)
@@ -142,7 +142,7 @@ namespace CFNetwork {
 				openTcs?.SetException (error);
 
 			var operation = Interlocked.Exchange (ref currentOperation, null);
-			if (operation != null)
+			if (operation is not null)
 				operation.SetException (error);
 		}
 
@@ -158,7 +158,7 @@ namespace CFNetwork {
 				openTcs?.SetCanceled ();
 
 			var operation = Interlocked.Exchange (ref currentOperation, null);
-			if (operation != null)
+			if (operation is not null)
 				operation.SetCanceled ();
 		}
 
@@ -176,7 +176,7 @@ namespace CFNetwork {
 			}
 
 			var operation = Interlocked.Exchange (ref currentOperation, null);
-			if (operation != null)
+			if (operation is not null)
 				operation.SetCompleted ();
 		}
 
@@ -196,14 +196,14 @@ namespace CFNetwork {
 		{
 			bool isCrossThread;
 			lock (syncRoot) {
-				if (!open || (currentOperation != null))
+				if (!open || (currentOperation is not null))
 					throw new InvalidOperationException ();
 
 				if (canceled) {
 					operation.SetCanceled ();
 					return;
 				}
-				if (lastError != null) {
+				if (lastError is not null) {
 					operation.SetException (lastError);
 					return;
 				}
@@ -227,7 +227,7 @@ namespace CFNetwork {
 			 * don't have to worry about any locking or anything.
 			 * 
 			 */
-			if ((worker != null) && !Thread.CurrentThread.Equals (workerThread)) {
+			if ((worker is not null) && !Thread.CurrentThread.Equals (workerThread)) {
 				await worker.Post (async () => {
 					if (bytesAvailable)
 						await OnBytesAvailable (false);
@@ -280,7 +280,7 @@ namespace CFNetwork {
 			 * 
 			 */
 			if (!crossThreadAccess) {
-				if ((currentOperation == null) || busy) {
+				if ((currentOperation is null) || busy) {
 					bytesAvailable = true;
 					return;
 				}
@@ -298,7 +298,7 @@ namespace CFNetwork {
 
 			Monitor.Enter (syncRoot);
 
-			if ((currentOperation == null) || busy) {
+			if ((currentOperation is null) || busy) {
 				bytesAvailable = true;
 				Monitor.Exit (syncRoot);
 				return;
@@ -485,7 +485,7 @@ namespace CFNetwork {
 			{
 				if (disposing) {
 					SetCanceled ();
-					if (cts != null) {
+					if (cts is not null) {
 						cts.Dispose ();
 						cts = null;
 					}
@@ -575,7 +575,7 @@ namespace CFNetwork {
 			mainThread = Thread.CurrentThread;
 
 			try {
-				if (worker != null)
+				if (worker is not null)
 					await worker.Post (c => DoOpen (), openCts.Token);
 				else
 					DoOpen ();
@@ -589,7 +589,7 @@ namespace CFNetwork {
 
 		void DoOpen ()
 		{
-			if (lastError != null) {
+			if (lastError is not null) {
 				openTcs?.SetException (lastError);
 				return;
 			}
@@ -624,7 +624,7 @@ namespace CFNetwork {
 				await HasBytesAvailable ();
 			};
 			stream.OpenCompletedEvent += async (sender, e) => {
-				if (body == null)
+				if (body is null)
 					return;
 				await body.Open ();
 			};
