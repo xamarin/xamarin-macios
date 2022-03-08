@@ -59,7 +59,8 @@ namespace MonoTouchFixtures.CoreVideo {
 		}
 
 		[Test]
-		public void DefaultConstructorTest () { 
+		public void DefaultConstructorTest ()
+		{ 
 			TestRuntime.AssertNotVSTS ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
@@ -67,7 +68,8 @@ namespace MonoTouchFixtures.CoreVideo {
 		}
 
 		[Test]
-		public void SetCurrentDisplayOpenGLTest () {
+		public void SetCurrentDisplayOpenGLTest ()
+		{
 			TestRuntime.AssertNotVSTS ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
@@ -76,7 +78,8 @@ namespace MonoTouchFixtures.CoreVideo {
 		}
 
 		[Test]
-		public void GetCurrentDisplayTest () {
+		public void GetCurrentDisplayTest ()
+		{
 			TestRuntime.AssertNotVSTS ();
 			Assert.DoesNotThrow (() => {
 				using var displayLink = new CVDisplayLink ();
