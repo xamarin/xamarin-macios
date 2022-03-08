@@ -17,12 +17,6 @@ using ObjCRuntime;
 #nullable enable
 
 namespace CoreVideo {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CVPixelBuffer : CVImageBuffer {
 
 #if NET

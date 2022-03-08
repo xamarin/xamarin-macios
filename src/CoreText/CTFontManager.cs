@@ -91,12 +91,6 @@ namespace CoreText {
 		PromptUser = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CTFontManager {
 
 #if MONOMAC
@@ -574,12 +568,6 @@ namespace CoreText {
 		public readonly static NSString ErrorFontUrlsKey;
 #endif
 
-#if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-#endif
 		public static partial class Notifications {
 			public static NSObject ObserveRegisteredFontsChanged (EventHandler<NSNotificationEventArgs> handler)
 			{

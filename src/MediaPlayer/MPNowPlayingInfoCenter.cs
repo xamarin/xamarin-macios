@@ -306,12 +306,6 @@ namespace MediaPlayer {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.12.2")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPNowPlayingInfoCenter {
 
 		public MPNowPlayingInfo NowPlaying {

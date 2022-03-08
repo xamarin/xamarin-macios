@@ -8,12 +8,6 @@ using ObjCRuntime;
 namespace CoreGraphics {
 
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	// the remaining of the struct is defined inside src/NativeTypes/Drawing.tt
 	public partial struct CGSize {
 

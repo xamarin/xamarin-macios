@@ -10,12 +10,6 @@ using Metal;
 #nullable enable
 
 namespace Metal {
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MTLVertexDescriptor {
 
 #if NET

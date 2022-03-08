@@ -42,12 +42,6 @@ using NativeHandle = System.IntPtr;
 
 namespace ImageIO {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGImageDestinationOptions
 	{
 		CGColor? destinationBackgroundColor;
@@ -65,12 +59,6 @@ namespace ImageIO {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGCopyImageSourceOptions
 	{
 #if NET
@@ -165,12 +153,6 @@ namespace ImageIO {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class CGImageAuxiliaryDataInfo {
 
 		public CGImageMetadata? Metadata {

@@ -17,12 +17,6 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSIndexPath {
 		public unsafe static NSIndexPath Create (params nint [] indexes)
 		{

@@ -14,12 +14,6 @@ using System.Runtime.Versioning;
 #nullable enable
 
 namespace Foundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSMetadataItem {
 #if !NET
 		bool GetBool (NSString key)

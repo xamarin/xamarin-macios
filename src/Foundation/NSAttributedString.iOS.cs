@@ -39,12 +39,6 @@ using UIKit;
 namespace Foundation {
 
 #if !MONOMAC && !COREBUILD
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSAttributedString {
 		static NSDictionary ignore;
 
@@ -77,12 +71,6 @@ namespace Foundation {
 	}
 #endif
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
 		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) {}

@@ -55,12 +55,6 @@ namespace ImageIO {
 		UnexpectedEOF = -5,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGImageOptions {
 
 		public CGImageOptions ()
@@ -102,12 +96,6 @@ namespace ImageIO {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGImageThumbnailOptions : CGImageOptions {
 
 		public bool CreateThumbnailFromImageIfAbsent { get; set; }
@@ -147,12 +135,6 @@ namespace ImageIO {
 	}
 #endif
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGImageSource : NativeObject
 	{
 #if !COREBUILD

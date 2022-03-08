@@ -65,12 +65,6 @@ namespace Foundation {
 		public string Password;
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSStream {
 		public NSObject this [NSString key] {
 			get {

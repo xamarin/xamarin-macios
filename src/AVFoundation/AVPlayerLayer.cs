@@ -14,12 +14,6 @@ using CoreVideo;
 using System.Runtime.Versioning;
 
 namespace AVFoundation {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class AVPlayerLayer {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]

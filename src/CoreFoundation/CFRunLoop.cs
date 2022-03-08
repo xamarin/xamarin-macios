@@ -222,12 +222,6 @@ namespace CoreFoundation {
 	}
 #endif
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CFRunLoop : NativeObject
 	{
 #if !COREBUILD

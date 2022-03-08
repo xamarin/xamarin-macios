@@ -77,12 +77,6 @@ namespace CoreLocation {
 	}
 
 #if IOS && !COREBUILD // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CLPlacemark {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]

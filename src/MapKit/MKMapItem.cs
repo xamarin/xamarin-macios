@@ -135,12 +135,6 @@ namespace MapKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos9.2")]
-	[SupportedOSPlatform ("macos10.9")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MKMapItem {
 		public void OpenInMaps (MKLaunchOptions? launchOptions = null)
 		{

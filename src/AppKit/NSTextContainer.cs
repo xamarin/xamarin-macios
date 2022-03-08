@@ -6,12 +6,6 @@ using System.Runtime.Versioning;
 
 namespace AppKit
 {
-#if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSTextContainer
 	{
 #if !NET

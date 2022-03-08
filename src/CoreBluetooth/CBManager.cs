@@ -6,12 +6,6 @@ using System.Runtime.Versioning;
 #nullable enable
 
 namespace CoreBluetooth {
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CBManager {
 
 #if NET

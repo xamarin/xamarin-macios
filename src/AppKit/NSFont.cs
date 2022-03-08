@@ -12,10 +12,6 @@ using CoreText;
 using CGGlyph = System.UInt16;
 
 namespace AppKit {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSFont
 	{
 		public static NSFont FromCTFont (CTFont font)

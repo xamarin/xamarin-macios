@@ -7,12 +7,6 @@ using Metal;
 using ObjCRuntime;
 
 namespace MetalPerformanceShaders {
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSNNGraph {
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]

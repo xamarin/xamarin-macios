@@ -31,10 +31,6 @@ using CoreGraphics;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("maccatalyst13.0")]
-	[SupportedOSPlatform ("macos")]
-#endif
 	public partial class NSImage {
 		public CGImage CGImage {
 			get {
@@ -80,10 +76,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSImageRep {
 
 		public CGImage CGImage {

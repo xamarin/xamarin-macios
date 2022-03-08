@@ -9,10 +9,6 @@ using ObjCRuntime;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSWorkspace {
 
 #if NET

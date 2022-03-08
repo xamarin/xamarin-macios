@@ -43,12 +43,6 @@ using NativeHandle = System.IntPtr;
 namespace CoreGraphics {
 
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	// CGDataConsumer.h
 	public partial class CGDataConsumer : NativeObject {
 #if !NET

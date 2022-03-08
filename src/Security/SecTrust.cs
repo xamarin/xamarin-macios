@@ -24,12 +24,6 @@ namespace Security {
 	public delegate void SecTrustCallback (SecTrust trust, SecTrustResult trustResult);
 	public delegate void SecTrustWithErrorCallback (SecTrust trust, bool result, NSError /* CFErrorRef _Nullable */ error);
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SecTrust {
 
 		public SecTrust (SecCertificate certificate, SecPolicy policy)

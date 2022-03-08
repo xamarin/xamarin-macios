@@ -88,12 +88,6 @@ namespace CoreImage {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CISampler {
 #if !XAMCORE_3_0 && MONOMAC
 		[Obsolete ("This default constructor does not provide a valid instance")]

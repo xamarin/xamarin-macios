@@ -66,10 +66,6 @@ namespace AppKit
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSAlert
 	{
 		public void BeginSheet (NSWindow window)

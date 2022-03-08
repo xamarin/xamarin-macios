@@ -825,12 +825,6 @@ namespace CoreMedia {
 	}
 
 #if !COREBUILD
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CMSampleBufferAttachmentSettings : DictionaryContainer {
 
 		internal CMSampleBufferAttachmentSettings (NSMutableDictionary dictionary)

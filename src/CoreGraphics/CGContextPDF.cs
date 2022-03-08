@@ -38,12 +38,6 @@ using CoreFoundation;
 
 namespace CoreGraphics {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGPDFPageInfo {
 
 		public CGRect? MediaBox { get; set; }
@@ -77,12 +71,6 @@ namespace CoreGraphics {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGPDFInfo : CGPDFPageInfo {
 
 		public string? Title { get; set; }

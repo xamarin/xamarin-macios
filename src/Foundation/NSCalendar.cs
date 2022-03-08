@@ -65,12 +65,6 @@ namespace Foundation {
 #pragma warning restore 612
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSCalendar {
 		static NSString GetCalendarIdentifier (NSCalendarType type)
 		{

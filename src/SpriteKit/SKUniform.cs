@@ -36,12 +36,6 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 #if !WATCH
 namespace SpriteKit {
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SKUniform {
 
 		static bool? versionCheck = null;

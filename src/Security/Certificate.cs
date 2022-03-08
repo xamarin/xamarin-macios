@@ -49,12 +49,6 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SecCertificate : NativeObject {
 #if !NET
 		public SecCertificate (NativeHandle handle)
@@ -577,12 +571,6 @@ namespace Security {
 #endif // COREBUILD
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SecIdentity : NativeObject {
 #if !NET
 		public SecIdentity (NativeHandle handle)
@@ -648,12 +636,6 @@ namespace Security {
 #endif
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SecKey : NativeObject {
 #if !NET
 		public SecKey (IntPtr handle)

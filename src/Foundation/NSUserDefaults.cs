@@ -9,12 +9,6 @@ namespace Foundation {
 		SuiteName
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSUserDefaults {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]

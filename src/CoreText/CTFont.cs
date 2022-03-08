@@ -1779,12 +1779,6 @@ namespace CoreText {
 		public NSDictionary Dictionary {get; private set;}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CTFont : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFont (NativeHandle handle, bool owns)

@@ -18,12 +18,6 @@ using Foundation;
 
 namespace SceneKit
 {
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SCNPhysicsShape
 	{
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNMatrix4 [] transforms)

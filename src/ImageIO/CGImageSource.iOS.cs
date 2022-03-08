@@ -19,12 +19,6 @@ using Foundation;
 
 namespace ImageIO {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CGImageSource {
 
 		// CGImageSource.h

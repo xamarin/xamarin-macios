@@ -38,12 +38,6 @@ namespace Intents {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.12")]
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class INIntentResolutionResult {
 
 		public static INIntentResolutionResult NeedsValue {

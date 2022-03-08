@@ -22,12 +22,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace GameplayKit {
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKPath {
 
 		public static GKPath FromPoints (Vector2[] points, float radius, bool cyclical)

@@ -46,12 +46,6 @@ namespace Foundation {
 		public NSError Error { get; private set; }
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSError : NSObject {
 #if !COREBUILD
 		[Advice ("Always specify a domain and error code when creating an NSError instance")]

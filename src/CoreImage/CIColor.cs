@@ -20,12 +20,6 @@ using UIKit;
 #nullable enable
 
 namespace CoreImage {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CIColor {
 
 		public nfloat [] Components {

@@ -40,12 +40,6 @@ using CoreGraphics;
 
 namespace CoreAnimation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CALayer {
 		const string selInitWithLayer = "initWithLayer:";
 

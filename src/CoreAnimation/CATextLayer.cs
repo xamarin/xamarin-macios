@@ -43,12 +43,6 @@ using AppKit;
 
 namespace CoreAnimation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CATextLayer {
 
 		public NSAttributedString? AttributedString {

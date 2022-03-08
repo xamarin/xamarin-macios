@@ -21,12 +21,6 @@ using System.Runtime.Versioning;
 #nullable enable
 
 namespace MediaPlayer {
-#if NET
-	[SupportedOSPlatform ("macos10.12.2")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPMediaItem {
 		ulong UInt64ForProperty (NSString property)
 		{

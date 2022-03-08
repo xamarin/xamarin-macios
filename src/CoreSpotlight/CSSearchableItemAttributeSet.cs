@@ -9,12 +9,6 @@ using System.Runtime.Versioning;
 
 namespace CoreSpotlight {
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public partial class CSSearchableItemAttributeSet {
 
 		public INSSecureCoding this [CSCustomAttributeKey key] {

@@ -17,12 +17,6 @@ using System.Runtime.Versioning;
 
 namespace CoreBluetooth {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CBUUID : IEquatable<CBUUID> {
 
 		const string format16bits = "{0:x2}{1:x2}";

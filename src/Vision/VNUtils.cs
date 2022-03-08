@@ -174,12 +174,6 @@ namespace Vision {
 		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-#endif
 	public partial class VNGeometryUtils {
 
 		public static VNCircle CreateBoundingCircle (Vector2 [] points, out NSError error)

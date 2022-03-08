@@ -16,10 +16,6 @@ using ObjCRuntime;
 using System.Runtime.Versioning;
 
 namespace AppKit {
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSGestureRecognizer {
 		object recognizers;
 		static Selector tsel = new Selector ("target");
@@ -96,10 +92,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSClickGestureRecognizer : NSGestureRecognizer {
 		public NSClickGestureRecognizer (Action action) : base (action) {}
 		public NSClickGestureRecognizer (Action<NSClickGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
@@ -123,10 +115,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSMagnificationGestureRecognizer : NSGestureRecognizer {
 		public NSMagnificationGestureRecognizer (Action action) : base (action) {}
 		public NSMagnificationGestureRecognizer (Action<NSMagnificationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
@@ -150,10 +138,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSPanGestureRecognizer : NSGestureRecognizer {
 		public NSPanGestureRecognizer (Action action) : base (action) {}
 		public NSPanGestureRecognizer (Action<NSPanGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
@@ -177,10 +161,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSPressGestureRecognizer : NSGestureRecognizer {
 		public NSPressGestureRecognizer (Action action) : base (action) {}
 		public NSPressGestureRecognizer (Action<NSPressGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
@@ -204,10 +184,6 @@ namespace AppKit {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSRotationGestureRecognizer : NSGestureRecognizer {
 		public NSRotationGestureRecognizer (Action action) : base (action) {}
 		public NSRotationGestureRecognizer (Action<NSRotationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}

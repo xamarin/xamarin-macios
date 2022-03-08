@@ -3,12 +3,6 @@ using ObjCRuntime;
 using System.Runtime.Versioning;
 
 namespace MetalPerformanceShaders {
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSCnnConvolutionDescriptor {
 
 #if NET

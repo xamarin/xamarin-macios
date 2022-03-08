@@ -37,10 +37,6 @@ using ObjCRuntime;
 using CoreGraphics;
 
 namespace AppKit {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class NSBezierPath {
 
 		public unsafe void GetLineDash (out nfloat [] pattern, out nfloat phase)

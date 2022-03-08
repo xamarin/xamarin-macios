@@ -44,12 +44,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Security {
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class SecTrust : NativeObject {
 #if !NET
 		public SecTrust (NativeHandle handle) 

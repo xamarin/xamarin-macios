@@ -17,12 +17,6 @@ using CoreMedia;
 using CoreVideo;
 
 namespace VideoToolbox {
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.2")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-#endif
 	public partial class VTCompressionProperties {
 		public VTProfileLevel ProfileLevel {
 			get {

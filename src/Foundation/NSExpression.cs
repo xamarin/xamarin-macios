@@ -8,12 +8,6 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class NSExpression {
 
 		[Export ("arguments")]

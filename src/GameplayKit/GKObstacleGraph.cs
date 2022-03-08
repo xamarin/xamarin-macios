@@ -18,12 +18,6 @@ using NativeHandle = System.IntPtr;
 
 namespace GameplayKit {
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class GKObstacleGraph {
 #if !NET
 		public virtual GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)

@@ -9,12 +9,6 @@ using Metal;
 using ObjCRuntime;
 
 namespace MetalPerformanceShaders {
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSKernel : NSObject {
 
 #if !COREBUILD
@@ -130,12 +124,6 @@ namespace MetalPerformanceShaders {
 	}
 
 #if !COREBUILD
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImage {
 
 #if NET
@@ -164,12 +152,6 @@ namespace MetalPerformanceShaders {
 		public MPSImageType ImageType => MPSGetImageType (Handle);
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageDilate {
 
 		[DesignatedInitializer]
@@ -186,12 +168,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageErode : MPSImageDilate {
 
 		public MPSImageErode (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] values)
@@ -200,12 +176,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageThresholdBinary {
 
 		public MPSImageThresholdBinary (IMTLDevice device, float thresholdValue, float maximumValue, /*[NullAllowed]*/ float[] transform)
@@ -224,12 +194,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageThresholdBinaryInverse {
 
 		[DesignatedInitializer]
@@ -247,12 +211,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageThresholdTruncate {
 
 		[DesignatedInitializer]
@@ -270,12 +228,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageThresholdToZero {
 
 		[DesignatedInitializer]
@@ -293,12 +245,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageThresholdToZeroInverse {
 
 		[DesignatedInitializer]
@@ -316,12 +262,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class MPSImageSobel {
 
 		[DesignatedInitializer]
@@ -342,12 +282,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSCnnConvolution {
 
 		[DesignatedInitializer]
@@ -365,12 +299,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSCnnFullyConnected {
 
 #if NET
@@ -403,12 +331,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImageConversion {
 		public MPSImageConversion (IMTLDevice device, MPSAlphaType srcAlpha, MPSAlphaType destAlpha, nfloat[] backgroundColor, CGColorConversionInfo conversionInfo)
 			: base (NSObjectFlag.Empty)
@@ -420,12 +342,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImagePyramid {
 
 		[DesignatedInitializer]
@@ -442,12 +358,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImageGaussianPyramid {
 
 		[DesignatedInitializer]
@@ -464,12 +374,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImageLaplacianPyramid {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
@@ -486,12 +390,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImageLaplacianPyramidSubtract {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramidSubtract (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
@@ -508,12 +406,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSImageLaplacianPyramidAdd {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramidAdd (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
@@ -530,12 +422,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSCnnBinaryConvolutionNode {
 #if NET
 		[SupportedOSPlatform ("tvos11.3")]
@@ -580,12 +466,6 @@ namespace MetalPerformanceShaders {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("maccatalyst")]
-#endif
 	public partial class MPSCnnBinaryFullyConnectedNode {
 #if NET
 		[SupportedOSPlatform ("tvos11.3")]

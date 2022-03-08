@@ -61,12 +61,6 @@ namespace Foundation {
 	}
 
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	// The C# overloads
 	public partial class NSNotificationCenter {
 		const string postSelector = "post:";
