@@ -69,9 +69,7 @@ namespace AVFoundation {
 			case AVLayerVideoGravity.Resize:
 				return AVPlayerLayer.GravityResize;
 			default:
-				// The default value according to docs is AVLayerVideoGravity.ResizeAspect so return AVPlayerLayer.GravityResizeAspect;
-				// https://developer.apple.com/documentation/avfoundation/avplayerlayer/1388915-videogravity?language=objc
-				return AVPlayerLayer.GravityResizeAspect;
+				return null!;
 			}
 		}
 		
