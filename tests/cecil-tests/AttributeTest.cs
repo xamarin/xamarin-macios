@@ -61,6 +61,55 @@ namespace Cecil.Tests {
 			Assert.That (found, Is.Empty);
 		}
 
+		// Look for classes/struct that have double attributes, either because of partial classes or binding errors
+		// Example:
+		// TestType.cs
+		// [SupportedOSPlatform("maccatalyst1.0")]
+		// public partial class TestType { }
+		//
+		// TestType.g.cs
+		// [SupportedOSPlatform("maccatalyst1.0")]
+		// public partial class TestType { }
+		// 
+		// Example #2:
+		// [Watch (5,0), NoTV, NoMac, iOS (12,0), NoTV]
+		// interface Type { }
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		public void DoubleAttributedElements (string assemblyPath)
+		{
+			var assembly = Helper.GetAssembly (assemblyPath);
+			if (assembly is null) {
+				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				return;
+			}
+
+			var doubleAttributed = new List<string>();
+			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a, includeUnsupported: true))) {
+				var platformCount = new Dictionary<string, int> ();
+				foreach (var attribute in type.CustomAttributes.Where (a => IsAvailabilityAttribute (a, includeUnsupported: true))) {
+					var kind = FindAvailabilityKind (attribute);
+					if (kind is not null) {
+						string key = $"{attribute.AttributeType.Name}-{kind}";						
+						if (platformCount.ContainsKey (key)) {
+							platformCount[key] += 1;
+						}
+						else {
+							platformCount[key] = 1;
+						}
+					}
+				}
+				foreach (var (kind, count) in platformCount) {
+					if (count != 1) {
+						doubleAttributed.Add ($"{kind} on {type} had a count of {count}");
+#if DEBUG
+						Console.Error.WriteLine ($"{kind} on {type} had a count of {count}");
+#endif
+					}
+				}
+			}
+			Assert.That (doubleAttributed, Is.Empty);
+		}
+
 		void CheckAllPlatformsOnParent (ICustomAttributeProvider item, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
 			// XXX - For now skip generated code until associated generator.cs changes are in

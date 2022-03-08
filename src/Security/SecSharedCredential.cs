@@ -11,12 +11,6 @@ using Foundation;
 
 namespace Security {
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public static partial class SecSharedCredential {
 
 		[DllImport (Constants.SecurityLibrary)]

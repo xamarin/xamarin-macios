@@ -7,10 +7,6 @@ using System;
 using System.Runtime.Versioning;
 
 namespace CoreWlan {
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	public unsafe partial class CWInterface {
 		public CWChannel [] SupportedWlanChannels  {
 			get {

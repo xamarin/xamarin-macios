@@ -9,10 +9,6 @@ using ObjCRuntime;
 
 namespace AppKit {
 
-#if NET
-	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#endif
 	[DebuggerTypeProxy (typeof(NSEvent.NSEventDebuggerProxy))]
 	public partial class NSEvent {
 		class NSEventDebuggerProxy {

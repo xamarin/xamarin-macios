@@ -85,12 +85,6 @@ namespace CoreMidi {
 		ExternalDestination = ExternalMask | Destination,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[UnsupportedOSPlatform ("tvos")]
-#endif
 	public static partial class Midi {
 #if !COREBUILD
 		[DllImport (Constants.CoreMidiLibrary)]

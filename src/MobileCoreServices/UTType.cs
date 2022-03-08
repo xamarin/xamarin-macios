@@ -34,22 +34,6 @@ using Foundation;
 
 namespace MobileCoreServices {
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("tvos14.0")]
-	[UnsupportedOSPlatform ("macos11.0")]
-	[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-	[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-	[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#endif
 	public static partial class UTType {
 
 #if NET

@@ -51,12 +51,6 @@ namespace CoreGraphics {
 	}
 
 
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	// CGPDFPage.h
 	public partial class CGPDFPage {
 #if !COREBUILD
