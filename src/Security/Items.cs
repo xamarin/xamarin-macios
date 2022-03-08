@@ -846,7 +846,6 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]

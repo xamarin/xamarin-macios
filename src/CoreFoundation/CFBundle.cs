@@ -589,8 +589,6 @@ namespace CoreFoundation {
 #if MONOMAC
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -602,8 +600,6 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -619,8 +615,6 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -632,8 +626,6 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -649,8 +641,6 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]
@@ -662,8 +652,6 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.MacOSX, 11, 0)]

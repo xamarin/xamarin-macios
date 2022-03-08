@@ -725,7 +725,6 @@ namespace AudioUnit
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]

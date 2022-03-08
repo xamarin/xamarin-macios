@@ -423,7 +423,6 @@ namespace AudioToolbox {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios8.0")]
 #if IOS

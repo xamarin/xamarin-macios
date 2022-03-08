@@ -240,10 +240,8 @@ namespace CoreImage {
 
 #if MONOMAC
 #if NET
-		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
