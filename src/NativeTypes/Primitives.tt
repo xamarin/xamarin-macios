@@ -38,6 +38,7 @@
 #endif
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -150,7 +151,15 @@ namespace System
 				break;
 			}
 
-			if (fromType == "IntPtr" || fromType == "UIntPtr") {
+			if (toType == "nfloat" && fromType == "IntPtr") {
+				Write ("({0}) v", arch == 32 ? "int" : "long");
+			} else if (toType == "nfloat" && fromType == "UIntPtr") {
+				Write ("({0}) v", arch == 32 ? "uint" : "ulong");
+			} else if (fromType == "nfloat" && toType == "IntPtr") {
+				Write ("(IntPtr) ({0}) v.v", arch == 32 ? "int" : "long");
+			} else if (fromType == "nfloat" && toType == "UIntPtr") {
+				Write ("(IntPtr) ({0}) v.v", arch == 32 ? "uint" : "ulong");
+			} else if (fromType == "IntPtr" || fromType == "UIntPtr") {
 				Write ("*(({0} *)&v)", Cast (arch));
 			} else if (toType == "IntPtr" || toType == "UIntPtr") {
 				Write ("*(({0} *)&v.v)", toType);
@@ -408,6 +417,8 @@ namespace System
 			return ((IConvertible)v).ToType (targetType, provider);
 		}
 
+		[Obsolete ("This API is not available in .NET, use Buffer.MemoryCopy instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void CopyArray (IntPtr source, <#= type.NSName #> [] destination, int startIndex, int length)
 		{
 			if (source == IntPtr.Zero)
@@ -427,6 +438,8 @@ namespace System
 				destination [i + startIndex] = (<#= type.NSName #>)Marshal.ReadIntPtr (source, i * <#= type.NSName #>.Size);
 		}
 
+		[Obsolete ("This API is not available in .NET, use Buffer.MemoryCopy instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void CopyArray (<#= type.NSName #> [] source, int startIndex, IntPtr destination, int length)
 		{
 			if (source is null)
