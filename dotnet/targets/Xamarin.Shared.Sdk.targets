@@ -1700,7 +1700,7 @@
 	</Target>
 
 	<Target Name="_ValidateRuntimeIdentifier"
-		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false'"
+		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false' And '$(_RuntimeIdentifierIsRequired)' == 'true'"
 		BeforeTargets="Restore;Build;ResolvedFrameworkReference;ResolveRuntimePackAssets;ProcessFrameworkReferences">
 		<PropertyGroup>
 			<_IsValidRuntimeIdentifier Condition="@(_XamarinValidRuntimeIdentifier->WithMetadataValue('Platform', '$(_PlatformName)')->WithMetadataValue('Filename', '$(RuntimeIdentifier)')->Count()) &gt; 0">true</_IsValidRuntimeIdentifier>

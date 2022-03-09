@@ -7,9 +7,9 @@
 	<key>CFBundleDisplayName</key>
 	<string>ShareExtension</string>
 	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
+	<string>ShareExtensionTest</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.ShareExtensionTest</string>
+	<string>com.xamarin.ShareExtensionTest</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
