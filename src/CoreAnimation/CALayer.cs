@@ -122,7 +122,7 @@ namespace CoreAnimation {
 
 		public void SetContents (NSObject value)
 		{
-			_Contents = value?.Handle ?? IntPtr.Zero;
+			_Contents = value.GetHandle ();
 		}
 
 #if MONOMAC && !NET
