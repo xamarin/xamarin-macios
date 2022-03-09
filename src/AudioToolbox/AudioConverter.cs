@@ -223,7 +223,7 @@ namespace AudioToolbox
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				var res = AudioConverterSetProperty (Handle, AudioConverterPropertyID.CompressionMagicCookie, value.Length, value);
 				if (res != AudioConverterError.None)
@@ -246,7 +246,7 @@ namespace AudioToolbox
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				var res = AudioConverterSetProperty (Handle, AudioConverterPropertyID.DecompressionMagicCookie, value.Length, value);
 				if (res != AudioConverterError.None)
@@ -412,7 +412,7 @@ namespace AudioToolbox
 		public static AudioConverter? Create (AudioStreamBasicDescription sourceFormat, AudioStreamBasicDescription destinationFormat, AudioClassDescription[] descriptions)
 		{
 			if (descriptions is null)
-				throw new ArgumentNullException (nameof (descriptions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptions));
 
 			IntPtr ptr = new IntPtr ();
 			var res = AudioConverterNewSpecific (ref sourceFormat, ref destinationFormat, descriptions.Length, ref descriptions, ref ptr);
@@ -450,9 +450,9 @@ namespace AudioToolbox
 		public AudioConverterError ConvertBuffer (byte[] input, byte[] output)
 		{
 			if (input is null)
-				throw new ArgumentNullException (nameof (input));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (input));
 			if (output is null)
-				throw new ArgumentNullException (nameof (output));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (output));
 
 			int outSize = output.Length;
 			return AudioConverterConvertBuffer (Handle, input.Length, input, ref outSize, output);
@@ -461,9 +461,9 @@ namespace AudioToolbox
 		public AudioConverterError ConvertComplexBuffer (int numberPCMFrames, AudioBuffers inputData, AudioBuffers outputData)
 		{
 			if (inputData is null)
-				throw new ArgumentNullException (nameof (inputData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputData));
 			if (outputData is null)
-				throw new ArgumentNullException (nameof (outputData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputData));
 
 			return AudioConverterConvertComplexBuffer (Handle, numberPCMFrames, (IntPtr) inputData, (IntPtr) outputData);
 		}
@@ -472,10 +472,10 @@ namespace AudioToolbox
 			AudioBuffers outputData, AudioStreamPacketDescription[] packetDescription, AudioConverterComplexInputData newInputDataHandler)
 		{
 			if (outputData is null)
-				throw new ArgumentNullException (nameof (outputData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputData));
 
 			if (newInputDataHandler is null)
-				throw new ArgumentNullException (nameof (newInputDataHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newInputDataHandler));
 
 			return FillComplexBuffer (ref outputDataPacketSize, outputData, packetDescription, new Tuple<AudioConverter, AudioConverterComplexInputData?> (this, newInputDataHandler));
 		}
@@ -484,7 +484,7 @@ namespace AudioToolbox
 			AudioBuffers outputData, AudioStreamPacketDescription[] packetDescription)
 		{
 			if (outputData is null)
-				throw new ArgumentNullException (nameof (outputData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputData));
 
 			return FillComplexBuffer (ref outputDataPacketSize, outputData, packetDescription, new Tuple<AudioConverter, AudioConverterComplexInputData?> (this, null));
 		}
@@ -521,7 +521,7 @@ namespace AudioToolbox
 			var instanceData = handler.Target as Tuple<AudioConverter, AudioConverterComplexInputData?>;
 
 			if (instanceData is null)
-				throw new ArgumentNullException (nameof (instanceData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (instanceData));
 
 			var inst = instanceData.Item1;
 			var callback = instanceData.Item2;
@@ -529,7 +529,7 @@ namespace AudioToolbox
 			// Invoke event handler with an argument
 			// since callback is not provided, must come from the old FillComplexBuffer call
 			if (callback is null && inst.InputData is null)
-				throw new ArgumentNullException ("InputData");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException ("InputData");
 			// Check if subscribed to event and provided a callback, error out if true
 			else if (callback is not null && inst.InputData is not null)
 				throw new InvalidOperationException ("Please either only subscribe to InputData event or provide newInputDataHandler in FillComplexBuffer, using both is unsuported.");

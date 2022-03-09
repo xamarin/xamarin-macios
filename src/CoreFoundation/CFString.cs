@@ -123,10 +123,10 @@ namespace CoreFoundation {
 		extern static nint CFStringGetLength (IntPtr handle);
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
-		extern static IntPtr CFStringGetCharactersPtr (IntPtr handle);
+		extern static unsafe char* CFStringGetCharactersPtr (IntPtr handle);
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
-		extern static IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, IntPtr buffer);
+		extern static unsafe IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, char* buffer);
 
 		public static NativeHandle CreateNative (string? value)
 		{
@@ -176,25 +176,35 @@ namespace CoreFoundation {
 		{
 			if (handle == IntPtr.Zero)
 				return null;
-			
-			string str;
-			
-			int l = (int)CFStringGetLength (handle);
-			IntPtr u = CFStringGetCharactersPtr (handle);
-			IntPtr buffer = IntPtr.Zero;
-			if (u == IntPtr.Zero){
-				CFRange r = new CFRange (0, l);
-				buffer = Marshal.AllocCoTaskMem (l * 2);
-				CFStringGetCharacters (handle, r, buffer);
-				u = buffer;
-			}
-			unsafe {
-				str = new string ((char *) u, 0, l);
-			}
-			
-			if (buffer != IntPtr.Zero)
-				Marshal.FreeCoTaskMem (buffer);
 
+			int l = (int)CFStringGetLength (handle);
+			if (l == 0)
+				return String.Empty;
+
+			string str;
+			bool allocate_memory = false;
+			CFRange r = new CFRange (0, l);
+			unsafe {
+				// this returns non-null only if the string can be represented as unicode
+				char* u = CFStringGetCharactersPtr (handle);
+				if (u == null) {
+					// alloc short string on the stack, otherwise use the heap
+					allocate_memory = l > 128;
+					// var m = allocate_memory ? (char*) Marshal.AllocHGlobal (l * 2) : stackalloc char [l];
+					// this ^ won't compile so...
+					if (allocate_memory) {
+						u = (char*) Marshal.AllocHGlobal (l * 2);
+					} else {
+						// `u = stackalloc char [l];` won't compile either, even with cast
+						char* u2 = stackalloc char [l];
+						u = u2;
+					}
+					CFStringGetCharacters (handle, r, u);
+				}
+				str = new string (u, 0, l);
+				if (allocate_memory)
+					Marshal.FreeHGlobal ((IntPtr) u);
+			}
 			return str;
 		}
 

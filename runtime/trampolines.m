@@ -1522,7 +1522,7 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 #endif
 		func = to_managed ? (void *) xamarin_nsnumber_to_nuint : (void *) xamarin_nuint_to_nsnumber;
 #if DOTNET
-	} else if (!strcmp (fullname, "ObjCRuntime.nfloat")) {
+	} else if (!strcmp (fullname, "System.Runtime.InteropServices.NFloat")) {
 #else
 	} else if (!strcmp (fullname, "System.nfloat")) {
 #endif

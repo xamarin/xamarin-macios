@@ -878,6 +878,26 @@ namespace GeneratorTests
 			verifyDelegate ("NSTableViewColumnRowPredicate");
 		}
 
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void CSharp10Syntax ()
+		{
+			BuildFile (Profile.iOS, "tests/csharp10syntax.cs");
+		}
+
+		[Test]
+		public void NFloatType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nfloat.cs");
+
+			var messaging = bgen.ApiAssembly.MainModule.Types.FirstOrDefault (v => v.Name == "Messaging");
+			Assert.IsNotNull (messaging, "Messaging");
+			var pinvoke = messaging.Methods.FirstOrDefault (v => v.Name == "xamarin_nfloat_objc_msgSend_exception");
+			Assert.IsNotNull (pinvoke, "PInvoke");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

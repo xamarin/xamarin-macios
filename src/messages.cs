@@ -21,6 +21,7 @@ using NativeHandle = System.IntPtr;
 #if !MONOMAC
 namespace Messages {
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[Native]
 	public enum MSMessagesAppPresentationStyle : ulong
@@ -30,6 +31,7 @@ namespace Messages {
 		Transcript,
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[Native]
 	public enum MSStickerSize : long
@@ -39,6 +41,7 @@ namespace Messages {
 		Large
 	}
 
+	[MacCatalyst (14,0)]
 	[Native]
 	[ErrorDomain ("MSMessagesErrorDomain")]
 	public enum MSMessageErrorCode : long
@@ -57,6 +60,7 @@ namespace Messages {
 		APIUnavailableInPresentationContext,
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (12,0)]
 	[Native]
 	public enum MSMessagesAppPresentationContext : long
@@ -65,6 +69,7 @@ namespace Messages {
 		Media,
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (11,0)]
 	[Protocol]
 	interface MSMessagesAppTranscriptPresentation
@@ -74,6 +79,7 @@ namespace Messages {
 		CGSize GetContentSizeThatFits (CGSize size);
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(UIViewController))]
 	interface MSMessagesAppViewController : MSMessagesAppTranscriptPresentation
@@ -132,6 +138,7 @@ namespace Messages {
 		MSMessagesAppPresentationContext PresentationContext { get; }
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface MSConversation
@@ -182,6 +189,7 @@ namespace Messages {
 		void SendAttachment (NSUrl url, [NullAllowed] string filename, [NullAllowed] Action<NSError> completionHandler);
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // designated
@@ -224,12 +232,14 @@ namespace Messages {
 		NSError Error { get; set; }
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
 	[Abstract] // as per docs
 	[DisableDefaultCtor]
 	interface MSMessageLayout : NSCopying {}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(MSMessageLayout))]
 	interface MSMessageTemplateLayout
@@ -259,10 +269,12 @@ namespace Messages {
 		string ImageSubtitle { get; set; }
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface MSSession : NSSecureCoding {}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -279,6 +291,7 @@ namespace Messages {
 		string LocalizedDescription { get; }
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(UIView))]
 	interface MSStickerView
@@ -308,6 +321,7 @@ namespace Messages {
 
 	interface IMSStickerBrowserViewDataSource { }
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
@@ -322,6 +336,7 @@ namespace Messages {
 		MSSticker GetSticker (MSStickerBrowserView stickerBrowserView, nint index);
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(UIView))]
 	interface MSStickerBrowserView
@@ -353,6 +368,7 @@ namespace Messages {
 		void ReloadData ();
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (10,0)]
 	[BaseType (typeof(UIViewController))]
 	interface MSStickerBrowserViewController : MSStickerBrowserViewDataSource
@@ -368,6 +384,7 @@ namespace Messages {
 		MSStickerSize StickerSize { get; }
 	}
 
+	[MacCatalyst (14,0)]
 	[iOS (11,0)]
 	[BaseType (typeof(MSMessageLayout))]
 	[DisableDefaultCtor]

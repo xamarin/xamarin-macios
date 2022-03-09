@@ -38,7 +38,7 @@ namespace Introspection {
 
 	public abstract class ApiSignatureTest : ApiBaseTest {
 #if NET
-		const string NFloatTypeName = "ObjCRuntime.nfloat";
+		const string NFloatTypeName = "System.Runtime.InteropServices.NFloat";
 #else
 		const string NFloatTypeName = "System.nfloat";
 #endif
