@@ -229,11 +229,6 @@ namespace CoreServices
 			InitializeHandle (handle);
 		}
 
-		public FSEventStream (string pathToWatch, TimeSpan latency, FSEventStreamCreateFlags flags)
-			: this (null, NSArray.FromStrings (pathToWatch), FSEvent.SinceNowId, latency, flags)
-		{
-		}
-
 		public FSEventStream (string [] pathsToWatch, TimeSpan latency, FSEventStreamCreateFlags flags)
 			: this (null, NSArray.FromStrings (pathsToWatch), FSEvent.SinceNowId, latency, flags)
 		{

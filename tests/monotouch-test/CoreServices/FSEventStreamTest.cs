@@ -75,7 +75,7 @@ namespace MonoTouchFixtures.CoreServices {
 				string rootPath,
 				FSEventStreamCreateFlags createFlags,
 				long maxFilesToCreate)
-				: base (rootPath, TimeSpan.Zero, createFlags)
+				: base (new [] { rootPath }, TimeSpan.Zero, createFlags)
 			{
 				_rootPath = rootPath;
 				_createFlags = createFlags;
