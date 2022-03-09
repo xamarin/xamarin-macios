@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>Bug60536</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.Bug60536</string>
+	<string>com.xamarin.Bug60536</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

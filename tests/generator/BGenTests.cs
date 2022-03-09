@@ -879,6 +879,15 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void CSharp10Syntax ()
+		{
+			BuildFile (Profile.iOS, "tests/csharp10syntax.cs");
+		}
+
+		[Test]
 		public void NFloatType ()
 		{
 			var bgen = BuildFile (Profile.iOS, "tests/nfloat.cs");
