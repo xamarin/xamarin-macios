@@ -65,7 +65,7 @@ namespace CoreAnimation {
 			}
 
 			set {
-				if (value == null) {
+				if (value is null) {
 					_Colors = IntPtr.Zero;
 					return;
 				}
