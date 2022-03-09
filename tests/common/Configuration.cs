@@ -334,7 +334,7 @@ namespace Xamarin.Tests
 					var path = Path.Combine (dir, ".git");
 					while (!Directory.Exists (path) && path.Length > 3) {
 						dir = Path.GetDirectoryName (dir);
-						if (dir == null)
+						if (dir is null)
 							throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
 						path = Path.Combine (dir, ".git");
 					}
