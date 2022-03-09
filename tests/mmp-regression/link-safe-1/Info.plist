@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>link-safe-1</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.linksafe1</string>
+	<string>com.xamarin.linksafe1</string>
 	<key>CFBundleName</key>
 	<string>link-safe-1</string>
 	<key>CFBundleVersion</key>
