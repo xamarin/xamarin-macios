@@ -237,6 +237,6 @@ steps:
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
     ACCESSTOKEN: $(System.AccessToken)
-  displayName: 'Create API diff GitHup comment'
+  displayName: 'Create API diff GitHub comment'
   enabled: false
   timeoutInMinutes: 10

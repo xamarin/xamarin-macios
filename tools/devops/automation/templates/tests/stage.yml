@@ -56,7 +56,7 @@ parameters:
 
 - name: makeTarget
   type: string
-  default: 'vsts-device-tests' # target to be usde to run the tests
+  default: 'vsts-device-tests' # target to be used to run the tests
 
 - name: condition
   type: boolean

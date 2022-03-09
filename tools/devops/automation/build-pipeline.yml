@@ -92,7 +92,7 @@ parameters:
       testsLabels: '--label=run-all-tests,skip-device-tests', # TODO same as calling jenkins, we need to use diff one in ci an
       statusContext: 'VSTS: simulator tests iOS',
       makeTarget: 'jenkins',
-      iOSDeviceDemand: [] # we do no need extra capabilities
+      iOSDeviceDemand: [] # we do not need extra capabilities
     }
   ]
 
