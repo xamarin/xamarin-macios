@@ -92,7 +92,6 @@ parameters:
       testsLabels: '--label=run-all-tests,skip-device-tests', # TODO same as calling jenkins, we need to use diff one in ci an
       statusContext: 'VSTS: simulator tests iOS',
       makeTarget: 'jenkins',
-      iOSDeviceDemand: [] # we do not need extra capabilities
     }
   ]
 
@@ -109,7 +108,7 @@ parameters:
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
       makeTarget: 'vsts-device-tests',
-      iOSDeviceDemand: [
+      extraBotDemands: [
         'ios',
       ]
     },
@@ -122,7 +121,7 @@ parameters:
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
       makeTarget: 'vsts-device-tests',
-      iOSDeviceDemand: [
+      extraBotDemands: [
         'tvos',
       ]
     }]
@@ -325,7 +324,6 @@ stages:
       useXamarinStorage: ${{ config.useXamarinStorage }} 
       testsLabels: ${{ config.testsLabels }}
       statusContext: ${{ config.statusContext }} 
-      iOSDeviceDemand: ${{ config.iOSDeviceDemand }} 
       ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
         makeTarget: 'wrench-jenkins' # override when we are running on CI or manually to run all tests
       ${{ else }}:
@@ -349,7 +347,7 @@ stages:
           useXamarinStorage: ${{ config.useXamarinStorage }} 
           testsLabels: ${{ config.testsLabels }} 
           statusContext: ${{ config.statusContext }} 
-          iOSDeviceDemand: ${{ config.iOSDeviceDemand }} 
+          extraBotDemands: ${{ config.extraBotDemands }} 
           makeTarget: ${{ config.makeTarget }} 
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
           keyringPass: $(pass-XamarinQA-bot-login) 
@@ -391,7 +389,7 @@ stages:
       useXamarinStorage: False
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
       statusContext: 'VSTS: device tests iOS32b'
-      iOSDeviceDemand: 'xismoke-32'
+      extraBotDemands: 'xismoke-32'
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}

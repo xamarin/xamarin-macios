@@ -25,7 +25,7 @@ parameters:
   default: ''
 
 # demand that has to be matched by a bot to be able to run the tests.
-- name: iOSDeviceDemand
+- name: extraBotDemands
   type: object
   default: []
 
@@ -121,7 +121,11 @@ stages:
 
     pool:
       name: $(AgentPoolComputed)
-      demands: ${{ parameters.iOSDeviceDemand }}
+      demands: 
+      - Agent.OS -equals Darwin
+      - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+      - ${{ each demand in parameters.extraBotDemands }}:
+        - demand
       workspace:
         clean: all
     steps:
