@@ -235,13 +235,13 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped -> true -->
 		<!-- default to 'false' -->
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</NoSymbolStrip>
-		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(_PlatformName)' == 'macOS'">true</NoSymbolStrip>
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">true</NoSymbolStrip>
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == ''">false</NoSymbolStrip>
 
 		<!-- NoDSymUtil -->
 		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil and never produced them -> now, produce them by default when archiving -->
 		<NoDSymUtil Condition="'$(NoDSymUtil)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchNoDSymUtil)</NoDSymUtil>
-		<NoDSymUtil Condition="'$(NoDSymUtil)' == '' And '$(_PlatformName)' == 'macOS' And '$(ArchiveOnBuild)' != 'true'">true</NoDSymUtil>
+		<NoDSymUtil Condition="'$(NoDSymUtil)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(ArchiveOnBuild)' != 'true'">true</NoDSymUtil>
 		<NoDSymUtil Condition="'$(NoDSymUtil)' == ''">false</NoDSymUtil>
 
 		<!-- DeviceSpecificIntermediateOutputPath -->
