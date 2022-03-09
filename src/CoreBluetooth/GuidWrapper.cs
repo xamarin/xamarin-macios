@@ -28,7 +28,7 @@ namespace CoreBluetooth {
 
 		public void ConnectPeripheral (CBPeripheral peripheral, PeripheralConnectionOptions? options = null)
 		{
-			ConnectPeripheral (peripheral, options is null ? null : options.Dictionary);
+			ConnectPeripheral (peripheral, options?.Dictionary);
 		}
 #if !NET && !TVOS && !WATCH
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
