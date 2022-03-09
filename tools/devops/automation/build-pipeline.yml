@@ -20,7 +20,7 @@ parameters:
 - name: runDeviceTests
   displayName: Run Device Tests 
   type: boolean
-  default: true
+  default: false
 
 - name: runOldMacOSTests
   displayName: Run Tests on older macOS versions 
