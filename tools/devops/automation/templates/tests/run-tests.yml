@@ -169,7 +169,7 @@ steps:
 
     var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET6_DIR)
     DOTNET6_DIR=${var#*=}
-    ls -lR DOTNET6_DIR
+    ls -lR $DOTNET6_DIR
 
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
