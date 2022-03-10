@@ -45,8 +45,8 @@ class Artifacts {
         if ($null -eq $contentFile -or (-not (Test-Path $contentFile -PathType Leaf))) {
             return [Artifacts]::new($null)
         } else {
-            $content =  Get-Content $contentFile | ConvertFrom-Json
-            return [Artifacts]::new($content)
+            $data = Get-Content $contentFile | ConvertFrom-Json
+            return [Artifacts]::new($data)
         }
     }
 }
