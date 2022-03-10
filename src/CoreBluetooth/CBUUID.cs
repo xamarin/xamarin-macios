@@ -27,7 +27,7 @@ namespace CoreBluetooth {
 
 		public static CBUUID FromBytes (byte [] bytes)
 		{
-			if (bytes == null) {
+			if (bytes is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			} else if (bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 16) {
 				throw new ArgumentException ("must either be 2, 4, or 16 bytes long", "bytes");
@@ -90,7 +90,7 @@ namespace CoreBluetooth {
 		public unsafe string ToString (bool fullUuid)
 		{
 			NSData d = Data;
-			if (d == null)
+			if (d is null)
 				return String.Empty;
 
 			StringBuilder sb = new StringBuilder ();
