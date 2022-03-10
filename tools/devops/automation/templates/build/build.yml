@@ -259,13 +259,7 @@ steps:
     set -x
     set -e
 
-    if [[ "$IsPR" == "True" ]]; then
-      echo "Xamarin private packages NOT configured. Building a PR."
-      CONFIGURE_FLAGS=""
-    else
-      echo "Xamarin private packages configured."
-      CONFIGURE_FLAGS="--enable-xamarin"
-    fi
+    CONFIGURE_FLAGS="--enable-xamarin"
 
     if [[ "$EnableDotNet" == "True" ]]; then
       echo "Enabling dotnet builds."
