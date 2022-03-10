@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreGraphics;
 using Foundation;
 using Metal;

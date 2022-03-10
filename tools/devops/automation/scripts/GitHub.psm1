@@ -1,3 +1,10 @@
+# the following is a hack around the fact that pwsh does not handle well the using 
+# form a relative path in vsts
+$moduleName = "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
+$scriptBody = "using module $ModuleName"
+$script = [ScriptBlock]::Create($scriptBody)
+. $script
+
 <#
     .SYNOPSIS
         Simple retry block to workaround certain issues with the webservices that cannot handle the load.
@@ -575,14 +582,8 @@ function New-GitHubSummaryComment {
     if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
         $githubPagePrefix = "https://xamarin.github.io/macios.ci"
         if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
-            $githubPagePrefix = "$githubPagePrefix/pr/PR$Env:PR_ID/$Env:BUILD_BUILDID"
-            $sb.AppendLine("# GitHub pages")
-            $sb.AppendLine()
-            $sb.AppendLine("Results can be found in the following github pages (it might take some time to publish):")
-            $sb.AppendLine()
-            $sb.AppendLine("* [Test results]($githubPagePrefix/HtmlReport-sim/tests/vsdrops_index.html)")
-            $sb.AppendLine("* [API diff ]($githubPagePrefix/HtmlReport-sim/api-diff/api-diff.html)")
-            $sb.AppendLine("* [API & Generator diff]($githubPagePrefix/apicomparison/api-diff.html)")
+            $staticPageComment = [StaticPages]::new($githubPagePrefix, $Env:PR_ID, $Env:BUILD_BUILDID)
+            $staticPageComment.WriteComment($sb)
         }
     }
 

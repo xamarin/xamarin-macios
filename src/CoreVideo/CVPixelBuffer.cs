@@ -12,7 +12,6 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 #if NET
-using System.Runtime.Versioning;
 #endif
 
 using CFDictionaryRef=System.IntPtr;

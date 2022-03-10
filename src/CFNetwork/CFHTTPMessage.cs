@@ -14,7 +14,6 @@ using System;
 using System.Net;
 using System.Security.Authentication;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;

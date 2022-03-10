@@ -15,7 +15,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Collections.Generic;
 
 using Foundation;
