@@ -6,7 +6,6 @@ using CoreImage;
 using Foundation;
 using ImageIO;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Photos {
 	

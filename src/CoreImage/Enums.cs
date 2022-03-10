@@ -22,7 +22,6 @@
 //
 
 using System;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #nullable enable

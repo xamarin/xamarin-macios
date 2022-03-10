@@ -1,7 +1,6 @@
 #if IOS || WATCH
 using System;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
