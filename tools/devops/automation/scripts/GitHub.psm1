@@ -7,7 +7,7 @@ $modules = @(
 
 foreach($m in $modules) {
     $modulePath = "$PSScriptRoot\\$m.psm1"  # windows path separators work on unix and windows
-    $scriptBody = "using module $ModuleName"
+    $scriptBody = "using module $modulePath"
     $script = [ScriptBlock]::Create($scriptBody)
     . $script
 }
