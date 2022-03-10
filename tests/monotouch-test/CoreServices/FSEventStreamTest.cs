@@ -26,6 +26,46 @@ namespace MonoTouchFixtures.CoreServices {
 	[Preserve (AllMembers = true)]
 	public sealed class FSEventStreamTest {
 		[Test]
+		public void TestPathsBeingWatched ()
+		{
+			FSEventStreamCreateOptions createOptions = new () {
+				Flags = FileEvents | UseExtendedData,
+				PathsToWatch = new [] {
+					Xamarin.Cache.CreateTemporaryDirectory (),
+					Xamarin.Cache.CreateTemporaryDirectory (),
+					Xamarin.Cache.CreateTemporaryDirectory (),
+					Xamarin.Cache.CreateTemporaryDirectory ()
+				}
+			};
+
+			var stream = createOptions.CreateStream ();
+
+			CollectionAssert.AreEqual (
+				createOptions.PathsToWatch,
+				stream.PathsBeingWatched);
+
+			Assert.AreEqual (0, stream.DeviceBeingWatched);
+		}
+
+		[Test]
+		public void TestPathsBeingWatchedRelativeToDevice ()
+		{
+			FSEventStreamCreateOptions createOptions = new () {
+				Flags = FileEvents | UseExtendedData,
+				DeviceToWatch = 123456789,
+				PathsToWatch = new [] { string.Empty }
+			};
+
+			var stream = createOptions.CreateStream ();
+
+			CollectionAssert.AreEqual (
+				createOptions.PathsToWatch,
+				stream.PathsBeingWatched);
+
+			Assert.AreEqual (123456789, stream.DeviceBeingWatched);
+		}
+
+		[Test]
 		public void TestFileEvents ()
 			=> RunTest (FileEvents);
 
@@ -100,6 +140,8 @@ namespace MonoTouchFixtures.CoreServices {
 
 				while (isWorking)
 					NSRunLoop.Current.RunUntil (NSDate.Now.AddSeconds (0.1));
+
+				Invalidate ();
 
 				if (_exceptions.Count > 0) {
 					if (_exceptions.Count > 1)
