@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>MyIBToolLinkTest</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.myibtoollinktest</string>
+	<string>com.xamarin.myibtoollinktest</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

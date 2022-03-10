@@ -16,7 +16,6 @@ using CoreGraphics;
 using Photos;
 using System;
 using System.Drawing;
-using System.Runtime.Versioning;
 
 namespace UIKit {
 	public partial class UIImagePickerController {

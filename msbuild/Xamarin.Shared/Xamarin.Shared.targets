@@ -386,23 +386,33 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<PropertyGroup>
-		<_CollectBundleResourcesDependsOn>
-			$(_CollectBundleResourcesDependsOn);
+		<!--
+			Custom targets that add items to the BundleResource or Content item groups must do so before the _CollectBundleResources target.
+			This can be achieved by adding your custom target to the CollectBundleResourcesDependsOn property group:
+
+			<CollectBundleResourcesDependsOn>
+				$(CollectBundleResourcesDependsOn);
+				MyTargetThatAddsBundleResources;
+			</CollectBundleResourcesDependsOn>
+		-->
+
+		<CollectBundleResourcesDependsOn>
+			$(CollectBundleResourcesDependsOn);
 			_ComputeTargetArchitectures;
 			_ComputeTargetFrameworkMoniker;
-		</_CollectBundleResourcesDependsOn>
-		<_CollectBundleResourcesDependsOn Condition="'$(IsBindingProject)' != 'true'">
-			$(_CollectBundleResourcesDependsOn);
+		</CollectBundleResourcesDependsOn>
+		<CollectBundleResourcesDependsOn Condition="'$(IsBindingProject)' != 'true'">
+			$(CollectBundleResourcesDependsOn);
 			_CompileImageAssets;
 			_CompileInterfaceDefinitions;
 			_CompileSceneKitAssets;
 			_CompileColladaAssets;
 			_CompileTextureAtlases;
 			_CompileCoreMLModels;
-		</_CollectBundleResourcesDependsOn>
+		</CollectBundleResourcesDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
+	<Target Name="_CollectBundleResources" DependsOnTargets="$(CollectBundleResourcesDependsOn)">
 		<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 		     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
 		     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->

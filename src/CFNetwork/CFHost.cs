@@ -12,7 +12,6 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;

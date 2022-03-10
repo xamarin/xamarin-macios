@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 using OS_nw_resolver_config=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr; 
