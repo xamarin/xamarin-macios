@@ -88,7 +88,9 @@ namespace Xamarin.MacDev.Tasks
 
 		string GetCodesignStampFile (ITaskItem item)
 		{
-			return GetNonEmptyStringOrFallback (item, "CodesignStampFile", StampFile, "StampFile", required: true);
+			var rv = GetNonEmptyStringOrFallback (item, "CodesignStampFile", StampFile, "StampFile", required: true);
+			rv = PathUtils.ConvertToMacPath (rv);
+			return rv;
 		}
 
 		string GetCodesignAllocate (ITaskItem item)
@@ -311,6 +313,15 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		public override bool Execute ()
+		{
+			try {
+				return ExecuteUnsafe ();
+			} catch (Exception e) {
+				return Log.LogErrorsFromException (e);
+			}
+		}
+
+		bool ExecuteUnsafe ()
 		{
 			if (Resources.Length == 0)
 				return true;

@@ -12,7 +12,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -88,10 +87,11 @@ namespace CoreServices
 		public ulong Id { get; internal set; }
 		public string? Path { get; internal set; }
 		public FSEventStreamEventFlags Flags { get; internal set; }
+		public ulong FileId { get; internal set; }
 
 		public override string ToString ()
 		{
-			return String.Format ("[FSEvent: Id={0}, Path={1}, Flags={2}]", Id, Path, Flags);
+			return String.Format ("[FSEvent: Id={0}, Path={1}, Flags={2}, FileId={3}]", Id, Path, Flags, FileId);
 		}
 
 		public const ulong SinceNowId = UInt64.MaxValue;
@@ -248,6 +248,14 @@ namespace CoreServices
 			GCHandle.FromIntPtr (gchandle).Free ();
 		}
 
+		static readonly nint CFStringTypeID = CFString.GetTypeID ();
+		static readonly nint CFDictionaryTypeID = CFDictionary.GetTypeID ();
+
+		// These constants are defined in FSEvents.h but do not end up exported in any binaries,
+		// so we cannot use Dlfcn.GetStringConstant against CoreServices. -abock, 2022-03-04
+		static readonly NSString kFSEventStreamEventExtendedDataPathKey = new ("path");
+		static readonly NSString kFSEventStreamEventExtendedFileIDKey = new ("fileID");
+
 #if NET
 		[UnmanagedCallersOnly]
 #endif
@@ -259,12 +267,35 @@ namespace CoreServices
 			}
 
 			var events = new FSEvent[numEvents];
-			var pathArray = new CFArray (eventPaths, false);
 
 			for (int i = 0; i < events.Length; i++) {
-				events[i].Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4);
-				events[i].Id = (uint)Marshal.ReadInt64 (eventIds, i * 8);
-				events[i].Path = CFString.FromHandle (pathArray.GetValue (i));
+				string? path = null;
+				long fileId = 0;
+
+				var eventDataHandle = CFArray.CFArrayGetValueAtIndex (eventPaths, i);
+				var eventDataType = CFType.GetTypeID (eventDataHandle);
+
+				if (eventDataType == CFStringTypeID) {
+					path = CFString.FromHandle (eventDataHandle);
+				} else if (eventDataType == CFDictionaryTypeID) {
+					path =  CFString.FromHandle (CFDictionary.GetValue (
+						eventDataHandle,
+						kFSEventStreamEventExtendedDataPathKey.Handle));
+
+					var fileIdHandle = CFDictionary.GetValue (
+						eventDataHandle,
+						kFSEventStreamEventExtendedFileIDKey.Handle);
+					if (fileIdHandle != IntPtr.Zero)
+						CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, out fileId);
+				}
+
+				events[i] = new FSEvent
+				{
+					Id = (ulong)Marshal.ReadInt64 (eventIds, i * 8),
+					Path = path,
+					Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4),
+					FileId = (ulong)fileId,
+				};
 			}
 
 			var instance = GCHandle.FromIntPtr (userData).Target as FSEventStream;
@@ -347,6 +378,36 @@ namespace CoreServices
 		{
 			ScheduleWithRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
 		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
+			IntPtr runLoop, IntPtr runLoopMode);
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
+		{
+			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);
+		}
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop)
+		{
+			UnscheduleFromRunLoop (runLoop, CFRunLoop.ModeDefault);
+		}
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop, NSString runLoopMode)
+		{
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
+		}
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop)
+		{
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamSetDispatchQueue (IntPtr handle, IntPtr dispatchQueue);
+
+		public void SetDispatchQueue (DispatchQueue? dispatchQueue)
+			=> FSEventStreamSetDispatchQueue (GetCheckedHandle (), dispatchQueue.GetHandle ());
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyPathsBeingWatched (IntPtr handle);
