@@ -46,7 +46,7 @@ namespace CoreLocation {
 		
 		public static double MaxDistance {
 			get {
-				if (max_distance == null)
+				if (max_distance is null)
 					max_distance = Dlfcn.GetDouble (Libraries.CoreLocation.Handle, "CLLocationDistanceMax");
 				return max_distance.Value; 
 			}
@@ -54,7 +54,7 @@ namespace CoreLocation {
 
 		public static double FilterNone {
 			get {
-				if (filter_none == null)
+				if (filter_none is null)
 					filter_none = Dlfcn.GetDouble (Libraries.CoreLocation.Handle, "kCLDistanceFilterNone");
 				return filter_none.Value;
 			}
