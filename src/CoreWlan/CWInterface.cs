@@ -4,7 +4,6 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
-using System.Runtime.Versioning;
 
 namespace CoreWlan {
 	public unsafe partial class CWInterface {
