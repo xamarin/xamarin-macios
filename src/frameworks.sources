@@ -2283,6 +2283,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreWlan \
 	DeviceCheck \
 	EventKit \
+	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
