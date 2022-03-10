@@ -2,7 +2,7 @@
 # form a relative path in vsts
 $modules = @(
     "Artifacts",
-    "StaticPages",
+    "StaticPages"
 )
 
 foreach($m in $modules) {
