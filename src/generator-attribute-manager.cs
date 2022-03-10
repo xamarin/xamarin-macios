@@ -325,7 +325,7 @@ public class AttributeManager
 		case "SupportedOSPlatformAttribute":
 			var sarg = attribute.ConstructorArguments [0].Value as string;
 			(var sp, var sv) = ParseOSPlatformAttribute (sarg);
-			if (sv == null)
+			if (sv is null)
 				return AttributeFactory.CreateNewUnspecifiedIntroducedAttribute (sp).Yield ();
 			else
 				return AttributeFactory.CreateNewIntroducedAttribute (sp, sv.Major, sv.Minor).Yield ();
