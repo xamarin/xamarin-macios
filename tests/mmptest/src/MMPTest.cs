@@ -620,23 +620,7 @@ namespace Xamarin.MMP.Tests
 						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				var valid_optimizations = new string [] {
-					"remove-uithread-checks",
-					"dead-code-elimination",
-					"inline-isdirectbinding",
-					"inline-intptr-size",
-					"blockliteral-setupblock",
-					"register-protocols",
-					"inline-dynamic-registration-supported",
-					"static-block-to-delegate-lookup",
-					"remove-dynamic-registrar",
-					"trim-architectures",
-					"inline-is-arm64-calling-convention",
-					"cctor-beforefieldinit",
-					"custom-attributes-removal",
-					"experimental-xforms-product-type",
-				};
-				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: {string.Join (", ", valid_optimizations)}.");
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures, inline-is-arm64-calling-convention, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type.");
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
