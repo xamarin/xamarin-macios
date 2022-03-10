@@ -8,7 +8,6 @@
 //
 
 using System;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 

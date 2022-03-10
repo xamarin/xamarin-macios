@@ -15,7 +15,6 @@ using CoreLocation;
 using UIKit;
 using AddressBook;
 using System;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;

@@ -19,7 +19,6 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;

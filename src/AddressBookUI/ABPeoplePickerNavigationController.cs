@@ -14,7 +14,6 @@ using AddressBook;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AddressBookUI {
 #if NET

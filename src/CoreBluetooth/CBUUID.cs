@@ -11,7 +11,6 @@
 using System;
 using System.Text;
 using Foundation;
-using System.Runtime.Versioning;
 
 #nullable enable
 

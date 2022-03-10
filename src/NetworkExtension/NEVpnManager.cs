@@ -14,7 +14,6 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using Security;
-using System.Runtime.Versioning;
 
 namespace NetworkExtension {
 	public partial class NEVpnManager {

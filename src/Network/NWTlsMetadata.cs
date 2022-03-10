@@ -14,7 +14,6 @@ using ObjCRuntime;
 using Foundation;
 using Security;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;

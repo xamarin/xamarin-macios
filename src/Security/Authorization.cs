@@ -34,7 +34,6 @@ using Foundation;
 using System;
 using System.Runtime.InteropServices;
 #if NET
-using System.Runtime.Versioning;
 #else
 using NativeHandle = System.IntPtr;
 #endif

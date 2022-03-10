@@ -3,7 +3,6 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace HealthKit {
 	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.")]
