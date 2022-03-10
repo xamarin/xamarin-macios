@@ -2,7 +2,6 @@
 #if IOS || TVOS
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 #if HAS_NOTIFICATIONCENTER
 using NotificationCenter;

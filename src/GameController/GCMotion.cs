@@ -7,7 +7,6 @@
 // Copyright 2019 Microsoft Corporation.
 
 using System;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;

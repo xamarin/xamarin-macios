@@ -7,7 +7,6 @@ using Foundation;
 using ObjCRuntime;
 using Security;
 
-using System.Runtime.Versioning;
 
 #nullable enable
 

@@ -33,7 +33,6 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
-using System.Runtime.Versioning;
 #if !WATCH
 using CoreText;
 #endif

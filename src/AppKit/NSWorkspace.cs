@@ -3,7 +3,6 @@ using System;
 using Foundation;
 
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 

@@ -7,7 +7,6 @@
 
 #if !TVOS
 
-using System.Runtime.Versioning;
 
 using Foundation;
 using CoreLocation;

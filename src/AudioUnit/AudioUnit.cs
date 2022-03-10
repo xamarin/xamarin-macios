@@ -40,7 +40,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Threading;
 using AudioToolbox;
 using ObjCRuntime;

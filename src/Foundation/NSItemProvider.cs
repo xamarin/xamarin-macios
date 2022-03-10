@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using CloudKit;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Foundation 
 {

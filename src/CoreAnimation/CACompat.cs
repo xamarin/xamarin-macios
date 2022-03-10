@@ -45,7 +45,7 @@ namespace CoreAnimation {
 		_CAAnimationDelegate EnsureCAAnimationDelegate ()
 		{
 			var del = Delegate;
-			if (del == null || (!(del is _CAAnimationDelegate))){
+			if (del is null || (!(del is _CAAnimationDelegate))){
 				del = new _CAAnimationDelegate ();
 				Delegate = del;
 			}
@@ -62,7 +62,7 @@ namespace CoreAnimation {
 			public override void AnimationStarted (CAAnimation? anim)
 			{
 				var handler = animationStarted;
-				if (handler != null){
+				if (handler is not null){
 					handler (anim, EventArgs.Empty);
 				}
 			}
@@ -72,7 +72,7 @@ namespace CoreAnimation {
 			public override void AnimationStopped (CAAnimation? anim, bool finished)
 			{
 				var handler = animationStopped;
-				if (handler != null){
+				if (handler is not null){
 					var args = new CAAnimationStateEventArgs (finished);
 					handler (anim, args);
 				}

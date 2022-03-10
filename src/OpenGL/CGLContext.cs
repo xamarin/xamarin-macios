@@ -33,7 +33,6 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;

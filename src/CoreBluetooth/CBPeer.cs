@@ -3,7 +3,6 @@ using ObjCRuntime;
 using Foundation;
 using System;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 #nullable enable
 

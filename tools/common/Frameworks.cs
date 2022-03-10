@@ -658,8 +658,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "AssetsLibrary":
 				case "CarPlay":
 				case "EventKitUI":
-				case "HealthKit":
-				case "HealthKitUI":
 #if !NET
 				case "iAd":
 				case "CHIP":

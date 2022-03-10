@@ -52,6 +52,15 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			try {
+				return ExecuteUnsafe ();
+			} catch (Exception e) {
+				return Log.LogErrorsFromException (e);
+			}
+		}
+
+		bool ExecuteUnsafe ()
+		{
 			if (!Enum.TryParse (TargetArchitectures, out architectures)) {
 				Log.LogError (12, null, MSBStrings.E0012, TargetArchitectures);
 				return false;

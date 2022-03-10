@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace StoreKit {
 

@@ -19,7 +19,6 @@ using Vector3 = global::OpenTK.Vector3;
 #endif
 
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace GameplayKit {
 	public partial class GKPath {

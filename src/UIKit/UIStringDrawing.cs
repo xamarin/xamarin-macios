@@ -6,7 +6,6 @@ using UIKit;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace UIKit {
 	public unsafe static partial class UIStringDrawing  {

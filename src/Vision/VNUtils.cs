@@ -9,7 +9,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreGraphics;
 using ObjCRuntime;
 using Foundation;
