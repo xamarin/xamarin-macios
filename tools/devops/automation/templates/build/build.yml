@@ -154,11 +154,7 @@ steps:
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
       $configVars.Add("IsPR", "True")
 
-      if ($Env:BuildPackage -eq "True") {
-        $configVars.Add("BuildPkgs", "True")
-      } else {
-        $configVars.Add("BuildPkgs", "False")
-      }
+      $configVars.Add("BuildPkgs", "True")
 
       # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
       if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
