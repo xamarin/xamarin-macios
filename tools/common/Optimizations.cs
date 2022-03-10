@@ -41,7 +41,7 @@ namespace Xamarin.Bundler
 			/* Opt.RegisterProtocols                  */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.InlineDynamicRegistrationSupported */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.StaticBlockToDelegateLookup        */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
-			/* Opt.RemoveDynamicRegistrar             */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
+			/* Opt.RemoveDynamicRegistrar             */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.TrimArchitectures                  */ new ApplePlatform [] {                    ApplePlatform.MacOSX,                                                                      },
 			/* Opt.RemoveUnsupportedILForBitcode      */ new ApplePlatform [] {                                          ApplePlatform.WatchOS,                                               },
 			/* Opt.InlineIsARM64CallingConvention     */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
@@ -169,6 +169,14 @@ namespace Xamarin.Bundler
 			// warn if the user asked to optimize something when the optimization can't be applied
 			for (int i = 0; i < values.Length; i++) {
 				if (!values [i].HasValue)
+					continue;
+
+				// The remove-dynamic-registrar optimization is a bit if a special case on macOS:
+				// it only works in very specific circumstances, so we don't add it to valid_platforms.
+				// This means it won't be listed in --help, and it won't be enabled if all optimizations
+				// are enabled. Yet we still might want to enable it manually, and this condition
+				// allows us to manually pass --optimize=remove-dynamic-registrar and enable it that way.
+				if (app.Platform == ApplePlatform.MacOSX && (Opt) i == Opt.RemoveDynamicRegistrar)
 					continue;
 
 				// check if the optimization is valid for the current platform
