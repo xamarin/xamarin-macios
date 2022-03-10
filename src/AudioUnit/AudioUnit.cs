@@ -1032,9 +1032,7 @@ namespace AudioUnit
 #if MONOMAC || __MACCATALYST__
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif

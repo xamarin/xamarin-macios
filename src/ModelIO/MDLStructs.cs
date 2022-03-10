@@ -86,12 +86,6 @@ namespace ModelIO {
 	}
 
 #if !NET
-#if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 	[Obsolete ("Use 'MDLVoxelIndexExtent2' instead.")]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MDLVoxelIndexExtent {
