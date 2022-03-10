@@ -75,7 +75,7 @@ namespace CoreImage {
 				var k = FilterMode.Value == CIFilterMode.Nearest ? CISampler.FilterNearest : CISampler.FilterLinear;
 				ret.SetObject (k, CISampler.FilterMode);
 			}
-			if (ColorSpace != null)
+			if (ColorSpace is not null)
 				ret.LowlevelSetObject (ColorSpace.Handle, CISampler.ColorSpace.Handle);
 			return ret;
 		}
@@ -88,7 +88,7 @@ namespace CoreImage {
 #endif
 		public CISampler FromImage (CIImage sourceImage, CISamplerOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromImage (sourceImage);
 			return FromImage (sourceImage, options.ToDictionary ());
 		}

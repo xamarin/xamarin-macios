@@ -203,7 +203,7 @@ namespace CoreImage {
 #if HAS_OPENGLES
 		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromContext (eaglContext);
 
 			return FromContext (eaglContext, options.Dictionary);
@@ -211,7 +211,7 @@ namespace CoreImage {
 
 		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromMetalDevice (device);
 
 			return FromMetalDevice (device, options.Dictionary);
