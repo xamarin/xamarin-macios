@@ -85,10 +85,11 @@ namespace System.Threading.Tasks
             internal TaskAsyncResult(Task task, object? state, AsyncCallback? callback)
             {
                 Debug.Assert(task != null);
-                _task = task;
+                _task = task!;
                 AsyncState = state;
 
-                if (task.IsCompleted)
+                // task is already checked for null
+                if (task!.IsCompleted)
                 {
                     // Synchronous completion.  Invoke the callback.  No need to store it.
                     CompletedSynchronously = true;
@@ -100,7 +101,7 @@ namespace System.Threading.Tasks
                     // order to avoid running synchronously if the task has already completed by the time we get here but still run
                     // synchronously as part of the task's completion if the task completes after (the more common case).
                     _callback = callback;
-                    _task.ConfigureAwait(continueOnCapturedContext: false)
+                    _task!.ConfigureAwait(continueOnCapturedContext: false)
                          .GetAwaiter()
                          .OnCompleted(InvokeCallback); // allocates a delegate, but avoids a closure
                 }
@@ -111,7 +112,8 @@ namespace System.Threading.Tasks
             {
                 Debug.Assert(!CompletedSynchronously);
                 Debug.Assert(_callback != null);
-                _callback.Invoke(this);
+                // _callback is already checked for null
+                _callback!.Invoke(this);
             }
 
             /// <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
@@ -122,7 +124,7 @@ namespace System.Threading.Tasks
             /// <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
             public bool IsCompleted => _task.IsCompleted;
             /// <summary>Gets a <see cref="WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
-            public WaitHandle AsyncWaitHandle => ((IAsyncResult)_task).AsyncWaitHandle;
+            public WaitHandle AsyncWaitHandle => ((IAsyncResult)_task!).AsyncWaitHandle;
         }
     }
 }

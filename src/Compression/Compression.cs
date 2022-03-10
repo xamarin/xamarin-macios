@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -27,12 +29,12 @@ namespace Compression
 	{
 		private const int DefaultBufferSize = 8192;
 
-		private Stream _stream;
+		private Stream? _stream;
 		private CompressionMode _mode;
 		private bool _leaveOpen;
-		private Inflater _inflater;
-		private Deflater _deflater;
-		private byte[] _buffer;
+		private Inflater? _inflater;
+		private Deflater? _deflater;
+		private byte[]? _buffer;
 		private int _activeAsyncOperation; // 1 == true, 0 == false
 		private bool _wroteBytes;
 
@@ -59,38 +61,36 @@ namespace Compression
 			if (stream == null)
 				throw new ArgumentNullException (nameof (stream));
 
+			_stream = stream;
+			_leaveOpen = leaveOpen;
 			switch (mode) {
 			case CompressionMode.Decompress:
-				InitializeInflater (stream, algorithm, leaveOpen);
+				InitializeInflater (stream, algorithm);
 				break;
 			case CompressionMode.Compress:
-				InitializeDeflater (stream, algorithm, leaveOpen);
+				InitializeDeflater (stream, algorithm);
 				break;
 			default:
 				throw new ArgumentException ("Enum value was out of legal range.", nameof (mode));
 			}
 		}
 
-		internal void InitializeInflater (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
+		internal void InitializeInflater (Stream stream, CompressionAlgorithm algorithm)
 		{
 			if (!stream.CanRead)
 				throw new ArgumentException ("Stream does not support reading.", nameof (stream));
 
 			_inflater = new Inflater (algorithm);
-			_stream = stream;
 			_mode = CompressionMode.Decompress;
-			_leaveOpen = leaveOpen;
 		}
 
-		internal void InitializeDeflater (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
+		internal void InitializeDeflater (Stream stream, CompressionAlgorithm algorithm)
 		{
 			if (!stream.CanWrite)
 				throw new ArgumentException ("Stream does not support writing.", nameof (stream));
 
 			_deflater = new Deflater (algorithm);
-			_stream = stream;
 			_mode = CompressionMode.Compress;
-			_leaveOpen = leaveOpen;
 			InitializeBuffer ();
 		}
 
@@ -106,7 +106,7 @@ namespace Compression
 			}
 		}
 
-		public Stream BaseStream => _stream;
+		public Stream? BaseStream => _stream;
 
 		public override bool CanRead
 		{
@@ -169,12 +169,16 @@ namespace Compression
 
 				// Pull out any bytes left inside deflater:
 				bool flushSuccessful;
+				EnsureCompressionMode ();
+
 				do {
 					int compressedBytes;
-					flushSuccessful = _deflater.Flush (_buffer, out compressedBytes);
-					if (flushSuccessful) {
-						await _stream.WriteAsync(_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
-					}
+					// TODO Flush throws exception if _buffer is null, do we want to
+					// call EnsureBufferInitialized () to create a _buffer if it is null?
+					flushSuccessful = _deflater!.Flush (_buffer!, out compressedBytes);
+
+					EnsureNotDisposed ();
+					await _stream!.WriteAsync(_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
 				} while (flushSuccessful);
 			} finally {
 				AsyncOperationCompleting ();
@@ -199,7 +203,7 @@ namespace Compression
 			// Try to read a single byte from zlib without allocating an array, pinning an array, etc.
 			// If zlib doesn't have any data, fall back to the base stream implementation, which will do that.
 			byte b;
-			return _inflater.Inflate (out b) ? b : base.ReadByte ();
+			return _inflater!.Inflate (out b) ? b : base.ReadByte ();
 		}
 
 		public override int Read (byte[] array, int offset, int count)
@@ -229,7 +233,8 @@ namespace Compression
 			int totalRead = 0;
 
 			while (true) {
-				int bytesRead = _inflater.Inflate (destination.Slice (totalRead));
+
+				int bytesRead = _inflater!.Inflate (destination.Slice (totalRead));
 				totalRead += bytesRead;
 				if (totalRead == destination.Length) {
 					break;
@@ -239,7 +244,7 @@ namespace Compression
 					break;
 				}
 
-				int bytes = _stream.Read (_buffer, 0, _buffer.Length);
+				int bytes = _stream!.Read (_buffer, 0, _buffer!.Length);
 				if (bytes <= 0) {
 					break;
 				}
@@ -345,7 +350,7 @@ namespace Compression
 			AsyncOperationStarting ();
 			try {
 				// Try to read decompressed data in output buffer
-				int bytesRead = _inflater.Inflate (destination.Span);
+				int bytesRead = _inflater!.Inflate (destination.Span);
 				if (bytesRead != 0) {
 					// If decompression output buffer is not empty, return immediately.
 					return new ValueTask<int> (bytesRead);
@@ -358,7 +363,7 @@ namespace Compression
 
 				// If there is no data on the output buffer and we are not at
 				// the end of the stream, we need to get more data from the base stream
-				ValueTask<int> readTask = _stream.ReadAsync (_buffer, cancellationToken);
+				ValueTask<int> readTask = _stream!.ReadAsync (_buffer, cancellationToken);
 				cleanup = false;
 				return FinishReadAsyncMemory (readTask, destination, cancellationToken);
 			} finally {
@@ -376,11 +381,12 @@ namespace Compression
 				while (true) {
 					int bytesRead = await readTask.ConfigureAwait (false);
 					EnsureNotDisposed ();
+					EnsureBufferInitialized ();
 
 					if (bytesRead <= 0) {
 						// This indicates the base stream has received EOF
 						return 0;
-					} else if (bytesRead > _buffer.Length) {
+					} else if (bytesRead > _buffer!.Length) {
 						// The stream is either malicious or poorly implemented and returned a number of
 						// bytes larger than the buffer supplied to it.
 						throw new InvalidDataException ("Found invalid data while decoding.");
@@ -388,14 +394,16 @@ namespace Compression
 
 					cancellationToken.ThrowIfCancellationRequested ();
 
+					EnsureDecompressionMode ();
+
 					// Feed the data from base stream into decompression engine
-					_inflater.SetInput (_buffer, 0, bytesRead);
+					_inflater!.SetInput (_buffer, 0, bytesRead);
 					bytesRead = _inflater.Inflate (destination.Span);
 
 					if (bytesRead == 0 && !_inflater.Finished ()) {
 						// We could have read in head information and didn't get any data.
 						// Read from the base stream again.
-						readTask = _stream.ReadAsync (_buffer, cancellationToken);
+						readTask = _stream!.ReadAsync (_buffer, cancellationToken);
 					} else {
 						return bytesRead;
 					}
@@ -433,8 +441,8 @@ namespace Compression
 
 			unsafe {
 				// Pass new bytes through deflater and write them too:
-				fixed (byte* bufferPtr = &MemoryMarshal.GetReference (source)) {
-					_deflater.SetInput (bufferPtr, source.Length);
+				fixed (byte* bufferPtr = &MemoryMarshal.GetReference (source) as byte*) {
+					_deflater!.SetInput (bufferPtr, source.Length);
 					WriteDeflaterOutput ();
 					_wroteBytes = true;
 				}
@@ -443,10 +451,13 @@ namespace Compression
 
 		private void WriteDeflaterOutput ()
 		{
-			while (!_deflater.NeedsInput ()) {
-				int compressedBytes = _deflater.GetDeflateOutput (_buffer);
+			EnsureCompressionMode ();
+			EnsureNotDisposed ();
+
+			while (!_deflater!.NeedsInput ()) {
+				int compressedBytes = _deflater.GetDeflateOutput (_buffer!);
 				if (compressedBytes > 0) {
-					_stream.Write (_buffer, 0, compressedBytes);
+					_stream!.Write (_buffer, 0, compressedBytes);
 				}
 				if (_deflater.Finished ()) {
 					break;
@@ -457,6 +468,9 @@ namespace Compression
 		// This is called by Flush:
 		private void FlushBuffers ()
 		{
+			EnsureCompressionMode ();
+			EnsureNotDisposed ();
+
 			// Make sure to only "flush" when we actually had some input:
 			if (_wroteBytes) {
 				// Compress any bytes left:
@@ -466,9 +480,11 @@ namespace Compression
 				bool flushSuccessful;
 				do {
 					int compressedBytes;
-					flushSuccessful = _deflater.Flush (_buffer, out compressedBytes);
+					// TODO Flush throws exception if _buffer is null, do we want to
+					// call EnsureBufferInitialized () to create a _buffer if it is null?
+					flushSuccessful = _deflater!.Flush (_buffer!, out compressedBytes);
 					if (flushSuccessful) {
-						_stream.Write (_buffer, 0, compressedBytes);
+						_stream!.Write (_buffer, 0, compressedBytes);
 					}
 				} while (flushSuccessful);
 			}
@@ -486,6 +502,8 @@ namespace Compression
 			if (_mode != CompressionMode.Compress)
 				return;
 
+			EnsureCompressionMode ();
+
 			// Some deflaters (e.g. ZLib) write more than zero bytes for zero byte inputs.
 			// This round-trips and we should be ok with this, but our legacy managed deflater
 			// always wrote zero output for zero input and upstack code (e.g. ZipArchiveEntry)
@@ -499,7 +517,9 @@ namespace Compression
 				bool finished;
 				do {
 					int compressedBytes;
-					finished = _deflater.Finish (_buffer, out compressedBytes);
+					// TODO Finish throws exception if _buffer is null, do we want to
+					// call EnsureBufferInitialized () to create a _buffer if it is null?
+					finished = _deflater!.Finish (_buffer!, out compressedBytes);
 
 					if (compressedBytes > 0)
 						_stream.Write(_buffer, 0, compressedBytes);
@@ -513,7 +533,9 @@ namespace Compression
 				bool finished;
 				do {
 					int compressedBytes;
-					finished = _deflater.Finish (_buffer, out compressedBytes);
+					// TODO Finish throws exception if _buffer is null, do we want to
+					// call EnsureBufferInitialized () to create a _buffer if it is null?
+					finished = _deflater!.Finish (_buffer!, out compressedBytes);
 				} while (!finished);
 			}
 		}
@@ -539,7 +561,7 @@ namespace Compression
 						_deflater = null;
 						_inflater = null;
 
-						byte[] buffer = _buffer;
+						byte[]? buffer = _buffer;
 						if (buffer != null) {
 							_buffer = null;
 							if (!AsyncOperationIsActive) {
@@ -589,11 +611,12 @@ namespace Compression
 		private async Task WriteAsyncMemoryCore (ReadOnlyMemory<byte> source, CancellationToken cancellationToken)
 		{
 			AsyncOperationStarting ();
+			EnsureCompressionMode ();
 			try {
 				await WriteDeflaterOutputAsync (cancellationToken).ConfigureAwait (false);
 
 				// Pass new bytes through deflater
-				_deflater.SetInput (source);
+				_deflater!.SetInput (source);
 
 				await WriteDeflaterOutputAsync (cancellationToken).ConfigureAwait (false);
 
@@ -608,10 +631,15 @@ namespace Compression
 		/// </summary>
 		private async Task WriteDeflaterOutputAsync (CancellationToken cancellationToken)
 		{
-			while (!_deflater.NeedsInput ()) {
-				int compressedBytes = _deflater.GetDeflateOutput (_buffer);
+			EnsureCompressionMode ();
+			EnsureNotDisposed ();
+
+			while (!_deflater!.NeedsInput ()) {
+				// TODO GetDeflateOutput throws exception if _buffer is null, do we want to
+				// call EnsureBufferInitialized () to create a _buffer if it is null?
+				int compressedBytes = _deflater.GetDeflateOutput (_buffer!);
 				if (compressedBytes > 0) {
-					await _stream.WriteAsync (_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
+					await _stream!.WriteAsync (_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
 				}
 
 				if (_deflater.Finished ()) {
@@ -644,7 +672,7 @@ namespace Compression
 			private readonly CompressionStream _deflateStream;
 			private readonly Stream _destination;
 			private readonly CancellationToken _cancellationToken;
-			private byte[] _arrayPoolBuffer;
+			private byte[]? _arrayPoolBuffer;
 			private int _arrayPoolBufferHighWaterMark;
 
 			public CopyToAsyncStream (CompressionStream deflateStream, Stream destination, int bufferSize, CancellationToken cancellationToken)
@@ -666,9 +694,14 @@ namespace Compression
 			{
 				_deflateStream.AsyncOperationStarting ();
 				try {
+					_deflateStream.EnsureDecompressionMode ();
 					// Flush any existing data in the inflater to the destination stream.
 					while (true) {
-						int bytesRead = _deflateStream._inflater.Inflate (_arrayPoolBuffer, 0, _arrayPoolBuffer.Length);
+						// TODO Inflate throws exception if _arrayPoolBuffer is null, do we want to
+						// create a new _arrayPoolBuffer if null or throw an exception here?
+						if (_arrayPoolBuffer is null)
+							throw new InvalidOperationException ("CopyToAsyncStream._arrayPoolBuffer should not be null.");
+						int bytesRead = _deflateStream._inflater!.Inflate (_arrayPoolBuffer, 0, _arrayPoolBuffer.Length);
 						if (bytesRead > 0) {
 							if (bytesRead > _arrayPoolBufferHighWaterMark) _arrayPoolBufferHighWaterMark = bytesRead;
 							await _destination.WriteAsync (_arrayPoolBuffer, 0, bytesRead, _cancellationToken).ConfigureAwait (false);
@@ -676,8 +709,9 @@ namespace Compression
 						else break;
 					}
 
+					_deflateStream.EnsureNotDisposed ();
 					// Now, use the source stream's CopyToAsync to push directly to our inflater via this helper stream
-					await _deflateStream._stream.CopyToAsync (this, _arrayPoolBuffer.Length, _cancellationToken).ConfigureAwait (false);
+					await _deflateStream._stream!.CopyToAsync (this, _arrayPoolBuffer.Length, _cancellationToken).ConfigureAwait (false);
 				} finally {
 					_deflateStream.AsyncOperationCompleting ();
 
@@ -701,12 +735,17 @@ namespace Compression
 					throw new InvalidDataException ("Found invalid data while decoding.");
 				}
 
+				_deflateStream.EnsureDecompressionMode ();
 				// Feed the data from base stream into the decompression engine.
-				_deflateStream._inflater.SetInput (buffer, offset, count);
+				_deflateStream._inflater!.SetInput (buffer, offset, count);
 
 				// While there's more decompressed data available, forward it to the destination stream.
 				while (true) {
-					int bytesRead = _deflateStream._inflater.Inflate (_arrayPoolBuffer, 0, _arrayPoolBuffer.Length);
+					// TODO Inflate throws exception if _arrayPoolBuffer is null, do we want to
+					// create a new _arrayPoolBuffer if null or throw an exception here?
+					if (_arrayPoolBuffer is null)
+						throw new InvalidOperationException ("CopyToAsyncStream._arrayPoolBuffer should not be null.");
+					int bytesRead = _deflateStream._inflater!.Inflate (_arrayPoolBuffer, 0, _arrayPoolBuffer.Length);
 					if (bytesRead > 0) {
 						if (bytesRead > _arrayPoolBufferHighWaterMark) _arrayPoolBufferHighWaterMark = bytesRead;
 						await _destination.WriteAsync (_arrayPoolBuffer, 0, bytesRead, cancellationToken).ConfigureAwait (false);
