@@ -28,44 +28,44 @@ MACCATALYST_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/maccatalyst
 GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
 
 DOTNET_REFERENCES = \
-	/r:$(DOTNET6_BCL_DIR)/System.Buffers.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Collections.Concurrent.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Collections.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Collections.NonGeneric.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Console.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Diagnostics.Debug.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Diagnostics.Tools.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Drawing.Primitives.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.IO.Compression.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.IO.FileSystem.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Linq.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Memory.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Net.Http.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Net.NameResolution.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Net.Primitives.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Net.Requests.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Net.Security.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Net.ServicePoint.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Net.Sockets.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Numerics.Vectors.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Resources.ResourceManager.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Runtime.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Runtime.CompilerServices.Unsafe.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Runtime.Extensions.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Runtime.InteropServices.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Security.Cryptography.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Text.RegularExpressions.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Threading.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Threading.Tasks.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Threading.Thread.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Xml.dll \
-	/r:$(DOTNET6_BCL_DIR)/System.Xml.ReaderWriter.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Buffers.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Collections.Concurrent.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Collections.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Collections.NonGeneric.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Console.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Debug.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Tools.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Drawing.Primitives.dll \
+	/r:$(DOTNET_BCL_DIR)/System.IO.Compression.dll \
+	/r:$(DOTNET_BCL_DIR)/System.IO.FileSystem.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Linq.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Memory.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Net.Http.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Net.NameResolution.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Net.Primitives.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Net.Requests.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Net.Security.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Net.ServicePoint.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Net.Sockets.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Numerics.Vectors.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Resources.ResourceManager.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Runtime.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Runtime.CompilerServices.Unsafe.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Runtime.Extensions.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Text.RegularExpressions.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Threading.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Threading.Tasks.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Threading.Thread.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Xml.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Xml.ReaderWriter.dll \
 
 DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO /define:XAMCORE_3_0 $(DOTNET_REFERENCES)
 
 DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
-DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET6_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
+DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
 

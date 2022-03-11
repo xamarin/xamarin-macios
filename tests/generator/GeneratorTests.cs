@@ -28,7 +28,7 @@ namespace GeneratorTests
 			var tf = TargetFramework.Parse (targetFramework);
 			arguments.Add ($"--baselib={Configuration.GetBaseLibrary (tf)}");
 			arguments.Add ($"--attributelib={Configuration.GetBindingAttributePath (tf)}");
-			arguments.AddRange (Directory.GetFiles (Configuration.DotNet6BclDir, "*.dll").Select (v => $"-r:{v}"));
+			arguments.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll").Select (v => $"-r:{v}"));
 #else
 			var targetFramework = "Xamarin.iOS,v1.0";
 #endif
