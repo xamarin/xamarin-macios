@@ -2307,8 +2307,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoDSymUtil)' == 'false'"
 			DSymDir="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM"
 			Executable="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
 		>
 		</DSymUtil>
 
@@ -2377,8 +2375,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(NoDSymUtil)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
 			DSymDir="%(_Frameworks._Destination)"
 			Executable="%(_Frameworks.Identity)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)">
+		>
 		</DSymUtil>
 
 		<!-- strip embedded frameworks -->
@@ -2453,8 +2450,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' And '$(NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
 			DSymDir="$(AppBundleDir).dSYM"
 			Executable="$(_NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
 		>
 		</DSymUtil>
 

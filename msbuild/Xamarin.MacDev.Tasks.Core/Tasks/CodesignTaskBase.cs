@@ -154,16 +154,6 @@ namespace Xamarin.MacDev.Tasks
 			return string.Equals (metadataValue, "true", StringComparison.OrdinalIgnoreCase);
 		}
 
-		string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string fallbackName = null, bool required = false)
-		{
-			var metadataValue = item.GetMetadata (metadataName);
-			if (!string.IsNullOrEmpty (metadataValue))
-				return metadataValue;
-			if (required && string.IsNullOrEmpty (fallbackValue))
-				Log.LogError (MSBStrings.E7085 /* The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}. */, "Codesign", fallbackName, metadataName, item.ItemSpec);
-			return fallbackValue;
-		}
-
 		IList<string> GenerateCommandLineArguments (ITaskItem item)
 		{
 			var args = new List<string> ();
@@ -206,11 +196,13 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (resourceRules)) {
+				resourceRules = PathUtils.ConvertToMacPath (resourceRules);
 				args.Add ("--resource-rules");
 				args.Add (Path.GetFullPath (resourceRules));
 			}
 
 			if (!string.IsNullOrEmpty (entitlements)) {
+				entitlements = PathUtils.ConvertToMacPath (entitlements);
 				args.Add ("--entitlements");
 				args.Add (Path.GetFullPath (entitlements));
 			}

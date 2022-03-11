@@ -404,6 +404,11 @@ verify-sorted-resx:
 		rm -rf .$@*tmp; \
 		exit 1; \
 	fi
+package-introspection-dependencies.zip: simlauncher32-sgen simlauncher64-sgen
+	$(Q) mkdir -p $@.tmpdir
+	$(Q) $(CP) -a simlauncher*-sgen*  $@.tmpdir
+	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
+	$(Q) rm -rf $@.tmpdir
 
 clean-dotnet:
 	rm -f $(TARGETS_DOTNET)
