@@ -196,11 +196,13 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (resourceRules)) {
+				resourceRules = PathUtils.ConvertToMacPath (resourceRules);
 				args.Add ("--resource-rules");
 				args.Add (Path.GetFullPath (resourceRules));
 			}
 
 			if (!string.IsNullOrEmpty (entitlements)) {
+				entitlements = PathUtils.ConvertToMacPath (entitlements);
 				args.Add ("--entitlements");
 				args.Add (Path.GetFullPath (entitlements));
 			}
