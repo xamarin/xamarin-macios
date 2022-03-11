@@ -41,8 +41,8 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var args = new CommandLineArgumentBuilder ();
 
-			args.AddQuoted (Source!.ItemSpec);
-			args.AddQuoted (Destination!.ItemSpec);
+			args.AddQuoted (Path.GetFullPath (Source!.ItemSpec));
+			args.AddQuoted (Path.GetFullPath (Destination!.ItemSpec));
 			if (!string.IsNullOrEmpty (AdditionalArguments))
 				args.Add (AdditionalArguments);
 

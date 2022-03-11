@@ -43,7 +43,7 @@ namespace CoreServices {
 		public static CFHTTPAuthentication? CreateFromResponse (CFHTTPMessage response)
 		{
 			if (response is null)
-				throw new ArgumentNullException (nameof (response));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (response));
 
 			if (response.IsRequest)
 				throw new InvalidOperationException ();
@@ -70,7 +70,7 @@ namespace CoreServices {
 		public bool AppliesToRequest (CFHTTPMessage request)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 
 			if (!request.IsRequest)
 				throw new InvalidOperationException ();

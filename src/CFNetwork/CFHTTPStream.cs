@@ -147,7 +147,7 @@ namespace CoreServices {
 		public void SetProxy (CFProxySettings proxySettings)
 		{
 			if (proxySettings is null)
-				throw new ArgumentNullException (nameof (proxySettings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (proxySettings));
 
 			SetProperty (_Proxy, proxySettings.Dictionary);
 		}
