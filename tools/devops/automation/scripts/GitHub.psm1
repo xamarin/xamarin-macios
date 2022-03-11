@@ -1,16 +1,14 @@
 # the following is a hack around the fact that pwsh does not handle well the using 
 # form a relative path in vsts
-$modules = @(
-    "Artifacts",
-    "StaticPages"
-)
+$modulePath = "$PSScriptRoot\\Artifacts.psm1"  # windows path separators work on unix and windows
+$scriptBody = "using module $modulePath"
+$script = [ScriptBlock]::Create($scriptBody)
+. $script
 
-foreach($m in $modules) {
-    $modulePath = "$PSScriptRoot\\$m.psm1"  # windows path separators work on unix and windows
-    $scriptBody = "using module $modulePath"
-    $script = [ScriptBlock]::Create($scriptBody)
-    . $script
-}
+$modulePath = "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
+$scriptBody = "using module $modulePath"
+$script = [ScriptBlock]::Create($scriptBody)
+. $script
 
 <#
     .SYNOPSIS
