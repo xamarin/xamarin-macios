@@ -116,7 +116,7 @@ steps:
     DOTNET_NUPKG_DIR=${var#*=}
     echo "Using nuget dir $DOTNET_NUPKG_DIR"
 
-    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/pkg-info/WorkloadRollback.json"
+    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
 
     echo "Rollback file contents:" 
     echo "$(cat $ROLLBACK_PATH)"
