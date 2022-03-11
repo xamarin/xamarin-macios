@@ -1,3 +1,6 @@
+# I'm not sure if WatchConnectivity is of any use on Mac Catalyst,
+# so until proven it's useful, ignore it.
+
 !missing-enum! WCErrorCode not bound
 !missing-enum! WCSessionActivationState not bound
 !missing-field! WCErrorDomain not bound
