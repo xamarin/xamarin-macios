@@ -27,5 +27,9 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>db49d790a4bfa977a9ed7436bf2aa242cefae45e</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.TemplateEngine.Tasks" Version="7.0.100-alpha.1.21601.1">
+      <Uri>https://github.com/dotnet/templating</Uri>
+      <Sha />
+    </Dependency>
   </ToolsetDependencies>
 </Dependencies>
