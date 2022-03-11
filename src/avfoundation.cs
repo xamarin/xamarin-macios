@@ -9060,62 +9060,74 @@ namespace AVFoundation {
 		[Export ("isVideoOrientationSupported")]
 		bool SupportsVideoOrientation { get; }
 
-		[Export ("supportsVideoMinFrameDuration"), Internal]
-		bool _SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get;  }
+		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
+		[Export ("supportsVideoMinFrameDuration")]
+		bool SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get; }
 
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set;  }
-#if !MONOMAC
-		[Export ("supportsVideoMaxFrameDuration"), Internal]
-		bool _SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get;  }
+
+		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
+		[Export ("supportsVideoMaxFrameDuration")]
+		bool SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get; }
 
 		[Export ("videoMaxFrameDuration")]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)] 
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		CMTime VideoMaxFrameDuration { get; set;  }
 
+		[NoMac]
 		[Export ("videoMaxScaleAndCropFactor")]
 		nfloat VideoMaxScaleAndCropFactor { get;  }
 
+		[NoMac]
 		[Export ("videoScaleAndCropFactor")]
 		nfloat VideoScaleAndCropFactor { get; set;  }
-#endif
+
 		[NullAllowed]
 		[Export ("videoPreviewLayer")]
 		AVCaptureVideoPreviewLayer VideoPreviewLayer { get;  }
 
 		[Export ("automaticallyAdjustsVideoMirroring")]
 		bool AutomaticallyAdjustsVideoMirroring { get; set;  }
-#if !MONOMAC
+
+		[NoMac]
 		[Export ("supportsVideoStabilization")]
 		bool SupportsVideoStabilization { [Bind ("isVideoStabilizationSupported")] get;  }
 
+		[NoMac]
 		[Export ("videoStabilizationEnabled")]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'ActiveVideoStabilizationMode' instead.")]
 		bool VideoStabilizationEnabled { [Bind ("isVideoStabilizationEnabled")] get;  }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PreferredVideoStabilizationMode' instead.")]
 		[Export ("enablesVideoStabilizationWhenAvailable")]
 		bool EnablesVideoStabilizationWhenAvailable { get; set;  }
 
+		[NoMac]
 		[iOS (8,0)]
 		[Export ("preferredVideoStabilizationMode")]
 		AVCaptureVideoStabilizationMode PreferredVideoStabilizationMode { get; set; }
 
+		[NoMac]
 		[iOS (8,0)]
 		[Export ("activeVideoStabilizationMode")]
 		AVCaptureVideoStabilizationMode ActiveVideoStabilizationMode { get; }
-#endif
+
 		[Unavailable (PlatformName.MacCatalyst)]
 		[NoiOS]
 		[Export ("supportsVideoFieldMode")]
 		bool SupportsVideoFieldMode { [Bind ("isVideoFieldModeSupported")] get; }
 
-#if MONOMAC
+		[NoiOS]
 		[Unavailable (PlatformName.MacCatalyst)]
 		[Export ("videoFieldMode")]
 		AVVideoFieldMode VideoFieldMode { get; set; }
-#endif
 
 		[iOS (11, 0), NoMac, TV (11, 0), NoWatch]
 		[Export ("cameraIntrinsicMatrixDeliverySupported")]
@@ -11717,6 +11729,7 @@ namespace AVFoundation {
 		[Export ("audioOutputDeviceUniqueID"), NullAllowed]
 		string AudioOutputDeviceUniqueID { get; set; }
 
+#if !NET
 		[Obsolete ("Use 'AVPlayerWaitingReason' enum instead.")]
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Field ("AVPlayerWaitingToMinimizeStallsReason")]
@@ -11743,6 +11756,7 @@ namespace AVFoundation {
 		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("AVPlayerWaitingForCoordinatedPlaybackReason")]
 		NSString AVPlayerWaitingForCoordinatedPlaybackReason { get; }
+#endif // !NET
 
 		// From AVPlayer (AVPlayerPlaybackCapabilities) Category
 
@@ -13675,7 +13689,11 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, Mac (11,3)]
+#if NET
+	[NoTV]
+#else
 	[Obsoleted (PlatformName.TvOS, 12, 0)]
+#endif
 	[Static, Internal]
 	interface AVAssetDownloadTaskKeys {
 		[iOS (9,0), Mac (12,0)]
@@ -13706,7 +13724,11 @@ namespace AVFoundation {
 
 	[Mac (12,0)]
 	[NoWatch]
+#if NET
+	[NoTV]
+#else
 	[Obsoleted (PlatformName.TvOS, 12, 0)]
+#endif
 	[StrongDictionary ("AVAssetDownloadTaskKeys")]
 	interface AVAssetDownloadOptions {
 		NSNumber MinimumRequiredMediaBitrate { get; set; }

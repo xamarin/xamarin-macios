@@ -10,7 +10,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -123,12 +122,8 @@ namespace Metal {
 			return obj;
 		}
 
-#if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios8.0")]
-#else
+#if !NET
 		[Mac (10, 13)]
-#endif
 		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject? observer, MTLDeviceNotificationHandler handler)
@@ -137,6 +132,7 @@ namespace Metal {
 			observer = obs;
 			return rv;
 		}
+#endif // !NET
 
 		internal delegate void InnerNotification (IntPtr block, IntPtr device, IntPtr notifyName);
 		static readonly InnerNotification static_notificationHandler = TrampolineNotificationHandler;

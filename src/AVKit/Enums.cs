@@ -1,6 +1,5 @@
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -37,16 +36,10 @@ namespace AVKit {
 		ContentDisallowedByProfile = -1102,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios13.0")]
-	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("macos")]
-#else
 	[NoWatch]
 	[NoTV]
 	[NoMac]
 	[iOS (13,0)]
-#endif
 	[Native]
 	public enum AVAudioSessionRouteSelection : long {
 		None = 0,
@@ -54,16 +47,10 @@ namespace AVKit {
 		External = 2,
 	}
 
-#if NET
-	[SupportedOSPlatform ("macos10.15")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
-#else
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
 	[Mac (10,15)]
-#endif
 	[Native]
 	public enum AVRoutePickerViewButtonState : long {
 		Normal,

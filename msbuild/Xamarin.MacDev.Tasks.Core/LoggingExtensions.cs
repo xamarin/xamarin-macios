@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -86,6 +89,20 @@ namespace Xamarin.MacDev.Tasks
 		public static void LogWarning (this TaskLoggingHelper log, int errorCode, string fileName, string message, params object[] args)
 		{
 			log.LogWarning (null, $"{ErrorPrefix}{errorCode}", null, fileName ?? "MSBuild", 0, 0, 0, 0, message, args);
+		}
+
+		public static bool LogErrorsFromException (this TaskLoggingHelper log, Exception exception, bool showStackTrace = true, bool showDetail = true)
+		{
+			var exceptions = new List<Exception> ();
+			if (exception is AggregateException ae) {
+				exceptions.AddRange (ae.InnerExceptions);
+			} else {
+				exceptions.Add (exception);
+			}
+			foreach (var e in exceptions) {
+				log.LogErrorFromException (e, showStackTrace, showDetail, null);
+			}
+			return false;
 		}
 	}
 }

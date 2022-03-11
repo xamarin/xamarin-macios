@@ -213,7 +213,7 @@ namespace Registrar {
 
 	class StaticRegistrar : Registrar
 	{
-		static string NFloatTypeName { get => Driver.IsDotNet ? "ObjCRuntime.nfloat" : "System.nfloat"; }
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
 
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
@@ -2191,9 +2191,11 @@ namespace Registrar {
 					}
 				}
 				goto default;
+#if !NET
 			case "Chip":
 				h = "<CHIP/CHIP.h>";
 				break;
+#endif
 			case "GLKit":
 				// This prevents this warning:
 				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both

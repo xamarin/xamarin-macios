@@ -27,4 +27,14 @@
 		<Using Include="Foundation" Platform="MacCatalyst" />
 		<Using Include="UIKit" Platform="MacCatalyst" />
 	</ItemGroup>
+
+	<!--
+		Add a 'global using nfloat = System.Runtime.InteropServices.NFloat' to ease migration from Xamarin.
+		This is not grouped with the other usings, because those are not enabled by default (ImplicitUsings is empty by default, but set in our templates).
+		However, the main target for this using is upgraded projects, which won't have ImplicitUsings set to anything, so we
+		use a different condition (NoNFloatUsing) to disable if desired.
+	-->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst' And '$(Language)' == 'C#' And '$(NoNFloatUsing)' != 'true'">
+		<Using Include="System.Runtime.InteropServices.NFloat" Platform="MacCatalyst" Alias="nfloat" />
+	</ItemGroup>
 </Project>

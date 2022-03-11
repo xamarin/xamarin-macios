@@ -13,25 +13,18 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace GameKit {
 
-#if !MONOMAC
-
 	// NSUInteger -> GKPeerPickerController.h
-#if NET
-	[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-	[UnsupportedOSPlatform ("tvos")]
-#else
+	[NoMac]
 	[NoWatch]
+#if NET
+	[NoTV]
+#endif
 	[Deprecated (PlatformName.iOS, 7, 0)]
-#endif // NET
 	[Native]
 	public enum GKPeerPickerConnectionType : ulong {
 		Online = 1 << 0,
@@ -39,14 +32,8 @@ namespace GameKit {
 	}
 
 	// untyped enum -> GKPublicConstants.h
-#if NET
-	[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 7, 0)]
-#endif
 	[ErrorDomain ("GKVoiceChatServiceErrorDomain")]
 	public enum GKVoiceChatServiceError {
 		Internal = 32000,	
@@ -67,39 +54,18 @@ namespace GameKit {
 		OutOfMemory = 32015,
 		InvalidParameter = 32016
 	}
-#endif
 
 	// untyped enum -> GKPublicConstants.h
-#if NET
-	[UnsupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
-#endif
 	public enum GKSendDataMode {
 		Reliable,
 		Unreliable,
 	} 
 
 	// untyped enum -> GKPublicConstants.h
-#if NET
-	[UnsupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
-#endif
 	public enum GKSessionMode {
 	    Server, 
 	    Client,
@@ -107,18 +73,8 @@ namespace GameKit {
 	}
 
 	// untyped enum -> GKPublicConstants.h
-#if NET
-	[UnsupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
-#endif
 	public enum GKPeerConnectionState {
 		Available,
 		Unavailable,
@@ -190,48 +146,24 @@ namespace GameKit {
 		FriendRequestNotAvailable = 103,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.12")]
-	[SupportedOSPlatform ("tvos10.0")]
-#else
 	[iOS (10,0)]
 	[Mac (10,12)]
 	[TV (10,0)]
-#endif
 	[Native]
 	public enum GKConnectionState : long {
 		NotConnected,
 		Connected,
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.12")]
-	[SupportedOSPlatform ("tvos10.0")]
-#else
 	[iOS (10,0)]
 	[Mac (10,12)]
 	[TV (10,0)]
-#endif
 	[Native]
 	public enum GKTransportType : long {
 		Unreliable,
 		Reliable,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("ios12.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-	[Obsolete ("Starting with tvos12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10,14)]
 	[Deprecated (PlatformName.TvOS, 12,0)]
 	[Deprecated (PlatformName.iOS, 12,0)]
@@ -243,7 +175,6 @@ namespace GameKit {
 	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
 #endif
-#endif // NET
 	public enum GKGameSessionErrorCode : long {
 		Unknown = 1,
 		NotAuthenticated = 2,
@@ -264,18 +195,8 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKMatch.h
-#if NET
-	[UnsupportedOSPlatform ("macos10.10")]
-	[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
-#endif
 	[Native]
 	public enum GKMatchSendDataMode : long {
 		Reliable, Unreliable
@@ -323,11 +244,7 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKChallenge.h
-#if NET
-	[SupportedOSPlatform ("macos10.9")]
-#else
 	[Mac (10,9)]
-#endif
 	[Native]
 	public enum GKChallengeState : long	{
 		Invalid = 0,
@@ -337,43 +254,24 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKGameCenterViewController.h
-#if !NET
 	[NoWatch]
-#endif
 	[Native]
 	public enum GKGameCenterViewControllerState : long {
 		Default = -1,
 		Leaderboards ,
 		Achievements,
 		Challenges,
-#if NET
-		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("tvos14.0")]
-#else
 		[iOS (14,0)]
 		[TV (14,0)]
-#endif
 		LocalPlayerProfile = 3,
-#if NET
-		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("tvos14.0")]
-#else
 		[iOS (14,0)]
 		[TV (14,0)]
-#endif
 		Dashboard = 4,
-#if NET
-		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("macos12.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("tvos15.0")]
-#else
 		[iOS (15,0)]
 		[Mac (12,0)]
 		[MacCatalyst (15,0)]
 		[TV (15,0)]
 		[NoWatch]
-#endif
 		LocalPlayerFriendsList = 5,
 	}
 
@@ -399,11 +297,7 @@ namespace GameKit {
 	}
 
 	// uint8_t -> GKTurnBasedMatch.h
-#if NET
-	[SupportedOSPlatform ("ios7.0")]
-#else
 	[iOS (7,0)]
-#endif
 	public enum GKTurnBasedExchangeStatus : sbyte
 	{
 		Unknown,
@@ -435,16 +329,10 @@ namespace GameKit {
 	}
 #endif
 
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-#else
 	[TV (14,0)]
 	[Mac (11,0)]
 	[iOS (14,0)]
 	[NoWatch]
-#endif
 	[Native]
 	public enum GKAccessPointLocation : long
 	{
@@ -454,16 +342,10 @@ namespace GameKit {
 		BottomTrailing,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-#else
 	[TV (14,0)]
 	[Mac (11,0)]
 	[iOS (14,0)]
 	[Watch (7,0)]
-#endif
 	[Native]
 	public enum GKLeaderboardType : long
 	{
@@ -471,46 +353,27 @@ namespace GameKit {
 		Recurring,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
-	[SupportedOSPlatform ("ios14.0")]
-#else
 	[TV (14,0)]
 	[Mac (11,0)]
 	[iOS (14,0)]
 	[NoWatch]
-#endif
 	[Native]
 	public enum GKMatchmakingMode : long
 	{
 		Default = 0,
 		NearbyOnly = 1,
 		AutomatchOnly = 2,
-#if NET
-		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
-		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
-#else
 		[TV (15,0)]
 		[Mac (12,0)]
 		[iOS (15,0)]
 		[MacCatalyst (15,0)]
-#endif
 		InviteOnly = 3,
 	}
 
-#if NET
-	[SupportedOSPlatform ("tvos14.5")]
-	[SupportedOSPlatform ("macos11.3")]
-	[SupportedOSPlatform ("ios14.5")]
-#else
 	[Watch (7,4)]
 	[TV (14,5)]
 	[Mac (11,3)]
 	[iOS (14,5)]
-#endif
 	[Native]
 	public enum GKFriendsAuthorizationStatus : long {
 		NotDetermined = 0,

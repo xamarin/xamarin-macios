@@ -16,10 +16,10 @@ steps:
 # download the common artifacts + the api diff
 - template: ../common/download-artifacts.yml
   parameters:
-    devicePrefix: sim
+    testPrefix: sim
     runTests: ${{ parameters.runTests }}
 
-- ${{ if eq(parameters.enableAPIDiff, true) }}:
+- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['APIDIFF_BUILT'], 'True')) }}:
   # Download the Html Report that was added by the tests job.
   - task: DownloadPipelineArtifact@2
     displayName: 'Download API diff (from stable)'
@@ -34,6 +34,7 @@ steps:
       archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apidiff-stable/apidiff-stable.zip'
       destinationFolder: '$(System.DefaultWorkingDirectory)/apidiff-stable'
 
+- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['API_GENERATOR_BUILT'], 'True')) }}:
   - task: DownloadPipelineArtifact@2
     displayName: 'Download API & Generator comparison'
     condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))

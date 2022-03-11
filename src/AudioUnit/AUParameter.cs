@@ -1,6 +1,7 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace AudioUnit
@@ -17,7 +18,7 @@ namespace AudioUnit
 		public string GetString (float? value)
 		{
 			unsafe {
-				if (value != null && value.HasValue) {
+				if (value is not null) {
 					float f = value.Value;
 					return this._GetString (new IntPtr (&f));
 				}

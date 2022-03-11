@@ -35,7 +35,6 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Threading;
 
 using AudioToolbox;
@@ -134,7 +133,7 @@ namespace AudioUnit
 		public AudioUnitStatus AddRenderNotify (RenderDelegate callback)
 		{
 			if (callback is null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			AudioUnitStatus error = AudioUnitStatus.OK;
 			if (graphUserCallbacks.Count == 0)
@@ -148,7 +147,7 @@ namespace AudioUnit
 		public AudioUnitStatus RemoveRenderNotify (RenderDelegate callback)
 		{
 			if (callback is null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 			if (!graphUserCallbacks.Contains (callback))
 				throw new ArgumentException ("Cannot unregister a callback that has not been registered");
 

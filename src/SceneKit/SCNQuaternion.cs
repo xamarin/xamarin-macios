@@ -39,7 +39,7 @@ using Quaternion = global::OpenTK.Quaternion;
 
 #if MONOMAC
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif
@@ -96,7 +96,11 @@ namespace SceneKit
 
         public SCNQuaternion (ref Matrix3 matrix)
         {
+#if NET
+            double scale = System.Math.Pow (matrix.GetDeterminant (), 1.0d / 3.0d);
+#else
             double scale = System.Math.Pow(matrix.Determinant, 1.0d / 3.0d);
+#endif
 	    float x, y, z;
 	    
             w = (float) (System.Math.Sqrt(System.Math.Max(0, scale + matrix.R0C0 + matrix.R1C1 + matrix.R2C2)) / 2);

@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -196,14 +197,16 @@ namespace Foundation {
 			return arr;
 		}
 
-		static public NSArray FromStrings (params string [] items)
+		static public NSArray FromStrings (params string [] items) => FromStrings ((IReadOnlyList<string>)items);
+
+		static public NSArray FromStrings (IReadOnlyList<string> items)
 		{
 			if (items == null)
 				throw new ArgumentNullException (nameof (items));
 			
-			IntPtr buf = Marshal.AllocHGlobal (items.Length * IntPtr.Size);
+			IntPtr buf = Marshal.AllocHGlobal (items.Count * IntPtr.Size);
 			try {
-				for (int i = 0; i < items.Length; i++){
+				for (int i = 0; i < items.Count; i++){
 					IntPtr val;
 					
 					if (items [i] == null)
@@ -214,7 +217,7 @@ namespace Foundation {
 	
 					Marshal.WriteIntPtr (buf, i * IntPtr.Size, val);
 				}
-				NSArray arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects (buf, items.Length));
+				NSArray arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects (buf, items.Count));
 				return arr;
 			} finally {
 				Marshal.FreeHGlobal (buf);
@@ -259,6 +262,7 @@ namespace Foundation {
 		}
 			
 		[Obsolete ("Use of 'CFArray.StringArrayFromHandle' offers better performance.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		static public string [] StringArrayFromHandle (NativeHandle handle)
 		{
 			if (handle == NativeHandle.Zero)

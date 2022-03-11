@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 
@@ -89,14 +88,7 @@ namespace AudioToolbox {
 		PreferredHardwareSampleRate = 0x68777372,
 		PreferredHardwareIOBufferDuration = 0x696f6264,
 		AudioCategory = 0x61636174, // 'acat'
-#if NET
-		[UnsupportedOSPlatform ("ios5.0")]
-#if IOS
-		[Obsolete ("Starting with ios5.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Deprecated (PlatformName.iOS, 5, 0)]
-#endif
 		AudioRoute = 0x726f7574,
 		AudioRouteChange = 0x726f6368,
 		CurrentHardwareSampleRate = 0x63687372,
@@ -110,14 +102,7 @@ namespace AudioToolbox {
 		OverrideAudioRoute = 0x6f767264,
 		AudioInputAvailable = 0x61696176,
 		ServerDied = 0x64696564,
-#if NET
-		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Deprecated (PlatformName.iOS, 7, 0)]
-#endif
 		OtherMixableAudioShouldDuck = 0x6475636b,
 		OverrideCategoryMixWithOthers = 0x636d6978,
 		OverrideCategoryDefaultToSpeaker = 0x6373706b, //'cspk'
@@ -141,14 +126,7 @@ namespace AudioToolbox {
 		GameChat		= 0x676d6374,	// 'gmct'
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios6.0")]
-#if IOS
-	[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.iOS, 6, 0)]
-#endif
 	public enum AudioSessionActiveFlags: uint // UInt32 in AudioSessionSetActiveWithFlags
 	{
 		NotifyOthersOnDeactivation       = (1 << 0)

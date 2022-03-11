@@ -30,7 +30,6 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -55,45 +54,45 @@ namespace CoreBluetooth {
 #if !MONOMAC
 		public bool? NotifyOnConnection {
 			get {
-				return GetBoolValue (CBCentralManager.OptionNotifyOnConnectionKey);
+				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey);
 			}
 			
 			set {
 				if (!value.HasValue){
-					RemoveValue (CBCentralManager.OptionNotifyOnConnectionKey);
+					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey);
 					return;
 				}
-				SetNumberValue (CBCentralManager.OptionNotifyOnConnectionKey, value.Value ? 1 : 0);
+				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey, value.Value ? 1 : 0);
 			}
 		}
 
 		public bool? NotifyOnNotification {
 			get {
-				return GetBoolValue (CBCentralManager.OptionNotifyOnNotificationKey);
+				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey);
 				
 			}
 			
 			set {
 				if (!value.HasValue){
-					RemoveValue (CBCentralManager.OptionNotifyOnNotificationKey);
+					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey);
 					return;
 				}
 				
-				SetNumberValue (CBCentralManager.OptionNotifyOnNotificationKey, value.Value ? 1 : 0);
+				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey, value.Value ? 1 : 0);
 			}
 		}
 #endif
 
 		public bool? NotifyOnDisconnection {
 			get {
-				return GetBoolValue (CBCentralManager.OptionNotifyOnDisconnectionKey);
+				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey);
 			}
 			set {
 				if (!value.HasValue){
-					RemoveValue (CBCentralManager.OptionNotifyOnDisconnectionKey);
+					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey);
 					return;
 				}
-				SetNumberValue (CBCentralManager.OptionNotifyOnDisconnectionKey, value.Value ? 1 : 0);
+				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey, value.Value ? 1 : 0);
 			}			
 		}
 #endif

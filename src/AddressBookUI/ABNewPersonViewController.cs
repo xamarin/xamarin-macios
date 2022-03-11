@@ -6,12 +6,13 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 
 using AddressBook;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AddressBookUI {
 
@@ -25,20 +26,20 @@ namespace AddressBookUI {
 #endif
 	public class ABNewPersonCompleteEventArgs : EventArgs {
 
-		public ABNewPersonCompleteEventArgs (ABPerson person)
+		public ABNewPersonCompleteEventArgs (ABPerson? person)
 		{
 			Person = person;
 		}
 
-		public ABPerson Person {get; private set;}
+		public ABPerson? Person {get; private set;}
 		public bool Completed {
-			get {return Person != null;}
+			get {return Person is not null;}
 		}
 	}
 
 	class InternalABNewPersonViewControllerDelegate : ABNewPersonViewControllerDelegate {
 
-		internal EventHandler<ABNewPersonCompleteEventArgs> newPersonComplete;
+		internal EventHandler<ABNewPersonCompleteEventArgs>? newPersonComplete;
 
 		public InternalABNewPersonViewControllerDelegate ()
 		{
@@ -46,7 +47,7 @@ namespace AddressBookUI {
 		}
 
 		[Preserve (Conditional = true)]
-		public override void DidCompleteWithNewPerson (ABNewPersonViewController controller, ABPerson person)
+		public override void DidCompleteWithNewPerson (ABNewPersonViewController controller, ABPerson? person)
 		{
 			controller.OnNewPersonComplete (new ABNewPersonCompleteEventArgs (person));
 		}
@@ -62,8 +63,8 @@ namespace AddressBookUI {
 #endif
 	partial class ABNewPersonViewController {
 
-		ABPerson displayedPerson;
-		public ABPerson DisplayedPerson {
+		ABPerson? displayedPerson;
+		public ABPerson? DisplayedPerson {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref displayedPerson, _DisplayedPerson, h => new ABPerson (h, AddressBook));
@@ -74,8 +75,8 @@ namespace AddressBookUI {
 			}
 		}
 
-		ABAddressBook addressBook;
-		public ABAddressBook AddressBook {
+		ABAddressBook? addressBook;
+		public ABAddressBook? AddressBook {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref addressBook, _AddressBook, h => new ABAddressBook (h, false));
@@ -86,11 +87,11 @@ namespace AddressBookUI {
 			}
 		}
 
-		ABGroup parentGroup;
-		public ABGroup ParentGroup {
+		ABGroup? parentGroup;
+		public ABGroup? ParentGroup {
 			get {
 				MarkDirty ();
-				return BackingField.Get (ref parentGroup, _ParentGroup, h => new ABGroup (h, AddressBook));
+				return BackingField.Get (ref parentGroup, _ParentGroup, h => (AddressBook is null) ? null : new ABGroup (h, AddressBook));
 			}
 			set {
 				_AddressBook = BackingField.Save (ref parentGroup, value);
@@ -101,7 +102,7 @@ namespace AddressBookUI {
 		InternalABNewPersonViewControllerDelegate EnsureEventDelegate ()
 		{
 			var d = WeakDelegate as InternalABNewPersonViewControllerDelegate;
-			if (d == null) {
+			if (d is null) {
 				d = new InternalABNewPersonViewControllerDelegate ();
 				WeakDelegate = d;
 			}
@@ -111,7 +112,7 @@ namespace AddressBookUI {
 		protected internal virtual void OnNewPersonComplete (ABNewPersonCompleteEventArgs e)
 		{
 			var h = EnsureEventDelegate ().newPersonComplete;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 

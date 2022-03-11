@@ -32,58 +32,16 @@
 using System;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
-	public partial class AVCaptureConnection {
-
-#if NET
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Deprecated (PlatformName.iOS, 7, 0)]
-#endif
-		public bool SupportsVideoMinFrameDuration {
-			get {
-				if (RespondsToSelector (new Selector ("isVideoMinFrameDurationSupported")))
-					return _SupportsVideoMinFrameDuration;
-				return false;
-			}
-		}
-
-#if NET
-		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Deprecated (PlatformName.iOS, 7, 0)]
-#endif
-		public bool SupportsVideoMaxFrameDuration {
-			get {
-#if !MONOMAC
-				if (RespondsToSelector (new Selector ("isVideoMaxFrameDurationSupported")))
-					return _SupportsVideoMaxFrameDuration;
-#endif
-				return false;
-			}
-		}
-
 #if !NET
+	public partial class AVCaptureConnection {
 		[Obsolete ("Use AvailableAudioChannels property instead.")]
-#else
-		[Obsolete ("Use AvailableAudioChannels property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 		public virtual AVCaptureAudioChannel AudioChannels { 
 			get { throw new NotSupportedException ("Use AvailableAudioChannels property instead."); }
 		}
 	}
+#endif
 }
 
 #endif // !TVOS

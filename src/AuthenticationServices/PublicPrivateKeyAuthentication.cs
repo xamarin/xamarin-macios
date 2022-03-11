@@ -11,7 +11,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -40,7 +39,7 @@ namespace AuthenticationServices {
 		public static ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]? GetAllSupportedPublicKeyCredentialDescriptorTransports () {
 			NSString[]? nsStringArray = NSArray.ArrayFromHandle<NSString> (ASAuthorizationAllSupportedPublicKeyCredentialDescriptorTransports ());
 
-			if (nsStringArray == null)
+			if (nsStringArray is null)
 				return null;
 
 			ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[] asArray = new ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[nsStringArray.Count ()];

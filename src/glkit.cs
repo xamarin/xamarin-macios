@@ -47,7 +47,7 @@ using Matrix4 = global::OpenTK.Matrix4;
 
 #if MONOMAC
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif

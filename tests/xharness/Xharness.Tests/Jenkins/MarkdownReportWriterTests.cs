@@ -165,7 +165,7 @@ namespace Xharness.Tests.Jenkins {
 
 			for (var i = 0; i < count; i++) {
 				var failure = new Mock<ITestTask> ();
-				(string HumanMessage, string IssueLink)? knownIssue = (HumanMessage: "Testing known issues", IssueLink:"http://github.com");
+				var knownIssue = new KnownIssue(humanMessage: "Testing known issues", issueLink:"http://github.com");
 				failure.Setup (t => t.Finished).Returns (true);
 				failure.Setup (t => t.Succeeded).Returns (false);
 				failure.Setup (t => t.Failed).Returns (true);

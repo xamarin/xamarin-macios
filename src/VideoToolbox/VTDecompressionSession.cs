@@ -11,7 +11,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -186,26 +185,27 @@ namespace VideoToolbox {
 				: null;
 		}
 #endif
-		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(VTDecompressionOutputCallback,CMVideoFormatDescription,VTVideoDecoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
 
+#if !NET
+		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(VTDecompressionOutputCallback,CMVideoFormatDescription,VTVideoDecoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
 		public static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
 							     CMVideoFormatDescription formatDescription,
 							     VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 							     NSDictionary? destinationImageBufferAttributes = null)
 		{
-#if NET
-			unsafe {
-				return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes, &DecompressionCallback);
-			}
-#else
 			return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes, static_DecompressionOutputCallback);
-#endif
 		}
+#endif // !NET
 	
 		public static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
 							     CMVideoFormatDescription formatDescription,
+#if NET
+							     VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
+							     CVPixelBufferAttributes? destinationImageBufferAttributes = null)
+#else
 							     VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
 							     CVPixelBufferAttributes? destinationImageBufferAttributes)
+#endif
 		{
 #if NET
 			unsafe {

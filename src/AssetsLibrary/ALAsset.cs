@@ -14,7 +14,6 @@ using CoreFoundation;
 using CoreLocation;
 using UIKit;
 using MediaPlayer;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -47,7 +46,7 @@ namespace AssetsLibrary {
 				// note: this can return an NSString like: ALErrorInvalidProperty
 				// which causes an InvalidCastException with a normal cast
 				var n = ValueForProperty (_PropertyDuration) as NSNumber;
-				return n == null ? double.NaN : n.DoubleValue;
+				return n?.DoubleValue ?? double.NaN;
 			}
 		}
 
@@ -81,9 +80,7 @@ namespace AssetsLibrary {
 			get {
 				// do not show an ArgumentNullException inside the
 				// debugger for releases before 6.0
-				if (_PropertyAssetURL == null)
-					return null;
-				return (NSUrl) ValueForProperty (_PropertyAssetURL);
+				return _PropertyAssetURL is not null ? (NSUrl) ValueForProperty (_PropertyAssetURL) : null;
 			}
 		}
 	}
