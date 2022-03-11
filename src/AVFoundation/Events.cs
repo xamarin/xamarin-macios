@@ -61,7 +61,7 @@ namespace AVFoundation {
 	sealed class InternalAVAudioPlayerDelegate : AVAudioPlayerDelegate {
 		internal EventHandler? cbEndInterruption, cbBeginInterruption;
 		internal EventHandler<AVStatusEventArgs>? cbFinishedPlaying;
-		internal EventHandler<AVErrorEventArgs>? cbDecoderError;
+		internal EventHandler<AVErrorEventArgs?>? cbDecoderError;
 
 		public InternalAVAudioPlayerDelegate ()
 		{
@@ -80,8 +80,8 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void DecoderError (AVAudioPlayer player, NSError?  error)
 		{
-			if (cbDecoderError is not null && error is not null)
-				cbDecoderError (player, new AVErrorEventArgs (error));
+			if (cbDecoderError is not null)
+				cbDecoderError (player, error is not null ? new AVErrorEventArgs (error) : null);
 		}
 #if !MONOMAC	
 		[Preserve (Conditional = true)]
@@ -161,7 +161,7 @@ namespace AVFoundation {
 	internal class InternalAVAudioRecorderDelegate : AVAudioRecorderDelegate {
 		internal EventHandler? cbEndInterruption, cbBeginInterruption;
 		internal EventHandler<AVStatusEventArgs>? cbFinishedRecording;
-		internal EventHandler<AVErrorEventArgs>? cbEncoderError;
+		internal EventHandler<AVErrorEventArgs?>? cbEncoderError;
 
 		public InternalAVAudioRecorderDelegate ()	
 		{
@@ -178,8 +178,8 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void EncoderError (AVAudioRecorder recorder, NSError? error)
 		{
-			if (cbEncoderError is not null && error is not null)
-				cbEncoderError (recorder, new AVErrorEventArgs (error));
+			if (cbEncoderError is not null)
+				cbEncoderError (recorder, error is not null ? new AVErrorEventArgs (error) : null);
 		}
 #if !MONOMAC	
 		[Preserve (Conditional = true)]
