@@ -2277,6 +2277,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreLocation \
 	CoreMIDI \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
