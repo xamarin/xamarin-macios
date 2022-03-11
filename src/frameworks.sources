@@ -2290,6 +2290,7 @@ MACCATALYST_FRAMEWORKS = \
 	HealthKit \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
