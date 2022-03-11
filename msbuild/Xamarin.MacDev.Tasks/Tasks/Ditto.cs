@@ -29,7 +29,14 @@ namespace Xamarin.MacDev.Tasks
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{	
+			if (!Directory.Exists(Source.ItemSpec))
+				return Enumerable.Empty<ITaskItem> ();
+
+			return Directory.GetFiles (Source.ItemSpec, "*", SearchOption.AllDirectories)
+				.Select(f => new TaskItem(f));
+		} 
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
 
