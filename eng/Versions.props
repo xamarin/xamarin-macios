@@ -7,5 +7,6 @@
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>7.0.0-preview.2.22116.9</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenManifest70100PackageVersion>7.0.0-alpha.2.22111.1</MicrosoftNETWorkloadEmscriptenManifest70100PackageVersion>
+    <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
   </PropertyGroup>
 </Project>
