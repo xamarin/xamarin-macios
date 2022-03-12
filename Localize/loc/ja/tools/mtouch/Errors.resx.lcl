@@ -2746,6 +2746,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MT4186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[レジストラーで最適でない型 '{0}' が見つかりました。この型には、2 つの (ObjCRuntime.NativeHandle, bool) 引数を受け取るコンストラクターがありません。ただし、2 つの (System.IntPtr, bool) 引数を受け取るコンストラクターが見つかりました (代わりに使用されます)。(System.IntPtr, bool) コンストラクターの署名を (ObjCRuntime.NativeHandle, bool) に変更することを強くお勧めします。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MT5101" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component]D;]A;		]]></Val>
@@ -3567,6 +3576,15 @@
           <Val><![CDATA[The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[ツール '{0}' を検索しているときにツール xcrun で結果が見つかりませんでした (ファイル '{1}' が存在しません)。詳細については、ビルド ログをご確認ください。]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX7000" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occured while executing the custom linker steps. Please review the build log for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[カスタム リンカー ステップの実行中にエラーが発生しました。詳細については、ビルド ログを確認してください。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

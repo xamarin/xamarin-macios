@@ -125,7 +125,7 @@ namespace CoreAnimation {
 			_Contents = value == null ? IntPtr.Zero : value.Handle;
 		}
 
-#if MONOMAC
+#if MONOMAC && !NET
 		[Obsolete ("Use 'AutoresizingMask' instead.")]
 		public virtual CAAutoresizingMask AutoresizinMask { 
 			get {

@@ -23,7 +23,8 @@ namespace Metal {
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoMac, NoTV]
+		[NoMac]
+		[NoTV]
 #endif
 		public static void Update (this IMTLResourceStateCommandEncoder This, IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion[] regions, nuint[] mipLevels, nuint[] slices)
 		{

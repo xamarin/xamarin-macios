@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <BundleResource Include="Resources\Spaceship.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MyPhotoEditingExtension\MyPhotoEditingExtension.dotnet.csproj">
       <IsAppExtension>True</IsAppExtension>
     </ProjectReference>

@@ -27,6 +27,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
+#if !NET
 namespace OpenTK
 {
 
@@ -354,3 +355,4 @@ namespace OpenTK
         #endregion BitConverter
     }
 }
+#endif // !NET

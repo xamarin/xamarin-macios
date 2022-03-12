@@ -762,7 +762,7 @@ namespace Xamarin
 				switch (cmd) {
 				case MachO.LoadCommands.LoadDylib:
 				case MachO.LoadCommands.LoadWeakDylib:
-				case MachO.LoadCommands.ReexportDylib:
+				case MachO.LoadCommands.ReexportDylib: { 
 					var dlc = new DylibLoadCommand ();
 					dlc.cmd = reader.ReadUInt32 ();
 					dlc.cmdsize = reader.ReadUInt32 ();
@@ -783,6 +783,29 @@ namespace Xamarin
 
 					lc = dlc;
 					break;
+				}
+				case MachO.LoadCommands.IdDylib: {
+					var dlc = new DylibIdCommand ();
+					dlc.cmd = reader.ReadUInt32 ();
+					dlc.cmdsize = reader.ReadUInt32 ();
+					/*var nameofs = */ reader.ReadUInt32 ();
+					dlc.timestamp = reader.ReadUInt32 ();
+					dlc.current_version = reader.ReadUInt32 ();
+					dlc.compatibility_version = reader.ReadUInt32 ();
+					var namelength = dlc.cmdsize - 6 * 4;
+					var namechars = reader.ReadBytes ((int) namelength);
+					// strip off any null characters at the end.
+					for (int n = namechars.Length - 1; n >= 0; n--) {
+						if (namechars [n] == 0)
+							namelength--;
+						else
+							break;
+					}
+					dlc.name = Encoding.UTF8.GetString (namechars, 0, (int) namelength);
+
+					lc = dlc;
+					break;
+				}
 				case MachO.LoadCommands.Uuid:
 					var uuidCmd = new UuidCommand ();
 					uuidCmd.cmd = reader.ReadUInt32 ();
@@ -1015,6 +1038,24 @@ namespace Xamarin
 #endif
 	}
 	
+	public class DylibIdCommand : LoadCommand {
+		public string name;
+		public uint timestamp;
+		public uint current_version;
+		public uint compatibility_version;
+
+#if DEBUG
+		public override void Dump ()
+		{
+			base.Dump ();
+			Console.WriteLine ("    name: {0}", name);
+			Console.WriteLine ("    timestamp: {0}", timestamp);
+			Console.WriteLine ("    current_version: {0}", current_version);
+			Console.WriteLine ("    compatibility_version: {0}", compatibility_version);
+		}
+#endif
+	}
+
 	public class UuidCommand : LoadCommand {
 		public byte [] uuid;
 

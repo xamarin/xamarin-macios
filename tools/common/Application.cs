@@ -583,8 +583,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		string info_plistpath;
 		public string InfoPListPath {
 			get {
+				if (info_plistpath is not null)
+					return info_plistpath;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -596,6 +600,9 @@ namespace Xamarin.Bundler {
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
+			}
+			set {
+				info_plistpath = value;
 			}
 		}
 
@@ -1359,7 +1366,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalManagedExceptions) {
 			case MarshalManagedExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
 				} else if (EnableCoopGC.Value) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
@@ -1394,7 +1401,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalObjectiveCExceptions) {
 			case MarshalObjectiveCExceptionMode.Default:
-				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+				if (Driver.IsDotNet) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 				} else if (EnableCoopGC.Value) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
@@ -1546,6 +1553,12 @@ namespace Xamarin.Bundler {
 				aotArguments.Add ("full");
 			} else
 				aotArguments.Add ("full");
+
+			if (IsDeviceBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/0");
+			} else if (IsSimulatorBuild) {
+				aotArguments.Add ("readonly-value=ObjCRuntime.Runtime.Arch=i4/1");
+			}
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
 			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);

@@ -65,14 +65,15 @@ namespace ObjCRuntime {
 
 		protected virtual void Dispose (bool disposing)
 		{
-			ClearHandle ();
+			handle = NativeHandle.Zero;
 		}
 
+#if !NET
 		protected void ClearHandle ()
 		{
 			handle = NativeHandle.Zero;
 		}
-
+#endif
 		void InitializeHandle (NativeHandle handle, bool verify)
 		{
 #if !COREBUILD
@@ -91,9 +92,10 @@ namespace ObjCRuntime {
 
 		public NativeHandle GetCheckedHandle ()
 		{
-			if (handle == NativeHandle.Zero)
+			var h = handle;
+			if (h == NativeHandle.Zero)
 				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
-			return handle;
+			return h;
 		}
 
 #if NET
