@@ -11,7 +11,6 @@
 
 using ObjCRuntime;
 using CoreVideo;
-using System.Runtime.Versioning;
 
 #nullable enable
 
