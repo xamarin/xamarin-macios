@@ -113,7 +113,7 @@ steps:
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
 - task: DownloadPipelineArtifact@2
-  displayName: Download artifacts.json
+  displayName: Download json artifacts
   inputs:
     patterns: '**/*.json'
     allowFailedBuilds: true
