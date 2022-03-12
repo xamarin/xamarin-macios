@@ -4,7 +4,6 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using NativeHandle = System.IntPtr;
 

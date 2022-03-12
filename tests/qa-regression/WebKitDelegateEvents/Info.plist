@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>WebKitDelegateEvents</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.WebKitDelegateEvents</string>
+	<string>com.xamarin.WebKitDelegateEvents</string>
 	<key>CFBundleName</key>
 	<string>WebKitDelegateEvents</string>
 	<key>CFBundleVersion</key>

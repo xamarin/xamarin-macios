@@ -1,3 +1,5 @@
+#nullable enable
+
 using ObjCRuntime;
 using Foundation;
 using System;
@@ -8,9 +10,9 @@ namespace CloudKit
 {
 	public partial class CKRecord
 	{
-		public NSObject this[string key] {
+		public NSObject? this[string key] {
 			get { return _ObjectForKey (key); }
-			set { _SetObject (value.Handle, key); }
+			set { _SetObject (value.GetHandle (), key); }
 		}
 	}
 }

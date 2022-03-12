@@ -7,7 +7,6 @@
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 using System;
 

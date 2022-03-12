@@ -12,6 +12,9 @@ using Xamarin.Tests;
 
 namespace GeneratorTests
 {
+#if NET
+		[Ignore ("Ignore this until done https://github.com/xamarin/maccore/issues/2549")]
+#endif
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
@@ -876,6 +879,15 @@ namespace GeneratorTests
 			verifyDelegate ("D2");
 			verifyDelegate ("D3");
 			verifyDelegate ("NSTableViewColumnRowPredicate");
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void CSharp10Syntax ()
+		{
+			BuildFile (Profile.iOS, "tests/csharp10syntax.cs");
 		}
 
 		[Test]

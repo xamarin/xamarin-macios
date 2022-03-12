@@ -80,8 +80,8 @@ namespace Xamarin.iOS.Tasks
 				var dSYMInfoPlist = Path.Combine (AppBundlePath + ".dSYM", "Contents", "Info.plist");
 				var nativeExecutable = Path.Combine (AppBundlePath, appName);
 
-				Assert.IsTrue (File.Exists (dSYMInfoPlist), "dSYM Info.plist file does not exist");
-				Assert.IsTrue (File.GetLastWriteTimeUtc (dSYMInfoPlist) >= File.GetLastWriteTimeUtc (nativeExecutable), "dSYM Info.plist should be newer than the native executable");
+				Assert.That (dSYMInfoPlist, Does.Exist, "dSYM Info.plist file does not exist");
+				Assert.That (File.GetLastWriteTimeUtc (dSYMInfoPlist), Is.GreaterThanOrEqualTo (File.GetLastWriteTimeUtc (nativeExecutable)), $"dSYM Info.plist ({dSYMInfoPlist}) should be newer than the native executable ({nativeExecutable})");
 			}
 
 			return mtouchPaths;

@@ -16,7 +16,7 @@ steps:
 # download the common artifacts + the api diff
 - template: ../common/download-artifacts.yml
   parameters:
-    devicePrefix: sim
+    testPrefix: sim
     runTests: ${{ parameters.runTests }}
 
 - ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['APIDIFF_BUILT'], 'True')) }}:

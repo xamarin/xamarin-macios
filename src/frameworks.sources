@@ -1853,6 +1853,7 @@ SHARED_API_SOURCES = \
 	ObjCRuntime/ObsoleteConstants.cs \
 
 SHARED_CORE_SOURCES = \
+	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
@@ -2298,6 +2299,7 @@ MACCATALYST_FRAMEWORKS = \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HealthKit \
 	HomeKit \
 	IdentityLookup \
 	ImageIO \
@@ -2346,6 +2348,7 @@ MACCATALYST_FRAMEWORKS = \
 	UserNotificationsUI \
 	VideoToolbox \
 	Vision \
+	VisionKit \
 	WKWebKit \
 
 # List frameworks that have been removed in .NET
