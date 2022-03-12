@@ -16,10 +16,6 @@ steps:
   persistCredentials: true
   path: s/xamarin-macios
 
-- template: download-artifacts.yml 
-  parameters:
-    runTests: ${{ parameters.runTests }}
-
 # Upload the API diff to vsdrops to be able to locate it
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
   displayName: 'Publish API diff to Artifact Services Drop'
