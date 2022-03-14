@@ -3770,7 +3770,7 @@ namespace HealthKit {
 
 		[iOS (15,4)]
 		[Export ("initWithRecordTypes:sourceTypes:predicate:resultsHandler:")]
-		IntPtr Constructor (string [] recordTypes, [BindAs (typeof (HKVerifiableClinicalRecordSourceType []))] NSString [] sourceTypes, [NullAllowed] NSPredicate predicate, Action<HKVerifiableClinicalRecordQuery, HKVerifiableClinicalRecord [], NSError> resultsHandler);
+		IntPtr Constructor (string [] recordTypes, [BindAs (typeof (HKVerifiableClinicalRecordSourceType []))] NSString [] sourceTypes, [NullAllowed] NSPredicate predicate, Action<HKVerifiableClinicalRecordQuery, HKVerifiableClinicalRecord []?, NSError?> resultsHandler);
 	}
 
 	[NoWatch, iOS (15,0)]

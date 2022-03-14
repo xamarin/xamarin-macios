@@ -81,7 +81,7 @@ namespace GameController {
 			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (values.Length > DiscretePositionCount)
-				throw new ArgumentException ($"The '{nameof (values)}' array length can't be greater than {DiscretePositionCount}.");
+				throw new ArgumentOutOfRangeException ($"The '{nameof (values)}' array length can't be greater than {DiscretePositionCount}.");
 
 			Values = values;
 		}
@@ -108,7 +108,7 @@ namespace GameController {
 			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (values.Length > DiscretePositionCount)
-				throw new ArgumentException ($"The '{nameof (values)}' array length can't be greater than {DiscretePositionCount}.");
+				throw new ArgumentOutOfRangeException ($"The '{nameof (values)}' array length can't be greater than {DiscretePositionCount}.");
 
 			Values = values;
 		}
