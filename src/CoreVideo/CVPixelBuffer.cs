@@ -52,7 +52,7 @@ namespace CoreVideo {
 		}
 
 		public CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, CVPixelBufferAttributes? attributes)
-			: this (width, height, pixelFormatType, attributes == null ? null : attributes.Dictionary)
+			: this (width, height, pixelFormatType, attributes?.Dictionary)
 		{
 		}
 
@@ -88,7 +88,7 @@ namespace CoreVideo {
 		{
 			CVReturn ret;
 			IntPtr resolvedDictionaryOut;
-			if (attributes == null) {
+			if (attributes is null) {
 				ret = CVPixelBufferCreateResolvedAttributesDictionary (IntPtr.Zero, IntPtr.Zero, out resolvedDictionaryOut);
 			} else {
 				using (var array = NSArray.FromNSObjects (attributes)) {
@@ -174,7 +174,7 @@ namespace CoreVideo {
 			IntPtr handle;
 			GCHandle gchandle;
 
-			if (data == null)
+			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			if (data.Length < height * bytesPerRow)
@@ -249,16 +249,16 @@ namespace CoreVideo {
 			PlaneData data;
 			GCHandle data_handle;
 
-			if (planes == null)
+			if (planes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planes));
 
-			if (planeWidths == null)
+			if (planeWidths is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeWidths));
 
-			if (planeHeights == null)
+			if (planeHeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeHeights));
 
-			if (planeBytesPerRow == null)
+			if (planeBytesPerRow is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeBytesPerRow));
 
 			var planeCount = planes.Length;
