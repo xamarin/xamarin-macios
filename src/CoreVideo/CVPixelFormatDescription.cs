@@ -204,7 +204,7 @@ namespace CoreVideo {
 		public static void Register (NSDictionary description, int pixelFormat)
 		{
 			if (description == null)
-				throw new ArgumentNullException ("description");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
 
 			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, pixelFormat);
 		}
@@ -213,7 +213,7 @@ namespace CoreVideo {
 		public static void Register (NSDictionary description, CVPixelFormatType pixelFormat)
 		{
 			if (description == null)
-				throw new ArgumentNullException ("description");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
 
 			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, (int) pixelFormat);
 		}
