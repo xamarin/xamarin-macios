@@ -17,7 +17,7 @@ namespace CoreML {
 	public partial class MLMultiArray {
 		static NSNumber[] ConvertArray (nint[] value)
 		{
-			if (value == null)
+			if (value is null)
 				return null!;
 
 			return Array.ConvertAll<nint, NSNumber> (value, NSNumber.FromNInt);
