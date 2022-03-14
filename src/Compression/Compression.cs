@@ -178,7 +178,8 @@ namespace Compression
 					flushSuccessful = _deflater!.Flush (_buffer!, out compressedBytes);
 
 					EnsureNotDisposed ();
-					await _stream!.WriteAsync(_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
+					// TODO I think we should call EnsureBufferInitialized () for this next call as well
+					await _stream!.WriteAsync(_buffer!, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
 				} while (flushSuccessful);
 			} finally {
 				AsyncOperationCompleting ();
@@ -244,7 +245,8 @@ namespace Compression
 					break;
 				}
 
-				int bytes = _stream!.Read (_buffer, 0, _buffer!.Length);
+				// TODO I think we should call EnsureBufferInitialized () for this next call
+				int bytes = _stream!.Read (_buffer!, 0, _buffer!.Length);
 				if (bytes <= 0) {
 					break;
 				}
@@ -311,7 +313,7 @@ namespace Compression
 			throw new InvalidOperationException ("Writing to the compression stream is not supported.");
 		}
 
-		public override IAsyncResult BeginRead (byte[] buffer, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
+		public override IAsyncResult BeginRead (byte[] buffer, int offset, int count, AsyncCallback? asyncCallback, object? asyncState) =>
 			TaskToApm.Begin(ReadAsync (buffer, offset, count, CancellationToken.None), asyncCallback, asyncState);
 
 		public override int EndRead (IAsyncResult asyncResult) =>
@@ -441,7 +443,7 @@ namespace Compression
 
 			unsafe {
 				// Pass new bytes through deflater and write them too:
-				fixed (byte* bufferPtr = &MemoryMarshal.GetReference (source) as byte*) {
+				fixed (byte* bufferPtr = source) {
 					_deflater!.SetInput (bufferPtr, source.Length);
 					WriteDeflaterOutput ();
 					_wroteBytes = true;
@@ -457,7 +459,8 @@ namespace Compression
 			while (!_deflater!.NeedsInput ()) {
 				int compressedBytes = _deflater.GetDeflateOutput (_buffer!);
 				if (compressedBytes > 0) {
-					_stream!.Write (_buffer, 0, compressedBytes);
+					// TODO I think we should call EnsureBufferInitialized () for this next call
+					_stream!.Write (_buffer!, 0, compressedBytes);
 				}
 				if (_deflater.Finished ()) {
 					break;
@@ -484,7 +487,8 @@ namespace Compression
 					// call EnsureBufferInitialized () to create a _buffer if it is null?
 					flushSuccessful = _deflater!.Flush (_buffer!, out compressedBytes);
 					if (flushSuccessful) {
-						_stream!.Write (_buffer, 0, compressedBytes);
+						// TODO I think we should call EnsureBufferInitialized () for this next call
+						_stream!.Write (_buffer!, 0, compressedBytes);
 					}
 				} while (flushSuccessful);
 			}
@@ -522,7 +526,8 @@ namespace Compression
 					finished = _deflater!.Finish (_buffer!, out compressedBytes);
 
 					if (compressedBytes > 0)
-						_stream.Write(_buffer, 0, compressedBytes);
+						// TODO I think we should call EnsureBufferInitialized () for this next call
+						_stream.Write(_buffer!, 0, compressedBytes);
 				} while (!finished);
 			} else {
 				// In case of zero length buffer, we still need to clean up the native created stream before
@@ -575,7 +580,7 @@ namespace Compression
 			}
 		}
 
-		public override IAsyncResult BeginWrite (byte[] array, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
+		public override IAsyncResult BeginWrite (byte[] array, int offset, int count, AsyncCallback? asyncCallback, object? asyncState) =>
 			TaskToApm.Begin(WriteAsync (array, offset, count, CancellationToken.None), asyncCallback, asyncState);
 
 		public override void EndWrite (IAsyncResult asyncResult) => TaskToApm.End (asyncResult);
@@ -639,7 +644,8 @@ namespace Compression
 				// call EnsureBufferInitialized () to create a _buffer if it is null?
 				int compressedBytes = _deflater.GetDeflateOutput (_buffer!);
 				if (compressedBytes > 0) {
-					await _stream!.WriteAsync (_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
+					// TODO I think we should call EnsureBufferInitialized () for this next call
+					await _stream!.WriteAsync (_buffer!, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
 				}
 
 				if (_deflater.Finished ()) {
@@ -715,8 +721,10 @@ namespace Compression
 				} finally {
 					_deflateStream.AsyncOperationCompleting ();
 
-					Array.Clear (_arrayPoolBuffer, 0, _arrayPoolBufferHighWaterMark); // clear only the most we used
-					ArrayPool<byte>.Shared.Return (_arrayPoolBuffer, clearArray: false);
+					// TODO I think we should not run the clear if _arrayPoolBuffer is null or make sure it is initialized as questioned above as well
+					Array.Clear (_arrayPoolBuffer!, 0, _arrayPoolBufferHighWaterMark); // clear only the most we used
+					// TODO another instant here where it would maybe be better if we make sure _arrayPoolBuffer is initialized
+					ArrayPool<byte>.Shared.Return (_arrayPoolBuffer!, clearArray: false);
 					_arrayPoolBuffer = null;
 				}
 			}

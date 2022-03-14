@@ -50,7 +50,7 @@ namespace System.Threading.Tasks
                 return;
             }
 
-            ObjCRuntime.ThrowHelper.ThrowArgumentNullException ();
+            ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (asyncResult));
         }
 
         /// <summary>Processes an IAsyncResult returned by Begin.</summary>
@@ -60,9 +60,15 @@ namespace System.Threading.Tasks
             if (asyncResult is TaskAsyncResult twar && twar._task is Task<TResult> task)
             {
                 return task.GetAwaiter().GetResult();
+            } else if (asyncResult is null) {
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (asyncResult));
+            } else {
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (twar._task));
             }
 
-            ObjCRuntime.ThrowHelper.ThrowArgumentNullException ();
+            // since the compiler does not recognize ObjCRuntime.ThrowHelper.ThrowArgumentNullException
+            // as a way to terminate the method call
+            throw new ArgumentNullException ();
         }
 
         /// <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
