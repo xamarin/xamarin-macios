@@ -58,7 +58,7 @@ namespace Compression
 		/// </summary>
 		public CompressionStream (Stream stream, CompressionMode mode, CompressionAlgorithm algorithm, bool leaveOpen)
 		{
-			if (stream == null)
+			if (stream is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stream));
 
 			_stream = stream;
@@ -101,7 +101,7 @@ namespace Compression
 
 		private void EnsureBufferInitialized ()
 		{
-			if (_buffer == null) {
+			if (_buffer is null) {
 				InitializeBuffer ();
 			}
 		}
@@ -111,7 +111,7 @@ namespace Compression
 		public override bool CanRead
 		{
 			get {
-				if (_stream == null) {
+				if (_stream is null) {
 					return false;
 				}
 
@@ -121,7 +121,7 @@ namespace Compression
 
 		public override bool CanWrite {
 			get {
-				if (_stream == null) {
+				if (_stream is null) {
 					return false;
 				}
 
@@ -262,7 +262,7 @@ namespace Compression
 
 		private void ValidateParameters (byte[] array, int offset, int count)
 		{
-			if (array == null)
+			if (array is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 
 			if (offset < 0)
@@ -277,7 +277,7 @@ namespace Compression
 
 		private void EnsureNotDisposed ()
 		{
-			if (_stream == null)
+			if (_stream is null)
 				ThrowStreamClosedException ();
 		}
 
@@ -496,7 +496,7 @@ namespace Compression
 			if (!disposing)
 				return;
 
-			if (_stream == null)
+			if (_stream is null)
 				return;
 
 			if (_mode != CompressionMode.Compress)
@@ -562,7 +562,7 @@ namespace Compression
 						_inflater = null;
 
 						byte[]? buffer = _buffer;
-						if (buffer != null) {
+						if (buffer is not null) {
 							_buffer = null;
 							if (!AsyncOperationIsActive) {
 								ArrayPool<byte>.Shared.Return (buffer);
@@ -677,9 +677,9 @@ namespace Compression
 
 			public CopyToAsyncStream (CompressionStream deflateStream, Stream destination, int bufferSize, CancellationToken cancellationToken)
 			{
-				if (deflateStream == null)
+				if (deflateStream is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (deflateStream));
-				if (destination == null)
+				if (destination is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 				if (bufferSize <= 0)
 					throw new ArgumentOutOfRangeException (nameof (bufferSize));
