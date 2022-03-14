@@ -50,7 +50,7 @@ namespace System.Threading.Tasks
                 return;
             }
 
-            throw new ArgumentNullException();
+            ObjCRuntime.ThrowHelper.ThrowArgumentNullException ();
         }
 
         /// <summary>Processes an IAsyncResult returned by Begin.</summary>
@@ -62,7 +62,7 @@ namespace System.Threading.Tasks
                 return task.GetAwaiter().GetResult();
             }
 
-            throw new ArgumentNullException();
+            ObjCRuntime.ThrowHelper.ThrowArgumentNullException ();
         }
 
         /// <summary>Provides a simple IAsyncResult that wraps a Task.</summary>

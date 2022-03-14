@@ -51,7 +51,7 @@ namespace Compression
 		public unsafe int Inflate (byte[] bytes, int offset, int length)
 		{
 			if (bytes == null)
-				throw new ArgumentNullException (nameof (bytes));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			// If Inflate is called on an invalid or unready inflater, return 0 to indicate no bytes have been read.
 			if (length == 0)
 				return 0;
@@ -98,7 +98,7 @@ namespace Compression
 		public void SetInput (byte[] inputBuffer, int startIndex, int count)
 		{
 			if (inputBuffer == null)
-				throw new ArgumentNullException (nameof (inputBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputBuffer));
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
 			if (_inputBufferHandle.IsAllocated)
