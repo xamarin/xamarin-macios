@@ -27,7 +27,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Runtime.Versioning;
 
 using Foundation; 
 using ObjCRuntime;
@@ -46,7 +45,7 @@ namespace CoreAnimation {
 		[Export ("initWithLayer:")]
 		public CALayer (CALayer other)
 		{
-			if (other == null)
+			if (other is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (other));
 
 			if (this.GetType () == typeof (CALayer)){
@@ -89,14 +88,14 @@ namespace CoreAnimation {
 		void SetCALayerDelegate (CALayerDelegate? value)
 		{
 			// Remove ourselves from any existing CALayerDelegate.
-			if (calayerdelegate != null) {
+			if (calayerdelegate is not null) {
 				var del = (CALayerDelegate?) calayerdelegate.Target;
 				if (del == value)
 					return;
 				del?.SetCALayer (null);
 			}
 			// Tell the new CALayerDelegate about ourselves
-			if (value == null) {
+			if (value is null) {
 				calayerdelegate = null;
 			} else {
 				calayerdelegate = new WeakReference (value);
@@ -108,9 +107,9 @@ namespace CoreAnimation {
 		[Preserve (Conditional = true)]
 		void OnDispose ()
 		{
-			if (calayerdelegate != null) {
+			if (calayerdelegate is not null) {
 				var del = (CALayerDelegate?) calayerdelegate.Target;
-				if (del != null)
+				if (del is not null)
 					WeakDelegate = null;
 			}
 		}
@@ -122,7 +121,7 @@ namespace CoreAnimation {
 
 		public void SetContents (NSObject value)
 		{
-			_Contents = value == null ? IntPtr.Zero : value.Handle;
+			_Contents = value.GetHandle ();
 		}
 
 #if MONOMAC && !NET

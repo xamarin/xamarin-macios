@@ -30,12 +30,16 @@
 
 #nullable enable
 
+// Adding this warning disable since AudioUnitPropertyIDType is removed from public API but used internally
+#if !XAMCORE_3_0
+#pragma warning disable CS0618
+#endif
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Threading;
 using AudioToolbox;
 using ObjCRuntime;
@@ -150,7 +154,7 @@ namespace AudioUnit
 		public SamplerInstrumentData (CFUrl fileUrl, InstrumentType instrumentType)
 		{
 			if (fileUrl is null)
-				throw new ArgumentNullException (nameof (fileUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 
 			this.FileUrl = fileUrl;
 			this.InstrumentType = instrumentType;
@@ -327,7 +331,7 @@ namespace AudioUnit
 		static IntPtr Create (AudioComponent component)
 		{
 			if (component is null)
-				throw new ArgumentNullException (nameof (component));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (component));
 
 			var err = AudioComponentInstanceNew (component.GetCheckedHandle (), out var handle);
 			if (err != 0)
@@ -504,7 +508,7 @@ namespace AudioUnit
 		public AudioUnitStatus LoadInstrument (SamplerInstrumentData instrumentData, AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)
 		{
 			if (instrumentData is null)
-				throw new ArgumentNullException (nameof (instrumentData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (instrumentData));
 
 			var data = instrumentData.ToStruct ();
 			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.LoadInstrument, scope, audioUnitElement, 
@@ -725,7 +729,7 @@ namespace AudioUnit
 		{
 
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 				
 			var nameHandle = CFString.CreateNative (name);
 			try {
@@ -845,7 +849,7 @@ namespace AudioUnit
 		public AudioUnitStatus Render (ref AudioUnitRenderActionFlags actionFlags, AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, AudioBuffers data)
 		{
 			if ((IntPtr)data == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			return AudioUnitRender (Handle, ref actionFlags, ref timeStamp, busNumber, numberFrames, (IntPtr) data);
 		}
 
@@ -1010,7 +1014,7 @@ namespace AudioUnit
 		public AudioUnitStatus SetScheduledFileRegion (AUScheduledAudioFileRegion region)
 		{
 			if (region is null)
-				throw new ArgumentNullException (nameof (region));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (region));
 
 			var safr = region.GetAudioFileRegion ();
 			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileRegion, AudioUnitScopeType.Global, 0, ref safr, Marshal.SizeOf (safr));
@@ -1028,7 +1032,7 @@ namespace AudioUnit
 		public AudioUnitStatus SetScheduledFiles (AudioFile audioFile)
 		{
 			if (audioFile is null)
-				throw new ArgumentNullException (nameof (audioFile));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioFile));
 
 			var audioFilehandle = audioFile.Handle;
 			return AudioUnitSetProperty (GetCheckedHandle (), AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, ref audioFilehandle,  Marshal.SizeOf (Handle));
@@ -1041,7 +1045,7 @@ namespace AudioUnit
 		public unsafe AudioUnitStatus SetScheduledFiles (AudioFile[] audioFiles)
 		{
 			if (audioFiles is null)
-				throw new ArgumentNullException (nameof (audioFiles));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (audioFiles));
 
 			int count = audioFiles.Length;
 			IntPtr[] handles = new IntPtr[count];
@@ -1252,7 +1256,7 @@ namespace AudioUnit
 //
 //		public AURenderEvent? Next {
 //			get {
-//				if (UnsafeNext != null)
+//				if (UnsafeNext is not null)
 //					return (AURenderEvent?) Marshal.PtrToStructure ((IntPtr)UnsafeNext, typeof (AURenderEvent));
 //				return null;
 //			}

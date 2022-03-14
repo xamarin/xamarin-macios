@@ -2,7 +2,7 @@
 # job that downloads the html report from the artifacts and uploads them into vsdrops.
 parameters:
 
-- name: devicePrefix
+- name: testPrefix
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
@@ -16,25 +16,10 @@ steps:
   persistCredentials: true
   path: s/xamarin-macios
 
-- template: download-artifacts.yml 
-  parameters:
-    runTests: ${{ parameters.runTests }}
-
-# Upload full report to vsdrops using the the build numer and id as uuids.
-- ${{ if eq(parameters.runTests, true) }}:
-  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-    displayName: 'Publish Html test report to Artifact Services Drop'
-    inputs:
-      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-      dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
-      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }}'
-      sourcePath: $(HTML_REPORT_PATH)
-      detailedLog: true
-      usePat: true 
-
 # Upload the API diff to vsdrops to be able to locate it
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
   displayName: 'Publish API diff to Artifact Services Drop'
+  continueOnError: true
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: 'DropMetadata-APIDiff'
@@ -45,6 +30,7 @@ steps:
 
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
   displayName: 'Publish API & Generator comparisonn to Artifact Services Drop'
+  continueOnError: true
   condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'

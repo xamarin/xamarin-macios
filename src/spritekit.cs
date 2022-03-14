@@ -54,7 +54,7 @@ using UIColor = global::AppKit.NSColor;
 using UIImage = global::AppKit.NSImage;
 using UIView = global::AppKit.NSView;
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif

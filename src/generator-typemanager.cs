@@ -194,7 +194,8 @@ public class TypeManager {
 #if NET
 		System_nint = Lookup (corlib_assembly, "System", "IntPtr");
 		System_nuint = Lookup (corlib_assembly, "System", "UIntPtr");
-		System_nfloat = Lookup (platform_assembly, "ObjCRuntime", "nfloat");
+		var interop_assembly = binding_touch.universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
+		System_nfloat = Lookup (interop_assembly, "System.Runtime.InteropServices", "NFloat");
 #else
 		System_nint = Lookup (platform_assembly, "System", "nint");
 		System_nuint = Lookup (platform_assembly, "System", "nuint");

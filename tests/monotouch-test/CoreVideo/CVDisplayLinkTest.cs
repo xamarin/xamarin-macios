@@ -59,21 +59,33 @@ namespace MonoTouchFixtures.CoreVideo {
 		}
 
 		[Test]
-		public void DefaultConstructorTest () => Assert.DoesNotThrow (() => {
-			using var displayLink = new CVDisplayLink ();
-		});
+		public void DefaultConstructorTest ()
+		{ 
+			TestRuntime.AssertNotVSTS ();
+			Assert.DoesNotThrow (() => {
+				using var displayLink = new CVDisplayLink ();
+			});
+		}
 
 		[Test]
-		public void SetCurrentDisplayOpenGLTest () => Assert.DoesNotThrow (() => {
-			using var displayLink = new CVDisplayLink ();
-			displayLink.SetCurrentDisplay (CGDisplay.MainDisplayID);
-		});
+		public void SetCurrentDisplayOpenGLTest ()
+		{
+			TestRuntime.AssertNotVSTS ();
+			Assert.DoesNotThrow (() => {
+				using var displayLink = new CVDisplayLink ();
+				displayLink.SetCurrentDisplay (CGDisplay.MainDisplayID);
+			});
+		}
 
 		[Test]
-		public void GetCurrentDisplayTest () => Assert.DoesNotThrow (() => {
-			using var displayLink = new CVDisplayLink ();
-			Assert.AreEqual (CGDisplay.MainDisplayID,  displayLink.GetCurrentDisplay ());
-		});
+		public void GetCurrentDisplayTest ()
+		{
+			TestRuntime.AssertNotVSTS ();
+			Assert.DoesNotThrow (() => {
+				using var displayLink = new CVDisplayLink ();
+				Assert.AreEqual (CGDisplay.MainDisplayID,  displayLink.GetCurrentDisplay ());
+			});
+		}
 
 		[Test]
 		public void GetTypeIdTest ()
@@ -87,6 +99,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void TryTranslateTimeValidTest ()
 		{
+			TestRuntime.AssertNotVSTS ();
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			var outTime = new CVTimeStamp {
 				Version = 0,

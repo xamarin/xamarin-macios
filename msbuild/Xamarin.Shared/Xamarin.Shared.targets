@@ -386,23 +386,33 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<PropertyGroup>
-		<_CollectBundleResourcesDependsOn>
-			$(_CollectBundleResourcesDependsOn);
+		<!--
+			Custom targets that add items to the BundleResource or Content item groups must do so before the _CollectBundleResources target.
+			This can be achieved by adding your custom target to the CollectBundleResourcesDependsOn property group:
+
+			<CollectBundleResourcesDependsOn>
+				$(CollectBundleResourcesDependsOn);
+				MyTargetThatAddsBundleResources;
+			</CollectBundleResourcesDependsOn>
+		-->
+
+		<CollectBundleResourcesDependsOn>
+			$(CollectBundleResourcesDependsOn);
 			_ComputeTargetArchitectures;
 			_ComputeTargetFrameworkMoniker;
-		</_CollectBundleResourcesDependsOn>
-		<_CollectBundleResourcesDependsOn Condition="'$(IsBindingProject)' != 'true'">
-			$(_CollectBundleResourcesDependsOn);
+		</CollectBundleResourcesDependsOn>
+		<CollectBundleResourcesDependsOn Condition="'$(IsBindingProject)' != 'true'">
+			$(CollectBundleResourcesDependsOn);
 			_CompileImageAssets;
 			_CompileInterfaceDefinitions;
 			_CompileSceneKitAssets;
 			_CompileColladaAssets;
 			_CompileTextureAtlases;
 			_CompileCoreMLModels;
-		</_CollectBundleResourcesDependsOn>
+		</CollectBundleResourcesDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
+	<Target Name="_CollectBundleResources" DependsOnTargets="$(CollectBundleResourcesDependsOn)">
 		<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 		     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
 		     list of resources we've procesed in _Processed*Path. Here we load that file, and remove them from the item group with the resources -->
@@ -1584,6 +1594,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
 			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
 			Namespace="$(Namespace)"
+			NoNFloatUsing="$(NoNFloatUsing)"
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
@@ -1714,8 +1725,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_ParseBundlerArguments">
 		<ParseBundlerArguments
 			ExtraArgs="$(_BundlerArguments)"
-			NoSymbolStrip="$(_NoSymbolStrip)"
-			NoDSymUtil="$(_NoDSymUtil)"
+			NoSymbolStrip="$(NoSymbolStrip)"
+			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
 			Verbosity="$(_BundlerVerbosity)"
 			>
@@ -1725,8 +1736,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
-			<Output TaskParameter="NoSymbolStrip" PropertyName="_NoSymbolStrip"/>
-			<Output TaskParameter="NoDSymUtil" PropertyName="_NoDSymUtil"/>
+			<Output TaskParameter="NoSymbolStrip" PropertyName="NoSymbolStrip"/>
+			<Output TaskParameter="NoDSymUtil" PropertyName="NoDSymUtil"/>
 			<Output TaskParameter="Optimize" PropertyName="_BundlerOptimize"/>
 			<Output TaskParameter="PackageDebugSymbols" PropertyName="PackageDebugSymbols" />
 			<Output TaskParameter="Registrar" PropertyName="_BundlerRegistrar" />
@@ -2294,12 +2305,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoDSymUtil)' == 'false'"
-			AppBundleDir="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)"
-			Architectures="%(_AppExtensionDebugSymbolProperties.CompiledArchitectures)"
 			DSymDir="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM"
 			Executable="$(_AppExtensionRoot)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
 		>
 		</DSymUtil>
 
@@ -2365,19 +2372,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- run dsymutil on embedded frameworks -->
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
-			Condition="'$(_NoDSymUtil)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
-			AppBundleDir="$(AppBundleDir)"
-			Architectures=""
+			Condition="'$(NoDSymUtil)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
 			DSymDir="%(_Frameworks._Destination)"
 			Executable="%(_Frameworks.Identity)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)">
+		>
 		</DSymUtil>
 
 		<!-- strip embedded frameworks -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(_NoSymbolStrip)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
+			Condition="'$(NoSymbolStrip)' == 'false' and '%(_Frameworks._DestinationExists)' != 'true' "
 			Executable="%(_Frameworks.Identity)"
 			IsFramework="true"
 			SymbolFile="">
@@ -2406,11 +2410,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppExtensionDebugSymbolProperties Remove="@(_AppExtensionDebugSymbolProperties)" />
 
 			<_AppExtensionDebugSymbolProperties Include="$(_AppBundleFileName)">
-				<CompiledArchitectures>$(_CompiledArchitectures)</CompiledArchitectures>
 				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
-				<NoSymbolStrip>$(_NoSymbolStrip)</NoSymbolStrip>
+				<NoSymbolStrip>$(NoSymbolStrip)</NoSymbolStrip>
 				<SymbolsList>$(_SymbolsListFullPath)</SymbolsList>
-				<NoDSymUtil>$(_NoDSymUtil)</NoDSymUtil>
+				<NoDSymUtil>$(NoDSymUtil)</NoDSymUtil>
 			</_AppExtensionDebugSymbolProperties>
 		</ItemGroup>
 
@@ -2444,20 +2447,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- run dsymutil on the main bundle -->
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures="$(_CompiledArchitectures)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
 			DSymDir="$(AppBundleDir).dSYM"
 			Executable="$(_NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
 		>
 		</DSymUtil>
 
 		<!-- strip the debug symbols from the $(_NativeExecutable) -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
 			Executable="$(_NativeExecutable)"
 			IsFramework="false"
 			SymbolFile="$(_MtouchSymbolsList)"
@@ -2467,7 +2466,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
 			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
 		>
 		</Touch>
@@ -2475,7 +2474,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- make sure spotlight indexes everything we've built -->
 		<SpotlightIndexer
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
 			Input="$(AppBundleDir)/../"
 		>
 		</SpotlightIndexer>

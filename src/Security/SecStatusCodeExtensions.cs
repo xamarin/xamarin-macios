@@ -11,7 +11,6 @@ using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace Security {
 	public static class SecStatusCodeExtensions {

@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -45,6 +46,27 @@ namespace CoreGraphics {
 		public /* CGFloat */ nfloat D;
 		public /* CGFloat */ nfloat Tx;
 		public /* CGFloat */ nfloat Ty;
+
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'A' instead.")]
+		public nfloat xx { get => A; set => A = value; }
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'B' instead.")]
+		public nfloat yx { get => B; set => B = value; }
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'C' instead.")]
+		public nfloat xy { get => C; set => C = value; }
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'D' instead.")]
+		public nfloat yy { get => D; set => D = value; }
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'Tx' instead.")]
+		public nfloat x0 { get => Tx; set => Tx = value; }
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'Ty' instead.")]
+		public nfloat y0 { get => Ty; set => Ty = value; }
+#endif // !XAMCORE_5_0
 #else
 		[Obsolete ("Use 'A' instead.")]
 		public /* CGFloat */ nfloat xx;   // a

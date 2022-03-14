@@ -14,7 +14,6 @@ using System;
 using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Collections;
 
 using CoreGraphics;

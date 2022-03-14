@@ -27,7 +27,7 @@ namespace Extrospection {
 					continue;
 				if (entry [0] != '#') {
 					Log ($"?bad-entry? '{entry}' in '{filename}'");
-				} else if (entry [1] == '!') {
+				} else if (entry.Length > 1 && entry [1] == '!') {
 					Log ($"?bad-comment? '{entry}' in '{filename}'");
 				}
 			}

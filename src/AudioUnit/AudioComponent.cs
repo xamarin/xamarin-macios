@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using AudioToolbox;
 using CoreFoundation;
@@ -560,7 +559,7 @@ namespace AudioUnit
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException	(nameof	(value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				var nameHandle = CFString.CreateNative (Name);
 				try {
 					var dics = new NSDictionary [value.Length];

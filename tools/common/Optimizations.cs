@@ -171,6 +171,14 @@ namespace Xamarin.Bundler
 				if (!values [i].HasValue)
 					continue;
 
+				// The remove-dynamic-registrar optimization is a bit if a special case on macOS:
+				// it only works in very specific circumstances, so we don't add it to valid_platforms.
+				// This means it won't be listed in --help, and it won't be enabled if all optimizations
+				// are enabled. Yet we still might want to enable it manually, and this condition
+				// allows us to manually pass --optimize=remove-dynamic-registrar and enable it that way.
+				if (app.Platform == ApplePlatform.MacOSX && (Opt) i == Opt.RemoveDynamicRegistrar)
+					continue;
+
 				// check if the optimization is valid for the current platform
 				var valid = valid_platforms [i];
 				if (Array.IndexOf (valid, app.Platform) < 0) {

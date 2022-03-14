@@ -1,7 +1,6 @@
 #if !NET
 
 using System;
-using System.Runtime.Versioning;
 
 namespace AdSupport {
 
