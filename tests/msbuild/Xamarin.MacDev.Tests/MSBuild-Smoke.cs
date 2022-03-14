@@ -40,7 +40,7 @@ namespace Xamarin.MMP.Tests
 
 		void TestBCLCore (string tmpDir, string projectName)
 		{
-			var dll = Path.GetFullPath (Path.Combine (TI.TestDirectory + "common", "mac", "System.Collections.Immutable.dll"));
+			var dll = Path.GetFullPath (Path.Combine (TI.TestDirectory, "common", "mac", "System.Collections.Immutable.dll"));
 			string reference = $"<Reference Include=\"System.Collections.Immutable\"><HintPath>{dll}</HintPath></Reference>";
 			string testCode = "var v = System.Collections.Immutable.ImmutableArray.CreateRange (new int [] { 42 });";
 			string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = projectName, References = reference, TestCode = testCode });
