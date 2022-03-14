@@ -359,24 +359,23 @@ stages:
           parseLabels: false
 
 - ${{ if eq(parameters.runOldMacOSTests, true) }}:
-  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
-    - ${{ each config in parameters.macTestsConfigurations }}:
-      - template: templates/mac/stage.yml
-        parameters:
-          stageName: ${{ config.stageName }}
-          displayName: ${{ config.displayName }}
-          macPool: ${{ config.macPool }}
-          useImage: ${{ config.useImage }}
-          statusContext: ${{ config.statusContext }}
-          keyringPass: $(pass--lab--mac--builder--keychain)
-          demands: ${{ config.demands }}
-
-    - template: templates/windows/stage.yml
+  - ${{ each config in parameters.macTestsConfigurations }}:
+    - template: templates/mac/stage.yml
       parameters:
-        stageName: windows_integration
-        displayName: 'Windows Integration Tests'
-        pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
-        statusContext: 'Windows Integration Tests'
+        stageName: ${{ config.stageName }}
+        displayName: ${{ config.displayName }}
+        macPool: ${{ config.macPool }}
+        useImage: ${{ config.useImage }}
+        statusContext: ${{ config.statusContext }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        demands: ${{ config.demands }}
+
+  - template: templates/windows/stage.yml
+    parameters:
+      stageName: windows_integration
+      displayName: 'Windows Integration Tests'
+      pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
+      statusContext: 'Windows Integration Tests'
 
 # iOS 32b tests are slow and do not have many machines, for that reason we are going just to run them in the Schedule builds.
 # This means we are going to get the translations AND the iOS 32b on those builds.
