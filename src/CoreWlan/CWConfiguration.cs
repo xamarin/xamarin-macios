@@ -13,9 +13,7 @@ namespace CoreWlan {
 		public CWNetworkProfile []? NetworkProfiles {
 			get {
 				NSOrderedSet profiles = _NetworkProfiles;
-				if (profiles != null)
-					return profiles.ToArray<CWNetworkProfile> ();
-				return null;
+				return profiles?.ToArray<CWNetworkProfile> ();
 			}
 		}
 	}

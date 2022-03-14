@@ -13,25 +13,21 @@ namespace CoreWlan {
 		public CWChannel []? SupportedWlanChannels  {
 			get {
 				NSSet? channels = _SupportedWlanChannels;
-				if (channels != null)
-					return channels.ToArray<CWChannel> ();
-				return null;
+				return channels?.ToArray<CWChannel> ();;
 			}
 		}
 
 		public CWNetwork []? CachedScanResults {
 			get {
 				NSSet? results = _CachedScanResults;
-				if (results != null)
-					return results.ToArray<CWNetwork> ();
-				return null;
+				return results?.ToArray<CWNetwork> ();
 			}
 		}
 
 		public static string []? InterfaceNames {
 			get {
 				NSSet? interfaceNames = _InterfaceNames;
-				if (interfaceNames != null)
+				if (interfaceNames is not null)
 					return Array.ConvertAll (interfaceNames.ToArray<NSString> (), item => (string)item);
 				return null;
 			}
@@ -40,17 +36,13 @@ namespace CoreWlan {
 		public CWNetwork []? ScanForNetworksWithSsid (NSData ssid, out NSError error)
 		{
 			NSSet? networks = _ScanForNetworksWithSsid (ssid, out error);
-			if (networks != null)
-				return networks.ToArray<CWNetwork> ();
-			return null;
+			return networks?.ToArray<CWNetwork> ();
 		}
 
 		public CWNetwork []? ScanForNetworksWithName (string networkName, out NSError error)
 		{
 			NSSet? networks = _ScanForNetworksWithName (networkName, out error);
-			if (networks != null)
-				return networks.ToArray<CWNetwork> ();
-			return null;
+			return networks?.ToArray<CWNetwork> ();
 		}
 
 #if NET
@@ -61,9 +53,7 @@ namespace CoreWlan {
 		public CWNetwork []? ScanForNetworksWithSsid (NSData ssid, bool includeHidden, out NSError? error)
 		{
 			NSSet? networks = _ScanForNetworksWithSsid (ssid, includeHidden, out error);
-			if (networks != null)
-				return networks.ToArray<CWNetwork> ();
-			return null;
+			return networks?.ToArray<CWNetwork> ();
 		}
 
 #if NET
@@ -74,9 +64,7 @@ namespace CoreWlan {
 		public CWNetwork []? ScanForNetworksWithName (string networkName, bool includeHidden, out NSError? error)
 		{
 			NSSet? networks = _ScanForNetworksWithName (networkName, includeHidden, out error);
-			if (networks != null)
-				return networks.ToArray<CWNetwork> ();
-			return null;
+			return networks?.ToArray<CWNetwork> ();
 		}
 
 	}
