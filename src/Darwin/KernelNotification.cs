@@ -25,6 +25,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -247,6 +249,8 @@ namespace Darwin {
 			return rv;
 		}
 
+// Don't worry about nullability for !NET
+#nullable disable
 #if !NET
 		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, int nChanges, KernelEvent [] eventList, int nEvents, ref TimeSpec timeOut)
@@ -256,7 +260,7 @@ namespace Darwin {
 
 			if (eventList != null && eventList.Length < nEvents)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
-			
+
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
@@ -272,7 +276,7 @@ namespace Darwin {
 
 			if (eventList != null && eventList.Length < nEvents)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
-			
+
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
@@ -290,6 +294,7 @@ namespace Darwin {
 			}
 		}
 #endif
+#nullable enable
 
 #if NET
 		public int KEvent (KernelEvent [] changeList, KernelEvent [] eventList)
