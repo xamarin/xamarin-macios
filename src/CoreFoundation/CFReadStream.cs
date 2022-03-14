@@ -152,7 +152,7 @@ namespace CoreFoundation {
 			return Read (buffer, 0, buffer.Length);
 		}
 
-		public unsafe nint Read (byte[]? buffer, int offset, int count)
+		public unsafe nint Read (byte[] buffer, int offset, int count)
 		{
 			if (buffer is null)
 				throw new ArgumentNullException (nameof (buffer));

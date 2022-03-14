@@ -338,7 +338,7 @@ namespace CFNetwork {
 
 			nint? ret;
 			try {
-				ret = stream?.Read (buffer, index, count);
+				ret = stream?.Read (buffer!, index, count);
 			} catch (Exception ex) {
 				OnError (ex);
 				return false;

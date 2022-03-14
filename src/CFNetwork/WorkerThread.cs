@@ -90,7 +90,7 @@ namespace CFNetwork {
 		public void Stop ()
 		{
 			cts.Cancel ();
-			loop?.RemoveSource (source, CFRunLoop.ModeDefault);
+			loop?.RemoveSource (source!, CFRunLoop.ModeDefault);
 			loop?.Stop ();
 		}
 

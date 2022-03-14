@@ -307,7 +307,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFRunLoopRemoveSource (/* CFRunLoopRef */ IntPtr rl, /* CFRunLoopSourceRef */ IntPtr source, /* CFStringRef */ IntPtr mode);
 
-		public void RemoveSource (CFRunLoopSource? source, NSString mode)
+		public void RemoveSource (CFRunLoopSource source, NSString mode)
 		{
 			if (source is null)
 				throw new ArgumentNullException (nameof (source));
