@@ -48,8 +48,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=15.7.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=8.7.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=15.8.0.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=8.8.0.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -66,11 +66,11 @@ MAC_PACKAGE_VERSION=8.7.0.$(MAC_COMMIT_DISTANCE)
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 # When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
 
-IOS_NUGET_VERSION=15.2.303
-TVOS_NUGET_VERSION=15.2.303
-WATCHOS_NUGET_VERSION=8.3.303
-MACOS_NUGET_VERSION=12.1.303
-MACCATALYST_NUGET_VERSION=15.2.303
+IOS_NUGET_VERSION=15.4.100
+TVOS_NUGET_VERSION=15.4.100
+WATCHOS_NUGET_VERSION=8.5.100
+MACOS_NUGET_VERSION=12.3.100
+MACCATALYST_NUGET_VERSION=15.4.100
 
 
 # Defines the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
@@ -80,8 +80,8 @@ MACCATALYST_NUGET_VERSION=15.2.303
 # Basically: this should be the last OS version of the platform in question when the current major .NET version is first released to stable.
 # Ref: https://github.com/dotnet/designs/blob/8e6394406d44f75f30ea2259a425cb9e38d75b69/accepted/2020/net5/net5.md#os-versions
 
-DEFAULT_TARGET_PLATFORM_VERSION_IOS=15.2
-DEFAULT_TARGET_PLATFORM_VERSION_TVOS=15.2
-DEFAULT_TARGET_PLATFORM_VERSION_WATCHOS=8.3
-DEFAULT_TARGET_PLATFORM_VERSION_MACOS=12.1
-DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST=15.2
+DEFAULT_TARGET_PLATFORM_VERSION_IOS=15.4
+DEFAULT_TARGET_PLATFORM_VERSION_TVOS=15.4
+DEFAULT_TARGET_PLATFORM_VERSION_WATCHOS=8.5
+DEFAULT_TARGET_PLATFORM_VERSION_MACOS=12.3
+DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST=15.4
