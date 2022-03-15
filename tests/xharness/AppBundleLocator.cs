@@ -17,19 +17,19 @@ namespace Xharness {
 		readonly IProcessManager processManager;
 		readonly Func<ILog> getLog;
 		readonly string msBuildPath;
-		readonly string dotnetPath;
+		readonly string systemDotnetPath;
 		readonly string dotnet6Path;
 
 		// Gets either the SYSTEM_DOTNET or DOTNET6 variable, depending on any global.json
 		// config file found in the specified directory or any containing directories.
 		readonly Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
 
-		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string msBuildPath, string dotnetPath, string dotnet6Path)
+		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string msBuildPath, string systemDotnetPath, string dotnet6Path)
 		{
 			this.processManager = processManager;
 			this.getLog = getLog;
 			this.msBuildPath = msBuildPath;
-			this.dotnetPath = dotnetPath;
+			this.systemDotnetPath = systemDotnetPath;
 			this.dotnet6Path = dotnet6Path;
 		}
 
@@ -169,7 +169,7 @@ namespace Xharness {
 			switch (version [0]) {
 			case '3':
 			case '5':
-				executable = dotnetPath;
+				executable = systemDotnetPath;
 				break;
 			default:
 				executable = dotnet6Path;
