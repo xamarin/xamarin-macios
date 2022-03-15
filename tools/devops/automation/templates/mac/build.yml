@@ -20,7 +20,13 @@ steps:
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
 - bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain
+    RC=0
+    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain || RC=$?
+    if [ $RC -eq 0 ]; then
+      echo "Security UI-prompt removed."
+    else
+      echo "Security UI-prompt could NOT be removed."
+    fi
   env:
     KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'

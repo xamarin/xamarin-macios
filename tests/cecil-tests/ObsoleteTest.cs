@@ -14,6 +14,9 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class ObsoleteTest {
 
+#if NET
+		[Ignore ("To be fixed after the move to an outside bot: https://github.com/xamarin/maccore/issues/2547.")]
+#endif
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))] // call this method with every .net6 library
 		public void GetAllObsoletedThings (string assemblyPath)
 		{

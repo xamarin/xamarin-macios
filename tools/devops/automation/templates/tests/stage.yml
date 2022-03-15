@@ -20,12 +20,12 @@ parameters:
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 # name of the pool that contains the iOS devices
-- name: iOSDevicePool
+- name: testPool
   type: string
-  default: 'VSEng-Xamarin-QA'
+  default: ''
 
 # demand that has to be matched by a bot to be able to run the tests.
-- name: iOSDeviceDemand
+- name: extraBotDemands
   type: object
   default: []
 
@@ -45,12 +45,8 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: execute
+- name: testPrefix
   type: string
-
-- name: devicePrefix
-  type: string
-  default: 'ios' # default context, since we started dealing with iOS devices.
 
 - name: gitHubToken
   type: string
@@ -58,20 +54,78 @@ parameters:
 - name: xqaCertPass
   type: string
 
+- name: makeTarget
+  type: string
+  default: 'vsts-device-tests' # target to be used to run the tests
+
+- name: condition
+  type: boolean
+  default: true
+
+- name: parseLabels
+  type: boolean
+  default: true
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
+  condition: and(succeeded(), ${{ parameters.condition }})
+
   jobs:
+  - ${{ if eq(parameters.testPool, '') }}:
+    - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+      pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+        vmImage: ubuntu-latest
+      steps:
+      - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+      # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+      - template: azure-devops-pools/agent-pool-selector.yml@templates
+        parameters:
+          agentPoolPR: $(PRBuildPool)
+          agentPoolPRUrl: $(PRBuildPoolUrl)
+          agentPoolCI: $(CIBuildPool)
+          agentPoolCIUrl: $(CIBuildPoolUrl)
+
+  - ${{ if eq(parameters.parseLabels, true) }}:
+    - job: configure
+      displayName: 'Configure build'
+      pool:
+        vmImage: windows-latest
+
+      variables:
+        isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+        isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+
+      steps:
+      - template: ../common/configure.yml
+
   - job: tests
-    displayName: 'Run ${{ parameters.devicePrefix }} Device Tests'
+    dependsOn:
+    - ${{ if eq(parameters.testPool, '') }}:
+      - AgentPoolSelector
+    - ${{ if eq(parameters.parseLabels, true) }}:
+      - configure
+    displayName: 'Run ${{ parameters.testPrefix }} Device Tests'
     timeoutInMinutes: 1000
+
+    variables:
+      XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+      ${{ if eq(parameters.testPool, '') }}:
+        AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      ${{ else }}:
+        AgentPoolComputed: ${{ parameters.testPool }}
+
     pool:
-      name: ${{ parameters.iOSDevicePool }}
-      demands: ${{ parameters.iOSDeviceDemand }}
+      name: $(AgentPoolComputed)
+      demands: 
+      - Agent.OS -equals Darwin
+      - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+      - ${{ each demand in parameters.extraBotDemands }}:
+        - demand
       workspace:
         clean: all
     steps:
@@ -82,7 +136,8 @@ stages:
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         keyringPass: ${{ parameters.keyringPass }}
-        devicePrefix: ${{ parameters.devicePrefix }}
+        testPrefix: ${{ parameters.testPrefix }}
+        makeTarget: ${{ parameters.makeTarget }}
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
 
@@ -98,7 +153,7 @@ stages:
     steps:
     - template: ../common/upload-vsdrops.yml
       parameters:
-        devicePrefix: ${{ parameters.devicePrefix }}
+        testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
   - job: upload_vsts_tests
@@ -113,7 +168,7 @@ stages:
     steps:
     - template: ../common/upload-vsts-tests.yml
       parameters:
-        devicePrefix: ${{ parameters.devicePrefix }}
+        testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
   - job: publish_html
@@ -138,4 +193,4 @@ stages:
       parameters:
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-        devicePrefix: ${{ parameters.devicePrefix }}
+        testPrefix: ${{ parameters.testPrefix }}
